@@ -1,5 +1,6 @@
 from oscar.apps.address.abstract_models import AbstractPartnerAddress
 from oscar.apps.partner.abstract_models import (
+    AbstractLegalEntity, AbstractLegalEntityAddress,
     AbstractPartner, AbstractStockAlert, AbstractStockRecord)
 from oscar.core.loading import is_model_registered
 
@@ -32,3 +33,17 @@ if not is_model_registered('partner', 'StockAlert'):
         pass
 
     __all__.append('StockAlert')
+
+
+if not is_model_registered('partner', 'LegalEntity'):
+    class LegalEntity(AbstractLegalEntity):
+        pass
+
+    __all__.append('LegalEntity')
+
+
+if not is_model_registered('partner', 'LegalEntityAddress'):
+    class LegalEntityAddress(AbstractLegalEntityAddress):
+        pass
+
+    __all__.append('LegalEntityAddress')

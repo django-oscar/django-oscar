@@ -337,6 +337,11 @@ class OrderListView(BulkEditMixin, ListView):
         ctx['form'] = self.form
         ctx['order_statuses'] = Order.all_statuses()
         ctx['search_filters'] = self.get_search_filter_descriptions()
+
+        ctx['is_invoice_column_shown'] = all([
+            settings.OSCAR_INVOICE_GENERATE_AFTER_ORDER_PLACED,
+            self.request.user.is_staff])
+
         return ctx
 
     def is_csv_download(self):
@@ -536,6 +541,10 @@ class OrderDetailView(DetailView):
         ctx['payment_event_types'] = PaymentEventType.objects.all()
 
         ctx['payment_transactions'] = self.get_payment_transactions()
+
+        ctx['is_invoice_column_shown'] = all([
+            settings.OSCAR_INVOICE_GENERATE_AFTER_ORDER_PLACED,
+            self.request.user.is_staff])
 
         return ctx
 

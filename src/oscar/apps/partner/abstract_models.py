@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models, router
 from django.db.models import F, Value, signals
 from django.db.models.functions import Coalesce
@@ -7,6 +8,9 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
+from phonenumber_field.modelfields import PhoneNumberField
+
+from oscar.apps.address.abstract_models import AbstractAddress
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import get_default_currency
@@ -304,3 +308,53 @@ class AbstractStockAlert(models.Model):
         ordering = ('-date_created',)
         verbose_name = _('Stock alert')
         verbose_name_plural = _('Stock alerts')
+
+
+@python_2_unicode_compatible
+class AbstractLegalEntity(models.Model):
+    """
+    Represents LegalEntity - merchant (company or individual) which we issue
+    invoice on behalf of.
+    """
+    shop_name = models.CharField(_('Shop name'), max_length=255, null=True, blank=True)
+    business_name = models.CharField(_('Business name'), max_length=255, db_index=True)
+    vat_number = models.CharField(_('VAT identification number'), max_length=20)
+    logo = models.ImageField(
+        _('Logo'), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255, null=True, blank=True)
+    email = models.EmailField(_('Email'), null=True, blank=True)
+    web_site = models.URLField(_('Website'), null=True, blank=True)
+
+    class Meta:
+        abstract = True
+        app_label = 'partner'
+        verbose_name = _('Legal Entity')
+        verbose_name_plural = _('Legal Entities')
+
+    def __str__(self):
+        return self.business_name
+
+    @property
+    def has_addresses(self):
+        return self.addresses.exists()
+
+
+class AbstractLegalEntityAddress(AbstractAddress):
+    """
+    Represents Address of LegalEntity.
+
+    Used in Invoices.
+    """
+    legal_entity = models.ForeignKey(
+        'partner.LegalEntity',
+        on_delete=models.CASCADE,
+        related_name='addresses',
+        verbose_name=_('Legal Entity'))
+
+    phone_number = PhoneNumberField(_('Phone number'), blank=True)
+    fax_number = PhoneNumberField(_('Fax number'), blank=True)
+
+    class Meta:
+        abstract = True
+        app_label = 'partner'
+        verbose_name = _('Legal Entity Address')
+        verbose_name_plural = _('Legal Entity Addresses')

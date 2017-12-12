@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 
 from oscar.core.loading import get_model
@@ -16,6 +17,7 @@ PaymentEventType = get_model('order', 'PaymentEventType')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 LineAttribute = get_model('order', 'LineAttribute')
 OrderDiscount = get_model('order', 'OrderDiscount')
+Invoice = get_model('order', 'Invoice')
 
 
 class LineInline(admin.TabularInline):
@@ -27,9 +29,27 @@ class OrderAdmin(admin.ModelAdmin):
     raw_id_fields = ['user', 'billing_address', 'shipping_address', ]
     list_display = ('number', 'total_incl_tax', 'site', 'user',
                     'billing_address', 'date_placed')
+    if settings.OSCAR_INVOICE_GENERATE_AFTER_ORDER_PLACED:
+        list_display += ('is_invoice_created', 'get_invoice_link')
+
     readonly_fields = ('number', 'total_incl_tax', 'total_excl_tax',
                        'shipping_incl_tax', 'shipping_excl_tax')
     inlines = [LineInline]
+
+    def is_invoice_created(self, obj):
+        return hasattr(obj, 'invoice')
+
+    is_invoice_created.boolean = True
+
+    def get_invoice_link(self, obj):
+        if self.is_invoice_created(obj) and obj.invoice.document:
+            links = '<a href="{0}">See HTML</a> | ' \
+                    '<a href="{0}" download>Download HTML</a>'
+            return links.format(obj.invoice.document.url)
+        return '-'
+
+    get_invoice_link.short_description = 'Invoice document'
+    get_invoice_link.allow_tags = True
 
 
 class LineAdmin(admin.ModelAdmin):
@@ -79,3 +99,4 @@ admin.site.register(LineAttribute)
 admin.site.register(OrderDiscount, OrderDiscountAdmin)
 admin.site.register(CommunicationEvent)
 admin.site.register(BillingAddress)
+admin.site.register(Invoice)

@@ -4,6 +4,8 @@ from oscar.core.loading import get_model
 
 Partner = get_model('partner', 'Partner')
 StockRecord = get_model('partner', 'StockRecord')
+LegalEntity = get_model('partner', 'LegalEntity')
+LegalEntityAddress = get_model('partner', 'LegalEntityAddress')
 
 
 class StockRecordAdmin(admin.ModelAdmin):
@@ -13,3 +15,5 @@ class StockRecordAdmin(admin.ModelAdmin):
 
 admin.site.register(Partner)
 admin.site.register(StockRecord, StockRecordAdmin)
+admin.site.register(LegalEntity)
+admin.site.register(LegalEntityAddress)

@@ -62,4 +62,5 @@ class Shop(Application):
             urls.append(url(r'', self.promotions_app.urls))
         return urls
 
+
 application = Shop()
