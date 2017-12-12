@@ -1,4 +1,3 @@
-import django
 from django.test import TestCase
 
 from oscar.apps.customer.auth_backends import EmailBackend
