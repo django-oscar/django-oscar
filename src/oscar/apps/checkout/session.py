@@ -141,8 +141,7 @@ class CheckoutSessionMixin(object):
             )
 
     def check_user_email_is_captured(self, request):
-        if not request.user.is_authenticated \
-                and not self.checkout_session.get_guest_email():
+        if not request.user.is_authenticated and not self.checkout_session.get_guest_email():
             raise exceptions.FailedPreCondition(
                 url=reverse('checkout:index'),
                 message=_(

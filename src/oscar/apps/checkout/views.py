@@ -170,8 +170,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     def post(self, request, *args, **kwargs):
         # Check if a shipping address was selected directly (eg no form was
         # filled in)
-        if self.request.user.is_authenticated \
-                and 'address_id' in self.request.POST:
+        if self.request.user.is_authenticated and 'address_id' in self.request.POST:
             address = UserAddress._default_manager.get(
                 pk=self.request.POST['address_id'], user=self.request.user)
             action = self.request.POST.get('action', None)
