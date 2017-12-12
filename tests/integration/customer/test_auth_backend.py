@@ -1,5 +1,3 @@
-import unittest
-
 import django
 from django.test import TestCase
 
@@ -15,12 +13,6 @@ class AuthBackendTestCase(TestCase):
         self.user.save()
         self.backend = EmailBackend()
 
-    @unittest.skipUnless(django.VERSION < (1, 11), "for Django <1.11 only")
-    def test_authentication_method_signature_pre_django_1_11(self):
-        auth_result = self.backend.authenticate('foo@example.com', 'letmein')
-        self.assertEqual(auth_result, self.user)
-
-    @unittest.skipUnless(django.VERSION >= (1, 11), "for Django >=1.11 only")
     def test_authentication_method_signature_post_django_1_11(self):
         auth_result = self.backend.authenticate(None, 'foo@example.com', 'letmein')
         self.assertEqual(auth_result, self.user)
