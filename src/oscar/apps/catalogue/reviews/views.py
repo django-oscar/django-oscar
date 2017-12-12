@@ -11,6 +11,7 @@ from oscar.core.utils import redirect_to_referrer
 ProductReviewForm, VoteForm, SortReviewsForm = get_classes(
     'catalogue.reviews.forms',
     ['ProductReviewForm', 'VoteForm', 'SortReviewsForm'])
+
 Vote = get_model('reviews', 'vote')
 ProductReview = get_model('reviews', 'ProductReview')
 Product = get_model('catalogue', 'product')

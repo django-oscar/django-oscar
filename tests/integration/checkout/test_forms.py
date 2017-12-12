@@ -7,6 +7,23 @@ from oscar.apps.checkout.forms import ShippingAddressForm
 from oscar.test.factories import CountryFactory
 
 
+class AnotherShippingAddressForm(ShippingAddressForm):
+    phone_numbers_fields = {
+        'phone_number': {
+            'required': False,
+            'help_text': '',
+            'max_length': 32,
+            'label': 'Phone number'
+        },
+        'another_phone_number': {
+            'required': False,
+            'help_text': 'Another phone number help text',
+            'max_length': 32,
+            'label': 'Another phone number'
+        },
+    }
+
+
 class TestShippingAddressForm(TestCase):
     minimal_data = {
         'first_name': 'Bärry',
@@ -55,10 +72,39 @@ class TestShippingAddressForm(TestCase):
         data['phone_number'] = '0176 968 426 71'  # local German number
         self.assertFalse(ShippingAddressForm(data).is_valid())
 
+    def test_only_accepts_british_local_phone_numbers(self):
+        data = self.minimal_data.copy()
+        # Both numbers are British local numbers
+        data['phone_number'] = '07 914721389'
+        data['another_phone_number'] = '0344493 0787'  # British Airways
+        self.assertTrue(AnotherShippingAddressForm(data).is_valid())
+
+        # Both numbers are local German numbers
+        data['phone_number'] = '0176 968 426 71'
+        data['another_phone_number'] = '07032 15 49225'  # IBM Germany
+        self.assertFalse(AnotherShippingAddressForm(data).is_valid())
+
+        # One number is British number, another is German number
+        data['phone_number'] = '07 914721389'
+        data['another_phone_number'] = '0176 968 426 71'
+        self.assertFalse(AnotherShippingAddressForm(data).is_valid())
+
+        # As previous case, but numbers are reversed
+        data['phone_number'] = '0176 968 426 71'
+        data['another_phone_number'] = '07 914721389'
+        self.assertFalse(AnotherShippingAddressForm(data).is_valid())
+
     def test_is_valid_with_international_phone_number(self):
         data = self.minimal_data.copy()
         data['phone_number'] = '+49 176 968426 71'
         form = ShippingAddressForm(data)
+        self.assertTrue(form.is_valid())
+
+    def test_is_valid_with_international_phone_numbers(self):
+        data = self.minimal_data.copy()
+        data['phone_number'] = '+49 176 968426 71'
+        data['another_phone_number'] = '+49-1805-426452'
+        form = AnotherShippingAddressForm(data)
         self.assertTrue(form.is_valid())
 
     # Tests where the country field exists
@@ -84,8 +130,21 @@ class TestShippingAddressForm(TestCase):
         data['country'] = Country.objects.get(iso_3166_1_a2='GB').pk
         self.assertTrue(ShippingAddressForm(data).is_valid())
 
+    def test_only_accepts_local_phone_numbers_when_country_matches(self):
+        CountryFactory(iso_3166_1_a2='DE', is_shipping_country=True)
+        data = self.minimal_data.copy()
+        # Local UK numbers
+        data['phone_number'] = '07 914721389'
+        data['another_phone_number'] = '0344493 0787'
+
+        data['country'] = Country.objects.get(iso_3166_1_a2='DE').pk
+        self.assertFalse(ShippingAddressForm(data).is_valid())
+
+        data['country'] = Country.objects.get(iso_3166_1_a2='GB').pk
+        self.assertTrue(ShippingAddressForm(data).is_valid())
+
     @override_settings(OSCAR_REQUIRED_ADDRESS_FIELDS=('phone_number',))
-    def test_local_phonenumber_invalid_without_country(self):
+    def test_local_phone_number_invalid_without_country(self):
         # Add another country, so we have two.
         CountryFactory(iso_3166_1_a2='DE', is_shipping_country=True)
         data = self.minimal_data.copy()

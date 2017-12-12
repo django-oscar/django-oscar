@@ -2,11 +2,14 @@ from decimal import Decimal as D
 
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.offer import results, utils, conditions
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.templatetags.currency_filters import currency
 
 Benefit = get_model('offer', 'Benefit')
+BasketDiscount, SHIPPING_DISCOUNT, ZERO_DISCOUNT = get_classes('offer.results', [
+    'BasketDiscount', 'SHIPPING_DISCOUNT', 'ZERO_DISCOUNT'])
+CoverageCondition, ValueCondition = get_classes('offer.conditions', ['CoverageCondition', 'ValueCondition'])
+range_anchor = get_class('offer.utils', 'range_anchor')
 
 __all__ = [
     'PercentageDiscountBenefit', 'AbsoluteDiscountBenefit', 'FixedPriceBenefit',
@@ -39,7 +42,7 @@ class PercentageDiscountBenefit(Benefit):
     def description(self):
         return self._description % {
             'value': self.value,
-            'range': utils.range_anchor(self.range)}
+            'range': range_anchor(self.range)}
 
     class Meta:
         app_label = 'offer'
@@ -84,7 +87,7 @@ class PercentageDiscountBenefit(Benefit):
 
         if discount > 0:
             condition.consume_items(offer, basket, affected_lines)
-        return results.BasketDiscount(discount)
+        return BasketDiscount(discount)
 
 
 class AbsoluteDiscountBenefit(Benefit):
@@ -103,7 +106,7 @@ class AbsoluteDiscountBenefit(Benefit):
     def description(self):
         return self._description % {
             'value': currency(self.value),
-            'range': utils.range_anchor(self.range)}
+            'range': range_anchor(self.range)}
 
     class Meta:
         app_label = 'offer'
@@ -142,7 +145,7 @@ class AbsoluteDiscountBenefit(Benefit):
             discount = min(discount, max_total_discount)
 
         if discount == 0:
-            return results.ZERO_DISCOUNT
+            return ZERO_DISCOUNT
 
         # Apply discount equally amongst them
         affected_lines = []
@@ -163,7 +166,7 @@ class AbsoluteDiscountBenefit(Benefit):
 
         condition.consume_items(offer, basket, affected_lines)
 
-        return results.BasketDiscount(discount)
+        return BasketDiscount(discount)
 
 
 class FixedPriceBenefit(Benefit):
@@ -192,15 +195,15 @@ class FixedPriceBenefit(Benefit):
         verbose_name_plural = _("Fixed price benefits")
 
     def apply(self, basket, condition, offer):  # noqa (too complex (10))
-        if isinstance(condition, conditions.ValueCondition):
-            return results.ZERO_DISCOUNT
+        if isinstance(condition, ValueCondition):
+            return ZERO_DISCOUNT
 
         # Fetch basket lines that are in the range and available to be used in
         # an offer.
         line_tuples = self.get_applicable_lines(offer, basket,
                                                 range=condition.range)
         if not line_tuples:
-            return results.ZERO_DISCOUNT
+            return ZERO_DISCOUNT
 
         # Determine the lines to consume
         num_permitted = int(condition.value)
@@ -208,7 +211,7 @@ class FixedPriceBenefit(Benefit):
         value_affected = D('0.00')
         covered_lines = []
         for price, line in line_tuples:
-            if isinstance(condition, conditions.CoverageCondition):
+            if isinstance(condition, CoverageCondition):
                 quantity_affected = 1
             else:
                 quantity_affected = min(
@@ -221,7 +224,7 @@ class FixedPriceBenefit(Benefit):
                 break
         discount = max(value_affected - self.value, D('0.00'))
         if not discount:
-            return results.ZERO_DISCOUNT
+            return ZERO_DISCOUNT
 
         # Apply discount to the affected lines
         discount_applied = D('0.00')
@@ -236,7 +239,7 @@ class FixedPriceBenefit(Benefit):
                     discount * (price * quantity) / value_affected)
             apply_discount(line, line_discount, quantity, offer)
             discount_applied += line_discount
-        return results.BasketDiscount(discount)
+        return BasketDiscount(discount)
 
 
 class MultibuyDiscountBenefit(Benefit):
@@ -250,7 +253,7 @@ class MultibuyDiscountBenefit(Benefit):
     @property
     def description(self):
         return self._description % {
-            'range': utils.range_anchor(self.range)}
+            'range': range_anchor(self.range)}
 
     class Meta:
         app_label = 'offer'
@@ -261,7 +264,7 @@ class MultibuyDiscountBenefit(Benefit):
     def apply(self, basket, condition, offer):
         line_tuples = self.get_applicable_lines(offer, basket)
         if not line_tuples:
-            return results.ZERO_DISCOUNT
+            return ZERO_DISCOUNT
 
         # Cheapest line gives free product
         discount, line = line_tuples[0]
@@ -270,7 +273,7 @@ class MultibuyDiscountBenefit(Benefit):
         affected_lines = [(line, discount, 1)]
         condition.consume_items(offer, basket, affected_lines)
 
-        return results.BasketDiscount(discount)
+        return BasketDiscount(discount)
 
 
 # =================
@@ -282,7 +285,7 @@ class ShippingBenefit(Benefit):
 
     def apply(self, basket, condition, offer):
         condition.consume_items(offer, basket, affected_lines=())
-        return results.SHIPPING_DISCOUNT
+        return SHIPPING_DISCOUNT
 
     class Meta:
         app_label = 'offer'

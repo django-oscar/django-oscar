@@ -1,6 +1,9 @@
 from itertools import chain
 
-from oscar.apps.promotions.models import KeywordPromotion, PagePromotion
+from oscar.core.loading import get_model
+
+KeywordPromotion = get_model('promotions', 'KeywordPromotion')
+PagePromotion = get_model('promotions', 'PagePromotion')
 
 
 def promotions(request):

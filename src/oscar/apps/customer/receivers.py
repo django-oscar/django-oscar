@@ -1,10 +1,8 @@
 from django.dispatch import receiver
 
-from oscar.core.loading import get_class
+from oscar.apps.catalogue.signals import product_viewed
 
 from . import history
-
-product_viewed = get_class('catalogue.signals', 'product_viewed')
 
 
 @receiver(product_viewed)
