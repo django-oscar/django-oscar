@@ -368,6 +368,8 @@ Default: ``GBP``
 This should be the symbol of the currency you wish Oscar to use by default.
 This will be used by the currency templatetag.
 
+.. _currency-format-setting:
+
 ``OSCAR_CURRENCY_FORMAT``
 -------------------------
 
