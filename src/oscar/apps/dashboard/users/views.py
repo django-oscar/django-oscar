@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
     DeleteView, DetailView, FormView, ListView, UpdateView)

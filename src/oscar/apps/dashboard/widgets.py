@@ -1,12 +1,8 @@
 import copy
 import re
 
-from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.forms import Widget
-from django.template.loader import render_to_string
-from django.utils.module_loading import import_string
-from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 
 class RelatedFieldWidgetWrapper(Widget):
@@ -87,24 +83,3 @@ class RelatedFieldWidgetWrapper(Widget):
 
     def id_for_label(self, id_):
         return self.widget.id_for_label(id_)
-
-    # render() method must be provided by subclasses of Widget, for Django
-    # versions earlier than 1.11.
-    def render(self, name, value, *args, **kwargs):
-        kwargs.setdefault('attrs', None)
-        attrs = kwargs['attrs']
-        template_name = self.template_name
-        context = self.get_context(name, value, attrs)
-        # From Django 1.11, a renderer can be specified. If one isn't, then the
-        # default one is used.
-        # Documentation URLs:
-        # - <https://docs.djangoproject.com/en/1.11/ref/forms/widgets/#django.forms.Widget.render>
-        # - <https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-FORM_RENDERER>
-        if 'renderer' in kwargs:
-            if kwargs['renderer'] is not None:
-                renderer = kwargs['renderer']
-            else:
-                renderer = import_string(settings.FORM_RENDERER)
-            return mark_safe(renderer.render(template_name, context))
-        else:
-            return mark_safe(render_to_string(template_name, context))

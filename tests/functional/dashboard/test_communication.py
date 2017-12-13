@@ -1,5 +1,5 @@
-from django.core.urlresolvers import reverse
 from django.core import mail
+from django.urls import reverse
 
 from oscar.apps.customer.models import CommunicationEventType
 from oscar.test.factories import UserFactory

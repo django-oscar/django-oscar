@@ -19,9 +19,8 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 1.6 is compatible with Django 1.8, 1.10 and 1.11 as well as Python 2.7,
-3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is no longer officialy supported
-since it is longer supported by Django (end of life).
+Oscar 1.6 is compatible with Django 1.11 and 2.0 as well as Python 2.7, 3.4,
+3.5 and 3.6. Django 1.8, 1.9 and 1.10 are no longer supported.
 
 
 .. _new_in_1.6:
@@ -33,14 +32,22 @@ What's new in Oscar 1.6?
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+ - ``oscar.core.validators.validate_password`` was removed.
+   Use ``django.contrib.auth.password_validation.validate_password`` instead.
+
+ - ``oscar.core.validators.CommonPasswordValidator`` was removed. Use ``django.contrib.auth.password_validation.CommonPasswordValidator`` instead.
+
+ - The ``num_orders`` property was removed from ``oscar.apps.address.models.UserAddress``.
+   Use ``num_orders_as_shipping_address`` and ``num_orders_as_billing_address`` instead.
+
 
 Minor changes
 ~~~~~~~~~~~~~
- - Majority of the Oscar imports now using dynamic loading, instead of
-   direct importing for better extensibility and customizability, except
-   signals.
- - Customer transaction emails reworked on top of mailgun layout and has
-   better look.
+
+ - The majority of the Oscar imports now use dynamic loading, instead of
+   direct importing, for better extensibility and customisability.
+
+ - Customer transaction emails now use a basic HTML template.
 
 .. _incompatible_in_1.6:
 
@@ -49,6 +56,12 @@ Backwards incompatible changes in Oscar 1.6
 
  - ``oscar.apps.customer.auth_backends.EmailBackend`` now rejects inactive users
    (where ``User.is_active`` is ``False``).
+
+ - ``EmailBackend`` no longer enforces its own password strength validation,
+   and relies instead on the ``AUTH_PASSWORD_VALIDATORS`` setting used by Django.
+
+ - ``oscar.apps.basket.middleware.BasketMiddleware`` was rewritten as new-style
+   middleware for Django 1.11.
 
  - ``oscar.apps.offer.models.ConditionalOffer`` now has a new flag
    ``exclusive`` to denote that the offer involved can not be combined on the
@@ -68,7 +81,10 @@ Backwards incompatible changes in Oscar 1.6
    The offending menu item will be skipped during menu rendering.
    In Oscar 1.8 the exception will be raised without being intercepted.
 
- - All signals are now loaded directly.
+ - All signals are now loaded directly rather than using the dynamic importer.
 
 Dependency changes
 ------------------
+
+- Support for Django 1.8, 1.9 and 1.10 have been dropped in line with the
+  Django project recommendation for third party apps.

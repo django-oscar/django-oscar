@@ -127,7 +127,7 @@ More info about installing ``flatpages`` is in the `Django docs`_.
 
 Next, add ``oscar.apps.basket.middleware.BasketMiddleware`` and
 ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
-your ``MIDDLEWARE`` setting (``MIDDLEWARE_CLASSES`` for Django 1.8).
+your ``MIDDLEWARE`` setting.
 
 .. code-block:: django
 

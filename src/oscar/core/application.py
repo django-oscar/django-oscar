@@ -1,8 +1,13 @@
-from django import VERSION as DJANGO_VERSION
-from django.core.urlresolvers import RegexURLPattern, reverse_lazy
+from django import VERSION
+from django.urls import reverse_lazy
 
 from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required
+
+if VERSION > (2, 0):
+    from django.urls.resolvers import URLPattern
+else:
+    from django.urls.resolvers import RegexURLPattern as URLPattern
 
 
 class Application(object):
@@ -70,26 +75,11 @@ class Application(object):
             if hasattr(pattern, 'url_patterns'):
                 self.post_process_urls(pattern.url_patterns)
 
-            # In Django 1.8 and 1.9 we could distinguish the RegexURLPattern
-            # by simply checking if the pattern has a `_callback` attribute.
-            # In 1.10 this attribute is now only available as `callback`.
-            # Since the `callback` attribute is also available on patterns we
-            # should not modify (`RegexURLResolver`) we just do a isinstance()
-            # check here.
-            if DJANGO_VERSION < (1, 10):
-                if not hasattr(pattern, '_callback'):
-                    continue
+            if isinstance(pattern, URLPattern):
                 # Look for a custom decorator
                 decorator = self.get_url_decorator(pattern)
                 if decorator:
-                    # Nasty way of modifying a RegexURLPattern
-                    pattern._callback = decorator(pattern._callback)
-            else:
-                if isinstance(pattern, RegexURLPattern):
-                    # Look for a custom decorator
-                    decorator = self.get_url_decorator(pattern)
-                    if decorator:
-                        pattern.callback = decorator(pattern.callback)
+                    pattern.callback = decorator(pattern.callback)
 
         return urlpatterns
 

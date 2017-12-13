@@ -4,7 +4,7 @@ import warnings
 from django_webtest import WebTest
 
 from django.contrib.auth.models import AnonymousUser
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core import mail
 from django.test import TestCase
 from oscar.utils.deprecation import RemovedInOscar20Warning

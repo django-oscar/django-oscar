@@ -1,6 +1,6 @@
 from decimal import Decimal as D
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from oscar.core import prices
 from oscar.apps.dashboard.views import IndexView

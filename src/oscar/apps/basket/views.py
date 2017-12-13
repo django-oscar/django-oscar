@@ -3,10 +3,10 @@ import json
 from django import shortcuts
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, View
@@ -15,7 +15,6 @@ from extra_views import ModelFormSetView
 from oscar.apps.basket.signals import (
     basket_addition, voucher_addition, voucher_removal)
 from oscar.core import ajax
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
@@ -116,7 +115,7 @@ class BasketView(ModelFormSetView):
         context['upsell_messages'] = self.get_upsell_messages(
             self.request.basket)
 
-        if user_is_authenticated(self.request.user):
+        if self.request.user.is_authenticated:
             try:
                 saved_basket = self.basket_model.saved.get(
                     owner=self.request.user)
@@ -151,7 +150,7 @@ class BasketView(ModelFormSetView):
             if (hasattr(form, 'cleaned_data') and
                     form.cleaned_data['save_for_later']):
                 line = form.instance
-                if user_is_authenticated(self.request.user):
+                if self.request.user.is_authenticated:
                     self.move_line_to_saved_basket(line)
 
                     msg = render_to_string(

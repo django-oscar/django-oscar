@@ -6,13 +6,13 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.utils import get_password_reset_url
-from oscar.core.compat import get_user_model, user_is_authenticated
+from oscar.core.compat import get_user_model
 from oscar.core.loading import (
     get_class, get_classes, get_model, get_profile_class)
 from oscar.core.utils import safe_referrer
@@ -67,7 +67,7 @@ class AccountRegistrationView(RegisterUserMixin, generic.FormView):
     redirect_field_name = 'next'
 
     def get(self, request, *args, **kwargs):
-        if user_is_authenticated(request.user):
+        if request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountRegistrationView, self).get(
             request, *args, **kwargs)
@@ -107,7 +107,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
     redirect_field_name = 'next'
 
     def get(self, request, *args, **kwargs):
-        if user_is_authenticated(request.user):
+        if request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountAuthView, self).get(
             request, *args, **kwargs)

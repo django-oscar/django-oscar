@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from django.views.generic import ListView

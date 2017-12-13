@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 from oscar.core.application import Application
 from oscar.core.loading import get_class

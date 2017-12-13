@@ -8,7 +8,6 @@ from oscar.apps.basket.signals import basket_addition
 from oscar.apps.catalogue.signals import product_viewed
 from oscar.apps.order.signals import order_placed
 from oscar.apps.search.signals import user_search
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_classes
 
 UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
@@ -80,14 +79,14 @@ def receive_product_view(sender, product, user, **kwargs):
     if kwargs.get('raw', False):
         return
     _update_counter(ProductRecord, 'num_views', {'product': product})
-    if user and user_is_authenticated(user):
+    if user and user.is_authenticated:
         _update_counter(UserRecord, 'num_product_views', {'user': user})
         UserProductView.objects.create(product=product, user=user)
 
 
 @receiver(user_search)
 def receive_product_search(sender, query, user, **kwargs):
-    if user and user_is_authenticated(user) and not kwargs.get('raw', False):
+    if user and user.is_authenticated and not kwargs.get('raw', False):
         UserSearch._default_manager.create(user=user, query=query)
 
 
@@ -97,7 +96,7 @@ def receive_basket_addition(sender, product, user, **kwargs):
         return
     _update_counter(
         ProductRecord, 'num_basket_additions', {'product': product})
-    if user and user_is_authenticated(user):
+    if user and user.is_authenticated:
         _update_counter(UserRecord, 'num_basket_additions', {'user': user})
 
 
@@ -106,5 +105,5 @@ def receive_order_placed(sender, order, user, **kwargs):
     if kwargs.get('raw', False):
         return
     _record_products_in_order(order)
-    if user and user_is_authenticated(user):
+    if user and user.is_authenticated:
         _record_user_order(user, order)

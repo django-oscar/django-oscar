@@ -5,12 +5,10 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.utils.six.moves.urllib import parse
 from django.utils.translation import ugettext_lazy as _
-
-from oscar.core.compat import user_is_authenticated
 
 
 def staff_member_required(view_func, login_url=None):
@@ -33,7 +31,7 @@ def staff_member_required(view_func, login_url=None):
             return view_func(request, *args, **kwargs)
 
         # If user is not logged in, redirect to login page
-        if not user_is_authenticated(request.user):
+        if not request.user.is_authenticated:
             # If the login url is the same scheme and net location then just
             # use the path as the "next" url.
             path = request.build_absolute_uri()
@@ -106,7 +104,7 @@ def permissions_required(permissions, login_url=None):
 
     def _check_permissions(user):
         outcome = check_permissions(user, permissions)
-        if not outcome and user_is_authenticated(user):
+        if not outcome and user.is_authenticated:
             raise PermissionDenied
         else:
             return outcome
@@ -121,7 +119,7 @@ def login_forbidden(view_func, template_name='login_forbidden.html',
     """
     @wraps(view_func)
     def _checklogin(request, *args, **kwargs):
-        if not user_is_authenticated(request.user):
+        if not request.user.is_authenticated:
             return view_func(request, *args, **kwargs)
         return render(request, template_name, status=status)
 
