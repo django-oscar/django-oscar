@@ -37,6 +37,9 @@ Removal of deprecated features
 
  - ``oscar.core.validators.CommonPasswordValidator`` was removed. Use ``django.contrib.auth.password_validation.CommonPasswordValidator`` instead.
 
+ - The ``num_orders`` property was removed from ``oscar.apps.address.models.UserAddress``.
+   Use ``num_orders_as_shipping_address`` and ``num_orders_as_billing_address`` instead.
+
 
 Minor changes
 ~~~~~~~~~~~~~
