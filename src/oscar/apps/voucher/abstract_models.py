@@ -56,6 +56,12 @@ class AbstractVoucher(models.Model):
 
     date_created = models.DateTimeField(auto_now_add=True)
 
+    # A basket can have many vouchers attached to it.  However, it is common
+    # for sites to only allow one voucher per basket - this will need to be
+    # enforced in the project's codebase.
+    baskets = models.ManyToManyField(
+        'basket.Basket', verbose_name=_("Baskets"), blank=True, related_name='vouchers')
+
     class Meta:
         abstract = True
         app_label = 'voucher'

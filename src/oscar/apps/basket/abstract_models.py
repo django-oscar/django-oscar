@@ -50,12 +50,6 @@ class AbstractBasket(models.Model):
     status = models.CharField(
         _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
 
-    # A basket can have many vouchers attached to it.  However, it is common
-    # for sites to only allow one voucher per basket - this will need to be
-    # enforced in the project's codebase.
-    vouchers = models.ManyToManyField(
-        'voucher.Voucher', verbose_name=_("Vouchers"), blank=True)
-
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
     date_submitted = models.DateTimeField(_("Date submitted"), null=True,
