@@ -8,7 +8,7 @@ from oscar.test.factories import CountryFactory
 
 
 class AnotherShippingAddressForm(ShippingAddressForm):
-    phone_numbers_fields = {
+    phone_number_fields = {
         'phone_number': {
             'required': False,
             'help_text': '',

@@ -11,12 +11,15 @@ class PhoneNumberMixin(object):
     It tries to validate the phone numbers, and on failure tries to validate
     them using a hint (the country provided), and treating it as a local number.
 
+    Specify which fields to treat as phone numbers by specifying them in
+    `phone_number_fields`, a dictionary of fields names and default kwargs
+    for instantiation of the field.
     """
     country = None
     region_code = None
-    # Since this mixin will be used with `ModelForms`, names of phone numbers
-    # fields should match names of related Model's fields
-    phone_numbers_fields = {
+    # Since this mixin will be used with `ModelForms`, names of phone number
+    # fields should match names of the related Model field
+    phone_number_fields = {
         'phone_number': {
             'required': False,
             'help_text': '',
@@ -35,7 +38,7 @@ class PhoneNumberMixin(object):
         # class as mixin.
 
         # If the model field already exists, copy existing properties from it
-        for field_name, field_kwargs in self.phone_numbers_fields.items():
+        for field_name, field_kwargs in self.phone_number_fields.items():
             for key in field_kwargs:
                 try:
                     field_kwargs[key] = getattr(self.fields[field_name], key)
@@ -102,6 +105,6 @@ class PhoneNumberMixin(object):
     def clean(self):
         self.set_country_and_region_code()
         cleaned_data = super(PhoneNumberMixin, self).clean()
-        for field_name in self.phone_numbers_fields:
+        for field_name in self.phone_number_fields:
             cleaned_data[field_name] = self.clean_phone_number_field(field_name)
         return cleaned_data

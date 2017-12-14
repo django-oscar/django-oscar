@@ -15,7 +15,7 @@ core functionality.
 .. automodule:: oscar.core.loading
     :members: get_classes, get_class
 
-URL patterns and views 
+URL patterns and views
 ----------------------
 
 Oscar's app organise their URLs and associated views using a "Application"
@@ -28,7 +28,7 @@ Oscar projects to subclass and customised URLs and views.
 Prices
 ------
 
-Oscar uses a custom price object for easier tax handling.  
+Oscar uses a custom price object for easier tax handling.
 
 .. automodule:: oscar.core.prices
     :members: Price
@@ -39,4 +39,11 @@ Custom model fields
 Oscar uses a few custom model fields.
 
 .. automodule:: oscar.models.fields
-    :members: 
+    :members:
+
+
+Form helpers
+------------
+
+.. automodule:: oscar.forms.mixins
+    :members:
