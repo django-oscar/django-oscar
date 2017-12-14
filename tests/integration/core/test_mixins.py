@@ -18,7 +18,7 @@ class PhoneNumberMixinTestCase(TestCase):
     def test_mixin_adds_all_phone_number_fields(self):
 
         class TestForm(PhoneNumberMixin, forms.Form):
-            phone_numbers_fields = {
+            phone_number_fields = {
                 'phone_number': {
                     'required': False,
                     'help_text': '',
