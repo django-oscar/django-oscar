@@ -104,10 +104,13 @@ understand it.
 Overriding individual products partials
 ---------------------------------------
 
-Apart from overriding ``catalogue/partials/product.html`` to change the looks
-for all products, you can also override it for individual products by placing
+Apart from overriding ``catalogue/partials/product.html`` to change the look
+for all products, you can also override it for individual product by placing
 templates in ``catalogue/detail-for-upc-%s.html`` or
-``catalogue/detail-for-class-%s.html``, where ``%s`` is the product's UPC
+``catalogue/detail-for-class-%s.html`` to customize look on product detail
+page and ``catalogue/partials/product/upc-%s.html`` or
+``catalogue/partials/product/class-%s.html`` to tweak product rendering by
+``{% render_product %}`` template tag , where ``%s`` is the product's UPC
 or class's slug, respectively.
 
 Example: Changing the analytics package
