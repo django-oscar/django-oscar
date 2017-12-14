@@ -35,7 +35,13 @@ class BasketOwnerCalledBarry(Condition):
         return False
 
 
-class CustomBenefitModel(Benefit):
+class BaseOfferModel(models.Model):
+    class Meta:
+        abstract = True
+        app_label = 'tests'
+
+
+class CustomBenefitModel(BaseOfferModel, Benefit):
 
     name = 'Test benefit'
 
@@ -49,3 +55,17 @@ class CustomBenefitModel(Benefit):
     @property
     def description(self):
         return self.name
+
+
+class CustomBenefitWithoutName(Benefit):
+    class Meta:
+        proxy = True
+        app_label = 'tests'
+
+    description = 'test'
+
+
+class CustomConditionWithoutName(Condition):
+    class Meta:
+        proxy = True
+        app_label = 'tests'

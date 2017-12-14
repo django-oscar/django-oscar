@@ -32,7 +32,11 @@ A benefit class must be a proxy class and have the following methods::
 
         class Meta:
             proxy = True
-        
+
+        @property
+        def name(self):
+            return "My Custom Benefit"
+
         @property
         def description(self):
             """
@@ -57,7 +61,7 @@ A benefit class must be a proxy class and have the following methods::
             """
             Perform a 'post-order action' if one is defined for this benefit
 
-            Should return a message indicating what has happend.  This will be
+            Should return a message indicating what has happened.  This will be
             stored with the order to provide audit of post-order benefits.
             """
 
@@ -66,14 +70,14 @@ As noted in the docstring, the ``apply`` method must return an instance of
 provided:
     
     * ``oscar.apps.offer.models.BasketDiscount``. This takes an amount as it's
-      constructor paramter.
+      constructor parameter.
 
     * ``oscar.apps.offer.models.ShippingDiscount``. This indicates that the
       benefit affects the shipping charge.
 
     * ``oscar.apps.offer.models.PostOrderAction``. This indicates that the
       benefit does nothing to the order total, but does fire an action once the
-      order has been placed.  It takes a single ``description`` paramter to its
+      order has been placed.  It takes a single ``description`` parameter to its
       constructor which is a message that describes what action will be taken
       once the order is placed.
 
@@ -86,7 +90,7 @@ Here's an example of a post-order action benefit::
         class Meta:
             proxy = True
         
-        description = "Changes customer's name"
+        name = description = "Changes customer's name"
 
         def apply(self, basket, condition, offer):
             # We need to mark all items from the matched condition as 'consumed'
