@@ -118,7 +118,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for line in order.lines.all %}
+                                {% for line in lines %}
                                     <tr>
                                         <td>
                                             <input type="checkbox" name="selected_line" value="{{ line.id }}" />

@@ -448,6 +448,9 @@ class OrderDetailView(DetailView):
         return get_order_for_user_or_404(
             self.request.user, self.kwargs['number'])
 
+    def get_order_lines(self):
+        return self.object.lines.all()
+
     def post(self, request, *args, **kwargs):
         # For POST requests, we use a dynamic dispatch technique where a
         # parameter specifies what we're trying to do with the form submission.
@@ -481,7 +484,9 @@ class OrderDetailView(DetailView):
         if len(line_ids) == 0:
             return self.reload_page(error=_(
                 "You must select some lines to act on"))
-        lines = order.lines.filter(id__in=line_ids)
+
+        lines = self.get_order_lines()
+        lines = lines.filter(id__in=line_ids)
         if len(line_ids) != len(lines):
             return self.reload_page(error=_("Invalid lines requested"))
 
@@ -525,6 +530,7 @@ class OrderDetailView(DetailView):
         ctx['note_form'] = self.get_order_note_form()
         ctx['order_status_form'] = self.get_order_status_form()
 
+        ctx['lines'] = self.get_order_lines()
         ctx['line_statuses'] = Line.all_statuses()
         ctx['shipping_event_types'] = ShippingEventType.objects.all()
         ctx['payment_event_types'] = PaymentEventType.objects.all()
