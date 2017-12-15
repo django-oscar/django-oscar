@@ -57,6 +57,21 @@ class CustomBenefitModel(BaseOfferModel, Benefit):
         return self.name
 
 
+class CustomConditionModel(Condition):
+
+    name = 'Test condition'
+
+    class Meta:
+        proxy = True
+        app_label = 'tests'
+
+    def is_satisfied(self, offer, basket):
+        return True
+
+    def can_apply_condition(self, product):
+        return True
+
+
 class CustomBenefitWithoutName(Benefit):
     class Meta:
         proxy = True
