@@ -78,6 +78,14 @@ Minor changes
    Corresponding data migration will update hashes automatically. Take it into
    account that it will take time to run if you have large user base.
 
+ - Compact basket form is no longer displayed for the products with options
+   on product list pages since it caused form elements to impose inside the
+   product box (see :issues:`1976`).
+
+- Added ``has_options`` property to the
+  ``oscar.apps.catalogue.models.Product`` model to indicated whether the
+  instance or its product class has product options.
+
  - ``oscar.core.validators.validate_password`` was removed.
    Use ``django.contrib.auth.password_validation.validate_password`` instead.
 

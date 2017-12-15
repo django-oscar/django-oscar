@@ -495,6 +495,16 @@ class AbstractProduct(models.Model):
         pclass_options = self.get_product_class().options.all()
         return set(pclass_options) or set(self.product_options.all())
 
+    @cached_property
+    def has_options(self):
+        # Extracting annotated value with number of product class options
+        # from product list queryset.
+        num_product_class_options = getattr(self, 'num_product_class_options', None)
+        num_product_options = getattr(self, 'num_product_options', None)
+        if num_product_class_options is not None and num_product_options is not None:
+            return num_product_class_options > 0 or num_product_options > 0
+        return self.get_product_class().options.exists() or self.product_options.exists()
+
     @property
     def is_shipping_required(self):
         return self.get_product_class().requires_shipping
