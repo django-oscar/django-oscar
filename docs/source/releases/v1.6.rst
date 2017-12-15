@@ -75,3 +75,14 @@ Backwards incompatible changes in Oscar 1.6
 
 Dependency changes
 ------------------
+
+
+.. _deprecated_features_in_1.6:
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+The following features have been deprecated in this release:
+
+* ``StockRecord.price_excl_tax`` will be renamed into ``StockRecord.price`` in
+  Oscar 2.0. Please see :issue:`1962` for more details.
