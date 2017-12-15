@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 
 
 class ProductQuerySet(models.query.QuerySet):
@@ -9,12 +10,9 @@ class ProductQuerySet(models.query.QuerySet):
         models to save on queries
         """
         return self.select_related('product_class')\
-            .prefetch_related('children',
-                              'product_options',
-                              'product_class__options',
-                              'stockrecords',
-                              'images',
-                              )
+            .prefetch_related('children', 'product_options', 'product_class__options', 'stockrecords', 'images') \
+            .annotate(num_product_class_options=Count('product_class__options'),
+                      num_product_options=Count('product_options'))
 
     def browsable(self):
         """
