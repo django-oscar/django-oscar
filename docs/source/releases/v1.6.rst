@@ -41,6 +41,9 @@ Minor changes
    signals.
  - Customer transaction emails reworked on top of mailgun layout and has
    better look.
+ - ``SearchHandler.get_search_form`` method now accepts additional
+   keyword arguments, which will be passed on search form class instance
+   initiation.
 
 .. _incompatible_in_1.6:
 

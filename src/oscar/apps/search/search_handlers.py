@@ -63,7 +63,7 @@ class SearchHandler(object):
         """
         return search_form.search()
 
-    def get_search_form(self, request_data, search_queryset):
+    def get_search_form(self, request_data, search_queryset, **form_kwargs):
         """
         Return a bound version of Haystack's search form.
         """
@@ -72,6 +72,7 @@ class SearchHandler(object):
             'selected_facets': request_data.getlist("selected_facets"),
             'searchqueryset': search_queryset
         }
+        kwargs.update(**form_kwargs)
         return self.form_class(**kwargs)
 
     def get_search_queryset(self):
