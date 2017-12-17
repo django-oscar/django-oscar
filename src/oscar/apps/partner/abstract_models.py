@@ -115,7 +115,8 @@ class AbstractStockRecord(models.Model):
     # appropriate method.  We don't store tax here as its calculation is highly
     # domain-specific.  It is NULLable because some items don't have a fixed
     # price but require a runtime calculation (possible from an external
-    # service).
+    # service). Current field name `price_excl_tax` is deprecated and will be
+    # renamed into `price` in Oscar 2.0.
     price_excl_tax = models.DecimalField(
         _("Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
