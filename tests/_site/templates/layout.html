@@ -6,64 +6,68 @@
 {% load i18n %}
 
 {% block layout %}
-<div id="container">
-    <div id="header">
-        <p><a href="{{ homepage_url }}">{% trans "Oscar // Flexible e-commerce for Django" %}</a></p>
 
-        <form method="get" action="{% url 'search:search' %}">
-            {{ search_form.as_p }}
-            <input type="submit" value="{% trans "Go!" %}" />
-        </form>
+    {% block content_wrapper %}
+    <div id="container">
+        <div id="header">
+            <p><a href="{{ homepage_url }}">{% trans "Oscar // Flexible e-commerce for Django" %}</a></p>
 
-        {% if user.is_authenticated %}
-        <a href="{% url 'customer:summary' %}">{% trans "Profile" %}</a>
-        <a href="{% url 'customer:logout' %}">{% trans "Logout" %}</a>
-        {% else %}
-        <a href="{% url 'customer:login' %}">{% trans "Login" %}</a>
-        {% endif %}
+                <form method="get" action="{% url 'search:search' %}">
+                    {{ search_form.as_p }}
+                    <input type="submit" value="{% trans "Go!" %}" />
+                </form>
 
-        {% blocktrans with total=basket.total_incl_tax|currency %}Basket total: {{ total }}{% endblocktrans %}
-        <a href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'customer:summary' %}">{% trans "Profile" %}</a>
+                <a href="{% url 'customer:logout' %}">{% trans "Logout" %}</a>
+                {% else %}
+                <a href="{% url 'customer:login' %}">{% trans "Login" %}</a>
+                {% endif %}
 
-        {% category_tree depth=2 as categories %}
+                {% blocktrans with total=basket.total_incl_tax|currency %}Basket total: {{ total }}{% endblocktrans %}
+                <a href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
 
-        {% if categories %}
-        <ul>
-            {% for category in categories %}
-            <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
-                {% if category.1 %}
+                {% category_tree depth=2 as categories %}
+
+                {% if categories %}
                 <ul>
-                    {% for subcategory in category.1 %}
-                    <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
-                        {% endfor %}
+                    {% for category in categories %}
+                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
+                        {% if category.1 %}
+                        <ul>
+                            {% for subcategory in category.1 %}
+                            <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
+                                {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
                 </ul>
                 {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
 
-        {% block header %}
-        {% endblock %}
-    </div>
-    <div id="content">
+                {% block header %}
+                {% endblock %}
+            </div>
+            <div id="content">
 
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
-        <div id="promotions">
-            {% for promotion in promotions_page %}
-            {% render_promotion promotion %}
-            {% endfor %}
+                <div id="promotions">
+                    {% for promotion in promotions_page %}
+                    {% render_promotion promotion %}
+                    {% endfor %}
+                </div>
+
+                {% block content %}{% endblock %}
+            </div>
+            <div id="footer">{% block footer %}{% endblock %}</div>
         </div>
+    {% endblock %}
 
-        {% block content %}{% endblock %}
-    </div>
-    <div id="footer">{% block footer %}{% endblock %}</div>
-</div>
 {% endblock %}
