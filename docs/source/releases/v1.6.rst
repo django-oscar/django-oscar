@@ -32,7 +32,8 @@ What's new in Oscar 1.6?
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+ - Removed ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting since
+   merchandising block promotions, which used it, already removed for a while.
 
 Minor changes
 ~~~~~~~~~~~~~
