@@ -166,7 +166,11 @@ class AbstractBasket(models.Model):
         self._lines = None
 
     def get_stock_info(self, product, options):
-        "Hook for implementing strategies that depend on product options"
+        """
+        Hook for implementing strategies that depend on product options
+        """
+        # The built-in strategies don't use options, so initially disregard
+        # them.
         return self.strategy.fetch_for_product(product)
 
     def add_product(self, product, quantity=1, options=None):
