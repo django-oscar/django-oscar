@@ -44,6 +44,8 @@ Minor changes
  - ``SearchHandler.get_search_form`` method now accepts additional
    keyword arguments, which will be passed on search form class instance
    initiation.
+ - Added ``get_stock_info`` hook to ``oscar.apps.basket.models.Basket``  for
+   implementing strategies that depend on product options.
 
 .. _incompatible_in_1.6:
 

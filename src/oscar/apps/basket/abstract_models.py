@@ -165,6 +165,14 @@ class AbstractBasket(models.Model):
         self.lines.all().delete()
         self._lines = None
 
+    def get_stock_info(self, product, options):
+        """
+        Hook for implementing strategies that depend on product options
+        """
+        # The built-in strategies don't use options, so initially disregard
+        # them.
+        return self.strategy.fetch_for_product(product)
+
     def add_product(self, product, quantity=1, options=None):
         """
         Add a product to the basket
@@ -188,7 +196,7 @@ class AbstractBasket(models.Model):
 
         # Ensure that all lines are the same currency
         price_currency = self.currency
-        stock_info = self.strategy.fetch_for_product(product)
+        stock_info = self.get_stock_info(product, options)
         if price_currency and stock_info.price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "
@@ -365,7 +373,7 @@ class AbstractBasket(models.Model):
                 pass
             except TypeError:
                 # Handle Unavailable products with no known price
-                info = self.strategy.fetch_for_product(line.product)
+                info = self.get_stock_info(line.product, line.attributes.all())
                 if info.availability.is_available_to_buy:
                     raise
                 pass
