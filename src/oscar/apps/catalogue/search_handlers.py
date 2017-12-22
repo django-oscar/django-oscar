@@ -51,7 +51,7 @@ class SolrProductSearchHandler(SearchHandler):
             # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
             # opposed to filtering using 'q'.
             pattern = ' OR '.join([
-                '"%s"' % c.full_name for c in self.categories])
+                '"%s"' % c.full_name.replace('\"', '\\\"') for c in self.categories])
             sqs = sqs.narrow('category_exact:(%s)' % pattern)
         return sqs
 
