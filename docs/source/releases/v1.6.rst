@@ -62,6 +62,10 @@ Minor changes
  - Product attribute value save now handled by separate methods, similar to
    validation which allows to override save logic for file, multi-option or
    generic attribute values.
+ - Address hash generation is now separated from the summary in order to
+   preserve same behavior when summary property customized (see :issue:`1537`).
+   They can use different field names, listed out in `base_fields` and
+   `hash_fields` respectively.
 
 .. _incompatible_in_1.6:
 

@@ -8,8 +8,21 @@ from oscar.core.compat import get_user_model
 from oscar.apps.address import models
 from oscar.test import factories
 
+from tests._site.model_tests_app.models import (
+    UserAddressModelWithCustomBaseFields, UserAddressModelWithCustomHashFields
+)
 
 User = get_user_model()
+
+
+class UserAddressModelWithCustomBaseFieldsFactory(factories.UserAddressFactory):
+    class Meta:
+        model = UserAddressModelWithCustomBaseFields
+
+
+class UserAddressModelWithCustomHashFieldsFactory(factories.UserAddressFactory):
+    class Meta:
+        model = UserAddressModelWithCustomHashFields
 
 
 class TestUserAddress(TestCase):
@@ -73,12 +86,21 @@ class TestUserAddress(TestCase):
             "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
             a.summary)
 
-    def test_can_be_hashed(self):
+    def test_hash_value(self):
         a = factories.UserAddressFactory.build(
             country=self.country,
             user=self.user)
-        hash = a.generate_hash()
-        self.assertTrue(hash is not None)
+        self.assertEqual(a.generate_hash(), 2668616117)
+
+    def test_hash_and_summary_values_on_model_with_custom_base_fields(self):
+        a = UserAddressModelWithCustomBaseFieldsFactory.build(country=self.country, user=self.user)
+        self.assertEqual(a.summary, '1 King Road, London')
+        self.assertEqual(a.generate_hash(), 2668616117)
+
+    def test_hash_and_summary_values_on_model_with_custom_hash_fields(self):
+        a = UserAddressModelWithCustomHashFieldsFactory.build(country=self.country, user=self.user)
+        self.assertEqual(a.summary, 'Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM')
+        self.assertEqual(a.generate_hash(), 2153195893)
 
     def test_can_be_hashed_including_non_ascii(self):
         a = factories.UserAddressFactory.build(
@@ -168,6 +190,12 @@ class TestUserAddress(TestCase):
         sa = ShippingAddress()
         a.populate_alternative_model(sa)
         self.assertEqual(sa.summary, a.summary)
+
+    def test_summary_value(self):
+        a = factories.UserAddressFactory.build(
+            country=self.country,
+            user=self.user)
+        self.assertEqual(a.summary, 'Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM')
 
     def test_summary_is_property(self):
         a = factories.UserAddressFactory.build(
