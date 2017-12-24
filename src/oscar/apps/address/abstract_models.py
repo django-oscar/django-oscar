@@ -244,6 +244,9 @@ class AbstractAddress(models.Model):
     search_text = models.TextField(
         _("Search text - used only for searching addresses"), editable=False)
 
+    # Fields, used for `summary` property definition and hash generation.
+    base_fields = hash_fields = ['salutation', 'line1', 'line2', 'line3', 'line4', 'state', 'postcode', 'country']
+
     def __str__(self):
         return self.summary
 
@@ -332,25 +335,47 @@ class AbstractAddress(models.Model):
 
     # Helpers
 
-    def generate_hash(self):
-        """
-        Returns a hash of the address summary
-        """
-        # We use an upper-case version of the summary
-        return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
-
-    def join_fields(self, fields, separator=u", "):
-        """
-        Join a sequence of fields using the specified separator
-        """
+    def get_field_values(self, fields):
         field_values = []
         for field in fields:
             # Title is special case
             if field == 'title':
                 value = self.get_title_display()
+            elif field == 'country':
+                try:
+                    value = self.country.printable_name
+                except exceptions.ObjectDoesNotExist:
+                    value = ''
+            elif field == 'salutation':
+                value = self.salutation
             else:
                 value = getattr(self, field)
             field_values.append(value)
+        return field_values
+
+    def get_address_field_values(self, fields):
+        """
+        Returns set of field values within the salutation and country.
+        """
+        field_values = [f.strip() for f in self.get_field_values(fields) if f]
+        return field_values
+
+    def generate_hash(self):
+        """
+        Returns a hash of the address, based on standard set of fields, listed
+        out in `hash_fields` property.
+        """
+        field_values = self.get_address_field_values(self.hash_fields)
+        # Python 2 and 3 generates CRC checksum in different ranges, so
+        # in order to generate platform-independent value we apply
+        # `& 0xffffffff` expression.
+        return zlib.crc32(', '.join(field_values).upper().encode('UTF8')) & 0xffffffff
+
+    def join_fields(self, fields, separator=u", "):
+        """
+        Join a sequence of fields using the specified separator
+        """
+        field_values = self.get_field_values(fields)
         return separator.join(filter(bool, field_values))
 
     def populate_alternative_model(self, address_model):
@@ -367,21 +392,13 @@ class AbstractAddress(models.Model):
             if field_name in destination_field_names and field_name != 'id':
                 setattr(address_model, field_name, getattr(self, field_name))
 
-    def active_address_fields(self, include_salutation=True):
+    def active_address_fields(self):
         """
-        Return the non-empty components of the address, but merging the
-        title, first_name and last_name into a single line.
+        Returns the non-empty components of the address, but merging the
+        title, first_name and last_name into a single line. It uses fields
+        listed out in `base_fields` property.
         """
-        fields = [self.line1, self.line2, self.line3,
-                  self.line4, self.state, self.postcode]
-        if include_salutation:
-            fields = [self.salutation] + fields
-        fields = [f.strip() for f in fields if f]
-        try:
-            fields.append(self.country.printable_name)
-        except exceptions.ObjectDoesNotExist:
-            pass
-        return fields
+        return self.get_address_field_values(self.base_fields)
 
 
 @python_2_unicode_compatible
