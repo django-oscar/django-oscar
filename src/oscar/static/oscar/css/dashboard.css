@@ -8839,3 +8839,5 @@ a .icon-flip-vertical:before {
 .icon-renren {
   *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf18b;');
 }
+
+/*# sourceMappingURL=dashboard.css.map */

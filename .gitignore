@@ -22,6 +22,7 @@ __pycache__
 .pydevproject
 .settings
 .idea
+.vscode
 
 # Docs
 /docs/build/*
