@@ -54,10 +54,15 @@ class BasketView(ModelFormSetView):
             basket=self.request.basket, user=self.request.user,
             request=self.request)
 
+    def get_default_shipping_address(self):
+        if user_is_authenticated(self.request.user):
+            return self.request.user.addresses.filter(is_default_for_shipping=True).first()
+        return
+
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(
             basket=self.request.basket, user=self.request.user,
-            request=self.request)
+            request=self.request, shipping_addr=self.get_default_shipping_address())
 
     def get_basket_warnings(self, basket):
         """
