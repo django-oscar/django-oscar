@@ -270,6 +270,7 @@ class AdvancedSelect(forms.Select):
         super(AdvancedSelect, self).__init__(attrs, choices)
 
     def render_option(self, selected_choices, option_value, option_label):
+        # TODO remove this when Django 1.8 support is dropped
         option_value = force_text(option_value)
         if option_value in self.disabled_values:
             selected_html = mark_safe(' disabled="disabled"')
@@ -284,6 +285,12 @@ class AdvancedSelect(forms.Select):
                            option_value,
                            selected_html,
                            force_text(option_label))
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super(AdvancedSelect, self).create_option(name, value, label, selected, index, subindex, attrs)
+        if force_text(value) in self.disabled_values:
+            option['attrs']['disabled'] = True
+        return option
 
 
 class RemoteSelect(forms.Widget):
