@@ -121,16 +121,12 @@ class AbstractStockRecord(models.Model):
         _("Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    #: Retail price for this item.  This is simply the recommended price from
-    #: the manufacturer.  If this is used, it is for display purposes only.
-    #: This prices is the NOT the price charged to the customer.
+    # Deprecated - will be removed in Oscar 2.0
     price_retail = models.DecimalField(
         _("Price (retail)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    #: Cost price is the price charged by the fulfilment partner.  It is not
-    #: used (by default) in any price calculations but is often used in
-    #: reporting so merchants can report on their profit margin.
+    # Deprecated - will be removed in Oscar 2.0
     cost_price = models.DecimalField(
         _("Cost Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
