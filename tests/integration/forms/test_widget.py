@@ -44,3 +44,22 @@ class TestWidgetsDatetimeFormat(TestCase):
         date = datetime.datetime(2017, 5, 1, 10, 57)
         html = i.render('datetime', date)
         self.assertIn(u'value="δ-01/05/2017 10:57"', html)
+
+
+class AdvancedSelectWidgetTestCase(TestCase):
+
+    def test_widget_disabled_options(self):
+
+        choices = (
+            ('red', 'Red'),
+            ('blue', 'Blue'),
+            ('green', 'Green'),
+        )
+
+        disabled_values = ('red', 'green')
+
+        i = widgets.AdvancedSelect(choices=choices, disabled_values=disabled_values)
+        html = i.render('advselect', [])
+        self.assertInHTML('<option value="blue">Blue</option>', html, count=1)
+        self.assertInHTML('<option value="red" disabled>Red</option>', html, count=1)
+        self.assertInHTML('<option value="green" disabled>Green</option>', html, count=1)
