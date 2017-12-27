@@ -166,7 +166,13 @@ class ProductCategoryView(TemplateView):
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def get_category(self):
-        if 'pk' in self.kwargs:
+        if 'category' in self.kwargs:
+            # in the case of integration with wagtail (cms)
+            # the category is injected into the system viw the as_view
+            # will also allow for hardcoding urls
+            return self.kwargs.get('category')
+
+        elif 'pk' in self.kwargs:
             # Usual way to reach a category page. We just look at the primary
             # key, which is easy on the database. If the slug changed, get()
             # will redirect appropriately.
