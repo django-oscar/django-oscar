@@ -214,15 +214,15 @@ class AutoSlugFieldTest(TestCase):
         self.assertIn("Migration", result)
 
     def safe_exec(self, string, value=None, context=None):
-        l = {}
+        loc = {}
         g = globals()
         g.update(context)
         try:
-            exec(string, g, l)
+            exec(string, g, loc)
         except Exception as e:
             if value:
                 self.fail("Could not exec %r (from value %r): %s" % (
                     string.strip(), value, e))
             else:
                 self.fail("Could not exec %r: %s" % (string.strip(), e))
-        return l
+        return loc
