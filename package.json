@@ -5,12 +5,13 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "gulp": "~3.8.11",
+    "gulp": "~3.9.1",
     "gulp-autoprefixer": "~1.0.1",
     "gulp-less": "^3.0.5",
-    "gulp-sourcemaps": "^1.6.0",
+    "gulp-sourcemaps": "^2.6.2",
     "gulp-watch": "^4.3.5",
     "less": "^2.5.3",
+    "pump": "^1.0.1",
     "require-dir": "^0.3.0"
   },
   "scripts": {
