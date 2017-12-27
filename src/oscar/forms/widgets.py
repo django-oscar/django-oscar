@@ -265,23 +265,6 @@ class AdvancedSelect(forms.Select):
         self.disabled_values = set(force_text(v) for v in disabled_values)
         super(AdvancedSelect, self).__init__(attrs, choices)
 
-    def render_option(self, selected_choices, option_value, option_label):
-        # TODO remove this when Django 1.8 support is dropped
-        option_value = force_text(option_value)
-        if option_value in self.disabled_values:
-            selected_html = mark_safe(' disabled="disabled"')
-        elif option_value in selected_choices:
-            selected_html = mark_safe(' selected="selected"')
-            if not self.allow_multiple_selected:
-                # Only allow for a single selection.
-                selected_choices.remove(option_value)
-        else:
-            selected_html = ''
-        return format_html(u'<option value="{0}"{1}>{2}</option>',
-                           option_value,
-                           selected_html,
-                           force_text(option_label))
-
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super(AdvancedSelect, self).create_option(name, value, label, selected, index, subindex, attrs)
         if force_text(value) in self.disabled_values:
