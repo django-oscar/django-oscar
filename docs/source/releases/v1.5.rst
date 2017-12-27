@@ -2,7 +2,7 @@
 Oscar 1.5 release notes
 =======================
 
-:release: tbd
+:release: 2017-08-10
 
 Welcome to Oscar 1.5
 
