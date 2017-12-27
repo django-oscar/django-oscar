@@ -92,3 +92,11 @@ The following features have been deprecated in this release:
 
 * ``StockRecord.price_excl_tax`` will be renamed into ``StockRecord.price`` in
   Oscar 2.0. Please see :issue:`1962` for more details.
+
+* The ``StockRecord.price_retail`` and ``StockRecord.cost_price`` fields are
+  deprecated and will be removed in Oscar 2.0.
+
+* The ``order.Line.est_dispatch_date``,  ``order.Line.line_price_incl_tax``,
+  ``order.Line.unit_retail_price``, ``order.Line.unit_cost_price`` and
+  ``order.Line.line_price_excl_tax`` fields are deprecated and will be removed
+  in Oscar 2.0.
