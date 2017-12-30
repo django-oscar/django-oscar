@@ -1,9 +1,10 @@
 import unittest
 
 import django
-from django.test import TestCase, override_settings
 from django.core.exceptions import ValidationError
 from django.contrib.flatpages.models import FlatPage
+from django.test import TestCase, override_settings
+from django.utils.translation import activate
 
 from oscar.core.validators import (
     ExtendedURLValidator, URLDoesNotExistValidator, validate_password)
@@ -49,6 +50,75 @@ class TestExtendedURLValidator(TestCase):
             self.validator('/test/page/')
         except ValidationError:
             self.fail('ExtendedURLValidator raises ValidationError'
+                      'unexpectedly!')
+
+
+@override_settings(
+    LANGUAGES=(
+        ('de', 'German'),
+        ('en-gb', 'British English'),
+    )
+)
+class TestExtendedURLValidatorForLocalePrefixURLS(TestCase):
+    def setUp(self):
+        self.validator = ExtendedURLValidator()
+
+    def test_validate_same_locals(self):
+        """
+        Current locale is default ("en-gb"), URL has locale prefix
+        of default and current locale ("en-gb").
+        """
+        try:
+            self.validator('/en-gb/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_prefix_locale_is_non_default(self):
+        """
+        Current locale is default ("en-gb"), URL has locale prefix
+        of non-default locale ("de").
+        """
+        try:
+            self.validator('/de/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_current_locale_is_non_default(self):
+        """
+        Current locale is non-default ("de"), URL has locale prefix
+        of default locale ("en-gb").
+        """
+        activate('de')
+        try:
+            self.validator('/en-gb/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_current_and_prefix_locales_are_non_default_and_same(self):
+        """
+        Current locale is non-default ("de"), URL has locale prefix
+        of non-default locale ("de").
+        """
+        activate('de')
+        try:
+            self.validator('/de/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_current_and_prefix_locales_are_non_default_and_different(self):
+        """
+        Current locale is non-default ("it"), URL has locale prefix
+        of non-default locale ("de").
+        """
+        activate('it')
+        try:
+            self.validator('/de/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
                       'unexpectedly!')
 
 
