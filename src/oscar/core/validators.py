@@ -3,10 +3,11 @@ import keyword
 from django.conf import settings
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, get_urlconf
 from django.http import Http404
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, get_language_from_path, get_language, override
 
+from oscar.core.compat import is_language_prefix_patterns_used
 from oscar.core.loading import get_model
 
 
@@ -27,8 +28,7 @@ class ExtendedURLValidator(validators.URLValidator):
             else:
                 raise
 
-    def validate_local_url(self, value):
-        value = self.clean_url(value)
+    def _validate_url(self, value):
         try:
             resolve(value)
         except Http404:
@@ -45,6 +45,29 @@ class ExtendedURLValidator(validators.URLValidator):
             raise ValidationError(_('The URL "%s" does not exist') % value)
         else:
             self.is_local_url = True
+
+    def validate_local_url(self, value):
+        value = self.clean_url(value)
+        # If we have i18n pattern in the URLconf, by default it will be
+        # resolved against default language by `LocaleRegexURLResolver`. In
+        # this case, it won't resolve the path /de/catalogue/ when default
+        # language code is "en-gb" and so that path validation won't pass,
+        # which is incorrect. In order to work it around, we extract language
+        # code from URL and override current locale within the locale prefix of
+        # the URL.
+        urlconf = get_urlconf()
+        i18n_patterns_used = is_language_prefix_patterns_used(urlconf)
+        redefined_language = None
+        if i18n_patterns_used:
+            language = get_language_from_path(value)
+            current_language = get_language()
+            if language != current_language:
+                redefined_language = language
+        if redefined_language:
+            with override(redefined_language):
+                self._validate_url(value)
+        else:
+            self._validate_url(value)
 
     def clean_url(self, value):
         """
