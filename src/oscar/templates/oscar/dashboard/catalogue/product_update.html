@@ -94,6 +94,7 @@
 
             <div class="col-md-9">
                 <div class="tab-content">
+                    {% block tab_content%}
                     {% block product_details %}
                         <div class="tab-pane active" id="product_details">
                             <div class="table-header">
@@ -308,6 +309,7 @@
                             {% endblock recommended_products_content %}
                         </div>
                     {% endblock recommended_products %}
+                    {%endblock tab_content%}
                 </div>
             </div>
         </div>
