@@ -7,7 +7,7 @@ django-extensions==1.9.8
 psycopg2==2.7.3.2
 
 # Sandbox
-Pillow==4.2.1
+Pillow==5.0.0
 Whoosh==2.7.4
 django-environ==0.4.4
 django-redis==4.8.0
