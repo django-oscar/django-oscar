@@ -726,7 +726,7 @@ class AbstractProductAttribute(models.Model):
         (FLOAT, _("Float")),
         (RICHTEXT, _("Rich Text")),
         (DATE, _("Date")),
-        (DATETIME, ("Datetime")),
+        (DATETIME, _("Datetime")),
         (OPTION, _("Option")),
         (MULTI_OPTION, _("Multi Option")),
         (ENTITY, _("Entity")),
