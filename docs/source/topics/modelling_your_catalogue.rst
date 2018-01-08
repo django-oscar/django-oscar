@@ -90,7 +90,7 @@ type::
     <User: superuser>
 
 You can also use the ``multi_option`` attribute type if your options are not
-mutually exclusive.
+mutually exclusive::
 
     > klass = ProductClass.objects.create(name='foo', slug='bar')
     > ProductAttribute.objects.create(
