@@ -12,6 +12,7 @@
 
     <div class="navbar-collapse account-collapse collapse">
         <div class="container-fluid">
+            {% block nav_account_languages %}
             {% if LANGUAGES|length > 1 %}
                 <form id="language_selector" class="navbar-left navbar-form" action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
@@ -29,6 +30,7 @@
                     <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% trans "Go" %}</button>
                 </form>
             {% endif %}
+            {% endblock %}
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                     <li>
