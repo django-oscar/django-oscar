@@ -33,7 +33,8 @@
             {% endblock %}
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                    <li>
+                {% block nav_account_navbar_authenticated %}
+                <li>
                         {% if num_unread_notifications > 0 %}
                             {# If user has new notifications - we change account link to go to inbox #}
                             <a href="{% url 'customer:notifications-inbox' %}">
@@ -49,6 +50,7 @@
                         <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
                     {% endif %}
                     <li><a id="logout_link" href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                {% endblock %}
                 {% else %}
                     <li><a id="login_link" href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "Login or register" %}</a></li>
                 {% endif %}
