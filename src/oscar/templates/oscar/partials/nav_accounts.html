@@ -12,6 +12,7 @@
 
     <div class="navbar-collapse account-collapse collapse">
         <div class="container-fluid">
+            {% block nav_account_languages %}
             {% if LANGUAGES|length > 1 %}
                 <form id="language_selector" class="navbar-left navbar-form" action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
@@ -29,8 +30,10 @@
                     <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% trans "Go" %}</button>
                 </form>
             {% endif %}
+            {% endblock %}
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
+                {% block nav_account_navbar_authenticated %}
                     <li>
                         {% if num_unread_notifications > 0 %}
                             {# If user has new notifications - we change account link to go to inbox #}
@@ -47,6 +50,7 @@
                         <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
                     {% endif %}
                     <li><a id="logout_link" href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                {% endblock %}
                 {% else %}
                     <li><a id="login_link" href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "Login or register" %}</a></li>
                 {% endif %}
