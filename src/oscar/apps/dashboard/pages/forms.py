@@ -22,8 +22,19 @@ class PageUpdateForm(forms.ModelForm):
     and *content* field. The specified URL will be validated and check if
     the same URL already exists in the system.
     """
-    url = forms.CharField(max_length=128, required=False, label=_("URL"),
-                          help_text=_("Example: '/about/contact/'."))
+    url = forms.RegexField(
+        label=_("URL"),
+        max_length=100,
+        regex=r'^[-\w/\.~]+$',
+        required=False,
+        help_text=_("Example: '/about/contact/'."),
+        error_messages={
+            "invalid": _(
+                "This value must contain only letters, numbers, dots, "
+                "underscores, dashes, slashes or tildes."
+            ),
+        },
+    )
 
     def clean_url(self):
         """
