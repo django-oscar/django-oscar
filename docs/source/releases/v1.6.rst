@@ -47,6 +47,9 @@ Minor changes
    initiation.
  - Added ``get_stock_info`` hook to ``oscar.apps.basket.models.Basket``  for
    implementing strategies that depend on product options.
+ - Fixed the page create/update views in the dashboard to correctly validate
+   URLs. Invalid characters in URLs will raise a validation error, as will
+   URLs longer than 100 characters.
 
 .. _incompatible_in_1.6:
 
