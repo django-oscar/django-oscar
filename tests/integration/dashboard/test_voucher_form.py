@@ -38,7 +38,7 @@ class TestVoucherForm(test.TestCase):
 class TestVoucherSetForm:
 
     def test_valid_form(self):
-        range = RangeFactory(includes_all_products=True)
+        a_range = RangeFactory(includes_all_products=True)
 
         start = timezone.now()
         end = start + timedelta(days=1)
@@ -49,7 +49,7 @@ class TestVoucherSetForm:
             'start_datetime': start,
             'end_datetime': end,
             'count': 10,
-            'benefit_range': range.pk,
+            'benefit_range': a_range.pk,
             'benefit_type': 'Percentage',
             'benefit_value': 10,
         }

@@ -7,7 +7,7 @@ from oscar.test.factories.offer import RangeFactory
 
 @pytest.mark.django_db
 def test_voucherform_set_create():
-    range = RangeFactory(
+    a_range = RangeFactory(
         includes_all_products=True
     )
     data = MultiValueDict({
@@ -17,7 +17,7 @@ def test_voucherform_set_create():
         'description': ['This is a 10% discount for mailing X'],
         'start_datetime': ['2014-10-01'],
         'end_datetime': ['2018-10-01'],
-        'benefit_range': [range.pk],
+        'benefit_range': [a_range.pk],
         'benefit_type': ['Percentage'],
         'benefit_value': ['10'],
     })
