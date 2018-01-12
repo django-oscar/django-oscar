@@ -96,7 +96,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
         # checking for empty string rather then True is required
         # as zero is a valid value for 'status' but would be
         # evaluated to False
-        if bool(str(status)):
+        if status != '':
             queryset = queryset.filter(status=status).distinct()
             display_status = self.form.get_friendly_status()
             self.desc_ctx['status_filter'] \
@@ -104,7 +104,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
         return queryset
 
     def add_filter_keyword(self, queryset, keyword):
-        if bool(str(keyword)):
+        if keyword:
             queryset = queryset.filter(
                 Q(title__icontains=keyword) |
                 Q(body__icontains=keyword)
@@ -114,7 +114,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
         return queryset
 
     def add_filter_name(self, queryset, name):
-        if bool(str(name)):
+        if name:
             # If the value is two words, then assume they are first name and
             # last name
             parts = name.split()
