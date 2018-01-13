@@ -38,7 +38,7 @@ def _update_counter(model, field_name, filter_kwargs, increment=1):
         if not affected:
             filter_kwargs[field_name] = increment
             model.objects.create(**filter_kwargs)
-    except IntegrityError:
+    except IntegrityError:      # pragma: no cover
         # get_or_create has a race condition (we should use upsert in supported)
         # databases. For now just ignore these errors
         logger.error(
@@ -68,7 +68,7 @@ def _record_user_order(user, order):
                 num_order_items=order.num_items,
                 total_spent=order.total_incl_tax,
                 date_last_order=order.date_placed)
-    except IntegrityError:
+    except IntegrityError:      # pragma: no cover
         logger.error(
             "IntegrityError in analytics when recording a user order.")
 
