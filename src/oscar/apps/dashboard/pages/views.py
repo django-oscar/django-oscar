@@ -63,11 +63,29 @@ class PageListView(ListView):
         return context
 
 
-class PageCreateView(generic.CreateView):
+class PageCreateUpdateMixin(object):
+
     template_name = 'dashboard/pages/update.html'
     model = FlatPage
     form_class = forms.PageUpdateForm
     context_object_name = 'page'
+
+    def get_success_url(self):
+        msg = render_to_string('oscar/dashboard/pages/messages/saved.html',
+                               {'page': self.object})
+        messages.success(self.request, msg, extra_tags='safe noicon')
+        return reverse('dashboard:page-list')
+
+    def form_valid(self, form):
+        # Ensure saved page is added to the current site
+        page = form.save()
+        if not page.sites.exists():
+            page.sites.add(Site.objects.get_current())
+        self.object = page
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class PageCreateView(PageCreateUpdateMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(PageCreateView, self).get_context_data(**kwargs)
@@ -76,9 +94,8 @@ class PageCreateView(generic.CreateView):
 
     def form_valid(self, form):
         """
-        Store new flatpage from form data. Checks wether a site
-        is specified for the flatpage or sets the current site by
-        default. Additionally, if URL is left blank, a slugified
+        Store new flatpage from form data.
+        Additionally, if URL is left blank, a slugified
         version of the title will be used as URL after checking
         if it is valid.
         """
@@ -93,50 +110,21 @@ class PageCreateView(generic.CreateView):
         except ValidationError:
             pass
         else:
-            # use current site as default for new page
-            page.save()
-            page.sites.add(Site.objects.get_current())
-
-            return HttpResponseRedirect(self.get_success_url(page))
+            return super(PageCreateView, self).form_valid(form)
 
         ctx = self.get_context_data()
         ctx['form'] = form
         return self.render_to_response(ctx)
 
-    def get_success_url(self, page):
-        msg = render_to_string('oscar/dashboard/pages/messages/saved.html',
-                               {'page': page})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:page-list')
 
-
-class PageUpdateView(generic.UpdateView):
+class PageUpdateView(PageCreateUpdateMixin, generic.UpdateView):
     """
     View for updating flatpages from the dashboard.
     """
-    template_name = 'dashboard/pages/update.html'
-    model = FlatPage
-    form_class = forms.PageUpdateForm
-    context_object_name = 'page'
-
     def get_context_data(self, **kwargs):
         ctx = super(PageUpdateView, self).get_context_data(**kwargs)
         ctx['title'] = self.object.title
         return ctx
-
-    def form_valid(self, form):
-        # Ensure saved page is added to the current site
-        page = form.save(commit=False)
-        if not page.sites.exists():
-            page.sites.add(Site.objects.get_current())
-        page.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        msg = render_to_string('oscar/dashboard/pages/messages/saved.html',
-                               {'page': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:page-list')
 
 
 class PageDeleteView(generic.DeleteView):
