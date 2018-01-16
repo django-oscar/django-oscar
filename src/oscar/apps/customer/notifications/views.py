@@ -39,13 +39,7 @@ class InboxView(NotificationListView):
         for obj in qs:
             if not obj.is_read:
                 setattr(obj, 'is_new', True)
-        # ...but then mark everything as read.
-        self.mark_as_read(qs)
         return qs
-
-    def mark_as_read(self, queryset):
-        unread = queryset.filter(date_read=None)
-        unread.update(date_read=now())
 
 
 class ArchiveView(NotificationListView):
@@ -62,6 +56,13 @@ class DetailView(PageTitleMixin, generic.DetailView):
     template_name = 'customer/notifications/detail.html'
     context_object_name = 'notification'
     active_tab = 'notifications'
+
+    def get_object(self, queryset=None):
+        obj = super(DetailView, self).get_object()
+        if not obj.date_read:
+            obj.date_read = now()
+            obj.save()
+        return obj
 
     def get_page_title(self):
         """Append subject to page title"""
