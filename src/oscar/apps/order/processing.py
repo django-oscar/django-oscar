@@ -189,18 +189,30 @@ class EventHandler(object):
                 return False
         return True
 
-    def consume_stock_allocations(self, order, lines, line_quantities):
+    def consume_stock_allocations(self, order, lines=None, line_quantities=None):
         """
-        Consume the stock allocations for the passed lines
+        Consume the stock allocations for the passed lines.
+
+        If no lines/quantities are passed, do it for all lines.
         """
+        if not lines:
+            lines = order.lines.all()
+        if not line_quantities:
+            line_quantities = [line.quantity for line in lines]
         for line, qty in zip(lines, line_quantities):
             if line.stockrecord:
                 line.stockrecord.consume_allocation(qty)
 
-    def cancel_stock_allocations(self, order, lines, line_quantities):
+    def cancel_stock_allocations(self, order, lines=None, line_quantities=None):
         """
-        Cancel the stock allocations for the passed lines
+        Cancel the stock allocations for the passed lines.
+
+        If no lines/quantities are passed, do it for all lines.
         """
+        if not lines:
+            lines = order.lines.all()
+        if not line_quantities:
+            line_quantities = [line.quantity for line in lines]
         for line, qty in zip(lines, line_quantities):
             if line.stockrecord:
                 line.stockrecord.cancel_allocation(qty)
