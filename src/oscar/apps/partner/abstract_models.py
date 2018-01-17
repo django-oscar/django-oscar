@@ -243,6 +243,8 @@ class AbstractStockRecord(models.Model):
     consume_allocation.alters_data = True
 
     def cancel_allocation(self, quantity):
+        if not self.product.product_class.track_stock:
+            return
         # We ignore requests that request a cancellation of more than the
         # amount already allocated.
         self.num_allocated -= min(self.num_allocated, quantity)
