@@ -113,6 +113,52 @@ class TestEventHandler(TestCase):
             "Stock shouldn't have changed, but it did."
         )
 
+    def test_cancel_stock_allocations_track_stock_on(self):
+        product_class = factories.ProductClassFactory(
+            requires_shipping=False, track_stock=True)
+        product = factories.ProductFactory(product_class=product_class)
+        basket = factories.create_basket(empty=True)
+        add_product(basket, D('10.00'), 5, product=product)
+        order = factories.create_order(basket=basket)
+
+        stockrecord = product.stockrecords.get()
+        num_in_stock = stockrecord.num_in_stock
+        num_allocated = stockrecord.num_allocated
+
+        lines = order.lines.all()
+        self.handler.cancel_stock_allocations(
+            order, lines, [line.quantity for line in lines])
+
+        stockrecord.refresh_from_db()
+        self.assertEqual(
+            stockrecord.num_allocated,
+            num_allocated - 5,
+            "Allocated stock should have decreased, but didn't."
+        )
+
+    def test_cancel_stock_allocations_track_stock_off(self):
+        product_class = factories.ProductClassFactory(
+            requires_shipping=False, track_stock=False)
+        product = factories.ProductFactory(product_class=product_class)
+        basket = factories.create_basket(empty=True)
+        add_product(basket, D('10.00'), 5, product=product)
+        order = factories.create_order(basket=basket)
+
+        stockrecord = product.stockrecords.get()
+        num_in_stock = stockrecord.num_in_stock
+        num_allocated = stockrecord.num_allocated
+
+        lines = order.lines.all()
+        self.handler.cancel_stock_allocations(
+            order, lines, [line.quantity for line in lines])
+
+        stockrecord.refresh_from_db()
+        self.assertEqual(
+            stockrecord.num_allocated,
+            num_allocated,
+            "Allocated stock shouldn't have changed, but it did."
+        )
+
 
 class TestTotalCalculation(TestCase):
 
