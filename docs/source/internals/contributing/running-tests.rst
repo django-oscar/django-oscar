@@ -36,7 +36,7 @@ To run all tests against multiple versions of Django and Python, use detox_::
 
     $ detox
 
-You need to have all Python interpreters to test against installed on your 
+You need to have all Python interpreters to test against installed on your
 system. All other requirements are downloaded automatically.
 detox_ is a wrapper around tox_, creating the environments and running the tests
 in parallel. This greatly speeds up the process.
@@ -50,7 +50,7 @@ Kinds of tests
 Tests are split into 3 folders:
 
 * integration - These are for tests that exercise a collection or chain of
-  units, like testing a template tag.  
+  units, like testing a template tag.
 
 * functional - These should be as close to "end-to-end" as possible.  Most of
   these tests should use WebTest to simulate the behaviour of a user browsing
