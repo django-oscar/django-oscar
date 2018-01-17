@@ -5,11 +5,17 @@ Test suite
 Running tests
 -------------
 
-Oscar uses pytest_ to run the tests, which can be invoked using::
+Oscar uses pytest_ to run the tests.
+.. _pytest: http://pytest.org/latest/
+
+First we create a virtualenv and install the required dependencies::
+
+    $ mkvirtualenv oscar-tests
+    $ pip install -e .[test]
+
+Then we invoke pytest using ::
 
     $ py.test
-
-.. _pytest: http://pytest.org/latest/
 
 You can run a subset of the tests by passing a path:
 
