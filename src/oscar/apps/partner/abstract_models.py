@@ -232,6 +232,8 @@ class AbstractStockRecord(models.Model):
         This is used when an item is shipped.  We remove the original
         allocation and adjust the number in stock accordingly
         """
+        if not self.product.product_class.track_stock:
+            return
         if not self.is_allocation_consumption_possible(quantity):
             raise InvalidStockAdjustment(
                 _('Invalid stock consumption request'))
