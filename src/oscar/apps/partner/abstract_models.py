@@ -190,6 +190,9 @@ class AbstractStockRecord(models.Model):
         product is actually shipped, then we 'consume' the allocation.
 
         """
+        # Doesn't make sense to allocate if stock tracking is off.
+        if not self.product.product_class.track_stock:
+            return
         # Send the pre-save signal
         signals.pre_save.send(
             sender=self.__class__,
