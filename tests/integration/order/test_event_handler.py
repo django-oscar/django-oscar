@@ -176,7 +176,6 @@ class TestEventHandler(TestCase):
             "Stock should have decreased, but didn't."
         )
 
-
     def test_cancel_stock_allocations_track_stock_on(self):
         product_class = factories.ProductClassFactory(
             requires_shipping=False, track_stock=True)
@@ -186,7 +185,6 @@ class TestEventHandler(TestCase):
         order = factories.create_order(basket=basket)
 
         stockrecord = product.stockrecords.get()
-        num_in_stock = stockrecord.num_in_stock
         num_allocated = stockrecord.num_allocated
 
         lines = order.lines.all()
@@ -209,7 +207,6 @@ class TestEventHandler(TestCase):
         order = factories.create_order(basket=basket)
 
         stockrecord = product.stockrecords.get()
-        num_in_stock = stockrecord.num_in_stock
         num_allocated = stockrecord.num_allocated
 
         lines = order.lines.all()
