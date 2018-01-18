@@ -180,11 +180,21 @@ class EventHandler(object):
         """
         Check whether stock records still have enough stock to honour the
         requested allocations.
+
+        Lines whose product doesn't track stock are disregarded, which means
+        this method will return True if only non-stock-tracking-lines are
+        passed.
+        This means you can just throw all order lines to this method, without
+        checking whether stock tracking is enabled or not.
+        This is okay, as calling consume_stock_allocations() has no effect for
+        non-stock-tracking lines.
         """
         for line, qty in zip(lines, line_quantities):
             record = line.stockrecord
             if not record:
                 return False
+            if not record.product.product_class.track_stock:
+                continue
             if not record.is_allocation_consumption_possible(qty):
                 return False
         return True

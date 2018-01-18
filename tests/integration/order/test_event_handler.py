@@ -79,6 +79,21 @@ class TestEventHandler(TestCase):
             False,
         )
 
+    def test_are_stock_allocations_available_track_stock_off(self):
+        product_class = factories.ProductClassFactory(
+            requires_shipping=False, track_stock=False)
+        product = factories.ProductFactory(product_class=product_class)
+        basket = factories.create_basket(empty=True)
+        add_product(basket, D('10.00'), 5, product=product)
+        order = factories.create_order(basket=basket)
+
+        line = order.lines.get()
+        self.assertEqual(
+            self.handler.are_stock_allocations_available(
+                [line], [105]),
+            True,
+        )
+
     def test_consume_stock_allocations_track_stock_on(self):
         product_class = factories.ProductClassFactory(
             requires_shipping=False, track_stock=True)
