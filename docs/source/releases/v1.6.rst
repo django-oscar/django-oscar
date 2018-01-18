@@ -50,6 +50,10 @@ Minor changes
  - Fixed the page create/update views in the dashboard to correctly validate
    URLs. Invalid characters in URLs will raise a validation error, as will
    URLs longer than 100 characters.
+ - Default shipping method on basket summary page uses default user shipping
+   address in order to calculate indicative shipping cost. Default shipping
+   address definition can be overridden in
+   ``oscar.apps.basket.views.BasketView.get_default_shipping_address`` method.
 
 .. _incompatible_in_1.6:
 
