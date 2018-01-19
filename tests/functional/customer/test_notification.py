@@ -4,6 +4,7 @@ from oscar.test.factories import UserFactory
 from django.utils.six.moves import http_client
 from django.core.urlresolvers import reverse
 
+
 class TestAUserWithUnreadNotifications(WebTestCase):
 
     def setUp(self):
@@ -15,7 +16,7 @@ class TestAUserWithUnreadNotifications(WebTestCase):
         self.assertTrue('num_unread_notifications' in homepage.context)
         self.assertEqual(1, homepage.context['num_unread_notifications'])
 
-        path = reverse('notifications-inbox:anon-order' )
+        path = reverse('notifications-inbox:anon-order')
         response = self.app.get(path)
         self.assertEqual(http_client.OK, response.status_code)
         # number of notifications should not change if we view the notofication list

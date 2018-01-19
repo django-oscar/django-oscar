@@ -59,10 +59,9 @@ class DetailView(PageTitleMixin, generic.DetailView):
     active_tab = 'notifications'
 
     def get_object(self, queryset=None):
-        obj = get_object_or_404(self.model, recipient=self.request.user,
-                                 id=self.kwargs['pk'])
+        obj = get_object_or_404(self.model, recipient=self.request.user, id=self.kwargs['pk'])
         if not obj.date_read:
-            obj.date_read=now()
+            obj.date_read = now()
             obj.save()
         return obj
 
