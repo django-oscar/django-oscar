@@ -16,7 +16,7 @@ class TestAUserWithUnreadNotifications(WebTestCase):
         self.assertTrue('num_unread_notifications' in homepage.context)
         self.assertEqual(1, homepage.context['num_unread_notifications'])
 
-        path = reverse('notifications-inbox:anon-order')
+        path = reverse('customer:notifications-inbox')
         response = self.app.get(path)
         self.assertEqual(http_client.OK, response.status_code)
         # number of notifications should not change if we view the notofication list
