@@ -108,8 +108,8 @@ All attribute types apart from ``entity`` can be edited in the product
 dashboard. The latter is too dependent on your use case and you will need to
 decide yourself how you want to set and display it.
 
-Parent and child products
--------------------------
+Variants (Parent and child products)
+------------------------------------
 
 Often there's an overarching product, which groups other products. In that
 case, you can create a parent product, and then set the ``parent`` field on the
