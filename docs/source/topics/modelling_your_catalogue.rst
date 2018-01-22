@@ -118,6 +118,17 @@ get their own URL.
 Child products inherit their product class from the parent, and only child
 products can have stock records (read: pricing information) on them.
 
+Product attributes vs. variants
+-------------------------------
+
+When to use variants, and when to use attributes?
+
+- Variants are tied to stock records, and hence, pricing.
+  Use variants if your product variations have different pricing or availability.
+
+- Use attributes when you are storing structured data for a product (ie. color, size)
+  that you can use for search/filtering/display purposes.
+
 Going further
 -------------
 
