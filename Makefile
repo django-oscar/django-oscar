@@ -34,10 +34,10 @@ docs:
 	cd docs && make html
 
 test:
-	py.test 
+	py.test
 
 retest:
-	py.test --lf 
+	py.test --lf
 
 coverage:
 	py.test --cov=oscar --cov-report=term-missing
@@ -70,7 +70,7 @@ clean:
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
 
 todo:
-	# Look for areas of the code that need updating when some event has taken place (like 
+	# Look for areas of the code that need updating when some event has taken place (like
 	# Oscar dropping support for a Django version)
 	-grep -rnH TODO *.txt
 	-grep -rnH TODO src/oscar/apps/
