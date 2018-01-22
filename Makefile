@@ -30,8 +30,12 @@ sandbox: install build_sandbox
 sandbox_image:
 	docker build -t django-oscar-sandbox:latest .
 
-docs:
-	cd docs && make html
+venv-docs:
+	virtualenv --python=$(shell which python3.5) venv-docs
+	venv-docs/bin/pip install -r docs/requirements.txt
+
+docs: venv-docs
+	make -C docs html SPHINXBUILD=$(PWD)/venv-docs/bin/sphinx-build
 
 test:
 	py.test

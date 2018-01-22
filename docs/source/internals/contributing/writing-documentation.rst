@@ -6,6 +6,9 @@ Directory Structure
 -------------------
 
 The docs are built by calling ``make docs`` from your Oscar directory.
+Note: This requires Python < 3.6, as `transifex-client` doesn't support that yet.
+The ``make docs`` command currently uses `python3.5`.
+
 They live in ``/docs/source``. This directory structure is a
 simplified version of what Django does.
 
