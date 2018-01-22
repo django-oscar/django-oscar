@@ -242,13 +242,13 @@ Videos
 
 Videos with talks about Oscar:
 
-* video1_ - "An introduction to Django-oscar" by `David Winterbottom`_, DjangoCon Europe 2014
-* video2_ - "Oscar and the art of transactional Django applications" by `David Winterbottom`_, PyCon PL 2014
-* video3_ - "The Tale of Oscar and the API" by `Kees Hink`_, PyGrunn 2017
+* `An introduction to Django-oscar`_ by `David Winterbottom`_, DjangoCon Europe 2014
+* `Oscar and the art of transactional Django applications`_ by `David Winterbottom`_, PyCon PL 2014
+* `The Tale of Oscar and the API`_ by `Kees Hink`_, PyGrunn 2017
 
-.. _video1: https://youtu.be/o4ol6EzGDSw
-.. _video2: https://youtu.be/datKUNTKYz8
-.. _video3: https://youtu.be/YPnKoiyGIHM
+.. _`An introduction to Django-oscar`: https://youtu.be/o4ol6EzGDSw
+.. _`Oscar and the art of transactional Django applications`: https://youtu.be/datKUNTKYz8
+.. _`The Tale of Oscar and the API`: https://youtu.be/YPnKoiyGIHM
 .. _`Kees Hink`: https://github.com/khink
 
 License
