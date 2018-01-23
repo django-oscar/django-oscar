@@ -25,7 +25,6 @@ Contents:
 Further reading:
 
 * `Official homepage`_
-* `Sandbox site`_ (automatically deployed via the official docker sandbox image)
 * `Documentation`_ on the excellent `readthedocs.org`_
 * `Docker image`_ on http://hub.docker.com/
 * `django-oscar group`_ - mailing list for questions and announcements
@@ -66,7 +65,6 @@ Docs status:
 .. end-no-pypi
 
 .. _`Official homepage`: http://oscarcommerce.com
-.. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
 .. _`Documentation`: https://django-oscar.readthedocs.io/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
@@ -78,7 +76,7 @@ Docs status:
 .. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
-.. _`Slack`: https://slack.oscarcommerce.com/
+.. _`Slack`: https://django-oscar.slack.com/
 
 Core team:
 
@@ -118,14 +116,9 @@ good starting point for rapidly building elegant e-commerce sites.
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dashboard.thumb.png
     :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dashboard.png
 
-The sandbox site is also available to browse at
-https://latest.oscarcommerce.com.  Dashboard users can be created using `this
-gateway page`_.
-
 The sandbox site can be set-up locally `in 5 commands`_.  Want to
 make changes?  Check out the `contributing guidelines`_.
 
-.. _`this gateway page`: http://latest.oscarcommerce.com/gateway/
 .. _`in 5 commands`: https://django-oscar.readthedocs.io/en/latest/internals/sandbox.html#running-the-sandbox-locally
 .. _`contributing guidelines`: https://django-oscar.readthedocs.io/en/latest/internals/contributing/index.html
 
