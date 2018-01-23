@@ -108,8 +108,8 @@ All attribute types apart from ``entity`` can be edited in the product
 dashboard. The latter is too dependent on your use case and you will need to
 decide yourself how you want to set and display it.
 
-Parent and child products
--------------------------
+Variants (Parent and child products)
+------------------------------------
 
 Often there's an overarching product, which groups other products. In that
 case, you can create a parent product, and then set the ``parent`` field on the
@@ -117,6 +117,17 @@ child products. By default, only parent products (or products without children)
 get their own URL.
 Child products inherit their product class from the parent, and only child
 products can have stock records (read: pricing information) on them.
+
+Product attributes vs. variants
+-------------------------------
+
+When to use variants, and when to use attributes?
+
+- Variants are tied to stock records, and hence, pricing.
+  Use variants if your product variations have different pricing or availability.
+
+- Use attributes when you are storing structured data for a product (ie. color, size)
+  that you can use for search/filtering/display purposes.
 
 Going further
 -------------
