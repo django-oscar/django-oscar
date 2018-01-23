@@ -33,7 +33,10 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
+    {% block form %}
+        <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
+    {% endblock %}
+
         {% csrf_token %}
 
         {% if parent %}
