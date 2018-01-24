@@ -30,14 +30,18 @@ sandbox: install build_sandbox
 sandbox_image:
 	docker build -t django-oscar-sandbox:latest .
 
-docs:
-	cd docs && make html
+venv-docs:
+	virtualenv --python=$(shell which python3.5) venv-docs
+	venv-docs/bin/pip install -r docs/requirements.txt
+
+docs: venv-docs
+	make -C docs html SPHINXBUILD=$(PWD)/venv-docs/bin/sphinx-build
 
 test:
-	py.test 
+	py.test
 
 retest:
-	py.test --lf 
+	py.test --lf
 
 coverage:
 	py.test --cov=oscar --cov-report=term-missing
@@ -70,7 +74,7 @@ clean:
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
 
 todo:
-	# Look for areas of the code that need updating when some event has taken place (like 
+	# Look for areas of the code that need updating when some event has taken place (like
 	# Oscar dropping support for a Django version)
 	-grep -rnH TODO *.txt
 	-grep -rnH TODO src/oscar/apps/
