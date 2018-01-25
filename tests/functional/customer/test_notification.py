@@ -34,4 +34,5 @@ class TestAUserWithUnreadNotifications(WebTestCase):
         response = self.app.get(path)
         self.assertEqual(http_client.OK, response.status_code)
         # number of notifications should not change if we visit the notification list
+        homepage = self.app.get('/', user=self.user)
         self.assertEqual(0, homepage.context['num_unread_notifications'])
