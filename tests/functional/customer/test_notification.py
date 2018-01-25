@@ -28,7 +28,7 @@ class TestAUserWithUnreadNotifications(WebTestCase):
     def test_notification_mark_it_as_read(self):
         homepage = self.app.get('/', user=self.user)
         self.assertEqual(1, homepage.context['num_unread_notifications'])
-        path = reverse('customer:notifications-detail', pk = 1 )
+        path = reverse('customer:notifications-detail', kwargs={'pk': 1} )
         response = self.app.get(path)
         self.assertEqual(http_client.OK, response.status_code)
         # number of notifications should not change if we visit the notification list
