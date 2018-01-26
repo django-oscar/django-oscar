@@ -7,6 +7,7 @@ from oscar.apps.customer.models import Notification
 
 TEST_MSG_TEXT = "Test message with code 123x456c789"
 
+
 class TestAUserWithUnreadNotifications(WebTestCase):
 
     def setUp(self):
@@ -29,8 +30,8 @@ class TestAUserWithUnreadNotifications(WebTestCase):
     def test_notification_mark_it_as_read(self):
         homepage = self.app.get('/', user=self.user)
         self.assertEqual(1, homepage.context['num_unread_notifications'])
-        n = Notification.objects.get( subject = TEST_MSG_TEXT )
-        path = reverse('customer:notifications-detail', kwargs={'pk': n.id} )
+        n = Notification.objects.get(subject=TEST_MSG_TEXT)
+        path = reverse('customer:notifications-detail', kwargs={'pk': n.id})
         response = self.app.get(path)
         self.assertEqual(http_client.OK, response.status_code)
         # number of notifications should not change if we visit the notification list
