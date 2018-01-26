@@ -138,5 +138,7 @@ class ObjectLookupView(View):
 
         return HttpResponse(json.dumps({
             'results': [self.format_object(obj) for obj in qs],
-            'more': more,
+            'pagination': {
+                "more": more
+            },
         }), content_type='application/json')
