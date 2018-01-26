@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 import datetime
+from unittest import skipIf
 
+from django import forms, VERSION
 from django.test import TestCase
 
+from oscar.apps.catalogue.models import Product
+from django.core.urlresolvers import reverse_lazy
 from oscar.forms import widgets
+from oscar.test.factories import create_product
 
 
 class TestWidgetsDatetimeFormat(TestCase):
@@ -63,3 +68,43 @@ class AdvancedSelectWidgetTestCase(TestCase):
         self.assertInHTML('<option value="blue">Blue</option>', html, count=1)
         self.assertInHTML('<option value="red" disabled>Red</option>', html, count=1)
         self.assertInHTML('<option value="green" disabled>Green</option>', html, count=1)
+
+
+class RemoteSelectTestCase(TestCase):
+
+    def test_remote_url_required(self):
+        with self.assertRaises(ValueError):
+            i = widgets.RemoteSelect()
+
+    @skipIf(VERSION < (1, 11), "Test widget in Django 1.11 and above")
+    def test_widget_renders_only_selected_choices(self):
+        p1 = create_product()
+        p2 = create_product()
+
+        f = forms.ModelChoiceField(
+            queryset=Product.objects.all(),
+            widget=widgets.RemoteSelect(lookup_url=reverse_lazy('dashboard:catalogue-product-lookup'))
+        )
+
+        form_choices = list(f.widget.options(name='name', value=[p2.pk]))
+
+        # We should only have one choice, not two
+        self.assertEqual(len(form_choices), 1)
+        self.assertEqual(form_choices[0]['value'], p2.pk)
+
+    @skipIf(VERSION >= (1, 9), "Test widget in Django 1.8 and above")
+    def test_django18_widget_renders_only_selected_choices(self):
+        p1 = create_product()
+        p2 = create_product()
+
+        f = forms.ModelChoiceField(
+            queryset=Product.objects.all(),
+            widget=widgets.RemoteSelect(lookup_url=reverse_lazy('dashboard:catalogue-product-lookup'))
+        )
+
+        html = f.widget.render(name='name', value=p2.pk)
+
+        # We should only have one choice, not two
+        self.assertHTMLEqual(html, '''<select name="name">
+                                  <option value="{}" selected="selected">{}</option>
+                                  </select>'''.format(p2.pk, p2.title))
