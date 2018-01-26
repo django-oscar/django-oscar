@@ -36,4 +36,4 @@ class TestAUserWithUnreadNotifications(WebTestCase):
         self.assertEqual(http_client.OK, response.status_code)
         # notification should be marked as read
         n = Notification.objects.get(subject=TEST_MSG_TEXT)
-        self.assertTrue(n.is_read())
+        self.assertTrue(n.is_read)
