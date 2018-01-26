@@ -25,11 +25,16 @@
                                 {% if notification.is_new %}
                                     <i class="icon-envelope"></i>
                                 {% else %}
-                                    <i class="icon-envelope"></i>
+                                    <i class="icon-inbox"></i>
                                 {% endif %}
                             </td>
                             <td>
-                                {{ notification.subject|safe }} <br/>
+                                {% if notification.is_new %}
+                                    <strong>{{ notification.subject|safe }}</strong>
+                                {% else %}
+                                    {{ notification.subject|safe }} 
+                                {% endif %}
+                                <br/>
                                 <em>{{ notification.date_sent }}</em> 
                             </td>
                             <td>
