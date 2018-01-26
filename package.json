@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
+    "bootstrap": "^3.3.7",
     "gulp": "~3.9.1",
     "gulp-autoprefixer": "~1.0.1",
     "gulp-less": "^3.0.5",
