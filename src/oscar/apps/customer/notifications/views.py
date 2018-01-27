@@ -32,14 +32,9 @@ class InboxView(NotificationListView):
     list_type = 'inbox'
 
     def get_queryset(self):
-        qs = self.model._default_manager.filter(
+        return self.model._default_manager.filter(
             recipient=self.request.user,
             location=self.model.INBOX)
-        # Mark unread notifications so they can be rendered differently...
-        for obj in qs:
-            if not obj.is_read:
-                setattr(obj, 'is_new', True)
-        return qs
 
 
 class ArchiveView(NotificationListView):
