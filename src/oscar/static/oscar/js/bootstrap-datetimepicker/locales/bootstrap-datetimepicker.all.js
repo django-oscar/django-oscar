@@ -15,6 +15,24 @@
 		rtl: true
 	};
 }(jQuery));
+
+/**
+ * Azerbaijani translation for bootstrap-datetimepicker
+ * Konstantin Kaluzhnikov <k.kaluzhnikov@gmail.com>
+ */
+;(function($){
+	$.fn.datetimepicker.dates['az'] = {
+		days: ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə", "Bazar"],
+		daysShort: ["B", "Be", "Ça", "Ç", "Ca", "C", "Ş", "B"],
+		daysMin: ["B", "Be", "Ça", "Ç", "Ca", "C", "Ş", "B"],
+		months: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"],
+		monthsShort: ["Yan", "Fev", "Mar", "Apr", "May", "İyun", "İyul", "Avq", "Sen", "Okt", "Noy", "Dek"],
+		today: "Bugün",
+		suffix: [],
+		meridiem: []
+	};
+}(jQuery));
+
 /**
  * Bulgarian translation for bootstrap-datetimepicker
  * Apostol Apostolov <apostol.s.apostolov@gmail.com>
@@ -29,6 +47,23 @@
 		today: "днес",
 		suffix: [],
 		meridiem: []
+	};
+}(jQuery));
+
+/**
+ * Bangla(Bangladesh) translation for bootstrap-datetimepicker
+ * Mahbub Rabbani <mahbub [dot] rucse [at] gmail.com>
+ */
+;(function($){
+	$.fn.datetimepicker.dates['bn'] = {
+		days: ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহষ্পতিবার", "শুক্রবার", "শনিবার", "রবিবার"],
+		daysShort: ["রবি", "সোম", "মঙ্গল", "বুধ", "  বৃহঃ", "শুক্র", "শনি", "রবি"],
+		daysMin: ["রবি", "সোম", "মঙ্গ", "বুধ", "বৃহ", "শুক্র", "শনি", "রবি"],
+		months: ['জানুয়ারী', 'ফেব্রুয়ারী', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'অগাস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর' ],
+		monthsShort: ['জানু', 'ফেব্রু', 'মার্চ', 'এপ্রি', 'মে', 'জুন', 'জুলা', 'অগা', 'সেপ্টে', 'অক্টো', 'নভে', 'ডিসে' ],
+		today: "আজ",
+		suffix: [],
+		meridiem: ['পূর্বাহ্ণ', 'অপরাহ্ন']
 	};
 }(jQuery));
 /**
@@ -47,6 +82,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Czech translation for bootstrap-datetimepicker
  * Matěj Koubík <matej@koubik.name>
@@ -66,6 +102,7 @@
 		format: "dd.mm.yyyy"
 	};
 }(jQuery));
+
 /**
  * Danish translation for bootstrap-datetimepicker
  * Christian Pedersen <http://github.com/chripede>
@@ -81,7 +118,8 @@
 		suffix: [],
 		meridiem: []
 	};
-}(jQuery));/**
+}(jQuery));
+/**
  * German translation for bootstrap-datetimepicker
  * Sam Zurcher <sam@orelias.ch>
  */
@@ -99,6 +137,7 @@
 		format: "dd.mm.yyyy"
 	};
 }(jQuery));
+
 /**
  * Estonian translation for bootstrap-datetimepicker
  * Rene Korss <http://rene.korss.ee> 
@@ -116,7 +155,8 @@
 		weekStart: 		1,
 		format: 		"dd.mm.yyyy hh:ii"
 	};
-}(jQuery));/**
+}(jQuery));
+/**
 * Greek translation for bootstrap-datetimepicker
 */
 ;(function($){
@@ -130,7 +170,8 @@
 		suffix: [],
 		meridiem: []
   };
-}(jQuery));/**
+}(jQuery));
+/**
  * Spanish translation for bootstrap-datetimepicker
  * Bruno Bonamin <bruno.bonamin@gmail.com>
  */
@@ -146,6 +187,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Finnish translation for bootstrap-datetimepicker
  * Jaakko Salonen <https://github.com/jsalonen>
@@ -162,6 +204,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * French translation for bootstrap-datetimepicker
  * Nico Mollet <nico.mollet@gmail.com>
@@ -177,9 +220,10 @@
 		suffix: [],
 		meridiem: ["am", "pm"],
 		weekStart: 1,
-		format: "dd/mm/yyyy"
+		format: "dd/mm/yyyy hh:ii"
 	};
 }(jQuery));
+
 /**
  * Hebrew translation for bootstrap-datetimepicker
  * Sagie Maoz <sagie@maoz.info>
@@ -197,6 +241,7 @@
       rtl: true
   };
 }(jQuery));
+
 /**
  * Croatian localisation
  */
@@ -212,6 +257,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Hungarian translation for bootstrap-datetimepicker
  * darevish <http://github.com/darevish>
@@ -229,21 +275,44 @@
 		weekStart: 1
 	};
 }(jQuery));
+
 /**
- * Bahasa translation for bootstrap-datetimepicker
- * Azwar Akbar <azwar.akbar@gmail.com>
+ * Armenian translation for bootstrap-datepicker
+ * Hayk Chamyan <hamshen@gmail.com>
  */
 ;(function($){
-	$.fn.datetimepicker.dates['id'] = {
-		days: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
-		daysShort: ["Mgu", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Mgu"],
-		daysMin: ["Mg", "Sn", "Sl", "Ra", "Ka", "Ju", "Sa", "Mg"],
-		months: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
-		monthsShort: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"],
+	$.fn.datetimepicker.dates['hy'] = {
+		days: ["Կիրակի", "Երկուշաբթի", "Երեքշաբթի", "Չորեքշաբթի", "Հինգշաբթի", "Ուրբաթ", "Շաբաթ", "Կիրակի"],
+		daysShort: ["Կիր", "Երկ", "Երք", "Չոր", "Հնգ", "Ուր", "Շաբ", "Կիր"],
+		daysMin: ["Կի", "Եկ", "Եք", "Չո", "Հի", "Ու", "Շա", "Կի"],
+		months: ["Հունվար", "Փետրվար", "Մարտ", "Ապրիլ", "Մայիս", "Հունիս", "Հուլիս", "Օգոստոս", "Սեպտեմբեր", "Հոկտեմբեր", "Նոյեմբեր", "Դեկտեմբեր"],
+		monthsShort: ["Հնվ", "Փետ", "Մար", "Ապր", "Մայ", "Հուն", "Հուլ", "Օգս", "Սեպ", "Հոկ", "Նոյ", "Դեկ"],
+		today: "Այսօր",
 		suffix: [],
 		meridiem: []
 	};
 }(jQuery));
+
+/**
+ * Bahasa translation for bootstrap-datetimepicker
+ * Azwar Akbar <azwar.akbar@gmail.com>
+ * Addtional by Yulian Sutopo <yuliansutopo@gmail.com>
+ */
+;(function($){
+	$.fn.datetimepicker.dates['id'] = {
+		days: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
+		daysShort: ["Mng", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Mng"],
+		daysMin: ["Mg", "Sn", "Sl", "Ra", "Ka", "Ju", "Sa", "Mg"],
+		months: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
+		monthsShort: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"],
+		today: "Hari Ini",
+		suffix: [],
+		meridiem: [],
+		weekStart: 1,
+		format: "dd/mm/yyyy hh:ii:ss"
+	};
+}(jQuery));
+
 /**
  * Icelandic translation for bootstrap-datetimepicker
  * Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
@@ -260,6 +329,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Italian translation for bootstrap-datetimepicker
  * Enrico Rubboli <rubboli@gmail.com>
@@ -278,6 +348,7 @@
 		format: "dd/mm/yyyy hh:ii:ss"
 	};
 }(jQuery));
+
 /**
  * Japanese translation for bootstrap-datetimepicker
  * Norio Suzuki <https://github.com/suzuki/>
@@ -290,6 +361,23 @@
 		months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
 		monthsShort: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
 		today: "今日",
+		suffix: [],
+		meridiem: []
+	};
+}(jQuery));
+
+/**
+ * Georgian translation for bootstrap-datetimepicker
+ * Zura Jijavadze <mailzura@gmail.com>
+ */
+;(function($){
+	$.fn.datetimepicker.dates['ka'] = {
+		days: ["კვირა", "ორშაბათი", "სამშაბათი", "ოთხშაბათი", "ხუთშაბათი", "პარასკევი", "შაბათი", "კვირა"],
+		daysShort: ["კვი", "ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ", "კვი"],
+		daysMin: ["კვ", "ორ", "სა", "ოთ", "ხუ", "პა", "შა", "კვ"],
+		months: ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"],
+		monthsShort: ["იან", "თებ", "მარ", "აპრ", "მაი", "ივნ", "ივლ", "აგვ", "სექ", "ოქტ", "ნოე", "დეკ"],
+		today: "დღეს",
 		suffix: [],
 		meridiem: []
 	};
@@ -311,7 +399,8 @@
         today: "오늘",
 	};
 }(jQuery));
-﻿/**
+
+/**
  * Lithuanian translation for bootstrap-datetimepicker
  * Šarūnas Gliebus <ssharunas@yahoo.co.uk>
  */
@@ -329,6 +418,7 @@
         weekStart: 1
     };
 }(jQuery));
+
 /**
  * Latvian translation for bootstrap-datetimepicker
  * Artis Avotins <artis@apit.lv>
@@ -346,7 +436,8 @@
 		meridiem: [],
         weekStart: 1
     };
-}(jQuery));/**
+}(jQuery));
+/**
  * Malay translation for bootstrap-datetimepicker
  * Ateman Faiz <noorulfaiz@gmail.com>
  */
@@ -362,6 +453,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Norwegian (bokmål) translation for bootstrap-datetimepicker
  * Fredrik Sundmyhr <http://github.com/fsundmyhr>
@@ -377,7 +469,8 @@
 		suffix: [],
 		meridiem: []
 	};
-}(jQuery));/**
+}(jQuery));
+/**
  * Dutch translation for bootstrap-datetimepicker
  * Reinier Goltstein <mrgoltstein@gmail.com>
  */
@@ -393,6 +486,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Norwegian translation for bootstrap-datetimepicker
  * Rune Warhuus <rune@dinkdonkd.no>
@@ -409,6 +503,7 @@
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Polish translation for bootstrap-datetimepicker
  * Robert <rtpm@gazeta.pl>
@@ -426,6 +521,7 @@ $.fn.datetimepicker.dates['pl'] = {
         weekStart: 1
 };
 }(jQuery));
+
 /**
  * Brazilian translation for bootstrap-datetimepicker
  * Cauan Cabral <cauan@radig.com.br>
@@ -443,6 +539,7 @@ $.fn.datetimepicker.dates['pl'] = {
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Portuguese translation for bootstrap-datetimepicker
  * Original code: Cauan Cabral <cauan@radig.com.br>
@@ -456,10 +553,11 @@ $.fn.datetimepicker.dates['pl'] = {
 		months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
 		monthsShort: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
 		suffix: [],
-		meridiem: ["am","pm"],
+		meridiem: [],
 		today: "Hoje"
 	};
 }(jQuery));
+
 /**
  * Romanian translation for bootstrap-datetimepicker
  * Cristian Vasile <cristi.mie@gmail.com>
@@ -477,22 +575,7 @@ $.fn.datetimepicker.dates['pl'] = {
 		weekStart: 1
 	};
 }(jQuery));
-/**
- * Serbian cyrillic translation for bootstrap-datetimepicker
- * Bojan Milosavlević <milboj@gmail.com>
- */
-;(function($){
-	$.fn.datetimepicker.dates['rs'] = {
-		days: ["Недеља","Понедељак", "Уторак", "Среда", "Четвртак", "Петак", "Субота", "Недеља"],
-		daysShort: ["Нед", "Пон", "Уто", "Сре", "Чет", "Пет", "Суб", "Нед"],
-		daysMin: ["Н", "По", "У", "Ср", "Ч", "Пе", "Су", "Н"],
-		months: ["Јануар", "Фебруар", "Март", "Април", "Мај", "Јун", "Јул", "Август", "Септембар", "Октобар", "Новембар", "Децембар"],
-		monthsShort: ["Јан", "Феб", "Мар", "Апр", "Мај", "Јун", "Јул", "Авг", "Сеп", "Окт", "Нов", "Дец"],
-		today: "Данас",
-		suffix: [],
-		meridiem: []
-	};
-}(jQuery));
+
 /**
  * Serbian latin translation for bootstrap-datetimepicker
  * Bojan Milosavlević <milboj@gmail.com>
@@ -509,6 +592,24 @@ $.fn.datetimepicker.dates['pl'] = {
 		meridiem: []
 	};
 }(jQuery));
+
+/**
+ * Serbian cyrillic translation for bootstrap-datetimepicker
+ * Bojan Milosavlević <milboj@gmail.com>
+ */
+;(function($){
+	$.fn.datetimepicker.dates['rs'] = {
+		days: ["Недеља","Понедељак", "Уторак", "Среда", "Четвртак", "Петак", "Субота", "Недеља"],
+		daysShort: ["Нед", "Пон", "Уто", "Сре", "Чет", "Пет", "Суб", "Нед"],
+		daysMin: ["Н", "По", "У", "Ср", "Ч", "Пе", "Су", "Н"],
+		months: ["Јануар", "Фебруар", "Март", "Април", "Мај", "Јун", "Јул", "Август", "Септембар", "Октобар", "Новембар", "Децембар"],
+		monthsShort: ["Јан", "Феб", "Мар", "Апр", "Мај", "Јун", "Јул", "Авг", "Сеп", "Окт", "Нов", "Дец"],
+		today: "Данас",
+		suffix: [],
+		meridiem: []
+	};
+}(jQuery));
+
 /**
  * Russian translation for bootstrap-datetimepicker
  * Victor Taranenko <darwin@snowdale.com>
@@ -524,7 +625,8 @@ $.fn.datetimepicker.dates['pl'] = {
 		suffix: [],
 		meridiem: []
 	};
-}(jQuery));/**
+}(jQuery));
+/**
  * Slovak translation for bootstrap-datetimepicker
  * Marek Lichtner <marek@licht.sk>
  * Fixes by Michal Remiš <michal.remis@gmail.com>
@@ -533,14 +635,17 @@ $.fn.datetimepicker.dates['pl'] = {
 	$.fn.datetimepicker.dates["sk"] = {
 		days: ["Nedeľa", "Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota", "Nedeľa"],
 		daysShort: ["Ned", "Pon", "Uto", "Str", "Štv", "Pia", "Sob", "Ned"],
-		daysMin: ["Ne", "Po", "Ut", "St", "Št", "Pia", "So", "Ne"],
+		daysMin: ["Ne", "Po", "Ut", "St", "Št", "Pi", "So", "Ne"],
 		months: ["Január", "Február", "Marec", "Apríl", "Máj", "Jún", "Júl", "August", "September", "Október", "November", "December"],
 		monthsShort: ["Jan", "Feb", "Mar", "Apr", "Máj", "Jún", "Júl", "Aug", "Sep", "Okt", "Nov", "Dec"],
 		today: "Dnes",
 		suffix: [],
-		meridiem: []
+		meridiem: [],
+		weekStart: 1,
+		format: "dd.mm.yyyy"
 	};
 }(jQuery));
+
 /**
  * Slovene translation for bootstrap-datetimepicker
  * Gregor Rudolf <gregor.rudolf@gmail.com>
@@ -557,6 +662,7 @@ $.fn.datetimepicker.dates['pl'] = {
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Swedish translation for bootstrap-datetimepicker
  * Patrik Ragnarsson <patrik@starkast.net>
@@ -573,6 +679,7 @@ $.fn.datetimepicker.dates['pl'] = {
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Swahili translation for bootstrap-datetimepicker
  * Edwin Mugendi <https://github.com/edwinmugendi>
@@ -590,6 +697,7 @@ $.fn.datetimepicker.dates['pl'] = {
 		meridiem: []
     };
 }(jQuery));
+
 /**
  * Thai translation for bootstrap-datetimepicker
  * Suchau Jiraprapot <seroz24@gmail.com>
@@ -606,6 +714,7 @@ $.fn.datetimepicker.dates['pl'] = {
 		meridiem: []
 	};
 }(jQuery));
+
 /**
  * Turkish translation for bootstrap-datetimepicker
  * Serkan Algur <kaisercrazy_2@hotmail.com>
@@ -623,6 +732,7 @@ $.fn.datetimepicker.dates['pl'] = {
 	};
 }(jQuery));
 
+
 /**
  * Ukrainian translation for bootstrap-datepicker
  * Igor Polynets
@@ -638,6 +748,7 @@ $.fn.datetimepicker.dates['pl'] = {
 		weekStart: 1
 	};
 }(jQuery));
+
 /**
  * Ukrainian translation for bootstrap-datetimepicker
  * Andrey Vityuk <andrey [dot] vityuk [at] gmail.com>
@@ -653,7 +764,8 @@ $.fn.datetimepicker.dates['pl'] = {
 		suffix: [],
 		meridiem: []
 	};
-}(jQuery));/**
+}(jQuery));
+/**
  * Simplified Chinese translation for bootstrap-datetimepicker
  * Yuan Cheung <advanimal@gmail.com>
  */
@@ -664,11 +776,12 @@ $.fn.datetimepicker.dates['pl'] = {
 			daysMin:  ["日", "一", "二", "三", "四", "五", "六", "日"],
 			months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
 			monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-			today: "今日",
+			today: "今天",
 			suffix: [],
 			meridiem: ["上午", "下午"]
 	};
 }(jQuery));
+
 /**
  * Traditional Chinese translation for bootstrap-datetimepicker
  * Rung-Sheng Jang <daniel@i-trend.co.cc>
