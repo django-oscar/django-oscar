@@ -65,7 +65,10 @@ Minor changes
  - Address hash generation is now separated from the summary in order to
    preserve same behavior when summary property customized (see :issue:`1537`).
    They can use different field names, listed out in `base_fields` and
-   `hash_fields` respectively.
+   `hash_fields` respectively. Also hash generation now became
+   platform-independent and generates the same for Python 2 and 3.
+   Corresponding data migration will update hashes automatically. Take it into
+   account that it will take time to run if you have large user base.
 
 .. _incompatible_in_1.6:
 
