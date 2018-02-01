@@ -193,7 +193,7 @@ class EventHandler(object):
             record = line.stockrecord
             if not record:
                 return False
-            if not record.product.product_class.track_stock:
+            if not record.can_track_allocations:
                 continue
             if not record.is_allocation_consumption_possible(qty):
                 return False
