@@ -28,7 +28,7 @@ __pycache__
 /docs/build/*
 *.pdf
 TODO
-venv-docs
+venv
 
 # Test files
 .coverage

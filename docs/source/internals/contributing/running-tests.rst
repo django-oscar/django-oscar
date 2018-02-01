@@ -8,9 +8,19 @@ Running tests
 Oscar uses pytest_ to run the tests.
 .. _pytest: http://pytest.org/latest/
 
+The fast way is::
+
+    $ make test
+
+This will create a virtualenv in `venv`, install the test dependencies and run py.test.
+
+Details
+~~~~~~~
+
 First we create a virtualenv and install the required dependencies::
 
-    $ mkvirtualenv oscar-tests
+    $ virtualenv venv
+    $ source venv/bin/activate
     $ pip install -e .[test]
 
 Then we invoke pytest using ::
