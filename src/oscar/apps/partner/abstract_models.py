@@ -2,6 +2,7 @@ from django.db import models, router
 from django.db.models import F, Value, signals
 from django.db.models.functions import Coalesce
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -180,7 +181,7 @@ class AbstractStockRecord(models.Model):
             return self.num_in_stock
         return self.num_in_stock - self.num_allocated
 
-    @property
+    @cached_property
     def can_track_allocations(self):
         """Return True if the Product is set for stock tracking."""
         return self.product.product_class.track_stock
