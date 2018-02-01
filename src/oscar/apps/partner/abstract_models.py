@@ -2,6 +2,7 @@ from django.db import models, router
 from django.db.models import F, Value, signals
 from django.db.models.functions import Coalesce
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -180,6 +181,11 @@ class AbstractStockRecord(models.Model):
             return self.num_in_stock
         return self.num_in_stock - self.num_allocated
 
+    @cached_property
+    def can_track_allocations(self):
+        """Return True if the Product is set for stock tracking."""
+        return self.product.product_class.track_stock
+
     # 2-stage stock management model
 
     def allocate(self, quantity):
@@ -190,6 +196,9 @@ class AbstractStockRecord(models.Model):
         product is actually shipped, then we 'consume' the allocation.
 
         """
+        # Doesn't make sense to allocate if stock tracking is off.
+        if not self.can_track_allocations:
+            return
         # Send the pre-save signal
         signals.pre_save.send(
             sender=self.__class__,
@@ -232,6 +241,8 @@ class AbstractStockRecord(models.Model):
         This is used when an item is shipped.  We remove the original
         allocation and adjust the number in stock accordingly
         """
+        if not self.can_track_allocations:
+            return
         if not self.is_allocation_consumption_possible(quantity):
             raise InvalidStockAdjustment(
                 _('Invalid stock consumption request'))
@@ -241,6 +252,8 @@ class AbstractStockRecord(models.Model):
     consume_allocation.alters_data = True
 
     def cancel_allocation(self, quantity):
+        if not self.can_track_allocations:
+            return
         # We ignore requests that request a cancellation of more than the
         # amount already allocated.
         self.num_allocated -= min(self.num_allocated, quantity)

@@ -180,27 +180,49 @@ class EventHandler(object):
         """
         Check whether stock records still have enough stock to honour the
         requested allocations.
+
+        Lines whose product doesn't track stock are disregarded, which means
+        this method will return True if only non-stock-tracking-lines are
+        passed.
+        This means you can just throw all order lines to this method, without
+        checking whether stock tracking is enabled or not.
+        This is okay, as calling consume_stock_allocations() has no effect for
+        non-stock-tracking lines.
         """
         for line, qty in zip(lines, line_quantities):
             record = line.stockrecord
             if not record:
                 return False
+            if not record.can_track_allocations:
+                continue
             if not record.is_allocation_consumption_possible(qty):
                 return False
         return True
 
-    def consume_stock_allocations(self, order, lines, line_quantities):
+    def consume_stock_allocations(self, order, lines=None, line_quantities=None):
         """
-        Consume the stock allocations for the passed lines
+        Consume the stock allocations for the passed lines.
+
+        If no lines/quantities are passed, do it for all lines.
         """
+        if not lines:
+            lines = order.lines.all()
+        if not line_quantities:
+            line_quantities = [line.quantity for line in lines]
         for line, qty in zip(lines, line_quantities):
             if line.stockrecord:
                 line.stockrecord.consume_allocation(qty)
 
-    def cancel_stock_allocations(self, order, lines, line_quantities):
+    def cancel_stock_allocations(self, order, lines=None, line_quantities=None):
         """
-        Cancel the stock allocations for the passed lines
+        Cancel the stock allocations for the passed lines.
+
+        If no lines/quantities are passed, do it for all lines.
         """
+        if not lines:
+            lines = order.lines.all()
+        if not line_quantities:
+            line_quantities = [line.quantity for line in lines]
         for line, qty in zip(lines, line_quantities):
             if line.stockrecord:
                 line.stockrecord.cancel_allocation(qty)
