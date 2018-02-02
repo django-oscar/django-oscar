@@ -141,11 +141,8 @@
     <script src="{% static "oscar/js/jquery-sortable/jquery-sortable-min.js" %}"></script>
     <script src="{% static "oscar/js/oscar/dashboard.js" %}"></script>
     <script src="{% static "oscar/js/oscar/RelatedObjectLookups.js" %}"></script>
-
-    {# We don't use a fallback for tinyMCE as it dynamically loads several other files #}
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-    <script src="//cdn.tinymce.com/4/jquery.tinymce.min.js"></script>
-
+    <script src="{% static "oscar/js/tinymce/tinymce.min.js" %}"></script>
+    <script src="{% static "oscar/js/tinymce/jquery.tinymce.min.js" %}"></script>
 {% endblock %}
 
 {% block onbodyload %}

@@ -19,7 +19,8 @@
     "jquery.inputmask": "~3.2.7",
     "less": "^2.5.3",
     "pump": "^1.0.1",
-    "require-dir": "^0.3.0"
+    "require-dir": "^0.3.0",
+    "tinymce": "^4.7.6"
   },
   "scripts": {
     "build": "gulp",
