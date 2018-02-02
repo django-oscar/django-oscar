@@ -11,3 +11,5 @@ Bug fixes
 
 * Fixed ``oscar.core.widgets.AdvancedSelect`` widget behaviour with Django 1.11
   and above.
+
+* Use a local copy of TinyMCE instead of a CDN, because of recent bugs in the CDN.
