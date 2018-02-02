@@ -769,6 +769,43 @@ class AbstractProductAttribute(models.Model):
     def __str__(self):
         return self.name
 
+    def _save_file(self, value_obj, value):
+        # File fields in Django are treated differently, see
+        # django.db.models.fields.FileField and method save_form_data
+        if value is None:
+            # No change
+            return
+        elif value is False:
+            # Delete file
+            value_obj.delete()
+        else:
+            # New uploaded file
+            value_obj.value = value
+            value_obj.save()
+
+    def _save_multi_option(self, value_obj, value):
+        # ManyToMany fields are handled separately
+        if value is None:
+            value_obj.delete()
+            return
+        try:
+            count = value.count()
+        except (AttributeError, TypeError):
+            count = len(value)
+        if count == 0:
+            value_obj.delete()
+        else:
+            value_obj.value = value
+            value_obj.save()
+
+    def _save_value(self, value_obj, value):
+        if value is None or value == '':
+            value_obj.delete()
+            return
+        if value != value_obj.value:
+            value_obj.value = value
+            value_obj.save()
+
     def save_value(self, product, value):   # noqa: C901 too complex
         ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
         try:
@@ -783,39 +820,11 @@ class AbstractProductAttribute(models.Model):
                 product=product, attribute=self)
 
         if self.is_file:
-            # File fields in Django are treated differently, see
-            # django.db.models.fields.FileField and method save_form_data
-            if value is None:
-                # No change
-                return
-            elif value is False:
-                # Delete file
-                value_obj.delete()
-            else:
-                # New uploaded file
-                value_obj.value = value
-                value_obj.save()
+            self._save_file(value_obj, value)
         elif self.is_multi_option:
-            # ManyToMany fields are handled separately
-            if value is None:
-                value_obj.delete()
-                return
-            try:
-                count = value.count()
-            except (AttributeError, TypeError):
-                count = len(value)
-            if count == 0:
-                value_obj.delete()
-            else:
-                value_obj.value = value
-                value_obj.save()
+            self._save_multi_option(value_obj, value)
         else:
-            if value is None or value == '':
-                value_obj.delete()
-                return
-            if value != value_obj.value:
-                value_obj.value = value
-                value_obj.save()
+            self._save_value(value_obj, value)
 
     def validate_value(self, value):
         validator = getattr(self, '_validate_%s' % self.type)

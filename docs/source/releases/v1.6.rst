@@ -59,6 +59,9 @@ Minor changes
    current locale is "en-gb" and URL is "/de/catalogue/" and visa versa due to
    default Django URL resolvers behaviour  - they do not take into account all
    locales, only current.
+ - Product attribute value save now handled by separate methods, similar to
+   validation which allows to override save logic for file, multi-option or
+   generic attribute values.
 
 .. _incompatible_in_1.6:
 
