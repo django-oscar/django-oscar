@@ -7,4 +7,4 @@ class Band(models.Model):
 
 class Member(models.Model):
     name = models.CharField(max_length=100)
-    band = models.ForeignKey(Band)
+    band = models.ForeignKey(Band, models.CASCADE)

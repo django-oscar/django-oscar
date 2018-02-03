@@ -2,9 +2,9 @@ import copy
 import re
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.forms import Widget
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.module_loading import import_string
 from django.utils.safestring import mark_safe
 

@@ -3,8 +3,8 @@ import logging
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import NoReverseMatch, reverse
 from django.http import HttpResponseRedirect
+from django.urls import NoReverseMatch, reverse
 
 from oscar.apps.checkout.signals import post_checkout
 from oscar.core.compat import user_is_authenticated

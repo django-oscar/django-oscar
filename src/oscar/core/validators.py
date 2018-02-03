@@ -3,8 +3,8 @@ import keyword
 from django.conf import settings
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import resolve, get_urlconf
 from django.http import Http404
+from django.urls import resolve, get_urlconf
 from django.utils.translation import ugettext_lazy as _, get_language_from_path, get_language, override
 
 from oscar.core.compat import is_language_prefix_patterns_used

@@ -6,15 +6,11 @@ import django
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+from django.urls import LocaleRegexURLResolver, get_resolver
 from django.utils import six, lru_cache
 
 from oscar.core.loading import get_model
 
-# Backwards compatibility for Django 1.8, which does not have urls package.
-try:
-    from django.urls import LocaleRegexURLResolver, get_resolver
-except ImportError:
-    from django.core.urlresolvers import get_resolver, LocaleRegexURLResolver
 
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
