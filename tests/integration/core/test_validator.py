@@ -1,6 +1,3 @@
-import unittest
-
-import django
 from django.core.exceptions import ValidationError
 from django.contrib.flatpages.models import FlatPage
 from django.test import TestCase, override_settings
