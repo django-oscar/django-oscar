@@ -2,12 +2,10 @@ import codecs
 import csv
 import sys
 
-import django
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import LocaleRegexURLResolver, get_resolver
-from django.utils import six, lru_cache
+from django.utils import six
 
 from oscar.core.loading import get_model
 
@@ -184,18 +182,3 @@ class UnicodeCSVWriter:
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
-
-
-@lru_cache.lru_cache(maxsize=None)
-def is_language_prefix_patterns_used(urlconf):
-    """
-    Almost exact copy of
-    `django.conf.urls.i18n.is_language_prefix_patterns_used`, which was
-    introduced in Django 1.10 in order support Django 1.8 and 1.9. Does not
-    return `prefix_default_language` property of `LocaleRegexURLResolver`,
-    since it's not available in Django 1.8.
-    """
-    for url_pattern in get_resolver(urlconf).url_patterns:
-        if isinstance(url_pattern, LocaleRegexURLResolver):
-            return True
-    return False

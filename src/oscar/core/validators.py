@@ -1,12 +1,12 @@
 import keyword
 
+from django.conf.urls.i18n import is_language_prefix_patterns_used
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.urls import resolve, get_urlconf
 from django.utils.translation import ugettext_lazy as _, get_language_from_path, get_language, override
 
-from oscar.core.compat import is_language_prefix_patterns_used
 from oscar.core.loading import get_model
 
 
@@ -55,7 +55,7 @@ class ExtendedURLValidator(validators.URLValidator):
         # code from URL and override current locale within the locale prefix of
         # the URL.
         urlconf = get_urlconf()
-        i18n_patterns_used = is_language_prefix_patterns_used(urlconf)
+        i18n_patterns_used, _ = is_language_prefix_patterns_used(urlconf)
         redefined_language = None
         if i18n_patterns_used:
             language = get_language_from_path(value)
