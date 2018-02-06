@@ -16,14 +16,15 @@ from django.utils.functional import cached_property
 from django.utils.timezone import get_current_timezone, now
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.offer import results, utils
-from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
 
-BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
+ActiveOfferManager, BrowsableRangeManager \
+    = get_classes('offer.managers', ['ActiveOfferManager', 'BrowsableRangeManager'])
+ZERO_DISCOUNT = get_class('offer.results', 'ZERO_DISCOUNT')
+load_proxy, unit_price = get_classes('offer.utils', ['load_proxy', 'unit_price'])
 
 
 @python_2_unicode_compatible
@@ -46,7 +47,7 @@ class BaseOfferMixin(models.Model):
                 del field_dict[field]
 
         if self.proxy_class:
-            klass = utils.load_proxy(self.proxy_class)
+            klass = load_proxy(self.proxy_class)
             # Short-circuit again.
             if self.__class__ == klass:
                 return self
@@ -293,7 +294,7 @@ class AbstractConditionalOffer(models.Model):
         Applies the benefit to the given basket and returns the discount.
         """
         if not self.is_condition_satisfied(basket):
-            return results.ZERO_DISCOUNT
+            return ZERO_DISCOUNT
         return self.benefit.proxy().apply(
             basket, self.condition.proxy(), self)
 
@@ -523,7 +524,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         }
 
     def apply(self, basket, condition, offer):
-        return results.ZERO_DISCOUNT
+        return ZERO_DISCOUNT
 
     def apply_deferred(self, basket, order, application):
         return None
@@ -661,7 +662,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
                     not self.can_apply_benefit(line)):
                 continue
 
-            price = utils.unit_price(offer, line)
+            price = unit_price(offer, line)
             if not price:
                 # Avoid zero price products
                 continue
@@ -761,7 +762,7 @@ class AbstractCondition(BaseOfferMixin, models.Model):
             if not self.can_apply_condition(line):
                 continue
 
-            price = utils.unit_price(offer, line)
+            price = unit_price(offer, line)
             if not price:
                 continue
             line_tuples.append((price, line))
@@ -836,7 +837,7 @@ class AbstractRange(models.Model):
     @cached_property
     def proxy(self):
         if self.proxy_class:
-            return utils.load_proxy(self.proxy_class)()
+            return load_proxy(self.proxy_class)()
 
     def add_product(self, product, display_order=None):
         """ Add product to the range

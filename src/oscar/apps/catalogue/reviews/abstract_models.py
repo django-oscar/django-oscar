@@ -6,10 +6,13 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
-from oscar.apps.catalogue.reviews.managers import ProductReviewQuerySet
 from oscar.apps.catalogue.reviews.utils import get_default_review_status
 from oscar.core import validators
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_class
+
+
+ProductReviewQuerySet = get_class('catalogue.reviews.managers', 'ProductReviewQuerySet')
 
 
 @python_2_unicode_compatible

@@ -5,11 +5,11 @@ from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
-from oscar.apps.offer import utils
-from oscar.core.loading import get_model
+from oscar.core.loading import get_classes, get_model
 from oscar.templatetags.currency_filters import currency
 
 Condition = get_model('offer', 'Condition')
+range_anchor, unit_price = get_classes('offer.utils', ['range_anchor', 'unit_price'])
 
 __all__ = [
     'CountCondition', 'CoverageCondition', 'ValueCondition'
@@ -33,7 +33,7 @@ class CountCondition(Condition):
     def description(self):
         return self._description % {
             'count': self.value,
-            'range': utils.range_anchor(self.range)}
+            'range': range_anchor(self.range)}
 
     class Meta:
         app_label = 'offer'
@@ -123,7 +123,7 @@ class CoverageCondition(Condition):
     def description(self):
         return self._description % {
             'count': self.value,
-            'range': utils.range_anchor(self.range)}
+            'range': range_anchor(self.range)}
 
     class Meta:
         app_label = 'offer'
@@ -204,7 +204,7 @@ class CoverageCondition(Condition):
             if (self.can_apply_condition(line) and line.product.id not in
                     covered_ids):
                 covered_ids.append(line.product.id)
-                value += utils.unit_price(offer, line)
+                value += unit_price(offer, line)
             if len(covered_ids) >= self.value:
                 return value
         return value
@@ -227,7 +227,7 @@ class ValueCondition(Condition):
     def description(self):
         return self._description % {
             'amount': currency(self.value),
-            'range': utils.range_anchor(self.range)}
+            'range': range_anchor(self.range)}
 
     class Meta:
         app_label = 'offer'
@@ -243,7 +243,7 @@ class ValueCondition(Condition):
         for line in basket.all_lines():
             if (self.can_apply_condition(line) and
                     line.quantity_without_offer_discount(offer) > 0):
-                price = utils.unit_price(offer, line)
+                price = unit_price(offer, line)
                 value_of_matches += price * int(
                     line.quantity_without_offer_discount(offer)
                 )
@@ -258,7 +258,7 @@ class ValueCondition(Condition):
         for line in basket.all_lines():
             if (self.can_apply_condition(line) and
                     line.quantity_without_offer_discount(offer) > 0):
-                price = utils.unit_price(offer, line)
+                price = unit_price(offer, line)
                 value_of_matches += price * int(
                     line.quantity_without_offer_discount(offer)
                 )
@@ -286,7 +286,7 @@ class ValueCondition(Condition):
         # Determine value of items already consumed as part of discount
         value_consumed = D('0.00')
         for line, __, qty in affected_lines:
-            price = utils.unit_price(offer, line)
+            price = unit_price(offer, line)
             value_consumed += price * qty
 
         to_consume = max(0, self.value - value_consumed)

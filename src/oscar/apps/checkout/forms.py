@@ -2,13 +2,13 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.address.forms import AbstractAddressForm
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 from oscar.forms.mixins import PhoneNumberMixin
 
 User = get_user_model()
+AbstractAddressForm = get_class('address.forms', 'AbstractAddressForm')
 Country = get_model('address', 'Country')
 
 

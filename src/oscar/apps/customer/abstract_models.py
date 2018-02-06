@@ -12,9 +12,12 @@ from django.utils import six, timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_class
 from oscar.models.fields import AutoSlugField
+
+
+CommunicationTypeManager = get_class('customer.managers', 'CommunicationTypeManager')
 
 
 class UserManager(auth_models.BaseUserManager):

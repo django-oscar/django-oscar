@@ -3,7 +3,12 @@ from decimal import Decimal as D
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.shipping import methods as shipping_methods
+from oscar.core.loading import get_classes
+
+(Free, NoShippingRequired,
+ TaxExclusiveOfferDiscount, TaxInclusiveOfferDiscount) \
+    = get_classes('shipping.methods', ['Free', 'NoShippingRequired',
+                                       'TaxExclusiveOfferDiscount', 'TaxInclusiveOfferDiscount'])
 
 
 class Repository(object):
@@ -15,7 +20,7 @@ class Repository(object):
     # We default to just free shipping. Customise this class and override this
     # property to add your own shipping methods. This should be a list of
     # instantiated shipping methods.
-    methods = (shipping_methods.Free(),)
+    methods = (Free(),)
 
     # API
 
@@ -27,7 +32,7 @@ class Repository(object):
         if not basket.is_shipping_required():
             # Special case! Baskets that don't require shipping get a special
             # shipping method.
-            return [shipping_methods.NoShippingRequired()]
+            return [NoShippingRequired()]
 
         methods = self.get_available_shipping_methods(
             basket=basket, shipping_addr=shipping_addr, **kwargs)
@@ -83,11 +88,9 @@ class Repository(object):
             return method
 
         if charge.is_tax_known:
-            return shipping_methods.TaxInclusiveOfferDiscount(
-                method, offer)
+            return TaxInclusiveOfferDiscount(method, offer)
         else:
             # When returning a tax exclusive discount, it is assumed
             # that this will be used to calculate taxes which will then
             # be assigned directly to the method instance.
-            return shipping_methods.TaxExclusiveOfferDiscount(
-                method, offer)
+            return TaxExclusiveOfferDiscount(method, offer)

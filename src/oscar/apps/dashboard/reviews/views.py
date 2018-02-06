@@ -7,12 +7,13 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from oscar.apps.dashboard.reviews import forms
-from oscar.core.loading import get_model
+from oscar.core.loading import get_classes, get_model
 from oscar.core.utils import format_datetime
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
 
+ProductReviewSearchForm, DashboardProductReviewForm = \
+    get_classes('dashboard.reviews.forms', ('ProductReviewSearchForm', 'DashboardProductReviewForm'))
 ProductReview = get_model('reviews', 'productreview')
 
 
@@ -20,8 +21,8 @@ class ReviewListView(BulkEditMixin, generic.ListView):
     model = ProductReview
     template_name = 'dashboard/reviews/review_list.html'
     context_object_name = 'review_list'
-    form_class = forms.ProductReviewSearchForm
-    review_form_class = forms.DashboardProductReviewForm
+    form_class = ProductReviewSearchForm
+    review_form_class = DashboardProductReviewForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     actions = ('update_selected_review_status',)
     checkbox_object_name = 'review'
@@ -150,7 +151,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
 class ReviewUpdateView(generic.UpdateView):
     model = ProductReview
     template_name = 'dashboard/reviews/review_update.html'
-    form_class = forms.DashboardProductReviewForm
+    form_class = DashboardProductReviewForm
     context_object_name = 'review'
 
     def get_success_url(self):

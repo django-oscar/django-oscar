@@ -7,13 +7,13 @@ from django.db.models import Max
 from django.template import TemplateDoesNotExist, loader
 
 from oscar.apps.customer.notifications import services
-from oscar.apps.customer.utils import Dispatcher
 from oscar.core.loading import get_class, get_model
 from oscar.utils.deprecation import RemovedInOscar20Warning
 
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
+Dispatcher = get_class('customer.utils', 'Dispatcher')
 Selector = get_class('partner.strategy', 'Selector')
 
 logger = logging.getLogger('oscar.alerts')

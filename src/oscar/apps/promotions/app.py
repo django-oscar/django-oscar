@@ -1,8 +1,11 @@
 from django.conf.urls import url
 
-from oscar.apps.promotions.models import KeywordPromotion, PagePromotion
 from oscar.core.application import Application
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
+
+
+KeywordPromotion = get_model('promotions', 'KeywordPromotion')
+PagePromotion = get_model('promotions', 'PagePromotion')
 
 
 class PromotionsApplication(Application):

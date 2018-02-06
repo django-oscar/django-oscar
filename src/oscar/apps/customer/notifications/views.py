@@ -6,11 +6,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 from django.views import generic
 
-from oscar.apps.customer.mixins import PageTitleMixin
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 from oscar.core.utils import redirect_to_referrer
 from oscar.views.generic import BulkEditMixin
 
+PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 Notification = get_model('customer', 'Notification')
 
 

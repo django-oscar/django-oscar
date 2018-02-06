@@ -6,11 +6,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.alerts import utils
-from oscar.apps.customer.mixins import PageTitleMixin
 from oscar.core.loading import get_class, get_model
 
 Product = get_model('catalogue', 'Product')
 ProductAlert = get_model('customer', 'ProductAlert')
+PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 
 
