@@ -4,13 +4,13 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
-from oscar.apps.customer.forms import EmailUserCreationForm
 from oscar.core.compat import existing_user_fields, get_user_model
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 
 User = get_user_model()
 Partner = get_model('partner', 'Partner')
 PartnerAddress = get_model('partner', 'PartnerAddress')
+EmailUserCreationForm = get_class('customer.forms', 'EmailUserCreationForm')
 
 
 class PartnerSearchForm(forms.Form):

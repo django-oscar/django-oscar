@@ -9,9 +9,8 @@ from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_classes
 from oscar.core.utils import get_default_currency
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
@@ -19,6 +18,7 @@ from oscar.templatetags.currency_filters import currency
 OfferApplications = get_class('offer.results', 'OfferApplications')
 Unavailable = get_class('partner.availability', 'Unavailable')
 LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
+OpenBasketManager, SavedBasketManager = get_classes('basket.managers', ['OpenBasketManager', 'SavedBasketManager'])
 
 
 @python_2_unicode_compatible

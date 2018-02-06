@@ -8,13 +8,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from django.views.generic import ListView
 
-from oscar.apps.dashboard.pages import forms
-from oscar.core.loading import get_model
+from oscar.core.loading import get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import URLDoesNotExistValidator
 
 FlatPage = get_model('flatpages', 'FlatPage')
 Site = get_model('sites', 'Site')
+PageSearchForm, PageUpdateForm = get_classes('dashboard.pages.forms', ('PageSearchForm', 'PageUpdateForm'))
 
 
 class PageListView(ListView):
@@ -23,7 +23,7 @@ class PageListView(ListView):
     """
     template_name = 'dashboard/pages/index.html'
     model = FlatPage
-    form_class = forms.PageSearchForm
+    form_class = PageSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     desc_template = u'%(main_filter)s %(title_filter)s'
 
@@ -67,7 +67,7 @@ class PageCreateUpdateMixin(object):
 
     template_name = 'dashboard/pages/update.html'
     model = FlatPage
-    form_class = forms.PageUpdateForm
+    form_class = PageUpdateForm
     context_object_name = 'page'
 
     def get_success_url(self):

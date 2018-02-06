@@ -4,7 +4,6 @@ from decimal import Decimal as D
 from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.core.compat import UnicodeCSVReader
 from oscar.core.loading import get_class, get_classes
 
@@ -14,6 +13,7 @@ Partner, StockRecord = get_classes('partner.models', ['Partner',
 ProductClass, Product, Category, ProductCategory = get_classes(
     'catalogue.models', ('ProductClass', 'Product', 'Category',
                          'ProductCategory'))
+create_from_breadcrumbs = get_class('catalogue.categories', 'create_from_breadcrumbs')
 
 
 class CatalogueImporter(object):
