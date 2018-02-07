@@ -34,6 +34,13 @@ var gulp = require("gulp"),
 
         gulp.src("node_modules/jquery-sortable/source/js/jquery-sortable-min.js")
             .pipe(gulp.dest("src/oscar/static/oscar/js/jquery-sortable"));
+
+        gulp.src([
+            "node_modules/tinymce/**/*.min.js",
+            "node_modules/tinymce/**/*.min.css",
+            "node_modules/tinymce/**/fonts/*",
+            "node_modules/tinymce/**/img/*",
+        ]).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce"));
     };
 
 gulp.task("copy", copyTask);
