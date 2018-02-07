@@ -71,7 +71,8 @@ class Application(object):
                 self.post_process_urls(pattern.url_patterns)
 
             if isinstance(pattern, URLPattern):
-                # Look for a custom decorator
+                # Apply the custom view decorator (if any) set for this class if this
+                # is a URL Pattern.
                 decorator = self.get_url_decorator(pattern)
                 if decorator:
                     pattern.callback = decorator(pattern.callback)
