@@ -22,6 +22,7 @@ Compatibility
 Oscar 1.6 is compatible with Django 1.11 as well as Python 2.7, 3.4,
 3.5 and 3.6. Django 1.8, 1.9 and 1.10 are no longer supported.
 
+Official support for Django 1.8, 1.9 and 1.10 has been dropped.
 
 .. _new_in_1.6:
 
@@ -33,32 +34,41 @@ Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  - Removed the redundant ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting.
- - Majority of the Oscar imports now using dynamic loading, instead of
-   direct importing for better extensibility and customizability, except
-   signals.
- - Customer transaction emails reworked on top of mailgun layout and has
-   better look.
+
+ - Removed the redundant ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting.
+
+Minor changes
+~~~~~~~~~~~~~
+ - The majority of the Oscar class imports now use dynamic loading, instead of
+   direct importing, for better extensibility and customizability.
+
+ - Customer transaction emails were reworked to use Mailgun templates, so that
+   they have a more modern appearance.
+
  - ``SearchHandler.get_search_form`` method now accepts additional
    keyword arguments, which will be passed on search form class instance
    initiation.
+
  - Added ``get_stock_info`` hook to ``oscar.apps.basket.models.Basket``  for
    implementing strategies that depend on product options.
+
  - Fixed the page create/update views in the dashboard to correctly validate
    URLs. Invalid characters in URLs will raise a validation error, as will
    URLs longer than 100 characters.
- - Default shipping method on basket summary page uses default user shipping
-   address in order to calculate indicative shipping cost. Default shipping
-   address definition can be overridden in
-   ``oscar.apps.basket.views.BasketView.get_default_shipping_address`` method.
+
+ - The default shipping method
+   ( ``oscar.apps.basket.views.BasketView.get_default_shipping_address``)
+   on the basket summary page now uses the user's default shipping address to
+   calculate an indicative shipping cost.
+
  - Fixed `ExtendedURLValidator` for locale-prefixed URLs for locales, different
    from current (see :issue:`1481`). Previously, validation did not pass when
    current locale is "en-gb" and URL is "/de/catalogue/" and visa versa due to
-   default Django URL resolvers behaviour  - they do not take into account all
-   locales, only current.
- - Product attribute value save now handled by separate methods, similar to
-   validation which allows to override save logic for file, multi-option or
-   generic attribute values.
-<<<<<<< HEAD
+   default Django URL resolvers behaviour.
+
+ - Product attribute value save is now handled by separate methods, to make it
+     easier to override this behaviour.
+
  - Address hash generation is now separated from the summary in order to
    preserve same behavior when summary property customized (see :issue:`1537`).
    They can use different field names, listed out in `base_fields` and
@@ -66,20 +76,17 @@ Removal of deprecated features
    platform-independent and generates the same for Python 2 and 3.
    Corresponding data migration will update hashes automatically. Take it into
    account that it will take time to run if you have large user base.
-=======
+
  - ``oscar.core.validators.validate_password`` was removed.
    Use ``django.contrib.auth.password_validation.validate_password`` instead.
+
  - ``oscar.core.validators.CommonPasswordValidator`` was removed. Use ``django.contrib.auth.password_validation.CommonPasswordValidator`` instead.
 
+ - User notifications are marked as read only when viewed in detail, instead of
+   being marked as read in bulk when the notification list was viewed.
 
-Minor changes
-~~~~~~~~~~~~~
-
- - The majority of the Oscar imports now use dynamic loading, instead of
-   direct importing, for better extensibility and customisability.
-
- - Customer transaction emails now use a basic HTML template.
->>>>>>> 96172f0... Update release notes for changes made when dropping support for Django < 1.11
+ - The Google Analytics tracking code provided by Oscar now uses ``gtag.js`` API
+   instead of the deprecated ``analytics.js``.
 
 .. _incompatible_in_1.6:
 
@@ -113,11 +120,31 @@ Backwards incompatible changes in Oscar 1.6
    The offending menu item will be skipped during menu rendering.
    In Oscar 1.8 the exception will be raised without being intercepted.
 
- - All signals are now loaded directly rather than using the dynamic importer.
+ - All signals are now loaded directly rather than using dynamic imports.
+
+ - Stock manipulation (allocation/consumption/cancellation) now only happens if
+   the ``track_stock`` property of the product's class is set to true.
+
+ - jQuery UI was removed from Oscar's static files. Projects that require it
+   should install it at the project level.
+
+ - Compatibility for Internet Explorer version 9 an lower was dropped from Oscar's
+   templates and styles.
 
 Dependency changes
 ------------------
 
+- Upgraded jQuery to version 3.3.1.
+
+- Upgraded Bootstrap to version 3.3.7.
+
+- Upgraded bootstrap-datetimepicker to v2.4.4.
+
+- Upgraded jQuery-mousewheel to v3.1.13.
+
+- Upgraded inputmask to v3.2.7.
+
+- Upgraded jquery-sortable to v0.9.13.
 
 .. _deprecated_features_in_1.6:
 
@@ -137,5 +164,5 @@ The following features have been deprecated in this release:
   ``order.Line.line_price_excl_tax`` fields are deprecated and will be removed
   in Oscar 2.0.
 
-- Support for Django 1.8, 1.9 and 1.10 have been dropped in line with the
+- Support for Django 1.8, 1.9 and 1.10 has been dropped in line with the
   Django project recommendation for third party apps.
