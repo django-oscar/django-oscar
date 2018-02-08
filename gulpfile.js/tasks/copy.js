@@ -41,6 +41,14 @@ var gulp = require("gulp"),
             "node_modules/tinymce/**/fonts/*",
             "node_modules/tinymce/**/img/*",
         ]).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce"));
+
+        gulp.src([
+            "node_modules/select2/dist/js/select2.min.js",
+            "node_modules/select2/dist/css/select2.min.css"
+        ]).pipe(gulp.dest("src/oscar/static/oscar/js/select2"));
+
+        gulp.src("node_modules/select2-bootstrap-theme/dist/*.min.css")
+            .pipe(gulp.dest("src/oscar/static/oscar/css"));
     };
 
 gulp.task("copy", copyTask);

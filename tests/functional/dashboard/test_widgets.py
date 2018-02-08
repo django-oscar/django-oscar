@@ -1,16 +1,13 @@
 from django import forms
-from django.test import override_settings
+from django.test import TestCase, override_settings
 
-from oscar.core.loading import get_class
 from oscar.test.factories import Member
-from oscar.test.testcases import WebTestCase
 
-RelatedFieldWidgetWrapper = get_class('dashboard.widgets',
-                                      'RelatedFieldWidgetWrapper')
+from oscar.apps.dashboard.widgets import RelatedFieldWidgetWrapper
 
 
 @override_settings(ROOT_URLCONF='oscar.test.factories.urls')
-class RelatedFieldWidgetWrapperTests(WebTestCase):
+class RelatedFieldWidgetWrapperTests(TestCase):
 
     def test_custom_widget_render(self):
         class CustomWidget(forms.Select):
