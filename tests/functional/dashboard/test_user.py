@@ -3,12 +3,13 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from webtest import AppError
 
-from oscar.apps.customer.models import ProductAlert
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 from oscar.test.factories import ProductAlertFactory, UserFactory
 from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
+ProductAlert = get_model('customer', 'ProductAlert')
 
 
 class IndexViewTests(WebTestCase):

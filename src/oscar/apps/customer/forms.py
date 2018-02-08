@@ -17,8 +17,7 @@ from oscar.core.compat import existing_user_fields, get_user_model
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.forms import widgets
 
-Dispatcher = get_class('customer.utils', 'Dispatcher')
-CommunicationEventType = get_model('customer', 'communicationeventtype')
+CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
@@ -38,10 +37,8 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
     """
     This form takes the same structure as its parent from :py:mod:`django.contrib.auth`
     """
-    communication_type_code = "PASSWORD_RESET"
 
-    def save(self, domain_override=None, use_https=False, request=None,
-             **kwargs):
+    def save(self, domain_override=None, request=None, **kwargs):
         """
         Generates a one-use only link for resetting password and sends to the
         user.
@@ -53,24 +50,15 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         active_users = User._default_manager.filter(
             email__iexact=email, is_active=True)
         for user in active_users:
-            reset_url = self.get_reset_url(site, request, user, use_https)
-            ctx = {
-                'user': user,
-                'site': site,
-                'reset_url': reset_url}
-            messages = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(user, messages)
+            self.send_password_reset_email(site, user)
 
-    def get_reset_url(self, site, request, user, use_https):
-        # the request argument isn't used currently, but implementors might
-        # need it to determine the correct subdomain
-        reset_url = "%s://%s%s" % (
-            'https' if use_https else 'http',
-            site.domain,
-            get_password_reset_url(user))
-
-        return reset_url
+    def send_password_reset_email(self, site, user):
+        extra_context = {
+            'user': user,
+            'site': site,
+            'reset_url': get_password_reset_url(user),
+        }
+        CustomerDispatcher().send_password_reset_email_for_user(user, extra_context)
 
 
 class EmailAuthenticationForm(AuthenticationForm):

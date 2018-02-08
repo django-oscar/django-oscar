@@ -1,6 +1,6 @@
-=======================
+========================================
 Oscar 2.1 release notes (in development)
-=======================
+========================================
 
 :release: tbd
 
@@ -19,7 +19,7 @@ Compatibility
 .. _new_in_2.1:
 
 What's new in Oscar 2.1?
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - The database performance of ``offer.Range.all_products()`` was substantially
   improved. The internals of that method have changed and specifically
@@ -30,6 +30,68 @@ What's new in Oscar 2.1?
   ``ProductAttributeValue`` models was changed to use a callable, so that
   Django doesn't generate migrations if a project modifies the ``OSCAR_IMAGE_FOLDER``
   to specify a custom directory structure for uploaded images.
+
+Communications app
+------------------
+
+A new ``communication`` app was introduced to provide a single point of entry
+for all communications sent by Oscar. This is a significant change with implications
+as follows:
+
+- Projects will need to add
+  ``oscar.apps.communication.apps.CommunicationConfig`` to ``INSTALLED_APPS``.
+
+  The ``CommunicationEventType``, ``Email`` and ``Notification`` models have
+  moved from the ``customer`` app to the ``communication`` app. In order to
+  preserve existing data, the table names for these models are unchanged.
+
+  This is a change that requires database migration.
+
+- The ``Dispatcher`` class moved from ``customer.utils`` to
+  ``communication.utils``. ``Dispatcher`` is now responsible for sending
+  all notifications, and not just emails.
+
+- A ``CustomerDispatcher`` utility class that wraps the core ``Dispatcher``
+  has been introduced to the ``customer`` app for sending communications to
+  customers.
+
+- An ``AlertsDispatcher`` utility class that wraps the core ``Dispatcher``
+  has been introduced to the ``customer.alerts`` module for sending product
+  alerts.
+
+- An ``OrderDispatcher``  utility class that wraps the core ``Dispatcher``
+  has been introduced to the ``order`` app for sending order related
+  communications.
+
+- A new setting, ``OSCAR_SAVE_SENT_EMAILS_TO_DB`` controls whether emails
+  sent through the ``Dispatcher`` are saved to the database. This defaults
+  to ``True``.
+
+- The ability to send multipart emails with attachments was added to the new
+  dispatcher.
+
+- All communication email templates (``commtype_*``) have moved from
+  moved from ``customer/emails`` to ``communication/emails``.
+
+- Templates in ``customer/email/`` and ``customer/notification/`` have moved
+  to ``communication/email/`` and ``communication/notification/``.
+
+- An ``absolute_url`` template tag was introduced to facilitate generating
+  absolute URLs in templates for a given domain and path. The schema for
+  generated URLs is configured via the ``OSCAR_URL_SCHEMA`` setting, which defaults
+  to ``http``.
+
+Backwards incompatible changes in Oscar 2.1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The ``category`` field has been removed from the
+  ``communication.Notification`` model. This change requires database migration.
+
+- The ``checkout.mixins.OrderPlacementMixin.send_confirmation_message``
+  method has been replaced with a new ``send_order_placed_email`` method.
+
+- ``customer.notifications.context_processors.notifications`` has moved to
+  ``communication.notifications.context_processors.notifications``.
 
 Bug fixes
 ~~~~~~~~~
@@ -64,4 +126,28 @@ Dependency changes
 .. _deprecated_features_in_2.1:
 
 Deprecated features
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+
+- ``customer.alerts.utils.send_alerts`` is deprecated.
+  Use ``AlertsDispatcher.send_alerts`` instead.
+
+- ``customer.alerts.utils.send_alert_confirmation`` is deprecated.
+  Use ``AlertsDispatcher.send_product_alert_confirmation_email_for_user``
+  instead.
+
+- ``customer.alerts.utils.send_product_alerts`` is deprecated.
+  Use ``AlertsDispatcher.send_product_alert_email_for_user`` instead.
+
+- ``customer.notifications.services.notify_user`` is deprecated.
+  Use Dispatcher.notify_user``.
+
+- ``customer.notifications.services.notify_users`` is deprecated.
+  Use ``Dispatcher.notify_users`` instead.
+
+- ``customer.forms.PasswordResetForm.get_reset_url`` has been removed.
+
+- ``customer.views.ProfileUpdateView.form_valid`` was modified
+  to use a new ``send_email_changed_email`` method.
+
+- ``customer.views.ChangePasswordView.form_valid`` was modified
+  to use a new ``send_password_changed_email`` method.

@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
+from django.core import mail
 from django.core.signing import Signer
 from django.db import connection
 from django.test import RequestFactory as BaseRequestFactory
@@ -15,7 +16,7 @@ from sorl.thumbnail.conf import settings as sorl_settings
 
 from oscar.core.loading import get_class, get_model
 from oscar.core.thumbnails import get_thumbnailer
-from oscar.test.factories import ProductImageFactory
+from oscar.test.factories import ProductImageFactory, UserFactory
 
 OSCAR_IMAGE_FOLDER_FORMATTED = 'images/products/{0}/{1:02d}/'.format(date.today().year, date.today().month)
 FULL_PATH_TO_IMAGES_FOLDER = os.path.join(settings.MEDIA_ROOT, OSCAR_IMAGE_FOLDER_FORMATTED)
@@ -95,6 +96,29 @@ class ThumbnailMixin:
     def _test_thumbnails_not_exist(self, thumbnails_full_paths):
         for path in thumbnails_full_paths:
             assert not os.path.isfile(path)
+
+
+class EmailsMixin:
+
+    def setUp(self):
+        super().setUp()
+        self.user = UserFactory()
+
+    def _test_send_plain_text_and_html(self, outboxed_email):
+        email = outboxed_email
+
+        assert '</p>' not in email.body  # Plain text body (because w/o </p> tags)
+
+        html_content = email.alternatives[0][0]
+        assert '</p>' in html_content
+
+        mimetype = email.alternatives[0][1]
+        assert mimetype == 'text/html'
+
+    def _test_common_part(self):
+        assert len(mail.outbox) == 1
+        assert mail.outbox[0].to == [self.user.email]
+        self._test_send_plain_text_and_html(mail.outbox[0])
 
 
 class RequestFactory(BaseRequestFactory):

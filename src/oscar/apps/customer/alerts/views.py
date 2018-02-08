@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
-from oscar.apps.customer.alerts import utils
+from oscar.apps.customer.alerts.utils import AlertsDispatcher
 from oscar.core.loading import get_class, get_model
 
 Product = get_model('catalogue', 'Product')
@@ -60,7 +60,7 @@ class ProductAlertCreateView(generic.CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         if self.object.is_anonymous:
-            utils.send_alert_confirmation(self.object)
+            AlertsDispatcher().send_product_alert_confirmation_email_for_user(self.object)
         return response
 
     def get_success_url(self):

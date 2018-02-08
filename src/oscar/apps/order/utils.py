@@ -6,13 +6,16 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.order.signals import order_placed
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 
 from . import exceptions
 
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 OrderDiscount = get_model('order', 'OrderDiscount')
+CommunicationEvent = get_model('order', 'CommunicationEvent')
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 
 class OrderNumberGenerator(object):
@@ -260,3 +263,45 @@ class OrderCreator(object):
         Updates the models that care about this voucher.
         """
         voucher.record_usage(order, user)
+
+
+class OrderDispatcher:
+    """
+    Dispatcher to send concrete order related emails.
+    """
+
+    # Event codes
+    ORDER_PLACED_EVENT_CODE = 'ORDER_PLACED'
+
+    def __init__(self, logger=None, mail_connection=None):
+        self.dispatcher = Dispatcher(logger=logger, mail_connection=mail_connection)
+
+    def dispatch_order_messages(self, order, messages, event_code, attachments=None, **kwargs):
+        """
+        Dispatch order-related messages to the customer.
+        """
+        self.dispatcher.logger.info("Order #%s - sending %s messages", order.number, event_code)
+        if order.is_anonymous:
+            email = kwargs.get('email_address', order.guest_email)
+            dispatched_messages = self.dispatcher.dispatch_anonymous_messages(email, messages, attachments)
+        else:
+            dispatched_messages = self.dispatcher.dispatch_user_messages(order.user, messages, attachments)
+
+        try:
+            event_type = CommunicationEventType.objects.get(code=event_code)
+        except CommunicationEventType.DoesNotExist:
+            event_type = None
+
+        self.create_communication_event(order, event_type, dispatched_messages)
+
+    def create_communication_event(self, order, event_type, dispatched_messages):
+        """
+        Create order communications event for audit.
+        """
+        if dispatched_messages and event_type is not None:
+            CommunicationEvent._default_manager.create(order=order, event_type=event_type)
+
+    def send_order_placed_email_for_user(self, order, extra_context, attachments=None):
+        event_code = self.ORDER_PLACED_EVENT_CODE
+        messages = self.dispatcher.get_messages(event_code, extra_context)
+        self.dispatch_order_messages(order, messages, event_code, attachments=attachments)

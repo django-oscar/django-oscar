@@ -1,7 +1,6 @@
 import logging
 
 from django.contrib.sites.models import Site
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import NoReverseMatch, reverse
@@ -10,7 +9,7 @@ from oscar.apps.checkout.signals import post_checkout
 from oscar.core.loading import get_class, get_model
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
+OrderDispatcher = get_class('order.utils', 'OrderDispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
 BillingAddress = get_model('order', 'BillingAddress')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -20,7 +19,6 @@ PaymentEvent = get_model('order', 'PaymentEvent')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
@@ -41,9 +39,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     # Any payment events should be added to this list as part of the
     # handle_payment method.
     _payment_events = None
-
-    # Default code for the email to send after successful checkout
-    communication_type_code = 'ORDER_PLACED'
 
     view_signal = post_checkout
 
@@ -248,7 +243,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order is submitted.
         """
         # Send confirmation message (normally an email)
-        self.send_confirmation_message(order, self.communication_type_code)
+        self.send_order_placed_email(order)
 
         # Flush all session data
         self.checkout_session.flush()
@@ -268,44 +263,15 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def get_success_url(self):
         return reverse('checkout:thank-you')
 
-    def send_confirmation_message(self, order, code, **kwargs):
-        try:
-            ctx = self.get_message_context(order, code)
-        except TypeError:
-            # It seems like the get_message_context method was overridden and
-            # it does not support the code argument yet
-            logger.warning(
-                'The signature of the get_message_context method has changed, '
-                'please update it in your codebase'
-            )
-            ctx = self.get_message_context(order)
+    def send_order_placed_email(self, order):
+        extra_context = self.get_message_context(order)
+        dispatcher = OrderDispatcher(logger=logger)
+        dispatcher.send_order_placed_email_for_user(order, extra_context)
 
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event-type in database, attempt to find templates for this
-            # type and render them immediately to get the messages.  Since we
-            # have not CommunicationEventType to link to, we can't create a
-            # CommunicationEvent instance.
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-            event_type = None
-        else:
-            messages = event_type.get_messages(ctx)
-
-        if messages and messages['body']:
-            logger.info("Order #%s - sending %s messages", order.number, code)
-            dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_messages(order, messages,
-                                               event_type, **kwargs)
-        else:
-            logger.warning("Order #%s - no %s communication event type",
-                           order.number, code)
-
-    def get_message_context(self, order, code=None):
+    def get_message_context(self, order):
         ctx = {
             'user': self.request.user,
             'order': order,
-            'site': get_current_site(self.request),
             'lines': order.lines.all()
         }
 
