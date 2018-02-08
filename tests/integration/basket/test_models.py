@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal as D
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.catalogue.models import Option
@@ -241,6 +241,16 @@ class TestANonEmptyBasket(TestCase):
         self.assertEqual(self.basket.total_incl_tax, 100)
         self.assertEqual(self.basket.total_excl_tax_excl_discounts, 100)
         self.assertEqual(self.basket.total_incl_tax_excl_discounts, 100)
+
+    @override_settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=20)
+    def test_max_allowed_quantity(self):
+        self.basket.add_product(self.product, quantity=3)
+        self.assertEquals(self.basket.max_allowed_quantity()[0], 7)
+
+    @override_settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=20)
+    def test_is_quantity_allowed(self):
+        self.assertTrue(self.basket.is_quantity_allowed(qty=3)[0])
+        self.assertFalse(self.basket.is_quantity_allowed(qty=11)[0])
 
 
 class TestMergingTwoBaskets(TestCase):

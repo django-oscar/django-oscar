@@ -1,6 +1,6 @@
 from decimal import Decimal as D
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.conf import settings
 import mock
 
@@ -65,8 +65,8 @@ class TestBasketLineForm(TestCase):
         form = self.build_form(quantity=invalid_qty)
         self.assertFalse(form.is_valid())
 
+    @override_settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=10)
     def test_enforce_max_line_quantity_for_existing_product(self):
-        settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10
         self.basket.flush()
         product = factories.create_product(num_in_stock=20)
         add_product(self.basket, D('100'), 4, product)
@@ -76,6 +76,23 @@ class TestBasketLineForm(TestCase):
         form.save()
         form = self.build_form(quantity=11)
         self.assertFalse(form.is_valid())
+
+    def test_line_quantity_max_attribute_per_num_available(self):
+        self.basket.flush()
+        product = factories.create_product(num_in_stock=20)
+        add_product(self.basket, D('100'), 4, product)
+        self.line = self.basket.all_lines()[0]
+        form = self.build_form()
+        self.assertIn('max="20"', str(form['quantity']))
+
+    @override_settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=10)
+    def test_line_quantity_max_attribute_per_basket_threshold(self):
+        self.basket.flush()
+        product = factories.create_product(num_in_stock=20)
+        add_product(self.basket, D('100'), 4, product)
+        self.line = self.basket.all_lines()[0]
+        form = self.build_form()
+        self.assertIn('max="6"', str(form['quantity']))
 
     def test_basketline_formset_ordering(self):
         # when we use a unordered queryset in the Basketlineformset, the
