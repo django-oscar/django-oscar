@@ -135,21 +135,29 @@ class AbstractBasket(models.Model):
                 .order_by(self._meta.pk.name))
         return self._lines
 
+    def max_allowed_quantity(self):
+        """
+        Returns maximum product quantity, that can be added to the basket
+        with the respect to basket quantity threshold.
+        """
+        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
+        if basket_threshold:
+            total_basket_quantity = self.num_items
+            max_allowed = basket_threshold - total_basket_quantity
+            return max_allowed, basket_threshold
+
     def is_quantity_allowed(self, qty):
         """
         Test whether the passed quantity of items can be added to the basket
         """
         # We enforce a max threshold to prevent a DOS attack via the offers
         # system.
-        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
-        if basket_threshold:
-            total_basket_quantity = self.num_items
-            max_allowed = basket_threshold - total_basket_quantity
-            if qty > max_allowed:
-                return False, _(
-                    "Due to technical limitations we are not able "
-                    "to ship more than %(threshold)d items in one order.") \
-                    % {'threshold': basket_threshold}
+        max_allowed, basket_threshold = self.max_allowed_quantity()
+        if max_allowed is not None and qty > max_allowed:
+            return False, _(
+                "Due to technical limitations we are not able "
+                "to ship more than %(threshold)d items in one order.") \
+                % {'threshold': basket_threshold}
         return True, None
 
     # ============

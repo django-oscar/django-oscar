@@ -94,6 +94,10 @@ Minor changes
  - For variant products we now display their own images on product detail page
    and fallback to parent product images if they don't have any.
 
+ - Basket line form quantity field now has "max" attribute with the maximum
+   allowed quantity in it based on product availability and basket threshold
+   (see :issue:`1412`).
+
 .. _incompatible_in_1.6:
 
 Backwards incompatible changes in Oscar 1.6

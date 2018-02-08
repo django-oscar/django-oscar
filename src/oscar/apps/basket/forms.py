@@ -19,6 +19,16 @@ class BasketLineForm(forms.ModelForm):
         super(BasketLineForm, self).__init__(*args, **kwargs)
         self.instance.strategy = strategy
 
+        max_allowed_quantity = None
+        num_available = getattr(self.instance.purchase_info.availability, 'num_available', None)
+        basket_max_allowed_quantity = self.instance.basket.max_allowed_quantity()[0]
+        if all([num_available, basket_max_allowed_quantity]):
+            max_allowed_quantity = min(num_available, basket_max_allowed_quantity)
+        else:
+            max_allowed_quantity = num_available or basket_max_allowed_quantity
+        if max_allowed_quantity:
+            self.fields['quantity'].widget.attrs['max'] = max_allowed_quantity
+
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
         if qty > 0:
