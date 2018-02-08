@@ -90,46 +90,21 @@ var oscar = (function(o, $) {
             $selects.filter('.form-stacked select').css('width', '95%');
             $selects.filter('.form-inline select').css('width', '300px');
             $selects.select2({width: 'resolve'});
-            $(el).find('input.select2').each(function(i, e) {
+            $(el).find('select.select2').each(function(i, e) {
                 var opts = {};
                 if($(e).data('ajax-url')) {
                     opts = {
-                        'ajax': {
-                            'url': $(e).data('ajax-url'),
-                            'dataType': 'json',
-                            'results': function(data, page) {
-                                if((page==1) && !($(e).data('required')=='required')) {
-                                    data.results.unshift({'id': '', 'text': '------------'});
-                                }
-                                return data;
-                            },
-                            'data': function(term, page) {
+                        ajax: {
+                            url: $(e).data('ajax-url'),
+                            dataType: 'json',
+                            data: function(params) {
                                 return {
-                                    'q': term,
-                                    'page': page
+                                    q: params.term,
+                                    page: params.page || 1
                                 };
                             }
                         },
-                        'multiple': $(e).data('multiple'),
-                        'initSelection': function(e, callback){
-                            if($(e).val()) {
-                                $.ajax({
-                                    'type': 'GET',
-                                    'url': $(e).data('ajax-url'),
-                                    'data': [{'name': 'initial', 'value': $(e).val()}],
-                                    'success': function(data){
-                                        if(data.results) {
-                                            if($(e).data('multiple')){
-                                                callback(data.results);
-                                            } else {
-                                                callback(data.results[0]);
-                                            }
-                                        }
-                                    },
-                                    'dataType': 'json'
-                                });
-                            }
-                        }
+                        multiple: $(e).data('multiple')
                     };
                 }
                 $(e).select2(opts);

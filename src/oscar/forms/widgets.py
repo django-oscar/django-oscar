@@ -1,14 +1,12 @@
-import copy
 import re
 
 from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.forms.utils import flatatt
+from django.forms.models import ModelChoiceIterator
 from django.forms.widgets import FileInput
-from django.utils import formats, six
+from django.utils import formats
 from django.utils.encoding import force_text
-from django.utils.safestring import mark_safe
-from django.utils.six.moves import filter, map
+from django.utils.six.moves import map
 
 
 class ImageInput(FileInput):
@@ -221,60 +219,71 @@ class AdvancedSelect(forms.Select):
         return option
 
 
-class RemoteSelect(forms.Widget):
+class RemoteSelect(forms.Select):
     """
     Somewhat reusable widget that allows AJAX lookups in combination with
     select2.
     Requires setting the URL of a lookup view either as class attribute or when
     constructing
     """
-    is_multiple = False
     lookup_url = None
-    template_name = None
 
     def __init__(self, *args, **kwargs):
-        if 'lookup_url' in kwargs:
-            self.lookup_url = kwargs.pop('lookup_url')
+        self.lookup_url = kwargs.pop('lookup_url', self.lookup_url)
         if self.lookup_url is None:
-            raise ValueError(
-                "RemoteSelect requires a lookup ULR")
+            raise ValueError("RemoteSelect requires a lookup URL")
+
         super(RemoteSelect, self).__init__(*args, **kwargs)
 
-    def format_value(self, value):
-        return six.text_type(value or '')
-
-    def value_from_datadict(self, data, files, name):
-        value = data.get(name, None)
-        if value is None:
-            return value
-        else:
-            return six.text_type(value)
-
-    def render(self, name, value, attrs=None, renderer=None):
-        attrs = {} if attrs is None else copy.copy(attrs)
+    def build_attrs(self, *args, **kwargs):
+        attrs = super(RemoteSelect, self).build_attrs(*args, **kwargs)
         attrs.update({
-            'type': 'hidden',
-            'name': name,
             'data-ajax-url': self.lookup_url,
-            'data-multiple': 'multiple' if self.is_multiple else '',
-            'value': self.format_value(value),
+            'data-multiple': 'multiple' if self.allow_multiple_selected else '',
             'data-required': 'required' if self.is_required else '',
         })
-        return mark_safe(u'<input %s>' % flatatt(attrs))
+        return attrs
+
+    def optgroups(self, name, value, attrs=None):
+        """
+        Borrowed liberally from https://github.com/applegrew/django-select2
+
+        For model choice fields, return only the selected options. The rest
+        will be populated with AJAX.
+        """
+
+        default = (None, [], 0)
+        groups = [default]
+        has_selected = False
+        selected_choices = {force_text(v) for v in value}
+        if not self.is_required and not self.allow_multiple_selected:
+            default[1].append(self.create_option(name, '', '', False, 0))
+
+        # If thi is not a model choice field then just return all choices
+        if not isinstance(self.choices, ModelChoiceIterator):
+            return super(RemoteSelect, self).optgroups(name, value, attrs=attrs)
+
+        selected_choices = {
+            c for c in selected_choices if c not in self.choices.field.empty_values
+        }
+        choices = (
+            (obj.pk, force_text(obj))
+            for obj in self.choices.queryset.filter(pk__in=selected_choices)
+        )
+        for option_value, option_label in choices:
+            selected = (
+                str(option_value) in value and
+                (has_selected is False or self.allow_multiple_selected)
+            )
+            if selected is True and has_selected is False:
+                has_selected = True
+            index = len(default[1])
+            subgroup = default[1]
+            subgroup.append(
+                self.create_option(name, option_value, option_label, selected_choices, index))
+
+        return groups
 
 
 class MultipleRemoteSelect(RemoteSelect):
-    is_multiple = True
-
-    def format_value(self, value):
-        if value:
-            return ','.join(map(six.text_type, filter(bool, value)))
-        else:
-            return ''
-
-    def value_from_datadict(self, data, files, name):
-        value = data.get(name, None)
-        if value is None:
-            return []
-        else:
-            return list(filter(bool, value.split(',')))
+    allow_multiple_selected = True

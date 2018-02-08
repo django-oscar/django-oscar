@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from django import forms
 from django.test import TestCase
 
+from oscar.apps.catalogue.models import Product
+from django.core.urlresolvers import reverse_lazy
 from oscar.forms import widgets
+from oscar.test.factories import create_product
 
 
 class ImageInputTestCase(TestCase):
@@ -129,3 +133,64 @@ class AdvancedSelectWidgetTestCase(TestCase):
         self.assertInHTML('<option value="blue">Blue</option>', html, count=1)
         self.assertInHTML('<option value="red" disabled>Red</option>', html, count=1)
         self.assertInHTML('<option value="green" disabled>Green</option>', html, count=1)
+
+
+class RemoteSelectTestCase(TestCase):
+
+    def setUp(self):
+        self.url = reverse_lazy('dashboard:catalogue-product-lookup')
+
+    def _get_form_field(self, **kwargs):
+        return forms.ModelChoiceField(
+            queryset=Product.objects.all(),
+            widget=widgets.RemoteSelect(lookup_url=self.url),
+            **kwargs
+        )
+
+    def _get_multiselect_form_field(self, **kwargs):
+        return forms.ModelChoiceField(
+            queryset=Product.objects.all(),
+            widget=widgets.MultipleRemoteSelect(lookup_url=self.url),
+            **kwargs
+        )
+
+    def test_remote_url_required(self):
+        with self.assertRaises(ValueError):
+            widgets.RemoteSelect()
+
+    def test_select_widget_renders_only_selected_choices(self):
+        create_product()
+        p2 = create_product()
+
+        field = self._get_form_field()
+        form_choices = list(field.widget.options(name='name', value=[p2.pk]))
+        # We should only have one choice, not two
+        self.assertEqual(len(form_choices), 1)
+        self.assertEqual(form_choices[0]['value'], p2.pk)
+
+    def test_widget_attrs(self):
+        field = self._get_form_field()
+        attrs = field.widget.get_context(name='my_field', value=None, attrs={})['widget']['attrs']
+        self.assertEqual(attrs['data-multiple'], '')
+        self.assertEqual(attrs['data-required'], 'required')
+        self.assertEqual(attrs['data-ajax-url'], self.url)
+
+    def test_not_required_widget_attrs(self):
+        field = self._get_multiselect_form_field(required=False)
+        attrs = field.widget.get_context(name='my_field', value=None, attrs={})['widget']['attrs']
+        self.assertEqual(attrs['data-required'], '')
+
+    def test_multiselect_widget_renders_only_selected_choices(self):
+        create_product()
+        p2 = create_product()
+        p3 = create_product()
+
+        field = self._get_multiselect_form_field()
+        form_choices = list(field.widget.options(name='name', value=[p2.pk, p3.pk]))
+        # We should only have two choices, not three
+        self.assertEqual(len(form_choices), 2)
+
+    def test_multiselect_widget_attrs(self):
+        field = self._get_multiselect_form_field()
+        attrs = field.widget.get_context(name='my_field', value=None, attrs={})['widget']['attrs']
+        self.assertEqual(attrs['data-multiple'], 'multiple')

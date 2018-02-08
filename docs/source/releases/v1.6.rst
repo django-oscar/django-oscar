@@ -131,6 +131,10 @@ Backwards incompatible changes in Oscar 1.6
  - Stock manipulation (allocation/consumption/cancellation) now only happens if
    the ``track_stock`` property of the product's class is set to true.
 
+ - ``oscar.forms.widgets.RemoteSelect`` was updated to work with version 4 of
+   select2. Instead of rendering a hidden input it now renders a normal
+   ``select`` element.
+
  - jQuery UI was removed from Oscar's static files. Projects that require it
    should install it at the project level.
 
@@ -151,6 +155,8 @@ Dependency changes
 - Upgraded inputmask to v3.2.7.
 
 - Upgraded jquery-sortable to v0.9.13.
+
+- Upgraded select2 to v4.0.5.
 
 .. _deprecated_features_in_1.6:
 
