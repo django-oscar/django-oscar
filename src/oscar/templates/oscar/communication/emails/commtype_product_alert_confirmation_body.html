@@ -1,0 +1,19 @@
+{% extends "communication/emails/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    {% blocktrans with title=alert.product.get_title|safe domain=site.domain confirm_path=alert.get_confirm_url cancel_path=alert.get_cancel_url %}Hello,
+        <p>
+            Somebody (hopefully you) has requested an email alert when '{{ title }}' is back in stock.
+            Please click the following link to confirm: http://{{ domain }}{{ confirm_path }}
+        </p>
+        <p>
+            You can cancel this alert at any time by clicking the following link: http://{{ domain }}{{ cancel_path }}
+        </p>
+
+        <p>
+            Thanks for your interest,
+            The {{ site }} Team
+        </p>
+    {% endblocktrans %}
+{% endblock %}

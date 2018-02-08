@@ -1,9 +1,11 @@
 from django.test import TestCase
 
-from oscar.apps.customer.models import CommunicationEventType
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 
 User = get_user_model()
+
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
 
 
 class CommunicationTypeTest(TestCase):

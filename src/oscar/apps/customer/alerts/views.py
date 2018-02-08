@@ -1,3 +1,5 @@
+import logging
+
 from django import http
 from django.contrib import messages
 from django.http import Http404
@@ -12,6 +14,10 @@ Product = get_model('catalogue', 'Product')
 ProductAlert = get_model('customer', 'ProductAlert')
 PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
+Dispatcher = get_class('communication.utils', 'Dispatcher')
+
+
+logger = logging.getLogger('oscar.alerts')
 
 
 class ProductAlertListView(PageTitleMixin, generic.ListView):

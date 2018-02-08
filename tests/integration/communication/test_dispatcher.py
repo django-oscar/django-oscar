@@ -13,9 +13,12 @@ User = get_user_model()
 class TestDispatcher(TestCase):
 
     def _dispatch_order_messages(self, order_number, order, email=None):
-        et = CommunicationEventType.objects.create(code="ORDER_PLACED",
-                                                   name="Order Placed",
-                                                   category=CommunicationEventType.ORDER_RELATED)
+        event_code = Dispatcher.ORDER_PLACED_EVENT_CODE
+        et = CommunicationEventType.objects.create(
+            code=event_code,
+            name="Order Placed",
+            category=CommunicationEventType.ORDER_RELATED,
+        )
 
         messages = et.get_messages({
             'order': order,
@@ -26,7 +29,7 @@ class TestDispatcher(TestCase):
         self.assertIn(order_number, messages['html'])
 
         dispatcher = Dispatcher()
-        dispatcher.dispatch_order_messages(order, messages, et)
+        dispatcher.dispatch_order_messages(order, messages, event_code)
 
         self.assertEqual(CommunicationEvent.objects.filter(order=order, event_type=et).count(), 1)
 
@@ -53,8 +56,8 @@ class TestDispatcher(TestCase):
 
     def test_dispatch_order_messages(self):
         email = 'testuser@example.com'
-        user = User.objects.create_user('testuser', email,
-                                        'somesimplepassword')
+        user = User.objects.create_user(
+            'testuser', email, 'somesimplepassword')
         order = create_order(number='12345', user=user)
         self.assertFalse(order.is_anonymous)
         self._dispatch_order_messages(order_number='12345', order=order, email=email)
@@ -66,9 +69,12 @@ class TestDispatcher(TestCase):
 
     def test_dispatch_email_changed_user_message(self):
         user = User.objects.create_user('testuser', 'testuser@example.com', 'somesimplepassword')
-        CommunicationEventType.objects.create(code='EMAIL_CHANGED',
-                                              name='Email Changed',
-                                              category=CommunicationEventType.USER_RELATED)
+        event_code = Dispatcher.EMAIL_CHANGED_EVENT_CODE
+        CommunicationEventType.objects.create(
+            code=event_code,
+            name='Email Changed',
+            category=CommunicationEventType.USER_RELATED,
+        )
         ctx = {
             'user': user,
             'site': SiteFactory(name='Test Site'),
@@ -76,17 +82,20 @@ class TestDispatcher(TestCase):
             'new_email': 'newtestuser@example.com',
         }
         self._dispatch_user_messages(
-            user, 'EMAIL_CHANGED', ctx, 'Your email address has changed at Test Site.'
+            user, event_code, ctx, 'Your email address has changed at Test Site.'
         )
 
     def test_dispatch_registration_email_message(self):
         user = User.objects.create_user('testuser', 'testuser@example.com', 'somesimplepassword')
-        CommunicationEventType.objects.create(code='REGISTRATION',
-                                              name='Registration',
-                                              category=CommunicationEventType.USER_RELATED)
+        event_code = Dispatcher.REGISTRATION_EVENT_CODE
+        CommunicationEventType.objects.create(
+            code=event_code,
+            name='Registration',
+            category=CommunicationEventType.USER_RELATED,
+        )
         ctx = {'user': user,
                'site': SiteFactory()}
-        self._dispatch_user_messages(user, 'REGISTRATION', ctx, 'Thank you for registering.')
+        self._dispatch_user_messages(user, event_code, ctx, 'Thank you for registering.')
 
     def test_dispatcher_uses_email_connection(self):
         connection = mail.get_connection()

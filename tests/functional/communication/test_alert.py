@@ -14,7 +14,7 @@ from oscar.test.factories import (
     ProductAlertFactory, UserFactory, create_product, create_stockrecord)
 
 
-class TestAUser(WebTest):
+class TestProductAlert(WebTest):
 
     def setUp(self):
         self.user = UserFactory()
@@ -83,7 +83,7 @@ class TestAUserWithAnActiveStockAlert(WebTest):
         self.stockrecord.save()
         self.assertEqual(0, len(mail.outbox))
 
-    @mock.patch('oscar.apps.customer.alerts.utils.services.notify_user')
+    @mock.patch('oscar.apps.communication.utils.Dispatcher.notify_user')
     def test_site_notification_sent(self, mock_notify):
         self.stockrecord.num_in_stock = 10
         self.stockrecord.save()
@@ -94,7 +94,7 @@ class TestAUserWithAnActiveStockAlert(WebTest):
                 self.product.get_absolute_url(), self.product.title)
         )
 
-    @mock.patch('oscar.apps.customer.alerts.utils.services.notify_user')
+    @mock.patch('oscar.apps.communication.utils.Dispatcher.notify_user')
     def test_product_title_truncated_in_alert_notification_subject(self, mock_notify):
         self.product.title = ('Aut nihil dignissimos perspiciatis. Beatae sed consequatur odit incidunt. '
                               'Quaerat labore perferendis quasi aut sunt maxime accusamus laborum. '
@@ -131,7 +131,7 @@ class TestAnAnonymousUser(WebTest):
         alert = ProductAlertFactory(
             user=None, email='john@smith.com', status=ProductAlert.UNCONFIRMED)
         self.app.get(
-            reverse('customer:alerts-cancel-by-key', kwargs={'key': alert.key}))
+            reverse('communication:alerts-cancel-by-key', kwargs={'key': alert.key}))
         alert.refresh_from_db()
         self.assertTrue(alert.is_cancelled)
 
@@ -233,7 +233,7 @@ class TestAlertMessageSending(TestCase):
         self.product = create_product()
         create_stockrecord(self.product, num_in_stock=1)
 
-    @mock.patch('oscar.apps.customer.utils.Dispatcher.dispatch_direct_messages')
+    @mock.patch('oscar.apps.communication.utils.Dispatcher.dispatch_direct_messages')
     def test_alert_confirmation_uses_dispatcher(self, mock_dispatch):
         alert = ProductAlert.objects.create(
             email='test@example.com',
@@ -245,7 +245,7 @@ class TestAlertMessageSending(TestCase):
         self.assertEqual(mock_dispatch.call_count, 1)
         self.assertEqual(mock_dispatch.call_args[0][0], 'test@example.com')
 
-    @mock.patch('oscar.apps.customer.utils.Dispatcher.dispatch_user_messages')
+    @mock.patch('oscar.apps.communication.utils.Dispatcher.dispatch_user_messages')
     def test_alert_uses_dispatcher(self, mock_dispatch):
         ProductAlert.objects.create(user=self.user, product=self.product)
         send_product_alerts(self.product)

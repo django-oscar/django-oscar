@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from oscar.apps.customer.forms import ProfileForm
 from oscar.core.compat import existing_user_fields, get_user_model
-from oscar.test.factories.customer import ProductAlertFactory, UserFactory
+from oscar.test.factories import ProductAlertFactory, UserFactory
 
 
 class TestACustomUserModel(TestCase):

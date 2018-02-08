@@ -3,9 +3,12 @@ from django.test import TestCase
 from oscar.apps.customer.models import Notification
 from oscar.apps.customer.notifications import services
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_class
 from oscar.test.factories import UserFactory
 
 User = get_user_model()
+
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 
 class TestANewNotification(TestCase):
