@@ -1,6 +1,6 @@
-from django.core.urlresolvers import reverse
 from django.contrib.flatpages.models import FlatPage
 from django.test import TestCase
+from django.urls import reverse
 
 from oscar.apps.dashboard.pages.forms import PageUpdateForm
 from oscar.test.testcases import WebTestCase

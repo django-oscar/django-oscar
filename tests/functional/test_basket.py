@@ -1,11 +1,11 @@
 from decimal import Decimal as D
-from django.utils.six.moves import http_client
 import datetime
 
 from django.conf import settings
 from django.test import TestCase
+from django.urls import reverse
+from django.utils.six.moves import http_client
 from django.utils.translation import ugettext
-from django.core.urlresolvers import reverse
 
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model

@@ -1,6 +1,6 @@
 from decimal import Decimal as D
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from oscar.test.testcases import WebTestCase
 from oscar.apps.shipping import models

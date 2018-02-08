@@ -7,10 +7,10 @@ from decimal import ROUND_DOWN
 
 from django.conf import settings
 from django.core import exceptions
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.timezone import get_current_timezone, now

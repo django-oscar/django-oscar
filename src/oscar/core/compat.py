@@ -2,19 +2,13 @@ import codecs
 import csv
 import sys
 
-import django
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import six, lru_cache
+from django.utils import six
 
 from oscar.core.loading import get_model
 
-# Backwards compatibility for Django 1.8, which does not have urls package.
-try:
-    from django.urls import LocaleRegexURLResolver, get_resolver
-except ImportError:
-    from django.core.urlresolvers import get_resolver, LocaleRegexURLResolver
 
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -75,34 +69,6 @@ def existing_user_fields(fields):
     user_fields = get_user_model()._meta.fields
     user_field_names = [field.name for field in user_fields]
     return [field for field in fields if field in user_field_names]
-
-
-# Supprt new Django 1.10 middleware
-if django.VERSION >= (1, 10):
-    from django.utils.deprecation import MiddlewareMixin
-else:
-    MiddlewareMixin = object
-
-
-def user_is_authenticated(user):
-    if django.VERSION >= (1, 10):
-        return user.is_authenticated
-    else:
-        return user.is_authenticated()
-
-
-def user_is_anonymous(user):
-    if django.VERSION >= (1, 10):
-        return user.is_anonymous
-    else:
-        return user.is_anonymous()
-
-
-def assignment_tag(register):
-    if django.VERSION >= (1, 9):
-        return register.simple_tag
-    else:
-        return register.assignment_tag
 
 
 # Python3 compatibility layer
@@ -216,18 +182,3 @@ class UnicodeCSVWriter:
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
-
-
-@lru_cache.lru_cache(maxsize=None)
-def is_language_prefix_patterns_used(urlconf):
-    """
-    Almost exact copy of
-    `django.conf.urls.i18n.is_language_prefix_patterns_used`, which was
-    introduced in Django 1.10 in order support Django 1.8 and 1.9. Does not
-    return `prefix_default_language` property of `LocaleRegexURLResolver`,
-    since it's not available in Django 1.8.
-    """
-    for url_pattern in get_resolver(urlconf).url_patterns:
-        if isinstance(url_pattern, LocaleRegexURLResolver):
-            return True
-    return False

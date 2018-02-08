@@ -1,6 +1,6 @@
 from django.contrib.messages import get_messages
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils import six
 
 from oscar.apps.basket import views

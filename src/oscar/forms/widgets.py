@@ -1,7 +1,6 @@
 import copy
 import re
 
-import django
 from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.utils import flatatt
@@ -39,10 +38,7 @@ class ImageInput(FileInput):
             'type': self.input_type,
             'name': name,
         }
-        if django.VERSION < (1, 11):
-            final_attrs = self.build_attrs(attrs, **extra_attrs)
-        else:
-            final_attrs = self.build_attrs(attrs, extra_attrs=extra_attrs)
+        final_attrs = self.build_attrs(attrs, extra_attrs=extra_attrs)
 
         if not value or isinstance(value, InMemoryUploadedFile):
             # can't display images that aren't stored
@@ -268,23 +264,6 @@ class AdvancedSelect(forms.Select):
     def __init__(self, attrs=None, choices=(), disabled_values=()):
         self.disabled_values = set(force_text(v) for v in disabled_values)
         super(AdvancedSelect, self).__init__(attrs, choices)
-
-    def render_option(self, selected_choices, option_value, option_label):
-        # TODO remove this when Django 1.8 support is dropped
-        option_value = force_text(option_value)
-        if option_value in self.disabled_values:
-            selected_html = mark_safe(' disabled="disabled"')
-        elif option_value in selected_choices:
-            selected_html = mark_safe(' selected="selected"')
-            if not self.allow_multiple_selected:
-                # Only allow for a single selection.
-                selected_choices.remove(option_value)
-        else:
-            selected_html = ''
-        return format_html(u'<option value="{0}"{1}>{2}</option>',
-                           option_value,
-                           selected_html,
-                           force_text(option_label))
 
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super(AdvancedSelect, self).create_option(name, value, label, selected, index, subindex, attrs)

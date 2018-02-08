@@ -2,7 +2,7 @@ import json
 
 from django.conf import settings
 from django.contrib.messages import ERROR, INFO
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.six.moves import http_client
 from django.utils.translation import ugettext

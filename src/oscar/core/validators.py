@@ -1,13 +1,12 @@
 import keyword
 
-from django.conf import settings
+from django.conf.urls.i18n import is_language_prefix_patterns_used
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import resolve, get_urlconf
 from django.http import Http404
+from django.urls import resolve, get_urlconf
 from django.utils.translation import ugettext_lazy as _, get_language_from_path, get_language, override
 
-from oscar.core.compat import is_language_prefix_patterns_used
 from oscar.core.loading import get_model
 
 
@@ -56,7 +55,7 @@ class ExtendedURLValidator(validators.URLValidator):
         # code from URL and override current locale within the locale prefix of
         # the URL.
         urlconf = get_urlconf()
-        i18n_patterns_used = is_language_prefix_patterns_used(urlconf)
+        i18n_patterns_used, _ = is_language_prefix_patterns_used(urlconf)
         redefined_language = None
         if i18n_patterns_used:
             language = get_language_from_path(value)
@@ -119,95 +118,3 @@ def non_python_keyword(value):
             _("This field is invalid as its value is forbidden")
         )
     return value
-
-
-class CommonPasswordValidator(validators.BaseValidator):
-
-    forbidden_passwords = [
-        'password',
-        '1234',
-        '12345'
-        '123456',
-        '123456y',
-        '123456789',
-        'iloveyou',
-        'princess',
-        'monkey',
-        'rockyou',
-        'babygirl',
-        'monkey',
-        'qwerty',
-        '654321',
-        'dragon',
-        'pussy',
-        'baseball',
-        'football',
-        'letmein',
-        'monkey',
-        '696969',
-        'abc123',
-        'qwe123',
-        'qweasd',
-        'mustang',
-        'michael',
-        'shadow',
-        'master',
-        'jennifer',
-        '111111',
-        '2000',
-        'jordan',
-        'superman'
-        'harley'
-    ]
-    message = _("Please choose a less common password")
-    code = 'password'
-
-    def __init__(self, password_file=None):
-        self.limit_value = password_file
-
-    def clean(self, value):
-        return value.strip()
-
-    def compare(self, value, limit):
-        return value in self.forbidden_passwords
-
-    def get_forbidden_passwords(self):
-        if self.limit_value is None:
-            return self.forbidden_passwords
-
-
-# Shim for backwards compatibility with Django 1.8. This can be removed when
-# support for Django 1.8 is dropped.
-def validate_password(password, user=None):
-    try:
-        # Django 1.9 and above
-        from django.contrib.auth import password_validation
-        # If AUTH_PASSWORD_VALIDATORS is empty, then supply validators
-        # equivalent to what Oscar used to do itself (deprecated).
-        if settings.AUTH_PASSWORD_VALIDATORS:
-            password_validators = None
-        else:
-            password_validators = [
-                password_validation.MinimumLengthValidator(min_length=6),
-                password_validation.CommonPasswordValidator(),
-            ]
-        return password_validation.validate_password(
-            password, user=user, password_validators=password_validators)
-    except ImportError:
-        # Django 1.8 - use our custom validators. Note that these are Field
-        # validators and have a different signature to the password validators
-        # used above.
-        password_validators = [
-            validators.MinLengthValidator(6),
-            CommonPasswordValidator(),
-        ]
-
-        errors = []
-        for validator in password_validators:
-            try:
-                validator(password)
-            except ValidationError as error:
-                errors.append(error)
-
-        if errors:
-            raise ValidationError(errors)

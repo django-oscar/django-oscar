@@ -1,7 +1,7 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
-from oscar.test import testcases, factories
 
+from oscar.test import testcases, factories
 from oscar.apps.offer import models
 
 

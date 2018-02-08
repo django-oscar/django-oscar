@@ -5,23 +5,9 @@ matrix:
   fast_finish: true
   include:
     - python: 2.7
-      env: TOXENV=py27-django18
-    - python: 2.7
-      env: TOXENV=py27-django110
-    - python: 2.7
       env: TOXENV=py27-django111
-    - python: 3.3
-      env: TOXENV=py33-django18
-    - python: 3.4
-      env: TOXENV=py34-django18
-    - python: 3.4
-      env: TOXENV=py34-django110
     - python: 3.4
       env: TOXENV=py34-django111
-    - python: 3.5
-      env: TOXENV=py35-django18
-    - python: 3.5
-      env: TOXENV=py35-django110
     - python: 3.5
       env: TOXENV=py35-django111
     - python: 3.6
@@ -29,7 +15,7 @@ matrix:
     - python: 3.6
       env: TOXENV=py36-djangomaster
 
-    - python: 3.5
+    - python: 3.6
       env: TOXENV=lint
     - python: 3.5
       env: TOXENV=sandbox

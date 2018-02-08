@@ -9,10 +9,10 @@ from django.contrib.staticfiles.finders import find
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
-from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Sum
+from django.urls import reverse
 from django.utils import six
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
@@ -22,7 +22,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.compat import user_is_anonymous, user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -624,7 +623,7 @@ class AbstractProduct(models.Model):
         return rating
 
     def has_review_by(self, user):
-        if user_is_anonymous(user):
+        if user.is_anonymous:
             return False
         return self.reviews.filter(user=user).exists()
 
@@ -638,7 +637,7 @@ class AbstractProduct(models.Model):
         Override this if you want to alter the default behaviour; e.g. enforce
         that a user purchased the product to be allowed to leave a review.
         """
-        if user_is_authenticated(user) or settings.OSCAR_ALLOW_ANON_REVIEWS:
+        if user.is_authenticated or settings.OSCAR_ALLOW_ANON_REVIEWS:
             return not self.has_review_by(user)
         else:
             return False
@@ -959,11 +958,18 @@ class AbstractProductAttributeValue(models.Model):
         return value
 
     def _set_value(self, new_value):
+        attr_name = 'value_%s' % self.attribute.type
+
         if self.attribute.is_option and isinstance(new_value, six.string_types):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
-        setattr(self, 'value_%s' % self.attribute.type, new_value)
+        elif self.attribute.is_multi_option:
+            getattr(self, attr_name).set(new_value)
+            return
+
+        setattr(self, attr_name, new_value)
+        return
 
     value = property(_get_value, _set_value)
 

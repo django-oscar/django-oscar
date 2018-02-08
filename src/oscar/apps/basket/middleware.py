@@ -4,7 +4,6 @@ from django.core.signing import BadSignature, Signer
 from django.utils.functional import SimpleLazyObject, empty
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.compat import MiddlewareMixin, user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
 Applicator = get_class('offer.applicator', 'Applicator')
@@ -14,11 +13,12 @@ Selector = get_class('partner.strategy', 'Selector')
 selector = Selector()
 
 
-class BasketMiddleware(MiddlewareMixin):
+class BasketMiddleware:
 
-    # Middleware interface methods
+    def __init__(self, get_response):
+        self.get_response = get_response
 
-    def process_request(self, request):
+    def __call__(self, request):
         # Keep track of cookies that need to be deleted (which can only be done
         # when we're processing the response instance).
         request.cookies_to_delete = []
@@ -58,6 +58,9 @@ class BasketMiddleware(MiddlewareMixin):
         request.basket = SimpleLazyObject(load_full_basket)
         request.basket_hash = SimpleLazyObject(load_basket_hash)
 
+        response = self.get_response(request)
+        return self.process_response(request, response)
+
     def process_response(self, request, response):
         # Delete any surplus cookies
         cookies_to_delete = getattr(request, 'cookies_to_delete', [])
@@ -81,7 +84,7 @@ class BasketMiddleware(MiddlewareMixin):
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if (request.basket.id and not user_is_authenticated(request.user)
+        if (request.basket.id and not request.user.is_authenticated
                 and not has_basket_cookie):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
@@ -131,7 +134,7 @@ class BasketMiddleware(MiddlewareMixin):
         cookie_key = self.get_cookie_key(request)
         cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
 
-        if hasattr(request, 'user') and user_is_authenticated(request.user):
+        if hasattr(request, 'user') and request.user.is_authenticated:
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie.
