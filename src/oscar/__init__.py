@@ -64,6 +64,7 @@ OSCAR_CORE_APPS = [
     'treebeard',
     'sorl.thumbnail',
     'django_tables2',
+    'django_elasticsearch_dsl'
 ]
 
 

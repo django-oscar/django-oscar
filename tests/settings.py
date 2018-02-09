@@ -61,7 +61,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.contrib.messages.context_processors.messages',
 
-                'oscar.apps.search.context_processors.search_form',
+                'oscar.apps.catalogue.context_processors.search_form',
                 'oscar.apps.customer.notifications.context_processors.notifications',
                 'oscar.apps.promotions.context_processors.promotions',
                 'oscar.apps.checkout.context_processors.checkout',
@@ -123,3 +123,7 @@ OSCAR_LINE_STATUS_PIPELINE = {'a': ('b', ), 'b': ()}
 
 SECRET_KEY = 'notverysecret'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+OSCAR_SEARCH = {
+    'INDEX_NAME': 'test'
+}

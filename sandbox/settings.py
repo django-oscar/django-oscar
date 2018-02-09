@@ -143,7 +143,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 # Oscar specific
-                'oscar.apps.search.context_processors.search_form',
+                'oscar.apps.catalogue.context_processors.search_form',
                 'oscar.apps.customer.notifications.context_processors.notifications',
                 'oscar.apps.promotions.context_processors.promotions',
                 'oscar.apps.checkout.context_processors.checkout',
@@ -378,6 +378,18 @@ OSCAR_ORDER_STATUS_CASCADE = {
 # If you want to develop Oscar's CSS, then set OSCAR_USE_LESS=True to enable the
 # on-the-fly less processor.
 OSCAR_USE_LESS = False
+
+# Search
+# ======
+
+OSCAR_SEARCH['INDEX_NAME'] = 'sandbox'
+OSCAR_SEARCH['FACETS'] = {
+    'size': {
+        'type': 'terms',
+        'label': 'Size',
+        'params': {'field': 'variants.size'}
+    }
+}
 
 
 # Sentry
