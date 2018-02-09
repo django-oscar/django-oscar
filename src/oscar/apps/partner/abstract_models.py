@@ -184,7 +184,7 @@ class AbstractStockRecord(models.Model):
     @cached_property
     def can_track_allocations(self):
         """Return True if the Product is set for stock tracking."""
-        return self.product.product_class.track_stock
+        return self.product.get_product_class().track_stock
 
     # 2-stage stock management model
 
