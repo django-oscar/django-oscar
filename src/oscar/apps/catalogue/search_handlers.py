@@ -1,108 +1,221 @@
 from django.conf import settings
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.utils.module_loading import import_string
-from django.views.generic.list import MultipleObjectMixin
 
 from oscar.core.loading import get_class, get_model
 
-BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
-SearchHandler = get_class('search.search_handlers', 'SearchHandler')
-is_solr_supported = get_class('search.features', 'is_solr_supported')
-is_elasticsearch_supported = get_class('search.features', 'is_elasticsearch_supported')
-Product = get_model('catalogue', 'Product')
+from . import filter
+from oscar.apps.search import forms
+from oscar.apps.search.base import BaseSearchHandler
+from . import forms
+
+Category = get_model('catalogue', 'Category')
 
 
 def get_product_search_handler_class():
     """
-    Determine the search handler to use.
-
-    Currently only Solr is supported as a search backend, so it falls
-    back to rudimentary category browsing if that isn't enabled.
+    Import and return the search handler class.
     """
     # Use get_class to ensure overridability
-    if settings.OSCAR_PRODUCT_SEARCH_HANDLER is not None:
-        return import_string(settings.OSCAR_PRODUCT_SEARCH_HANDLER)
-    if is_solr_supported():
-        return get_class('catalogue.search_handlers', 'SolrProductSearchHandler')
-    elif is_elasticsearch_supported():
-        return get_class(
-            'catalogue.search_handlers', 'ESProductSearchHandler',
-        )
-    else:
-        return get_class(
-            'catalogue.search_handlers', 'SimpleProductSearchHandler')
+    return import_string(settings.OSCAR_PRODUCT_SEARCH_HANDLER)
 
 
-class SolrProductSearchHandler(SearchHandler):
+class ProductSearchHandler(BaseSearchHandler):
     """
-    Search handler specialised for searching products.  Comes with optional
-    category filtering. To be used with a Solr search backend.
+    Category search handler. Must expose a handful of methods that Oscar is
+    expecting. Refer to oscar.apps.search.search_handlers for more information.
     """
-    form_class = BrowseCategoryForm
-    model_whitelist = [Product]
-    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
-    def __init__(self, request_data, full_path, categories=None):
+    form_class = forms.CatalogueSearchForm
+    query = get_class('catalogue.query', 'ProductSearch')
+
+    def __init__(self, request_data, full_path, categories=None, **kwargs):
+        super(ProductSearchHandler, self).__init__(request_data, full_path, **kwargs)
         self.categories = categories
-        super(SolrProductSearchHandler, self).__init__(request_data, full_path)
+        self.currency = kwargs.pop('currency', settings.OSCAR_DEFAULT_CURRENCY)
 
-    def get_search_queryset(self):
-        sqs = super(SolrProductSearchHandler, self).get_search_queryset()
+        # Allow a custom default sort order for the category views
+        request_data = request_data.copy()
+        default_sort = settings.OSCAR_SEARCH.get('DEFAULT_CATEGORY_SORT_BY')
+        if default_sort and not request_data.get('sort_by'):
+            request_data['sort_by'] = default_sort
+
+        # Triggers the search. All exceptions (404, Invalid Page) must be raised
+        # at init time from inside one of these methods.
+        self.results = self.get_results(request_data)
+        self.context = self.prepare_context(self.results)
+
+    # Search related methods
+
+    def get_filters(self, form_data):
+        filters = {}
+
         if self.categories:
-            # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
-            # opposed to filtering using 'q'.
-            pattern = ' OR '.join([
-                '"%s"' % sqs.query.clean(c.full_name) for c in self.categories])
-            sqs = sqs.narrow('category_exact:(%s)' % pattern)
-        return sqs
+            form_data['category'] = self.categories[-1].pk
 
+        if form_data.get('category'):
+            filters['categories'] = {
+                'type': 'term',
+                'params': {'categories': int(form_data.get('category'))}
+            }
 
-class ESProductSearchHandler(SearchHandler):
-    """
-    Search handler specialised for searching products.  Comes with optional
-    category filtering. To be used with an ElasticSearch search backend.
-    """
-    form_class = BrowseCategoryForm
-    model_whitelist = [Product]
-    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+        price_min = form_data.get('price_min')
+        price_max = form_data.get('price_max')
+        if price_min is not None:
+            price_params = {
+                'gte': float(price_min)
+            }
+            if price_max is not None:
+                price_params['lte'] = float(price_max)
 
-    def __init__(self, request_data, full_path, categories=None):
-        self.categories = categories
-        super(ESProductSearchHandler, self).__init__(request_data, full_path)
+            # Does your head hurt making sense of this?
+            filters['price'] = {
+                'type': 'nested',
+                'params': {
+                    'path': 'stock',
+                    'query': {
+                        'bool': {
+                            'must': [
+                                {
+                                    'range': {'stock.price': price_params}
+                                },
+                                {
+                                    'match': {'stock.currency': self.currency}
+                                },
+                            ]
+                        }
+                    }
+                }
+            }
 
-    def get_search_queryset(self):
-        sqs = super(ESProductSearchHandler, self).get_search_queryset()
+        if settings.OSCAR_SEARCH.get('HIDE_OOS_FROM_CATEGORY_VIEW'):
+            filters['num_in_stock'] = {
+                'type': 'nested',
+                'params': {
+                    'path': 'stock',
+                    'query': {
+                        'bool': {
+                            'must': [
+                                {
+                                    'range': {'stock.price': {'gt': 0}}
+                                },
+                                {
+                                    'match': {'stock.currency': self.currency}
+                                },
+                            ]
+                        }
+                    }
+                }
+            }
+
+        # Filter for the selected currency
+        filters['currency'] = {
+            'type': 'nested',
+            'params': {
+                'path': 'stock',
+                'query': {
+                    'match': {'stock.currency': self.currency}
+                }
+            }
+        }
+
+        return filters
+
+    def get_category_tree(self):
         if self.categories:
-            for category in self.categories:
-                sqs = sqs.filter_or(category=category.full_name)
-        return sqs
+            return filter.build_category_tree(
+                request_url=self.full_path,
+                category=self.categories[-1].pk,
+                agg=self.results['other_aggs']['category'],
+                use_cat_url=True
+            )
+        else:
+            return filter.build_category_tree(
+                request_url=self.full_path,
+                category=self.request_data.get('category'),
+                agg=self.results['other_aggs']['category']
+            )
 
+    def get_search_kwargs(self, search_form, page_no=1):
+        kwargs = super(ProductSearchHandler, self).get_search_kwargs(search_form, page_no)
+        kwargs['currency'] = self.currency
+        return kwargs
 
-class SimpleProductSearchHandler(MultipleObjectMixin):
-    """
-    A basic implementation of the full-featured SearchHandler that has no
-    faceting support, but doesn't require a Haystack backend. It only
-    supports category browsing.
+    def get_search_context_data(self, context_object_name=None):
+        """
+        Oscar's category view expects this method to return the template context
+        """
+        return self.context
 
-    Note that is meant as a replacement search handler and not as a view
-    mixin; the mixin just does most of what we need it to do.
-    """
-    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+    def prepare_context(self, results):
+        context = super(ProductSearchHandler, self).prepare_context(results)
 
-    def __init__(self, request_data, full_path, categories=None):
-        self.categories = categories
-        self.kwargs = {'page': request_data.get('page', 1)}
-        self.object_list = self.get_queryset()
+        if results is not None:
+            # Filters
+            if self.request_data.get('category'):
+                try:
+                    cat_id = int(self.request_data.get('category'))
+                except ValueError:
+                    raise Http404()
+                context['category'] = get_object_or_404(Category, pk=cat_id)
 
-    def get_queryset(self):
-        qs = Product.browsable.base_queryset()
-        if self.categories:
-            qs = qs.filter(categories__in=self.categories).distinct()
-        return qs
+            if 'category' in results['other_aggs']:
+                context['categories'] = self.get_category_tree()
 
-    def get_search_context_data(self, context_object_name):
-        # Set the context_object_name instance property as it's needed
-        # internally by MultipleObjectMixin
-        self.context_object_name = context_object_name
-        context = self.get_context_data(object_list=self.object_list)
-        context[context_object_name] = context['page_obj'].object_list
+            if results['price_ranges']:
+                context['price_ranges'] = filter.build_price_ranges(
+                    price_ranges=results['price_ranges'],
+                    currency=self.currency,
+                    request_url=self.full_path
+                )
+            elif self.form.cleaned_data.get('price_min') is not None:
+                context['clear_price_url'] = filter.clear_price_from_url(self.full_path)
+                context['selected_price_range'] = filter.price_display_name(
+                    self.form.cleaned_data.get('price_min'),
+                    self.form.cleaned_data.get('price_max'),
+                    self.currency
+                )
+
         return context
+
+
+class OnSaleSearchHandler(ProductSearchHandler):
+
+    def get_filters(self, form_data):
+        filters = super(OnSaleSearchHandler, self).get_filters(form_data)
+        filters['on_sale'] = {
+            'type': 'nested',
+            'params': {
+                'path': 'stock',
+                'query': {
+                    'bool': {
+                        'must': [
+                            {
+                                'match': {'stock.on_sale': True}
+                            },
+                            {
+                                'match': {'stock.currency': self.currency}
+                            },
+                        ]
+                    }
+                }
+            }
+        }
+
+        return filters
+
+
+class ManufacturerSearchHandler(ProductSearchHandler):
+
+    def __init__(self, manufacturer, *args, **kwargs):
+        self.manufacturer = manufacturer
+        super(ManufacturerSearchHandler, self).__init__(*args, **kwargs)
+
+    def get_filters(self, form_data):
+        filters = super(ManufacturerSearchHandler, self).get_filters(form_data)
+        filters['manufacturer'] = {
+            'type': 'term',
+            'params': {'manufacturer.keyword': self.manufacturer.name}
+        }
+        return filters

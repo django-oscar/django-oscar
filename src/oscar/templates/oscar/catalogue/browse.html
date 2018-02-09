@@ -49,7 +49,7 @@
         <div class="side_categories">
             {% for field, data in facet_data.items %}
                 {% if data.results %}
-                    {% include 'search/partials/facet.html' with name=data.name items=data.results %}
+                    {% include 'catalogue/search/partials/facet.html' with name=data.name items=data.results %}
                 {% endif %}
             {% endfor %}
         </div>
@@ -91,11 +91,11 @@
         {% endif %}
     </form>
 
-    {% if products %}
+    {% if page_obj.object_list %}
         <section>
             <div>
                 <ol class="row">
-                    {% for product in products %}
+                    {% for product in page_obj.object_list %}
                         <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
                     {% endfor %}
                 </ol>

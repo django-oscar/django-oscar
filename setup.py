@@ -25,7 +25,7 @@ install_requires = [
     # We use the ModelFormSetView from django-extra-views for the basket page
     'django-extra-views>=0.11,<0.12',
     # Search support
-    'django-haystack>=2.5.0,<3.0.0',
+    'django-elasticsearch-dsl==0.4.4',
     # Treebeard is used for categories
     'django-treebeard>=4.3.0',
     # Sorl is used as the default thumbnailer
