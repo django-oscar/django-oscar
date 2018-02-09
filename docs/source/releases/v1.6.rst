@@ -35,8 +35,6 @@ Removal of deprecated features
 
  - Removed the redundant ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting.
 
- - Removed the redundant ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting.
-
 Minor changes
 ~~~~~~~~~~~~~
  - The majority of the Oscar class imports now use dynamic loading, instead of
@@ -87,6 +85,9 @@ Minor changes
 
  - The Google Analytics tracking code provided by Oscar now uses ``gtag.js`` API
    instead of the deprecated ``analytics.js``.
+
+ - Oscar's ``TimePickerInput``, ``DatePickerInput`` and ``DateTimePickerInput``
+   now use templates for rendering.
 
 .. _incompatible_in_1.6:
 

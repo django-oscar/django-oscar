@@ -8,7 +8,6 @@ from django.forms.widgets import FileInput
 from django.template.loader import render_to_string
 from django.utils import formats, six
 from django.utils.encoding import force_text
-from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.six.moves import filter, map
 
@@ -139,16 +138,15 @@ def datetime_format_to_js_input_mask(format):
 
 class DateTimeWidgetMixin(object):
 
+    template_name = 'oscar/forms/widgets/date_time_picker.html'
+
     def get_format(self):
         return self.format or formats.get_format(self.format_key)[0]
 
-    def gett_attrs(self, attrs, format):
-        if not attrs:
-            attrs = {}
-
+    def build_attrs(self, base_attrs, extra_attrs=None):
+        attrs = super(DateTimeWidgetMixin, self).build_attrs(base_attrs, extra_attrs)
         attrs['data-inputmask'] = u"'mask': '{mask}'".format(
-            mask=datetime_format_to_js_input_mask(format))
-
+            mask=datetime_format_to_js_input_mask(self.get_format()))
         return attrs
 
 
@@ -159,26 +157,14 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
     """
     format_key = 'TIME_INPUT_FORMATS'
 
-    def render(self, name, value, attrs=None, renderer=None):
-        format = self.get_format()
-        input = super(TimePickerInput, self).render(
-            name, value, self.gett_attrs(attrs, format))
-
-        attrs = {
+    def get_context(self, name, value, attrs):
+        ctx = super(TimePickerInput, self).get_context(name, value, attrs)
+        ctx['div_attrs'] = {
             'data-oscarWidget': 'time',
-            'data-timeFormat': datetime_format_to_js_time_format(format),
+            'data-timeFormat': datetime_format_to_js_time_format(self.get_format()),
         }
-
-        div = format_html(u'<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe(u'<div class="form-inline">'
-                         u' {div}'
-                         u'  {input}'
-                         u'  <span class="input-group-addon">'
-                         u'   <i class="icon-time glyphicon-time"></i>'
-                         u'  </span>'
-                         u' </div>'
-                         u'</div>'
-                         .format(div=div, input=input))
+        ctx['icon_classes'] = 'icon-time glyphicon-time'
+        return ctx
 
 
 class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
@@ -188,26 +174,14 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
     """
     format_key = 'DATE_INPUT_FORMATS'
 
-    def render(self, name, value, attrs=None, renderer=None):
-        format = self.get_format()
-        input = super(DatePickerInput, self).render(
-            name, value, self.gett_attrs(attrs, format))
-
-        attrs = {
+    def get_context(self, name, value, attrs):
+        ctx = super(DatePickerInput, self).get_context(name, value, attrs)
+        ctx['div_attrs'] = {
             'data-oscarWidget': 'date',
-            'data-dateFormat': datetime_format_to_js_date_format(format),
+            'data-dateFormat': datetime_format_to_js_date_format(self.get_format()),
         }
-
-        div = format_html(u'<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe(u'<div class="form-inline">'
-                         u' {div}'
-                         u'  {input}'
-                         u'  <span class="input-group-addon">'
-                         u'   <i class="icon-calendar glyphicon-calendar"></i>'
-                         u'  </span>'
-                         u' </div>'
-                         u'</div>'
-                         .format(div=div, input=input))
+        ctx['icon_classes'] = 'icon-calendar glyphicon-calendar'
+        return ctx
 
 
 class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
@@ -219,7 +193,7 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
     without localize=True.
 
     For localized widgets refer to
-    https://docs.djangoproject.com/en/1.6/topics/i18n/formatting/#creating-custom-format-files # noqa
+    https://docs.djangoproject.com/en/1.11/topics/i18n/formatting/#creating-custom-format-files # noqa
     instead to override the format.
     """
     format_key = 'DATETIME_INPUT_FORMATS'
@@ -231,26 +205,14 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
         if not include_seconds and self.format:
             self.format = re.sub(':?%S', '', self.format)
 
-    def render(self, name, value, attrs=None, renderer=None):
-        format = self.get_format()
-        input = super(DateTimePickerInput, self).render(
-            name, value, self.gett_attrs(attrs, format))
-
-        attrs = {
+    def get_context(self, name, value, attrs):
+        ctx = super(DateTimePickerInput, self).get_context(name, value, attrs)
+        ctx['div_attrs'] = {
             'data-oscarWidget': 'datetime',
-            'data-datetimeFormat': datetime_format_to_js_datetime_format(format),
+            'data-datetimeFormat': datetime_format_to_js_datetime_format(self.get_format()),
         }
-
-        div = format_html(u'<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe(u'<div class="form-inline">'
-                         u' {div}'
-                         u'  {input}'
-                         u'  <span class="input-group-addon">'
-                         u'   <i class="icon-calendar glyphicon-calendar"></i>'
-                         u'  </span>'
-                         u' </div>'
-                         u'</div>'
-                         .format(div=div, input=input))
+        ctx['icon_classes'] = 'icon-calendar glyphicon-calendar'
+        return ctx
 
 
 class AdvancedSelect(forms.Select):
