@@ -86,8 +86,8 @@ Minor changes
  - The Google Analytics tracking code provided by Oscar now uses ``gtag.js`` API
    instead of the deprecated ``analytics.js``.
 
- - Oscar's ``TimePickerInput``, ``DatePickerInput`` and ``DateTimePickerInput``
-   now use templates for rendering.
+ - Oscar's ``ImageInput``, ``TimePickerInput``, ``DatePickerInput`` and
+   ``DateTimePickerInput`` all use templates for rendering.
 
 .. _incompatible_in_1.6:
 

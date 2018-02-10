@@ -13,6 +13,6 @@
         <button class="btn btn-primary" id="upload_button_{{ image_id }}">{% trans "Upload Image" %}</button>
     {% endif %}
     <div class="input-field">
-        <input {{ input_attrs|safe }} accept="image/*" />
+        {% include "django/forms/widgets/input.html" %}
     </div>
 </div>
