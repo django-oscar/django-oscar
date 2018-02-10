@@ -10,6 +10,13 @@ from django.utils import six
 from oscar.core.loading import get_model
 
 
+try:
+    # Python 3
+    from http.cookies import _unquote
+except ImportError:
+    from Cookie import _unquote
+
+
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 try:
@@ -72,6 +79,13 @@ def existing_user_fields(fields):
 
 
 # Python3 compatibility layer
+
+def unquote_cookie(cookie_value):
+    """
+    Make sure a cookie value is unescaped from double quotes
+    """
+    return _unquote(cookie_value)
+
 
 """
 Unicode compatible wrapper for CSV reader and writer that abstracts away

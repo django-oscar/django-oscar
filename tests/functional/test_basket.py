@@ -7,15 +7,14 @@ from django.urls import reverse
 from django.utils.six.moves import http_client
 from django.utils.translation import ugettext
 
-from oscar.test.factories import create_product
-from oscar.core.compat import get_user_model
-from oscar.test import factories
-from oscar.test.basket import add_product
-from oscar.test.utils import extract_cookie_value
 from oscar.apps.basket import reports
 from oscar.apps.basket.models import Basket
-from oscar.test.testcases import WebTestCase
 from oscar.apps.partner import strategy
+from oscar.core.compat import get_user_model, unquote_cookie
+from oscar.test import factories
+from oscar.test.basket import add_product
+from oscar.test.factories import create_product
+from oscar.test.testcases import WebTestCase
 
 
 User = get_user_model()
@@ -60,9 +59,7 @@ class AnonAddToBasketViewTests(WebTestCase):
         self.assertTrue('oscar_open_basket' in self.response.test_app.cookies)
 
     def test_price_is_recorded(self):
-        oscar_open_basket_cookie = extract_cookie_value(
-            self.response.test_app.cookies, 'oscar_open_basket'
-        )
+        oscar_open_basket_cookie = unquote_cookie(self.response.test_app.cookies['oscar_open_basket'])
         basket_id = oscar_open_basket_cookie.split(':')[0]
         basket = Basket.objects.get(id=basket_id)
         line = basket.lines.get(product=self.product)
