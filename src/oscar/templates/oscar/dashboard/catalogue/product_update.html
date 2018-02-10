@@ -74,9 +74,7 @@
                                 {% if product_class.has_attributes %}
                                     <li><a href="#product_attributes" data-toggle="tab">{% trans 'Attributes' %}</a></li>
                                 {% endif %}
-                                {% if not parent %}
-                                    <li><a href="#product_images" data-toggle="tab">{% trans 'Images' %}</a></li>
-                                {% endif %}
+                                <li><a href="#product_images" data-toggle="tab">{% trans 'Images' %}</a></li>
                                 {% if not product.is_parent %}
                                     <li><a href="#product_stock" data-toggle="tab">{% trans 'Stock and pricing' %}</a></li>
                                 {% endif %}
