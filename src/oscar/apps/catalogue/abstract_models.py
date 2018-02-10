@@ -325,6 +325,14 @@ class AbstractProduct(models.Model):
         help_text=_("These are products that are recommended to accompany the "
                     "main product."))
 
+    # Which images belong to which child. For instance, you might have both a Blue and Dark Blue
+    # T-Shirt, so it's important to be totally clear on this matter
+    child_images = models.ManyToManyField(
+        'catalogue.ProductImage',
+        blank='True',
+        related_name='children',
+        verbose_name='Child images')
+
     # Denormalised product rating - used by reviews app.
     # Product has no ratings if rating is None
     rating = models.FloatField(_('Rating'), null=True, editable=False)
@@ -399,6 +407,8 @@ class AbstractProduct(models.Model):
         +---------------+-------------+--------------+--------------+
         | rec. products | optional    | optional     | unsupported  |
         +---------------+-------------+--------------+--------------+
+        | child images  | forbidden   | forbidden    | 0 or more    |
+        +---------------+-------------+--------------+--------------+
         | options       | optional    | optional     | forbidden    |
         +---------------+-------------+--------------+--------------+
 
@@ -419,6 +429,8 @@ class AbstractProduct(models.Model):
             raise ValidationError(_("Your product must have a product class."))
         if self.parent_id:
             raise ValidationError(_("Only child products can have a parent."))
+        if self.pk and self.child_images.exists():
+            raise ValidationError(_("Only child products can have child images."))
 
     def _clean_child(self):
         """
@@ -574,8 +586,12 @@ class AbstractProduct(models.Model):
         Returns the primary image for a product. Usually used when one can
         only display one product image, e.g. in a list of products.
         """
-        images = self.images.all()
-        ordering = self.images.model.Meta.ordering
+        if self.structure == self.CHILD:
+            images_manager = self.child_images
+        else:
+            images_manager = self.images
+        images = images_manager.all()
+        ordering = images_manager.model.Meta.ordering
         if not ordering or ordering[0] != 'display_order':
             # Only apply order_by() if a custom model doesn't use default
             # ordering. Applying order_by() busts the prefetch cache of

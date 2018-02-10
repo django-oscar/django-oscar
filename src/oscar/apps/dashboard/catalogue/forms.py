@@ -1,3 +1,5 @@
+import os
+
 from django import forms
 from django.core import exceptions
 from django.utils.translation import ugettext_lazy as _
@@ -164,6 +166,18 @@ def _attr_image_field(attribute):
         label=attribute.name, required=attribute.required)
 
 
+def _child_images_label_from_instance(image):
+    """
+    The default __str__ representation for a ProductImage isn't really suitable for our
+    child_images widget; by default, all of the images will say "Image of 'Parent'".
+    """
+    basename = os.path.basename(image.original.name)
+    if image.caption:
+        return '%s (%s)' % (basename, image.caption)
+    else:
+        return basename
+
+
 class ProductForm(forms.ModelForm):
     FIELD_FACTORIES = {
         "text": _attr_text_field,
@@ -184,7 +198,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'title', 'upc', 'description', 'is_discountable', 'structure']
+            'title', 'upc', 'description', 'is_discountable', 'child_images', 'structure']
         widgets = {
             'structure': forms.HiddenInput()
         }
@@ -201,9 +215,12 @@ class ProductForm(forms.ModelForm):
             self.instance.parent.structure = Product.PARENT
 
             self.delete_non_child_fields()
+            self.patch_child_images_field()
         else:
             # Only set product class for non-child products
             self.instance.product_class = product_class
+
+            self.delete_child_fields()
         self.add_attribute_fields(product_class, self.instance.is_parent)
 
         if 'title' in self.fields:
@@ -257,6 +274,24 @@ class ProductForm(forms.ModelForm):
         Gets the correct form field for a given attribute type.
         """
         return self.FIELD_FACTORIES[attribute.type](attribute)
+
+    def delete_child_fields(self):
+        for field_name in ['child_images']:
+            if field_name in self.fields:
+                del self.fields[field_name]
+
+    def patch_child_images_field(self):
+        """
+        The child_images widget should only reference the parent's images. In addition,
+        the label needs to be somewhat more verbose than the default.
+        """
+        if 'child_images' in self.fields:
+            if self.instance.parent:
+                queryset = self.instance.parent.images.all()
+            else:
+                queryset = ProductImage.objects.none()
+            self.fields['child_images'].queryset = queryset
+            self.fields['child_images'].label_from_instance = _child_images_label_from_instance
 
     def delete_non_child_fields(self):
         """
