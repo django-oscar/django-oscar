@@ -569,12 +569,17 @@ class AbstractProduct(models.Model):
         # field.
         return MissingProductImage()
 
+    def get_all_images(self):
+        if self.is_child and not self.images.exists():
+            return self.parent.images.all()
+        return self.images.all()
+
     def primary_image(self):
         """
         Returns the primary image for a product. Usually used when one can
         only display one product image, e.g. in a list of products.
         """
-        images = self.images.all()
+        images = self.get_all_images()
         ordering = self.images.model.Meta.ordering
         if not ordering or ordering[0] != 'display_order':
             # Only apply order_by() if a custom model doesn't use default
@@ -584,18 +589,13 @@ class AbstractProduct(models.Model):
         try:
             return images[0]
         except IndexError:
-            if self.is_child:
-                # By default, Oscar's dashboard doesn't support child images.
-                # We just serve the parents image instead.
-                return self.parent.primary_image()
-            else:
-                # We return a dict with fields that mirror the key properties of
-                # the ProductImage class so this missing image can be used
-                # interchangeably in templates.  Strategy pattern ftw!
-                return {
-                    'original': self.get_missing_image(),
-                    'caption': '',
-                    'is_missing': True}
+            # We return a dict with fields that mirror the key properties of
+            # the ProductImage class so this missing image can be used
+            # interchangeably in templates.  Strategy pattern ftw!
+            return {
+                'original': self.get_missing_image(),
+                'caption': '',
+                'is_missing': True}
 
     # Updating methods
 

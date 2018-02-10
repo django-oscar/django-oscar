@@ -91,6 +91,9 @@ Minor changes
 
  - It's now possible to manage images for variant products and their parents.
 
+ - For variant products we now display their own images on product detail page
+   and fallback to parent product images if they don't have any.
+
 .. _incompatible_in_1.6:
 
 Backwards incompatible changes in Oscar 1.6
