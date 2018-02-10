@@ -14,7 +14,7 @@ django-redis==4.8.0
 pysolr==3.7.0
 redis==2.10.6
 requests==2.18.4
-uWSGI==2.0.15
+uWSGI==2.0.16
 whitenoise==3.3.1
 
 # Linting
