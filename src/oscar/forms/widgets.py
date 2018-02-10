@@ -5,7 +5,6 @@ from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.utils import flatatt
 from django.forms.widgets import FileInput
-from django.template.loader import render_to_string
 from django.utils import formats, six
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
@@ -20,36 +19,24 @@ class ImageInput(FileInput):
     been previously uploaded. Selecting the image will open the file
     dialog and allow for selecting a new or replacing image file.
     """
-    template_name = 'partials/image_input_widget.html'
-    attrs = {'accept': 'image/*'}
+    template_name = 'oscar/forms/widgets/image_input_widget.html'
 
-    def render(self, name, value, attrs=None, renderer=None):
-        """
-        Render the ``input`` field based on the defined ``template_name``. The
-        image URL is take from *value* and is provided to the template as
-        ``image_url`` context variable relative to ``MEDIA_URL``. Further
-        attributes for the ``input`` element are provide in ``input_attrs`` and
-        contain parameters specified in *attrs* and *name*.
-        If *value* contains no valid image URL an empty string will be provided
-        in the context.
-        """
-        extra_attrs = {
-            'type': self.input_type,
-            'name': name,
-        }
-        final_attrs = self.build_attrs(attrs, extra_attrs=extra_attrs)
+    def __init__(self, attrs=None):
+        if not attrs:
+            attrs = {}
+        attrs['accept'] = 'image/*'
+        super(ImageInput, self).__init__(attrs=attrs)
 
-        if not value or isinstance(value, InMemoryUploadedFile):
-            # can't display images that aren't stored
-            image_url = ''
-        else:
-            image_url = final_attrs['value'] = value
+    def get_context(self, name, value, attrs):
+        ctx = super(ImageInput, self).get_context(name, value, attrs)
 
-        return render_to_string(self.template_name, {
-            'input_attrs': flatatt(final_attrs),
-            'image_url': image_url,
-            'image_id': "%s-image" % final_attrs['id'],
-        })
+        ctx['image_url'] = ''
+        if value and not isinstance(value, InMemoryUploadedFile):
+            # can't display images that aren't stored - pass empty string to context
+            ctx['image_url'] = value
+
+        ctx['image_id'] = "%s-image" % ctx['widget']['attrs']['id']
+        return ctx
 
 
 class WYSIWYGTextArea(forms.Textarea):

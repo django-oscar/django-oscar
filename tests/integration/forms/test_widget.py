@@ -6,6 +6,24 @@ from django.test import TestCase
 from oscar.forms import widgets
 
 
+class ImageInputTestCase(TestCase):
+
+    def test_unbound_context(self):
+        i = widgets.ImageInput()
+        ctx = i.get_context('test_input', None, {'id': 'test-image-id'})
+        self.assertEqual(ctx['image_id'], 'test-image-id-image')
+        self.assertEqual(ctx['image_url'], '')
+        self.assertEqual(
+            ctx['widget']['attrs'],
+            {'accept': 'image/*', 'id': 'test-image-id'}
+        )
+
+    def test_bound_context(self):
+        i = widgets.ImageInput()
+        ctx = i.get_context('test_input', '/dummy-image-value', {'id': 'test-image-id'})
+        self.assertEqual(ctx['image_url'], '/dummy-image-value')
+
+
 class TimePickerInputTestCase(TestCase):
 
     def test_div_attrs_context(self):
