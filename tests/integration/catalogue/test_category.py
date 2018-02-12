@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from django.core.cache import cache
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -13,6 +13,9 @@ class TestCategory(TestCase):
     def setUp(self):
         self.products = Category.add_root(name=u"Pröducts")
         self.books = self.products.add_child(name=u"Bücher")
+
+    def tearDown(self):
+        cache.clear()
 
     def test_includes_parents_name_in_full_name(self):
         self.assertTrue(self.products.name in self.books.full_name)
@@ -37,12 +40,27 @@ class TestCategory(TestCase):
         more_books = Category.add_root(name=self.books.name)
         self.assertEqual(more_books.slug, self.books.slug)
 
+    @override_settings(OSCAR_SLUG_ALLOW_UNICODE=True)
     def test_unicode_slug(self):
-        with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
-            root_category = Category.add_root(name=u"Vins français")
-            child_category = root_category.add_child(name=u"Château d'Yquem")
-            self.assertEqual(root_category.slug, u'vins-français')
-            self.assertEqual(child_category.slug, u'château-dyquem')
+        root_category = Category.add_root(name=u"Vins français")
+        child_category = root_category.add_child(name=u"Château d'Yquem")
+        self.assertEqual(root_category.slug, u'vins-français')
+        self.assertEqual(
+            root_category.get_absolute_url(), '/catalogue/category/vins-fran%C3%A7ais_{}/'.format(root_category.pk)
+        )
+        self.assertEqual(child_category.slug, u'château-dyquem')
+        self.assertEqual(
+            child_category.get_absolute_url(),
+            u'/catalogue/category/vins-fran%C3%A7ais/ch%C3%A2teau-dyquem_{}/'.format(child_category.pk)
+        )
+
+    @override_settings(OSCAR_SLUG_ALLOW_UNICODE=True)
+    def test_url_caching(self):
+        category = self.products.add_child(name=u"Fromages français")
+        absolute_url = category.get_absolute_url()
+        url = cache.get(category.get_url_cache_key())
+        self.assertEqual(url, '/catalogue/category/products/fromages-fran%C3%A7ais_{}/'.format(category.pk))
+        self.assertEqual(absolute_url, '/catalogue/category/products/fromages-fran%C3%A7ais_{}/'.format(category.pk))
 
 
 class TestMovingACategory(TestCase):
