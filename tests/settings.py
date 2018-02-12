@@ -36,7 +36,11 @@ INSTALLED_APPS = [
     # Use a custom partner app to test overriding models.  I can't
     # find a way of doing this on a per-test basis, so I'm using a
     # global change.
-] + oscar.get_core_apps(['tests._site.apps.partner', 'tests._site.apps.customer'])
+] + oscar.get_core_apps([
+    'tests._site.apps.partner',
+    'tests._site.apps.customer',
+    'tests._site.apps.catalogue'
+])
 
 AUTH_USER_MODEL = 'myauth.User'
 

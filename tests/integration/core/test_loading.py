@@ -44,7 +44,7 @@ class TestClassLoading(TestCase):
         app if the overriding app throws an ImportError.
         """
         apps = list(settings.INSTALLED_APPS)
-        apps[apps.index('oscar.apps.catalogue')] = 'tests._site.import_error_app.catalogue'
+        apps[apps.index('tests._site.apps.catalogue')] = 'tests._site.import_error_app.catalogue'
         with override_settings(INSTALLED_APPS=apps):
             with self.assertRaises(ImportError):
                 get_class('catalogue.app', 'CatalogueApplication')
