@@ -1,10 +1,12 @@
-from django.db import models
+from oscar.core.loading import is_model_registered
+
+from .abstract_models import AbstractSynonym
+
+__all__ = []
 
 
-class Synonym(models.Model):
-    synonyms = models.CharField(max_length=255,
-                                help_text='Comma-separated list of synonyms, optionally mapped using '
-                                          '"=>" to what they should be rewritten to.')
+if not is_model_registered('search', 'Synonym'):
+    class Synonym(AbstractSynonym):
+        pass
 
-    def __str__(self):
-        return self.synonyms
+    __all__.append('Synonym')
