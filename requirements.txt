@@ -19,7 +19,7 @@ whitenoise==3.3.1
 
 # Linting
 flake8==3.5.0
-flake8-debugger==3.0.0
+flake8-debugger==3.1.0
 flake8-blind-except==0.1.1
 isort==4.3.4
 
