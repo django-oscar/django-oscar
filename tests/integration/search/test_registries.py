@@ -1,4 +1,4 @@
-from unittest.mock import patch
+import mock
 
 from django.conf import settings
 from django.test import TestCase
@@ -24,7 +24,7 @@ class AnalyzerRegistryTestCase(TestCase):
     def test_define_in_index_finds_analyzers_in_analyzer_dot_py_files(self):
         settings.OSCAR_SEARCH['ANALYZERS'] = ['tests._site.apps.myapp.analyzers.test_analyzer']
 
-        with patch.object(Index, 'analyzer') as mock_analyzer:
+        with mock.patch.object(Index, 'analyzer') as mock_analyzer:
             index = Index('test')
 
             analyzer_registry = AnalyzerRegistry()
