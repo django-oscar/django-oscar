@@ -5,8 +5,8 @@ from django.utils.six.moves import http_client
 from django.utils.translation import ugettext
 
 from oscar.apps.catalogue.models import Category
-from oscar.test.factories import create_product
-from oscar.test.testcases import WebTestCase
+from oscar.test.factories import create_product, create_product_in_index
+from oscar.test.testcases import WebTestCase, SearchTestCase
 
 
 class TestProductDetailView(WebTestCase):
@@ -40,16 +40,16 @@ class TestProductDetailView(WebTestCase):
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
 
 
-class TestProductListView(WebTestCase):
+class TestProductListView(SearchTestCase, WebTestCase):
 
     def test_shows_add_to_basket_button_for_available_product(self):
-        product = create_product(num_in_stock=1)
+        product = create_product_in_index(num_in_stock=1)
         page = self.app.get(reverse('catalogue:index'))
         self.assertContains(page, product.title)
         self.assertContains(page, ugettext("Add to basket"))
 
     def test_shows_not_available_for_out_of_stock_product(self):
-        product = create_product(num_in_stock=0)
+        product = create_product_in_index(num_in_stock=0)
 
         page = self.app.get(reverse('catalogue:index'))
 
@@ -60,16 +60,17 @@ class TestProductListView(WebTestCase):
         per_page = settings.OSCAR_PRODUCTS_PER_PAGE
         title = u"Product #%d"
         for idx in range(0, int(1.5 * per_page)):
-            create_product(title=title % idx)
+            create_product_in_index(title=title % idx, num_in_stock=100, price=200)
 
         page = self.app.get(reverse('catalogue:index'))
 
         self.assertContains(page, "Page 1 of 2")
 
 
-class TestProductCategoryView(WebTestCase):
+class TestProductCategoryView(SearchTestCase, WebTestCase):
 
     def setUp(self):
+        super(TestProductCategoryView, self).setUp()
         self.category = Category.add_root(name="Products")
 
     def test_browsing_works(self):

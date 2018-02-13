@@ -1,9 +1,13 @@
+from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.urls import reverse
 from django.utils.six.moves import http_client
+from django_elasticsearch_dsl.registries import registry
+from django_elasticsearch_dsl.test import ESTestCase
 from django_webtest import WebTest
 from purl import URL
 
+from oscar.apps.search.registries import AnalyzerRegistry
 from oscar.core.compat import get_user_model
 
 User = get_user_model()
@@ -105,3 +109,16 @@ class WebTestCase(WebTest):
         self.assertContext(response)
         self.assertTrue(key in response.context,
                         "Context should contain a variable '%s'" % key)
+
+
+class SearchTestCase(ESTestCase):
+
+    def setUp(self):
+        for index in registry.get_indices():
+            index.delete(ignore=[404, 400])
+
+            analyzer_registry = AnalyzerRegistry()
+            analyzer_registry.define_in_index(index)
+
+            index.settings(**settings.OSCAR_SEARCH['INDEX_CONFIG'])
+            index.create()
