@@ -34,7 +34,7 @@ sandbox_image:
 	docker build -t django-oscar-sandbox:latest .
 
 venv:
-	virtualenv --python=$(shell which python3.5) $(VENV)
+	virtualenv --python=$(shell which python3) $(VENV)
 	$(VENV)/bin/pip install -e .[test]
 	$(VENV)/bin/pip install -r docs/requirements.txt
 
