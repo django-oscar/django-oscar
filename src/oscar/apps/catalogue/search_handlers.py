@@ -6,7 +6,6 @@ from django.utils.module_loading import import_string
 from oscar.core.loading import get_class, get_model
 
 from . import filter
-from oscar.apps.search import forms
 from oscar.apps.search.base import BaseSearchHandler
 from . import forms
 
@@ -178,44 +177,3 @@ class ProductSearchHandler(BaseSearchHandler):
                 )
 
         return context
-
-
-class OnSaleSearchHandler(ProductSearchHandler):
-
-    def get_filters(self, form_data):
-        filters = super(OnSaleSearchHandler, self).get_filters(form_data)
-        filters['on_sale'] = {
-            'type': 'nested',
-            'params': {
-                'path': 'stock',
-                'query': {
-                    'bool': {
-                        'must': [
-                            {
-                                'match': {'stock.on_sale': True}
-                            },
-                            {
-                                'match': {'stock.currency': self.currency}
-                            },
-                        ]
-                    }
-                }
-            }
-        }
-
-        return filters
-
-
-class ManufacturerSearchHandler(ProductSearchHandler):
-
-    def __init__(self, manufacturer, *args, **kwargs):
-        self.manufacturer = manufacturer
-        super(ManufacturerSearchHandler, self).__init__(*args, **kwargs)
-
-    def get_filters(self, form_data):
-        filters = super(ManufacturerSearchHandler, self).get_filters(form_data)
-        filters['manufacturer'] = {
-            'type': 'term',
-            'params': {'manufacturer.keyword': self.manufacturer.name}
-        }
-        return filters
