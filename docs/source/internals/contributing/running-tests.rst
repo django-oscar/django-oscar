@@ -2,6 +2,14 @@
 Test suite
 ==========
 
+Testing requirements
+--------------------
+
+You'll need:
+
+- A running SQL server (PostgreSQL, or SQLite with `--sqlite` params)
+- python3.5 or python3.6
+
 Running tests
 -------------
 
