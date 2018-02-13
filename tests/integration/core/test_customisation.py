@@ -67,7 +67,7 @@ def test_creates_models_and_admin_file(tmpdir):
 
 def test_copies_in_migrations_when_needed(tmpdir):
     path = tmpdir.mkdir('fork')
-    for app, has_models in [('order', True), ('search', False)]:
+    for app, has_models in [('order', True), ('checkout', False)]:
         customisation.fork_app(app, str(path))
 
         native_migration_path = path.join(app).join('migrations')
