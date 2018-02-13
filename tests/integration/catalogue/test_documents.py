@@ -1,4 +1,5 @@
 import importlib
+import sys
 
 from dateutil.relativedelta import relativedelta
 from mock import patch, call
@@ -14,10 +15,13 @@ from oscar.test import factories
 from oscar.test.factories import (create_product, create_stockrecord, create_basket,
                                   create_order, ProductFactory)
 
+if sys.version_info >= (3, 0):
+    reload = importlib.reload
+
 
 def ProductDocument(*args, **kwargs):
     documents = importlib.import_module('oscar.apps.catalogue.documents')
-    importlib.reload(documents)
+    reload(documents)
     return documents.ProductDocument(*args, **kwargs)
 
 
