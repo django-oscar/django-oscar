@@ -94,10 +94,10 @@ class BaseRangeFacet(BaseFacet):
         from_value = int(bucket.get('from', 0))
         to_value = int(bucket.get('to', 0))
         if not from_value:
-            return 'Up to {}'.format(to_value-1)
+            return 'Up to {}'.format(to_value - 1)
         if not to_value:
             return '{} and above'.format(from_value)
-        return '{} to {}'.format(from_value, to_value-1)
+        return '{} to {}'.format(from_value, to_value - 1)
 
     def get_facet(self):
         # Horrible ugly check to return an empty result if all ranges are empty
@@ -134,12 +134,10 @@ def build_oscar_facets(aggs, request_url, selected_facets):
         if not isinstance(agg, dict):
             continue
         Facet = get_facet_class(field)
-        facet_data[field] = Facet(
-                name=field,
-                agg=agg,
-                request_url=request_url,
-                selected_facets=selected_facets) \
-                .get_facet()
+        facet_data[field] = Facet(name=field,
+                                  agg=agg,
+                                  request_url=request_url,
+                                  selected_facets=selected_facets).get_facet()
 
     # Sort facets based on the order supplied in settings
     facet_order = getattr(settings, 'OSCAR_FACET_ORDER', [])

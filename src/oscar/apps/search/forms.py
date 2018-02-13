@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 def items_per_page_choices():
     n = settings.OSCAR_PRODUCTS_PER_PAGE
-    return [(n*i, n*i) for i in (1, 2, 4)]
+    return [(n * i, n * i) for i in (1, 2, 4)]
 
 
 class SearchInput(Input):

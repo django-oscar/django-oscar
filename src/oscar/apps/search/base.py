@@ -63,8 +63,7 @@ class BaseSearchHandler(object):
         if results is not None:
             context['paginator'] = results['paginator']
             try:
-                context['page_obj'] = results['paginator'].page(
-                                                self.request_data.get('page', 1))
+                context['page_obj'] = results['paginator'].page(self.request_data.get('page', 1))
             except EmptyPage:
                 raise InvalidPage('Invalid page number')
 
@@ -78,7 +77,6 @@ class BaseSearchHandler(object):
                     selected_facets=self.form.selected_multi_facets
                 )
                 # Set has_facets to True if at least one facet is non-empty
-                context['has_facets'] = any(len(data['results']) > 0 \
-                                    for data in context['facet_data'].values())
+                context['has_facets'] = any(len(data['results']) > 0 for data in context['facet_data'].values())
 
         return context

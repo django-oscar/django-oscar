@@ -1,4 +1,5 @@
-import math, six
+import math
+import six
 
 from django.conf import settings
 
@@ -23,14 +24,14 @@ class BaseProductSearch(BaseSearch):
         self.currency = kwargs.pop('currency')
 
     def filter_in_stock(self, s):
-        return s.filter('nested', path='stock',
-            query=dsl.Q('match', stock__currency=self.currency) & dsl.Q('range', stock__num_in_stock={'gt': 0}))
+        query = dsl.Q('match', stock__currency=self.currency) & dsl.Q('range', stock__num_in_stock={'gt': 0})
+        return s.filter('nested', path='stock', query=query)
 
 
 class ProductSearch(BaseProductSearch):
 
     def __init__(self, query=None, selected_facets=None, filters=None,
-                    start_offset=0, results_per_page=None, sort_by=None, **kwargs):
+                 start_offset=0, results_per_page=None, sort_by=None, **kwargs):
         super(ProductSearch, self).__init__(**kwargs)
         self.query = query
         self.selected_facets = selected_facets if selected_facets else {}
@@ -65,7 +66,7 @@ class ProductSearch(BaseProductSearch):
 
         # Filter for the selected currency
         search = search.filter('nested', path='stock',
-            query=dsl.Q('match', stock__currency=self.currency))
+                               query=dsl.Q('match', stock__currency=self.currency))
 
         return search
 
@@ -116,7 +117,7 @@ class ProductSearch(BaseProductSearch):
             return
 
         n_groups = getattr(settings, 'OSCAR_PRICE_FACET_COUNT', 5)
-        group_size = int(math.ceil(price_count/n_groups))
+        group_size = int(math.ceil(price_count / n_groups))
         chunks = utils.chunks(prices, group_size)
         ranges = []
         last_breakpoint = 0
@@ -130,7 +131,7 @@ class ProductSearch(BaseProductSearch):
             while spread < magnitude and magnitude > 10:
                 magnitude = magnitude / 10
 
-            rounded_range_end = int(math.ceil(range_end/magnitude) * magnitude)
+            rounded_range_end = int(math.ceil(range_end / magnitude) * magnitude)
 
             # It is possible that items in this chunk fall in the previous range
             count = len(chunk)
@@ -182,10 +183,10 @@ class ProductSearch(BaseProductSearch):
         s = self.get_basic_search()
         if self.query:
             s = s.suggest('suggestions', self.query,
-                phrase={'field': 'raw_title', 'size': 1, 'max_errors': 2.0})
+                          phrase={'field': 'raw_title', 'size': 1, 'max_errors': 2.0})
         self.aggregate(s)
         # Pagination
-        s = s[self.start_offset:self.start_offset+self.results_per_page]
+        s = s[self.start_offset:self.start_offset + self.results_per_page]
         # Sorting
         if self.sort_by:
             s = s.sort(self.sort_by)
@@ -201,11 +202,11 @@ class ProductSearch(BaseProductSearch):
         facets = {}
 
         for name in self.facet_aggs:
-            facets.update(result_aggs['_filter_'+name].to_dict())
+            facets.update(result_aggs['_filter_' + name].to_dict())
 
         other_aggs = {}
         for name in self.aggs:
-            other_aggs.update(result_aggs['_filter_'+name].to_dict())
+            other_aggs.update(result_aggs['_filter_' + name].to_dict())
 
         suggestion = None
         if hasattr(response, 'suggest'):
@@ -230,7 +231,7 @@ class ProductSearch(BaseProductSearch):
         """
         Executes a search and parses the response.
         """
-        if not 'price' in self.filters and settings.OSCAR_SEARCH['SHOW_PRICE_RANGE_FACET']:
+        if 'price' not in self.filters and settings.OSCAR_SEARCH['SHOW_PRICE_RANGE_FACET']:
             self.sniff_price_range()
         s = self.build_search()
         return self.parse_response(s.execute())
@@ -248,8 +249,7 @@ class RelatedProductSearch(BaseProductSearch):
         } for p in self.products]
 
     def get_related_products(self, num=5, category_id=None):
-        compare_fields = getattr(settings, 'OSCAR_RELATED_PRODUCT_FIELDS',
-            ['title', 'description'])
+        compare_fields = getattr(settings, 'OSCAR_RELATED_PRODUCT_FIELDS', ['title', 'description'])
 
         if not hasattr(self, '_results'):
             s = self.search_instance()

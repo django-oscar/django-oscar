@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 

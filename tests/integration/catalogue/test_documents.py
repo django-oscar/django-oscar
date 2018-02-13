@@ -304,7 +304,7 @@ class ProductDocumentTestCase(TestCase):
 
     def test_sanitize_description_strips_tags_and_turns_white_space_to_single_space(self):
         initial_description = """<some-tag>First text</some-tag>
-        
+
         Second text"""
 
         expected_description = "First text Second text"
