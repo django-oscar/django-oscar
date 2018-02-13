@@ -39,6 +39,7 @@ ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductImage = get_model('catalogue', 'ProductImage')
+ProductDocument = get_class('catalogue.documents', 'ProductDocument')
 
 WeightBand = get_model('shipping', 'WeightBand')
 WeightBased = get_model('shipping', 'WeightBased')
@@ -112,6 +113,12 @@ def create_product(upc=None, title=u"Dùｍϻϒ title",
             product, price_excl_tax=price, num_in_stock=num_in_stock,
             partner_users=partner_users, partner_sku=partner_sku,
             partner_name=partner_name)
+    return product
+
+
+def create_product_in_index(*args, **kwargs):
+    product = create_product(*args, **kwargs)
+    ProductDocument().update(product)
     return product
 
 
