@@ -163,9 +163,6 @@ class ProductDocument(with_metaclass(ProductDocumentMeta, DocType)):
 
         return Line.objects.filter(product=product, order__date_placed__gte=orders_above_date).count()
 
-    def prepare_manufacturer(self, product):
-        return product.manufacturer.name if product.manufacturer else None
-
     def get_stockrecord_data(self, stockrecord):
         # Exclude stock records that have no price
         if not stockrecord.price_excl_tax:
