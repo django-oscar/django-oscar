@@ -32,7 +32,7 @@ def agg_terms_to_filters(agg, values):
 
 def agg_histogram_to_filters(agg, values):
     return [dsl.Q('range', **{agg.field: {'gte': value, 'lt': int(agg.interval) + int(value)}})
-        for value in values]
+            for value in values]
 
 
 AGG_TO_FILTERS = {
@@ -120,4 +120,3 @@ class AutoSuggestSearch(BaseSearch):
             'count': results.hits.total,
             'results': items
         }
-

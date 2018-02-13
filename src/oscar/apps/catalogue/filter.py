@@ -52,7 +52,7 @@ def price_display_name(price_min, price_max, currency):
 def build_price_ranges(price_ranges, currency, request_url):
     n = len(price_ranges)
     output = []
-    for i in range(0,n):
+    for i in range(0, n):
         r = price_ranges[i]
         # For the last range, remove upper bound
         if i == n - 1:
@@ -108,7 +108,7 @@ def build_category_tree(category, agg, request_url, use_cat_url=False):
 
                 if current_level < num_levels:
                     item['children'] = build_data_list(cat.get_children(),
-                                                        current_level + 1)
+                                                       current_level + 1)
                 data.append(item)
         return data
 

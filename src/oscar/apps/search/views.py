@@ -21,7 +21,7 @@ class BaseSearchView(TemplateView):
             self.context = search_handler.prepare_context(results)
         except InvalidPage:
             return HttpResponseRedirect(
-                            self.remove_page_arg(request.get_full_path()))
+                self.remove_page_arg(request.get_full_path()))
 
         # Raise a signal for other apps to hook into for analytics
         self.search_signal.send(
