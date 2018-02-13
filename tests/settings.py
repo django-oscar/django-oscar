@@ -124,3 +124,5 @@ SECRET_KEY = 'notverysecret'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 OSCAR_SEARCH['INDEX_NAME'] = 'test'
+
+ELASTICSEARCH_DSL_AUTOSYNC = False

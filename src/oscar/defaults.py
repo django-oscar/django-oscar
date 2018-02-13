@@ -223,7 +223,7 @@ ELASTICSEARCH_DSL = {
         'hosts': 'localhost:9200'
     }
 }
-ELASTICSEARCH_DSL_AUTOSYNC = False
+ELASTICSEARCH_DSL_AUTOSYNC = True
 
 OSCAR_SEARCH = {
     "ANALYZERS": [
