@@ -17,10 +17,14 @@ from oscar.apps.order.signals import (
     order_line_status_changed, order_status_changed)
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
+from oscar.core.storages import DocumentsStorage
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
 
 from . import exceptions
+
+
+documents_storage = DocumentsStorage()
 
 
 @python_2_unicode_compatible
@@ -1162,7 +1166,7 @@ class AbstractInvoice(models.Model):
     notes = models.TextField(_('Notes for invoice'), null=True, blank=False)
 
     document = models.FileField(
-        _('Document'), upload_to=settings.OSCAR_INVOICE_FOLDER,
+        _('Document'), storage=documents_storage, upload_to=settings.OSCAR_INVOICE_FOLDER,
         blank=True, null=True, max_length=255)
 
     class Meta:

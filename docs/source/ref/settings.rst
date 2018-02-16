@@ -225,6 +225,15 @@ Default: ``{}``
 
 Same as ``OSCAR_ORDER_STATUS_PIPELINE`` but for lines.
 
+``OSCAR_DOCUMENT_ROOT``
+-----------------------
+
+Default: ``documents/``
+
+Location of the document directory, which contains sensitive data and hence
+should not be publicly available (as media files).
+
+
 ``OSCAR_INVOICE_FOLDER``
 ------------------------
 
