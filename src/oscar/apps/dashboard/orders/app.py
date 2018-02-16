@@ -22,6 +22,7 @@ class OrdersDashboardApplication(DashboardApplication):
                                       'ShippingAddressUpdateView')
     line_detail_view = get_class('dashboard.orders.views', 'LineDetailView')
     order_stats_view = get_class('dashboard.orders.views', 'OrderStatsView')
+    download_invoice_view = get_class('dashboard.orders.views', 'DownloadInvoiceView')
 
     def get_urls(self):
         urls = [
@@ -37,6 +38,9 @@ class OrdersDashboardApplication(DashboardApplication):
             url(r'^(?P<number>[-\w]+)/shipping-address/$',
                 self.shipping_address_view.as_view(),
                 name='order-shipping-address'),
+            url(r'^(?P<number>[-\w]+)/invoices/(?P<invoice_id>\d+)/$',
+                self.download_invoice_view.as_view(),
+                name='order-download-invoice'),
         ]
         return self.post_process_urls(urls)
 

@@ -30,6 +30,7 @@ ShippingAddress = get_model('order', 'ShippingAddress')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
+Invoice = get_model('order', 'Invoice')
 EventHandler = get_class('order.processing', 'EventHandler')
 OrderStatsForm = get_class('dashboard.orders.forms', 'OrderStatsForm')
 OrderSearchForm = get_class('dashboard.orders.forms', 'OrderSearchForm')
@@ -830,3 +831,14 @@ class ShippingAddressUpdateView(UpdateView):
         messages.info(self.request, _("Delivery address updated"))
         return reverse('dashboard:order-detail',
                        kwargs={'number': self.object.order.number, })
+
+
+class DownloadInvoiceView(DetailView):
+    model = Invoice
+    pk_url_kwarg = 'invoice_id'
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        response = HttpResponse(obj.document.read(), content_type="text/html")
+        response['Content-Disposition'] = 'inline; filename=' + obj.get_invoice_filename()
+        return response
