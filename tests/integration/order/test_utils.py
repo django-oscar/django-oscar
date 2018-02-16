@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from oscar.apps.order.utils import create_invoice
 from oscar.core.loading import get_model
@@ -44,6 +45,26 @@ class TestInvoiceUtils(TestCase):
 
         self.assertFalse(Invoice.objects.exists())
         create_invoice(self.order)
+        self.assertTrue(Invoice.objects.exists())
+        invoice = Invoice.objects.first()
+        # Document created and saved
+        self.assertIsNotNone(invoice.document)
+
+    @override_settings(OSCAR_INVOICE_GENERATE_AFTER_ORDER_PLACED=True)
+    def test_invoice_creation_based_on_settings(self):
+        legal_entity = LegalEntity.objects.create(
+            business_name='Test company', vat_number='test-vat-number')
+        country = Country.objects.create(
+            iso_3166_1_a2='GB', name="UNITED KINGDOM")
+        LegalEntityAddress.objects.create(
+            legal_entity=legal_entity,
+            line1='1 Egg Street',
+            line4='London',
+            postcode='N12 9RE',
+            country=country,
+        )
+
+        self.order = create_order(number='000043', user=self.user)
         self.assertTrue(Invoice.objects.exists())
         invoice = Invoice.objects.first()
         # Document created and saved
