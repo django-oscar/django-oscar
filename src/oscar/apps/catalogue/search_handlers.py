@@ -28,6 +28,7 @@ class ProductSearchHandler(BaseSearchHandler):
 
     form_class = forms.CatalogueSearchForm
     query = get_class('catalogue.query', 'ProductSearch')
+    applied_filters = ['category', 'price', 'num_in_stock', 'currency']
 
     def __init__(self, request_data, full_path, categories=None, **kwargs):
         super(ProductSearchHandler, self).__init__(request_data, full_path, **kwargs)
@@ -47,18 +48,18 @@ class ProductSearchHandler(BaseSearchHandler):
 
     # Search related methods
 
-    def get_filters(self, form_data):
-        filters = {}
-
+    def get_category_filters(self, form_data):
         if self.categories:
             form_data['category'] = self.categories[-1].pk
 
-        if form_data.get('category'):
-            filters['categories'] = {
+        category = form_data.get('category')
+        if category:
+            return {
                 'type': 'term',
-                'params': {'categories': int(form_data.get('category'))}
+                'params': {'categories': int(category)}
             }
 
+    def get_price_filters(self, form_data):
         price_min = form_data.get('price_min')
         price_max = form_data.get('price_max')
         if price_min is not None:
@@ -68,48 +69,34 @@ class ProductSearchHandler(BaseSearchHandler):
             if price_max is not None:
                 price_params['lte'] = float(price_max)
 
-            # Does your head hurt making sense of this?
-            filters['price'] = {
+            return {
                 'type': 'nested',
                 'params': {
                     'path': 'stock',
                     'query': {
-                        'bool': {
-                            'must': [
-                                {
-                                    'range': {'stock.price': price_params}
-                                },
-                                {
-                                    'match': {'stock.currency': self.currency}
-                                },
-                            ]
+                        'range': {
+                            'stock.price': price_params
                         }
                     }
                 }
             }
 
+    def get_num_in_stock_filters(self, form_data):
         if settings.OSCAR_SEARCH.get('HIDE_OOS_FROM_CATEGORY_VIEW'):
-            filters['num_in_stock'] = {
+            return {
                 'type': 'nested',
                 'params': {
                     'path': 'stock',
                     'query': {
-                        'bool': {
-                            'must': [
-                                {
-                                    'range': {'stock.price': {'gt': 0}}
-                                },
-                                {
-                                    'match': {'stock.currency': self.currency}
-                                },
-                            ]
+                        'range': {
+                            'stock.num_in_stock': {'gt': 0}
                         }
                     }
                 }
             }
 
-        # Filter for the selected currency
-        filters['currency'] = {
+    def get_currency_filters(self, form_data):
+        return {
             'type': 'nested',
             'params': {
                 'path': 'stock',
@@ -118,6 +105,16 @@ class ProductSearchHandler(BaseSearchHandler):
                 }
             }
         }
+
+    def get_filters(self, form_data):
+        filters = {}
+
+        for _filter in self.applied_filters:
+            filter_method = getattr(self, 'get_{}_filters'.format(_filter), None)
+            if filter_method:
+                filter_data = filter_method(form_data)
+                if filter_data:
+                    filters[_filter] = filter_data
 
         return filters
 
