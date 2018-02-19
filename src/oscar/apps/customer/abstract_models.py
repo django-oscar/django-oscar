@@ -14,7 +14,7 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class
 from oscar.models.fields import AutoSlugField
 
-CommunicationTypeManager = get_class('customer.managers', 'CommunicationTypeManager')
+CommunicationTypeManager = get_class('communication.managers', 'CommunicationTypeManager')
 
 
 class UserManager(auth_models.BaseUserManager):

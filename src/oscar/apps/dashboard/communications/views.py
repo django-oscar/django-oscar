@@ -6,10 +6,10 @@ from django.views import generic
 
 from oscar.core.loading import get_class, get_model
 
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
 CommunicationEventTypeForm = get_class('dashboard.communications.forms',
                                        'CommunicationEventTypeForm')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 
 class ListView(generic.ListView):
