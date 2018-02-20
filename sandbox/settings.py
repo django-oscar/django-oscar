@@ -131,7 +131,7 @@ TEMPLATES = [
 
                 # Oscar specific
                 'oscar.apps.search.context_processors.search_form',
-                'oscar.apps.customer.notifications.context_processors.notifications',
+                'oscar.apps.communication.notifications.context_processors.notifications',
                 'oscar.apps.checkout.context_processors.checkout',
                 'oscar.core.context_processors.metadata',
             ],
