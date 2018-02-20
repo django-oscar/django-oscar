@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
+from django.urls import reverse
 
 from oscar.core.loading import get_model
 
@@ -43,9 +44,13 @@ class OrderAdmin(admin.ModelAdmin):
 
     def get_invoice_link(self, obj):
         if self.is_invoice_created(obj) and obj.invoice.document:
+            url = reverse(
+                'dashboard:order-download-invoice',
+                args=(obj.number, obj.invoice.id),
+            )
             links = '<a href="{0}">See HTML</a> | ' \
                     '<a href="{0}" download>Download HTML</a>'
-            return links.format(obj.invoice.document.url)
+            return links.format(url)
         return '-'
 
     get_invoice_link.short_description = 'Invoice document'
