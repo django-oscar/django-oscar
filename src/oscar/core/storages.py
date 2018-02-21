@@ -8,7 +8,8 @@ from django.utils.functional import cached_property
 class DocumentsStorage(FileSystemStorage):
     """
     Custom filesystem storage for storing documents outside of media directory
-    and restricting their public access via URL.
+    (destination folder - `settings.OSCAR_DOCUMENT_ROOT`) and restricting
+    their public access via URL.
     """
 
     def __init__(self, *args, **kwargs):

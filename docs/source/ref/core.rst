@@ -47,3 +47,10 @@ Form helpers
 
 .. automodule:: oscar.forms.mixins
     :members:
+
+
+Storages
+--------
+
+.. automodule:: oscar.core.storages
+    :members:
