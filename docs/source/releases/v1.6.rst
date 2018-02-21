@@ -30,6 +30,7 @@ What's new in Oscar 1.6?
 ------------------------
  - Added support for managing large amounts of vouchers grouped in sets.
  - Added ability to generate invoices (:issue:`2314`)
+ - Invoice generation for admin and customer after order payment (:issue:`2314`)
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
