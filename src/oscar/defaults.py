@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = ''
-OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
+OSCAR_HOMEPAGE = reverse_lazy('catalogue:index')
 
 # Dynamic class loading
 OSCAR_DYNAMIC_CLASS_LOADER = 'oscar.core.loading.default_class_loader'
