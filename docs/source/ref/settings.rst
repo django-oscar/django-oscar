@@ -26,7 +26,7 @@ The tagline that is displayed next to the shop name and in the browser title.
 ``OSCAR_HOMEPAGE``
 ------------------
 
-Default: ``reverse_lazy('promotions:home')``
+Default: ``reverse_lazy('catalogue:index')``
 
 URL of home page of your site. This value is used for `Home` link in
 navigation and redirection page after logout. Useful if you use a different app
