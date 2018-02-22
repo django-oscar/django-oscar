@@ -142,22 +142,6 @@ Default::
 The choice of display locations available when editing a promotion. Only
 useful when using a new set of templates.
 
-``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES``
----------------------------------------------
-
-Default::
-
-    COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
-        'Countdown', 'List', 'SingleProduct', 'TabbedBlock')
-    OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
-        (COUNTDOWN, "Vertical list"),
-        (LIST, "Horizontal list"),
-        (TABBED_BLOCK, "Tabbed block"),
-        (SINGLE_PRODUCT, "Single product"),
-    )
-
-Defines the available promotion block types that can be used in Oscar.
-
 .. _OSCAR_DASHBOARD_NAVIGATION:
 
 ``OSCAR_DASHBOARD_NAVIGATION``
