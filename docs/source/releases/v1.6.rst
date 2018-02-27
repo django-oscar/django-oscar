@@ -83,9 +83,6 @@ Minor changes
  - User notifications are marked as read only when viewed in detail, instead of
    being marked as read in bulk when the notification list was viewed.
 
- - The Google Analytics tracking code provided by Oscar now uses ``gtag.js`` API
-   instead of the deprecated ``analytics.js``.
-
  - Oscar's ``ImageInput``, ``TimePickerInput``, ``DatePickerInput`` and
    ``DateTimePickerInput`` all use templates for rendering.
 
@@ -144,6 +141,10 @@ Backwards incompatible changes in Oscar 1.6
 
  - Compatibility for Internet Explorer version 9 an lower was dropped from Oscar's
    templates and styles.
+
+ - The Google Analytics tracking code provided by Oscar now uses ``gtag.js`` API
+   instead of the deprecated ``analytics.js``. Analytics are also disabled by
+   default in Oscar's dashboard.
 
 Dependency changes
 ------------------
