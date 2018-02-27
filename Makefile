@@ -1,3 +1,6 @@
+VENV = venv
+PYTEST = $(PWD)/$(VENV)/bin/py.test
+
 # These targets are not files
 .PHONY: install sandbox docs coverage lint messages compiledmessages css clean sandbox_image
 
@@ -30,21 +33,22 @@ sandbox: install build_sandbox
 sandbox_image:
 	docker build -t django-oscar-sandbox:latest .
 
-venv-docs:
-	virtualenv --python=$(shell which python3.5) venv-docs
-	venv-docs/bin/pip install -r docs/requirements.txt
+venv:
+	virtualenv --python=$(shell which python3) $(VENV)
+	$(VENV)/bin/pip install -e .[test]
+	$(VENV)/bin/pip install -r docs/requirements.txt
 
-docs: venv-docs
-	make -C docs html SPHINXBUILD=$(PWD)/venv-docs/bin/sphinx-build
+docs: venv
+	make -C docs html SPHINXBUILD=$(PWD)/$(VENV)/bin/sphinx-build
 
-test:
-	py.test
+test: venv
+	$(PYTEST)
 
-retest:
-	py.test --lf
+retest: venv
+	$(PYTEST) --lf
 
-coverage:
-	py.test --cov=oscar --cov-report=term-missing
+coverage: venv
+	$(PYTEST) --cov=oscar --cov-report=term-missing
 
 lint:
 	flake8 src/oscar/
