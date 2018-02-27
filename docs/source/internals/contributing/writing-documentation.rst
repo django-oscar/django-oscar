@@ -6,7 +6,6 @@ Directory Structure
 -------------------
 
 The docs are built by calling ``make docs`` from your Oscar directory.
-Note: This requires Python 3.5 or 3.6, as `transifex-client` only supports these.
 The ``make docs`` command currently uses `python3`,
 so make sure it links to one of these versions.
 
