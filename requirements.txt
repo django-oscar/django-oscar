@@ -27,7 +27,6 @@ isort==4.3.4
 pyprof2calltree==1.4.3
 ipdb==0.11
 ipython==5.5.0
-transifex-client==0.13.1
 
 # Country data
 pycountry==18.2.23
