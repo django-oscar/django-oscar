@@ -14,8 +14,17 @@ DATABASES = {
         'ENGINE': os.environ.get('DATABASE_ENGINE',
                                  'django.db.backends.postgresql'),
         'NAME': os.environ.get('DATABASE_NAME', 'oscar'),
+        'TEST': {
+            'CHARSET': 'utf8',
+        },
     }
 }
+
+if os.environ.get('DATABASE_USER'):
+    DATABASES['default']['USER'] = os.environ.get('DATABASE_USER')
+
+if DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+    DATABASES['default']['TEST']['COLLATION'] = 'utf8_general_ci'
 
 INSTALLED_APPS = [
     'django.contrib.auth',

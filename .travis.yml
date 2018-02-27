@@ -13,6 +13,8 @@ matrix:
     - python: 3.6
       env: TOXENV=py36-django111
     - python: 3.6
+      env: TOXENV=py36-django111-mysql
+    - python: 3.6
       env: TOXENV=py36-djangomaster
 
     - python: 3.6
