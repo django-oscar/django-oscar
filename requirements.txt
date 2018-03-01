@@ -10,7 +10,7 @@ psycopg2==2.7.4
 Pillow==5.0.0
 Whoosh==2.7.4
 django-environ==0.4.4
-django-redis==4.8.0
+django-redis==4.9.0
 pysolr==3.7.0
 redis==2.10.6
 requests==2.18.4
