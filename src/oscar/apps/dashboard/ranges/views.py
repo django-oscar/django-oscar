@@ -28,6 +28,7 @@ class RangeListView(ListView):
     model = Range
     context_object_name = 'ranges'
     template_name = 'dashboard/ranges/range_list.html'
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
 
 class RangeCreateView(CreateView):
@@ -97,6 +98,7 @@ class RangeProductListView(BulkEditMixin, ListView):
     context_object_name = 'products'
     actions = ('remove_selected_products', 'add_products')
     form_class = RangeProductForm
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def post(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
