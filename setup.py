@@ -19,9 +19,9 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=1.11,<2',
+    'django>=1.11,<2.1',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
-    'pillow>=3.4.2',
+    'pillow>=4.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
     'django-extra-views>=0.2,<1.0',
     # Search support
@@ -37,13 +37,13 @@ install_requires = [
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
-    'django-phonenumber-field>=1.0.0,<2.0.0',
+    'django-phonenumber-field>=2.0,<2.1',
     # Used for oscar.test.contextmanagers.mock_signal_receiver
     'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
-    'django-tables2>=1.19,<1.20',
+    'django-tables2>=1.19',
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
@@ -97,6 +97,7 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: Unix',
