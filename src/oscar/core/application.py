@@ -1,8 +1,15 @@
 from django.urls import reverse_lazy
-from django.urls.resolvers import RegexURLPattern as URLPattern
 
 from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required
+
+
+try:
+    # Django 2
+    from django.urls import URLPattern
+except ImportError:
+    # Django 1.11
+    from django.urls.resolvers import RegexURLPattern as URLPattern
 
 
 class Application(object):
