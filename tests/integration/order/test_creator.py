@@ -294,7 +294,6 @@ class TestConcurrentOrderPlacement(TransactionTestCase):
 
         exceptions = run_concurrently(worker, num_threads=5)
 
-        assert all(isinstance(x, ValueError) for x in exceptions), exceptions
         assert len(exceptions) == 0
         assert Order.objects.count() == 5
 
