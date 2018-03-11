@@ -184,5 +184,8 @@ The following features have been deprecated in this release:
   ``order.Line.line_price_excl_tax`` fields are deprecated and will be removed
   in Oscar 2.0.
 
+- ``oscar.views.decorators.staff_member_required`` is deprecated. Use
+  ``oscar.views.decorators.permissions_required(['is_staff'])`` instead.
+
 - Support for Django 1.8, 1.9 and 1.10 has been dropped in line with the
   Django project recommendation for third party apps.
