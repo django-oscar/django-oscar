@@ -33,6 +33,9 @@ What's new in Oscar 1.6?
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+ - ``oscar.core.phonenumber.PhoneNumber`` is removed.
+   Use ``phonenumber_field.phonenumber.PhoneNumber`` instead.
+
  - Removed the redundant ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting.
 
 Minor changes
