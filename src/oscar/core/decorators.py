@@ -8,7 +8,7 @@ else:
     CHECK_TYPES = (type, ClassType)
 import warnings
 
-from oscar.utils.deprecation import RemovedInOscar16Warning
+from oscar.utils.deprecation import RemovedInOscar20Warning
 
 
 def deprecated(obj):
@@ -18,7 +18,7 @@ def deprecated(obj):
         return _deprecated_func(f=obj)
 
 
-def _deprecated_func(f, warn_cls=RemovedInOscar16Warning):
+def _deprecated_func(f, warn_cls=RemovedInOscar20Warning):
     def _deprecated(*args, **kwargs):
         message = "Method '%s' is deprecated and will be " \
             "removed in the next version of django-oscar" \
@@ -28,7 +28,7 @@ def _deprecated_func(f, warn_cls=RemovedInOscar16Warning):
     return _deprecated
 
 
-def _deprecated_cls(cls, warn_cls=RemovedInOscar16Warning):
+def _deprecated_cls(cls, warn_cls=RemovedInOscar20Warning):
     class Deprecated(cls):
         def __init__(self, *args, **kwargs):
             message = "Class '%s' is deprecated and will be " \
