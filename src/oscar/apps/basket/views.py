@@ -1,9 +1,7 @@
-import json
-
 from django import shortcuts
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -214,11 +212,10 @@ class BasketView(ModelFormSetView):
             'basket/partials/basket_content.html',
             context=ctx, request=self.request)
 
-        payload = {
+        return JsonResponse({
             'content_html': basket_html,
-            'messages': flash_messages.as_dict()}
-        return HttpResponse(json.dumps(payload),
-                            content_type="application/json")
+            'messages': flash_messages.as_dict()
+        })
 
     def move_line_to_saved_basket(self, line):
         saved_basket, _ = get_model('basket', 'basket').saved.get_or_create(

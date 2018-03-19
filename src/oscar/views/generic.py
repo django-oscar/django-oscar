@@ -1,7 +1,5 @@
-import json
-
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils import six
 from django.utils.encoding import smart_str
@@ -136,9 +134,9 @@ class ObjectLookupView(View):
                 qs = self.lookup_filter(qs, q)
             qs, more = self.paginate(qs, page, page_limit)
 
-        return HttpResponse(json.dumps({
+        return JsonResponse({
             'results': [self.format_object(obj) for obj in qs],
             'pagination': {
                 "more": more
             },
-        }), content_type='application/json')
+        })
