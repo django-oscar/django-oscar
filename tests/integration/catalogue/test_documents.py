@@ -4,7 +4,6 @@ import sys
 from dateutil.relativedelta import relativedelta
 from mock import patch, call
 
-from django.conf import settings
 from django.utils import timezone
 from django.test import TestCase, override_settings
 
@@ -135,134 +134,130 @@ class ProductDocumentTestCase(TestCase):
             sorted(expected_categories)
         )
 
+    @override_settings(OSCAR_SEARCH={
+        'PRODUCTS': {'facets': {'included_attribute': {}}},
+        'INDEX_NAME': 'oscar'
+    })
     def test_es_dsl_fields_created_for_product_attributes_in_ELASTICSEARCH_FACETS(self):
-        OSCAR_SEARCH = settings.OSCAR_SEARCH.copy()
-        OSCAR_SEARCH['FACETS'] = {'included_attribute': {}}
+        ProductAttribute.objects.create(
+            name='Test attribute', code='included_attribute',
+            type=ProductAttribute.TEXT
+        )
+        ProductAttribute.objects.create(
+            name='Test attribute', code='not_included_attribute',
+            type=ProductAttribute.TEXT
+        )
 
-        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH):
-            ProductAttribute.objects.create(
-                name='Test attribute', code='included_attribute',
-                type=ProductAttribute.TEXT
-            )
-            ProductAttribute.objects.create(
-                name='Test attribute', code='not_included_attribute',
-                type=ProductAttribute.TEXT
-            )
+        doc = ProductDocument()
 
-            doc = ProductDocument()
+        variants = doc._doc_type._fields()['variants']
 
-            variants = doc._doc_type._fields()['variants']
+        self.assertTrue(isinstance(variants.properties['included_attribute'], dsl_fields.KeywordField))
 
-            self.assertTrue(isinstance(variants.properties['included_attribute'], dsl_fields.KeywordField))
+        self.assertFalse(hasattr(variants.properties, 'not_included_attribute'))
 
-            self.assertFalse(hasattr(variants.properties, 'not_included_attribute'))
-
+    @override_settings(OSCAR_SEARCH={
+        'PRODUCTS': {'facets': {'attribute_one': {}, 'attribute_two': {}}},
+        'INDEX_NAME': 'oscar'
+    })
     def test_prepared_data_contains_attribute_data(self):
-        OSCAR_SEARCH = settings.OSCAR_SEARCH.copy()
-        OSCAR_SEARCH['FACETS'] = {'attribute_one': {}, 'attribute_two': {}}
+        product_class = factories.ProductClassFactory()
 
-        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH):
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Attribute 1', code='attribute_one',
+            type=ProductAttribute.TEXT
+        ))
 
-            product_class = factories.ProductClassFactory()
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Attribute 2', code='attribute_two',
+            type=ProductAttribute.FLOAT
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Attribute 1', code='attribute_one',
-                type=ProductAttribute.TEXT
-            ))
+        product = create_product(attributes={
+            'attribute_one': 'Hello world',
+            'attribute_two': 16.1
+        })
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Attribute 2', code='attribute_two',
-                type=ProductAttribute.FLOAT
-            ))
+        doc = ProductDocument()
 
-            product = create_product(attributes={
-                'attribute_one': 'Hello world',
-                'attribute_two': 16.1
-            })
+        prepared_data = doc.prepare(product)
+        self.assertEqual(prepared_data['variants'][0]['attribute_one'], 'Hello world')
+        self.assertEqual(prepared_data['variants'][0]['attribute_two'], 16.1)
 
-            doc = ProductDocument()
-
-            prepared_data = doc.prepare(product)
-            self.assertEqual(prepared_data['variants'][0]['attribute_one'], 'Hello world')
-            self.assertEqual(prepared_data['variants'][0]['attribute_two'], 16.1)
-
+    @override_settings(OSCAR_SEARCH={'PRODUCTS': {'facets': {
+        'text': {},
+        'integer': {},
+        'boolean': {},
+        'float': {},
+        'richtext': {},
+        'date': {},
+        'datetime': {},
+        'option': {},
+        'multi_option': {}
+    }}, 'INDEX_NAME': 'oscar'})
     def test_proper_fields_used_for_different_attribute_types(self):
-        OSCAR_SEARCH = settings.OSCAR_SEARCH.copy()
-        OSCAR_SEARCH['FACETS'] = {
-            'text': {},
-            'integer': {},
-            'boolean': {},
-            'float': {},
-            'richtext': {},
-            'date': {},
-            'datetime': {},
-            'option': {},
-            'multi_option': {}
-        }
+        product_class = factories.ProductClassFactory()
 
-        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH):
-            product_class = factories.ProductClassFactory()
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Text', code='text',
+            type=ProductAttribute.TEXT
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Text', code='text',
-                type=ProductAttribute.TEXT
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Integer', code='integer',
+            type=ProductAttribute.INTEGER
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Integer', code='integer',
-                type=ProductAttribute.INTEGER
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Boolean', code='boolean',
+            type=ProductAttribute.BOOLEAN
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Boolean', code='boolean',
-                type=ProductAttribute.BOOLEAN
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Float', code='float',
+            type=ProductAttribute.FLOAT
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Float', code='float',
-                type=ProductAttribute.FLOAT
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Richtext', code='richtext',
+            type=ProductAttribute.RICHTEXT
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Richtext', code='richtext',
-                type=ProductAttribute.RICHTEXT
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Date', code='date',
+            type=ProductAttribute.DATE
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Date', code='date',
-                type=ProductAttribute.DATE
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Datetime', code='datetime',
+            type=ProductAttribute.DATETIME
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Datetime', code='datetime',
-                type=ProductAttribute.DATETIME
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Option', code='option',
+            type=ProductAttribute.OPTION
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Option', code='option',
-                type=ProductAttribute.OPTION
-            ))
+        product_class.attributes.add(ProductAttribute.objects.create(
+            name='Multi Option', code='multi_option',
+            type=ProductAttribute.MULTI_OPTION
+        ))
 
-            product_class.attributes.add(ProductAttribute.objects.create(
-                name='Multi Option', code='multi_option',
-                type=ProductAttribute.MULTI_OPTION
-            ))
+        doc = ProductDocument()
 
-            doc = ProductDocument()
+        def get_variant(field_name):
+            return doc.__class__._doc_type._fields()['variants'].properties[field_name]
 
-            def get_variant(field_name):
-                return doc.__class__._doc_type._fields()['variants'].properties[field_name]
-
-            self.assertTrue(isinstance(doc.__class__._doc_type._fields()['variants'], dsl_fields.ObjectField))
-            self.assertTrue(isinstance(get_variant('text'), dsl_fields.KeywordField))
-            self.assertTrue(isinstance(get_variant('integer'), dsl_fields.IntegerField))
-            self.assertTrue(isinstance(get_variant('boolean'), dsl_fields.BooleanField))
-            self.assertTrue(isinstance(get_variant('float'), dsl_fields.FloatField))
-            self.assertTrue(isinstance(get_variant('richtext'), dsl_fields.KeywordField))
-            self.assertTrue(isinstance(get_variant('date'), dsl_fields.DateField))
-            self.assertTrue(isinstance(get_variant('datetime'), dsl_fields.DateField))
-            self.assertTrue(isinstance(get_variant('option'), dsl_fields.KeywordField))
-            self.assertTrue(isinstance(get_variant('multi_option'), dsl_fields.KeywordField))
+        self.assertTrue(isinstance(doc.__class__._doc_type._fields()['variants'], dsl_fields.ObjectField))
+        self.assertTrue(isinstance(get_variant('text'), dsl_fields.KeywordField))
+        self.assertTrue(isinstance(get_variant('integer'), dsl_fields.IntegerField))
+        self.assertTrue(isinstance(get_variant('boolean'), dsl_fields.BooleanField))
+        self.assertTrue(isinstance(get_variant('float'), dsl_fields.FloatField))
+        self.assertTrue(isinstance(get_variant('richtext'), dsl_fields.KeywordField))
+        self.assertTrue(isinstance(get_variant('date'), dsl_fields.DateField))
+        self.assertTrue(isinstance(get_variant('datetime'), dsl_fields.DateField))
+        self.assertTrue(isinstance(get_variant('option'), dsl_fields.KeywordField))
+        self.assertTrue(isinstance(get_variant('multi_option'), dsl_fields.KeywordField))
 
     def test_get_attribute_data_returns_proper_value_for_multi_options(self):
         option_group = factories.AttributeOptionGroupFactory()

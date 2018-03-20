@@ -3,13 +3,14 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.module_loading import import_string
 
+from oscar.apps.search.search_handlers import BaseSearchHandler
 from oscar.core.loading import get_class, get_model
 
 from . import filter
-from oscar.apps.search.base import BaseSearchHandler
 from . import forms
 
 Category = get_model('catalogue', 'Category')
+PriceRangeSearch = get_class('catalogue.search', 'PriceRangeSearch')
 
 
 def get_product_search_handler_class():
@@ -27,11 +28,10 @@ class ProductSearchHandler(BaseSearchHandler):
     """
 
     form_class = forms.CatalogueSearchForm
-    query = get_class('catalogue.query', 'ProductSearch')
+    query = get_class('catalogue.search', 'ProductSearch')
     applied_filters = ['category', 'price', 'num_in_stock', 'currency']
 
     def __init__(self, request_data, full_path, categories=None, **kwargs):
-        super(ProductSearchHandler, self).__init__(request_data, full_path, **kwargs)
         self.categories = categories
         self.currency = kwargs.pop('currency', settings.OSCAR_DEFAULT_CURRENCY)
 
@@ -41,12 +41,7 @@ class ProductSearchHandler(BaseSearchHandler):
         if default_sort and not request_data.get('sort_by'):
             request_data['sort_by'] = default_sort
 
-        # Triggers the search. All exceptions (404, Invalid Page) must be raised
-        # at init time from inside one of these methods.
-        self.results = self.get_results(request_data)
-        self.context = self.prepare_context(self.results)
-
-    # Search related methods
+        super(ProductSearchHandler, self).__init__(request_data, full_path, **kwargs)
 
     def get_category_filters(self, form_data):
         if self.categories:
@@ -118,23 +113,23 @@ class ProductSearchHandler(BaseSearchHandler):
 
         return filters
 
-    def get_category_tree(self):
+    def get_category_tree(self, category_agg):
         if self.categories:
             return filter.build_category_tree(
                 request_url=self.full_path,
                 category=self.categories[-1].pk,
-                agg=self.results['other_aggs']['category'],
+                agg=category_agg,
                 use_cat_url=True
             )
         else:
             return filter.build_category_tree(
                 request_url=self.full_path,
                 category=self.request_data.get('category'),
-                agg=self.results['other_aggs']['category']
+                agg=category_agg
             )
 
-    def get_search_kwargs(self, search_form, page_no=1):
-        kwargs = super(ProductSearchHandler, self).get_search_kwargs(search_form, page_no)
+    def get_search_kwargs(self, search_form, page_number=1):
+        kwargs = super(ProductSearchHandler, self).get_search_kwargs(search_form, page_number)
         kwargs['currency'] = self.currency
         return kwargs
 
@@ -143,6 +138,15 @@ class ProductSearchHandler(BaseSearchHandler):
         Oscar's category view expects this method to return the template context
         """
         return self.context
+
+    def get_results(self, request_data):
+        results = super(ProductSearchHandler, self).get_results(request_data)
+
+        search_kwargs = self.get_search_kwargs(self.form)
+        if settings.OSCAR_SEARCH.get('SHOW_PRICE_RANGE_FACET', False):
+            results['price_ranges'] = PriceRangeSearch(**search_kwargs).get_price_ranges()
+
+        return results
 
     def prepare_context(self, results):
         context = super(ProductSearchHandler, self).prepare_context(results)
@@ -156,10 +160,10 @@ class ProductSearchHandler(BaseSearchHandler):
                     raise Http404()
                 context['category'] = get_object_or_404(Category, pk=cat_id)
 
-            if 'category' in results['other_aggs']:
-                context['categories'] = self.get_category_tree()
+            if 'category' in results.get('other_aggs', {}):
+                context['categories'] = self.get_category_tree(results['other_aggs']['category'])
 
-            if results['price_ranges']:
+            if 'price_ranges' in results and results['price_ranges']:
                 context['price_ranges'] = filter.build_price_ranges(
                     price_ranges=results['price_ranges'],
                     currency=self.currency,
@@ -174,3 +178,33 @@ class ProductSearchHandler(BaseSearchHandler):
                 )
 
         return context
+
+
+class NoStockSearchHandler(ProductSearchHandler):
+
+    applied_filters = ['category']
+
+
+class OnSaleSearchHandler(ProductSearchHandler):
+
+    applied_filters = ProductSearchHandler.applied_filters + ['on_sale']
+
+    def get_on_sale_filters(self, form_data):
+        return {
+            'type': 'nested',
+            'params': {
+                'path': 'stock',
+                'query': {
+                    'bool': {
+                        'must': [
+                            {
+                                'match': {'stock.on_sale': True}
+                            },
+                            {
+                                'match': {'stock.currency': self.currency}
+                            },
+                        ]
+                    }
+                }
+            }
+        }

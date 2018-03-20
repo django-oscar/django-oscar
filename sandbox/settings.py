@@ -171,6 +171,9 @@ MIDDLEWARE = [
     'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
 
+    # Ensure the request has a currency (even if it's None)
+    'oscar.apps.catalogue.middleware.CurrencyMiddleware',
+
     # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
 ]
@@ -383,7 +386,7 @@ OSCAR_USE_LESS = False
 # ======
 
 OSCAR_SEARCH['INDEX_NAME'] = 'sandbox'
-OSCAR_SEARCH['FACETS'] = {
+OSCAR_SEARCH['PRODUCTS']['facets'] = {
     'size': {
         'type': 'terms',
         'label': 'Size',

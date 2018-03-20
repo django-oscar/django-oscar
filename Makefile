@@ -30,7 +30,7 @@ sandbox_load_data:
 	sandbox/manage.py oscar_populate_countries --initial-only
 	sandbox/manage.py loaddata sandbox/fixtures/pages.json sandbox/fixtures/ranges.json sandbox/fixtures/offers.json
 	sandbox/manage.py loaddata sandbox/fixtures/orders.json sandbox/fixtures/promotions.json
-	sandbox/manage.py rebuild_index
+	sandbox/manage.py rebuild_oscar_index
 	sandbox/manage.py thumbnail cleanup
 	sandbox/manage.py collectstatic --noinput
 

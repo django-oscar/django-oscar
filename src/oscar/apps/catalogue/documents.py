@@ -45,7 +45,8 @@ class ProductDocumentMeta(DocTypeMeta):
         attrs['product_attributes'] = []
 
         try:
-            indexed_attributes = ProductAttribute.objects.filter(code__in=settings.OSCAR_SEARCH.get('FACETS', {}).keys())
+            attr_codes = settings.OSCAR_SEARCH.get('PRODUCTS', {}).get('facets', {}).keys()
+            indexed_attributes = ProductAttribute.objects.filter(code__in=attr_codes)
 
             attribute_fields = {}
             for attr in indexed_attributes:

@@ -24,7 +24,6 @@ get_product_search_handler_class = get_class(
 
 class CatalogueSearchView(BaseSearchView):
     template_name = 'catalogue/search/results.html'
-    # search_signal = signals.product_search
     search_signal = signals.user_search
     search_handler_class = get_product_search_handler_class()
 
@@ -167,7 +166,7 @@ class ProductCategoryView(TemplateView):
 
         try:
             self.search_handler = self.get_search_handler(
-                request.GET, request.get_full_path(), self.get_categories())
+                request.GET, request.get_full_path(), self.get_categories(), currency=request.currency)
         except InvalidPage:
             messages.error(request, _('The given page number was invalid.'))
             return redirect(self.category.get_absolute_url())

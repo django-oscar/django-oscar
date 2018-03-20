@@ -45,14 +45,20 @@ class BaseAutoSuggestView(View):
     form_class = None
     query_class = None
 
-    def get_query(self):
-        return self.query_class()
+    def get_query(self, form):
+        return self.query_class(**self.get_query_kwargs(form))
+
+    def get_query_kwargs(self, form):
+        kwargs = {
+            'query': form.cleaned_data['q']
+        }
+        return kwargs
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(self.request.GET)
         if form.is_valid():
-            s = self.get_query()
-            results = s.get_suggestions(form)
+            s = self.get_query(form)
+            results = s.get_suggestions()
             return JsonResponse(results, safe=False)
         else:
             return JsonResponse([], safe=False, status=400)

@@ -2,16 +2,15 @@ from collections import OrderedDict
 from purl import URL
 from six import iteritems
 
-from django.conf import settings
-
 
 class BaseFacet(object):
 
     facet_name = None
 
-    def __init__(self, name, agg, request_url, selected_facets={}):
+    def __init__(self, name, agg, request_url, user_defined_facets, selected_facets={}):
         self.field_name = name
         self.agg = agg
+        self.user_defined_facets = user_defined_facets
         self.selected_facets = selected_facets
         self.base_url = URL(request_url)
         if 'buckets' in agg:
@@ -62,10 +61,9 @@ class BaseFacet(object):
 
         facet_name = self.facet_name if self.facet_name else self.field_name.capitalize()
         # TODO this is rather hacky - is there a better way to get this label?
-        user_defined_facets = settings.OSCAR_SEARCH.get('FACETS', {})
 
-        if self.field_name in user_defined_facets:
-            facet_name = user_defined_facets[self.field_name]['label']
+        if self.field_name in self.user_defined_facets:
+            facet_name = self.user_defined_facets[self.field_name]['label']
 
         return {
             'name': facet_name,
@@ -94,10 +92,10 @@ class BaseRangeFacet(BaseFacet):
         from_value = int(bucket.get('from', 0))
         to_value = int(bucket.get('to', 0))
         if not from_value:
-            return 'Up to {}'.format(to_value - 1)
+            return 'Up to {}'.format(to_value)
         if not to_value:
             return '{} and above'.format(from_value)
-        return '{} to {}'.format(from_value, to_value - 1)
+        return '{} to {}'.format(from_value, to_value)
 
     def get_facet(self):
         # Horrible ugly check to return an empty result if all ranges are empty
@@ -111,21 +109,36 @@ class BaseRangeFacet(BaseFacet):
         return super(BaseRangeFacet, self).get_facet()
 
 
+class BaseHistogramFacet(BaseFacet):
+
+    def get_display_name(self, bucket):
+        interval = self.user_defined_facets[self.field_name]['params']['interval']
+
+        from_value = int(float(bucket.get('key')))
+
+        to_display_value = (from_value + interval) - 1
+
+        if not from_value:
+            return 'Up to {}'.format(to_display_value)
+        return '{} to {}'.format(from_value, to_display_value)
+
+
 FACET_CLASSES = {
-    'range': BaseRangeFacet
+    'range': BaseRangeFacet,
+    'auto_range': BaseRangeFacet,
+    'histogram': BaseHistogramFacet
 }
 
 
-def get_facet_class(field):
+def get_facet_class(user_defined_facets, field):
     try:
-        user_defined_facets = settings.OSCAR_SEARCH.get('FACETS', {})
         facet_type = user_defined_facets.get(field, {})['type']
         return FACET_CLASSES[facet_type]
     except KeyError:
         return BaseFacet
 
 
-def build_oscar_facets(aggs, request_url, selected_facets):
+def build_oscar_facets(aggs, request_url, selected_facets, user_defined_facets, facet_order=[]):
     """
     Converts aggregations from ES into facets that Oscar templates will grok.
     """
@@ -133,14 +146,15 @@ def build_oscar_facets(aggs, request_url, selected_facets):
     for field, agg in iteritems(aggs):
         if not isinstance(agg, dict):
             continue
-        Facet = get_facet_class(field)
-        facet_data[field] = Facet(name=field,
-                                  agg=agg,
-                                  request_url=request_url,
-                                  selected_facets=selected_facets).get_facet()
+        Facet = get_facet_class(user_defined_facets, field)
+        facet_data[field] = Facet(
+            name=field,
+            agg=agg,
+            request_url=request_url,
+            selected_facets=selected_facets,
+            user_defined_facets=user_defined_facets).get_facet()
 
     # Sort facets based on the order supplied in settings
-    facet_order = getattr(settings, 'OSCAR_FACET_ORDER', [])
     sorted_facet_data = []
     for field in facet_order:
         if field in facet_data:
