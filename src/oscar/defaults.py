@@ -227,14 +227,23 @@ OSCAR_SEARCH = {
         "number_of_shards": 1,
         "number_of_replicas": 0
     },
-    "SEARCH_CONFIG": {
-        "product": {
+    "INDEX_NAME": "oscar",
+    "SHOW_PRICE_RANGE_FACET": False,
+    "PRODUCTS": {
+        "facets": {},
+        "query": {
             "query_type": "multi_match",
             "fields": ["all_skus", "upc", "title^2", "description"],
-            "minimum_should_match": "70%"
-        }
+            "minimum_should_match": "70%",
+        },
+        "aggregate_search": True
     },
-    "SHOW_PRICE_RANGE_FACET": False
+    "RELATED_PRODUCTS": {
+        "filter_in_stock": True
+    },
+    "TOP_PRODUCTS": {
+        "filter_in_stock": True
+    },
 }
 
 OSCAR_SETTINGS = dict(

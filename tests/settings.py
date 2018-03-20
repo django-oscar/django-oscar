@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # contains models we need for testing
     'tests._site.model_tests_app',
     'tests._site.myauth',
+    'tests._site.search_tests_app'
 
     # Use a custom partner app to test overriding models.  I can't
     # find a way of doing this on a per-test basis, so I'm using a
@@ -79,6 +80,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 
+    'oscar.apps.catalogue.middleware.CurrencyMiddleware',
     'oscar.apps.basket.middleware.BasketMiddleware',
 ]
 
@@ -124,5 +126,13 @@ SECRET_KEY = 'notverysecret'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 OSCAR_SEARCH['INDEX_NAME'] = 'test'
+OSCAR_SEARCH['TEST_SEARCH'] = {
+    "query": {
+        "query_type": "multi_match",
+        "fields": ["all_skus", "upc", "title^2", "description"],
+        "minimum_should_match": "70%",
+    },
+    "facets": {}
+}
 
 ELASTICSEARCH_DSL_AUTOSYNC = False

@@ -9,7 +9,7 @@ class AnalyzerRegistry(object):
         self.analyzers = {}
 
     def define_in_index(self, index):
-        for analyzer_path in settings.OSCAR_SEARCH['ANALYZERS']:
+        for analyzer_path in settings.OSCAR_SEARCH.get('ANALYZERS', []):
             analyzer = locate(analyzer_path)
             if not analyzer:
                 raise ImportError('{} not found'.format(analyzer_path))
