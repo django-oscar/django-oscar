@@ -11,6 +11,8 @@ Release notes for each version of Oscar published to PyPI.
     :maxdepth: 1
 
     v1.5
+    v1.5.1
+    v1.5.2
 
 
 1.4 release branch
