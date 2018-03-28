@@ -221,7 +221,7 @@ class ProductCategoryView(TemplateView):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_search_handler(self, *args, **kwargs):
-        return get_product_search_handler_class()(*args, **kwargs)
+        return get_product_search_handler_class(search=False)(*args, **kwargs)
 
     def get_categories(self):
         """
