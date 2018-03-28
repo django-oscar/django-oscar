@@ -247,5 +247,7 @@ OSCAR_SEARCH = {
     },
 }
 
+OSCAR_PRODUCTS_HAVE_STOCKRECORDS = True
+
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

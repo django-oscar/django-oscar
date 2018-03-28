@@ -1,6 +1,5 @@
 import mock
 
-from django.conf import settings
 from django.test import TestCase, override_settings
 from oscar.test.factories import CategoryFactory
 from oscar.test.utils import RequestFactory
@@ -39,9 +38,11 @@ class ProductSearchHandlerFiltersTestCase(TestCase):
             'params': {'categories': last_category.pk}
         }, self.search_handler.get_category_filters({}))
 
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True)
     def test_get_prices_filters_returns_none_if_price_min_isnt_set(self):
         self.assertIsNone(self.search_handler.get_price_filters({}))
 
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True)
     def test_get_prices_filters_sets_min_price(self):
         price_min = 100
 
@@ -59,6 +60,7 @@ class ProductSearchHandlerFiltersTestCase(TestCase):
             }
         }, self.search_handler.get_price_filters({'price_min': price_min}))
 
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True)
     def test_get_prices_filters_sets_max_price_if_available(self):
         price_min = 100
         price_max = 125
@@ -78,27 +80,29 @@ class ProductSearchHandlerFiltersTestCase(TestCase):
             }
         }, self.search_handler.get_price_filters({'price_min': price_min, 'price_max': price_max}))
 
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=False)
+    def test_get_prices_filters_not_applied_if_OSCAR_PRODUCTS_HAVE_STOCKRECORDS_set_to_False(self):
+        self.assertEqual({}, self.search_handler.get_price_filters({}))
+
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True)
     def test_get_num_in_stock_filters(self):
-        OSCAR_SEARCH = settings.OSCAR_SEARCH.copy()
-        OSCAR_SEARCH['HIDE_OOS_FROM_CATEGORY_VIEW'] = False
-
-        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH):
-            self.assertEqual(None, self.search_handler.get_num_in_stock_filters({}))
-
-        OSCAR_SEARCH['HIDE_OOS_FROM_CATEGORY_VIEW'] = True
-        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH):
-            self.assertEqual({
-                'type': 'nested',
-                'params': {
-                    'path': 'stock',
-                    'query': {
-                        'range': {
-                            'stock.num_in_stock': {'gt': 0}
-                        }
+        self.assertEqual({
+            'type': 'nested',
+            'params': {
+                'path': 'stock',
+                'query': {
+                    'range': {
+                        'stock.num_in_stock': {'gt': 0}
                     }
                 }
-            }, self.search_handler.get_num_in_stock_filters({}))
+            }
+        }, self.search_handler.get_num_in_stock_filters({}))
 
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=False)
+    def test_num_in_stock_filters_not_applied_if_OSCAR_PRODUCTS_HAVE_STOCKRECORDS_set_to_False(self):
+        self.assertEqual({}, self.search_handler.get_num_in_stock_filters({}))
+
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True)
     def test_get_currency_filters(self):
         currency = 'CUR'
         self.search_handler.currency = currency
@@ -112,6 +116,10 @@ class ProductSearchHandlerFiltersTestCase(TestCase):
                 }
             }
         }, self.search_handler.get_currency_filters({}))
+
+    @override_settings(OSCAR_PRODUCTS_HAVE_STOCKRECORDS=False)
+    def test_get_currency_filters_not_applied_if_OSCAR_PRODUCTS_HAVE_STOCKRECORDS_set_to_False(self):
+        self.assertEqual({}, self.search_handler.get_currency_filters({}))
 
     def test_get_filters_returns_filters_defined_in_applied_filters(self):
         filter_form_data = {'category': 1, 'price_min': 100}
