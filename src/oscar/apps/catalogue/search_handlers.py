@@ -179,33 +179,3 @@ class ProductSearchHandler(BaseSearchHandler):
                 )
 
         return context
-
-
-class NoStockSearchHandler(ProductSearchHandler):
-
-    applied_filters = ['category']
-
-
-class OnSaleSearchHandler(ProductSearchHandler):
-
-    applied_filters = ProductSearchHandler.applied_filters + ['on_sale']
-
-    def get_on_sale_filters(self, form_data):
-        return {
-            'type': 'nested',
-            'params': {
-                'path': 'stock',
-                'query': {
-                    'bool': {
-                        'must': [
-                            {
-                                'match': {'stock.on_sale': True}
-                            },
-                            {
-                                'match': {'stock.currency': self.currency}
-                            },
-                        ]
-                    }
-                }
-            }
-        }
