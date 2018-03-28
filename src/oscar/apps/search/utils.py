@@ -22,13 +22,23 @@ def terms_buckets_to_values_list(buckets):
 
 
 def get_auto_ranges(chunks):
+    """
+    Generate a set of ranges given an iterable of chunks of values.
+    Works only for integer values.
+    """
+
     ranges = []
     last_breakpoint = 0
     for chunk in chunks:
         range_start = float(chunk[0])
         range_end = float(chunk[-1])
-        magnitude = pow(10, int(math.log10(range_end)))
         spread = int(range_end - range_start)
+        if spread > 0:
+            # Determine the order of magnitude of the range_end
+            magnitude = pow(10, int(math.log10(range_end)))
+        else:
+            magnitude = 1
+
         # If everything in this chunk is a similar value, then we need
         # to use a smaller interval
         while spread < magnitude and magnitude > 10:
@@ -43,7 +53,7 @@ def get_auto_ranges(chunks):
                 ranges[-1]['doc_count'] += 1
                 count -= 1
 
-        if rounded_range_end > last_breakpoint:
+        if rounded_range_end >= last_breakpoint:
             ranges.append({
                 'from': last_breakpoint,
                 'to': rounded_range_end,
