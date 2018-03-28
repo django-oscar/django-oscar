@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 from django.views import View
 from purl import URL
 
@@ -14,12 +16,11 @@ class BaseSearchView(TemplateView):
         return self.search_handler_class(self.request.GET, self.request.get_full_path())
 
     def get(self, request, *args, **kwargs):
-        search_handler = self.get_search_handler()
-
-        results = search_handler.get_results(request.GET)
         try:
-            self.context = search_handler.prepare_context(results)
+            search_handler = self.get_search_handler()
+            self.context = search_handler.context
         except InvalidPage:
+            messages.error(request, _('The given page number was invalid.'))
             return HttpResponseRedirect(
                 self.remove_page_arg(request.get_full_path()))
 
