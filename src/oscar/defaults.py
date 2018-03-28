@@ -228,6 +228,7 @@ OSCAR_SEARCH = {
         "number_of_replicas": 0
     },
     "INDEX_NAME": "oscar",
+    "INDEXED_FIELDS": {},
     "SHOW_PRICE_RANGE_FACET": False,
     "PRODUCTS": {
         "facets": {},

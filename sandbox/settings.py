@@ -386,6 +386,11 @@ OSCAR_USE_LESS = False
 # ======
 
 OSCAR_SEARCH['INDEX_NAME'] = 'sandbox'
+OSCAR_SEARCH['INDEXED_FIELDS'] = {
+    'product': {
+        'size': {'field': 'size'}
+    }
+}
 OSCAR_SEARCH['PRODUCTS']['facets'] = {
     'size': {
         'type': 'terms',
