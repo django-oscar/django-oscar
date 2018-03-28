@@ -154,7 +154,17 @@ class BaseSearch(FacetedSearch):
 
     def get_auto_range_group_size(self, facet_name, values):
         group_count = self.auto_ranges[facet_name]['group_count']
-        return int(math.ceil(len(values) / group_count))
+        # The number of unique values must be at least 1 more than the desired
+        # number of groups, otherwise we have to reduce the group count.
+        num_values = len(set(values))
+        if num_values <= 1:
+            # We don't have anything to group!
+            return None
+        if num_values < group_count:
+            # We cannot have more groups than unique values
+            return num_values
+
+        return int(math.ceil(num_values / group_count))
 
     def auto_range_to_range_facet(self, facet_name, auto_range_facet):
         values = utils.terms_buckets_to_values_list(auto_range_facet['buckets'])
@@ -163,6 +173,10 @@ class BaseSearch(FacetedSearch):
             return {}
 
         group_size = self.get_auto_range_group_size(facet_name, values)
+
+        if group_size is None:
+            return {}
+
         chunks = utils.chunks(sorted(values), group_size)
 
         return {

@@ -558,6 +558,28 @@ class SearchTestCase(TestCase):
 
         self.assertEqual(test_search.get_auto_range_group_size('size', list(range(100))), 20)
 
+    def test_get_auto_range_group_size_if_fewer_values_than_groups(self):
+        test_search = Search()
+
+        test_search.auto_ranges['size'] = {
+            'group_count': 5
+        }
+        # We only have 2 unique values, so should return a size of 2, and ignore group_count
+        values = [0, 1, 1, 1]
+
+        self.assertEqual(test_search.get_auto_range_group_size('size', values), 2)
+
+    def test_get_auto_range_group_size_if_too_few_unique_values(self):
+        test_search = Search()
+
+        test_search.auto_ranges['size'] = {
+            'group_count': 5
+        }
+        # Only one unique value - we cannot make a meaningful range facet
+        values = [1, 1, 1, 1]
+
+        self.assertEqual(test_search.get_auto_range_group_size('size', values), None)
+
     def test_auto_range_to_range_facet_returns_empty_dict_if_no_buckets_were_received(self):
         self.assertEqual(Search().auto_range_to_range_facet('', {'buckets': []}), {})
 
