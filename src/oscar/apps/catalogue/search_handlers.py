@@ -36,12 +36,6 @@ class ProductSearchHandler(BaseSearchHandler):
         self.categories = categories
         self.currency = kwargs.pop('currency', settings.OSCAR_DEFAULT_CURRENCY)
 
-        # Allow a custom default sort order for the category views
-        request_data = request_data.copy()
-        default_sort = settings.OSCAR_SEARCH.get('DEFAULT_CATEGORY_SORT_BY')
-        if default_sort and not request_data.get('sort_by'):
-            request_data['sort_by'] = default_sort
-
         super(ProductSearchHandler, self).__init__(request_data, full_path, **kwargs)
 
     def get_category_filters(self, form_data):
