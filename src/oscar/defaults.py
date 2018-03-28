@@ -216,7 +216,7 @@ OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_acce
 
 
 OSCAR_PROMOTIONS_ENABLED = True
-OSCAR_PRODUCT_SEARCH_HANDLER = 'oscar.apps.catalogue.search_handlers.ProductSearchHandler'
+OSCAR_PRODUCT_SEARCH_HANDLER = OSCAR_PRODUCT_BROWSE_SEARCH_HANDLER = 'oscar.apps.catalogue.search_handlers.ProductSearchHandler'
 
 ELASTICSEARCH_DSL = {
     'default': {

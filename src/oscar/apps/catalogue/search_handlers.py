@@ -13,12 +13,13 @@ Category = get_model('catalogue', 'Category')
 PriceRangeSearch = get_class('catalogue.search', 'PriceRangeSearch')
 
 
-def get_product_search_handler_class():
-    """
-    Import and return the search handler class.
-    """
-    # Use get_class to ensure overridability
-    return import_string(settings.OSCAR_PRODUCT_SEARCH_HANDLER)
+def get_product_search_handler_class(search=True):
+    if search and settings.OSCAR_PRODUCT_SEARCH_HANDLER is not None:
+        return import_string(settings.OSCAR_PRODUCT_SEARCH_HANDLER)
+    elif settings.OSCAR_PRODUCT_BROWSE_SEARCH_HANDLER is not None:
+        return import_string(settings.OSCAR_PRODUCT_BROWSE_SEARCH_HANDLER)
+    else:
+        return get_class('catalogue.search_handlers', 'ProductSearchHandler')
 
 
 class ProductSearchHandler(BaseSearchHandler):
