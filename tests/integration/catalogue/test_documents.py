@@ -4,6 +4,7 @@ import sys
 from dateutil.relativedelta import relativedelta
 from mock import patch, call
 
+from django.conf import settings
 from django.utils import timezone
 from django.test import TestCase, override_settings
 
@@ -135,10 +136,10 @@ class ProductDocumentTestCase(TestCase):
         )
 
     @override_settings(OSCAR_SEARCH={
-        'PRODUCTS': {'facets': {'included_attribute': {}}},
-        'INDEX_NAME': 'oscar'
+        'INDEX_NAME': 'oscar',
+        'INDEXED_FIELDS': {'product': {'included_attribute': {}}}
     })
-    def test_es_dsl_fields_created_for_product_attributes_in_ELASTICSEARCH_FACETS(self):
+    def test_es_dsl_fields_created_for_product_attributes_in_INDEXED_FIELDS(self):
         ProductAttribute.objects.create(
             name='Test attribute', code='included_attribute',
             type=ProductAttribute.TEXT
@@ -157,8 +158,10 @@ class ProductDocumentTestCase(TestCase):
         self.assertFalse(hasattr(variants.properties, 'not_included_attribute'))
 
     @override_settings(OSCAR_SEARCH={
-        'PRODUCTS': {'facets': {'attribute_one': {}, 'attribute_two': {}}},
-        'INDEX_NAME': 'oscar'
+        'INDEX_NAME': 'oscar',
+        'INDEXED_FIELDS': {
+            'product': {'attribute_one': {}, 'attribute_two': {}}
+        }
     })
     def test_prepared_data_contains_attribute_data(self):
         product_class = factories.ProductClassFactory()
@@ -184,17 +187,22 @@ class ProductDocumentTestCase(TestCase):
         self.assertEqual(prepared_data['variants'][0]['attribute_one'], 'Hello world')
         self.assertEqual(prepared_data['variants'][0]['attribute_two'], 16.1)
 
-    @override_settings(OSCAR_SEARCH={'PRODUCTS': {'facets': {
-        'text': {},
-        'integer': {},
-        'boolean': {},
-        'float': {},
-        'richtext': {},
-        'date': {},
-        'datetime': {},
-        'option': {},
-        'multi_option': {}
-    }}, 'INDEX_NAME': 'oscar'})
+    @override_settings(OSCAR_SEARCH={
+        'INDEXED_FIELDS': {
+            'product': {
+                'text': {},
+                'integer': {},
+                'boolean': {},
+                'float': {},
+                'richtext': {},
+                'date': {},
+                'datetime': {},
+                'option': {},
+                'multi_option': {}
+            }
+        },
+        'INDEX_NAME': 'oscar'
+    })
     def test_proper_fields_used_for_different_attribute_types(self):
         product_class = factories.ProductClassFactory()
 
@@ -258,6 +266,65 @@ class ProductDocumentTestCase(TestCase):
         self.assertTrue(isinstance(get_variant('datetime'), dsl_fields.DateField))
         self.assertTrue(isinstance(get_variant('option'), dsl_fields.KeywordField))
         self.assertTrue(isinstance(get_variant('multi_option'), dsl_fields.KeywordField))
+
+    @override_settings(OSCAR_SEARCH={
+        'INDEXED_FIELDS': {
+            'product': {
+                'attachment': {'type': 'attachment'},
+                'boolean': {'type': 'boolean'},
+                'byte': {'type': 'byte'},
+                'completion': {'type': 'completion'},
+                'date': {'type': 'date'},
+                'double': {'type': 'double'},
+                'float': {'type': 'float'},
+                'geo_point': {'type': 'geo_point'},
+                'geo_shape': {'type': 'geo_shape'},
+                'integer': {'type': 'integer'},
+                'ip': {'type': 'ip'},
+                'keyword': {'type': 'keyword'},
+                'long': {'type': 'long'},
+                'nested': {'type': 'nested'},
+                'object': {'type': 'object'},
+                'short': {'type': 'short'},
+                'string': {'type': 'string'},
+                'text': {'type': 'text'}
+            }
+        },
+        'INDEX_NAME': 'oscar'
+    })
+    def test_proper_fields_used_for_manually_defined_index_field_type(self):
+        product_class = factories.ProductClassFactory()
+
+        for field in settings.OSCAR_SEARCH['INDEXED_FIELDS']['product'].keys():
+            product_class.attributes.add(ProductAttribute.objects.create(
+                name=field, code=field,
+                type=ProductAttribute.TEXT
+            ))
+
+        expected_field_types = {
+            'attachment': dsl_fields.AttachmentField,
+            'boolean': dsl_fields.BooleanField,
+            'byte': dsl_fields.ByteField,
+            'completion': dsl_fields.CompletionField,
+            'date': dsl_fields.DateField,
+            'double': dsl_fields.DoubleField,
+            'float': dsl_fields.FloatField,
+            'geo_point': dsl_fields.GeoPointField,
+            'geo_shape': dsl_fields.GeoShapeField,
+            'integer': dsl_fields.IntegerField,
+            'ip': dsl_fields.IpField,
+            'keyword': dsl_fields.KeywordField,
+            'long': dsl_fields.LongField,
+            'nested': dsl_fields.NestedField,
+            'object': dsl_fields.ObjectField,
+            'short': dsl_fields.ShortField,
+            'string': dsl_fields.StringField,
+            'text': dsl_fields.TextField
+        }
+
+        doc = ProductDocument()
+        for field_name, doc_field in doc.__class__._doc_type._fields()['variants'].properties.to_dict().items():
+            self.assertTrue(isinstance(doc_field, expected_field_types[field_name]))
 
     def test_get_attribute_data_returns_proper_value_for_multi_options(self):
         option_group = factories.AttributeOptionGroupFactory()

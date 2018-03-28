@@ -38,6 +38,27 @@ ATTRIBUTE_TYPE_ES_FIELDS = {
     ProductAttribute.MULTI_OPTION: fields.KeywordField
 }
 
+ES_FIELDS = {
+    'attachment': fields.AttachmentField,
+    'boolean': fields.BooleanField,
+    'byte': fields.ByteField,
+    'completion': fields.CompletionField,
+    'date': fields.DateField,
+    'double': fields.DoubleField,
+    'float': fields.FloatField,
+    'geo_point': fields.GeoPointField,
+    'geo_shape': fields.GeoShapeField,
+    'integer': fields.IntegerField,
+    'ip': fields.IpField,
+    'keyword': fields.KeywordField,
+    'long': fields.LongField,
+    'nested': fields.NestedField,
+    'object': fields.ObjectField,
+    'short': fields.ShortField,
+    'string': fields.StringField,
+    'text': fields.TextField
+}
+
 
 class ProductDocumentMeta(DocTypeMeta):
 
@@ -45,14 +66,26 @@ class ProductDocumentMeta(DocTypeMeta):
         attrs['product_attributes'] = []
 
         try:
-            attr_codes = settings.OSCAR_SEARCH.get('PRODUCTS', {}).get('facets', {}).keys()
-            indexed_attributes = ProductAttribute.objects.filter(code__in=attr_codes)
+            attribute_configs = settings.OSCAR_SEARCH['INDEXED_FIELDS'].get('product', {})
+            indexed_attributes = ProductAttribute.objects.filter(code__in=attribute_configs.keys())
 
             attribute_fields = {}
             for attr in indexed_attributes:
+                attr_config = attribute_configs[attr.code]
+
                 # don't add it if a custom field is already defined
                 if attr.code not in attrs:
-                    attribute_fields[attr.code] = ATTRIBUTE_TYPE_ES_FIELDS[attr.type](index='not_analyzed', include_in_all=False)
+                    if 'type' in attr_config:
+                        ES_FIELD_CLASS = ES_FIELDS[attr_config['type']]
+                    else:
+                        ES_FIELD_CLASS = ATTRIBUTE_TYPE_ES_FIELDS[attr.type]
+
+                    field_params = attribute_configs[attr.code].get('params', {})
+
+                    if 'copy_to' in field_params:
+                        product_mapping.field(field_params['copy_to'], 'keyword')
+
+                    attribute_fields[attr.code] = ES_FIELD_CLASS(**field_params)
 
                 attrs['product_attributes'].append(attr.code)
 
