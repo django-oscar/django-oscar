@@ -47,8 +47,10 @@ class ProductSearch(BaseSearch):
         return search
 
     def filter_in_stock(self, search):
+        products_have_stockrecords = settings.OSCAR_PRODUCTS_HAVE_STOCKRECORDS
         filter_in_stock = settings.OSCAR_SEARCH[self.settings_key].get('filter_in_stock', False)
-        if filter_in_stock:
+
+        if products_have_stockrecords and filter_in_stock:
             query = Q('range', stock__num_in_stock={'gt': 0})
             if self.currency:
                 query = query & Q('match', stock__currency=self.currency)

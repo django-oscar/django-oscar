@@ -30,7 +30,7 @@ class ProductSearchHandler(BaseSearchHandler):
 
     form_class = forms.CatalogueSearchForm
     query = get_class('catalogue.search', 'ProductSearch')
-    applied_filters = ['category', 'price', 'num_in_stock', 'currency']
+    applied_filters = ['category', 'price', 'currency']
 
     def __init__(self, request_data, full_path, categories=None, **kwargs):
         self.categories = categories
@@ -50,6 +50,9 @@ class ProductSearchHandler(BaseSearchHandler):
             }
 
     def get_price_filters(self, form_data):
+        if not settings.OSCAR_PRODUCTS_HAVE_STOCKRECORDS:
+            return {}
+
         price_min = form_data.get('price_min')
         price_max = form_data.get('price_max')
         if price_min is not None:
@@ -72,20 +75,25 @@ class ProductSearchHandler(BaseSearchHandler):
             }
 
     def get_num_in_stock_filters(self, form_data):
-        if settings.OSCAR_SEARCH.get('HIDE_OOS_FROM_CATEGORY_VIEW'):
-            return {
-                'type': 'nested',
-                'params': {
-                    'path': 'stock',
-                    'query': {
-                        'range': {
-                            'stock.num_in_stock': {'gt': 0}
-                        }
+        if not settings.OSCAR_PRODUCTS_HAVE_STOCKRECORDS:
+            return {}
+
+        return {
+            'type': 'nested',
+            'params': {
+                'path': 'stock',
+                'query': {
+                    'range': {
+                        'stock.num_in_stock': {'gt': 0}
                     }
                 }
             }
+        }
 
     def get_currency_filters(self, form_data):
+        if not settings.OSCAR_PRODUCTS_HAVE_STOCKRECORDS:
+            return {}
+
         return {
             'type': 'nested',
             'params': {

@@ -51,25 +51,36 @@ class ProductSearchTestCase(TestCase):
 
             filter_in_stock_mock.assert_called()
 
-    def test_filter_in_stock_not_applied_if_disabled_in_settings(self):
+    def test_filter_in_stock_only_applied_if_enabled_for_class_and_OSCAR_PRODUCTS_HAVE_STOCKRECORDS_set_to_True(self):
         OSCAR_SEARCH = settings.OSCAR_SEARCH.copy()
 
         search_mock = MagicMock()
 
+        # false, false
         OSCAR_SEARCH['PRODUCTS']['filter_in_stock'] = False
-        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH):
-            test_search = ProductSearch()
-            test_search.filter_in_stock(search_mock)
-
+        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH, OSCAR_PRODUCTS_HAVE_STOCKRECORDS=False):
+            ProductSearch().filter_in_stock(search_mock)
             search_mock.filter.assert_not_called()
 
+        # false, true
+        OSCAR_SEARCH['PRODUCTS']['filter_in_stock'] = False
+        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH, OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True):
+            ProductSearch().filter_in_stock(search_mock)
+            search_mock.filter.assert_not_called()
+
+        # true, false
         OSCAR_SEARCH['PRODUCTS']['filter_in_stock'] = True
-        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH):
-            test_search = ProductSearch()
-            test_search.filter_in_stock(search_mock)
+        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH, OSCAR_PRODUCTS_HAVE_STOCKRECORDS=False):
+            ProductSearch().filter_in_stock(search_mock)
+            search_mock.filter.assert_not_called()
+
+        # true, true, only this should work
+        OSCAR_SEARCH['PRODUCTS']['filter_in_stock'] = True
+        with override_settings(OSCAR_SEARCH=OSCAR_SEARCH, OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True):
+            ProductSearch().filter_in_stock(search_mock)
             search_mock.filter.assert_called()
 
-    @override_settings(OSCAR_SEARCH={'PRODUCTS': {'filter_in_stock': True}})
+    @override_settings(OSCAR_SEARCH={'PRODUCTS': {'filter_in_stock': True}}, OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True)
     def test_filter_in_stock_filters_products_with_num_in_stock_bigger_than_zero(self):
         search_mock = MagicMock()
 
@@ -78,7 +89,7 @@ class ProductSearchTestCase(TestCase):
 
         search_mock.filter.assert_called_with('nested', path='stock', query=Q('range', stock__num_in_stock={'gt': 0}))
 
-    @override_settings(OSCAR_SEARCH={'PRODUCTS': {'filter_in_stock': True}})
+    @override_settings(OSCAR_SEARCH={'PRODUCTS': {'filter_in_stock': True}}, OSCAR_PRODUCTS_HAVE_STOCKRECORDS=True)
     def test_filter_in_stock_adds_currency_filter_if_present(self):
         search_mock = MagicMock()
 
