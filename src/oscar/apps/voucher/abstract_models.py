@@ -14,7 +14,22 @@ from oscar.core.loading import get_model
 
 @python_2_unicode_compatible
 class AbstractVoucherSet(models.Model):
-    """A collection of vouchers (potentially auto-generated)"""
+    """A collection of vouchers (potentially auto-generated)
+
+    a VoucherSet is a group of voucher that are generated
+    automatically.
+
+    - count: the minimum number of vouchers in the set. If this is kept at
+    zero, vouchers are created when and as needed.
+
+    - code_length: the length of the voucher code. Codes are by default created
+    with groups of 4 characters: XXXX-XXXX-XXXX. The dashes (-) do not count for
+    the code_length.
+
+    - start_datetime, end_datetime: defines the validity datetime range for
+    all vouchers in the set.
+
+    """
 
     name = models.CharField(verbose_name=_('Name'), max_length=100)
     count = models.IntegerField(verbose_name=_('Number of vouchers'))
