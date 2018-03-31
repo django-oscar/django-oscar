@@ -1,15 +1,16 @@
 from os.path import dirname
 import sys
 
-from django.test import TestCase
+from django.test import override_settings, TestCase
 from django.conf import settings
-from django.test.utils import override_settings
 
 import oscar
 from oscar.core.loading import (
-    get_model, AppNotFoundError, get_classes, get_class, ClassNotFoundError)
+    get_model, AppNotFoundError, get_classes, get_class, get_class_loader,
+    ClassNotFoundError)
 from oscar.test.factories import create_product, WishListFactory, UserFactory
 from tests import temporary_python_path
+from tests._site.loader import DummyClass
 
 
 class TestClassLoading(TestCase):
@@ -238,3 +239,22 @@ class TestMovedClasses(TestCase):
         LineFormset, WishListLineForm = get_classes('wishlists.forms', ('LineFormset', 'WishListLineForm'))
         self.assertEqual('oscar.apps.wishlists.forms', WishListLineForm.__module__)
         self.assertTrue(isinstance(LineFormset(instance=self.wishlist).forms[0], WishListLineForm))
+
+
+class OverriddenClassLoadingTestCase(TestCase):
+
+    def test_non_override_class_loader(self):
+        from oscar.apps.catalogue.views import ProductDetailView
+        View = get_class('catalogue.views', 'ProductDetailView')
+        self.assertEqual(View, ProductDetailView)
+
+    @override_settings(OSCAR_DYNAMIC_CLASS_LOADER='tests._site.loader.custom_class_loader')
+    def test_override_class_loader(self):
+        # Clear lru cache for the class loader
+        get_class_loader.cache_clear()
+
+        View = get_class('catalogue.views', 'ProductDetailView')
+        self.assertEqual(View, DummyClass)
+
+        # Clear lru cache for the class loader again
+        get_class_loader.cache_clear()
