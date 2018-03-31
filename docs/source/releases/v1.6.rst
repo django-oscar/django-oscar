@@ -41,7 +41,10 @@ Removal of deprecated features
 Minor changes
 ~~~~~~~~~~~~~
  - The majority of the Oscar class imports now use dynamic loading, instead of
-   direct importing, for better extensibility and customizability.
+   direct imports, for better extensibility and customizability.
+
+ - Added the ability to specify a custom class loader through the
+   ``OSCAR_DYNAMIC_CLASS_LOADER`` setting.
 
  - Customer transaction emails were reworked to use Mailgun templates, so that
    they have a more modern appearance.
