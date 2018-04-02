@@ -1,12 +1,112 @@
 from decimal import Decimal
 
 from django.core import exceptions
-from django.db import models
+from django.db import models, transaction
+from django.db.models import Sum
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.apps.voucher.utils import get_unused_code
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_model
+
+
+@python_2_unicode_compatible
+class AbstractVoucherSet(models.Model):
+    """A collection of vouchers (potentially auto-generated)
+
+    a VoucherSet is a group of voucher that are generated
+    automatically.
+
+    - count: the minimum number of vouchers in the set. If this is kept at
+    zero, vouchers are created when and as needed.
+
+    - code_length: the length of the voucher code. Codes are by default created
+    with groups of 4 characters: XXXX-XXXX-XXXX. The dashes (-) do not count for
+    the code_length.
+
+    - start_datetime, end_datetime: defines the validity datetime range for
+    all vouchers in the set.
+
+    """
+
+    name = models.CharField(verbose_name=_('Name'), max_length=100)
+    count = models.IntegerField(verbose_name=_('Number of vouchers'))
+    code_length = models.IntegerField(
+        verbose_name=_('Length of Code'), default=12)
+    description = models.TextField(verbose_name=_('Description'))
+    date_created = models.DateTimeField(auto_now_add=True)
+    start_datetime = models.DateTimeField(_('Start datetime'))
+    end_datetime = models.DateTimeField(_('End datetime'))
+
+    offer = models.OneToOneField(
+        'offer.ConditionalOffer', related_name='voucher_set',
+        verbose_name=_("Offer"), limit_choices_to={'offer_type': "Voucher"},
+        on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+        app_label = 'voucher'
+        get_latest_by = 'date_created'
+        verbose_name = _("VoucherSet")
+        verbose_name_plural = _("VoucherSets")
+
+    def __str__(self):
+        return self.name
+
+    def generate_vouchers(self):
+        """Generate vouchers for this set"""
+        current_count = self.vouchers.count()
+        for i in range(current_count, self.count):
+            self.add_new()
+
+    def add_new(self):
+        """Add a new voucher to this set"""
+        Voucher = get_model('voucher', 'Voucher')
+        code = get_unused_code(length=self.code_length)
+        voucher = Voucher.objects.create(
+            name=self.name,
+            code=code,
+            voucher_set=self,
+            usage=Voucher.SINGLE_USE,
+            start_datetime=self.start_datetime,
+            end_datetime=self.end_datetime)
+
+        if self.offer:
+            voucher.offers.add(self.offer)
+
+        return voucher
+
+    def is_active(self, test_datetime=None):
+        """Test whether this voucher set is currently active. """
+        test_datetime = test_datetime or timezone.now()
+        return self.start_datetime <= test_datetime <= self.end_datetime
+
+    def save(self, *args, **kwargs):
+        self.count = max(self.count, self.vouchers.count())
+        with transaction.atomic():
+            super(AbstractVoucherSet, self).save(*args, **kwargs)
+            self.generate_vouchers()
+            self.vouchers.update(
+                start_datetime=self.start_datetime,
+                end_datetime=self.end_datetime
+            )
+
+    @property
+    def num_basket_additions(self):
+        value = self.vouchers.aggregate(result=Sum('num_basket_additions'))
+        return value['result']
+
+    @property
+    def num_orders(self):
+        value = self.vouchers.aggregate(result=Sum('num_orders'))
+        return value['result']
+
+    @property
+    def total_discount(self):
+        value = self.vouchers.aggregate(result=Sum('total_discount'))
+        return value['result']
 
 
 @python_2_unicode_compatible
@@ -53,6 +153,11 @@ class AbstractVoucher(models.Model):
     total_discount = models.DecimalField(
         _("Total discount"), decimal_places=2, max_digits=12,
         default=Decimal('0.00'))
+
+    voucher_set = models.ForeignKey(
+        'voucher.VoucherSet', null=True, blank=True, related_name='vouchers',
+        on_delete=models.CASCADE
+    )
 
     date_created = models.DateTimeField(auto_now_add=True)
 

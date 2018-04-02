@@ -172,6 +172,11 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Vouchers'),
                 'url_name': 'dashboard:voucher-list',
             },
+            {
+                'label': _('VoucherSets'),
+                'url_name': 'dashboard:voucher-set-list',
+            },
+
         ],
     },
     {

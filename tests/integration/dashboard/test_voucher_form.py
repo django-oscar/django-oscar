@@ -1,6 +1,10 @@
 from django import test
+from datetime import timedelta
+from django.utils import timezone
+import pytest
 
 from oscar.apps.dashboard.vouchers import forms
+from oscar.test.factories.offer import RangeFactory
 
 
 class TestVoucherForm(test.TestCase):
@@ -28,3 +32,30 @@ class TestVoucherForm(test.TestCase):
             self.fail(
                 "Exception raised while validating voucher form: %s\n\n%s" % (
                     e.message, traceback.format_exc()))
+
+
+@pytest.mark.django_db
+class TestVoucherSetForm:
+
+    def test_valid_form(self):
+        a_range = RangeFactory(includes_all_products=True)
+
+        start = timezone.now()
+        end = start + timedelta(days=1)
+        data = {
+            'name': 'test',
+            'code_length': 12,
+            'description': 'test',
+            'start_datetime': start,
+            'end_datetime': end,
+            'count': 10,
+            'benefit_range': a_range.pk,
+            'benefit_type': 'Percentage',
+            'benefit_value': 10,
+        }
+        form = forms.VoucherSetForm(data=data)
+        assert form.is_valid()
+        instance = form.save()
+        assert instance.count == instance.vouchers.count()
+        assert instance.start_datetime == start
+        assert instance.end_datetime == end
