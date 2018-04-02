@@ -28,7 +28,7 @@ Official support for Django 1.8, 1.9 and 1.10 has been dropped.
 
 What's new in Oscar 1.6?
 ------------------------
-
+ - Added support for managing large amounts of vouchers grouped in sets.
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
