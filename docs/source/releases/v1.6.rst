@@ -106,6 +106,8 @@ Minor changes
    allowed quantity in it based on product availability and basket threshold
    (see :issue:`1412`).
 
+ - An unused setting ``OSCAR_SETTINGS`` was removed from ``oscar.core.defaults``.   
+
 .. _incompatible_in_1.6:
 
 Backwards incompatible changes in Oscar 1.6
