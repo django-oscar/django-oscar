@@ -186,6 +186,11 @@ class AbstractCategory(MP_Node):
         """
         return list(self.get_descendants()) + [self]
 
+    def get_url_cache_key(self):
+        current_locale = get_language()
+        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
+        return cache_key
+
     def get_absolute_url(self):
         """
         Our URL scheme means we have to look up the category's ancestors. As
@@ -195,8 +200,7 @@ class AbstractCategory(MP_Node):
         you change that logic, you'll have to reconsider the caching
         approach.
         """
-        current_locale = get_language()
-        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
+        cache_key = self.get_url_cache_key()
         url = cache.get(cache_key)
         if not url:
             url = reverse(
