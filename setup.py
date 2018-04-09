@@ -33,7 +33,7 @@ install_requires = [
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
     # For converting non-ASCII to ASCII when creating slugs
-    'Unidecode>=0.04.12,<0.05',
+    'Unidecode>=1.0,<1.1',
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
@@ -50,23 +50,23 @@ install_requires = [
 ]
 
 docs_requires = [
-    'Sphinx==1.6.3',
+    'Sphinx==1.7.2',
     'sphinxcontrib-napoleon==0.6.1',
-    'sphinx_rtd_theme==0.1.9',
-    'sphinx-issues==0.3.1',
+    'sphinx_rtd_theme==0.3.0',
+    'sphinx-issues==0.4.0',
 ]
 
 test_requires = [
-    'WebTest==2.0.28',
-    'coverage==4.4.1',
+    'WebTest>=2.0,<2.1',
+    'coverage>=4.5,<4.6',
     'django-webtest==1.9.2',
     'py>=1.4.31',
-    'psycopg2==2.7.3.1',
-    'pytest==3.2.1',
+    'psycopg2>=2.7,<2.8',
+    'pytest>=3.5,<3.6',
     'pytest-cov==2.5.1',
     'pytest-django==3.1.2',
-    'pytest-xdist==1.20.0',
-    'tox==2.8.2',
+    'pytest-xdist>=1.22<1.23',
+    'tox>=3.0,<3.1',
 ]
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
