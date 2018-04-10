@@ -1,11 +1,12 @@
-import hashlib
 from collections import OrderedDict
 from decimal import Decimal as D
 
 from django.conf import settings
+from django.core.signing import BadSignature, Signer
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+from django.utils.crypto import constant_time_compare
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -299,9 +300,21 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        key = '%s%s' % (self.number, settings.SECRET_KEY)
-        hash = hashlib.md5(key.encode('utf8'))
-        return hash.hexdigest()
+        signer = Signer(salt='oscar.apps.order.Order')
+        return signer.sign(self.number)
+
+    def check_verification_hash(self, hash_to_check):
+        """
+        Checks the received verification hash against this order number.
+        Returns False if the verification failed, True otherwise.
+        """
+        signer = Signer(salt='oscar.apps.order.Order')
+        try:
+            signed_number = signer.unsign(hash_to_check)
+        except BadSignature:
+            return False
+
+        return constant_time_compare(signed_number, self.number)
 
     @property
     def email(self):
