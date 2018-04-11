@@ -1,7 +1,8 @@
 from datetime import timedelta, datetime
 from decimal import Decimal as D
 
-from django.test import TestCase
+from django.core.exceptions import ImproperlyConfigured
+from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 import mock
@@ -391,3 +392,50 @@ class OrderTests(TestCase):
         # Set second line to returned
         event_2.line_quantities.create(line=line_2, quantity=1)
         self.assertEqual(order.shipping_status, _('Returned'))
+
+    @override_settings(SECRET_KEY='order_hash_secret')
+    def test_verification_hash_generation(self):
+        order = OrderFactory(number='111000')
+        self.assertEqual(order.verification_hash(), '111000:UJrZWNPLsq7zf1r17c3v1Q6DUmE')
+
+    @override_settings(SECRET_KEY='order_hash_secret')
+    def test_check_verification_hash_valid(self):
+        order = OrderFactory(number='111000')
+        self.assertTrue(order.check_verification_hash('111000:UJrZWNPLsq7zf1r17c3v1Q6DUmE'))
+
+    @override_settings(SECRET_KEY='order_hash_secret')
+    def test_check_verification_hash_invalid_signature(self):
+        order = OrderFactory(number='111000')
+        self.assertFalse(order.check_verification_hash('111000:HKDZWNPLsq7589517c3v1Q6DHKD'))
+
+    @override_settings(SECRET_KEY='order_hash_secret')
+    def test_check_verification_hash_valid_signature_but_wrong_number(self):
+        order = OrderFactory(number='111000')
+        # Hash is valid, but it is for a different order number
+        self.assertFalse(order.check_verification_hash('222000:knvoMB1KAiJu8meWtGce00Y88j4'))
+
+    @override_settings(OSCAR_DEPRECATED_ORDER_VERIFY_KEY='deprecated_order_hash_secret')
+    def test_check_deprecated_hash_verification(self):
+        order = OrderFactory(number='100001')
+        # Check that check_deprecated_verification_hash validates the hash
+        self.assertTrue(
+            order.check_deprecated_verification_hash('3efd0339e8c789447469f37851cbaaaf')
+        )
+        # Check that check_verification_hash calls it correctly
+        self.assertTrue(order.check_verification_hash('3efd0339e8c789447469f37851cbaaaf'))
+
+    def test_check_deprecated_hash_verification_without_old_key(self):
+        order = OrderFactory(number='100001')
+        # Check that check_deprecated_verification_hash validates the hash
+        self.assertFalse(
+            order.check_deprecated_verification_hash('3efd0339e8c789447469f37851cbaaaf')
+        )
+
+    @override_settings(
+        OSCAR_DEPRECATED_ORDER_VERIFY_KEY='deprecated_order_hash_secret',
+        SECRET_KEY='deprecated_order_hash_secret')
+    def test_check_deprecated_hash_verification_old_key_matches_new(self):
+        order = OrderFactory(number='100001')
+        # OSCAR_DEPRECATED_ORDER_VERIFY_KEY must not be equal to SECRET_KEY.
+        with self.assertRaises(ImproperlyConfigured):
+            order.check_deprecated_verification_hash('3efd0339e8c789447469f37851cbaaaf')
