@@ -20,7 +20,7 @@ Compatibility
 -------------
 
 Oscar 1.6 is compatible with Django 1.11 as well as Python 2.7, 3.4,
-3.5 and 3.6. Django 1.8, 1.9 and 1.10 are no longer supported.
+3.5 and 3.6.
 
 Official support for Django 1.8, 1.9 and 1.10 has been dropped.
 
@@ -41,7 +41,7 @@ Removal of deprecated features
 Minor changes
 ~~~~~~~~~~~~~
  - The majority of the Oscar class imports now use dynamic loading, instead of
-   direct imports, for better extensibility and customizability.
+   direct imports, for better extensibility and customisability.
 
  - Added the ability to specify a custom class loader through the
    ``OSCAR_DYNAMIC_CLASS_LOADER`` setting.
@@ -50,8 +50,7 @@ Minor changes
    they have a more modern appearance.
 
  - ``SearchHandler.get_search_form`` method now accepts additional
-   keyword arguments, which will be passed on search form class instance
-   initiation.
+   keyword arguments, which will be passed on search form class instance.
 
  - Added ``get_stock_info`` hook to ``oscar.apps.basket.models.Basket``  for
    implementing strategies that depend on product options.
@@ -65,10 +64,10 @@ Minor changes
    on the basket summary page now uses the user's default shipping address to
    calculate an indicative shipping cost.
 
- - Fixed `ExtendedURLValidator` for locale-prefixed URLs for locales, different
+ - Fixed ``ExtendedURLValidator`` for locale-prefixed URLs for locales, different
    from current (see :issue:`1481`). Previously, validation did not pass when
-   current locale is "en-gb" and URL is "/de/catalogue/" and visa versa due to
-   default Django URL resolvers behaviour.
+   if the current locale was "en-gb" and, the a visited URL was "/de/catalogue/"
+   and visa versa due to Django's default behaviour.
 
  - Product attribute value save is now handled by separate methods, to make it
      easier to override this behaviour.
@@ -86,7 +85,7 @@ Minor changes
    product box (see :issues:`1976`).
 
 - Added ``has_options`` property to the
-  ``oscar.apps.catalogue.models.Product`` model to indicated whether the
+  ``oscar.apps.catalogue.models.Product`` model to indicate whether an
   instance or its product class has product options.
 
  - ``oscar.core.validators.validate_password`` was removed.
@@ -100,7 +99,7 @@ Minor changes
  - Oscar's ``ImageInput``, ``TimePickerInput``, ``DatePickerInput`` and
    ``DateTimePickerInput`` all use templates for rendering.
 
- - It's now possible to manage images for variant products and their parents.
+ - It is now possible to manage images for variant products and their parents.
 
  - For variant products we now display their own images on product detail page
    and fallback to parent product images if they don't have any.
@@ -115,25 +114,6 @@ Minor changes
 
 Backwards incompatible changes in Oscar 1.6
 -------------------------------------------
-
- - The mechanism used to generate verification hashes for anonymous orders was
-   changed due to a security vulnerability.
-   ``oscar.apps.order.Order.verification_hash()`` now uses
-   ``django.core.signing`` instead of generating its own MD5 hash for
-    tracking URLs for anonymous orders.
-
-   Projects that allow anonymous checkout are **strongly recommended** to
-   generate a new ``SECRET_KEY``, as the vulnerability exposed the
-   ``SECRET_KEY`` to potential exposure due to weaknesses in the hash generation
-   algorithm.
-
-   As a result of this change, order verification hashes generated previously
-   will no longer validate by default, and URLs generated with the old hash will
-   not be accessible.
-
-   Projects that wish to allow validation of old hashes
-   must specify a ``OSCAR_DEPRECATED_ORDER_VERIFY_KEY`` setting that is equal to
-   the ``SECRET_KEY`` that was in use prior to applying this change.
 
  - ``oscar.apps.customer.auth_backends.EmailBackend`` now rejects inactive users
    (where ``User.is_active`` is ``False``).

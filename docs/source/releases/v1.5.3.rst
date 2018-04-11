@@ -1,0 +1,27 @@
+=========================
+Oscar 1.5.3 release notes
+=========================
+
+:release: 2018-04-11
+
+This is Oscar 1.5.3, a security release.
+
+A security vulnerability existed in the mechanism used to generate verification
+hashes for anonymous orders. This has been fixed in this release.
+
+``oscar.apps.order.Order.verification_hash()`` now uses
+``django.core.signing`` instead of generating its own MD5 hash for
+tracking URLs for anonymous orders.
+
+Projects that allow anonymous checkout are **strongly recommended** to
+generate a new ``SECRET_KEY``, as the vulnerability exposed the
+``SECRET_KEY`` to potential exposure due to weaknesses in the hash generation
+algorithm.
+
+As a result of this change, order verification hashes generated previously
+will no longer validate by default, and URLs generated with the old hash will
+not be accessible.
+
+Projects that wish to allow validation of old hashes
+must specify a ``OSCAR_DEPRECATED_ORDER_VERIFY_KEY`` setting that is equal to
+the ``SECRET_KEY`` that was in use prior to applying this change.
