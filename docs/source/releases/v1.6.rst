@@ -109,12 +109,31 @@ Minor changes
    allowed quantity in it based on product availability and basket threshold
    (see :issue:`1412`).
 
- - An unused setting ``OSCAR_SETTINGS`` was removed from ``oscar.core.defaults``.   
+ - An unused setting ``OSCAR_SETTINGS`` was removed from ``oscar.core.defaults``.
 
 .. _incompatible_in_1.6:
 
 Backwards incompatible changes in Oscar 1.6
 -------------------------------------------
+
+ - The mechanism used to generate verification hashes for anonymous orders was
+   changed due to a security vulnerability.
+   ``oscar.apps.order.Order.verification_hash()`` now uses
+   ``django.core.signing`` instead of generating its own MD5 hash for
+    tracking URLs for anonymous orders.
+
+   Projects that allow anonymous checkout are **strongly recommended** to
+   generate a new ``SECRET_KEY``, as the vulnerability exposed the
+   ``SECRET_KEY`` to potential exposure due to weaknesses in the hash generation
+   algorithm.
+
+   As a result of this change, order verification hashes generated previously
+   will no longer validate by default, and URLs generated with the old hash will
+   not be accessible.
+
+   Projects that wish to allow validation of old hashes
+   must specify a ``OSCAR_DEPRECATED_ORDER_VERIFY_KEY`` setting that is equal to
+   the ``SECRET_KEY`` that was in use prior to applying this change.
 
  - ``oscar.apps.customer.auth_backends.EmailBackend`` now rejects inactive users
    (where ``User.is_active`` is ``False``).

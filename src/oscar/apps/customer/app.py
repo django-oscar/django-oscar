@@ -96,7 +96,7 @@ class CustomerApplication(Application):
             url(r'^orders/$',
                 login_required(self.order_history_view.as_view()),
                 name='order-list'),
-            url(r'^order-status/(?P<order_number>[\w-]*)/(?P<hash>\w+)/$',
+            url(r'^order-status/(?P<order_number>[\w-]*)/(?P<hash>[A-z0-9-_=:]+)/$',
                 self.anon_order_detail_view.as_view(), name='anon-order'),
             url(r'^orders/(?P<order_number>[\w-]*)/$',
                 login_required(self.order_detail_view.as_view()),

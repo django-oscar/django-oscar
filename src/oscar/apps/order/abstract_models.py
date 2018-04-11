@@ -1,11 +1,15 @@
 import hashlib
+import logging
 from collections import OrderedDict
 from decimal import Decimal as D
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+from django.core.signing import BadSignature, Signer
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+from django.utils.crypto import constant_time_compare
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -19,6 +23,9 @@ from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
 
 from . import exceptions
+
+
+logger = logging.getLogger('oscar.order')
 
 
 @python_2_unicode_compatible
@@ -299,9 +306,48 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        key = '%s%s' % (self.number, settings.SECRET_KEY)
-        hash = hashlib.md5(key.encode('utf8'))
-        return hash.hexdigest()
+        signer = Signer(salt='oscar.apps.order.Order')
+        return signer.sign(self.number)
+
+    def check_deprecated_verification_hash(self, hash_to_check):
+        """
+        Backward compatible check for md5 hashes that were generated in
+        Oscar 1.5 and lower.
+
+        This must explicitly be enabled by setting OSCAR_DEPRECATED_ORDER_VERIFY_KEY,
+        which must not be equal to SECRET_KEY - i.e., the project must
+        have changed its SECRET_KEY since this change was applied.
+
+        TODO: deprecate this method in Oscar 2.0, and remove it in Oscar 2.1.
+        """
+        old_verification_key = getattr(settings, 'OSCAR_DEPRECATED_ORDER_VERIFY_KEY', None)
+        if old_verification_key is None:
+            return False
+
+        if old_verification_key == settings.SECRET_KEY:
+            raise ImproperlyConfigured(
+                'OSCAR_DEPRECATED_ORDER_VERIFY_KEY cannot be equal to SECRET_KEY')
+
+        logger.warning('Using insecure md5 hashing for order URL hash verification.')
+        string_to_hash = '%s%s' % (self.number, old_verification_key)
+        order_hash = hashlib.md5(string_to_hash.encode('utf8')).hexdigest()
+        return constant_time_compare(order_hash, hash_to_check)
+
+    def check_verification_hash(self, hash_to_check):
+        """
+        Checks the received verification hash against this order number.
+        Returns False if the verification failed, True otherwise.
+        """
+        if self.check_deprecated_verification_hash(hash_to_check):
+            return True
+
+        signer = Signer(salt='oscar.apps.order.Order')
+        try:
+            signed_number = signer.unsign(hash_to_check)
+        except BadSignature:
+            return False
+
+        return constant_time_compare(signed_number, self.number)
 
     @property
     def email(self):
