@@ -123,6 +123,9 @@
                         <th>{% trans "Billing address" %}</th>
                         <th>{% trans "Date of purchase" %}</th>
                         <th></th>
+                        {% if is_invoice_column_shown %}
+                            <th>{% trans "Invoice" %}</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -148,6 +151,17 @@
                         <td>
                             <a class="btn btn-info" href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "View" %}</a>
                         </td>
+                        {% if is_invoice_column_shown %}
+                            <td>
+                                {% with invoice=order.invoice %}
+                                    {% if invoice.document %}
+                                        <a class="btn btn-info" href="{% url 'dashboard:order-download-invoice' order.number invoice.id %}" download>{% trans "Download" %}</a>
+                                    {% else %}
+                                        &ndash;
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

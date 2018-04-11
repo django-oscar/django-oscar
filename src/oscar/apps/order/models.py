@@ -95,3 +95,10 @@ if not is_model_registered('order', 'OrderDiscount'):
         pass
 
     __all__.append('OrderDiscount')
+
+
+if not is_model_registered('order', 'Invoice'):
+    class Invoice(AbstractInvoice):
+        pass
+
+    __all__.append('Invoice')

@@ -3,8 +3,10 @@ from collections import OrderedDict
 from decimal import Decimal as D
 
 from django.conf import settings
+from django.core.files.base import ContentFile
 from django.db import models
 from django.db.models import Sum
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
@@ -15,10 +17,14 @@ from oscar.apps.order.signals import (
     order_line_status_changed, order_status_changed)
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
+from oscar.core.storages import DocumentsStorage
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
 
 from . import exceptions
+
+
+documents_storage = DocumentsStorage()
 
 
 @python_2_unicode_compatible
@@ -1136,3 +1142,73 @@ class AbstractOrderDiscount(models.Model):
         if self.voucher_code:
             return self.voucher_code
         return self.offer_name or u""
+
+
+@python_2_unicode_compatible
+class AbstractInvoice(models.Model):
+    """
+    An Invoice.
+    """
+
+    legal_entity = models.ForeignKey(
+        'partner.LegalEntity',
+        on_delete=models.CASCADE,
+        related_name='invoices',
+        verbose_name=_('Legal Entity'))
+
+    number = models.CharField(
+        _('Invoice number'), max_length=128)
+
+    order = models.OneToOneField(
+        'order.Order', verbose_name=_('Order'), related_name='invoice',
+        null=True, blank=True, on_delete=models.SET_NULL)
+
+    notes = models.TextField(_('Notes for invoice'), null=True, blank=False)
+
+    document = models.FileField(
+        _('Document'), storage=documents_storage, upload_to=settings.OSCAR_INVOICE_FOLDER,
+        blank=True, null=True, max_length=255)
+
+    class Meta:
+        abstract = True
+        app_label = 'order'
+        verbose_name = _('Invoice')
+        verbose_name_plural = _('Invoices')
+
+    @classmethod
+    def get_last_invoice_number(cls):
+        last_invoice = cls.objects.order_by('-id').last()
+        return last_invoice.number if last_invoice else 0
+
+    def __str__(self):
+        if self.order:
+            order_number = self.order.number
+            return _(
+                'Invoice #%(invoice_number)s for order #%(order_number)s'
+            ) % {'invoice_number': self.number, 'order_number': order_number}
+
+        return _(
+            'Invoice %(invoice_number)s') % {'number': self.number}
+
+    def render_document(self):
+        """
+        Return rendered from html template invoice document.
+        """
+        template_name = 'order/invoice.html'
+        template_context = {
+            'invoice': self,
+            'order': self.order,
+            'legal_entity': self.legal_entity,
+            'legal_entity_address': self.legal_entity.addresses.first(),
+        }
+        return render_to_string(template_name, template_context)
+
+    def get_invoice_filename(self):
+        return 'invoice_{}.html'.format(self.order.number)
+
+    def generate_and_save_document(self):
+        """
+        Create and save invoice document (as *.html file).
+        """
+        document_file = ContentFile(self.render_document())
+        self.document.save(self.get_invoice_filename(), document_file)

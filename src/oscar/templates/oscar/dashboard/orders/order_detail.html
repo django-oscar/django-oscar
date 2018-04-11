@@ -62,12 +62,27 @@
             <th>{% trans "Date of purchase" %}</th>
             <th>{% trans "Time of purchase" %}</th>
             <th>{% trans "Status" %}</th>
+            {% if is_invoice_column_shown %}
+                <th>{% trans "Invoice" %}</th>
+            {% endif %}
         </tr>
         <tr>
             <td>{{ order.total_incl_tax|currency:order.currency }}</td>
             <td>{{ order.date_placed|date }}</td>
             <td>{{ order.date_placed|time }}</td>
             <td>{{ order.status|default:"N/A" }}</td>
+            {% if is_invoice_column_shown %}
+                <td>
+                    {% with document=order.invoice.document %}
+                        {% if document %}
+                            <a class="btn btn-info" href="{{ document.url }}">{% trans "View" %}</a>
+                            <a class="btn btn-info" href="{{ document.url }}" download>{% trans "Download" %}</a>
+                        {% else %}
+                            &ndash;
+                        {% endif %}
+                    {% endwith %}
+                </td>
+            {% endif %}
         </tr>
     </table>
     {% endblock order_information %}

@@ -13,6 +13,8 @@ from . import exceptions
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 OrderDiscount = get_model('order', 'OrderDiscount')
+Invoice = get_model('order', 'Invoice')
+LegalEntity = get_model('partner', 'LegalEntity')
 
 
 class OrderNumberGenerator(object):
@@ -257,3 +259,32 @@ class OrderCreator(object):
         Updates the models that care about this voucher.
         """
         voucher.record_usage(order, user)
+
+
+class InvoiceNumberGenerator(object):
+    """
+    Simple object for generating invoice numbers.
+    """
+
+    def invoice_number(self):
+        return Invoice.get_last_invoice_number() + 1
+
+
+def create_invoice(order, invoice_number_generator=None):
+    """
+    To create `Invoice` instance, we should have at least one
+    instance of `LegalEntity` with `LegalEntityAddress`.
+
+    Some platforms may have couple `LegalEntity`s (with couple
+    `LegalEntityAddress`s). In this case needed instances should be
+    selected based on order (ordered products).
+
+    """
+    legal_entity = LegalEntity.objects.first()
+    if legal_entity and legal_entity.has_addresses:
+        invoice_number_generator = invoice_number_generator or InvoiceNumberGenerator
+        invoice_number = invoice_number_generator().invoice_number()
+
+        invoice = Invoice.objects.create(
+            legal_entity=legal_entity, number=invoice_number, order=order)
+        invoice.generate_and_save_document()
