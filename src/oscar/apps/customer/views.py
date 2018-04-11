@@ -604,7 +604,7 @@ class AnonymousOrderDetailView(generic.DetailView):
         # Check URL hash matches that for order to prevent spoof attacks
         order = get_object_or_404(self.model, user=None,
                                   number=self.kwargs['order_number'])
-        if self.kwargs['hash'] != order.verification_hash():
+        if not order.check_verification_hash(self.kwargs['hash']):
             raise http.Http404()
         return order
 
