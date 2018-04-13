@@ -32,7 +32,7 @@ class AbstractVoucherSet(models.Model):
     """
 
     name = models.CharField(verbose_name=_('Name'), max_length=100)
-    count = models.IntegerField(verbose_name=_('Number of vouchers'))
+    count = models.PositiveIntegerField(verbose_name=_('Number of vouchers'))
     code_length = models.IntegerField(
         verbose_name=_('Length of Code'), default=12)
     description = models.TextField(verbose_name=_('Description'))
