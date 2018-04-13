@@ -1,3 +1,5 @@
+/*global jQuery */
+
 var oscar = (function(o, $) {
     // Replicate Django's flash messages so they can be used by AJAX callbacks.
     o.messages = {
@@ -82,19 +84,19 @@ var oscar = (function(o, $) {
             });
             // stuff for star rating on review page
             // show clickable stars instead of a select dropdown for product rating
-            ratings = $('.reviewrating');
+            var ratings = $('.reviewrating');
             if(ratings.length){
                 ratings.find('.star-rating i').on('click',o.forms.reviewRatingClick);
             }
         },
-        submitIfNotLocked: function(event) {
+        submitIfNotLocked: function() {
             var $form = $(this);
             if ($form.data('locked')) {
                 return false;
             }
             $form.data('locked', true);
         },
-        reviewRatingClick: function(event){
+        reviewRatingClick: function(){
             var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
             $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
             $(this).closest('.controls').find('select').val($(this).index() + 1); //select is hidden, set value
@@ -182,7 +184,7 @@ var oscar = (function(o, $) {
                 o.basket.checkAndSubmit($(this), 'form', 'save_for_later');
                 event.preventDefault();
             });
-            $('#content_inner').on('click', '#saved_basket_formset a[data-behaviours~="move"]', function(event) {
+            $('#content_inner').on('click', '#saved_basket_formset a[data-behaviours~="move"]', function() {
                 o.basket.checkAndSubmit($(this), 'saved', 'move_to_basket');
             });
             $('#content_inner').on('click', '#saved_basket_formset a[data-behaviours~="remove"]', function(event) {
@@ -285,7 +287,7 @@ var oscar = (function(o, $) {
                     'language': o.datetimepickers.options.languageCode,
                     'minView': 2
                 };
-                $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *');
+                var $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *');
                 $dates.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
@@ -300,12 +302,12 @@ var oscar = (function(o, $) {
                     'autoclose': true,
                     'language': o.datetimepickers.options.languageCode
                 };
-                $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
+                var $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
                 $datetimes.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
-                          'format': $ele.data('datetimeformat'),
-                          'minuteStep': $ele.data('stepminute')
+                            'format': $ele.data('datetimeformat'),
+                            'minuteStep': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
                 });
@@ -316,15 +318,15 @@ var oscar = (function(o, $) {
                     'autoclose': true,
                     'language': o.datetimepickers.options.languageCode
                 };
-                $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *')
+                var $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *');
                 $times.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
-                          'format': $ele.data('timeformat'),
-                          'minuteStep': $ele.data('stepminute'),
-                          'startView': 1,
-                          'maxView': 1,
-                          'formatViewType': 'time'
+                            'format': $ele.data('timeformat'),
+                            'minuteStep': $ele.data('stepminute'),
+                            'startView': 1,
+                            'maxView': 1,
+                            'formatViewType': 'time'
                         });
                     $ele.datetimepicker(config);
                 });

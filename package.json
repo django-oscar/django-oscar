@@ -1,12 +1,13 @@
 {
   "name": "django-oscar",
-  "version": "1.1.1",
+  "version": "1.6.0",
   "description": "A domain-driven e-commerce framework for Django",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
     "bootstrap": "^3.3.7",
     "bootstrap-datetime-picker": "^2.4.4",
+    "eslint": "^4.19.1",
     "gulp": "~3.9.1",
     "gulp-autoprefixer": "~1.0.1",
     "gulp-concat": "^2.6.1",
@@ -20,13 +21,14 @@
     "less": "^2.5.3",
     "pump": "^1.0.1",
     "require-dir": "^0.3.0",
-    "tinymce": "^4.7.6",
     "select2": "4.0.5",
-    "select2-bootstrap-theme": "0.1.0-beta.10"
+    "select2-bootstrap-theme": "0.1.0-beta.10",
+    "tinymce": "^4.7.6"
   },
   "scripts": {
     "build": "gulp",
-    "start": "gulp watch"
+    "start": "gulp watch",
+    "eslint": "./node_modules/.bin/eslint src/oscar/static/oscar/js/oscar/"
   },
   "license": "MIT",
   "homepage": "https://github.com/django-oscar/django-oscar#readme"
