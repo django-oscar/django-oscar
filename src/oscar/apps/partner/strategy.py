@@ -58,7 +58,7 @@ class Base(object):
     def __init__(self, request=None):
         self.request = request
         self.user = None
-        if request and request.user.is_authenticated:
+        if request and request.user and request.user.is_authenticated:
             self.user = request.user
 
     def fetch_for_product(self, product, stockrecord=None):
