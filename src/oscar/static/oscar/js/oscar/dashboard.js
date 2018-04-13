@@ -341,7 +341,7 @@ var oscar = (function(o, $) {
         },
         product_lists: {
             init: function() {
-                var imageModal = $("#product-image-modal")
+                var imageModal = $("#product-image-modal"),
                     thumbnails = $('.sub-image');
                 thumbnails.click(function(e){
                     e.preventDefault();
