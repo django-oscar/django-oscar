@@ -1,3 +1,4 @@
+/*global jQuery,oscar */
 /*!
  * Code in this file copied and modified from Django's admin app
  * Source-code file: django/contrib/admin/static/admin/js/admin/RelatedObjectLookups.js
@@ -28,11 +29,11 @@
      * Date: 2017-08-25T12:16:21+03:00
      */
     o.interpolate = function(fmt, obj, named) {
-      if (named) {
-        return fmt.replace(/%\(\w+\)s/g, function(match){return String(obj[match.slice(2,-2)])});
-      } else {
-        return fmt.replace(/%s/g, function(match){return String(obj.shift())});
-      }
+        if (named) {
+            return fmt.replace(/%\(\w+\)s/g, function(match){return String(obj[match.slice(2,-2)]);});
+        } else {
+            return fmt.replace(/%s/g, function(){return String(obj.shift());});
+        }
     };
 
     // IE doesn't accept periods or dashes in the window name, but the element IDs
@@ -41,7 +42,7 @@
     // element when the popup window is dismissed.
     o.id_to_windowname = function(text) {
         text = text.replace(/\./g, '__dot__');
-        text = text.replace(/\-/g, '__dash__');
+        text = text.replace(/-/g, '__dash__');
         return text;
     };
 
@@ -111,7 +112,7 @@
             }
         }).trigger('change');
         win.close();
-    }
+    };
 
     o.dismissDeleteRelatedObjectPopup = function(win, objId) {
         var id = o.windowname_to_id(win.name).replace(/^delete_/, '');
@@ -135,7 +136,7 @@
             }
         }
     });
-    $('body').on('change', '.related-widget-wrapper select', function(e) {
+    $('body').on('change', '.related-widget-wrapper select', function() {
         var event = $.Event('oscar:update-related');
         $(this).trigger(event);
         if (!event.isDefaultPrevented()) {

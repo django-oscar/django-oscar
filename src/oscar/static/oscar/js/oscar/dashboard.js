@@ -1,3 +1,5 @@
+/*global jQuery */
+
 var oscar = (function(o, $) {
 
     o.getCsrfToken = function() {
@@ -5,7 +7,7 @@ var oscar = (function(o, $) {
         var cookies = document.cookie.split(';');
         var csrf_token = null;
         $.each(cookies, function(index, cookie) {
-            cookieParts = $.trim(cookie).split('=');
+            var cookieParts = $.trim(cookie).split('=');
             if (cookieParts[0] == 'csrftoken') {
                 csrf_token = cookieParts[1];
             }
@@ -47,7 +49,7 @@ var oscar = (function(o, $) {
 
             $(".category-select ul").prev('a').on('click', function(){
                 var $this = $(this),
-                plus = $this.hasClass('ico_expand');
+                    plus = $this.hasClass('ico_expand');
                 if (plus) {
                     $this.removeClass('ico_expand').addClass('ico_contract');
                 } else {
@@ -58,8 +60,8 @@ var oscar = (function(o, $) {
 
             // Adds error icon if there are errors in the product update form
             $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
-              var productErrorListener = $(this).find('[class*="error"]:not(:empty)').closest('.tab-pane').attr('id');
-              $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
+                var productErrorListener = $(this).find('[class*="error"]:not(:empty)').closest('.tab-pane').attr('id');
+                $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
 
             o.dashboard.filereader.init();
@@ -82,7 +84,7 @@ var oscar = (function(o, $) {
             o.dashboard.initSelects(el);
         },
         initMasks: function(el) {
-            $(el).find(':input').inputmask()
+            $(el).find(':input').inputmask();
         },
         initSelects: function(el) {
             // Adds type/search for select fields
@@ -118,7 +120,7 @@ var oscar = (function(o, $) {
                     'language': o.dashboard.options.languageCode,
                     'minView': 2
                 };
-                $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *')
+                var $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *');
                 $dates.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
@@ -134,12 +136,12 @@ var oscar = (function(o, $) {
                     'language': o.dashboard.options.languageCode,
                     'initialDate': o.dashboard.options.initialDate
                 };
-                $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *')
+                var $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
                 $datetimes.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
-                          'format': $ele.data('datetimeformat'),
-                          'minuteStep': $ele.data('stepminute')
+                            'format': $ele.data('datetimeformat'),
+                            'minuteStep': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
                 });
@@ -151,15 +153,15 @@ var oscar = (function(o, $) {
                     'language': o.dashboard.options.languageCode,
                     'initialDate': o.dashboard.options.initialDate
                 };
-                $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *')
+                var $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *');
                 $times.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
-                          'format': $ele.data('timeformat'),
-                          'minuteStep': $ele.data('stepminute'),
-                          'startView': 1,
-                          'maxView': 1,
-                          'formatViewType': 'time'
+                            'format': $ele.data('timeformat'),
+                            'minuteStep': $ele.data('stepminute'),
+                            'startView': 1,
+                            'maxView': 1,
+                            'formatViewType': 'time'
                         });
                     $ele.datetimepicker(config);
                 });
@@ -167,7 +169,7 @@ var oscar = (function(o, $) {
         },
         initWYSIWYG: function(el) {
             // Use TinyMCE by default
-            $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
+            var $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
             $textareas.filter('form.wysiwyg textarea').tinymce(o.dashboard.options.tinyConfig);
             $textareas.filter('.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
         },
@@ -205,11 +207,11 @@ var oscar = (function(o, $) {
             init: function(){
                 var type_selects = $("select[name$=type]");
 
-                type_selects.each(function(index){
+                type_selects.each(function(){
                     o.dashboard.product_attributes.toggleOptionGroup($(this));
                 });
 
-                type_selects.change(function(e){
+                type_selects.change(function(){
                     o.dashboard.product_attributes.toggleOptionGroup($(this));
                 });
             },
@@ -223,7 +225,7 @@ var oscar = (function(o, $) {
         ranges: {
             init: function() {
                 $('[data-behaviours~="remove"]').click(function() {
-                    $this = $(this);
+                    var $this = $(this);
                     $this.parents('table').find('input').prop('checked', false);
                     $this.parents('tr').find('input').prop('checked', true);
                     $this.parents('form').submit();
@@ -252,48 +254,48 @@ var oscar = (function(o, $) {
         },
         reordering: (function() {
             var options = {
-                handle: '.btn-handle',
-                submit_url: '#'
-            },
-            saveOrder = function(data) {
+                    handle: '.btn-handle',
+                    submit_url: '#'
+                },
+                saveOrder = function(data) {
                 // Get the csrf token, otherwise django will not accept the
                 // POST request.
-                var csrf = o.getCsrfToken();
-                $.ajax({
-                    type: 'POST',
-                    data: $.param(data),
-                    dataType: "json",
-                    url: options.submit_url,
-                    beforeSend: function(xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf);
-                    }
-                });
-            },
-            init = function(user_options) {
-                options = $.extend(options, user_options);
-                var group = $(options.wrapper).sortable({
-                    group: 'serialization',
-                    containerSelector: 'tbody',
-                    itemSelector: 'tr',
-                    handle: options.handle,
-                    vertical: true,
-                    onDrop: function ($item, container, _super) {
-                        var data = group.sortable("serialize");
-                        saveOrder(data);
-                        _super($item, container);
-                    },
-                    placeholder: '<tr class="placeholder"/>',
-                    serialize: function (parent, children, isContainer) {
-                        if (isContainer) {
-                            return children;
+                    var csrf = o.getCsrfToken();
+                    $.ajax({
+                        type: 'POST',
+                        data: $.param(data),
+                        dataType: "json",
+                        url: options.submit_url,
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", csrf);
                         }
-                        else {
-                            var parts = parent.attr('id').split('_');
-                            return {'name': parts[0], 'value': parts[1]};
+                    });
+                },
+                init = function(user_options) {
+                    options = $.extend(options, user_options);
+                    var group = $(options.wrapper).sortable({
+                        group: 'serialization',
+                        containerSelector: 'tbody',
+                        itemSelector: 'tr',
+                        handle: options.handle,
+                        vertical: true,
+                        onDrop: function ($item, container, _super) {
+                            var data = group.sortable("serialize");
+                            saveOrder(data);
+                            _super($item, container);
+                        },
+                        placeholder: '<tr class="placeholder"/>',
+                        serialize: function (parent, children, isContainer) {
+                            if (isContainer) {
+                                return children;
+                            }
+                            else {
+                                var parts = parent.attr('id').split('_');
+                                return {'name': parts[0], 'value': parts[1]};
+                            }
                         }
-                    }
-                });
-            };
+                    });
+                };
 
             return {
                 init: init,
@@ -305,7 +307,7 @@ var oscar = (function(o, $) {
                 var searchForm = $(".orders_search"),
                     searchLink = $('.pull_out'),
                     doc = $('document');
-                searchForm.each(function(index) {
+                searchForm.each(function() {
                     doc.css('height', doc.height());
                 });
                 searchLink.on('click', function() {
@@ -314,7 +316,7 @@ var oscar = (function(o, $) {
                         .toggleClass('no-float')
                         .end().end()
                         .slideToggle("fast");
-                    }
+                }
                 );
             }
         },
