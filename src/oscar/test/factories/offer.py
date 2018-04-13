@@ -46,7 +46,7 @@ class ConditionFactory(factory.DjangoModelFactory):
 
 
 class ConditionalOfferFactory(factory.DjangoModelFactory):
-    name = 'Test offer'
+    name = factory.Sequence(lambda n: 'Test offer %d' % n)
     benefit = factory.SubFactory(BenefitFactory)
     condition = factory.SubFactory(ConditionFactory)
 

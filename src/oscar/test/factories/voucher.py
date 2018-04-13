@@ -22,7 +22,7 @@ class VoucherFactory(factory.DjangoModelFactory):
 
 
 class VoucherSetFactory(factory.DjangoModelFactory):
-    name = "My voucherset"
+    name = factory.Sequence(lambda n: 'Voucher Set %d' % n)
     count = 100
     code_length = 12
     start_datetime = now() - datetime.timedelta(days=1)

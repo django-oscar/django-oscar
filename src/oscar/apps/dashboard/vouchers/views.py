@@ -417,6 +417,7 @@ class VoucherSetListView(generic.ListView):
     context_object_name = 'vouchers'
     template_name = 'dashboard/vouchers/voucher_set_list.html'
     description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get_queryset(self):
         qs = self.model.objects.all().order_by('-date_created')
