@@ -212,6 +212,12 @@ class AddToBasketForm(forms.Form):
     def clean(self):
         info = self.basket.strategy.fetch_for_product(self.product)
 
+        # Check that a price was found by the strategy
+        if not info.price.exists:
+            raise forms.ValidationError(
+                _("This product cannot be added to the basket because a "
+                  "price could not be determined for it."))
+
         # Check currencies are sensible
         if (self.basket.currency and
                 info.price.currency != self.basket.currency):

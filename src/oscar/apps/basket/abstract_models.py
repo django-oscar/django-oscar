@@ -205,6 +205,11 @@ class AbstractBasket(models.Model):
         # Ensure that all lines are the same currency
         price_currency = self.currency
         stock_info = self.get_stock_info(product, options)
+
+        if not stock_info.price.exists:
+            raise ValueError(
+                "Strategy hasn't found a price for product %s" % product)
+
         if price_currency and stock_info.price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "

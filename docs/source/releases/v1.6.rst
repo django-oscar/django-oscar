@@ -115,6 +115,11 @@ Minor changes
 Backwards incompatible changes in Oscar 1.6
 -------------------------------------------
 
+ - Fixed a regression introduced in Oscar 1.5 (see :issue:`2664`) where
+   ``StockRequired.availability_policy`` was dependent on the product
+   having a price. Price and availability are now decoupled, and it is possible
+   to defer determination of a price until a product is added to the basket.  
+
  - ``oscar.apps.customer.auth_backends.EmailBackend`` now rejects inactive users
    (where ``User.is_active`` is ``False``).
 
