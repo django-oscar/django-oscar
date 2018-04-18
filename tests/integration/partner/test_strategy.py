@@ -7,17 +7,7 @@ from oscar.test import factories
 from oscar.apps.basket.models import Line
 
 
-class ProductWithEmptyPriceTestMixin(object):
-
-    def test_product_with_empty_price(self):
-        product_class = factories.ProductClassFactory(track_stock=False)
-        product = factories.ProductFactory(product_class=product_class, stockrecords=[])
-        factories.StockRecordFactory(price_excl_tax=None, product=product)
-        info = self.strategy.fetch_for_product(product)
-        self.assertFalse(info.availability.is_available_to_buy)
-
-
-class TestDefaultStrategy(ProductWithEmptyPriceTestMixin, TestCase):
+class TestDefaultStrategy(TestCase):
 
     def setUp(self):
         self.strategy = strategy.Default()
@@ -57,12 +47,14 @@ class TestDefaultStrategy(ProductWithEmptyPriceTestMixin, TestCase):
         self.assertTrue(info.availability.is_available_to_buy)
         self.assertTrue(info.price.exists)
 
-    def test_product_with_empty_price(self):
+    def test_availability_does_not_require_price(self):
+        # regression test for https://github.com/django-oscar/django-oscar/issues/2664
+        # The availability policy should be independent of price.
         product_class = factories.ProductClassFactory(track_stock=False)
         product = factories.ProductFactory(product_class=product_class, stockrecords=[])
         factories.StockRecordFactory(price_excl_tax=None, product=product)
         info = self.strategy.fetch_for_product(product)
-        self.assertFalse(info.availability.is_available_to_buy)
+        self.assertTrue(info.availability.is_available_to_buy)
 
 
 class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCase):
@@ -126,13 +118,19 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
         self.assertEqual(D('10.00'), self.info.price.incl_tax)
 
 
-class TestFixedRateTax(ProductWithEmptyPriceTestMixin, TestCase):
+class TestFixedRateTax(TestCase):
 
-    def setUp(self):
-        self.strategy = strategy.UK()
+    def test_pricing_policy_unavailable_if_no_price_excl_tax(self):
+        product = factories.ProductFactory(stockrecords=[])
+        factories.StockRecordFactory(price_excl_tax=None, product=product)
+        info = strategy.UK().fetch_for_product(product)
+        self.assertFalse(info.price.exists)
 
 
-class TestDeferredTax(ProductWithEmptyPriceTestMixin, TestCase):
+class TestDeferredTax(TestCase):
 
-    def setUp(self):
-        self.strategy = strategy.US()
+    def test_pricing_policy_unavailable_if_no_price_excl_tax(self):
+        product = factories.ProductFactory(stockrecords=[])
+        factories.StockRecordFactory(price_excl_tax=None, product=product)
+        info = strategy.US().fetch_for_product(product)
+        self.assertFalse(info.price.exists)

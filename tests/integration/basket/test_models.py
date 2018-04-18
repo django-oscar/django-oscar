@@ -140,6 +140,11 @@ class TestAddingAProductToABasket(TestCase):
         with self.assertRaises(ValueError):
             self.basket.add(product)
 
+    def test_cannot_add_a_product_without_price(self):
+        product = factories.create_product(price=None)
+        with self.assertRaises(ValueError):
+            self.basket.add(product)
+
 
 class TestANonEmptyBasket(TestCase):
 

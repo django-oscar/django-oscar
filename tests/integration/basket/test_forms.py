@@ -193,13 +193,16 @@ class TestAddToBasketForm(TestCase):
             basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
 
-    def test_for_empty_price_excl_tax(self):
+    def test_cannot_add_a_product_without_price(self):
         basket = factories.BasketFactory()
-        product_class = factories.ProductClassFactory(track_stock=False)
-        product = factories.ProductFactory(product_class=product_class, stockrecords=[])
-        factories.StockRecordFactory.build(price_excl_tax=None, product=product)
+        product = factories.create_product(price=None)
 
         data = {'quantity': 1}
-        form = forms.AddToBasketForm(basket=basket, product=product, data=data)
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['__all__'][0], 'unavailable')
+        self.assertEqual(
+            form.errors['__all__'][0],
+            'This product cannot be added to the basket because a price '
+            'could not be determined for it.',
+        )
