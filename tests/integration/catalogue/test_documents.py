@@ -65,6 +65,21 @@ class ProductDocumentTestCase(TestCase):
 
         self.assertIsNone(ProductDocument().get_stockrecord_data(no_price))
 
+    def test_get_stockrecord_data_doesnt_return_none_if_price_excl_tax_is_0(self):
+        free_sr = create_stockrecord(num_in_stock=0)
+        free_sr.price_excl_tax = 0
+        free_sr.save()
+
+        expected = {
+            'partner': free_sr.partner.pk,
+            'currency': free_sr.price_currency,
+            'price': 0,
+            'num_in_stock': free_sr.num_in_stock,
+            'sku': free_sr.partner_sku,
+        }
+
+        self.assertEqual(ProductDocument().get_stockrecord_data(free_sr), expected)
+
     def test_prepare_stock(self):
         product = create_product()
 
@@ -78,6 +93,27 @@ class ProductDocumentTestCase(TestCase):
             get_stockrecord_data_mock.assert_has_calls([call(sr1), call(sr2)], any_order=True)
 
             self.assertEqual(stock_data, ['gsd_data', 'gsd_data'])
+
+    def test_prepare_stock_skips_null_data(self):
+        product = create_product()
+
+        sr1 = create_stockrecord(product, partner_name="P1", price_excl_tax=1000, num_in_stock=10)
+        # this will return None when passed through get_stockrecord_data
+        sr2 = create_stockrecord(product, partner_name="P2", num_in_stock=10)
+        sr2.price_excl_tax = None
+        sr2.save()
+
+        expected = [
+            {
+                'partner': sr1.partner.pk,
+                'currency': sr1.price_currency,
+                'price': sr1.price_excl_tax,
+                'num_in_stock': sr1.num_in_stock,
+                'sku': sr1.partner_sku
+            }
+        ]
+
+        self.assertEqual(ProductDocument().prepare_stock(product), expected)
 
     def test_prepare_stock_skips_parent_products_and_products_without_stockrecords(self):
         doc = ProductDocument()

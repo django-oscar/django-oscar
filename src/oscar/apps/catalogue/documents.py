@@ -179,7 +179,9 @@ class ProductDocument(with_metaclass(ProductDocumentMeta, DocType)):
             stockrecords = product.stockrecords.all()
 
         for stockrecord in stockrecords:
-            stocks.append(self.get_stockrecord_data(stockrecord))
+            stockrecord_data = self.get_stockrecord_data(stockrecord)
+            if stockrecord_data:
+                stocks.append(stockrecord_data)
 
         return stocks
 
@@ -199,7 +201,7 @@ class ProductDocument(with_metaclass(ProductDocumentMeta, DocType)):
 
     def get_stockrecord_data(self, stockrecord):
         # Exclude stock records that have no price
-        if not stockrecord.price_excl_tax:
+        if stockrecord.price_excl_tax is None:
             return None
 
         # Partner can be missing when loading data from fixtures
