@@ -141,10 +141,11 @@ class AbstractBasket(models.Model):
         with the respect to basket quantity threshold.
         """
         basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
+        max_allowed = 0
         if basket_threshold:
             total_basket_quantity = self.num_items
             max_allowed = basket_threshold - total_basket_quantity
-            return max_allowed, basket_threshold
+        return max_allowed, basket_threshold
 
     def is_quantity_allowed(self, qty):
         """
