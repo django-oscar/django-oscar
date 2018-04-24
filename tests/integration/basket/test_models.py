@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal as D
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.catalogue.models import Option
