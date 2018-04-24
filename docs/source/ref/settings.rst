@@ -330,9 +330,11 @@ The time to live for the basket cookie in seconds.
 ``OSCAR_MAX_BASKET_QUANTITY_THRESHOLD``
 ---------------------------------------
 
-Default: ``None``
+Default: ``10000``
 
-The maximum number of products that can be added to a basket at once.
+The maximum number of products that can be added to a basket at once. Set to 
+``None`` to disable the basket treshold limitation.
+
 
 ``OSCAR_BASKET_COOKIE_OPEN``
 ----------------------------

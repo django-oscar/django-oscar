@@ -145,6 +145,7 @@ class AbstractBasket(models.Model):
             total_basket_quantity = self.num_items
             max_allowed = basket_threshold - total_basket_quantity
             return max_allowed, basket_threshold
+        return None, None
 
     def is_quantity_allowed(self, qty):
         """
