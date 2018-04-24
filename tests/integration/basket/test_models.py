@@ -267,16 +267,20 @@ class TestANonEmptyBasket(TestCase):
             # 7 or below is possible
             allowed, message = self.basket.is_quantity_allowed(qty=7)
             self.assertTrue(allowed)
+            self.assertIsNone(message)
             # but above it's not
             allowed, message = self.basket.is_quantity_allowed(qty=11)
             self.assertFalse(allowed)
+            self.assertIsNotNone(message)
 
         with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=None):
             # with the treshold disabled all quantities are possible
             allowed, message = self.basket.is_quantity_allowed(qty=7)
             self.assertTrue(allowed)
+            self.assertIsNone(message)
             allowed, message = self.basket.is_quantity_allowed(qty=5000)
             self.assertTrue(allowed)
+            self.assertIsNone(message)
 
 
 class TestMergingTwoBaskets(TestCase):
