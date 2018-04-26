@@ -118,7 +118,7 @@ Backwards incompatible changes in Oscar 1.6
  - Fixed a regression introduced in Oscar 1.5 (see :issue:`2664`) where
    ``StockRequired.availability_policy`` was dependent on the product
    having a price. Price and availability are now decoupled, and it is possible
-   to defer determination of a price until a product is added to the basket.  
+   to defer determination of a price until a product is added to the basket.
 
  - ``oscar.apps.customer.auth_backends.EmailBackend`` now rejects inactive users
    (where ``User.is_active`` is ``False``).
@@ -155,6 +155,10 @@ Backwards incompatible changes in Oscar 1.6
  - ``oscar.forms.widgets.RemoteSelect`` was updated to work with version 4 of
    select2. Instead of rendering a hidden input it now renders a normal
    ``select`` element.
+
+ - The django-extra-views dependency was upgraded to version 0.11, and the
+   basket views that rely on ``extra_views.ModelFormSetView`` updated to use the
+   new factory_kwargs attribute.
 
  - jQuery UI was removed from Oscar's static files. Projects that require it
    should install it at the project level.

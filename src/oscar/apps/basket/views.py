@@ -34,8 +34,10 @@ class BasketView(ModelFormSetView):
     basket_model = get_model('basket', 'Basket')
     formset_class = BasketLineFormSet
     form_class = BasketLineForm
-    extra = 0
-    can_delete = True
+    factory_kwargs = {
+        'extra': 0,
+        'can_delete': True
+    }
     template_name = 'basket/basket.html'
 
     def get_formset_kwargs(self):
@@ -416,8 +418,10 @@ class SavedView(ModelFormSetView):
     basket_model = get_model('basket', 'basket')
     formset_class = SavedLineFormSet
     form_class = SavedLineForm
-    extra = 0
-    can_delete = True
+    factory_kwargs = {
+        'extra': 0,
+        'can_delete': True
+    }
 
     def get(self, request, *args, **kwargs):
         return redirect('basket:summary')
