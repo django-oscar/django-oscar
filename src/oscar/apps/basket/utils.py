@@ -145,6 +145,7 @@ class LineOfferConsumer(object):
         :return: the number of items available for offer
         :rtype: int
         """
+
         max_affected_items = self.__line.quantity
 
         if offer and isinstance(offer, ConditionalOffer):
