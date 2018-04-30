@@ -22,6 +22,7 @@ Release notes for each version of Oscar published to PyPI.
     v1.5.1
     v1.5.2
     v1.5.3
+    v1.5.4
 
 
 1.4 release branch
