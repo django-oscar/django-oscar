@@ -23,10 +23,9 @@ install_requires = [
     'django>=1.8.8,<1.12',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=3.4.2',
-    # We use the ModelFormSetView from django-extra-views for the basket
-    # page. > 0.6.5 has a bug which causes issues with Django > 1.6,
-    # https://github.com/AndrewIngram/django-extra-views/issues/114
-    'django-extra-views>=0.2,<0.6.5',
+    # django-extra-views 0.11 doesn't support Django 1.8, and has API changes
+    # which Oscar 1.5.x hasn't accommodated.
+    'django-extra-views>=0.2,<0.11',
     # Search support
     'django-haystack>=2.5.0,<3.0.0',
     # Treebeard is used for categories

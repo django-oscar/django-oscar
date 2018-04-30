@@ -1,0 +1,18 @@
+=========================
+Oscar 1.5.4 release notes
+=========================
+
+:release: 2018-04-30
+
+This is Oscar 1.5.4, a bugfix release.
+
+Bug fixes
+=========
+
+* Pinned the version of django-extra-views to <0.11, to avoid exceptions
+  raised in newer versions of the package.
+
+Dependency changes
+=========
+
+* Upgraded TinyMCE to version 4.7.11.
