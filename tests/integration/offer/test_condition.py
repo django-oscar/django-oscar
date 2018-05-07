@@ -47,6 +47,28 @@ def value_condition(range_all):
 
 
 @pytest.fixture
+def basket():
+    return factories.create_basket(empty=True)
+
+
+@pytest.fixture
+def product_range():
+    return factories.RangeFactory(
+        name="All products range", includes_all_products=True)
+
+
+@pytest.fixture
+def condition(product_range):
+    return factories.ConditionFactory(
+        range=product_range, value=2).proxy()
+
+
+@pytest.fixture
+def offer(condition):
+    return factories.ConditionalOfferFactory(condition=condition)
+
+
+@pytest.fixture
 def coverage_condition(range_some):
     return models.CoverageCondition(range=range_some, type="Coverage", value=2)
 
@@ -308,9 +330,9 @@ class TestConditionProxyModels(object):
             condition = models.Condition(type=type, range=range, value=5)
             assert all([condition.name, condition.description, str(condition)])
 
-    def test_proxy(self, range):
+    def test_proxy(self, product_range):
         for type, __ in models.Condition.TYPE_CHOICES:
-            condition = models.Condition(type=type, range=range, value=5)
+            condition = models.Condition(type=type, range=product_range, value=5)
             proxy = condition.proxy()
             assert condition.type == proxy.type
             assert condition.range == proxy.range

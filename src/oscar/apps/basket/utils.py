@@ -82,18 +82,20 @@ class LineOfferConsumer(object):
     """
 
     def __init__(self, line):
-        self.__line = line
-        self.__offers = dict()
-        self.__affected_quantity = 0
-        self.__consumptions = defaultdict(int)
+        self._line = line
+        self._offers = dict()
+        self._affected_quantity = 0
+        self._consumptions = defaultdict(int)
 
     # private
     def __cache(self, offer):
-        self.__offers[offer.pk] = offer
+        self._offers[offer.pk] = offer
 
     def __update_affected_quantity(self, quantity):
-        available = int(self.__line.quantity - self.__affected_quantity)
-        self.__affected_quantity += min(available, quantity)
+        available = int(self._line.quantity - self._affected_quantity)
+        num_consumed = min(available, quantity)
+        self._affected_quantity += num_consumed
+        return num_consumed
 
     # public
     def consume(self, quantity: int, offer=None):
@@ -103,16 +105,22 @@ class LineOfferConsumer(object):
         :param int quantity: the number of items on the line affected
         :param offer: the offer to mark the line
         :type offer: ConditionalOffer or None
+        :return: the number of items actually consumed
+        :rtype: int
 
         if offer is None, the specified quantity of items on this
         basket line is consumed for *any* offer, else only for the
         specified offer.
         """
-        self.__update_affected_quantity(quantity)
         if offer:
             self.__cache(offer)
             available = self.available(offer)
-            self.__consumptions[offer.pk] += min(available, quantity)
+
+        num_consumed = self.__update_affected_quantity(quantity)
+        if offer:
+            num_consumed = min(available, quantity)
+            self._consumptions[offer.pk] += num_consumed
+        return num_consumed
 
     def consumed(self, offer=None):
         """
@@ -129,8 +137,8 @@ class LineOfferConsumer(object):
 
         """
         if not offer:
-            return self.__affected_quantity
-        return int(self.__consumptions[offer.pk])
+            return self._affected_quantity
+        return int(self._consumptions[offer.pk])
 
     @property
     def consumers(self):
@@ -145,7 +153,6 @@ class LineOfferConsumer(object):
         :return: the number of items available for offer
         :rtype: int
         """
-
         max_affected_items = self.__line.quantity
 
         if offer and isinstance(offer, ConditionalOffer):

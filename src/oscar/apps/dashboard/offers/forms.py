@@ -52,26 +52,27 @@ class RestrictionsForm(forms.ModelForm):
                 'Exclusive offers can not be combined'))
         return cleaned_data
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):
         """
         Store the offer combinations, and make sure
         the combinations are stored on the combine-able
         offers as well.
         """
-        instance = super().save(**kwargs)
-        instance.combinations.clear()
-        for offer in self.cleaned_data['combinations']:
-            if offer != instance:
-                instance.combinations.add(offer)
+        instance = super(RestrictionsForm, self).save(*args, **kwargs)
+        if instance.id:
+            instance.combinations.clear()
+            for offer in self.cleaned_data['combinations']:
+                if offer != instance:
+                    instance.combinations.add(offer)
 
-        combined_offers = instance.combined_offers
-        for offer in combined_offers:
-            if offer == instance:
-                continue
-            for otheroffer in combined_offers:
-                if offer == otheroffer:
+            combined_offers = instance.combined_offers
+            for offer in combined_offers:
+                if offer == instance:
                     continue
-                offer.combinations.add(otheroffer)
+                for otheroffer in combined_offers:
+                    if offer == otheroffer:
+                        continue
+                    offer.combinations.add(otheroffer)
         return instance
 
 
