@@ -113,8 +113,7 @@ class OfferWizardStepView(FormView):
         form_data = form.cleaned_data.copy()
         product_range = form_data.get('range', None)
         if product_range is not None:
-            form_data['range_id'] = product_range.id
-            del form_data['range']
+            form_data['range'] = product_range.id
 
         combinations = form_data.get('combinations', None)
         if combinations is not None:
@@ -134,10 +133,9 @@ class OfferWizardStepView(FormView):
         json_data = session_data.get(self._key(step_name), None)
         if json_data:
             form_kwargs = json.loads(json_data)
-            if 'range_id' in form_kwargs['data']:
+            if 'range' in form_kwargs['data']:
                 form_kwargs['data']['range'] = Range.objects.get(
-                    id=form_kwargs['data']['range_id'])
-                del form_kwargs['data']['range_id']
+                    id=form_kwargs['data']['range'])
 
             if 'combination_ids' in form_kwargs['data']:
                 form_kwargs['data']['combinations'] = ConditionalOffer.objects.filter(

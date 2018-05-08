@@ -124,7 +124,7 @@ class AbstractConditionalOffer(models.Model):
         'offer.ConditionalOffer',
         help_text=_('Select offers this offer can be combined with on the same items'),
         related_name='in_combination',
-        null=True, blank=True)
+        blank=True)
 
     # We track a status variable so it's easier to load offers that are
     # 'available' in some sense.

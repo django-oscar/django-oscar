@@ -53,12 +53,12 @@ class RestrictionsForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, *args, **kwargs):
-        """
-        Store the offer combinations, and make sure
-        the combinations are stored on the combine-able
+        """Store the offer combinations.
+
+        Also, and make sure the combinations are stored on the combine-able
         offers as well.
         """
-        instance = super(RestrictionsForm, self).save(*args, **kwargs)
+        instance = super().save(*args, **kwargs)
         if instance.id:
             instance.combinations.clear()
             for offer in self.cleaned_data['combinations']:
