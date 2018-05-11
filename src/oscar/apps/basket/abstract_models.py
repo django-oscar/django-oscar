@@ -186,9 +186,6 @@ class AbstractBasket(models.Model):
         """
         Add a product to the basket
 
-        'stock_info' is the price and availability data returned from
-        a partner strategy class.
-
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value
         respectively.
