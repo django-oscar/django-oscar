@@ -63,7 +63,7 @@ class PhoneNumberMixin(object):
             self.region_code = self.country.iso_3166_1_a2
 
     def clean_phone_number_field(self, field_name):
-        number = self.cleaned_data[field_name]
+        number = self.cleaned_data.get(field_name)
 
         # Empty
         if number in validators.EMPTY_VALUES:
