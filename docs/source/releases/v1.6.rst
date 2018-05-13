@@ -110,6 +110,8 @@ Minor changes
 
  - An unused setting ``OSCAR_SETTINGS`` was removed from ``oscar.core.defaults``.
 
+ - Fixed ``PhoneNumberMixin``s handling of empty phone number fields in forms.
+
 .. _incompatible_in_1.6:
 
 Backwards incompatible changes in Oscar 1.6
