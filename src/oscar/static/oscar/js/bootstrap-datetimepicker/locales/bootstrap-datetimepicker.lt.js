@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Lithuanian translation for bootstrap-datetimepicker
  * Šarūnas Gliebus <ssharunas@yahoo.co.uk>
  */

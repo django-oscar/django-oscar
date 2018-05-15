@@ -1,11 +1,12 @@
 import json
 
+from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DeleteView, FormView, ListView
@@ -32,6 +33,7 @@ class OfferListView(ListView):
     context_object_name = 'offers'
     template_name = 'dashboard/offers/offer_list.html'
     form_class = OfferSearchForm
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get_queryset(self):
         qs = self.model._default_manager.exclude(
@@ -333,6 +335,7 @@ class OfferDetailView(ListView):
     model = OrderDiscount
     template_name = 'dashboard/offers/offer_detail.html'
     context_object_name = 'order_discounts'
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def dispatch(self, request, *args, **kwargs):
         self.offer = get_object_or_404(ConditionalOffer, pk=kwargs['pk'])

@@ -1,4 +1,3 @@
-import django
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ImproperlyConfigured
 
@@ -54,17 +53,5 @@ class EmailBackend(ModelBackend):
                 "password")
         return None
 
-    # The signature of the authenticate method changed in Django 1.11 to include
-    # a mandatory `request` argument.
-    if django.VERSION < (1, 11):
-        def authenticate(self, email=None, password=None, *args, **kwargs):
-            return self._authenticate(None, email, password, *args, **kwargs)
-    else:
-        def authenticate(self, *args, **kwargs):
-            return self._authenticate(*args, **kwargs)
-
-    if django.VERSION < (1, 10):
-        def user_can_authenticate(self, user):
-            # user_can_authenticate was introduced in Django 1.10. Prior to that
-            # inactive users could log in. That behaviour is retained for Django < 1.10.
-            return True
+    def authenticate(self, *args, **kwargs):
+        return self._authenticate(*args, **kwargs)

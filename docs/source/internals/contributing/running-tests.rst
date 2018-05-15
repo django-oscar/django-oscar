@@ -2,14 +2,38 @@
 Test suite
 ==========
 
+Testing requirements
+--------------------
+
+You'll need:
+
+- A running SQL server (PostgreSQL, or SQLite with `--sqlite` params)
+- python3.5 or python3.6
+
 Running tests
 -------------
 
-Oscar uses pytest_ to run the tests, which can be invoked using::
+Oscar uses pytest_ to run the tests.
+.. _pytest: http://pytest.org/latest/
+
+The fast way is::
+
+    $ make test
+
+This will create a virtualenv in `venv`, install the test dependencies and run py.test.
+
+Details
+~~~~~~~
+
+First we create a virtualenv and install the required dependencies::
+
+    $ virtualenv venv
+    $ source venv/bin/activate
+    $ pip install -e .[test]
+
+Then we invoke pytest using ::
 
     $ py.test
-
-.. _pytest: http://pytest.org/latest/
 
 You can run a subset of the tests by passing a path:
 
@@ -36,7 +60,7 @@ To run all tests against multiple versions of Django and Python, use detox_::
 
     $ detox
 
-You need to have all Python interpreters to test against installed on your 
+You need to have all Python interpreters to test against installed on your
 system. All other requirements are downloaded automatically.
 detox_ is a wrapper around tox_, creating the environments and running the tests
 in parallel. This greatly speeds up the process.
@@ -50,7 +74,7 @@ Kinds of tests
 Tests are split into 3 folders:
 
 * integration - These are for tests that exercise a collection or chain of
-  units, like testing a template tag.  
+  units, like testing a template tag.
 
 * functional - These should be as close to "end-to-end" as possible.  Most of
   these tests should use WebTest to simulate the behaviour of a user browsing

@@ -9,9 +9,8 @@ from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_classes
 from oscar.core.utils import get_default_currency
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
@@ -19,6 +18,7 @@ from oscar.templatetags.currency_filters import currency
 OfferApplications = get_class('offer.results', 'OfferApplications')
 Unavailable = get_class('partner.availability', 'Unavailable')
 LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
+OpenBasketManager, SavedBasketManager = get_classes('basket.managers', ['OpenBasketManager', 'SavedBasketManager'])
 
 
 @python_2_unicode_compatible
@@ -135,21 +135,30 @@ class AbstractBasket(models.Model):
                 .order_by(self._meta.pk.name))
         return self._lines
 
+    def max_allowed_quantity(self):
+        """
+        Returns maximum product quantity, that can be added to the basket
+        with the respect to basket quantity threshold.
+        """
+        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
+        if basket_threshold:
+            total_basket_quantity = self.num_items
+            max_allowed = basket_threshold - total_basket_quantity
+            return max_allowed, basket_threshold
+        return None, None
+
     def is_quantity_allowed(self, qty):
         """
         Test whether the passed quantity of items can be added to the basket
         """
         # We enforce a max threshold to prevent a DOS attack via the offers
         # system.
-        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
-        if basket_threshold:
-            total_basket_quantity = self.num_items
-            max_allowed = basket_threshold - total_basket_quantity
-            if qty > max_allowed:
-                return False, _(
-                    "Due to technical limitations we are not able "
-                    "to ship more than %(threshold)d items in one order.") \
-                    % {'threshold': basket_threshold}
+        max_allowed, basket_threshold = self.max_allowed_quantity()
+        if max_allowed is not None and qty > max_allowed:
+            return False, _(
+                "Due to technical limitations we are not able "
+                "to ship more than %(threshold)d items in one order.") \
+                % {'threshold': basket_threshold}
         return True, None
 
     # ============
@@ -177,9 +186,6 @@ class AbstractBasket(models.Model):
         """
         Add a product to the basket
 
-        'stock_info' is the price and availability data returned from
-        a partner strategy class.
-
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value
         respectively.
@@ -197,6 +203,11 @@ class AbstractBasket(models.Model):
         # Ensure that all lines are the same currency
         price_currency = self.currency
         stock_info = self.get_stock_info(product, options)
+
+        if not stock_info.price.exists:
+            raise ValueError(
+                "Strategy hasn't found a price for product %s" % product)
+
         if price_currency and stock_info.price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "

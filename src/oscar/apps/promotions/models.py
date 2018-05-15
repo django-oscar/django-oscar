@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib.contenttypes import fields
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy

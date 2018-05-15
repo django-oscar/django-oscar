@@ -9,10 +9,10 @@ from django.contrib.staticfiles.finders import find
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
-from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Sum
+from django.urls import reverse
 from django.utils import six
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
@@ -22,7 +22,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.compat import user_is_anonymous, user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -187,6 +186,11 @@ class AbstractCategory(MP_Node):
         """
         return list(self.get_descendants()) + [self]
 
+    def get_url_cache_key(self):
+        current_locale = get_language()
+        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
+        return cache_key
+
     def get_absolute_url(self):
         """
         Our URL scheme means we have to look up the category's ancestors. As
@@ -196,8 +200,7 @@ class AbstractCategory(MP_Node):
         you change that logic, you'll have to reconsider the caching
         approach.
         """
-        current_locale = get_language()
-        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
+        cache_key = self.get_url_cache_key()
         url = cache.get(cache_key)
         if not url:
             url = reverse(
@@ -496,6 +499,16 @@ class AbstractProduct(models.Model):
         pclass_options = self.get_product_class().options.all()
         return set(pclass_options) or set(self.product_options.all())
 
+    @cached_property
+    def has_options(self):
+        # Extracting annotated value with number of product class options
+        # from product list queryset.
+        num_product_class_options = getattr(self, 'num_product_class_options', None)
+        num_product_options = getattr(self, 'num_product_options', None)
+        if num_product_class_options is not None and num_product_options is not None:
+            return num_product_class_options > 0 or num_product_options > 0
+        return self.get_product_class().options.exists() or self.product_options.exists()
+
     @property
     def is_shipping_required(self):
         return self.get_product_class().requires_shipping
@@ -570,12 +583,17 @@ class AbstractProduct(models.Model):
         # field.
         return MissingProductImage()
 
+    def get_all_images(self):
+        if self.is_child and not self.images.exists():
+            return self.parent.images.all()
+        return self.images.all()
+
     def primary_image(self):
         """
         Returns the primary image for a product. Usually used when one can
         only display one product image, e.g. in a list of products.
         """
-        images = self.images.all()
+        images = self.get_all_images()
         ordering = self.images.model.Meta.ordering
         if not ordering or ordering[0] != 'display_order':
             # Only apply order_by() if a custom model doesn't use default
@@ -585,18 +603,13 @@ class AbstractProduct(models.Model):
         try:
             return images[0]
         except IndexError:
-            if self.is_child:
-                # By default, Oscar's dashboard doesn't support child images.
-                # We just serve the parents image instead.
-                return self.parent.primary_image()
-            else:
-                # We return a dict with fields that mirror the key properties of
-                # the ProductImage class so this missing image can be used
-                # interchangeably in templates.  Strategy pattern ftw!
-                return {
-                    'original': self.get_missing_image(),
-                    'caption': '',
-                    'is_missing': True}
+            # We return a dict with fields that mirror the key properties of
+            # the ProductImage class so this missing image can be used
+            # interchangeably in templates.  Strategy pattern ftw!
+            return {
+                'original': self.get_missing_image(),
+                'caption': '',
+                'is_missing': True}
 
     # Updating methods
 
@@ -624,7 +637,7 @@ class AbstractProduct(models.Model):
         return rating
 
     def has_review_by(self, user):
-        if user_is_anonymous(user):
+        if user.is_anonymous:
             return False
         return self.reviews.filter(user=user).exists()
 
@@ -638,7 +651,7 @@ class AbstractProduct(models.Model):
         Override this if you want to alter the default behaviour; e.g. enforce
         that a user purchased the product to be allowed to leave a review.
         """
-        if user_is_authenticated(user) or settings.OSCAR_ALLOW_ANON_REVIEWS:
+        if user.is_authenticated or settings.OSCAR_ALLOW_ANON_REVIEWS:
             return not self.has_review_by(user)
         else:
             return False
@@ -726,7 +739,7 @@ class AbstractProductAttribute(models.Model):
         (FLOAT, _("Float")),
         (RICHTEXT, _("Rich Text")),
         (DATE, _("Date")),
-        (DATETIME, ("Datetime")),
+        (DATETIME, _("Datetime")),
         (OPTION, _("Option")),
         (MULTI_OPTION, _("Multi Option")),
         (ENTITY, _("Entity")),
@@ -769,6 +782,43 @@ class AbstractProductAttribute(models.Model):
     def __str__(self):
         return self.name
 
+    def _save_file(self, value_obj, value):
+        # File fields in Django are treated differently, see
+        # django.db.models.fields.FileField and method save_form_data
+        if value is None:
+            # No change
+            return
+        elif value is False:
+            # Delete file
+            value_obj.delete()
+        else:
+            # New uploaded file
+            value_obj.value = value
+            value_obj.save()
+
+    def _save_multi_option(self, value_obj, value):
+        # ManyToMany fields are handled separately
+        if value is None:
+            value_obj.delete()
+            return
+        try:
+            count = value.count()
+        except (AttributeError, TypeError):
+            count = len(value)
+        if count == 0:
+            value_obj.delete()
+        else:
+            value_obj.value = value
+            value_obj.save()
+
+    def _save_value(self, value_obj, value):
+        if value is None or value == '':
+            value_obj.delete()
+            return
+        if value != value_obj.value:
+            value_obj.value = value
+            value_obj.save()
+
     def save_value(self, product, value):   # noqa: C901 too complex
         ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
         try:
@@ -783,39 +833,11 @@ class AbstractProductAttribute(models.Model):
                 product=product, attribute=self)
 
         if self.is_file:
-            # File fields in Django are treated differently, see
-            # django.db.models.fields.FileField and method save_form_data
-            if value is None:
-                # No change
-                return
-            elif value is False:
-                # Delete file
-                value_obj.delete()
-            else:
-                # New uploaded file
-                value_obj.value = value
-                value_obj.save()
+            self._save_file(value_obj, value)
         elif self.is_multi_option:
-            # ManyToMany fields are handled separately
-            if value is None:
-                value_obj.delete()
-                return
-            try:
-                count = value.count()
-            except (AttributeError, TypeError):
-                count = len(value)
-            if count == 0:
-                value_obj.delete()
-            else:
-                value_obj.value = value
-                value_obj.save()
+            self._save_multi_option(value_obj, value)
         else:
-            if value is None or value == '':
-                value_obj.delete()
-                return
-            if value != value_obj.value:
-                value_obj.value = value
-                value_obj.save()
+            self._save_value(value_obj, value)
 
     def validate_value(self, value):
         validator = getattr(self, '_validate_%s' % self.type)
@@ -950,11 +972,18 @@ class AbstractProductAttributeValue(models.Model):
         return value
 
     def _set_value(self, new_value):
+        attr_name = 'value_%s' % self.attribute.type
+
         if self.attribute.is_option and isinstance(new_value, six.string_types):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
-        setattr(self, 'value_%s' % self.attribute.type, new_value)
+        elif self.attribute.is_multi_option:
+            getattr(self, attr_name).set(new_value)
+            return
+
+        setattr(self, attr_name, new_value)
+        return
 
     value = property(_get_value, _set_value)
 

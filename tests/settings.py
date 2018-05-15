@@ -1,7 +1,5 @@
 import os
 
-from django import VERSION as DJANGO_VERSION
-
 import oscar
 from oscar.defaults import *  # noqa
 
@@ -14,7 +12,7 @@ ALLOWED_HOSTS = ['test', '.oscarcommerce.com']
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DATABASE_ENGINE',
-                                 'django.db.backends.postgresql_psycopg2'),
+                                 'django.db.backends.postgresql'),
         'NAME': os.environ.get('DATABASE_NAME', 'oscar'),
     }
 }
@@ -74,26 +72,15 @@ TEMPLATES = [
 ]
 
 
-if DJANGO_VERSION < (1, 10):
-    MIDDLEWARE_CLASSES = [
-        'django.middleware.common.CommonMiddleware',
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
+MIDDLEWARE = [
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 
-        'oscar.apps.basket.middleware.BasketMiddleware',
-    ]
-else:
-    MIDDLEWARE = [
-        'django.middleware.common.CommonMiddleware',
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-
-        'oscar.apps.basket.middleware.BasketMiddleware',
-    ]
+    'oscar.apps.basket.middleware.BasketMiddleware',
+]
 
 
 AUTHENTICATION_BACKENDS = (

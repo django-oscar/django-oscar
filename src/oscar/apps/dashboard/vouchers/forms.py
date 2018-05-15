@@ -5,6 +5,7 @@ from oscar.core.loading import get_model
 from oscar.forms import widgets
 
 Voucher = get_model('voucher', 'Voucher')
+VoucherSet = get_model('voucher', 'VoucherSet')
 Benefit = get_model('offer', 'Benefit')
 Range = get_model('offer', 'Range')
 
@@ -21,7 +22,9 @@ class VoucherForm(forms.Form):
         widget=widgets.DateTimePickerInput(),
         label=_("Start datetime"))
     end_datetime = forms.DateTimeField(
-        label=_("End datetime"), widget=widgets.DateTimePickerInput())
+        widget=widgets.DateTimePickerInput(),
+        label=_("End datetime"))
+
     usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
@@ -90,6 +93,59 @@ class VoucherForm(forms.Form):
 
 class VoucherSearchForm(forms.Form):
     name = forms.CharField(required=False, label=_("Name"))
+    code = forms.CharField(required=False, label=_("Code"))
+    is_active = forms.BooleanField(required=False, label=_("Is Active?"))
+    in_set = forms.BooleanField(
+        required=False, label=_("In Voucherset?"))
+
+    def clean_code(self):
+        return self.cleaned_data['code'].upper()
+
+
+class VoucherSetForm(forms.ModelForm):
+    class Meta:
+        model = VoucherSet
+        fields = [
+            'name',
+            'code_length',
+            'description',
+            'start_datetime',
+            'end_datetime',
+            'count',
+        ]
+        widgets = {
+            'start_datetime': widgets.DateTimePickerInput(),
+            'end_datetime': widgets.DateTimePickerInput(),
+        }
+
+    benefit_range = forms.ModelChoiceField(
+        label=_('Which products get a discount?'),
+        queryset=Range.objects.all(),
+    )
+    type_choices = (
+        (Benefit.PERCENTAGE, _('Percentage off of products in range')),
+        (Benefit.FIXED, _('Fixed amount off of products in range')),
+        (Benefit.SHIPPING_PERCENTAGE,
+         _("Discount is a percentage off of the shipping cost")),
+        (Benefit.SHIPPING_ABSOLUTE,
+         _("Discount is a fixed amount of the shipping cost")),
+        (Benefit.SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
+    )
+    benefit_type = forms.ChoiceField(
+        choices=type_choices,
+        label=_('Discount type'),
+    )
+    benefit_value = forms.DecimalField(
+        label=_('Discount value'))
+
+    def save(self, commit=True):
+        instance = super(VoucherSetForm, self).save(commit)
+        if commit:
+            instance.generate_vouchers()
+        return instance
+
+
+class VoucherSetSearchForm(forms.Form):
     code = forms.CharField(required=False, label=_("Code"))
     is_active = forms.BooleanField(required=False, label=_("Is Active?"))
 

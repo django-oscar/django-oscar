@@ -3,11 +3,11 @@ import os
 from django.conf import settings
 from django.contrib import messages
 from django.core import exceptions
-from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 from django.views.generic import (
@@ -28,6 +28,7 @@ class RangeListView(ListView):
     model = Range
     context_object_name = 'ranges'
     template_name = 'dashboard/ranges/range_list.html'
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
 
 class RangeCreateView(CreateView):
@@ -97,6 +98,7 @@ class RangeProductListView(BulkEditMixin, ListView):
     context_object_name = 'products'
     actions = ('remove_selected_products', 'add_products')
     form_class = RangeProductForm
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def post(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()

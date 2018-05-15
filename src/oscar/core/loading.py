@@ -7,6 +7,8 @@ from django.apps import apps
 from django.apps.config import MODELS_MODULE_NAME
 from django.conf import settings
 from django.core.exceptions import AppRegistryNotReady
+from django.utils.lru_cache import lru_cache
+from django.utils.module_loading import import_string
 
 from oscar.core.exceptions import (
     AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
@@ -57,7 +59,17 @@ def get_class(module_label, classname, module_prefix='oscar.apps'):
     return get_classes(module_label, [classname], module_prefix)[0]
 
 
+@lru_cache(maxsize=100)
+def get_class_loader():
+    return import_string(settings.OSCAR_DYNAMIC_CLASS_LOADER)
+
+
 def get_classes(module_label, classnames, module_prefix='oscar.apps'):
+    class_loader = get_class_loader()
+    return class_loader(module_label, classnames, module_prefix)
+
+
+def default_class_loader(module_label, classnames, module_prefix):
     """
     Dynamically import a list of classes from the given module.
 
@@ -100,6 +112,7 @@ def get_classes(module_label, classnames, module_prefix='oscar.apps'):
         ImportError: If the attempted import of a class raises an
             ``ImportError``, it is re-raised
     """
+
     if '.' not in module_label:
         # Importing from top-level modules is not supported, e.g.
         # get_class('shipping', 'Scale'). That should be easy to fix,

@@ -140,6 +140,11 @@ class TestAddingAProductToABasket(TestCase):
         with self.assertRaises(ValueError):
             self.basket.add(product)
 
+    def test_cannot_add_a_product_without_price(self):
+        product = factories.create_product(price=None)
+        with self.assertRaises(ValueError):
+            self.basket.add(product)
+
 
 class TestANonEmptyBasket(TestCase):
 
@@ -241,6 +246,41 @@ class TestANonEmptyBasket(TestCase):
         self.assertEqual(self.basket.total_incl_tax, 100)
         self.assertEqual(self.basket.total_excl_tax_excl_discounts, 100)
         self.assertEqual(self.basket.total_incl_tax_excl_discounts, 100)
+
+    def test_max_allowed_quantity(self):
+        self.basket.add_product(self.product, quantity=3)
+
+        # max allowed here is 7 (20-10+3)
+        with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=20):
+            max_allowed, basket_threshold = self.basket.max_allowed_quantity()
+            self.assertEqual(max_allowed, 7)
+            self.assertEqual(basket_threshold, 20)
+
+        # but we can also completely disable the threshold
+        with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=None):
+            max_allowed, basket_threshold = self.basket.max_allowed_quantity()
+            self.assertEqual(max_allowed, None)
+            self.assertEqual(basket_threshold, None)
+
+    def test_is_quantity_allowed(self):
+        with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=20):
+            # 7 or below is possible
+            allowed, message = self.basket.is_quantity_allowed(qty=7)
+            self.assertTrue(allowed)
+            self.assertIsNone(message)
+            # but above it's not
+            allowed, message = self.basket.is_quantity_allowed(qty=11)
+            self.assertFalse(allowed)
+            self.assertIsNotNone(message)
+
+        with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=None):
+            # with the treshold disabled all quantities are possible
+            allowed, message = self.basket.is_quantity_allowed(qty=7)
+            self.assertTrue(allowed)
+            self.assertIsNone(message)
+            allowed, message = self.basket.is_quantity_allowed(qty=5000)
+            self.assertTrue(allowed)
+            self.assertIsNone(message)
 
 
 class TestMergingTwoBaskets(TestCase):

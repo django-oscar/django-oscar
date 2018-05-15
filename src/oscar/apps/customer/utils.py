@@ -3,11 +3,10 @@ import logging
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_model
 
 
@@ -76,7 +75,7 @@ class Dispatcher(object):
         Create Email instance in database for logging purposes.
         """
         # Is user is signed in, record the event for audit
-        if email and user_is_authenticated(user):
+        if email and user.is_authenticated:
             return Email._default_manager.create(user=user,
                                                  email=user.email,
                                                  subject=email.subject,
@@ -135,7 +134,7 @@ def get_password_reset_url(user, token_generator=default_token_generator):
     """
     kwargs = {
         'token': token_generator.make_token(user),
-        'uidb64': urlsafe_base64_encode(force_bytes(user.id)),
+        'uidb64': urlsafe_base64_encode(force_bytes(user.id)).decode(),
     }
     return reverse('password-reset-confirm', kwargs=kwargs)
 

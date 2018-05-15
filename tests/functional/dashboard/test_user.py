@@ -1,5 +1,5 @@
-from django.core.urlresolvers import reverse
 from django.core import mail
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from webtest import AppError
 

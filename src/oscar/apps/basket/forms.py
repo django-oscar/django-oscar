@@ -19,6 +19,16 @@ class BasketLineForm(forms.ModelForm):
         super(BasketLineForm, self).__init__(*args, **kwargs)
         self.instance.strategy = strategy
 
+        max_allowed_quantity = None
+        num_available = getattr(self.instance.purchase_info.availability, 'num_available', None)
+        basket_max_allowed_quantity = self.instance.basket.max_allowed_quantity()[0]
+        if all([num_available, basket_max_allowed_quantity]):
+            max_allowed_quantity = min(num_available, basket_max_allowed_quantity)
+        else:
+            max_allowed_quantity = num_available or basket_max_allowed_quantity
+        if max_allowed_quantity:
+            self.fields['quantity'].widget.attrs['max'] = max_allowed_quantity
+
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
         if qty > 0:
@@ -201,6 +211,12 @@ class AddToBasketForm(forms.Form):
 
     def clean(self):
         info = self.basket.strategy.fetch_for_product(self.product)
+
+        # Check that a price was found by the strategy
+        if not info.price.exists:
+            raise forms.ValidationError(
+                _("This product cannot be added to the basket because a "
+                  "price could not be determined for it."))
 
         # Check currencies are sensible
         if (self.basket.currency and

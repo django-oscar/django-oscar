@@ -2,13 +2,20 @@ import codecs
 import csv
 import sys
 
-import django
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
 
 from oscar.core.loading import get_model
+
+
+try:
+    # Python 3
+    from http.cookies import _unquote
+except ImportError:
+    from Cookie import _unquote
+
 
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -71,35 +78,14 @@ def existing_user_fields(fields):
     return [field for field in fields if field in user_field_names]
 
 
-# Supprt new Django 1.10 middleware
-if django.VERSION >= (1, 10):
-    from django.utils.deprecation import MiddlewareMixin
-else:
-    MiddlewareMixin = object
-
-
-def user_is_authenticated(user):
-    if django.VERSION >= (1, 10):
-        return user.is_authenticated
-    else:
-        return user.is_authenticated()
-
-
-def user_is_anonymous(user):
-    if django.VERSION >= (1, 10):
-        return user.is_anonymous
-    else:
-        return user.is_anonymous()
-
-
-def assignment_tag(register):
-    if django.VERSION >= (1, 9):
-        return register.simple_tag
-    else:
-        return register.assignment_tag
-
-
 # Python3 compatibility layer
+
+def unquote_cookie(cookie_value):
+    """
+    Make sure a cookie value is unescaped from double quotes
+    """
+    return _unquote(cookie_value)
+
 
 """
 Unicode compatible wrapper for CSV reader and writer that abstracts away

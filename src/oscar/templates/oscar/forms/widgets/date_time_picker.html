@@ -1,0 +1,8 @@
+<div class="form-inline">
+    <div class="input-group date" {% for name, value in div_attrs.items %}{{ name }}="{{ value|stringformat:'s' }}"{% endfor %}>
+        {% include "django/forms/widgets/input.html" %}
+        <span class="input-group-addon">
+            <i class="{{ icon_classes }}"></i>
+        </span>
+    </div>
+</div>

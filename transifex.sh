@@ -16,7 +16,7 @@ then
     echo "[https://www.transifex.com]
 hostname = https://www.transifex.com
 password = $TRANSIFEX_PASSWORD
-token =
+token = 
 username = oscar_bot" > ~/.transifexrc
     tx push --source --no-interactive
 fi

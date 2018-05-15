@@ -1,12 +1,10 @@
-import json
-
 from django import shortcuts
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, View
@@ -15,7 +13,6 @@ from extra_views import ModelFormSetView
 from oscar.apps.basket.signals import (
     basket_addition, voucher_addition, voucher_removal)
 from oscar.core import ajax
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
@@ -37,8 +34,10 @@ class BasketView(ModelFormSetView):
     basket_model = get_model('basket', 'Basket')
     formset_class = BasketLineFormSet
     form_class = BasketLineForm
-    extra = 0
-    can_delete = True
+    factory_kwargs = {
+        'extra': 0,
+        'can_delete': True
+    }
     template_name = 'basket/basket.html'
 
     def get_formset_kwargs(self):
@@ -54,10 +53,14 @@ class BasketView(ModelFormSetView):
             basket=self.request.basket, user=self.request.user,
             request=self.request)
 
+    def get_default_shipping_address(self):
+        if self.request.user.is_authenticated:
+            return self.request.user.addresses.filter(is_default_for_shipping=True).first()
+
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(
             basket=self.request.basket, user=self.request.user,
-            request=self.request)
+            request=self.request, shipping_addr=self.get_default_shipping_address())
 
     def get_basket_warnings(self, basket):
         """
@@ -116,7 +119,7 @@ class BasketView(ModelFormSetView):
         context['upsell_messages'] = self.get_upsell_messages(
             self.request.basket)
 
-        if user_is_authenticated(self.request.user):
+        if self.request.user.is_authenticated:
             try:
                 saved_basket = self.basket_model.saved.get(
                     owner=self.request.user)
@@ -151,7 +154,7 @@ class BasketView(ModelFormSetView):
             if (hasattr(form, 'cleaned_data') and
                     form.cleaned_data['save_for_later']):
                 line = form.instance
-                if user_is_authenticated(self.request.user):
+                if self.request.user.is_authenticated:
                     self.move_line_to_saved_basket(line)
 
                     msg = render_to_string(
@@ -211,11 +214,10 @@ class BasketView(ModelFormSetView):
             'basket/partials/basket_content.html',
             context=ctx, request=self.request)
 
-        payload = {
+        return JsonResponse({
             'content_html': basket_html,
-            'messages': flash_messages.as_dict()}
-        return HttpResponse(json.dumps(payload),
-                            content_type="application/json")
+            'messages': flash_messages.as_dict()
+        })
 
     def move_line_to_saved_basket(self, line):
         saved_basket, _ = get_model('basket', 'basket').saved.get_or_create(
@@ -416,8 +418,10 @@ class SavedView(ModelFormSetView):
     basket_model = get_model('basket', 'basket')
     formset_class = SavedLineFormSet
     form_class = SavedLineForm
-    extra = 0
-    can_delete = True
+    factory_kwargs = {
+        'extra': 0,
+        'can_delete': True
+    }
 
     def get(self, request, *args, **kwargs):
         return redirect('basket:summary')

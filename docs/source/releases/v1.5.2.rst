@@ -1,0 +1,15 @@
+=========================
+Oscar 1.5.2 release notes
+=========================
+
+:release: 2018-02-12
+
+This is Oscar 1.5.2, a bug fix release.
+
+Bug fixes
+=========
+
+* Fixed ``oscar.core.widgets.AdvancedSelect`` widget behaviour with Django 1.11
+  and above.
+
+* Use a local copy of TinyMCE instead of a CDN, because of recent bugs in the CDN.

@@ -14,5 +14,5 @@ dashboard_urlpatterns = [
 ]
 
 urlpatterns = [
-    url(r'^dashboard/', include((dashboard_urlpatterns, 'dashboard', 'dashboard'))),
+    url(r'^dashboard/', include((dashboard_urlpatterns, 'dashboard'), namespace='dashboard')),
 ]

@@ -6,12 +6,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.alerts import utils
-from oscar.apps.customer.mixins import PageTitleMixin
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
 Product = get_model('catalogue', 'Product')
 ProductAlert = get_model('customer', 'ProductAlert')
+PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 
 
@@ -110,7 +109,7 @@ class ProductAlertCancelView(generic.RedirectView):
     def get(self, request, *args, **kwargs):
         if 'key' in kwargs:
             self.alert = get_object_or_404(ProductAlert, key=kwargs['key'])
-        elif 'pk' in kwargs and user_is_authenticated(request.user):
+        elif 'pk' in kwargs and request.user.is_authenticated:
             self.alert = get_object_or_404(ProductAlert,
                                            user=self.request.user,
                                            pk=kwargs['pk'])

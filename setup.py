@@ -19,54 +19,55 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=1.8.8,<1.12',
+    'django>=1.11,<2.1',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
-    'pillow>=3.4.2',
+    'pillow>=4.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
-    'django-extra-views>=0.2,<1.0',
+    'django-extra-views>=0.11,<0.12',
     # Search support
     'django-haystack>=2.5.0,<3.0.0',
     # Treebeard is used for categories
-    'django-treebeard>=4.1.0',
+    'django-treebeard>=4.3.0',
     # Sorl is used as the default thumbnailer
     'sorl-thumbnail>=12.4.1,<12.5',
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
     # For converting non-ASCII to ASCII when creating slugs
-    'Unidecode>=0.04.12,<0.05',
+    'Unidecode>=1.0,<1.1',
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
-    'django-phonenumber-field>=1.0.0,<2.0.0',
+    'phonenumbers',
+    'django-phonenumber-field>=2.0,<2.1',
     # Used for oscar.test.contextmanagers.mock_signal_receiver
     'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
-    'django-tables2>=1.2,<1.17.0',
+    'django-tables2>=1.19,<2.0',
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
 ]
 
 docs_requires = [
-    'Sphinx==1.6.3',
+    'Sphinx==1.7.2',
     'sphinxcontrib-napoleon==0.6.1',
-    'sphinx_rtd_theme==0.1.9',
-    'sphinx-issues==0.3.1',
+    'sphinx_rtd_theme==0.3.0',
+    'sphinx-issues==0.4.0',
 ]
 
 test_requires = [
-    'WebTest==2.0.28',
-    'coverage==4.4.1',
+    'WebTest>=2.0,<2.1',
+    'coverage>=4.5,<4.6',
     'django-webtest==1.9.2',
     'py>=1.4.31',
-    'psycopg2==2.7.3.1',
-    'pytest==3.2.1',
+    'psycopg2>=2.7,<2.8',
+    'pytest>=3.5,<3.6',
     'pytest-cov==2.5.1',
     'pytest-django==3.1.2',
-    'pytest-xdist==1.20.0',
-    'tox==2.8.2',
+    'pytest-xdist>=1.22<1.23',
+    'tox>=3.0,<3.1',
 ]
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
@@ -96,9 +97,8 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 1.8',
-        'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: Unix',

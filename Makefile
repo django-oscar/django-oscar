@@ -1,3 +1,6 @@
+VENV = venv
+PYTEST = $(PWD)/$(VENV)/bin/py.test
+
 # These targets are not files
 .PHONY: install sandbox docs coverage lint messages compiledmessages css clean sandbox_image
 
@@ -30,17 +33,22 @@ sandbox: install build_sandbox
 sandbox_image:
 	docker build -t django-oscar-sandbox:latest .
 
-docs:
-	cd docs && make html
+venv:
+	virtualenv --python=$(shell which python3) $(VENV)
+	$(VENV)/bin/pip install -e .[test]
+	$(VENV)/bin/pip install -r docs/requirements.txt
 
-test:
-	py.test 
+docs: venv
+	make -C docs html SPHINXBUILD=$(PWD)/$(VENV)/bin/sphinx-build
 
-retest:
-	py.test --lf 
+test: venv
+	$(PYTEST)
 
-coverage:
-	py.test --cov=oscar --cov-report=term-missing
+retest: venv
+	$(PYTEST) --lf
+
+coverage: venv
+	$(PYTEST) --cov=oscar --cov-report=term-missing
 
 lint:
 	flake8 src/oscar/
@@ -70,7 +78,7 @@ clean:
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
 
 todo:
-	# Look for areas of the code that need updating when some event has taken place (like 
+	# Look for areas of the code that need updating when some event has taken place (like
 	# Oscar dropping support for a Django version)
 	-grep -rnH TODO *.txt
 	-grep -rnH TODO src/oscar/apps/

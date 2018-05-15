@@ -1,7 +1,9 @@
 from django.utils import six
 from django.db import models
-from oscar.models.fields import AutoSlugField
+
+from oscar.apps.address.models import UserAddress
 from oscar.apps.offer.models import Benefit, Condition
+from oscar.models.fields import AutoSlugField
 
 
 class SluggedTestModel(models.Model):
@@ -84,3 +86,19 @@ class CustomConditionWithoutName(Condition):
     class Meta:
         proxy = True
         app_label = 'tests'
+
+
+class UserAddressModelWithCustomBaseFields(UserAddress):
+    class Meta:
+        proxy = True
+        app_label = 'tests'
+
+    base_fields = ['line1', 'line4']
+
+
+class UserAddressModelWithCustomHashFields(UserAddress):
+    class Meta:
+        proxy = True
+        app_label = 'tests'
+
+    hash_fields = ['line1', 'line4']

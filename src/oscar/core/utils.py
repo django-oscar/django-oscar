@@ -16,16 +16,9 @@ from unidecode import unidecode
 
 def default_slugifier(value):
     """
-    Oscar's default slugifier function.
-    Uses Django's slugify function, but first applies unidecode() to convert
-    non-ASCII strings to ASCII equivalents where possible, if it was not
-    allowed to use unicode in slugs. To keep backwards compatibility with
-    Django<1.9, we pass `allow_unicode` only if case it was enabled in
-    settings.
+    Oscar's default slugifier function. Uses Django's slugify function.
     """
-    if settings.OSCAR_SLUG_ALLOW_UNICODE:
-        return django_slugify(value, allow_unicode=True)
-    return django_slugify(value)
+    return django_slugify(value, allow_unicode=settings.OSCAR_SLUG_ALLOW_UNICODE)
 
 
 def slugify(value):

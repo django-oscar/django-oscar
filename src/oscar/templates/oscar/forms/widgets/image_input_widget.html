@@ -1,0 +1,18 @@
+{% load i18n %}
+{% load thumbnail %}
+
+<div id="{{ image_id }}" class="image-input">
+    {% if image_url %}
+        {% thumbnail image_url "200x200" upscale=False as thumb %}
+            <img src="{{ thumb.url }}" alt="{% trans "thumbnail" %}" />
+        {% endthumbnail %}
+    {% else %}
+        <img alt="{% trans "thumbnail" %}"
+            onload="$('#upload_button_{{ image_id }}').hide()"
+            onerror="$('#upload_button_{{ image_id }}').show(); alert('{% trans 'Unrecognized image type!' %}')" />
+        <button class="btn btn-primary" id="upload_button_{{ image_id }}">{% trans "Upload Image" %}</button>
+    {% endif %}
+    <div class="input-field">
+        {% include "django/forms/widgets/input.html" %}
+    </div>
+</div>

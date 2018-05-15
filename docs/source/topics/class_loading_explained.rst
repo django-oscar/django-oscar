@@ -69,6 +69,19 @@ Model initialisation is a tricky process and it's
 easy to run into circular import issues.
 
 
+Overriding dynamic class loading behaviour
+------------------------------------
+
+In some cases it may be necessary to customise the logic used by Oscar to
+dynamically load classes. You can do this by supplying your own class loader
+function to the ``OSCAR_DYNAMIC_CLASS_LOADER`` setting:
+
+    OSCAR_DYNAMIC_CLASS_LOADER = 'myproject.custom_class_loader'
+
+Supply a dotted Python path to a callable that takes
+the same arguments as :meth:`~oscar.core.loading.default_class_loader`.
+
+
 Testing
 -------
 

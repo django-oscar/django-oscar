@@ -1,12 +1,9 @@
-import unittest
-
-import django
-from django.test import TestCase, override_settings
 from django.core.exceptions import ValidationError
 from django.contrib.flatpages.models import FlatPage
+from django.test import TestCase, override_settings
+from django.utils.translation import activate
 
-from oscar.core.validators import (
-    ExtendedURLValidator, URLDoesNotExistValidator, validate_password)
+from oscar.core.validators import ExtendedURLValidator, URLDoesNotExistValidator
 
 
 class TestExtendedURLValidator(TestCase):
@@ -52,6 +49,75 @@ class TestExtendedURLValidator(TestCase):
                       'unexpectedly!')
 
 
+@override_settings(
+    LANGUAGES=(
+        ('de', 'German'),
+        ('en-gb', 'British English'),
+    )
+)
+class TestExtendedURLValidatorForLocalePrefixURLS(TestCase):
+    def setUp(self):
+        self.validator = ExtendedURLValidator()
+
+    def test_validate_same_locals(self):
+        """
+        Current locale is default ("en-gb"), URL has locale prefix
+        of default and current locale ("en-gb").
+        """
+        try:
+            self.validator('/en-gb/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_prefix_locale_is_non_default(self):
+        """
+        Current locale is default ("en-gb"), URL has locale prefix
+        of non-default locale ("de").
+        """
+        try:
+            self.validator('/de/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_current_locale_is_non_default(self):
+        """
+        Current locale is non-default ("de"), URL has locale prefix
+        of default locale ("en-gb").
+        """
+        activate('de')
+        try:
+            self.validator('/en-gb/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_current_and_prefix_locales_are_non_default_and_same(self):
+        """
+        Current locale is non-default ("de"), URL has locale prefix
+        of non-default locale ("de").
+        """
+        activate('de')
+        try:
+            self.validator('/de/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_current_and_prefix_locales_are_non_default_and_different(self):
+        """
+        Current locale is non-default ("it"), URL has locale prefix
+        of non-default locale ("de").
+        """
+        activate('it')
+        try:
+            self.validator('/de/test/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
+
 class TestURLDoesNotExistValidator(TestCase):
 
     def setUp(self):
@@ -63,46 +129,3 @@ class TestURLDoesNotExistValidator(TestCase):
     def test_raises_exception_for_flatpages(self):
         FlatPage.objects.create(title='test page', url='/test/page/')
         self.assertRaises(ValidationError, self.validator, '/test/page/')
-
-
-class TestPasswordValidator(TestCase):
-
-    @unittest.skipUnless(django.VERSION < (1, 9), 'Django 1.8 only')
-    def test_validator_fallback_django_18(self):
-        # In Django 1.8, we use our custom validators
-        with self.assertRaises(ValidationError):
-            # Should be in the list of common passwords
-            validate_password('password')
-
-        with self.assertRaises(ValidationError):
-            # Should be too short (min is 6 characters)
-            validate_password('short')
-
-        # This should validate
-        self.assertIsNone(validate_password('zNWJKpyq7idw'))
-
-    @unittest.skipUnless(django.VERSION >= (1, 9), 'Django 1.9 and up only')
-    def test_validator_uses_auth_validators(self):
-        with self.assertRaises(ValidationError):
-            # Should be in the list of common passwords
-            validate_password('password')
-
-        with self.assertRaises(ValidationError):
-            # Should be too short (min is 6 characters)
-            validate_password('short')
-
-        with self.assertRaises(ValidationError):
-            # Numeric passwords not allowed
-            validate_password('9796474332')
-
-        # This should validate
-        self.assertIsNone(validate_password('zNWJKpyq7idw'))
-
-    @unittest.skipUnless(django.VERSION >= (1, 9), 'Django 1.9 and up only')
-    @override_settings(AUTH_PASSWORD_VALIDATORS=[])
-    def test_validator_fallback_if_auth_setting_empty(self):
-        # If AUTH_PASSWORD_VALIDATORS we should still enforce validation
-        # consistent with previous versions of Oscar.
-        with self.assertRaises(ValidationError):
-            # Should be too short (min is 6 characters)
-            validate_password('short')

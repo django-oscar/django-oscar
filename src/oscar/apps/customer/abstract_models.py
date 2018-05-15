@@ -3,18 +3,21 @@ import random
 
 from django.conf import settings
 from django.contrib.auth import models as auth_models
-from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
 from django.template import TemplateDoesNotExist, engines
 from django.template.loader import get_template
+from django.urls import reverse
 from django.utils import six, timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_class
 from oscar.models.fields import AutoSlugField
+
+
+CommunicationTypeManager = get_class('customer.managers', 'CommunicationTypeManager')
 
 
 class UserManager(auth_models.BaseUserManager):

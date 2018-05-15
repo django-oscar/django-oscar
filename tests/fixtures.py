@@ -19,7 +19,7 @@ class RequestFactory(BaseRequestFactory):
 
     def request(self, user=None, **request):
         request = super(RequestFactory, self).request(**request)
-        request.user = AnonymousUser()
+        request.user = user or AnonymousUser()
         request.session = SessionStore()
         request._messages = FallbackStorage(request)
 

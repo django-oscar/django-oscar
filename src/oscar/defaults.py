@@ -1,11 +1,14 @@
 from collections import OrderedDict
 
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = ''
 OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
+
+# Dynamic class loading
+OSCAR_DYNAMIC_CLASS_LOADER = 'oscar.core.loading.default_class_loader'
 
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
@@ -172,6 +175,11 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Vouchers'),
                 'url_name': 'dashboard:voucher-list',
             },
+            {
+                'label': _('Voucher Sets'),
+                'url_name': 'dashboard:voucher-set-list',
+            },
+
         ],
     },
     {
@@ -245,6 +253,3 @@ OSCAR_SEARCH_FACETS = {
 
 OSCAR_PROMOTIONS_ENABLED = True
 OSCAR_PRODUCT_SEARCH_HANDLER = None
-
-OSCAR_SETTINGS = dict(
-    [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

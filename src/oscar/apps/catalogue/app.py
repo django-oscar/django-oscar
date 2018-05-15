@@ -1,6 +1,5 @@
 from django.conf.urls import url
 
-from oscar.apps.catalogue.reviews.app import application as reviews_app
 from oscar.core.application import Application
 from oscar.core.loading import get_class
 
@@ -30,7 +29,7 @@ class BaseCatalogueApplication(Application):
 
 class ReviewsApplication(Application):
     name = None
-    reviews_app = reviews_app
+    reviews_app = get_class('catalogue.reviews.app', 'application')
 
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()

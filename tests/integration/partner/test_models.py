@@ -55,6 +55,34 @@ class TestStockRecord(TestCase):
         self.assertEqual(10, self.stockrecord.num_in_stock)
 
 
+class TestStockRecordNoStockTrack(TestCase):
+
+    def setUp(self):
+        self.product_class = factories.ProductClassFactory(
+            requires_shipping=False, track_stock=False)
+
+    def test_allocate_does_nothing(self):
+        product = factories.ProductFactory(product_class=self.product_class)
+        stockrecord = factories.create_stockrecord(
+            product, price_excl_tax=D('10.00'), num_in_stock=10)
+
+        self.assertFalse(stockrecord.can_track_allocations)
+        stockrecord.allocate(5)
+        self.assertEqual(stockrecord.num_allocated, None)
+
+    def test_allocate_does_nothing_for_child_product(self):
+        parent_product = factories.ProductFactory(
+            structure='parent', product_class=self.product_class)
+        child_product = factories.ProductFactory(
+            parent=parent_product, product_class=None, structure='child')
+        stockrecord = factories.create_stockrecord(
+            child_product, price_excl_tax=D('10.00'), num_in_stock=10)
+
+        self.assertFalse(stockrecord.can_track_allocations)
+        stockrecord.allocate(5)
+        self.assertEqual(stockrecord.num_allocated, None)
+
+
 class TestPartnerAddress(TestCase):
 
     def setUp(self):

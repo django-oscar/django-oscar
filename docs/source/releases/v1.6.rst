@@ -19,42 +19,115 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 1.6 is compatible with Django 1.8, 1.10 and 1.11 as well as Python 2.7,
-3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is no longer officialy supported
-since it is longer supported by Django (end of life).
+Oscar 1.6 is compatible with Django 1.11 as well as Python 2.7, 3.4,
+3.5 and 3.6.
 
+Official support for Django 1.8, 1.9 and 1.10 has been dropped.
 
 .. _new_in_1.6:
 
 What's new in Oscar 1.6?
 ------------------------
-
+ - Added support for managing large amounts of vouchers grouped in sets.
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- - Removed ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting since
-   merchandising block promotions, which used it, already removed for a while.
+
+ - ``oscar.core.phonenumber.PhoneNumber`` is removed.
+   Use ``phonenumber_field.phonenumber.PhoneNumber`` instead.
+
+ - Removed the redundant ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES`` setting.
 
 Minor changes
 ~~~~~~~~~~~~~
- - Majority of the Oscar imports now using dynamic loading, instead of
-   direct importing for better extensibility and customizability, except
-   signals.
- - Customer transaction emails reworked on top of mailgun layout and has
-   better look.
+ - The majority of the Oscar class imports now use dynamic loading, instead of
+   direct imports, for better extensibility and customisability.
+
+ - Added the ability to specify a custom class loader through the
+   ``OSCAR_DYNAMIC_CLASS_LOADER`` setting.
+
+ - Customer transaction emails were reworked to use Mailgun templates, so that
+   they have a more modern appearance.
+
  - ``SearchHandler.get_search_form`` method now accepts additional
-   keyword arguments, which will be passed on search form class instance
-   initiation.
+   keyword arguments, which will be passed on search form class instance.
+
  - Added ``get_stock_info`` hook to ``oscar.apps.basket.models.Basket``  for
    implementing strategies that depend on product options.
+
+ - Fixed the page create/update views in the dashboard to correctly validate
+   URLs. Invalid characters in URLs will raise a validation error, as will
+   URLs longer than 100 characters.
+
+ - The default shipping method
+   ( ``oscar.apps.basket.views.BasketView.get_default_shipping_address``)
+   on the basket summary page now uses the user's default shipping address to
+   calculate an indicative shipping cost.
+
+ - Fixed ``ExtendedURLValidator`` for locale-prefixed URLs for locales, different
+   from current (see :issue:`1481`). Previously, validation did not pass when
+   if the current locale was "en-gb" and, the a visited URL was "/de/catalogue/"
+   and visa versa due to Django's default behaviour.
+
+ - Product attribute value save is now handled by separate methods, to make it
+     easier to override this behaviour.
+
+ - Address hash generation is now separated from the summary in order to
+   preserve same behavior when summary property customized (see :issue:`1537`).
+   They can use different field names, listed out in `base_fields` and
+   `hash_fields` respectively. Also hash generation now became
+   platform-independent and generates the same for Python 2 and 3.
+   Corresponding data migration will update hashes automatically. Take it into
+   account that it will take time to run if you have large user base.
+
+ - Compact basket form is no longer displayed for the products with options
+   on product list pages since it caused form elements to impose inside the
+   product box (see :issues:`1976`).
+
+- Added ``has_options`` property to the
+  ``oscar.apps.catalogue.models.Product`` model to indicate whether an
+  instance or its product class has product options.
+
+ - ``oscar.core.validators.validate_password`` was removed.
+   Use ``django.contrib.auth.password_validation.validate_password`` instead.
+
+ - ``oscar.core.validators.CommonPasswordValidator`` was removed. Use ``django.contrib.auth.password_validation.CommonPasswordValidator`` instead.
+
+ - User notifications are marked as read only when viewed in detail, instead of
+   being marked as read in bulk when the notification list was viewed.
+
+ - Oscar's ``ImageInput``, ``TimePickerInput``, ``DatePickerInput`` and
+   ``DateTimePickerInput`` all use templates for rendering.
+
+ - It is now possible to manage images for variant products and their parents.
+
+ - For variant products we now display their own images on product detail page
+   and fallback to parent product images if they don't have any.
+
+ - Basket line form quantity field now has "max" attribute with the maximum
+   allowed quantity in it based on product availability and basket threshold
+   (see :issue:`1412`).
+
+ - An unused setting ``OSCAR_SETTINGS`` was removed from ``oscar.core.defaults``.
 
 .. _incompatible_in_1.6:
 
 Backwards incompatible changes in Oscar 1.6
 -------------------------------------------
 
+ - Fixed a regression introduced in Oscar 1.5 (see :issue:`2664`) where
+   ``StockRequired.availability_policy`` was dependent on the product
+   having a price. Price and availability are now decoupled, and it is possible
+   to defer determination of a price until a product is added to the basket.
+
  - ``oscar.apps.customer.auth_backends.EmailBackend`` now rejects inactive users
    (where ``User.is_active`` is ``False``).
+
+ - ``EmailBackend`` no longer enforces its own password strength validation,
+   and relies instead on the ``AUTH_PASSWORD_VALIDATORS`` setting used by Django.
+
+ - ``oscar.apps.basket.middleware.BasketMiddleware`` was rewritten as new-style
+   middleware for Django 1.11.
 
  - ``oscar.apps.offer.models.ConditionalOffer`` now has a new flag
    ``exclusive`` to denote that the offer involved can not be combined on the
@@ -74,11 +147,45 @@ Backwards incompatible changes in Oscar 1.6
    The offending menu item will be skipped during menu rendering.
    In Oscar 1.8 the exception will be raised without being intercepted.
 
- - All signals are now loaded directly.
+ - All signals are now loaded directly rather than using dynamic imports.
+
+ - Stock manipulation (allocation/consumption/cancellation) now only happens if
+   the ``track_stock`` property of the product's class is set to true.
+
+ - ``oscar.forms.widgets.RemoteSelect`` was updated to work with version 4 of
+   select2. Instead of rendering a hidden input it now renders a normal
+   ``select`` element.
+
+ - The django-extra-views dependency was upgraded to version 0.11, and the
+   basket views that rely on ``extra_views.ModelFormSetView`` updated to use the
+   new factory_kwargs attribute.
+
+ - jQuery UI was removed from Oscar's static files. Projects that require it
+   should install it at the project level.
+
+ - Compatibility for Internet Explorer version 9 an lower was dropped from Oscar's
+   templates and styles.
+
+ - The Google Analytics tracking code provided by Oscar now uses ``gtag.js`` API
+   instead of the deprecated ``analytics.js``. Analytics are also disabled by
+   default in Oscar's dashboard.
 
 Dependency changes
 ------------------
 
+- Upgraded jQuery to version 3.3.1.
+
+- Upgraded Bootstrap to version 3.3.7.
+
+- Upgraded bootstrap-datetimepicker to v2.4.4.
+
+- Upgraded jQuery-mousewheel to v3.1.13.
+
+- Upgraded inputmask to v3.2.7.
+
+- Upgraded jquery-sortable to v0.9.13.
+
+- Upgraded select2 to v4.0.5.
 
 .. _deprecated_features_in_1.6:
 
@@ -87,5 +194,19 @@ Deprecated features
 
 The following features have been deprecated in this release:
 
-* ``StockRecord.price_excl_tax`` will be renamed into ``StockRecord.price`` in
+- ``StockRecord.price_excl_tax`` will be renamed into ``StockRecord.price`` in
   Oscar 2.0. Please see :issue:`1962` for more details.
+
+- The ``StockRecord.price_retail`` and ``StockRecord.cost_price`` fields are
+  deprecated and will be removed in Oscar 2.0.
+
+- The ``order.Line.est_dispatch_date``,  ``order.Line.line_price_incl_tax``,
+  ``order.Line.unit_retail_price``, ``order.Line.unit_cost_price`` and
+  ``order.Line.line_price_excl_tax`` fields are deprecated and will be removed
+  in Oscar 2.0.
+
+- ``oscar.views.decorators.staff_member_required`` is deprecated. Use
+  ``oscar.views.decorators.permissions_required(['is_staff'])`` instead.
+
+- Support for Django 1.8, 1.9 and 1.10 has been dropped in line with the
+  Django project recommendation for third party apps.

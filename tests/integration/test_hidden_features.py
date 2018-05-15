@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
