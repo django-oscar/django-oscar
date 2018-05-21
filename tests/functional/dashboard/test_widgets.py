@@ -49,4 +49,4 @@ class RelatedFieldWidgetWrapperTests(TestCase):
         widget = forms.Select()
         wrapper = RelatedFieldWidgetWrapper(widget, remote_field)
         # just make sure that generator can be made into a list.
-        self.assertTrue(type(list(wrapper.subwidgets('name','value'))),list)
+        self.assertTrue(isinstance(list(wrapper.subwidgets('name','value')),list))
