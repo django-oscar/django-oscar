@@ -28,7 +28,7 @@
     <div class="table-header">
         <h2>{% trans "Delete page" %}</h2>
     </div>
-    <form action="." method="post" class="well">
+    <form method="post" class="well">
         {% csrf_token %}
         {{ form }}
         <p>{% blocktrans with title=object.title %}Delete page <strong>{{ title }}</strong> - are you sure?{% endblocktrans %}</p>

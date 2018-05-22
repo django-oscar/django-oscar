@@ -44,7 +44,7 @@
             <h3><i class="icon-search icon-large"></i>{% trans "Search Products" %}</h3>
         </div>
         <div class="well">
-            <form action="." method="get" class="form-inline">
+            <form method="get" class="form-inline">
                 {% comment %}
                     Add the current query string to the search form so that the
                     sort order is not reset when searching.
@@ -63,7 +63,7 @@
 
     {% if products %}
         {% block product_list %}
-            <form action="." method="post">
+            <form method="post">
                 {% csrf_token %}
                 {% render_table products %}
             </form>

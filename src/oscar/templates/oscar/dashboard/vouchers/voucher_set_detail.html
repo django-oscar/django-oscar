@@ -69,7 +69,7 @@
     <h3><i class="icon-search icon-large"></i>{% trans "Search" %}</h3>
 </div>
 <div class="well">
-    <form action="." method="get" class="form-inline">
+    <form method="get" class="form-inline">
 		{% include 'partials/form_fields_inline.html' with form=form %}
 		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
 		<a href="{% url 'dashboard:voucher-list' %}" class="btn">{% trans "Reset" %}</a>

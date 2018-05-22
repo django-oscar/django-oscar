@@ -96,7 +96,7 @@
                 <div class="table-header">
                     <h3>{% trans "Items ordered" %}</h3>
                 </div>
-                <form id="order_lines_form" action="." method="post" class="form-inline">
+                <form id="order_lines_form" method="post" class="form-inline">
                     {% csrf_token %}
                     {% block order_lines %}
                         <table class="table table-striped table-bordered table-hover">
@@ -313,7 +313,7 @@
                     {% endblock line_actions %}
                 </form>
 
-                <form action="." method="post" id="order_status_form">
+                <form method="post" id="order_status_form">
                     {% csrf_token %}
                     {% block order_actions %}
                         <div class="well">
@@ -620,7 +620,7 @@
                                         <td>
                                             {% if note.is_editable %}
                                                 &nbsp;<a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
-                                                <form action="." method="post" class="pull-left flat">
+                                                <form method="post" class="pull-left flat">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_action" value="delete_note" />
                                                     <input type="hidden" name="note_id" value="{{ note.id }}" />

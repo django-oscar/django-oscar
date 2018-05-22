@@ -26,7 +26,7 @@
         <div class="table-header">
             <h2>{% trans "Delete product type" %}</h2>
         </div>
-        <form action="." method="post" class="well">
+        <form method="post" class="well">
             {% csrf_token %}
             {{ form }}
             <p>

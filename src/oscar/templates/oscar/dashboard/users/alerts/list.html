@@ -26,7 +26,7 @@
         <h3><i class="icon-search icon-large"></i> {% trans "Search product alerts" %}</h3>
     </div>
     <div class="well">
-        <form action="." method="get" class="form-inline">
+        <form method="get" class="form-inline">
             {% include "dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% trans "or" %}

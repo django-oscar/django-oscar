@@ -15,7 +15,7 @@
 
 {% block content %}
 
-    <form action="." method="post" class="form-stacked well">
+    <form method="post" class="form-stacked well">
         {% csrf_token %}
         {{ form.non_field_errors }}
 

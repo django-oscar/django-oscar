@@ -25,7 +25,7 @@
 {% block dashboard_content %}
     {% if attribute_option_groups %}
         {% block product_list %}
-            <form action="." method="post">
+            <form method="post">
                 {% csrf_token %}
                 {% render_table attribute_option_groups %}
             </form>

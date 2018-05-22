@@ -28,7 +28,7 @@
     <div class="table-header">
         {% trans "Delete content block" %}
     </div>
-    <form action="." method="post" class="well">
+    <form method="post" class="well">
         {% csrf_token %}
         {{ form }}
         <p>{% blocktrans %}Delete {{ object.type }} content block <strong>{{ object.name }}</strong> - are you sure?{% endblocktrans %}</p>

@@ -39,7 +39,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <form action="." method="post" class="form-stacked well wysiwyg">
+    <form method="post" class="form-stacked well wysiwyg">
         {% csrf_token %}
         {% include "dashboard/partials/form_fields.html" with form=form %}
         {% block form_actions %}

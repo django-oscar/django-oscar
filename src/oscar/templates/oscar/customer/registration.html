@@ -22,7 +22,7 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-6 register_form">
-            <form id="register_form" action="." method="post" class="form-stacked">
+            <form id="register_form" method="post" class="form-stacked">
                 {% csrf_token %}
                 {% include "partials/form_fields.html"  %}
                 <button name="registration_submit" type="submit" value="Register" class="btn btn-primary btn-lg" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>

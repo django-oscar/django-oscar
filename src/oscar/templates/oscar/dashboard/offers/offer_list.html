@@ -26,13 +26,13 @@
 
 {% block dashboard_content %}
     <div class="well">
-        <form action="." method="get" class="form-inline">
+        <form method="get" class="form-inline">
             {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
         </form>
     </div>
 
-    <form action="." method="post" class="order_table">
+    <form method="post" class="order_table">
         {% csrf_token %}
         <table class="table table-striped table-bordered">
             <caption>
