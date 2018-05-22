@@ -1,3 +1,3 @@
 var gulp = require('gulp');
 
-gulp.task('default', ['copy', 'less']);
+gulp.task('default', gulp.series(['copy', 'less']));
