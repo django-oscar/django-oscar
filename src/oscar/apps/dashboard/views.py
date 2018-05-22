@@ -185,10 +185,6 @@ class IndexView(TemplateView):
             'total_open_stock_alerts': open_alerts.count(),
             'total_closed_stock_alerts': closed_alerts.count(),
 
-            'total_site_offers': self.get_active_site_offers().count(),
-            'total_vouchers': self.get_active_vouchers().count(),
-            'total_promotions': self.get_number_of_promotions(),
-
             'total_customers': customers.count(),
             'total_open_baskets': baskets.count(),
             'total_orders': orders.count(),
@@ -201,6 +197,12 @@ class IndexView(TemplateView):
                 'status'
             ).values('status').annotate(freq=Count('id'))
         }
+        if user.is_staff:
+            stats.update(
+                total_site_offers=self.get_active_site_offers().count(),
+                total_vouchers=self.get_active_vouchers().count(),
+                total_promotions=self.get_number_of_promotions(),
+            )
         return stats
 
 
