@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from oscar.core import prices
 from oscar.apps.dashboard.views import IndexView
+from oscar.apps.order.models import Order
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_order
 
@@ -28,7 +29,7 @@ class TestDashboardIndexForStaffUser(WebTestCase):
             self.assertTrue('Password' not in response.content.decode('utf8'))
 
     def test_includes_hourly_report_with_no_orders(self):
-        report = IndexView().get_hourly_report()
+        report = IndexView().get_hourly_report(Order.objects.all())
         self.assertEqual(len(report), 3)
 
         keys = ['max_revenue', 'order_total_hourly', 'y_range']
@@ -44,7 +45,7 @@ class TestDashboardIndexForStaffUser(WebTestCase):
                                         tax=D('0.00')))
         create_order(total=prices.Price('GBP', excl_tax=D('21.90'),
                                         tax=D('0.00')))
-        report = IndexView().get_hourly_report()
+        report = IndexView().get_hourly_report(Order.objects.all())
 
         self.assertEqual(len(report['order_total_hourly']), 12)
         self.assertEqual(len(report['y_range']), 11)
