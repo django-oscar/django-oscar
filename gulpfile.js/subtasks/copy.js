@@ -47,7 +47,7 @@ var gulp = require("gulp"),
             "node_modules/select2/dist/css/select2.min.css"
         ]).pipe(gulp.dest("src/oscar/static/oscar/js/select2"));
 
-        gulp.src("node_modules/select2-bootstrap-theme/dist/*.min.css")
+        return gulp.src("node_modules/select2-bootstrap-theme/dist/*.min.css")
             .pipe(gulp.dest("src/oscar/static/oscar/css"));
     };
 
