@@ -2,7 +2,7 @@
 Oscar 1.6 release notes
 =======================
 
-:release: tbd
+:release: 2018-05-23
 
 Welcome to Oscar 1.6
 
