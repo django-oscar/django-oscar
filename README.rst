@@ -86,6 +86,8 @@ Core team:
 - `Maik Hoepfel`_ (Twitter `@maikhoepfel`_)
 - `Markus Bertheau`_
 - `Michael van Tellingen`_
+- `Alexander Gaevsky`_
+- `Samir Shah`_
 
 .. _`David Winterbottom`: https://github.com/codeinthehole
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
@@ -93,6 +95,8 @@ Core team:
 .. _`@maikhoepfel`: https://twitter.com/maikhoepfel
 .. _`Markus Bertheau`: https://github.com/mbertheau
 .. _`Michael van Tellingen`: https://github.com/mvantellingen
+.. _`Alexander Gaevsky`: https://github.com/sasha0
+.. _`Samir Shah`: https://github.com/solarissmoke
 
 Screenshots
 -----------
