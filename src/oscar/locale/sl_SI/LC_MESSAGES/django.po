@@ -1,44 +1,42 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
-# Simon Weiss <weiss.simon.1995@gmail.com>, 2017
+# Simon Weiss <weiss.simon.1995@gmail.com>, 2017-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2017-10-26 15:55+0000\n"
+"PO-Revision-Date: 2018-05-15 09:37+0000\n"
 "Last-Translator: Simon Weiss <weiss.simon.1995@gmail.com>\n"
-"Language-Team: Slovenian (Slovenia) (http://www.transifex.com/codeinthehole/"
-"django-oscar/language/sl_SI/)\n"
-"Language: sl_SI\n"
+"Language-Team: Slovenian (Slovenia) (http://www.transifex.com/codeinthehole/django-oscar/language/sl_SI/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
-"%100==4 ? 2 : 3);\n"
+"Language: sl_SI\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #: apps/address/abstract_models.py:28
 msgid "Mr"
-msgstr "G"
+msgstr "G."
 
 #: apps/address/abstract_models.py:29
 msgid "Miss"
-msgstr "Gdč"
+msgstr "Gdč."
 
 #: apps/address/abstract_models.py:30
 msgid "Mrs"
-msgstr "Ga"
+msgstr "Ga."
 
 #: apps/address/abstract_models.py:31
 msgid "Ms"
-msgstr "Mag"
+msgstr "Mag."
 
 #: apps/address/abstract_models.py:32
 msgid "Dr"
-msgstr "Dr"
+msgstr "Dr."
 
 #: apps/address/abstract_models.py:221
 msgctxt "Treatment Pronouns for the customer"
@@ -209,16 +207,12 @@ msgid "Default billing address?"
 msgstr "Privzet naslov plačnika"
 
 #: apps/address/abstract_models.py:533
-#, fuzzy
-#| msgid "Set as default shipping address"
 msgid "Number of Orders as Shipping Address"
-msgstr "Nastavi privzet naslov za dostavo"
+msgstr ""
 
 #: apps/address/abstract_models.py:537
-#, fuzzy
-#| msgid "Number of Orders"
 msgid "Number of Orders as Billing Address"
-msgstr "Število naročil"
+msgstr ""
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -276,9 +270,10 @@ msgstr "Naslovi partnerja"
 #: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:86
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:625
 #: apps/catalogue/abstract_models.py:234 apps/catalogue/abstract_models.py:363
-#: apps/catalogue/abstract_models.py:931 apps/catalogue/abstract_models.py:1188
-#: apps/order/abstract_models.py:469 apps/partner/abstract_models.py:98
-#: apps/promotions/models.py:297 apps/wishlists/abstract_models.py:121
+#: apps/catalogue/abstract_models.py:931
+#: apps/catalogue/abstract_models.py:1188 apps/order/abstract_models.py:469
+#: apps/partner/abstract_models.py:98 apps/promotions/models.py:297
+#: apps/wishlists/abstract_models.py:121
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:17
@@ -418,7 +413,8 @@ msgstr "Analiza izdelka"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:49 apps/catalogue/abstract_models.py:92
-#: apps/catalogue/abstract_models.py:710 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:710
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1110 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:166 apps/dashboard/catalogue/tables.py:78
 #: apps/dashboard/users/forms.py:44 apps/dashboard/vouchers/forms.py:18
@@ -560,9 +556,10 @@ msgid "Vouchers"
 msgstr "Kuponi"
 
 #: apps/basket/abstract_models.py:59 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:336 apps/catalogue/abstract_models.py:1198
-#: apps/customer/abstract_models.py:362 apps/order/abstract_models.py:887
-#: apps/partner/abstract_models.py:151 apps/wishlists/abstract_models.py:55
+#: apps/catalogue/abstract_models.py:336
+#: apps/catalogue/abstract_models.py:1198 apps/customer/abstract_models.py:362
+#: apps/order/abstract_models.py:887 apps/partner/abstract_models.py:151
+#: apps/wishlists/abstract_models.py:55
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/promotions/promotion_list.html:44
 #: templates/oscar/dashboard/ranges/range_list.html:34
@@ -610,11 +607,9 @@ msgstr "%(status)s košarica (lastnik: %(owner)s, vrstica: %(num_lines)d)"
 #: apps/basket/abstract_models.py:158
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order."
-msgstr ""
-"Zaradi tehničnih omejitev ne moremo dostaviti več kot %(threshold)d izdelkov "
-"v enem naročilu."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
+msgstr "Zaradi tehničnih omejitev ne moremo dostaviti več kot %(threshold)d izdelkov v enem naročilu."
 
 #: apps/basket/abstract_models.py:619
 msgid "Line Reference"
@@ -662,8 +657,7 @@ msgstr "Vrstice košarice"
 #: apps/basket/abstract_models.py:667
 #, python-format
 msgid "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
-msgstr ""
-"Košarica #%(basket_id)d, izdelek #%(product_id)d, količina %(quantity)d"
+msgstr "Košarica #%(basket_id)d, izdelek #%(product_id)d, količina %(quantity)d"
 
 #: apps/basket/abstract_models.py:675
 #, python-format
@@ -673,20 +667,16 @@ msgstr "Ne moreš urediti %s košarice"
 #: apps/basket/abstract_models.py:904
 #, python-format
 msgid ""
-"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"Cena izdelka '%(product)s' se je povičala iz %(old_price)s na %(new_price)s "
-"odkar ste ga dodali v košarico"
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "Cena izdelka '%(product)s' se je povičala iz %(old_price)s na %(new_price)s odkar ste ga dodali v košarico"
 
 #: apps/basket/abstract_models.py:909
 #, python-format
 msgid ""
-"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"Cena izdelka '%(product)s' se je znižala iz %(old_price)s na %(new_price)s "
-"odkar ste ga dodoali v košarico"
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "Cena izdelka '%(product)s' se je znižala iz %(old_price)s na %(new_price)s odkar ste ga dodoali v košarico"
 
 #: apps/basket/abstract_models.py:923 apps/order/abstract_models.py:766
 #: apps/order/abstract_models.py:801 apps/order/abstract_models.py:916
@@ -750,26 +740,21 @@ msgstr "Prosimo, da izberete veljaven izdelek"
 #: apps/basket/forms.py:196
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order. Your basket currently has %(basket)d items."
-msgstr ""
-"Zaradi tehničnih omejitev ne moremo dostaviti več kot %(threshold)d izdelkov "
-"v enem naročilu. Vaša košarica ima trenutno %(basket)d izdelkov."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
+msgstr "Zaradi tehničnih omejitev ne moremo dostaviti več kot %(threshold)d izdelkov v enem naročilu. Vaša košarica ima trenutno %(basket)d izdelkov."
 
 #: apps/basket/forms.py:219
 msgid ""
-"This product cannot be added to the basket as its currency isn't the same as "
-"other products in your basket"
-msgstr ""
-"Ta izdelek ne more biti dodan v košarico, saj je v drugi valuti kot ostali "
-"izdelki v vaši košarici"
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
+msgstr "Ta izdelek ne more biti dodan v košarico, saj je v drugi valuti kot ostali izdelki v vaši košarici"
 
 #: apps/basket/middleware.py:174
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
-"Združili smo košarico prejjšnje seje. Lahko je prišlo do spremembe vsebine."
+msgstr "Združili smo košarico prejjšnje seje. Lahko je prišlo do spremembe vsebine."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -876,10 +861,9 @@ msgid "Please enter a voucher code"
 msgstr "Vnesite kodo kupona"
 
 #: apps/basket/views.py:403
-#, fuzzy, python-format
-#| msgid "No voucher found with id '%d'"
+#, python-format
 msgid "No voucher found with id '%s'"
-msgstr "Kupon s številko '%d' ne obstaja"
+msgstr ""
 
 #: apps/basket/views.py:409
 #, python-format
@@ -985,19 +969,14 @@ msgstr "Univerzalna koda izdelka (UPC)"
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
-msgstr ""
-"Unverzalna koda izdelka (UPC) je označevalnik izdeka, ki ni odvisna od "
-"dobavitelja. Npr. ISBN za knjigo."
+msgstr "Unverzalna koda izdelka (UPC) je označevalnik izdeka, ki ni odvisna od dobavitelja. Npr. ISBN za knjigo."
 
 #: apps/catalogue/abstract_models.py:291
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
-"example if this is a size 4 of a particular t-shirt.  Leave blank if this is "
-"a stand-alone product (i.e. there is only one version of this product)."
-msgstr ""
-"Izberite le nadrejen izdelek, če ustvarjate podrejenega. Npr. če so 4 "
-"velikosti določene majice. Pustite prazno, če je samostojen izdelek (Npr. če "
-"je le ena različica izdelka)"
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
+msgstr "Izberite le nadrejen izdelek, če ustvarjate podrejenega. Npr. če so 4 velikosti določene majice. Pustite prazno, če je samostojen izdelek (Npr. če je le ena različica izdelka)"
 
 #: apps/catalogue/abstract_models.py:298 apps/catalogue/abstract_models.py:544
 #: apps/order/abstract_models.py:471 apps/wishlists/abstract_models.py:127
@@ -1026,11 +1005,9 @@ msgstr "Lastnosti"
 
 #: apps/catalogue/abstract_models.py:316
 msgid ""
-"A product attribute is something that this product may have, such as a size, "
-"as specified by its class"
-msgstr ""
-"Lastnost izdelka je nekaj, kar izdelek lahko ima, npr velikost, ki je "
-"določena z razredom"
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
+msgstr "Lastnost izdelka je nekaj, kar izdelek lahko ima, npr velikost, ki je določena z razredom"
 
 #: apps/catalogue/abstract_models.py:320
 msgid "Product options"
@@ -1041,9 +1018,7 @@ msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
-msgstr ""
-"Možnosti so vrednosti, ki predstavljajo izdelek, ki je dodan v uporabnikovo "
-"košarico. Npr. Sporočilo, ki ga uporabnik želi imeti natiskanega na majici."
+msgstr "Možnosti so vrednosti, ki predstavljajo izdelek, ki je dodan v uporabnikovo košarico. Npr. Sporočilo, ki ga uporabnik želi imeti natiskanega na majici."
 
 #: apps/catalogue/abstract_models.py:328
 #: templates/oscar/dashboard/catalogue/product_update.html:297
@@ -1143,9 +1118,7 @@ msgstr "Razvrstitev"
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
-msgstr ""
-"Določi vrstni red izdelkov. Izdelek z višjo oceno se bo pojavil pred "
-"izdelkom z nižjo oceno."
+msgstr "Določi vrstni red izdelkov. Izdelek z višjo oceno se bo pojavil pred izdelkom z nižjo oceno."
 
 #: apps/catalogue/abstract_models.py:693
 msgid "Product recommendation"
@@ -1159,9 +1132,7 @@ msgstr "Priporočila izdelka"
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, and underscores, and "
 "can't start with a digit."
-msgstr ""
-"Koda lahko vsebuje le črke a-z, A-Z, števke in podčrtaje, in se ne sme "
-"začeti s števko."
+msgstr "Koda lahko vsebuje le črke a-z, A-Z, števke in podčrtaje, in se ne sme začeti s števko."
 
 #: apps/catalogue/abstract_models.py:736 apps/catalogue/abstract_models.py:933
 msgid "Text"
@@ -1195,16 +1166,12 @@ msgid "Date"
 msgstr "Datum"
 
 #: apps/catalogue/abstract_models.py:742
-#, fuzzy
-#| msgid "End datetime"
 msgid "Datetime"
-msgstr "Končna datum in ura"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:744
-#, fuzzy
-#| msgid "Product Options"
 msgid "Multi Option"
-msgstr "Možnosti izdelka"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:745
 msgid "Entity"
@@ -1231,10 +1198,8 @@ msgid "Option Group"
 msgstr "Možnost skupine"
 
 #: apps/catalogue/abstract_models.py:760
-#, fuzzy
-#| msgid "Select an option group if using type \"Option\""
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
-msgstr "Izberite opcijo skupine, če uporabljate tip \"Možnost\""
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:761
 #: templates/oscar/dashboard/catalogue/product_class_form.html:100
@@ -1268,10 +1233,8 @@ msgid "Must be a date or datetime"
 msgstr "Mora biti datum ali datum in ura"
 
 #: apps/catalogue/abstract_models.py:871
-#, fuzzy
-#| msgid "Must be a date or datetime"
 msgid "Must be a datetime"
-msgstr "Mora biti datum ali datum in ura"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:875
 msgid "Must be a boolean"
@@ -1282,10 +1245,8 @@ msgid "Must be a model instance"
 msgstr "Mora biti instanca modela"
 
 #: apps/catalogue/abstract_models.py:886
-#, fuzzy
-#| msgid "Must be an AttributeOption model object instance"
 msgid "Must be a list or AttributeOption queryset"
-msgstr "Mora biti instanca objekta modela MožnostAtributa "
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:897
 msgid "Must be an AttributeOption model object instance"
@@ -1317,16 +1278,12 @@ msgid "Richtext"
 msgstr "Bogato besedilo"
 
 #: apps/catalogue/abstract_models.py:939
-#, fuzzy
-#| msgid "Date"
 msgid "DateTime"
-msgstr "Datum"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:943
-#, fuzzy
-#| msgid "Value option"
 msgid "Value multi option"
-msgstr "Možnost vrednosti"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:949
 msgid "Value option"
@@ -1378,7 +1335,8 @@ msgstr "Naslov slike"
 
 #: apps/catalogue/abstract_models.py:1196
 msgid ""
-"An image with a display order of zero will be the primary image for a product"
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr "Slika z zaporedno številko 0 bo primarna slika izdelka"
 
 #: apps/catalogue/abstract_models.py:1206
@@ -1592,9 +1550,7 @@ msgstr "Pred odhodom na blagajno morate dodati kakšen izdelek v košarico"
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr ""
-"'%(title)s ni več mogoče kupiti (%(reason)s). Prosimo vas, da popravite "
-"košarico pred nadaljevanjem"
+msgstr "'%(title)s ni več mogoče kupiti (%(reason)s). Prosimo vas, da popravite košarico pred nadaljevanjem"
 
 #: apps/checkout/session.py:149
 msgid "Please either sign in or enter your email address"
@@ -1608,9 +1564,7 @@ msgstr "Prosimo vas, da izberete naslov za dostavo"
 msgid ""
 "Your previously chosen shipping address is no longer valid.  Please choose "
 "another one"
-msgstr ""
-"Vaš predhodni naslov za dostavo ni več veljaven. Prosimo vas, da izberete "
-"novega"
+msgstr "Vaš predhodni naslov za dostavo ni več veljaven. Prosimo vas, da izberete novega"
 
 #: apps/checkout/session.py:192
 msgid "Please choose a shipping method"
@@ -1620,9 +1574,7 @@ msgstr "Prosimo vas, da izberete način dostave"
 msgid ""
 "Your previously chosen shipping method is no longer valid.  Please choose "
 "another one"
-msgstr ""
-"Vaš predhodno izbran način dostave ni več veljaven. Prosimo vas, da izberete "
-"drugega"
+msgstr "Vaš predhodno izbran način dostave ni več veljaven. Prosimo vas, da izberete drugega"
 
 #: apps/checkout/views.py:91
 msgid ""
@@ -1639,7 +1591,8 @@ msgid "Address deleted"
 msgstr "Naslov je izbrisan"
 
 #: apps/checkout/views.py:283
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "Dostava na dan naslov ni možna - prosimo vas, da izberete drugega"
 
 #: apps/checkout/views.py:326
@@ -1650,10 +1603,7 @@ msgstr "Izbran način dostave ni dovoljen"
 msgid ""
 "A problem occurred while processing payment for this order - no payment has "
 "been taken.  Please contact customer services if this problem persists"
-msgstr ""
-"Nastal je problem pri obdelavi vašega plačila. Nobena transakcija ni bila "
-"izvedena. Prosimo vas, da kontaktirate z našo službo za stranke, če problem "
-"ne izgine"
+msgstr "Nastal je problem pri obdelavi vašega plačila. Nobena transakcija ni bila izvedena. Prosimo vas, da kontaktirate z našo službo za stranke, če problem ne izgine"
 
 #: apps/checkout/views.py:676
 msgid "No order found"
@@ -1683,9 +1633,7 @@ msgstr "Aktiven"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr ""
-"Določa, če je uporabnik lahko tretiran kot aktiven. Odkljukajte raje to, kot "
-"da izbrišete račune."
+msgstr "Določa, če je uporabnik lahko tretiran kot aktiven. Odkljukajte raje to, kot da izbrišete račune."
 
 #: apps/customer/abstract_models.py:73
 msgid "date joined"
@@ -1698,10 +1646,8 @@ msgid "Users"
 msgstr "Uporabniki"
 
 #: apps/customer/abstract_models.py:123
-#, fuzzy
-#| msgid "Email address"
 msgid "Email Address"
-msgstr "E-poštni naslov"
+msgstr ""
 
 #: apps/customer/abstract_models.py:124
 #: templates/oscar/customer/email/email_detail.html:19
@@ -1739,10 +1685,9 @@ msgid "Email to %(user)s with subject '%(subject)s'"
 msgstr "E-poštno sporočilo za %(user)s z zadevo '%(subject)s'"
 
 #: apps/customer/abstract_models.py:140
-#, fuzzy, python-format
-#| msgid "Email to %(user)s with subject '%(subject)s'"
+#, python-format
 msgid "Anonymous email to %(email)s with subject '%(subject)s'"
-msgstr "E-poštno sporočilo za %(user)s z zadevo '%(subject)s'"
+msgstr ""
 
 #: apps/customer/abstract_models.py:162
 msgid "Code used for looking up this event programmatically"
@@ -1805,11 +1750,13 @@ msgstr "Nabiralnik"
 msgid "Archive"
 msgstr "Arhiv"
 
-#: apps/customer/abstract_models.py:305 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:305
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "Obvestilo"
 
-#: apps/customer/abstract_models.py:306 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:306
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "Obvestila"
@@ -1954,9 +1901,7 @@ msgstr "Vsa naročila"
 msgid ""
 "Orders placed between %(date_from)s and %(date_to)s and order number "
 "containing %(order_number)s"
-msgstr ""
-"Naročila med dnem %(date_from)s in dnem %(date_to)s in številko naročila z "
-"%(order_number)s "
+msgstr "Naročila med dnem %(date_from)s in dnem %(date_to)s in številko naročila z %(order_number)s "
 
 #: apps/customer/forms.py:227 apps/dashboard/orders/forms.py:42
 #, python-format
@@ -1968,9 +1913,7 @@ msgstr "Naročila med dnem %(date_from)s in dnem %(date_to)s"
 msgid ""
 "Orders placed since %(date_from)s and order number containing "
 "%(order_number)s"
-msgstr ""
-"Naročila oddana od dne %(date_from)s naprej in s številko naročila z "
-"%(order_number)s"
+msgstr "Naročila oddana od dne %(date_from)s naprej in s številko naročila z %(order_number)s"
 
 #: apps/customer/forms.py:234
 #, python-format
@@ -1981,8 +1924,7 @@ msgstr "Naročila oddana od %(date_from)s"
 #, python-format
 msgid ""
 "Orders placed until %(date_to)s and order number containing %(order_number)s"
-msgstr ""
-"Naročila oddana do dne %(date_to)s in s številko naročila z %(order_number)s"
+msgstr "Naročila oddana do dne %(date_to)s in s številko naročila z %(order_number)s"
 
 #: apps/customer/forms.py:240
 #, python-format
@@ -2109,9 +2051,7 @@ msgstr "Vse možne vrstice naročila %(number)s so bile dodane v vašo košarico
 msgid ""
 "It is not possible to re-order order %(number)s as none of its lines are "
 "available to purchase"
-msgstr ""
-"Ni možno ponoviti naročila %(number)s ker nobene izmed vrstic ni več možno "
-"kupiti"
+msgstr "Ni možno ponoviti naročila %(number)s ker nobene izmed vrstic ni več možno kupiti"
 
 #: apps/customer/views.py:590
 #, python-format
@@ -2232,10 +2172,9 @@ msgid "'%(title)s' was removed from your '%(name)s' wish list"
 msgstr "%(title)s je izbrisan z vašega seznama želja '%(name)s'"
 
 #: apps/customer/wishlists/views.py:317
-#, fuzzy, python-format
-#| msgid "User '%(name)s' is already linked to '%(partner_name)s'"
+#, python-format
 msgid "Wish list '%(name)s' already containing '%(title)s'"
-msgstr "Uporabnik '%(name)s' je že povezan z '%(partner_name)s'"
+msgstr ""
 
 #: apps/customer/wishlists/views.py:325
 #, python-format
@@ -2262,8 +2201,7 @@ msgstr "Izberite opcijo skupine"
 msgid ""
 "At least one stock record must be set to a partner that you're associated "
 "with."
-msgstr ""
-"Vsaj en zapis zaloge mora biti nastavljen na partnerja s katerim sodelujete."
+msgstr "Vsaj en zapis zaloge mora biti nastavljen na partnerja s katerim sodelujete."
 
 #: apps/dashboard/catalogue/formsets.py:115
 msgid "Stand-alone and parent products must have at least one category"
@@ -2330,20 +2268,17 @@ msgstr[2] "%s kategorije"
 msgstr[3] "%s kategorij"
 
 #: apps/dashboard/catalogue/tables.py:82
-#, fuzzy
-#| msgid "Offer summary"
 msgid "Option summary"
-msgstr "Pregled ponudb"
+msgstr ""
 
 #: apps/dashboard/catalogue/tables.py:91
-#, fuzzy, python-format
-#| msgid "Attribute option group"
+#, python-format
 msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
-msgstr[0] "Atribut možnosti skupine"
-msgstr[1] "Atribut možnosti skupine"
-msgstr[2] "Atribut možnosti skupine"
-msgstr[3] "Atribut možnosti skupine"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: apps/dashboard/catalogue/views.py:99
 msgid "Product search results"
@@ -2464,46 +2399,36 @@ msgid "Product type deleted successfully"
 msgstr "Tip izdelka uspešno izbrisan"
 
 #: apps/dashboard/catalogue/views.py:842
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Add a new Attribute Option Group"
-msgstr "Atribut možnosti skupine"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:846
-#, fuzzy
-#| msgid "Product type created successfully"
 msgid "Attribute Option Group created successfully"
-msgstr "Tip izdelka uspešno ustvarjen"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:860
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Update Attribute Option Group '%s'"
-msgstr "Atribut možnosti skupin"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:864
-#, fuzzy
-#| msgid "Product type updated successfully"
 msgid "Attribute Option Group updated successfully"
-msgstr "Tip izdelka uspešno posodobljen"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:891
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Delete Attribute Option Group '%s'"
-msgstr "Atribut možnosti skupin"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:898
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
-msgid "%i product attributes are still assigned to this attribute option group"
-msgstr "%i izdelkov je še vedno dodeljeno temu tipu"
+#, python-format
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:918
-#, fuzzy
-#| msgid "Product type deleted successfully"
 msgid "Attribute Option Group deleted successfully"
-msgstr "Tip izdelka uspešno izbrisan"
+msgstr ""
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
@@ -2536,9 +2461,7 @@ msgstr "Proimo vas, da vnesete vaš e-poštni naslov"
 #: apps/dashboard/communications/views.py:32
 msgid ""
 "The submitted form was not valid, please correct the errors and resubmit"
-msgstr ""
-"Vnešeni podatki niso veljavni - prosimo popravite napake spodaj in ponovno "
-"oddate"
+msgstr "Vnešeni podatki niso veljavni - prosimo popravite napake spodaj in ponovno oddate"
 
 #: apps/dashboard/communications/views.py:41
 msgid "Email saved"
@@ -2648,8 +2571,7 @@ msgstr "Posebni pogoj"
 #: apps/dashboard/offers/forms.py:87
 msgid ""
 "Please either choose a range, type and value OR select a custom condition"
-msgstr ""
-"Prosimo da izberete interval, tip in vrednost ALI izberete poseben pogoj"
+msgstr "Prosimo da izberete interval, tip in vrednost ALI izberete poseben pogoj"
 
 #: apps/dashboard/offers/forms.py:93
 msgid "A range is required"
@@ -2662,13 +2584,11 @@ msgstr "Posebna pobuda"
 #: apps/dashboard/offers/forms.py:140
 msgid ""
 "Please either choose a range, type and value OR select a custom incentive"
-msgstr ""
-"Prosimo da izberete interval, tip in vrednost ALI izberete posebno pobudo"
+msgstr "Prosimo da izberete interval, tip in vrednost ALI izberete posebno pobudo"
 
 #: apps/dashboard/offers/forms.py:146
 msgid "No other options can be set if you are using a custom incentive"
-msgstr ""
-"Nobena druga možnost ne more biti izbrana, če ste izbrai posebno pobudo"
+msgstr "Nobena druga možnost ne more biti izbrana, če ste izbrai posebno pobudo"
 
 #: apps/dashboard/offers/forms.py:161 apps/order/abstract_models.py:1071
 #: templates/oscar/dashboard/offers/offer_list.html:46
@@ -2984,8 +2904,7 @@ msgstr "Vnešena količina za vrstico %s ni veljavna"
 msgid ""
 "The entered quantity for line #%(line_id)s should not be higher than "
 "%(quantity)s"
-msgstr ""
-"Vnešena količina za vrstico %(line_id)s ne sme biti višja od %(quantity)s"
+msgstr "Vnešena količina za vrstico %(line_id)s ne sme biti višja od %(quantity)s"
 
 #: apps/dashboard/orders/views.py:575
 msgid "Note saved"
@@ -3005,8 +2924,7 @@ msgstr "Napačna oblika oddaje"
 
 #: apps/dashboard/orders/views.py:614
 msgid "Unable to change order status as the requested new status is not valid"
-msgstr ""
-"Ne morem spremeniti stanja naročila, ker je zahtevano novo stanje neveljavno"
+msgstr "Ne morem spremeniti stanja naročila, ker je zahtevano novo stanje neveljavno"
 
 #: apps/dashboard/orders/views.py:628 apps/dashboard/orders/views.py:704
 msgid "Please choose a valid amount"
@@ -3020,10 +2938,9 @@ msgstr "'%(status)s' ni veljavno novo stanje za vrstico %(line_id)d"
 #: apps/dashboard/orders/views.py:652
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
-msgstr ""
-"Stanje vrstice #%(line_id)d se je spremenilo iz '%(old_status)s' v "
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
 "'%(new_status)s'"
+msgstr "Stanje vrstice #%(line_id)d se je spremenilo iz '%(old_status)s' v '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
 #, python-format
@@ -3068,9 +2985,7 @@ msgstr "%(field)s je spremenjen iz '%(old_value)s' v '%(new_value)s'"
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"Naslov dostave je posodobljen:\n"
-"%s"
+msgstr "Naslov dostave je posodobljen:\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -3336,10 +3251,9 @@ msgid "No product(s) were found with SKU or UPC matching %s"
 msgstr "Izdelka s SKU ali UPC enakim %s ni mogoče najti"
 
 #: apps/dashboard/ranges/views.py:213
-#, fuzzy, python-format
-#| msgid "There are no product types."
+#, python-format
 msgid "There are more than one product with SKU %s"
-msgstr "Ne obstaja noben tip izdelka"
+msgstr ""
 
 #: apps/dashboard/reports/config.py:8
 msgid "Reports dashboard"
@@ -3392,8 +3306,7 @@ msgstr "do"
 msgid ""
 "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
 "%(name_filter)s"
-msgstr ""
-"%(main_filter)s%(date_filter)s%(status_filter)s%(kw_filter)s%(name_filter)s"
+msgstr "%(main_filter)s%(date_filter)s%(status_filter)s%(kw_filter)s%(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
 #, python-format
@@ -3579,10 +3492,8 @@ msgid "Is Active?"
 msgstr "Je aktiven?"
 
 #: apps/dashboard/vouchers/forms.py:99
-#, fuzzy
-#| msgid "Vouchers"
 msgid "In Voucherset?"
-msgstr "Kuponi"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:34 apps/dashboard/vouchers/views.py:360
 #: apps/dashboard/vouchers/views.py:419
@@ -3633,26 +3544,20 @@ msgid "Voucher deleted"
 msgstr "Kupon je izbrisan"
 
 #: apps/dashboard/vouchers/views.py:234
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Create voucher set"
-msgstr "Ustvari kupon"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:274
-#, fuzzy
-#| msgid "Voucher created"
 msgid "Voucher set created"
-msgstr "Kupon je ustvarjen"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:430
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:16
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:8
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:17
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:22
-#, fuzzy
-#| msgid "Voucher details"
 msgid "Voucher sets"
-msgstr "Podrobnosti kupona"
+msgstr ""
 
 #: apps/offer/abstract_models.py:91
 msgid "This is displayed within the customer's basket"
@@ -3669,8 +3574,7 @@ msgstr "Ponudba strani - omogočeno vsem uporabnikom"
 #: apps/offer/abstract_models.py:111
 msgid ""
 "Voucher offer - only available after entering the appropriate voucher code"
-msgstr ""
-"Ponudba kupona - omogočeno le strankam, ki vpišejo primerno kodo kupona"
+msgstr "Ponudba kupona - omogočeno le strankam, ki vpišejo primerno kodo kupona"
 
 #: apps/offer/abstract_models.py:113
 msgid "User offer - available to certain types of user"
@@ -3680,15 +3584,11 @@ msgstr "Ponudba strankam - omogočeno le določenim tipom uporabnikov"
 msgid ""
 "Session offer - temporary offer, available for a user for the duration of "
 "their session"
-msgstr ""
-"Sezonska ponudba - začasna ponudba, ki je omogočena strankam za čas njihove "
-"seje"
+msgstr "Sezonska ponudba - začasna ponudba, ki je omogočena strankam za čas njihove seje"
 
 #: apps/offer/abstract_models.py:121
-#, fuzzy
-#| msgid "Suspend offer"
 msgid "Exclusive offer"
-msgstr "Ugasni ponudbo"
+msgstr ""
 
 #: apps/offer/abstract_models.py:135 apps/offer/abstract_models.py:710
 #: templates/oscar/dashboard/offers/offer_detail.html:76
@@ -3717,12 +3617,10 @@ msgid ""
 msgstr ""
 
 #: apps/offer/abstract_models.py:158
-#, fuzzy
-#| msgid "Offers are active until the end of the 'end date'"
 msgid ""
 "Offers are active until the end date. Leave this empty if the offer has no "
 "expiry date."
-msgstr "Ponudbe so aktivne do konca 'končnega dne'"
+msgstr ""
 
 #: apps/offer/abstract_models.py:166
 msgid "Max global applications"
@@ -3756,8 +3654,7 @@ msgstr "Največji popust"
 msgid ""
 "When an offer has given more discount to orders than this threshold, then "
 "the offer becomes unavailable"
-msgstr ""
-"Ko ponudba poda več popusta k naročilu kot sama vsebuje, postane nedostopna"
+msgstr "Ko ponudba poda več popusta k naročilu kot sama vsebuje, postane nedostopna"
 
 #: apps/offer/abstract_models.py:201
 msgid "Total Discount"
@@ -3863,9 +3760,7 @@ msgstr "Največje število vključenih izdekov"
 msgid ""
 "Set this to prevent the discount consuming all items within the range that "
 "are in the basket."
-msgstr ""
-"Omogočite, da ne bi popust porabljal vse izdelke znotraj območja, ki so v "
-"košarici"
+msgstr "Omogočite, da ne bi popust porabljal vse izdelke znotraj območja, ki so v košarici"
 
 #: apps/offer/abstract_models.py:499 apps/offer/abstract_models.py:705
 #: apps/offer/abstract_models.py:812
@@ -3886,19 +3781,15 @@ msgstr "Količinski popust ne zahteva vrednosti"
 
 #: apps/offer/abstract_models.py:547
 msgid "Multibuy benefits don't require a 'max affected items' attribute"
-msgstr ""
-"Količinski popust ne zahteva lastnosti 'največjega števila vključenih "
-"izdelkov'"
+msgstr "Količinski popust ne zahteva lastnosti 'največjega števila vključenih izdelkov'"
 
 #: apps/offer/abstract_models.py:557
 msgid "Percentage benefits require a product range"
 msgstr "Odstotek koristi zahteva območje izdelka"
 
 #: apps/offer/abstract_models.py:560 apps/offer/abstract_models.py:585
-#, fuzzy
-#| msgid "Fixed discount benefits require a value"
 msgid "Percentage discount benefits require a value"
-msgstr "Fiksen popust zahteva vrednost"
+msgstr ""
 
 #: apps/offer/abstract_models.py:562 apps/offer/abstract_models.py:587
 msgid "Percentage discount cannot be greater than 100"
@@ -3916,9 +3807,7 @@ msgstr "Nobeno območje ne sme biti izbrano, ker ta korist ni vezana na izdelke"
 #: apps/offer/abstract_models.py:575 apps/offer/abstract_models.py:593
 #: apps/offer/abstract_models.py:604
 msgid "Shipping discounts don't require a 'max affected items' attribute"
-msgstr ""
-"Popusti pri dostavi ne zahtevajo lastnosti 'največjega števila vključenih "
-"izdelkov'"
+msgstr "Popusti pri dostavi ne zahtevajo lastnosti 'največjega števila vključenih izdelkov'"
 
 #: apps/offer/abstract_models.py:613
 msgid ""
@@ -3944,9 +3833,7 @@ msgstr "Zavisi od vrednosti izdelkov v košarici, ki ustrezajo pogoju območja"
 #: apps/offer/abstract_models.py:691
 msgid ""
 "Needs to contain a set number of DISTINCT items from the condition range"
-msgstr ""
-"Potrebuje določeno množico števil OBSTOJEČIH izdelkov, ki ustrezajo pogoju "
-"območja"
+msgstr "Potrebuje določeno množico števil OBSTOJEČIH izdelkov, ki ustrezajo pogoju območja"
 
 #: apps/offer/abstract_models.py:711
 msgid "Conditions"
@@ -4245,11 +4132,9 @@ msgstr "E-poštni naslov gosta"
 #: apps/order/abstract_models.py:128
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status: "
-"'%(status)s')"
-msgstr ""
-"'%(new_status)s' ni veljavno stanje za naročilo %(number)s (trenutno stanje: "
-"'%(status)s')"
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
+msgstr "'%(new_status)s' ni veljavno stanje za naročilo %(number)s (trenutno stanje: '%(status)s')"
 
 #: apps/order/abstract_models.py:259
 msgid "In progress"
@@ -4908,9 +4793,9 @@ msgstr "Prikaži tip"
 
 #: apps/promotions/models.py:152
 msgid ""
-"This can be used to have different types of HTML blocks (eg different widths)"
-msgstr ""
-"To lahko uporabite, da imate več različnih blokov HTML (npr. različne širine)"
+"This can be used to have different types of HTML blocks (eg different "
+"widths)"
+msgstr "To lahko uporabite, da imate več različnih blokov HTML (npr. različne širine)"
 
 #: apps/promotions/models.py:159 apps/promotions/models.py:160
 msgid "Raw HTML"
@@ -4928,9 +4813,7 @@ msgstr "Promocija se poveže sem"
 msgid ""
 "Choose the Image content blocks that this block will use. (You may need to "
 "create some first)."
-msgstr ""
-"Izberite slikovne bloke vsebine, ki jih uporablja ta blok. (Lahko da boste "
-"najprej morali ustvariti kakšnega)."
+msgstr "Izberite slikovne bloke vsebine, ki jih uporablja ta blok. (Lahko da boste najprej morali ustvariti kakšnega)."
 
 #: apps/promotions/models.py:214
 msgid "Multi Image"
@@ -5181,26 +5064,20 @@ msgstr "Defninirati morate nekaj načinov dostave"
 
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
-#, fuzzy
-#| msgid "Number of orders"
 msgid "Number of vouchers"
-msgstr "Število naročil"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:37
 msgid "Length of Code"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:52
-#, fuzzy
-#| msgid "Voucher"
 msgid "VoucherSet"
-msgstr "Kupon"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:53
-#, fuzzy
-#| msgid "Vouchers"
 msgid "VoucherSets"
-msgstr "Kuponi"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:126
 msgid ""
@@ -5304,9 +5181,7 @@ msgstr "Zasebno - le lastnik lahko vidi seznam želja"
 msgid ""
 "Shared - Only the owner and people with access to the obfuscated link can "
 "see the wish list"
-msgstr ""
-"Deljeno - Le lastnik in ljudje z dostopom do obljubljenega naslova lahko "
-"vidijo seznam želja"
+msgstr "Deljeno - Le lastnik in ljudje z dostopom do obljubljenega naslova lahko vidijo seznam želja"
 
 #: apps/wishlists/abstract_models.py:43
 msgid "Public - Everybody can see the wish list"
@@ -5388,10 +5263,8 @@ msgid "Stock alert requests"
 msgstr "Prošnja opomnika zaloge"
 
 #: defaults.py:179
-#, fuzzy
-#| msgid "Voucher details"
 msgid "Voucher Sets"
-msgstr "Podrobnosti kupona"
+msgstr ""
 
 #: defaults.py:186
 msgid "Content"
@@ -5467,9 +5340,7 @@ msgstr "To ni veljavna oblika lokalne telefonske številke za %s."
 
 #: forms/mixins.py:100
 msgid "This is not a valid local or international phone format."
-msgstr ""
-"To ni veljavna oblika tako lokalne kot tudi ne mednarodne telefonske "
-"številke."
+msgstr "To ni veljavna oblika tako lokalne kot tudi ne mednarodne telefonske številke."
 
 #: management/commands/oscar_send_alerts.py:16
 msgid "Check for products that are back in stock and send out alerts"
@@ -5503,17 +5374,13 @@ msgstr "Napaka strežnika!"
 msgid ""
 "We're sorry but something went terribly wrong and we've been unable to "
 "generate the page you requested."
-msgstr ""
-"Iskreno nam je žal, ampak zgodilo se je nekaj zelo napačnega, zatorej nismo "
-"uspeli izpisati željene strani."
+msgstr "Iskreno nam je žal, ampak zgodilo se je nekaj zelo napačnega, zatorej nismo uspeli izpisati željene strani."
 
 #: templates/oscar/500.html:14
 msgid ""
 "This incident has been logged and will be addressed by an engineer as soon "
 "as possible."
-msgstr ""
-"Ta incident je zapisan in bo naslovljen na tehnika kolikor hitro bo to "
-"mogoče."
+msgstr "Ta incident je zapisan in bo naslovljen na tehnika kolikor hitro bo to mogoče."
 
 #: templates/oscar/basket/basket.html:12
 #: templates/oscar/catalogue/browse.html:17
@@ -5547,10 +5414,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> je dodan v košarico.\n"
-" "
+msgstr "\n<strong>%(title)s</strong> je dodan v košarico.\n "
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5559,28 +5423,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(quantity)s</strong> kopij <strong>%(title)s</strong>\n"
-"je bilo dodanih v košarico"
+msgstr "\n<strong>%(quantity)s</strong> kopij <strong>%(title)s</strong>\nje bilo dodanih v košarico"
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> je prestavljen nazaj v košarico.\n"
+msgstr "\n<strong>%(title)s</strong> je prestavljen nazaj v košarico.\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> je shranjen za kasneje\n"
+msgstr "\n<strong>%(title)s</strong> je shranjen za kasneje\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5593,10 +5450,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
-"\n"
-"         Vrednost vaše košarice je trenutno <strong>%(total)s</strong>\n"
-"         "
+msgstr "\n         Vrednost vaše košarice je trenutno <strong>%(total)s</strong>\n         "
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5614,10 +5468,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Vaša košarica trenutno ustreza pogojem za ponudbo\n"
-"<strong>%(name)s</strong>.\n"
+msgstr "\nVaša košarica trenutno ustreza pogojem za ponudbo\n<strong>%(name)s</strong>.\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5625,10 +5476,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Vaša košarica ne ustreza več pogojem za ponudbo\n"
-"<strong>%(name)s</strong>.\n"
+msgstr "\nVaša košarica ne ustreza več pogojem za ponudbo\n<strong>%(name)s</strong>.\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5642,14 +5490,9 @@ msgstr "Zamujate posebne ponudbe!"
 #, python-format
 msgid ""
 "\n"
-"                <div class=\"warning\">%(message)s to qualify for the <a "
-"href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div class=\"warning\">%(message)s ustreza posebni ponudbi <a href=\"%(url)s"
-"\">%(offer_name)s</a></div>\n"
-" "
+msgstr "\n<div class=\"warning\">%(message)s ustreza posebni ponudbi <a href=\"%(url)s\">%(offer_name)s</a></div>\n "
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5927,34 +5770,16 @@ msgstr "Izboljšajte z"
 #, python-format
 msgid ""
 "\n"
-"                    <strong>%(num_results)s</strong> result - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> result - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgid_plural ""
 "\n"
-"                    <strong>%(num_results)s</strong> results - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultat - prikaz od <strong>%(start)s</"
-"strong> do <strong>%(end)s</strong>.\n"
-" "
-msgstr[1] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultata - prikaz od <strong>%(start)s</"
-"strong> do <strong>%(end)s</strong>.\n"
-" "
-msgstr[2] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultati - prikaz od  <strong>%(start)s</"
-"strong> do <strong>%(end)s</strong>.\n"
-" "
-msgstr[3] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultatov - prikaz od <strong>%(start)s</"
-"strong> do <strong>%(end)s</strong>.\n"
-" "
+msgstr[0] "\n<strong>%(num_results)s</strong> rezultat - prikaz od <strong>%(start)s</strong> do <strong>%(end)s</strong>.\n "
+msgstr[1] "\n<strong>%(num_results)s</strong> rezultata - prikaz od <strong>%(start)s</strong> do <strong>%(end)s</strong>.\n "
+msgstr[2] "\n<strong>%(num_results)s</strong> rezultati - prikaz od  <strong>%(start)s</strong> do <strong>%(end)s</strong>.\n "
+msgstr[3] "\n<strong>%(num_results)s</strong> rezultatov - prikaz od <strong>%(start)s</strong> do <strong>%(end)s</strong>.\n "
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5966,22 +5791,10 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultat.\n"
-" "
-msgstr[1] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultata.\n"
-" "
-msgstr[2] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultati.\n"
-" "
-msgstr[3] ""
-"\n"
-"<strong>%(num_results)s</strong> rezultatov.\n"
-" "
+msgstr[0] "\n<strong>%(num_results)s</strong> rezultat.\n "
+msgstr[1] "\n<strong>%(num_results)s</strong> rezultata.\n "
+msgstr[2] "\n<strong>%(num_results)s</strong> rezultati.\n "
+msgstr[3] "\n<strong>%(num_results)s</strong> rezultatov.\n "
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5995,10 +5808,8 @@ msgid "No products found."
 msgstr "Ni najdenih izdelkov."
 
 #: templates/oscar/catalogue/category.html:16
-#, fuzzy
-#| msgid "Edit category"
 msgid "Edit this category"
-msgstr "Uredi kategorijo"
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -6043,14 +5854,9 @@ msgstr "Mnenja strank"
 #, python-format
 msgid ""
 "This product does not have any reviews yet -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">be the "
-"first to write one</a>.\n"
+"                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"Ta izdelek nima še nobenega mnenja -\n"
-"<a href=\"%(add_review_url)s#addreview\">bodite prvi, ki ga boste napisali</"
-"a>.\n"
-" "
+msgstr "Ta izdelek nima še nobenega mnenja -\n<a href=\"%(add_review_url)s#addreview\">bodite prvi, ki ga boste napisali</a>.\n "
 
 #: templates/oscar/catalogue/detail.html:164
 msgid "This product does not have any reviews yet"
@@ -6106,10 +5912,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
-"\n"
-"Dodaj v seznam želja '%(name)s'\n"
-" "
+msgstr "\nDodaj v seznam želja '%(name)s'\n "
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -6119,14 +5922,9 @@ msgstr "Ustvari nov seznam želja"
 #, python-format
 msgid ""
 "\n"
-"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s"
-"\">'%(name)s'</a> wishlist.</span>\n"
+"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">Izdelek je v seznamu želja <a href=\"%(url)s"
-"\">'%(name)s'</a></span>\n"
-" "
+msgstr "\n<span class=\"pull-left\">Izdelek je v seznamu želja <a href=\"%(url)s\">'%(name)s'</a></span>\n "
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -6146,22 +5944,15 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"Pregledali ste %(review_date)s\n"
-" "
+msgstr "\nPregledali ste %(review_date)s\n "
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
 msgid ""
 "\n"
-"                    Reviewed by <strong>%(name)s</strong> on "
-"%(review_date)s\n"
+"                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"Pregledal <strong>%(name)s</strong> dne %(review_date)s\n"
-" "
+msgstr "\nPregledal <strong>%(name)s</strong> dne %(review_date)s\n "
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -6189,34 +5980,16 @@ msgstr "Ne"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer found this useful\n"
 "            "
 msgid_plural ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(num_up_votes)s</strong> od %(num_votes)s stranke je to označilo "
-"kot uporabno\n"
-"  "
-msgstr[1] ""
-"\n"
-"<strong>%(num_up_votes)s</strong> od %(num_votes)s strank je to označilo kot "
-"uporabno\n"
-" "
-msgstr[2] ""
-"\n"
-"<strong>%(num_up_votes)s</strong> od %(num_votes)sstrank je to označilo kot "
-"uporabno\n"
-" "
-msgstr[3] ""
-"\n"
-"<strong>%(num_up_votes)s</strong> od %(num_votes)s strank je to označilo kot "
-"uporabno\n"
-" "
+msgstr[0] "\n<strong>%(num_up_votes)s</strong> od %(num_votes)s stranke je to označilo kot uporabno\n  "
+msgstr[1] "\n<strong>%(num_up_votes)s</strong> od %(num_votes)s strank je to označilo kot uporabno\n "
+msgstr[2] "\n<strong>%(num_up_votes)s</strong> od %(num_votes)sstrank je to označilo kot uporabno\n "
+msgstr[3] "\n<strong>%(num_up_votes)s</strong> od %(num_votes)s strank je to označilo kot uporabno\n "
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -6236,22 +6009,10 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
-"\n"
-"%(num_reviews)s mnenje strank\n"
-" "
-msgstr[1] ""
-"\n"
-"%(num_reviews)s mnenji strank\n"
-"  "
-msgstr[2] ""
-"\n"
-"%(num_reviews)s mnenja strank\n"
-" "
-msgstr[3] ""
-"\n"
-"%(num_reviews)s mnenj strank.\n"
-"  "
+msgstr[0] "\n%(num_reviews)s mnenje strank\n "
+msgstr[1] "\n%(num_reviews)s mnenji strank\n  "
+msgstr[2] "\n%(num_reviews)s mnenja strank\n "
+msgstr[3] "\n%(num_reviews)s mnenj strank.\n  "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:79
@@ -6399,9 +6160,7 @@ msgstr "Vnesite podrobnosti plačila"
 msgid ""
 "This page needs implementing within your project.  You may want to use one "
 "of Oscar's payment gateway libraries:"
-msgstr ""
-"Ta stran potrebuje implementacijo znotraj projekta. Lahko uporabite eno od "
-"sledečih knjižnic za plailo: "
+msgstr "Ta stran potrebuje implementacijo znotraj projekta. Lahko uporabite eno od sledečih knjižnic za plailo: "
 
 #: templates/oscar/checkout/preview.html:5
 msgid "Order preview"
@@ -6486,16 +6245,10 @@ msgstr "vrni se v košarico"
 #, python-format
 msgid ""
 "\n"
-"                                This includes a discount of <strong>"
-"%(amount)s</strong> as\n"
-"                                your basket qualifies for the <strong>"
-"%(name)s</strong> offer.\n"
+"                                This includes a discount of <strong>%(amount)s</strong> as\n"
+"                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
-msgstr ""
-"\n"
-"To vključuje popust v vrednosti <strong>%(amount)s</strong>, saj \n"
-"vaša košarica ustreza ponudbi <strong>%(name)s</strong>.\n"
-" "
+msgstr "\nTo vključuje popust v vrednosti <strong>%(amount)s</strong>, saj \nvaša košarica ustreza ponudbi <strong>%(name)s</strong>.\n "
 
 #: templates/oscar/checkout/shipping_methods.html:58
 msgid "Select option"
@@ -6508,33 +6261,22 @@ msgid ""
 "\n"
 "        Order %(number)s: confirmation\n"
 "    "
-msgstr ""
-"\n"
-"Naročilo %(number)s: potrditev\n"
-" "
+msgstr "\nNaročilo %(number)s: potrditev\n "
 
 #: templates/oscar/checkout/thank_you.html:25
 #, python-format
 msgid ""
 "\n"
-"        Your order has been placed and a confirmation email has been sent - "
-"your order number is\n"
+"        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
-msgstr ""
-"\n"
-"Vaše naročilo je uspešno. Potrditveno e-poštno sporočilo smo vam že poslali. "
-"Številka vašega naročila je \n"
-" <strong>%(number)s</strong>.\n"
-" "
+msgstr "\nVaše naročilo je uspešno. Potrditveno e-poštno sporočilo smo vam že poslali. Številka vašega naročila je \n <strong>%(number)s</strong>.\n "
 
 #: templates/oscar/checkout/thank_you.html:29
 msgid ""
 "Please make a note of this reference or print this page and quote it in any "
 "communication with us regarding your order."
-msgstr ""
-"Prosimo, da si zapomnite referenco ali izpišete stran. Pri komunikaciji v "
-"zvezi z naročilom vas naprošamo, da jo zapišete zraven."
+msgstr "Prosimo, da si zapomnite referenco ali izpišete stran. Pri komunikaciji v zvezi z naročilom vas naprošamo, da jo zapišete zraven."
 
 #: templates/oscar/checkout/thank_you.html:62
 msgid "No shipping address required."
@@ -6544,13 +6286,9 @@ msgstr "Naslov dostave ni potreben."
 #, python-format
 msgid ""
 "\n"
-"                                Allocation of %(amount)s from type %(type)s "
-"(reference: %(reference)s)\n"
+"                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"Alokacija %(amount)s iz tipa %(type)s (referenca: %(reference)s)\n"
-" "
+msgstr "\nAlokacija %(amount)s iz tipa %(type)s (referenca: %(reference)s)\n "
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6558,10 +6296,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"Alokacija %(amount)s iz tipa %(type)s\n"
-" "
+msgstr "\nAlokacija %(amount)s iz tipa %(type)s\n "
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
@@ -6577,10 +6312,7 @@ msgid ""
 "\n"
 "                            Estimated dispatch: <strong>%(date)s</strong>\n"
 "                        "
-msgstr ""
-"\n"
-"Predviden datum odpreme: <strong>%(date)s</strong>\n"
-" "
+msgstr "\nPredviden datum odpreme: <strong>%(date)s</strong>\n "
 
 #: templates/oscar/checkout/thank_you.html:227
 msgid "Shipping charge (before discounts)"
@@ -6741,17 +6473,14 @@ msgstr "Prekliči"
 msgid ""
 "\n"
 "<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a> je nazaj na zalogi\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a> je nazaj na zalogi\n"
 
 #: templates/oscar/customer/alerts/message_subject.html:2
-#, fuzzy, python-format
-#| msgid "%(title|safe)s is back in stock"
+#, python-format
 msgid ""
 "\n"
 "%(title)s is back in stock\n"
-msgstr "%(title|safe)s je nazaj na zalogi"
+msgstr ""
 
 #: templates/oscar/customer/anon_order.html:8
 #: templates/oscar/dashboard/orders/order_detail.html:24
@@ -6826,33 +6555,23 @@ msgid "The %(name)s team"
 msgstr "Ekipa %(name)s"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "    You're receiving this email because your email address has been "
-#| "changed to <strong>%(email)s</strong>.\n"
-#| "    "
+#, python-format
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "<strong>%(email)s</strong>."
 msgstr ""
-"\n"
-"To sporočilo ste prejeli, ker je bil vaš e-poštni naslov spremenjen na "
-"<strong>%(email)s</strong>.\n"
-" "
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately and "
 "correct your email address:"
-msgstr ""
-"Če tega niste storili vi, vas prosimo, da si čim hitreje spremenite geslo in "
-"popravite e-poštni naslov:"
+msgstr "Če tega niste storili vi, vas prosimo, da si čim hitreje spremenite geslo in popravite e-poštni naslov:"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr "Če ste to storili vi, lahko ignorirate to sporočilo."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
@@ -6860,9 +6579,7 @@ msgstr "Če ste to storili vi, lahko ignorirate to sporočilo."
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "%(email)s."
-msgstr ""
-"To sporočilo ste prejeli, ker je bil vaš e-poštni naslov spremenjen na "
-"%(email)s."
+msgstr "To sporočilo ste prejeli, ker je bil vaš e-poštni naslov spremenjen na %(email)s."
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
 #, python-format
@@ -6876,17 +6593,11 @@ msgid "Hello,"
 msgstr "Živjo,"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:8
-#, fuzzy, python-format
-#| msgid ""
-#| "We are pleased to confirm your order %(order_number)s has been received "
-#| "and\n"
-#| "will be processed shortly."
+#, python-format
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "        will be processed shortly."
 msgstr ""
-"Veseli nas, da vas lahko obvestimo, da je vaše naročilo %(order_number)s "
-"uspešno prejeto in ga bomo v kratkem tudi obdelali."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:17
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6917,11 +6628,9 @@ msgstr "Naslov dostave:"
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
-"title=\"order status\">here</a>"
-msgstr ""
-"Ogled stanja naročila je možen s klikom <a href=\"%(status_url)s\" title="
-"\"order status\">sem</a>"
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
+msgstr "Ogled stanja naročila je možen s klikom <a href=\"%(status_url)s\" title=\"order status\">sem</a>"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -6930,12 +6639,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"Živjo,\n"
-"\n"
-"Z veseljem vam sporočamo, da je bilo vaše naročilo %(order_number)s uspešno "
-"sprejeto\n"
-"in da ga bomo v kratkem tudi obledali."
+msgstr "Živjo,\n\nZ veseljem vam sporočamo, da je bilo vaše naročilo %(order_number)s uspešno sprejeto\nin da ga bomo v kratkem tudi obledali."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6950,9 +6654,7 @@ msgstr "cena:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"Ogled stanja naročila je možen na spodnji povezavi:\n"
-"%(status_url)s"
+msgstr "Ogled stanja naročila je možen na spodnji povezavi:\n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6964,24 +6666,17 @@ msgid "Confirmation of order %(number)s"
 msgstr "Potrditev naročila %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "You're receiving this email because your password has been changed at "
-#| "%(name)s.\n"
+#, python-format
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
 msgstr ""
-"\n"
-"To sporočilo ste prejeli, ker je vaše geslo za %(name)s spremenjeno.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately:"
-msgstr ""
-"Če tega niste storili vi, vas naprošamo, da ga čim hitreje ponastavite:"
+msgstr "Če tega niste storili vi, vas naprošamo, da ga čim hitreje ponastavite:"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:11
@@ -6992,11 +6687,8 @@ msgstr "Drugače lahko sporočilo ignorirate."
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your password has been changed at "
-"%(name)s.\n"
-msgstr ""
-"\n"
-"To sporočilo ste prejeli, ker je vaše geslo za %(name)s spremenjeno.\n"
+"You're receiving this email because your password has been changed at %(name)s.\n"
+msgstr "\nTo sporočilo ste prejeli, ker je vaše geslo za %(name)s spremenjeno.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -7007,11 +6699,9 @@ msgstr "Vaše geslo za %(site_name)s je spremenjeno."
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(name)s."
-msgstr ""
-"To sporočilo ste prejeli, ker ste zahtevali ponastavitev gesla za uporabnika "
-"%(name)s."
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
+msgstr "To sporočilo ste prejeli, ker ste zahtevali ponastavitev gesla za uporabnika %(name)s."
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:7
@@ -7030,90 +6720,42 @@ msgid "Dear %(name)s,"
 msgstr "Spoštovani %(name)s,"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:14
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "We are happy to inform you that our product '%(product|safe)s' is back in "
-#| "stock:\n"
-#| "http://%(site)s%(path)s\n"
+#, python-format
 msgid ""
 "\n"
-"            We are happy to inform you that our product '%(title)s' is back "
-"in stock:\n"
+"            We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "            http://%(site)s%(path)s\n"
 "        "
 msgstr ""
-"\n"
-"Veseli nas, da vas lahko obvestimo, da je '%(product|safe)s'  nazaj na "
-"zalogi:\n"
-"http://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:22
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "Beware that the amount of items in stock is limited. Be quick or someone "
-#| "might get there first.\n"
 msgid ""
 "\n"
-"                Beware that the amount of items in stock is limited. Be "
-"quick or someone might get there first.\n"
+"                Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 "            "
 msgstr ""
-"\n"
-"Vedite, da je število izdelkov na zalogi omejeno. Zato pohitite, da vas kdo "
-"ne prehiti.\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:29
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "With this email we have disabled your alert automatically and you will "
-#| "not\n"
-#| "receive any further email regarding this product.\n"
-#| "\n"
-#| "Thanks for your interest,\n"
-#| "The %(site_name)s Team\n"
 msgid ""
 "\n"
-"            With this email we have disabled your alert automatically and "
-"you will not\n"
+"            With this email we have disabled your alert automatically and you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
 msgstr ""
-"\n"
-"S tem e-poštnim sporočilom smo vam ukinili opozorila avtomatično. Sedaj o "
-"tem izdelku ne boste prejemali več e-poštnih sporočil.\n"
-"\n"
-"Zahvaljujemo se vam za interes,\n"
-"Ekipa %(site_name)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:2
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "We are happy to inform you that our product '%(product|safe)s' is back in "
-#| "stock:\n"
-#| "http://%(site)s%(path)s\n"
+#, python-format
 msgid ""
 "\n"
 "We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
 msgstr ""
-"\n"
-"Veseli nas, da vas lahko obvestimo, da je '%(product|safe)s'  nazaj na "
-"zalogi:\n"
-"http://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:5
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone "
-"might get there first.\n"
-msgstr ""
-"\n"
-"Vedite, da je število izdelkov na zalogi omejeno. Zato pohitite, da vas kdo "
-"ne prehiti.\n"
+"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
+msgstr "\nVedite, da je število izdelkov na zalogi omejeno. Zato pohitite, da vas kdo ne prehiti.\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
 #, python-format
@@ -7124,29 +6766,10 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"S tem e-poštnim sporočilom smo vam ukinili opozorila avtomatično. Sedaj o "
-"tem izdelku ne boste prejemali več e-poštnih sporočil.\n"
-"\n"
-"Zahvaljujemo se vam za interes,\n"
-"Ekipa %(site_name)s\n"
+msgstr "\nS tem e-poštnim sporočilom smo vam ukinili opozorila avtomatično. Sedaj o tem izdelku ne boste prejemali več e-poštnih sporočil.\n\nZahvaljujemo se vam za interes,\nEkipa %(site_name)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_body.txt:1
-#, fuzzy, python-format
-#| msgid ""
-#| "Hello,\n"
-#| "\n"
-#| "Somebody (hopefully you) has requested an email alert when\n"
-#| "'%(product|safe)s' is back in stock.  Please click the following link\n"
-#| "to confirm:\n"
-#| "http://%(domain)s%(confirm_path)s\n"
-#| "\n"
-#| "You can cancel this alert at any time by clicking the following link:\n"
-#| "http://%(domain)s%(cancel_path)s\n"
-#| "\n"
-#| "Thanks for your interest,\n"
-#| "The %(site)s Team\n"
+#, python-format
 msgid ""
 "Hello,\n"
 "\n"
@@ -7161,29 +6784,15 @@ msgid ""
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
 msgstr ""
-"Živjo,\n"
-"\n"
-"Nekdo (upamo, da vi) je nastavil e-poštni opomnik, ko\n"
-"bo '%(product|safe)s' nazaj na zalogi. Prosimo vas, da pritisnete na "
-"naslednjo povezavo\n"
-"za potrditev:\n"
-"http://%(domain)s%(confirm_path)s\n"
-"\n"
-"Opomnik lahko vedno prekličete s klikom na naslednjo povezavo:\n"
-"http://%(domain)s%(cancel_path)s\n"
-"\n"
-"Hvala za vaše zanimanje,\n"
-"Ekipa %(site)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"
 msgstr "Za opomnik je potrebna potrditev"
 
 #: templates/oscar/customer/emails/commtype_product_alert_subject.txt:1
-#, fuzzy, python-format
-#| msgid "%(title|safe)s is back in stock"
+#, python-format
 msgid "%(title)s is back in stock"
-msgstr "%(title|safe)s je nazaj na zalogi"
+msgstr ""
 
 #: templates/oscar/customer/emails/commtype_registration_body.html:1
 #: templates/oscar/customer/emails/commtype_registration_body.txt:1
@@ -7389,15 +6998,10 @@ msgstr "Opozorilo"
 #: templates/oscar/customer/profile/profile_delete.html:11
 msgid ""
 "\n"
-"                This will delete all information about you from the site.  "
-"Deleting your profile cannot be\n"
+"                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"To bo odstranilo vsakršno informacijo o vas iz strani. Izbris profila je "
-"nepovraten.\n"
-" "
+msgstr "\nTo bo odstranilo vsakršno informacijo o vas iz strani. Izbris profila je nepovraten.\n "
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -7417,10 +7021,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"Ste prepričani, da želite izbrisati %(name)s?\n"
-" "
+msgstr "\nSte prepričani, da želite izbrisati %(name)s?\n "
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:18
 msgid "Remove product"
@@ -7430,14 +7031,9 @@ msgstr "Odstrani izdelek"
 #, python-format
 msgid ""
 "\n"
-"                Are you sure you want to delete %(product_name)s from wish "
-"list %(wishlist_name)s?\n"
+"                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
-"\n"
-"Ste prepričani, da želite odstraniti %(product_name)s iz seznama želja "
-"%(wishlist_name)s?\n"
-" "
+msgstr "\nSte prepričani, da želite odstraniti %(product_name)s iz seznama želja %(wishlist_name)s?\n "
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -7452,12 +7048,9 @@ msgstr "Poglej izdelek"
 #, python-format
 msgid ""
 "\n"
-"                                                            Move to "
-"'%(name)s' wish list\n"
+"                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
-"\n"
-"Premakni v seznam želja '%(name)s'?"
+msgstr "\nPremakni v seznam želja '%(name)s'?"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:100
 msgid "Update quantities"
@@ -7479,13 +7072,9 @@ msgstr "Kako naj poimenujemo vaš nov seznam želja?"
 #, python-format
 msgid ""
 "\n"
-"                    After your wishlist is created, <strong>%(title)s</"
-"strong> will be added.\n"
+"                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
-"\n"
-"Ko bo seznam želja ustvarjen, bo <strong>%(title)s</strong> dodan.\n"
-" "
+msgstr "\nKo bo seznam želja ustvarjen, bo <strong>%(title)s</strong> dodan.\n "
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -7501,49 +7090,35 @@ msgstr "Že imate kakšen seznam želja?"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:5
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:5
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create Attribute Option Group"
-msgstr "Atribut možnosti skupine"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:14
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:21
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Attribute Option Group"
-msgstr "Atribut možnosti skupine"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:31
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group?"
-msgstr "Atribut možnosti skupine"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
-#, fuzzy
-#| msgid ""
-#| "Please make sure all products are assigned to another type before "
-#| "deletion."
 msgid ""
 "Please make sure all Product Attributes are assigned to another Attribute "
 "Option Group before deletion."
 msgstr ""
-"Prosimo vas, da se pred izbrisom prepričate ali imajo vsi izdelki tega tipa "
-"dodeljen nov tip."
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group"
-msgstr "Atribut možnosti skupine"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
-#, fuzzy, python-format
-#| msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
-msgstr "Izbris tipa izdelka <strong>%(name)s</strong>. Ste prepričani?"
+#, python-format
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
 #: templates/oscar/dashboard/catalogue/product_class_form.html:34
@@ -7553,41 +7128,29 @@ msgstr "Razdelki"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:55
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:70
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Group details"
-msgstr "Atribut možnosti skupin"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:56
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:102
-#, fuzzy
-#| msgid "Attribute options"
 msgid "Attribute Options"
-msgstr "Možnosti atributa"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:6
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Groups"
-msgstr "Atribut možnosti skupin"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:20
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create new Attribute Option Group"
-msgstr "Atribut možnosti skupine"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:34
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "No Attribute Option Groups found."
-msgstr "Atribut možnosti skupin"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_row_actions.html:11
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Edit Attribute Option Group"
-msgstr "Atribut možnosti skupine"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:14
 #: templates/oscar/dashboard/catalogue/category_delete.html:19
@@ -7602,13 +7165,9 @@ msgstr "Izbriši kategorijo"
 #, python-format
 msgid ""
 "\n"
-"            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
-"p>\n"
+"            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
-msgstr ""
-"\n"
-"<p>Izbris kategorije <strong>%(name)s</strong> - ali ste prepričani?</p>\n"
-" "
+msgstr "\n<p>Izbris kategorije <strong>%(name)s</strong> - ali ste prepričani?</p>\n "
 
 #: templates/oscar/dashboard/catalogue/category_list.html:23
 msgid "Create new category"
@@ -7650,10 +7209,7 @@ msgid ""
 "\n"
 "                    Created product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Ustvarjena različica izdelka '%(name)s'.\n"
-" "
+msgstr "\nUstvarjena različica izdelka '%(name)s'.\n "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
 #, python-format
@@ -7661,10 +7217,7 @@ msgid ""
 "\n"
 "                    Created variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Ustvarjena različica '%(parent_name)s'.\n"
-" "
+msgstr "\nUstvarjena različica '%(parent_name)s'.\n "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
 #, python-format
@@ -7672,10 +7225,7 @@ msgid ""
 "\n"
 "                    Updated product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Posodobljena različica izdelka '%(name)s'.\n"
-" "
+msgstr "\nPosodobljena različica izdelka '%(name)s'.\n "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
 #, python-format
@@ -7683,10 +7233,7 @@ msgid ""
 "\n"
 "                    Updated a variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Posodobljena različica '%(parent_name)s'.\n"
-" "
+msgstr "\nPosodobljena različica '%(parent_name)s'.\n "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
 #, python-format
@@ -7694,10 +7241,7 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"Ustvarjen izdelek '%(name)s'.\n"
-" "
+msgstr "\nUstvarjen izdelek '%(name)s'.\n "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -7705,10 +7249,7 @@ msgid ""
 "\n"
 "                Updated product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"Posodobljen izdelek '%(name)s'.\n"
-" "
+msgstr "\nPosodobljen izdelek '%(name)s'.\n "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
 #: templates/oscar/dashboard/pages/messages/saved.html:10
@@ -7727,9 +7268,7 @@ msgstr "Izbrišem tip izdelkov?"
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
 msgid ""
 "Please make sure all products are assigned to another type before deletion."
-msgstr ""
-"Prosimo vas, da se pred izbrisom prepričate ali imajo vsi izdelki tega tipa "
-"dodeljen nov tip."
+msgstr "Prosimo vas, da se pred izbrisom prepričate ali imajo vsi izdelki tega tipa dodeljen nov tip."
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
 msgid "Delete product type"
@@ -7777,25 +7316,17 @@ msgstr "Ne obstaja noben tip izdelka"
 #, python-format
 msgid ""
 "\n"
-"                    Delete product variant <strong>%(title)s</strong> - are "
-"you sure?\n"
+"                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-" Izbris različice izdelka <strong>%(title)s</strong>. Ste prepričani?\n"
-" "
+msgstr "\n Izbris različice izdelka <strong>%(title)s</strong>. Ste prepričani?\n "
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:41
 #, python-format
 msgid ""
 "\n"
-"                    Delete product <strong>%(title)s</strong> - are you "
-"sure?\n"
+"                    Delete product <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-"Izbris izdelka <strong>%(title)s</strong>. Ste prepričani?\n"
-" "
+msgstr "\nIzbris izdelka <strong>%(title)s</strong>. Ste prepričani?\n "
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:49
 msgid "This will also delete the following child products:"
@@ -7833,11 +7364,7 @@ msgid ""
 "                            You are currently editing a product variant of\n"
 "                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
 "                        "
-msgstr ""
-"\n"
-"Trenutno urejate različico izdelka\n"
-"<a href=\"%(parent_url)s\">%(title)s</a>.\n"
-" "
+msgstr "\nTrenutno urejate različico izdelka\n<a href=\"%(parent_url)s\">%(title)s</a>.\n "
 
 #: templates/oscar/dashboard/catalogue/product_update.html:71
 #: templates/oscar/dashboard/catalogue/product_update.html:100
@@ -8122,10 +7649,8 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
-#, fuzzy
-#| msgid "Last login"
 msgid "Login"
-msgstr "Zadnja prijava"
+msgstr ""
 
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
@@ -8136,14 +7661,9 @@ msgstr "Ustvarite novo spodbudo"
 #, python-format
 msgid ""
 "\n"
-"        Ranges can be created and edited from within the <a href="
-"\"%(range_list_url)s\">range dashboard</a>.\n"
+"        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
 "        "
-msgstr ""
-"\n"
-"Območja lahko ustvarite in urejate na <a href=\"%(range_list_url)s"
-"\">nadrzorni plošči območij</a>.\n"
-" "
+msgstr "\nObmočja lahko ustvarite in urejate na <a href=\"%(range_list_url)s\">nadrzorni plošči območij</a>.\n "
 
 #: templates/oscar/dashboard/offers/benefit_form.html:28
 #: templates/oscar/dashboard/offers/condition_form.html:31
@@ -8181,10 +7701,7 @@ msgid ""
 "\n"
 "        %(name)s | Offers\n"
 "    "
-msgstr ""
-"\n"
-"%(name)s| Ponudbe\n"
-" "
+msgstr "\n%(name)s| Ponudbe\n "
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
@@ -8313,10 +7830,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"Naročilo %(number)s - Vrstica #%(id)s\n"
-" "
+msgstr "\nNaročilo %(number)s - Vrstica #%(id)s\n "
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -8502,13 +8016,9 @@ msgstr "Temu naročilu ne morete spremeniti stanja."
 #, python-format
 msgid ""
 "\n"
-"                                                                %(title)s "
-"(quantity %(event_qty)s/%(total_qty)s)\n"
+"                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
-"\n"
-" %(title)s (količina %(event_qty)s/%(total_qty)s)\n"
-" "
+msgstr "\n %(title)s (količina %(event_qty)s/%(total_qty)s)\n "
 
 #: templates/oscar/dashboard/orders/order_detail.html:371
 msgid "No shipping events."
@@ -8694,10 +8204,7 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
-"\n"
-" Stran <strong>%(title)s</strong> je shranjena!\n"
-" "
+msgstr "\n Stran <strong>%(title)s</strong> je shranjena!\n "
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
@@ -8723,10 +8230,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"Stran %(page_num)s od %(total_pages)s\n"
-" "
+msgstr "\nStran %(page_num)s od %(total_pages)s\n "
 
 #: templates/oscar/dashboard/partials/pagination.html:16
 #: templates/oscar/partials/pagination.html:16
@@ -8739,9 +8243,7 @@ msgstr "naprej"
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"Uporabnik %(user_name)s je odstranjen od %(partner_name)s.\n"
+msgstr "\nUporabnik %(user_name)s je odstranjen od %(partner_name)s.\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8820,23 +8322,17 @@ msgstr "Posodobi podrobnosti"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
 msgid ""
-"A partial email address can be entered (eg '@example.com') to match multiple "
-"addresses."
-msgstr ""
-"Lahko vnesete delni e-poštni naslov (npr. @primer.si), da ustrezate več e-"
-"poštnim naslovom."
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
+msgstr "Lahko vnesete delni e-poštni naslov (npr. @primer.si), da ustrezate več e-poštnim naslovom."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
 #, python-format
 msgid ""
 "\n"
-"                                                User is already linked to "
-"%(name)s.\n"
+"                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"Uporabnik je že povezan z %(name)s.\n"
-" "
+msgstr "\nUporabnik je že povezan z %(name)s.\n "
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:71
 msgid "Linking..."
@@ -8866,9 +8362,7 @@ msgstr "Izbriši blok vsebine"
 msgid ""
 "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are "
 "you sure?"
-msgstr ""
-"Izbris %(object.type)s bloka vsebine <strong>%(object.name)s</strong>. Ste "
-"prepričani?"
+msgstr "Izbris %(object.type)s bloka vsebine <strong>%(object.name)s</strong>. Ste prepričani?"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:14
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:19
@@ -8882,12 +8376,10 @@ msgstr "Izbriši promocijo"
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:28
 #, python-format
 msgid ""
-"Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
-"strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
-msgstr ""
-"Odstranitev %(object.content_object.type)s bloka vsebine <strong>"
-"%(object.name)s</strong> iz strani <strong>%(object.page_url)s</strong>. Ste "
-"prepričani?"
+"Remove %(object.content_object.type)s content block "
+"<strong>%(object.name)s</strong> from page "
+"<strong>%(object.page_url)s</strong> - are you sure?"
+msgstr "Odstranitev %(object.content_object.type)s bloka vsebine <strong>%(object.name)s</strong> iz strani <strong>%(object.page_url)s</strong>. Ste prepričani?"
 
 #: templates/oscar/dashboard/promotions/form.html:26
 msgid "Content block"
@@ -8999,9 +8491,7 @@ msgstr "Število uporab"
 msgid ""
 "\n"
 "    <p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr ""
-"\n"
-"<p>Datoteka <strong>%(filename)s</strong> je procesirana</p>\n"
+msgstr "\n<p>Datoteka <strong>%(filename)s</strong> je procesirana</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:9
 #, python-format
@@ -9013,84 +8503,40 @@ msgid_plural ""
 "\n"
 "                <strong>%(n)s</strong> products added\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(n)s</strong> izdelek je dodan\n"
-" "
-msgstr[1] ""
-"\n"
-"<strong>%(n)s</strong> izdelka sta dodana\n"
-" "
-msgstr[2] ""
-"\n"
-"<strong>%(n)s</strong> izdelki so dodani\n"
-" "
-msgstr[3] ""
-"\n"
-"<strong>%(n)s</strong> izdelkov je dodanih\n"
-" "
+msgstr[0] "\n<strong>%(n)s</strong> izdelek je dodan\n "
+msgstr[1] "\n<strong>%(n)s</strong> izdelka sta dodana\n "
+msgstr[2] "\n<strong>%(n)s</strong> izdelki so dodani\n "
+msgstr[3] "\n<strong>%(n)s</strong> izdelkov je dodanih\n "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> duplicate product in the "
-"file\n"
+"                There was <strong>%(n)s</strong> duplicate product in the file\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> duplicate products in the "
-"file\n"
+"                There were <strong>%(n)s</strong> duplicate products in the file\n"
 "            "
-msgstr[0] ""
-"\n"
-"V datoteki je <strong>%(n)s</strong> izdelek podvojen\n"
-" "
-msgstr[1] ""
-"\n"
-"V datoteki sta <strong>%(n)s</strong> izdelka podvojena\n"
-" "
-msgstr[2] ""
-"\n"
-"V datoteki so <strong>%(n)s</strong> izdelki podvojeni\n"
-" "
-msgstr[3] ""
-"\n"
-"V datoteki je <strong>%(n)s</strong> izdelkov podvojenih\n"
-" "
+msgstr[0] "\nV datoteki je <strong>%(n)s</strong> izdelek podvojen\n "
+msgstr[1] "\nV datoteki sta <strong>%(n)s</strong> izdelka podvojena\n "
+msgstr[2] "\nV datoteki so <strong>%(n)s</strong> izdelki podvojeni\n "
+msgstr[3] "\nV datoteki je <strong>%(n)s</strong> izdelkov podvojenih\n "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> product in the file that "
-"couldn't be found in the catalogue\n"
+"                There was <strong>%(n)s</strong> product in the file that couldn't be found in the catalogue\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> products in the file that "
-"couldn't be found in the catalogue\n"
+"                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
 "            "
-msgstr[0] ""
-"\n"
-"V datoteki je bil <strong>%(n)s</strong> izdelek, ki ga ni bilo moč najti v "
-"katalogu\n"
-" "
-msgstr[1] ""
-"\n"
-" V datoteki sta bila <strong>%(n)s</strong> izdelka, ki ju ni bilo moč najti "
-"v katalogu\n"
-" "
-msgstr[2] ""
-"\n"
-"V datoteki so bili <strong>%(n)s</strong> izdelki, ki jih ni bilo moč najti "
-"v katalogu.\n"
-" "
-msgstr[3] ""
-"\n"
-"V datoteki je bilo <strong>%(n)s</strong> izdelkov, ki jih ni bilo moč najti "
-"v katalogu\n"
-" "
+msgstr[0] "\nV datoteki je bil <strong>%(n)s</strong> izdelek, ki ga ni bilo moč najti v katalogu\n "
+msgstr[1] "\n V datoteki sta bila <strong>%(n)s</strong> izdelka, ki ju ni bilo moč najti v katalogu\n "
+msgstr[2] "\nV datoteki so bili <strong>%(n)s</strong> izdelki, ki jih ni bilo moč najti v katalogu.\n "
+msgstr[3] "\nV datoteki je bilo <strong>%(n)s</strong> izdelkov, ki jih ni bilo moč najti v katalogu\n "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -9105,9 +8551,7 @@ msgstr "Vrni se na domačo stran območij"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p>Območje <strong>%(name)s</strong> je shranjeno</p>\n"
+msgstr "\n<p>Območje <strong>%(name)s</strong> je shranjeno</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -9156,9 +8600,7 @@ msgstr "izdelki"
 msgid ""
 "This range contains all products. To add products manually, please unselect "
 "the 'Includes All Products' option on the edit range page."
-msgstr ""
-"To območje vsebuje vse izdelke. Za ročno dodajanje ne izberite 'Vključi vse "
-"izdelke' na strani za urejanje območij."
+msgstr "To območje vsebuje vse izdelke. Za ročno dodajanje ne izberite 'Vključi vse izdelke' na strani za urejanje območij."
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
 msgid "Add products"
@@ -9288,10 +8730,9 @@ msgid "Review #%(review.id)s"
 msgstr "Mnenje #%(review.id)s"
 
 #: templates/oscar/dashboard/reviews/review_update.html:24
-#, fuzzy, python-format
-#| msgid "Review #%(review.id)s"
+#, python-format
 msgid "Review #%(review_id)s"
-msgstr "Mnenje #%(review.id)s"
+msgstr ""
 
 #: templates/oscar/dashboard/reviews/review_update.html:31
 msgid "Review information"
@@ -9301,22 +8742,15 @@ msgstr "Podatki mnenja"
 #, python-format
 msgid ""
 "\n"
-"    <p>A weight band has been added to the <strong>%(name)s</strong> "
-"shipping method.</p>\n"
-msgstr ""
-"\n"
-"<p>Masa pakiranja je dodana k <strong>%(name)s</strong> načinu dostave</p>\n"
+"    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
+msgstr "\n<p>Masa pakiranja je dodana k <strong>%(name)s</strong> načinu dostave</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
 #, python-format
 msgid ""
 "\n"
-"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping "
-"method \n"
-msgstr ""
-"\n"
-"<p>Masa pakiranja je bila odstranjena od <strong>%(name)s</strong> načina "
-"dostave\n"
+"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
+msgstr "\n<p>Masa pakiranja je bila odstranjena od <strong>%(name)s</strong> načina dostave\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_updated.html:3
 msgid "Weight band updated"
@@ -9327,27 +8761,21 @@ msgstr "Masa pakiranja je posodobljena"
 msgid ""
 "\n"
 "<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
-msgstr ""
-"\n"
-"<p>Način dostave <strong>%(name)s</strong> je ustvarjen.</p>\n"
+msgstr "\n<p>Način dostave <strong>%(name)s</strong> je ustvarjen.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
-msgstr ""
-"\n"
-"<p>Način dostave <strong>%(name)s</strong> je izbrisan.</p>\n"
+msgstr "\n<p>Način dostave <strong>%(name)s</strong> je izbrisan.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_updated.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
-msgstr ""
-"\n"
-"<p>Način dostave <strong>%(name)s</strong> je posodobljen.</p>\n"
+msgstr "\n<p>Način dostave <strong>%(name)s</strong> je posodobljen.</p>\n"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:6
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:22
@@ -9646,51 +9074,37 @@ msgid "No vouchers found."
 msgstr "Ni najdenih kuponov."
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:25
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Update voucher set"
-msgstr "Ustvari kupon"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:26
-#, fuzzy
-#| msgid "Download"
 msgid "Download CSV"
-msgstr "Prenesi"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:28
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:37
-#, fuzzy
-#| msgid "Vouchers"
 msgid "Voucher set"
-msgstr "Kuponi"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:46
-#, fuzzy
-#| msgid "Start date"
 msgid "Start"
-msgstr "Datum začetka"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:50
 msgid "End"
 msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:62
-#, fuzzy
-#| msgid "Create"
 msgid "Created"
-msgstr "Ustvari"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
-#, fuzzy
-#| msgid "Create new voucher"
 msgid "Create new voucher set"
-msgstr "Ustvari nov kupon"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
-#, fuzzy
-#| msgid "Number"
 msgid "Num"
-msgstr "Številka"
+msgstr ""
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
@@ -9707,16 +9121,13 @@ msgid "Add another %(model)s"
 msgstr ""
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:14
-#, fuzzy
-#| msgid "Address"
 msgid "Add"
-msgstr "Naslov"
+msgstr ""
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:18
-#, fuzzy, python-format
-#| msgid "Delete alert #%(id)s?"
+#, python-format
 msgid "Delete selected %(model)s"
-msgstr "Izbrišem opozorilo #%(id)s?"
+msgstr ""
 
 #: templates/oscar/error.html:9
 msgid "Sorry!"
@@ -9778,10 +9189,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"Skupaj:%(total)s\n"
-" "
+msgstr "\nSkupaj:%(total)s\n "
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -9827,9 +9235,7 @@ msgstr "Vnesite novo geslo"
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr ""
-"Prosimo vas, da vnesete novo geslo dvakrat, da lahko preprečimo morebitno "
-"zatipkanje."
+msgstr "Prosimo vas, da vnesete novo geslo dvakrat, da lahko preprečimo morebitno zatipkanje."
 
 #: templates/oscar/registration/password_reset_confirm.html:27
 msgid "Change my password"
@@ -9843,10 +9249,7 @@ msgstr "Ponastavitev gesla je neuspešna"
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr ""
-"Naslov za ponastavitev gesla je neveljaven. To se je najverjetneje "
-"pripetilo, ker ste ga že uporabilo. Prosimo vas, da ponovno zahtevate "
-"ponastavitev gesla."
+msgstr "Naslov za ponastavitev gesla je neveljaven. To se je najverjetneje pripetilo, ker ste ga že uporabilo. Prosimo vas, da ponovno zahtevate ponastavitev gesla."
 
 #: templates/oscar/registration/password_reset_done.html:4
 msgid "Password reset email sent"
@@ -9860,36 +9263,23 @@ msgstr "E-poštno sporočilo je poslano"
 #: templates/oscar/registration/password_reset_done.html:22
 msgid ""
 "\n"
-"        We've e-mailed you instructions for resetting your password. You "
-"should be receiving it shortly.\n"
+"        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
-"\n"
-"Na vaš e-poštni naslov smo vam poslali navodila za ponastavitev gesla. "
-"Prejeli ga boste v kratkem.\n"
-" "
+msgstr "\nNa vaš e-poštni naslov smo vam poslali navodila za ponastavitev gesla. Prejeli ga boste v kratkem.\n "
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
 "\n"
-"        If you don't receive an email, please make sure you've entered the "
-"address you registered with, and check\n"
+"        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
-"\n"
-"Če sporočila niste prejeli, se prepričajte, da ste vnesli prav e-poštni "
-"naslov (s katerim ste se registrirali)\n"
-" in preverite mapo z vsiljeno pošto.\n"
-" "
+msgstr "\nČe sporočila niste prejeli, se prepričajte, da ste vnesli prav e-poštni naslov (s katerim ste se registrirali)\n in preverite mapo z vsiljeno pošto.\n "
 
 #: templates/oscar/registration/password_reset_form.html:21
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
-"Pozabljeno geslo? Vnesite vaš e-poštni naslov in poslali vam bomo navodila "
-"za ponastavitev."
+msgstr "Pozabljeno geslo? Vnesite vaš e-poštni naslov in poslali vam bomo navodila za ponastavitev."
 
 #: templates/oscar/registration/password_reset_form.html:24
 msgid "Send reset email"
@@ -9905,34 +9295,18 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"Izdelki, ki ustrezajo \"%(q)s\"\n"
-" "
+msgstr "\nIzdelki, ki ustrezajo \"%(q)s\"\n "
 
 #: templates/oscar/search/results.html:53
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>%(num_results)s</strong> results, showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr ""
-"\n"
-"Najdenih <strong>%(num_results)s</strong> rezultatov, prikaz od <strong>"
-"%(start)s</strong> do <strong>%(end)s</strong>.\n"
-" "
+msgstr "\nNajdenih <strong>%(num_results)s</strong> rezultatov, prikaz od <strong>%(start)s</strong> do <strong>%(end)s</strong>.\n "
 
 #: templates/oscar/search/results.html:57
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                    Found <strong>%(num_results)s</strong> result.\n"
-#| "                "
-#| msgid_plural ""
-#| "\n"
-#| "                    Found <strong>%(num_results)s</strong> results. \n"
-#| "                "
+#, python-format
 msgid ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> result.\n"
@@ -9942,21 +9316,9 @@ msgid_plural ""
 "                    Found <strong>%(num_results)s</strong> results.\n"
 "                "
 msgstr[0] ""
-"\n"
-"Najden <strong>%(num_results)s</strong> rezultat.\n"
-" "
 msgstr[1] ""
-"\n"
-"Najdena <strong>%(num_results)s</strong> rezultata.\n"
-" "
 msgstr[2] ""
-"\n"
-"Najdeni <strong>%(num_results)s</strong> rezultati.\n"
-" "
 msgstr[3] ""
-"\n"
-"Najdenih <strong>%(num_results)s</strong> rezultatov.\n"
-" "
 
 #: templates/oscar/search/results.html:68
 msgid "Found <strong>0</strong> results."
@@ -9966,14 +9328,9 @@ msgstr "Najdenih <strong>0</strong> rezultatov."
 #, python-format
 msgid ""
 "\n"
-"                        Did you mean <a href=\"%(search_url)s?q="
-"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
+"                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"Ste mislili <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</"
-"a>?\n"
-" "
+msgstr "\nSte mislili <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n "
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9983,32 +9340,3 @@ msgstr "Nazaj na rezultate iskanja"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Izbrati morate nekaj %ss"
-
-#~ msgid "Weight-based shipping"
-#~ msgstr "Dostava po masi"
-
-#~ msgid "The phone number entered is not valid."
-#~ msgstr "Vnešena telefonska številka ni veljavna"
-
-#~ msgid "Please choose a less common password"
-#~ msgstr "Prosimo, da izberete manj pogosto geslo"
-
-#~ msgid "Build"
-#~ msgstr "Zgradi"
-
-#~ msgid "Version:"
-#~ msgstr "Verzija:"
-
-#~ msgid ""
-#~ "\n"
-#~ "    You're receiving this e-mail because your password has been changed "
-#~ "at %(name)s.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "To sporočilo ste prejeli, ker je bilo vaše geslo za %(name)s "
-#~ "spremenjeno.\n"
-#~ " "
-
-#~ msgid "You must log in to access this page"
-#~ msgstr "Za dostop do te strani morate biti prijavljeni"

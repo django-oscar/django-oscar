@@ -5,12 +5,15 @@
 # Translators:
 # Ali Nikneshan <ali@nikneshan.com>, 2013
 # ali ranjbar <ali.ranjbar.sharif@gmail.com>, 2015
+# amir rad <amir.radan@gmail.com>, 2018
 # amirtds <amirtds@gmail.com>, 2014
 # amirtds <amirtds@gmail.com>, 2014
 # ashkanBIG <ashkanxoxoxo@gmail.com>, 2015
 # ashkanBIG <ashkanxoxoxo@gmail.com>, 2015
 # Behnam Mazaheri <mazaheri@gmail.com>, 2015
 # Danial Keshvary <d.keshvary@gmail.com>, 2016
+# eneepo <eneepo@gmail.com>, 2018
+# eneepo <eneepo@gmail.com>, 2018
 # Foad Nosrati Habibi <foad.nh@gmail.com>, 2015
 # Hasan Hejdari Nasab <hsn6@openmailbox.org>, 2016
 # Hasan Hejdari Nasab <hsn6@openmailbox.org>, 2016
@@ -27,15 +30,14 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-03-15 12:07+0000\n"
-"Last-Translator: pouya <poooooyabarzegar@gmail.com>\n"
-"Language-Team: Persian (http://www.transifex.com/codeinthehole/django-oscar/"
-"language/fa/)\n"
-"Language: fa\n"
+"PO-Revision-Date: 2018-05-16 11:47+0000\n"
+"Last-Translator: amir rad <amir.radan@gmail.com>\n"
+"Language-Team: Persian (http://www.transifex.com/codeinthehole/django-oscar/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: apps/address/abstract_models.py:28
 msgid "Mr"
@@ -226,16 +228,12 @@ msgid "Default billing address?"
 msgstr "نشانی پرداخت پیش‌فرض"
 
 #: apps/address/abstract_models.py:533
-#, fuzzy
-#| msgid "Set as default shipping address"
 msgid "Number of Orders as Shipping Address"
-msgstr "قرار دادن به عنوان آدرس حمل و نقل به طور پیش فرض"
+msgstr "تعداد سفارشات بر اساس آدرس ارسال"
 
 #: apps/address/abstract_models.py:537
-#, fuzzy
-#| msgid "Number of Orders"
 msgid "Number of Orders as Billing Address"
-msgstr "تعداد سفارش‌ها"
+msgstr "تعداد سفارشات بر اساس آدرس پرداخت صورتحساب"
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -293,9 +291,10 @@ msgstr "نشانی‌های شریک"
 #: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:86
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:625
 #: apps/catalogue/abstract_models.py:234 apps/catalogue/abstract_models.py:363
-#: apps/catalogue/abstract_models.py:931 apps/catalogue/abstract_models.py:1188
-#: apps/order/abstract_models.py:469 apps/partner/abstract_models.py:98
-#: apps/promotions/models.py:297 apps/wishlists/abstract_models.py:121
+#: apps/catalogue/abstract_models.py:931
+#: apps/catalogue/abstract_models.py:1188 apps/order/abstract_models.py:469
+#: apps/partner/abstract_models.py:98 apps/promotions/models.py:297
+#: apps/wishlists/abstract_models.py:121
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:17
@@ -435,7 +434,8 @@ msgstr "تحلیل محصول"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:49 apps/catalogue/abstract_models.py:92
-#: apps/catalogue/abstract_models.py:710 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:710
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1110 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:166 apps/dashboard/catalogue/tables.py:78
 #: apps/dashboard/users/forms.py:44 apps/dashboard/vouchers/forms.py:18
@@ -577,9 +577,10 @@ msgid "Vouchers"
 msgstr "کوپن"
 
 #: apps/basket/abstract_models.py:59 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:336 apps/catalogue/abstract_models.py:1198
-#: apps/customer/abstract_models.py:362 apps/order/abstract_models.py:887
-#: apps/partner/abstract_models.py:151 apps/wishlists/abstract_models.py:55
+#: apps/catalogue/abstract_models.py:336
+#: apps/catalogue/abstract_models.py:1198 apps/customer/abstract_models.py:362
+#: apps/order/abstract_models.py:887 apps/partner/abstract_models.py:151
+#: apps/wishlists/abstract_models.py:55
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/promotions/promotion_list.html:44
 #: templates/oscar/dashboard/ranges/range_list.html:34
@@ -627,11 +628,9 @@ msgstr "%(status)s سبد (مالک: %(owner)s, قلم: %(num_lines)d)"
 #: apps/basket/abstract_models.py:158
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order."
-msgstr ""
-"به دلیل مشکلات فنی ما قادر به فرستادن بیش از  %(threshold)d کالا در یک سفارش "
-"نیستیم."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
+msgstr "به دلیل مشکلات فنی ما قادر به فرستادن بیش از  %(threshold)d کالا در یک سفارش نیستیم."
 
 #: apps/basket/abstract_models.py:619
 msgid "Line Reference"
@@ -689,20 +688,16 @@ msgstr "شما نمی‌توانید یک سبد %s را تغییر دهید"
 #: apps/basket/abstract_models.py:904
 #, python-format
 msgid ""
-"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"قیمت '%(product)s' از مبلغ %(old_price)s به مبلغ %(new_price)s  افزایش یافته "
-"است."
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "قیمت '%(product)s' از مبلغ %(old_price)s به مبلغ %(new_price)s  افزایش یافته است."
 
 #: apps/basket/abstract_models.py:909
 #, python-format
 msgid ""
-"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"قیمت '%(product)s' از مبلغ %(old_price)s به مبلغ %(new_price)s  کاهش یافته "
-"است."
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "قیمت '%(product)s' از مبلغ %(old_price)s به مبلغ %(new_price)s  کاهش یافته است."
 
 #: apps/basket/abstract_models.py:923 apps/order/abstract_models.py:766
 #: apps/order/abstract_models.py:801 apps/order/abstract_models.py:916
@@ -766,26 +761,21 @@ msgstr "لطفا یک محصول معتبر انتخاب کنید"
 #: apps/basket/forms.py:196
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order. Your basket currently has %(basket)d items."
-msgstr ""
-"به دلیل مشکلات فنی ما قادر به فرستادن بیش از  %(threshold)d قلم کالا در یک "
-"سفارش نیستیم. سبد شما  %(basket)d قلم کالا دارد."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
+msgstr "به دلیل مشکلات فنی ما قادر به فرستادن بیش از  %(threshold)d قلم کالا در یک سفارش نیستیم. سبد شما  %(basket)d قلم کالا دارد."
 
 #: apps/basket/forms.py:219
 msgid ""
-"This product cannot be added to the basket as its currency isn't the same as "
-"other products in your basket"
-msgstr ""
-"واحد پولی این محصول با دیگر محصولات سبد شما یکسان نیست، پس به سبد افزوده "
-"نخواهد شد"
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
+msgstr "واحد پولی این محصول با دیگر محصولات سبد شما یکسان نیست، پس به سبد افزوده نخواهد شد"
 
 #: apps/basket/middleware.py:174
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
-"ما سبدی را از نشست پیشین ادغام کرده‌ایم. محتویاتش ممکن است تغییر کرده باشد."
+msgstr "ما سبدی را از نشست پیشین ادغام کرده‌ایم. محتویاتش ممکن است تغییر کرده باشد."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -856,9 +846,7 @@ msgstr "برای ذخیرهٔ خریدهایتان برای بعد، باید ب
 #: apps/basket/views.py:228
 msgid ""
 "Your basket couldn't be updated. Please correct any validation errors below."
-msgstr ""
-"به‌روزرسانی سبد خرید شما با مشکل مواجه شد - لطفا خطاهای اعتبارسنجی زیر را "
-"درست کنید."
+msgstr "به‌روزرسانی سبد خرید شما با مشکل مواجه شد - لطفا خطاهای اعتبارسنجی زیر را درست کنید."
 
 #: apps/basket/views.py:316
 #, python-format
@@ -894,10 +882,9 @@ msgid "Please enter a voucher code"
 msgstr "لطفا کد کوپن خود را وارد کنید"
 
 #: apps/basket/views.py:403
-#, fuzzy, python-format
-#| msgid "No voucher found with id '%d'"
+#, python-format
 msgid "No voucher found with id '%s'"
-msgstr "هیچ کوپنی با شناسه '%d' یافت نشد."
+msgstr "کوپن با شناسه %s یافت نشد"
 
 #: apps/basket/views.py:409
 #, python-format
@@ -1003,15 +990,13 @@ msgstr "کد اختصاصی"
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
-msgstr ""
-"کد جهانی کالا (‌UPC) شناسه ای برای یک کالا است که به تامین کننده ی آن وابستگی "
-"ندارد. مثلا شماره ی ISBN برای یک کتاب."
+msgstr "کد جهانی کالا (‌UPC) شناسه ای برای یک کالا است که به تامین کننده ی آن وابستگی ندارد. مثلا شماره ی ISBN برای یک کتاب."
 
 #: apps/catalogue/abstract_models.py:291
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
-"example if this is a size 4 of a particular t-shirt.  Leave blank if this is "
-"a stand-alone product (i.e. there is only one version of this product)."
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
 msgstr "تنها وقتی یک کالای پدر بسازید که می خواهید کالای فرزندی داشته باشید."
 
 #: apps/catalogue/abstract_models.py:298 apps/catalogue/abstract_models.py:544
@@ -1041,11 +1026,9 @@ msgstr "خواص"
 
 #: apps/catalogue/abstract_models.py:316
 msgid ""
-"A product attribute is something that this product may have, such as a size, "
-"as specified by its class"
-msgstr ""
-"خصیصه ی یک کالا خاصیتی است که ممکن است این کالا داشته باشد، مثلا بسته به نوع "
-"کالا، سایز می تواند یک خصیصه باشد."
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
+msgstr "خصیصه ی یک کالا خاصیتی است که ممکن است این کالا داشته باشد، مثلا بسته به نوع کالا، سایز می تواند یک خصیصه باشد."
 
 #: apps/catalogue/abstract_models.py:320
 msgid "Product options"
@@ -1056,10 +1039,7 @@ msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
-msgstr ""
-"امکانات در واقع مقادیری هستند که می توانند به یک کالا هنگام اضافه شدن به سبد "
-"خرید متصل شوند. مثلا برای یک تی شرت، یک نوشته ی خاص برای انداختن روی تی شرت "
-"می تواند یک امکان باشد."
+msgstr "امکانات در واقع مقادیری هستند که می توانند به یک کالا هنگام اضافه شدن به سبد خرید متصل شوند. مثلا برای یک تی شرت، یک نوشته ی خاص برای انداختن روی تی شرت می تواند یک امکان باشد."
 
 #: apps/catalogue/abstract_models.py:328
 #: templates/oscar/dashboard/catalogue/product_update.html:297
@@ -1068,8 +1048,7 @@ msgstr "کالاهای پیشنهادی"
 
 #: apps/catalogue/abstract_models.py:329
 msgid "These are products that are recommended to accompany the main product."
-msgstr ""
-"این ها کالاهایی هستند که به عنوان پیشنهاد همراه کالای اصلی قرار می گیرند."
+msgstr "این ها کالاهایی هستند که به عنوان پیشنهاد همراه کالای اصلی قرار می گیرند."
 
 #: apps/catalogue/abstract_models.py:334 defaults.py:225
 msgid "Rating"
@@ -1085,9 +1064,7 @@ msgstr "قابل تخفیف؟"
 
 #: apps/catalogue/abstract_models.py:353
 msgid "This flag indicates if this product can be used in an offer or not"
-msgstr ""
-"این امکان مشخص می کند که آیا این کالا در فرصت های تخفیف می تواند قرار بگیرد "
-"یا نه."
+msgstr "این امکان مشخص می کند که آیا این کالا در فرصت های تخفیف می تواند قرار بگیرد یا نه."
 
 #: apps/catalogue/abstract_models.py:364 apps/dashboard/catalogue/views.py:100
 #: apps/promotions/models.py:273 defaults.py:105
@@ -1120,7 +1097,7 @@ msgstr "هر محصول زیردسته نیاز به یک سردسته دارد.
 
 #: apps/catalogue/abstract_models.py:435
 msgid "You can only assign child products to parent products."
-msgstr ""
+msgstr "شما تنها می‌توانید محصولات کودک را به محصولات والدین ارجاع دهید"
 
 #: apps/catalogue/abstract_models.py:438
 msgid "A child product can't have a product class."
@@ -1136,11 +1113,11 @@ msgstr "محصول زیردسته تنظیمات ندارد."
 
 #: apps/catalogue/abstract_models.py:454
 msgid "A parent product can't have stockrecords."
-msgstr ""
+msgstr "محصول سرشاخه نمی تواند شامل سابقه موجودی باشد"
 
 #: apps/catalogue/abstract_models.py:482
 msgid "The specified parent product is a child product."
-msgstr ""
+msgstr "محصول سرشاخه مشخص شده یک محصول زیرشاخه می باشد"
 
 #: apps/catalogue/abstract_models.py:485
 msgid "One can't add a child product to a product with stock records."
@@ -1162,7 +1139,7 @@ msgstr "رتبه بندی"
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
-msgstr ""
+msgstr "ترتیب محصولات را تعیین می‌کند. محصول با رتبه بالاتر قبل از محصول با رتبه کمتر نمایش داده می‌شود"
 
 #: apps/catalogue/abstract_models.py:693
 msgid "Product recommendation"
@@ -1176,9 +1153,7 @@ msgstr "پیشنهاد محصولات"
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, and underscores, and "
 "can't start with a digit."
-msgstr ""
-"کد فقط می‌تواند شامل حروف A-Z، a-z، اعداد و زیرخط‌ها باشد، و نمی‌تواند با یک "
-"عدد شروع شود."
+msgstr "کد فقط می‌تواند شامل حروف A-Z، a-z، اعداد و زیرخط‌ها باشد، و نمی‌تواند با یک عدد شروع شود."
 
 #: apps/catalogue/abstract_models.py:736 apps/catalogue/abstract_models.py:933
 msgid "Text"
@@ -1212,16 +1187,12 @@ msgid "Date"
 msgstr "تاریخ"
 
 #: apps/catalogue/abstract_models.py:742
-#, fuzzy
-#| msgid "End datetime"
 msgid "Datetime"
-msgstr "تاریخ پایان"
+msgstr "تاریخ زمان"
 
 #: apps/catalogue/abstract_models.py:744
-#, fuzzy
-#| msgid "Product Options"
 msgid "Multi Option"
-msgstr "گزینه های محصول"
+msgstr "چند گزینه"
 
 #: apps/catalogue/abstract_models.py:745
 msgid "Entity"
@@ -1283,10 +1254,8 @@ msgid "Must be a date or datetime"
 msgstr "باید یک تاریخ و یا تاریخ ساعت"
 
 #: apps/catalogue/abstract_models.py:871
-#, fuzzy
-#| msgid "Must be a date or datetime"
 msgid "Must be a datetime"
-msgstr "باید یک تاریخ و یا تاریخ ساعت"
+msgstr "میبایست تاریخ زمان باشد"
 
 #: apps/catalogue/abstract_models.py:875
 msgid "Must be a boolean"
@@ -1297,10 +1266,8 @@ msgid "Must be a model instance"
 msgstr "باید نمونه‌ای از یک مدل باشد"
 
 #: apps/catalogue/abstract_models.py:886
-#, fuzzy
-#| msgid "Must be an AttributeOption model object instance"
 msgid "Must be a list or AttributeOption queryset"
-msgstr "Must be an AttributeOption model object instance"
+msgstr "باید یک لیست یا queryset از مجموعه ویژگی ها باشد"
 
 #: apps/catalogue/abstract_models.py:897
 msgid "Must be an AttributeOption model object instance"
@@ -1332,16 +1299,12 @@ msgid "Richtext"
 msgstr "غنی متن"
 
 #: apps/catalogue/abstract_models.py:939
-#, fuzzy
-#| msgid "Date"
 msgid "DateTime"
-msgstr "تاریخ"
+msgstr "تاریخ زمان"
 
 #: apps/catalogue/abstract_models.py:943
-#, fuzzy
-#| msgid "Value option"
 msgid "Value multi option"
-msgstr "مقدار گزینه"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:949
 msgid "Value option"
@@ -1373,7 +1336,7 @@ msgstr "ویژگی موجود"
 
 #: apps/catalogue/abstract_models.py:1094
 msgid "Attribute options"
-msgstr ""
+msgstr "مجموعه ویژگی ها"
 
 #: apps/catalogue/abstract_models.py:1116
 msgid "Required - a value for this option must be specified"
@@ -1393,7 +1356,8 @@ msgstr "عنوان"
 
 #: apps/catalogue/abstract_models.py:1196
 msgid ""
-"An image with a display order of zero will be the primary image for a product"
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:1206
@@ -1588,15 +1552,11 @@ msgstr "من یک مشتری جدید هستم و می خواهم به عنوا�
 
 #: apps/checkout/forms.py:57
 msgid "I am a new customer and want to create an account before checking out"
-msgstr ""
-"من یک مشتری جدید هستم و می خواهم قبل از خریدم یک اکانت در سایت شما ایجاد کنم "
-"و از این طریق خریدم را انجام دهم."
+msgstr "من یک مشتری جدید هستم و می خواهم قبل از خریدم یک اکانت در سایت شما ایجاد کنم و از این طریق خریدم را انجام دهم."
 
 #: apps/checkout/forms.py:59
 msgid "I am a returning customer, and my password is"
-msgstr ""
-"من قبلا از فروشگاه شما خرید کرده ام و در سایت شما اکانت دارم.\n"
-"رمز عبور من:"
+msgstr "من قبلا از فروشگاه شما خرید کرده ام و در سایت شما اکانت دارم.\nرمز عبور من:"
 
 #: apps/checkout/forms.py:73 apps/customer/forms.py:162
 msgid "A user with that email address already exists"
@@ -1604,17 +1564,14 @@ msgstr "کاربری با همین ایمیل قبلا در سیستم ثبت ن
 
 #: apps/checkout/session.py:113
 msgid "You need to add some items to your basket to checkout"
-msgstr ""
-"برای پرداخت نهایی شما ابتدا باید تعدادی محصول را به سبد خرید خود اضافه کنید!"
+msgstr "برای پرداخت نهایی شما ابتدا باید تعدادی محصول را به سبد خرید خود اضافه کنید!"
 
 #: apps/checkout/session.py:131
 #, python-format
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr ""
-"'%(title)s' دیگر موجود نیست، به این دلایل (%(reason)s). لطفا برای ادامه "
-"کالا(ها)ی ذکر شده را از سبد خود حذف کنید."
+msgstr "'%(title)s' دیگر موجود نیست، به این دلایل (%(reason)s). لطفا برای ادامه کالا(ها)ی ذکر شده را از سبد خود حذف کنید."
 
 #: apps/checkout/session.py:149
 msgid "Please either sign in or enter your email address"
@@ -1638,17 +1595,13 @@ msgstr "لطفا یک روش ارسال انتخاب کنید."
 msgid ""
 "Your previously chosen shipping method is no longer valid.  Please choose "
 "another one"
-msgstr ""
-"روش ارسالی که شما قبلا انتخاب کرده بودید دیگر معتبر نیست. لطفا روش دیگری را "
-"برای ارسال انتخاب کنید."
+msgstr "روش ارسالی که شما قبلا انتخاب کرده بودید دیگر معتبر نیست. لطفا روش دیگری را برای ارسال انتخاب کنید."
 
 #: apps/checkout/views.py:91
 msgid ""
 "Create your account and then you will be redirected back to the checkout "
 "process"
-msgstr ""
-"اکانت خود را در سایت ما بسازید و ما شما را به پروسه ی پرداخت نهایی برمی "
-"گردانیم."
+msgstr "اکانت خود را در سایت ما بسازید و ما شما را به پروسه ی پرداخت نهایی برمی گردانیم."
 
 #: apps/checkout/views.py:214
 msgid "Address saved"
@@ -1659,7 +1612,8 @@ msgid "Address deleted"
 msgstr "آدرس حذف شد."
 
 #: apps/checkout/views.py:283
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "ارسال کالا به آدرس شما مقدور نیست. لطفا آدرس دیگری را انتخاب کنید."
 
 #: apps/checkout/views.py:326
@@ -1670,9 +1624,7 @@ msgstr "شما اجازه ی انتخاب شیوه ی ارسال انتخاب ش
 msgid ""
 "A problem occurred while processing payment for this order - no payment has "
 "been taken.  Please contact customer services if this problem persists"
-msgstr ""
-"در هنگام انجام پرداخت سفارش شما مشکلی پیش آمده، هیچ هزینه ای از حساب شما "
-"کاسته نشده. در صورت مشکلات بیشتر با پشتیبانی تماس حاصل فرمایید."
+msgstr "در هنگام انجام پرداخت سفارش شما مشکلی پیش آمده، هیچ هزینه ای از حساب شما کاسته نشده. در صورت مشکلات بیشتر با پشتیبانی تماس حاصل فرمایید."
 
 #: apps/checkout/views.py:676
 msgid "No order found"
@@ -1702,7 +1654,7 @@ msgstr "فعال"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr ""
+msgstr "مشخص می کند که وضعیت این کابر فعال باشد. به جای پاک کردن حساب های کاربری این گزینه را از حالت انتخاب خارج کنید"
 
 #: apps/customer/abstract_models.py:73
 msgid "date joined"
@@ -1715,10 +1667,8 @@ msgid "Users"
 msgstr "کاربران"
 
 #: apps/customer/abstract_models.py:123
-#, fuzzy
-#| msgid "Email address"
 msgid "Email Address"
-msgstr "ایمیل"
+msgstr "آدرس ایمیل"
 
 #: apps/customer/abstract_models.py:124
 #: templates/oscar/customer/email/email_detail.html:19
@@ -1756,10 +1706,9 @@ msgid "Email to %(user)s with subject '%(subject)s'"
 msgstr "ایمیل به %(user)s با عنوان %(subject)s"
 
 #: apps/customer/abstract_models.py:140
-#, fuzzy, python-format
-#| msgid "Email to %(user)s with subject '%(subject)s'"
+#, python-format
 msgid "Anonymous email to %(email)s with subject '%(subject)s'"
-msgstr "ایمیل به %(user)s با عنوان %(subject)s"
+msgstr "ارسال ایمیل به صورت ناشناس به %(email)s با موضوع %(subject)s"
 
 #: apps/customer/abstract_models.py:162
 msgid "Code used for looking up this event programmatically"
@@ -1822,11 +1771,13 @@ msgstr "صندوق ورودی"
 msgid "Archive"
 msgstr "بایگانی"
 
-#: apps/customer/abstract_models.py:305 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:305
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "آگاه شدن از طریق"
 
-#: apps/customer/abstract_models.py:306 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:306
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "اعلان‌ها"
@@ -1971,9 +1922,7 @@ msgstr "تمام سفارشات"
 msgid ""
 "Orders placed between %(date_from)s and %(date_to)s and order number "
 "containing %(order_number)s"
-msgstr ""
-"سفارش‌های ثبت شده بین %(date_from)s و %(date_to)s و شماره سفارش‌های حاوی "
-"%(order_number)s"
+msgstr "سفارش‌های ثبت شده بین %(date_from)s و %(date_to)s و شماره سفارش‌های حاوی %(order_number)s"
 
 #: apps/customer/forms.py:227 apps/dashboard/orders/forms.py:42
 #, python-format
@@ -1985,9 +1934,7 @@ msgstr "سفارشات بین %(date_from)s و %(date_to)s قرار داده ش�
 msgid ""
 "Orders placed since %(date_from)s and order number containing "
 "%(order_number)s"
-msgstr ""
-"سفارش‌های ثبت شده از تاریخ %(date_from)s و شماره سفارش‌های حاوی "
-"%(order_number)s"
+msgstr "سفارش‌های ثبت شده از تاریخ %(date_from)s و شماره سفارش‌های حاوی %(order_number)s"
 
 #: apps/customer/forms.py:234
 #, python-format
@@ -1998,8 +1945,7 @@ msgstr "سفارشاتی که از تاریخ %(date_from)s قرار داده ش
 #, python-format
 msgid ""
 "Orders placed until %(date_to)s and order number containing %(order_number)s"
-msgstr ""
-"سفارش‌های ثبت شده تا تاریخ %(date_to)s و شماره سفارش‌های حاوی %(order_number)s"
+msgstr "سفارش‌های ثبت شده تا تاریخ %(date_to)s و شماره سفارش‌های حاوی %(order_number)s"
 
 #: apps/customer/forms.py:240
 #, python-format
@@ -2026,7 +1972,7 @@ msgstr "ایمیل خود را وارد کنید"
 #: apps/customer/forms.py:407
 #, python-format
 msgid "There is already an active stock alert for %s"
-msgstr ""
+msgstr "یک هشدار موجودی برای %s از پیش فعال است"
 
 #: apps/customer/forms.py:415
 #, python-format
@@ -2034,23 +1980,25 @@ msgid ""
 "%s has been sent a confirmation email for another product alert on this "
 "site. Please confirm or cancel that request before signing up for more "
 "alerts."
-msgstr ""
+msgstr "%s یک ایمیل تایید برای هشدار محصول دیگری در این سایت ارسال شده. لطفاً قبل از آنکه هشدار‌های بیشتری را ثبت کنید. آن درخواست را تایید یا لغو کنید "
 
 #: apps/customer/forms.py:427
 msgid "You already have an active alert for this product"
-msgstr ""
+msgstr "شما یک هشدار فعال برای این محصول از پیش دارید"
 
 #: apps/customer/notifications/views.py:90
 #, python-format
 msgid "%(count)d notification archived"
 msgid_plural "%(count)d notifications archived"
 msgstr[0] "%(count)d اطلاعیه بایگانی شد"
+msgstr[1] "%(count)d اطلاعیه بایگانی شد"
 
 #: apps/customer/notifications/views.py:100
 #, python-format
 msgid "%(count)d notification deleted"
 msgid_plural "%(count)d notifications deleted"
 msgstr[0] "%(count)d اطلاعیه حذف شدند"
+msgstr[1] "%(count)d اطلاعیه حذف شدند"
 
 #: apps/customer/views.py:178
 msgid "Welcome back"
@@ -2120,8 +2068,7 @@ msgstr "همه ی خطوط موجود از سفارش %(number)s به سبد خ�
 msgid ""
 "It is not possible to re-order order %(number)s as none of its lines are "
 "available to purchase"
-msgstr ""
-"امکان سفارش مجدد کالای %(number)s به دلیل موجود نبودن برای خرید، وجود ندارد."
+msgstr "امکان سفارش مجدد کالای %(number)s به دلیل موجود نبودن برای خرید، وجود ندارد."
 
 #: apps/customer/views.py:590
 #, python-format
@@ -2173,7 +2120,7 @@ msgstr "آدرس %s حذف شد"
 
 #: apps/customer/views.py:715
 msgid "We do not ship to this country"
-msgstr ""
+msgstr "متاسفانه برای کشور شما امکان حمل و نقل نداریم"
 
 #: apps/customer/wishlists/views.py:26
 #: templates/oscar/customer/partials/standard_tabs.html:24
@@ -2242,10 +2189,9 @@ msgid "'%(title)s' was removed from your '%(name)s' wish list"
 msgstr "'%(title)s' از لیست درخواست '%(name)s' شما برداشته شد"
 
 #: apps/customer/wishlists/views.py:317
-#, fuzzy, python-format
-#| msgid "User '%(name)s' is already linked to '%(partner_name)s'"
+#, python-format
 msgid "Wish list '%(name)s' already containing '%(title)s'"
-msgstr "کاربر '%(name)s' اخیرا به همکار '%(partner_name)s' لینک شده است."
+msgstr "لیست علاقه‌ها ی '%(name)s' از قبل شامل '%(title)s' می باشد"
 
 #: apps/customer/wishlists/views.py:325
 #, python-format
@@ -2266,13 +2212,13 @@ msgstr "عنوان محصول"
 
 #: apps/dashboard/catalogue/forms.py:347
 msgid "Select an option group"
-msgstr ""
+msgstr "یک مجموعه را انتخاب کنید"
 
 #: apps/dashboard/catalogue/formsets.py:97
 msgid ""
 "At least one stock record must be set to a partner that you're associated "
 "with."
-msgstr ""
+msgstr "حداقل یک سابقه موجودى باید به شریک فروش شما اختصاص داده شده باشد"
 
 #: apps/dashboard/catalogue/formsets.py:115
 msgid "Stand-alone and parent products must have at least one category"
@@ -2334,19 +2280,18 @@ msgstr "تعداد فرزندهای گروه "
 msgid "%s Category"
 msgid_plural "%s Categories"
 msgstr[0] "دسته‌های %s"
+msgstr[1] "دسته‌های %s"
 
 #: apps/dashboard/catalogue/tables.py:82
-#, fuzzy
-#| msgid "Offer summary"
 msgid "Option summary"
-msgstr "خلاصه ی پیشنهاد"
+msgstr "خلاصه گزینه‌ها"
 
 #: apps/dashboard/catalogue/tables.py:91
-#, fuzzy, python-format
-#| msgid "Attribute option group"
+#, python-format
 msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
-msgstr[0] "ویژگی انتخاب گروه"
+msgstr[0] "%sویژگی انتخاب گروه"
+msgstr[1] "%sویژگی انتخاب گروه"
 
 #: apps/dashboard/catalogue/views.py:99
 msgid "Product search results"
@@ -2467,46 +2412,36 @@ msgid "Product type deleted successfully"
 msgstr "نوع محصول با موفقیت حذف شد."
 
 #: apps/dashboard/catalogue/views.py:842
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Add a new Attribute Option Group"
-msgstr "ویژگی انتخاب گروه"
+msgstr "افزودن یک گروه ویژگی انتخاب"
 
 #: apps/dashboard/catalogue/views.py:846
-#, fuzzy
-#| msgid "Product type created successfully"
 msgid "Attribute Option Group created successfully"
-msgstr "نوع محصول با موفقیت ایجاد شد."
+msgstr "مجموعه ویژگی با موفقیت ساخته شد"
 
 #: apps/dashboard/catalogue/views.py:860
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Update Attribute Option Group '%s'"
-msgstr "ویژگی انتخاب گروه ها"
+msgstr "بروز رسانی ویژگی انتخاب گروه «%s»"
 
 #: apps/dashboard/catalogue/views.py:864
-#, fuzzy
-#| msgid "Product type updated successfully"
 msgid "Attribute Option Group updated successfully"
-msgstr "نوع محصول با موفقیت به‌روز شد"
+msgstr "مجموعه ویژگی با موفقیت بروز رسانی شد"
 
 #: apps/dashboard/catalogue/views.py:891
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Delete Attribute Option Group '%s'"
-msgstr "ویژگی انتخاب گروه ها"
+msgstr "پاک کردن مجموعه ویژگی ها ی '%s'"
 
 #: apps/dashboard/catalogue/views.py:898
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
-msgid "%i product attributes are still assigned to this attribute option group"
-msgstr "%i از محصولات هنوز به این دسته اختصاص دارند"
+#, python-format
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
+msgstr "ویژگی های محصول %i همچنان به این مجموعه ویژگی اختصاص داده شده است"
 
 #: apps/dashboard/catalogue/views.py:918
-#, fuzzy
-#| msgid "Product type deleted successfully"
 msgid "Attribute Option Group deleted successfully"
-msgstr "نوع محصول با موفقیت حذف شد."
+msgstr "مجموعه ویژگی ها با موفقیت پاک شدند"
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
@@ -2662,13 +2597,11 @@ msgstr "انگیزه های همیشگی"
 #: apps/dashboard/offers/forms.py:140
 msgid ""
 "Please either choose a range, type and value OR select a custom incentive"
-msgstr ""
-"لطفا یک محدوده، نوع و مقدار را انتخاب کنید یا انگیزه های همیشگی را برگزینید"
+msgstr "لطفا یک محدوده، نوع و مقدار را انتخاب کنید یا انگیزه های همیشگی را برگزینید"
 
 #: apps/dashboard/offers/forms.py:146
 msgid "No other options can be set if you are using a custom incentive"
-msgstr ""
-"اگر از انگیزه های همیشگی استفاده میکنید هیچ انتخاب دیگری نمیتواند تنظیم شود"
+msgstr "اگر از انگیزه های همیشگی استفاده میکنید هیچ انتخاب دیگری نمیتواند تنظیم شود"
 
 #: apps/dashboard/offers/forms.py:161 apps/order/abstract_models.py:1071
 #: templates/oscar/dashboard/offers/offer_list.html:46
@@ -2759,8 +2692,7 @@ msgstr "پیشنهاد حالت تعلیق درآمده"
 
 #: apps/dashboard/offers/views.py:363
 msgid "Offer cannot be reinstated as it is not currently suspended"
-msgstr ""
-"پیشنهاد تا زمانی که به حالت تعلیق درنیامده باشد نمی تواند مجددا ثبت شود."
+msgstr "پیشنهاد تا زمانی که به حالت تعلیق درنیامده باشد نمی تواند مجددا ثبت شود."
 
 #: apps/dashboard/offers/views.py:367
 msgid "Offer reinstated"
@@ -2836,12 +2768,12 @@ msgstr "شماره‌ی سفارش با \"{order_number}\" شروع می‌شو�
 #: apps/dashboard/orders/views.py:243
 #, python-brace-format
 msgid "Customer name matches \"{customer_name}\""
-msgstr ""
+msgstr "نام مشتری مطابقت دارد با \"{customer_name}\""
 
 #: apps/dashboard/orders/views.py:250
 #, python-brace-format
 msgid "Product name matches \"{product_name}\""
-msgstr ""
+msgstr "نام محصول مطابقت دارد با  \"{product_name}\""
 
 #. Translators: "UPC" means "universal product code" and it is
 #. used to uniquely identify a product in an online store.
@@ -2850,7 +2782,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:261
 #, python-brace-format
 msgid "Includes an item with UPC \"{upc}\""
-msgstr ""
+msgstr "شامل یک قلم کالا با کد جهانی محصول  ‍\"{upc}\""
 
 #. Translators: "SKU" means "stock keeping unit" and is used to
 #. identify products that can be shipped from an online store.
@@ -2859,28 +2791,28 @@ msgstr ""
 #: apps/dashboard/orders/views.py:272
 #, python-brace-format
 msgid "Includes an item with partner SKU \"{partner_sku}\""
-msgstr ""
+msgstr "شامل یک قلم کالا از واحد نگهداری موجودی همکار \"{partner_sku}\""
 
 #. Translators: This string refers to orders in an online
 #. store that were made within a particular date range.
 #: apps/dashboard/orders/views.py:281
 #, python-brace-format
 msgid "Placed between {start_date} and {end_date}"
-msgstr ""
+msgstr "واقع شده بین تاریخ {start_date} و {end_date}"
 
 #. Translators: This string refers to orders in an online store
 #. that were made after a particular date.
 #: apps/dashboard/orders/views.py:291
 #, python-brace-format
 msgid "Placed after {start_date}"
-msgstr ""
+msgstr "واقع شده بعد از تاریخ {start_date}"
 
 #. Translators: This string refers to orders in an online store
 #. that were made before a particular date.
 #: apps/dashboard/orders/views.py:300
 #, python-brace-format
 msgid "Placed before {end_date}"
-msgstr ""
+msgstr "واقع شده قبل از تاریخ {end_date}"
 
 #. Translators: A "voucher" is a coupon that can be applied to
 #. an order in an online store in order to receive a discount.
@@ -2897,7 +2829,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:319
 #, python-brace-format
 msgid "Paid using {payment_method}"
-msgstr ""
+msgstr "پرداخت به وسیله {payment_method}"
 
 #. Translators: This string refers to an order in an
 #. online store.  Some examples of order status are
@@ -2905,7 +2837,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:329
 #, python-brace-format
 msgid "Order status is {order_status}"
-msgstr ""
+msgstr "وضعیت سفارش برابر است با {order_status}"
 
 #: apps/dashboard/orders/views.py:366
 msgid "Order value"
@@ -2936,7 +2868,7 @@ msgstr "تحویل دادن به اسم"
 
 #: apps/dashboard/orders/views.py:372
 msgid "Bill to name"
-msgstr ""
+msgstr "رسید به نام"
 
 #: apps/dashboard/orders/views.py:408 apps/dashboard/orders/views.py:637
 #, python-format
@@ -2985,8 +2917,7 @@ msgstr "مقدار وارد شده برای ردیف #%s معتبر نمیباش
 msgid ""
 "The entered quantity for line #%(line_id)s should not be higher than "
 "%(quantity)s"
-msgstr ""
-"مقدار وارد شده برای ردیف #%(line_id)s نباید بیشتر از %(quantity)s باشد."
+msgstr "مقدار وارد شده برای ردیف #%(line_id)s نباید بیشتر از %(quantity)s باشد."
 
 #: apps/dashboard/orders/views.py:575
 msgid "Note saved"
@@ -3006,8 +2937,7 @@ msgstr "ثبت فرم نامعتبر"
 
 #: apps/dashboard/orders/views.py:614
 msgid "Unable to change order status as the requested new status is not valid"
-msgstr ""
-"وضعیت سفارش قابل تغییر نمی باشد زیرا وضعیت جدید درخواست شده نامعتبر است."
+msgstr "وضعیت سفارش قابل تغییر نمی باشد زیرا وضعیت جدید درخواست شده نامعتبر است."
 
 #: apps/dashboard/orders/views.py:628 apps/dashboard/orders/views.py:704
 msgid "Please choose a valid amount"
@@ -3021,10 +2951,9 @@ msgstr "وضعیت '%(status)s' یک وضعیت معتبر برای ردیف %(l
 #: apps/dashboard/orders/views.py:652
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
-msgstr ""
-"وضعیت ردیف #%(line_id)d از '%(old_status)s' به '%(new_status)s' تغییر پیدا "
-"کرد."
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
+msgstr "وضعیت ردیف #%(line_id)d از '%(old_status)s' به '%(new_status)s' تغییر پیدا کرد."
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
 #, python-format
@@ -3069,9 +2998,7 @@ msgstr "%(field)s از '%(old_value)s' به '%(new_value)s' تغییر یافت�
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"آدرس تحویل به روز رسانی شد:\n"
-"%s"
+msgstr "آدرس تحویل به روز رسانی شد:\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -3095,7 +3022,7 @@ msgstr "مثال : '/about/contact/'"
 msgid ""
 "This value must contain only letters, numbers, dots, underscores, dashes, "
 "slashes or tildes."
-msgstr ""
+msgstr "این عبارت تنها می تواند شامل حرف عدد نقطه آندرلاین خط تیره ممیز و علامت تیلدا باشد"
 
 #: apps/dashboard/pages/views.py:37
 msgid "All pages"
@@ -3318,12 +3245,14 @@ msgstr "محدوده حذف شده"
 msgid "Removed %d product from range"
 msgid_plural "Removed %d products from range"
 msgstr[0] "%d محصولات از محدوده حذف شدند"
+msgstr[1] "%d محصولات از محدوده حذف شدند"
 
 #: apps/dashboard/ranges/views.py:157
 #, python-format
 msgid "%d product added to range"
 msgid_plural "%d products added to range"
 msgstr[0] "%d محصولات به محدوده اضافه شدند"
+msgstr[1] "%d محصولات به محدوده اضافه شدند"
 
 #: apps/dashboard/ranges/views.py:171
 #, python-format
@@ -3331,10 +3260,9 @@ msgid "No product(s) were found with SKU or UPC matching %s"
 msgstr "هیچ محصولی (محصولاتی) با SKU یا UPC مطابقت داده شده با %s یافت نشد"
 
 #: apps/dashboard/ranges/views.py:213
-#, fuzzy, python-format
-#| msgid "There are no product types."
+#, python-format
 msgid "There are more than one product with SKU %s"
-msgstr ".دسته بندی محصول وجود ندارد"
+msgstr "بیشتر از یک محصول با واحد نگهداری موجودی %s وجود دارد"
 
 #: apps/dashboard/reports/config.py:8
 msgid "Reports dashboard"
@@ -3346,7 +3274,7 @@ msgstr "نوع گزارش"
 
 #: apps/dashboard/reports/forms.py:20
 msgid "Only the offer and order reports use the selected date range"
-msgstr ""
+msgstr "فقط این پیشنهاد و گزارشات سفارش از دامنه تاریخ انتخابی استفاده می کنند"
 
 #: apps/dashboard/reports/forms.py:27
 msgid "The report is inclusive of this date"
@@ -3387,9 +3315,7 @@ msgstr "به"
 msgid ""
 "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
 "%(name_filter)s"
-msgstr ""
-"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
-"%(name_filter)s"
+msgstr "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
 #, python-format
@@ -3436,6 +3362,7 @@ msgstr "داشبورد حمل و نقل"
 msgid "%d Row"
 msgid_plural "%d Rows"
 msgstr[0] "ردیف‌های %d"
+msgstr[1] "ردیف‌های %d"
 
 #: apps/dashboard/users/config.py:8
 msgid "Users dashboard"
@@ -3551,7 +3478,7 @@ msgstr "ارزش تخفیف"
 
 #: apps/dashboard/vouchers/forms.py:52 apps/offer/abstract_models.py:122
 msgid "Exclusive offers cannot be combined on the same items"
-msgstr ""
+msgstr "پیشنهاد‌های ویژه همزمان نمی توانند بر روی اقلام یکسان اعمال شوند"
 
 #: apps/dashboard/vouchers/forms.py:66
 #, python-format
@@ -3572,10 +3499,8 @@ msgid "Is Active?"
 msgstr "آیا فعال است؟"
 
 #: apps/dashboard/vouchers/forms.py:99
-#, fuzzy
-#| msgid "Vouchers"
 msgid "In Voucherset?"
-msgstr "کوپن"
+msgstr "در مجموعه کوپن است؟"
 
 #: apps/dashboard/vouchers/views.py:34 apps/dashboard/vouchers/views.py:360
 #: apps/dashboard/vouchers/views.py:419
@@ -3626,26 +3551,20 @@ msgid "Voucher deleted"
 msgstr "کوپن حذف شد"
 
 #: apps/dashboard/vouchers/views.py:234
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Create voucher set"
-msgstr "ایجاد کردن کوپن"
+msgstr "ساخت یک مجموعه کوپن"
 
 #: apps/dashboard/vouchers/views.py:274
-#, fuzzy
-#| msgid "Voucher created"
 msgid "Voucher set created"
-msgstr "کوپن ایجاد گردید"
+msgstr "مجموعه کوپن ساخته شد"
 
 #: apps/dashboard/vouchers/views.py:430
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:16
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:8
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:17
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:22
-#, fuzzy
-#| msgid "Vouchers"
 msgid "Voucher sets"
-msgstr "کوپن"
+msgstr "مجموعه کوپن ها"
 
 #: apps/offer/abstract_models.py:91
 msgid "This is displayed within the customer's basket"
@@ -3672,14 +3591,11 @@ msgstr "پیشنهاد کاربر - برای انواع خاصی از کاربر
 msgid ""
 "Session offer - temporary offer, available for a user for the duration of "
 "their session"
-msgstr ""
-"پیشنهاد دوره ای - پیشنهاد موقتی ، برای کابر در مدت دوره اش قابل استفاده است"
+msgstr "پیشنهاد دوره ای - پیشنهاد موقتی ، برای کابر در مدت دوره اش قابل استفاده است"
 
 #: apps/offer/abstract_models.py:121
-#, fuzzy
-#| msgid "Suspend offer"
 msgid "Exclusive offer"
-msgstr "پیشنهاد متوقف ساختن"
+msgstr "پیشنهاد شگفت انگیز"
 
 #: apps/offer/abstract_models.py:135 apps/offer/abstract_models.py:710
 #: templates/oscar/dashboard/offers/offer_detail.html:76
@@ -3705,15 +3621,13 @@ msgstr "پیشنهاد هایی که بالاترین اولویت را دارن
 msgid ""
 "Offers are active from the start date. Leave this empty if the offer has no "
 "start date."
-msgstr ""
+msgstr "پیشنهاد ها از تاریخ شروع فعال هستند. در صورتی که این پیشنهاد تاریخ شروع ندارد این گزینه را خالی بگذارید"
 
 #: apps/offer/abstract_models.py:158
-#, fuzzy
-#| msgid "Offers are active until the end of the 'end date'"
 msgid ""
 "Offers are active until the end date. Leave this empty if the offer has no "
 "expiry date."
-msgstr "پیشنهاد ها تا پایان 'end date' فعال هستند"
+msgstr "پیشنهاد ها تا زمان انقضای آن فعال هستند. در صورتی که این پیشنهاد تاریخ انقضا ندارد این گزینه را خالی بگذارید"
 
 #: apps/offer/abstract_models.py:166
 msgid "Max global applications"
@@ -3721,9 +3635,7 @@ msgstr "حداکثر درخواست های جهانی"
 
 #: apps/offer/abstract_models.py:167
 msgid "The number of times this offer can be used before it is unavailable"
-msgstr ""
-"تعداد دفعاتی که این پیشنهاد قبل از اینکه غیرقابل استفاده شود، میتواند مورد "
-"استفاده قرار بگیرد"
+msgstr "تعداد دفعاتی که این پیشنهاد قبل از اینکه غیرقابل استفاده شود، میتواند مورد استفاده قرار بگیرد"
 
 #: apps/offer/abstract_models.py:174
 msgid "Max user applications"
@@ -3739,9 +3651,7 @@ msgstr "حداکثر سبد درخواست ها"
 
 #: apps/offer/abstract_models.py:184
 msgid "The number of times this offer can be applied to a basket (and order)"
-msgstr ""
-"تعداد دفعاتی که این پیشنهاد میتواند برای یک سبد مورد استفاده قرار گیرد (و "
-"سفارش)"
+msgstr "تعداد دفعاتی که این پیشنهاد میتواند برای یک سبد مورد استفاده قرار گیرد (و سفارش)"
 
 #: apps/offer/abstract_models.py:190
 msgid "Max discount"
@@ -3767,7 +3677,7 @@ msgstr "تعداد سفارش‌ها"
 
 #: apps/offer/abstract_models.py:209
 msgid "URL redirect (optional)"
-msgstr ""
+msgstr "هدایت آدرس URL (اختیاری)"
 
 #: apps/offer/abstract_models.py:223
 msgid "Conditional offer"
@@ -3878,19 +3788,15 @@ msgstr "مزایای خریدهای چندگانه به هیچ ارزشی نیا
 
 #: apps/offer/abstract_models.py:547
 msgid "Multibuy benefits don't require a 'max affected items' attribute"
-msgstr ""
-"مزایای خریدهای چندگانه به ویژگی \"بیشترین موارد موردتاثیر واقع شده\" نیاز "
-"ندارند"
+msgstr "مزایای خریدهای چندگانه به ویژگی \"بیشترین موارد موردتاثیر واقع شده\" نیاز ندارند"
 
 #: apps/offer/abstract_models.py:557
 msgid "Percentage benefits require a product range"
 msgstr "مزایای درصد به یک گستره ی محصول نیاز دارد"
 
 #: apps/offer/abstract_models.py:560 apps/offer/abstract_models.py:585
-#, fuzzy
-#| msgid "Fixed discount benefits require a value"
 msgid "Percentage discount benefits require a value"
-msgstr "مزایای تخفیف ثابت به یک مقدار، نیاز دارد"
+msgstr "مقدار درصد تخفیف باید شامل یک مقدار باشد"
 
 #: apps/offer/abstract_models.py:562 apps/offer/abstract_models.py:587
 msgid "Percentage discount cannot be greater than 100"
@@ -3908,8 +3814,7 @@ msgstr ""
 #: apps/offer/abstract_models.py:575 apps/offer/abstract_models.py:593
 #: apps/offer/abstract_models.py:604
 msgid "Shipping discounts don't require a 'max affected items' attribute"
-msgstr ""
-"تخفبف های حمل ونقل به ویژگی \"بیشترین موارد موردتاثیر واقع شده\" نیاز ندارند"
+msgstr "تخفبف های حمل ونقل به ویژگی \"بیشترین موارد موردتاثیر واقع شده\" نیاز ندارند"
 
 #: apps/offer/abstract_models.py:613
 msgid ""
@@ -3935,7 +3840,7 @@ msgstr "بستگی به ارزش اقلام در سبد، که در محدوده
 #: apps/offer/abstract_models.py:691
 msgid ""
 "Needs to contain a set number of DISTINCT items from the condition range"
-msgstr ""
+msgstr "باید شامل یک مجموعه از اقلام متمایز از دامنه شرایط باشد"
 
 #: apps/offer/abstract_models.py:711
 msgid "Conditions"
@@ -4082,7 +3987,7 @@ msgstr "%(amount)s تخفیف هزینه‌ی ارسال"
 
 #: apps/offer/benefits.py:306
 msgid "Shipping absolute discount benefit"
-msgstr ""
+msgstr " "
 
 #: apps/offer/benefits.py:307
 msgid "Shipping absolute discount benefits"
@@ -4091,7 +3996,7 @@ msgstr ""
 #: apps/offer/benefits.py:314
 #, python-format
 msgid "Get shipping for %(amount)s"
-msgstr ""
+msgstr "حمل و نقل برای %(amount)s"
 
 #: apps/offer/benefits.py:324
 msgid "Fixed price shipping benefit"
@@ -4104,7 +4009,7 @@ msgstr "مزایای حمل و نقل قیمت ثابت"
 #: apps/offer/benefits.py:334
 #, python-format
 msgid "%(value)s%% off of shipping cost"
-msgstr ""
+msgstr "%(value)s%% از هزینه حمل و نقل"
 
 #: apps/offer/benefits.py:344
 msgid "Shipping percentage discount benefit"
@@ -4132,6 +4037,7 @@ msgstr "شرایط شمارش"
 msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] "خریدن %(delta)d محصولات بیشتر از %(range)s "
+msgstr[1] "خریدن %(delta)d محصولات بیشتر از %(range)s "
 
 #: apps/offer/conditions.py:113
 #, python-format
@@ -4231,11 +4137,9 @@ msgstr "آدرس ایمیل مهمان"
 #: apps/order/abstract_models.py:128
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status: "
-"'%(status)s')"
-msgstr ""
-"'%(new_status)s' یک وضعیت معتبر برای سفارش %(number)s نمیباشد (وضعیت کنونی: "
-"'%(status)s' )"
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
+msgstr "'%(new_status)s' یک وضعیت معتبر برای سفارش %(number)s نمیباشد (وضعیت کنونی: '%(status)s' )"
 
 #: apps/order/abstract_models.py:259
 msgid "In progress"
@@ -4386,15 +4290,15 @@ msgstr "قیمت های خطی"
 #: apps/order/abstract_models.py:820
 #, python-format
 msgid "Line '%(number)s' (quantity %(qty)d) price %(price)s"
-msgstr ""
+msgstr "خط '%(number)s' (مقدار %(qty)d) قیمت %(price)s"
 
 #: apps/order/abstract_models.py:843
 msgid "Payment Event Type"
-msgstr ""
+msgstr "شیوه پرداخت رویداد"
 
 #: apps/order/abstract_models.py:844
 msgid "Payment Event Types"
-msgstr ""
+msgstr "انواع شیوه های پرداخت رویداد"
 
 #: apps/order/abstract_models.py:867 apps/order/abstract_models.py:1078
 #: apps/payment/abstract_models.py:41
@@ -4527,7 +4431,7 @@ msgstr ""
 #: apps/order/processing.py:87 apps/order/processing.py:99
 #, python-format
 msgid "The selected quantity for line #%(line_id)s is too large"
-msgstr ""
+msgstr "مقدار انتخابی برای خط #%(line_id)s بسیار بزرگ است"
 
 #: apps/order/reports.py:23
 #: templates/oscar/dashboard/reports/partials/order_report.html:12
@@ -4547,7 +4451,7 @@ msgstr "سفارشات ثبت شده"
 
 #: apps/order/utils.py:47
 msgid "Empty baskets cannot be submitted"
-msgstr ""
+msgstr "سبد خرید خالی امکان ارسال ندارد"
 
 #: apps/order/utils.py:55
 #, python-format
@@ -4556,11 +4460,11 @@ msgstr "قبلا سفارشی با شماره ی %s ثبت شده است."
 
 #: apps/partner/abstract_models.py:76
 msgid "Fulfillment partner"
-msgstr ""
+msgstr "شریک دستاورد"
 
 #: apps/partner/abstract_models.py:77
 msgid "Fulfillment partners"
-msgstr ""
+msgstr "شرکای دستاورد"
 
 #: apps/partner/abstract_models.py:127
 msgid "Price (retail)"
@@ -4576,7 +4480,7 @@ msgstr "تعداد موجود در انبار"
 
 #: apps/partner/abstract_models.py:143
 msgid "Number allocated"
-msgstr ""
+msgstr "تعداد تخصیص داده شده"
 
 #: apps/partner/abstract_models.py:148
 msgid "Low Stock Threshold"
@@ -4588,7 +4492,7 @@ msgstr "درخواست نامعتبر محاسبه‌ی موجودی"
 
 #: apps/partner/abstract_models.py:279
 msgid "Stock Record"
-msgstr ""
+msgstr "لیست فروشندگان"
 
 #: apps/partner/abstract_models.py:280
 msgid "Threshold"
@@ -4716,7 +4620,7 @@ msgstr "منابع"
 #: apps/payment/abstract_models.py:118
 #, python-format
 msgid "Allocation of %(amount)s from type %(type)s"
-msgstr ""
+msgstr "تخصیص %(amount)s از نوع %(type)s"
 
 #: apps/payment/abstract_models.py:122
 #, python-format
@@ -4750,7 +4654,7 @@ msgstr "شریک مرجع"
 #: apps/payment/abstract_models.py:275
 #, python-format
 msgid "%(card_type)s %(number)s (Expires: %(expiry)s)"
-msgstr ""
+msgstr "%(card_type)s%(number)s (منقضی می‌شود در: %(expiry)s)"
 
 #: apps/payment/abstract_models.py:296
 msgid "Bankcard"
@@ -4779,7 +4683,7 @@ msgstr "لطفاً شماره کارت اعتباری معتبر وارد کنی
 #: apps/payment/forms.py:57
 #, python-format
 msgid "%s cards are not accepted."
-msgstr ""
+msgstr "%s کارت ها قبول نشده اند"
 
 #: apps/payment/forms.py:79
 msgid "Enter a valid month."
@@ -4807,7 +4711,7 @@ msgstr "تاریخ شروعی که شما وارد کردید در آینده ا
 
 #: apps/payment/forms.py:206
 msgid "CCV number"
-msgstr ""
+msgstr "شماره CCV کارت اعتباری"
 
 #: apps/payment/forms.py:209
 msgid "Please enter a 3 or 4 digit number"
@@ -4819,7 +4723,7 @@ msgstr "پشت کارت بانکی شما یک شماره امنیت 3 یا 4 ر
 
 #: apps/payment/forms.py:245
 msgid "American Express cards use a 4 digit security code"
-msgstr ""
+msgstr "کارت های اعتباری American Express دارای کد امنیتی 4 رقمی هستند"
 
 #: apps/promotions/config.py:8 apps/promotions/models.py:101
 #: templates/oscar/dashboard/index.html:173
@@ -4854,7 +4758,7 @@ msgstr "صفحه ارتقاء"
 
 #: apps/promotions/models.py:59
 msgid "Page Promotions"
-msgstr ""
+msgstr "صفحه های ترفیع"
 
 #: apps/promotions/models.py:74
 #: templates/oscar/customer/order/order_list.html:22
@@ -4894,8 +4798,9 @@ msgstr "نوع صفحه نمایش"
 
 #: apps/promotions/models.py:152
 msgid ""
-"This can be used to have different types of HTML blocks (eg different widths)"
-msgstr ""
+"This can be used to have different types of HTML blocks (eg different "
+"widths)"
+msgstr "برای داشتن انواع مختلف بلاک های HTML می تواند استفاده شود (مثلا عرض های متفاوت)"
 
 #: apps/promotions/models.py:159 apps/promotions/models.py:160
 msgid "Raw HTML"
@@ -4907,7 +4812,7 @@ msgstr "URL لینک"
 
 #: apps/promotions/models.py:178
 msgid "This is where this promotion links to"
-msgstr ""
+msgstr "این جایی است که ترفیع به آن لینک می شود"
 
 #: apps/promotions/models.py:205
 msgid ""
@@ -4917,15 +4822,15 @@ msgstr ""
 
 #: apps/promotions/models.py:214
 msgid "Multi Image"
-msgstr ""
+msgstr "چند تصویر"
 
 #: apps/promotions/models.py:215
 msgid "Multi Images"
-msgstr ""
+msgstr "چند تصویر"
 
 #: apps/promotions/models.py:234 apps/promotions/models.py:235
 msgid "Single product"
-msgstr ""
+msgstr "تک محصول"
 
 #: apps/promotions/models.py:245
 msgctxt "Promotion product list title"
@@ -4946,11 +4851,11 @@ msgstr "لیست محصولات"
 
 #: apps/promotions/models.py:284
 msgid "Hand Picked Product List"
-msgstr ""
+msgstr "لیست محصول های نشان دار شده"
 
 #: apps/promotions/models.py:285
 msgid "Hand Picked Product Lists"
-msgstr ""
+msgstr "لیست های محصولات نشان دار شده"
 
 #: apps/promotions/models.py:293
 msgid "List"
@@ -4958,7 +4863,7 @@ msgstr "فهرست"
 
 #: apps/promotions/models.py:304 apps/promotions/models.py:305
 msgid "Ordered product"
-msgstr ""
+msgstr "محصول سفارش داده شده"
 
 #: apps/promotions/models.py:313
 msgid "Bestselling products"
@@ -5084,11 +4989,11 @@ msgstr "حمل ونقل رایگان"
 
 #: apps/shipping/abstract_models.py:77
 msgid "Order and Item Charge"
-msgstr ""
+msgstr "سفارش و هزینه اقلام"
 
 #: apps/shipping/abstract_models.py:78
 msgid "Order and Item Charges"
-msgstr ""
+msgstr "سفارش و هزینه اقلام"
 
 #: apps/shipping/abstract_models.py:106
 msgid "Default Weight"
@@ -5114,15 +5019,13 @@ msgstr "محدودیت از بالا"
 msgid ""
 "Enter upper limit of this weight band in kg. The lower limit will be "
 "determined by the other weight bands."
-msgstr ""
-"محدودیت از بالا را برای این گروه وزنی به کیلوگرم وارد کنید. محدودیت از پایین "
-"توسط گروه های وزنی دیگر مشخص میشود"
+msgstr "محدودیت از بالا را برای این گروه وزنی به کیلوگرم وارد کنید. محدودیت از پایین توسط گروه های وزنی دیگر مشخص میشود"
 
 #: apps/shipping/abstract_models.py:202
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:35
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:68
 msgid "Charge"
-msgstr ""
+msgstr "هزینه"
 
 #: apps/shipping/abstract_models.py:221
 msgid "Weight Band"
@@ -5166,32 +5069,25 @@ msgstr "شما باید چند روش حمل ونقل تعریف کنید"
 
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
-#, fuzzy
-#| msgid "Number of orders:"
 msgid "Number of vouchers"
-msgstr "تعداد سفارشات:"
+msgstr "تعداد کوپن ها"
 
 #: apps/voucher/abstract_models.py:37
 msgid "Length of Code"
-msgstr ""
+msgstr "طول کد"
 
 #: apps/voucher/abstract_models.py:52
-#, fuzzy
-#| msgid "Voucher"
 msgid "VoucherSet"
-msgstr "کوپن"
+msgstr "مجموعه کوپن"
 
 #: apps/voucher/abstract_models.py:53
-#, fuzzy
-#| msgid "Vouchers"
 msgid "VoucherSets"
-msgstr "کوپن"
+msgstr "مجموعه کوپن ها"
 
 #: apps/voucher/abstract_models.py:126
 msgid ""
 "This will be shown in the checkout and basket once the voucher is entered"
-msgstr ""
-"این در قسمت وارسی نهایی و در سبد، هنگامی که کوپن وارد شد، نمایش داده میشود"
+msgstr "این در قسمت وارسی نهایی و در سبد، هنگامی که کوپن وارد شد، نمایش داده میشود"
 
 #: apps/voucher/abstract_models.py:130
 msgid "Case insensitive / No spaces allowed"
@@ -5290,9 +5186,7 @@ msgstr "خصوصی- فقط مالک میتواند لیست خاسته ها را
 msgid ""
 "Shared - Only the owner and people with access to the obfuscated link can "
 "see the wish list"
-msgstr ""
-"به اشتراک گذاشته شده- فقط مالک و کسانی که به لینک مبهم دسترسی دارند میتوانند "
-"لیست خاسته ها را ببینند"
+msgstr "به اشتراک گذاشته شده- فقط مالک و کسانی که به لینک مبهم دسترسی دارند میتوانند لیست خاسته ها را ببینند"
 
 #: apps/wishlists/abstract_models.py:43
 msgid "Public - Everybody can see the wish list"
@@ -5329,7 +5223,7 @@ msgstr "این فیلد الزامی است"
 
 #: core/validators.py:118
 msgid "This field is invalid as its value is forbidden"
-msgstr ""
+msgstr "این ورودی نامعتبر است زیرا مقدار وارد شده غیرمجاز است"
 
 #: defaults.py:121
 msgid "Low stock alerts"
@@ -5374,10 +5268,8 @@ msgid "Stock alert requests"
 msgstr "تقاضاهای اخطار موجودی"
 
 #: defaults.py:179
-#, fuzzy
-#| msgid "Vouchers"
 msgid "Voucher Sets"
-msgstr "کوپن"
+msgstr "مجموعه کوپن ها"
 
 #: defaults.py:186
 msgid "Content"
@@ -5444,16 +5336,16 @@ msgstr "بیش از ۶۰ "
 
 #: forms/mixins.py:81
 msgid "This is not a valid international phone format."
-msgstr ""
+msgstr "شماره وارد شده دارای فرمت استاندارد بین الملی نمی باشد"
 
 #: forms/mixins.py:94
 #, python-format
 msgid "This is not a valid local phone format for %s."
-msgstr ""
+msgstr "شماره %s  دارای فرمت صحیح محلی نمی باشد"
 
 #: forms/mixins.py:100
 msgid "This is not a valid local or international phone format."
-msgstr ""
+msgstr "شماره وارد شده دارای فرمت صحیح محلی و بین المللی نمی باشد"
 
 #: management/commands/oscar_send_alerts.py:16
 msgid "Check for products that are back in stock and send out alerts"
@@ -5493,8 +5385,7 @@ msgstr "با عرض پوزش، خطایی رخ داد و ما قادر به ار
 msgid ""
 "This incident has been logged and will be addressed by an engineer as soon "
 "as possible."
-msgstr ""
-"این حادثه وارد سیستم شده و توسط یک مهندس در اسرع وقت.مورد توجه قرار می گیرد"
+msgstr "این حادثه وارد سیستم شده و توسط یک مهندس در اسرع وقت.مورد توجه قرار می گیرد"
 
 #: templates/oscar/basket/basket.html:12
 #: templates/oscar/catalogue/browse.html:17
@@ -5528,9 +5419,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong>  به سبد خرید شما اضافه شد"
+msgstr "\n<strong>%(title)s</strong>  به سبد خرید شما اضافه شد"
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5539,28 +5428,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(quantity)s</strong> کپی هایی از <strong>%(title)s</strong>\n"
-"به شبد خرید شما اضافه شدند"
+msgstr "\n<strong>%(quantity)s</strong> کپی هایی از <strong>%(title)s</strong>\nبه شبد خرید شما اضافه شدند"
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> به سبد خرید شما برگردانده شد\n"
+msgstr "\n<strong>%(title)s</strong> به سبد خرید شما برگردانده شد\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> برای بعد ذخیره شد\n"
+msgstr "\n<strong>%(title)s</strong> برای بعد ذخیره شد\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5573,9 +5455,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
-"\n"
-"تمام سبد شما در حال حاظر <strong>%(total)s</strong>"
+msgstr "\nتمام سبد شما در حال حاظر <strong>%(total)s</strong>"
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5593,10 +5473,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"سبدخرید شما اکنون واجد شرایط \n"
-"<strong>%(name)s</strong> پیشنهاد میباشد\n"
+msgstr "\nسبدخرید شما اکنون واجد شرایط \n<strong>%(name)s</strong> پیشنهاد میباشد\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5604,10 +5481,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"سبد خرید شما دیگر واجد شرایط\n"
-"<strong>%(name)s</strong> پیشنهاد نمیباشد\n"
+msgstr "\nسبد خرید شما دیگر واجد شرایط\n<strong>%(name)s</strong> پیشنهاد نمیباشد\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5615,16 +5489,15 @@ msgstr "پیغام های مهم درباره ی موردهای درون سبد 
 
 #: templates/oscar/basket/partials/basket_content.html:16
 msgid "You could be missing out on offers!"
-msgstr ""
+msgstr "شما ممکن است پیشنهاد‌ها را از دست بدهید"
 
 #: templates/oscar/basket/partials/basket_content.html:18
 #, python-format
 msgid ""
 "\n"
-"                <div class=\"warning\">%(message)s to qualify for the <a "
-"href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
+msgstr "\n</div>%(message)s واجد شرایط بودن برای <a href=\"%(url)s\">%(offer_name)s</a> پیشنهاد ویژه<div class=\"warning\">"
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5902,18 +5775,14 @@ msgstr "مرتب سازی بر حسب"
 #, python-format
 msgid ""
 "\n"
-"                    <strong>%(num_results)s</strong> result - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> result - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgid_plural ""
 "\n"
-"                    <strong>%(num_results)s</strong> results - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
-"\n"
-"                   نتایج <strong>%(num_results)s</strong>  <strong>\n"
-" %(end)s</strong> تا <strong>%(start)s</strong> از"
+msgstr[0] "\n                   نتایج <strong>%(num_results)s</strong>  <strong>\n %(end)s</strong> تا <strong>%(start)s</strong> از"
+msgstr[1] "\n                   نتایج <strong>%(num_results)s</strong>  <strong>\n %(end)s</strong> تا <strong>%(start)s</strong> از"
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5925,9 +5794,8 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> نتیجه"
+msgstr[0] "\n<strong>%(num_results)s</strong> نتیجه"
+msgstr[1] "\n<strong>%(num_results)s</strong> نتیجه"
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5941,10 +5809,8 @@ msgid "No products found."
 msgstr "محصولی یافت نشد"
 
 #: templates/oscar/catalogue/category.html:16
-#, fuzzy
-#| msgid "Edit category"
 msgid "Edit this category"
-msgstr "ویرایش دسته بندی"
+msgstr "ویرایش این دسته‌بندی"
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -5989,12 +5855,9 @@ msgstr "نظرات مشتریان"
 #, python-format
 msgid ""
 "This product does not have any reviews yet -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">be the "
-"first to write one</a>.\n"
+"                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"هنوز نظری درباره‌ی این محصول ثبت‌نشده‌است -\n"
-"<a href=\"%(add_review_url)s#addreview\">اولین نفری باشید که نظر می‌دهد</a>."
+msgstr "هنوز نظری درباره‌ی این محصول ثبت‌نشده‌است -\n<a href=\"%(add_review_url)s#addreview\">اولین نفری باشید که نظر می‌دهد</a>."
 
 #: templates/oscar/catalogue/detail.html:164
 msgid "This product does not have any reviews yet"
@@ -6012,7 +5875,7 @@ msgstr "اضافه کردن به سبد"
 
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:20
 msgid "You have an active stock alert for this product."
-msgstr ""
+msgstr "شما یک هشدار موجودی فعال برای این محصول دارید"
 
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:24
 msgid "You can get an email alert when this product is back in stock."
@@ -6050,7 +5913,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
+msgstr "\nاضافه کردن به لیست علاقه‌ها ی %(name)s"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -6060,13 +5923,9 @@ msgstr "ایجاد یک علاقه‌مندی جدید"
 #, python-format
 msgid ""
 "\n"
-"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s"
-"\">'%(name)s'</a> wishlist.</span>\n"
+"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">محصول در لیست علاقه‌مندی‌های <a href=\"%(url)s"
-"\">'%(name)s'</a>است."
+msgstr "\n<span class=\"pull-left\">محصول در لیست علاقه‌مندی‌های <a href=\"%(url)s\">'%(name)s'</a>است."
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -6086,20 +5945,15 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-" نظر توسط شما در تاریخ %(review_date)s"
+msgstr "\n نظر توسط شما در تاریخ %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
 msgid ""
 "\n"
-"                    Reviewed by <strong>%(name)s</strong> on "
-"%(review_date)s\n"
+"                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"نظر داده شده توسط <strong>%(name)s</strong> در تاریخ %(review_date)s"
+msgstr "\nنظر داده شده توسط <strong>%(name)s</strong> در تاریخ %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -6127,15 +5981,14 @@ msgstr "نه"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer found this useful\n"
 "            "
 msgid_plural ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
+msgstr[0] "\n<strong>%(num_up_votes)s</strong> از %(num_votes)s مشتریان این را مثبت ارزابی کرده اند"
+msgstr[1] "\n<strong>%(num_up_votes)s</strong> از %(num_votes)s مشتریان این را مثبت ارزابی کرده اند"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -6155,7 +6008,8 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
+msgstr[0] "\n%(num_reviews)sبررسی‌ها ی مشتری "
+msgstr[1] "\n%(num_reviews)sبررسی‌ها ی مشتری "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:79
@@ -6303,7 +6157,7 @@ msgstr "مشخصات پرداخت را وارد کنید"
 msgid ""
 "This page needs implementing within your project.  You may want to use one "
 "of Oscar's payment gateway libraries:"
-msgstr ""
+msgstr "این صفحه باید در پروژه شما قرار بگیرد. می توانید از یکی از کتابخانه های درگاه های پرداخت اسکار استفاده کنید"
 
 #: templates/oscar/checkout/preview.html:5
 msgid "Order preview"
@@ -6323,7 +6177,7 @@ msgstr "حمل ونقل به کجا صورت میگیرد؟"
 
 #: templates/oscar/checkout/shipping_address.html:23
 msgid "An address from your address book?"
-msgstr ""
+msgstr "یک آدرس از دفترچه آدرس شما؟"
 
 #: templates/oscar/checkout/shipping_address.html:42
 msgid "Ship to your default shipping address"
@@ -6388,15 +6242,10 @@ msgstr "بازگشت به سبد خرید"
 #, python-format
 msgid ""
 "\n"
-"                                This includes a discount of <strong>"
-"%(amount)s</strong> as\n"
-"                                your basket qualifies for the <strong>"
-"%(name)s</strong> offer.\n"
+"                                This includes a discount of <strong>%(amount)s</strong> as\n"
+"                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
-msgstr ""
-"\n"
-"شامل یک تخفیف <strong>%(amount)s</strong> به عنوان\n"
-"سبد شما قابلیت <strong>%(name)s</strong> پیشنهاد را دارد"
+msgstr "\nشامل یک تخفیف <strong>%(amount)s</strong> به عنوان\nسبد شما قابلیت <strong>%(name)s</strong> پیشنهاد را دارد"
 
 #: templates/oscar/checkout/shipping_methods.html:58
 msgid "Select option"
@@ -6409,31 +6258,22 @@ msgid ""
 "\n"
 "        Order %(number)s: confirmation\n"
 "    "
-msgstr ""
-"\n"
-"سفارش %(number)s : تایید"
+msgstr "\nسفارش %(number)s : تایید"
 
 #: templates/oscar/checkout/thank_you.html:25
 #, python-format
 msgid ""
 "\n"
-"        Your order has been placed and a confirmation email has been sent - "
-"your order number is\n"
+"        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
-msgstr ""
-"\n"
-"سفارش شما در سیستم ما ثبت شد. همکاران ما به زودی آن را آماده و برای شما "
-"ارسال خواهند کرد. شماره ی سفارش شما :‌\n"
-"<strong>%(number)s</strong>"
+msgstr "\nسفارش شما در سیستم ما ثبت شد. همکاران ما به زودی آن را آماده و برای شما ارسال خواهند کرد. شماره ی سفارش شما :‌\n<strong>%(number)s</strong>"
 
 #: templates/oscar/checkout/thank_you.html:29
 msgid ""
 "Please make a note of this reference or print this page and quote it in any "
 "communication with us regarding your order."
-msgstr ""
-"لطفا از این رسید یادداشت برداری کنید یا آن را پرینت کنید و برای پیگیری سفارش "
-"خود از آن استفاده کنید."
+msgstr "لطفا از این رسید یادداشت برداری کنید یا آن را پرینت کنید و برای پیگیری سفارش خود از آن استفاده کنید."
 
 #: templates/oscar/checkout/thank_you.html:62
 msgid "No shipping address required."
@@ -6443,12 +6283,9 @@ msgstr "هیچ آدرس حمل ونقلی مورد نیاز نمیباشد"
 #, python-format
 msgid ""
 "\n"
-"                                Allocation of %(amount)s from type %(type)s "
-"(reference: %(reference)s)\n"
+"                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"تخصیص %(amount)s از نوع %(type)s - مرجع : %(reference)s "
+msgstr "\nتخصیص %(amount)s از نوع %(type)s - مرجع : %(reference)s "
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6456,14 +6293,11 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"تخصیص %(amount)s از نوع %(type)s"
+msgstr "\nتخصیص %(amount)s از نوع %(type)s"
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
-msgstr ""
-"پرداخت برای این سفارش لازم نیست. پرداخت به هنگام تحویل کالا انجام می گیرد"
+msgstr "پرداخت برای این سفارش لازم نیست. پرداخت به هنگام تحویل کالا انجام می گیرد"
 
 #: templates/oscar/checkout/thank_you.html:118
 msgid "Items purchased"
@@ -6475,9 +6309,7 @@ msgid ""
 "\n"
 "                            Estimated dispatch: <strong>%(date)s</strong>\n"
 "                        "
-msgstr ""
-"\n"
-"زمان تخمینی فرستادن: <strong>%(date)s</strong> "
+msgstr "\nزمان تخمینی فرستادن: <strong>%(date)s</strong> "
 
 #: templates/oscar/checkout/thank_you.html:227
 msgid "Shipping charge (before discounts)"
@@ -6638,17 +6470,14 @@ msgstr "کنسل"
 msgid ""
 "\n"
 "<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a> به انبار اضافه شد\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a> به انبار اضافه شد\n"
 
 #: templates/oscar/customer/alerts/message_subject.html:2
-#, fuzzy, python-format
-#| msgid "%(title|safe)s is back in stock"
+#, python-format
 msgid ""
 "\n"
 "%(title)s is back in stock\n"
-msgstr "%(title|safe) موجود شد"
+msgstr "\n%(title)sموجود شده است\n"
 
 #: templates/oscar/customer/anon_order.html:8
 #: templates/oscar/dashboard/orders/order_detail.html:24
@@ -6723,43 +6552,31 @@ msgid "The %(name)s team"
 msgstr "گروه %(name)s "
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "    You're receiving this email because your email address has been "
-#| "changed to <strong>%(email)s</strong>.\n"
-#| "    "
+#, python-format
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "<strong>%(email)s</strong>."
-msgstr ""
-"\n"
-"شما این ایمیل را دریافت کرده‌اید زیرا آدرس ایمیل شما به <strong>%(email)s</"
-"strong> تغییر کرده است."
+msgstr "شما این ایمیل را دریافت کرده اید زیرا آدرس ایمیل شما به <strong>%(email)s</strong> تغییر کرد"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately and "
 "correct your email address:"
-msgstr ""
-"اگر شما آن را تغییر نداده‌اید، لطفا فورا رمز عبور خود را تغییر داده و آدرس "
-"ایمیل خود را اصلاح کنید:"
+msgstr "اگر شما آن را تغییر نداده‌اید، لطفا فورا رمز عبور خود را تغییر داده و آدرس ایمیل خود را اصلاح کنید:"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
-msgstr ""
-"اگر خودتان آدرس ایمیل را تغییر دادید، می‌توانید این ایمیل را نادیده بگیرید"
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
+msgstr "اگر خودتان آدرس ایمیل را تغییر دادید، می‌توانید این ایمیل را نادیده بگیرید"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
 #, python-format
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "%(email)s."
-msgstr ""
-"شما این ایمیل را دریافت کرده‌اید، زیرا آدرس ایمیل شما به %(email)s تغییر "
-"یافته است."
+msgstr "شما این ایمیل را دریافت کرده‌اید، زیرا آدرس ایمیل شما به %(email)s تغییر یافته است."
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
 #, python-format
@@ -6777,7 +6594,7 @@ msgstr "سلام"
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "        will be processed shortly."
-msgstr ""
+msgstr "سفارش %(order_number)s شما دریافت شد و به زودی پردازش خواهد شد"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:17
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6808,11 +6625,9 @@ msgstr "آدرس حمل و نقل:"
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
-"title=\"order status\">here</a>"
-msgstr ""
-"شما می‌توانید وضعیت این سفارش را با کلیک کردن <a href=\"%(status_url)s\" "
-"title=\"order status\">اینجا</a> مشاهده نمایید"
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
+msgstr "شما می‌توانید وضعیت این سفارش را با کلیک کردن <a href=\"%(status_url)s\" title=\"order status\">اینجا</a> مشاهده نمایید"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -6821,7 +6636,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
+msgstr "سلام!\nسفارش %(order_number)s شما دریافت شد و به زودی پردازش خواهد شد"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6836,9 +6651,7 @@ msgstr "قیمت:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"شما می‌توانید وضعیت سفارش خود را از طریق URL زیر ببینید\n"
-"%(status_url)s"
+msgstr "شما می‌توانید وضعیت سفارش خود را از طریق URL زیر ببینید\n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6850,19 +6663,11 @@ msgid "Confirmation of order %(number)s"
 msgstr "تأییدیه‌ی سفارش %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "    You're receiving this e-mail because your password has been changed "
-#| "at %(name)s.\n"
-#| "    "
+#, python-format
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
-msgstr ""
-"\n"
-"شما این ایمیل را به دلیل این که رمز عبورتان در %(name)s تغییر یافته، دریافت "
-"نموده‌اید."
+msgstr "شما این ایمیل را دریافت کرده اید زیرا کلمه عبور شما برای %(name)s تغییر داده شده است"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
@@ -6879,9 +6684,8 @@ msgstr "در غیر این صورت، می‌توانید این ایمیل را
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your password has been changed at "
-"%(name)s.\n"
-msgstr ""
+"You're receiving this email because your password has been changed at %(name)s.\n"
+msgstr "\nشما این ایمیل را دریافت کرده اید زیرا کلمه عبور شما برای %(name)s تغییر داده شده است\n\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6892,19 +6696,19 @@ msgstr "رمز عبور شما در %(site_name)s تغییر یافته است."
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(name)s."
-msgstr ""
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
+msgstr "شما این ایمیل را دریافت کرده اید زیرا برای حساب کاربری شما در %(name)s درخواست بازنشانی کردن کلمه عبور شده است"
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:7
 msgid "Please go to the following page and choose a new password:"
-msgstr ""
+msgstr "لطفا وارد صفحه بعد شوید و برای انتخاب کردن یک کلمه عبور جدید اقدام کنید"
 
 #: templates/oscar/customer/emails/commtype_password_reset_subject.txt:1
 #, python-format
 msgid "Resetting your password at %(site_name)s."
-msgstr ""
+msgstr "بازنشانی کردن کلمه عبور شما در %(site_name)s"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:7
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:1
@@ -6913,90 +6717,42 @@ msgid "Dear %(name)s,"
 msgstr "%(name)s عزیز"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:14
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "We are happy to inform you that our product '%(product|safe)s' is back in "
-#| "stock:\n"
-#| "http://%(site)s%(path)s\n"
+#, python-format
 msgid ""
 "\n"
-"            We are happy to inform you that our product '%(title)s' is back "
-"in stock:\n"
+"            We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "            http://%(site)s%(path)s\n"
 "        "
-msgstr ""
-"\n"
-"ما خوشحالیم که میتوانیم به شما اطلاع بدهیم product '%(product|safe)s'  به "
-"انبار اضافه شده اند:\n"
-"http://%(site)s%(path)s \n"
+msgstr "\nخوشحالیم که به اطلاع برسانیم موجودی محصول %(title)s  تامین شده است و هم اکنون در فروشگاه موجود است\nhttp://%(site)s%(path)s"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:22
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "Beware that the amount of items in stock is limited. Be quick or someone "
-#| "might get there first.\n"
 msgid ""
 "\n"
-"                Beware that the amount of items in stock is limited. Be "
-"quick or someone might get there first.\n"
+"                Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 "            "
-msgstr ""
-"\n"
-"آگاه باشید که مقدار موارد درون انبار محدود است. قبل ازینکه مشتری به آنجا سر "
-"بزند سریعتر اقدام کنید\n"
+msgstr "\nمطلع باشید که موجودی اقلام محدود می باشد. سفارش خود را به سرعت تکمیل کنید زیرا ممکن است شخص دیگری آن را ثبت کند"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:29
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "With this email we have disabled your alert automatically and you will "
-#| "not\n"
-#| "receive any further email regarding this product.\n"
-#| "\n"
-#| "Thanks for your interest,\n"
-#| "The %(site_name)s Team\n"
 msgid ""
 "\n"
-"            With this email we have disabled your alert automatically and "
-"you will not\n"
+"            With this email we have disabled your alert automatically and you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
-msgstr ""
-"\n"
-"بوسیله ی این ایمیل ما اعلان شما را به صورت اتوماتیک غیرفعال میکنیم \n"
-"وشما هیچ ایمیل دیگری مرتبط با این محصول دریافت نخواهید کرد\n"
-"\n"
-"بابت علاقه ی شما تشکر میکنیم\n"
-"گروه %(site_name)s  \n"
+msgstr "\nبا این ایمیل هشدار شما به طور خودکار غیر فعال شده است و شما ایمیل دیگری را برای این محصول دریافت نخواهید کرد"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:2
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "We are happy to inform you that our product '%(product|safe)s' is back in "
-#| "stock:\n"
-#| "http://%(site)s%(path)s\n"
+#, python-format
 msgid ""
 "\n"
 "We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr ""
-"\n"
-"ما خوشحالیم که میتوانیم به شما اطلاع بدهیم product '%(product|safe)s'  به "
-"انبار اضافه شده اند:\n"
-"http://%(site)s%(path)s \n"
+msgstr "\nخوشحالیم که به اطلاع برسانیم موجودی محصول %(title)s تامین شده است و هم اکنون در فروشگاه موجود است\nhttp://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:5
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone "
-"might get there first.\n"
-msgstr ""
-"\n"
-"آگاه باشید که مقدار موارد درون انبار محدود است. قبل ازینکه مشتری به آنجا سر "
-"بزند سریعتر اقدام کنید\n"
+"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
+msgstr "\nآگاه باشید که مقدار موارد درون انبار محدود است. قبل ازینکه مشتری به آنجا سر بزند سریعتر اقدام کنید\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
 #, python-format
@@ -7007,13 +6763,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"بوسیله ی این ایمیل ما اعلان شما را به صورت اتوماتیک غیرفعال میکنیم \n"
-"وشما هیچ ایمیل دیگری مرتبط با این محصول دریافت نخواهید کرد\n"
-"\n"
-"بابت علاقه ی شما تشکر میکنیم\n"
-"گروه %(site_name)s  \n"
+msgstr "\nبوسیله ی این ایمیل ما اعلان شما را به صورت اتوماتیک غیرفعال میکنیم \nوشما هیچ ایمیل دیگری مرتبط با این محصول دریافت نخواهید کرد\n\nبابت علاقه ی شما تشکر میکنیم\nگروه %(site_name)s  \n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_body.txt:1
 #, python-format
@@ -7030,17 +6780,16 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
-msgstr ""
+msgstr "سلام\nشخصی (امیدواریم خود شما!) درخواست یک ایمیل هشدار را در هنگام موجود شدن %(title)s در سایت را کرده است. لطفا برای تایید روی لینک زیر کلیک کنید:\nhttp://%(domain)s%(confirm_path)s\nشما می توانید این پیام هشدار را در هر زمانی که مایل بودید با کلیک بر روی لینک زیر لغو‌ کنید:\nhttp://%(domain)s%(cancel_path)s\nممنون از توجهتان.\nاز طرف تیم %(site)s\n\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"
 msgstr "برای اعلان انبار تایید نیاز است"
 
 #: templates/oscar/customer/emails/commtype_product_alert_subject.txt:1
-#, fuzzy, python-format
-#| msgid "%(title|safe)s is back in stock"
+#, python-format
 msgid "%(title)s is back in stock"
-msgstr "%(title|safe) موجود شد"
+msgstr "موجودی محصول %(title)s تامین شده است"
 
 #: templates/oscar/customer/emails/commtype_registration_body.html:1
 #: templates/oscar/customer/emails/commtype_registration_body.txt:1
@@ -7087,7 +6836,7 @@ msgstr "ثبت ..."
 
 #: templates/oscar/customer/notifications/detail.html:6
 msgid "Notifications inbox"
-msgstr ""
+msgstr "صندوق اعلانات"
 
 #: templates/oscar/customer/notifications/detail.html:14
 msgid "Sender"
@@ -7154,32 +6903,32 @@ msgstr "سفارش مجدد "
 #: templates/oscar/customer/order/order_detail.html:57
 #: templates/oscar/customer/wishlists/wishlists_detail.html:54
 msgid "Not available anymore"
-msgstr ""
+msgstr "دیگر موجود نیست"
 
 #: templates/oscar/customer/order/order_detail.html:68
 #: templates/oscar/dashboard/orders/order_detail.html:168
 msgid "Basket total (excl. discounts)"
-msgstr ""
+msgstr "مجموع سبد خرید (بدون احتساب تخفیف ها)"
 
 #: templates/oscar/customer/order/order_detail.html:86
 #: templates/oscar/dashboard/orders/order_detail.html:187
 msgid "Basket total (inc. discounts)"
-msgstr ""
+msgstr "مجموع سبد خرید (شامل تخفیف ها)"
 
 #: templates/oscar/customer/order/order_detail.html:101
 #: templates/oscar/dashboard/orders/order_detail.html:206
 msgid "Shipping total (excl. discounts)"
-msgstr ""
+msgstr "مجموع هزینه حمل و نقل (بدون احتساب تخفیف ها)"
 
 #: templates/oscar/customer/order/order_detail.html:114
 #: templates/oscar/dashboard/orders/order_detail.html:225
 msgid "Shipping total (inc. discounts)"
-msgstr ""
+msgstr "مجموع هزینه حمل و نقل (شامل تخفیف ها)"
 
 #: templates/oscar/customer/order/order_detail.html:119
 #: templates/oscar/dashboard/orders/order_detail.html:233
 msgid "Shipping total"
-msgstr ""
+msgstr "هزینه حمل و نقل"
 
 #: templates/oscar/customer/order/order_detail.html:139
 msgid "Re-order all items"
@@ -7191,12 +6940,12 @@ msgstr "شماره تماس"
 
 #: templates/oscar/customer/order/order_detail.html:156
 msgid "Shipping Notes"
-msgstr ""
+msgstr "توضیحات حمل و نقل"
 
 #: templates/oscar/customer/order/order_list.html:27
 #: templates/oscar/dashboard/orders/statistics.html:33
 msgid "Filtering..."
-msgstr ""
+msgstr "در حال فیلتر کردن..."
 
 #: templates/oscar/customer/order/order_list.html:27
 msgid "Filter results"
@@ -7217,11 +6966,11 @@ msgstr "تنظیم مجدد"
 #: templates/oscar/customer/order/order_list.html:41
 #: templates/oscar/dashboard/orders/order_list.html:118
 msgid "Total inc tax"
-msgstr ""
+msgstr "مجموع شامل مالیات"
 
 #: templates/oscar/customer/order/order_list.html:56
 msgid "No orders match your search."
-msgstr ""
+msgstr "هیچ محصولی یافت نشد"
 
 #: templates/oscar/customer/order/order_list.html:58
 msgid "You haven't placed any orders."
@@ -7237,7 +6986,7 @@ msgstr "ویرایش مشخصات"
 
 #: templates/oscar/customer/profile/profile_delete.html:5
 msgid "Please confirm your password to delete your profile."
-msgstr ""
+msgstr "لطفا برای پاک کردن حساب کاربری کلمه عبور خود را تایید کنید"
 
 #: templates/oscar/customer/profile/profile_delete.html:10
 msgid "Warning"
@@ -7246,11 +6995,10 @@ msgstr "اخطار"
 #: templates/oscar/customer/profile/profile_delete.html:11
 msgid ""
 "\n"
-"                This will delete all information about you from the site.  "
-"Deleting your profile cannot be\n"
+"                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
+msgstr "\nهمه اطلاعات شما از سایت پاک خواهد شد. پاک کردن حساب کاربری شما برگشت ناپذیر است"
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -7270,9 +7018,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"آیا مطمئن هستید که می خواهید %(name)s را حذف کنید؟"
+msgstr "\nآیا مطمئن هستید که می خواهید %(name)s را حذف کنید؟"
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:18
 msgid "Remove product"
@@ -7282,10 +7028,9 @@ msgstr "حذف محصول"
 #, python-format
 msgid ""
 "\n"
-"                Are you sure you want to delete %(product_name)s from wish "
-"list %(wishlist_name)s?\n"
+"                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
+msgstr "\nاز پاک کردن محصول %(product_name)s از لیست علاقه‌ها ی %(wishlist_name)s اطمینان دارید؟"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -7300,10 +7045,9 @@ msgstr "مشاهده محصول"
 #, python-format
 msgid ""
 "\n"
-"                                                            Move to "
-"'%(name)s' wish list\n"
+"                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
+msgstr "\nانتقال به لیست علاقه‌ها ی%(name)s"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:100
 msgid "Update quantities"
@@ -7325,10 +7069,9 @@ msgstr "اسم لیست درخواست جدید شما چیست؟"
 #, python-format
 msgid ""
 "\n"
-"                    After your wishlist is created, <strong>%(title)s</"
-"strong> will be added.\n"
+"                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
+msgstr "\nبعد از ساخته شدن لیست علاقه‌ها <strong>%(title)s</strong> اضافه خواهد شد"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -7336,7 +7079,7 @@ msgstr "تعداد محصولات"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:26
 msgid "Wish list settings"
-msgstr ""
+msgstr "تنظیمات لیست علاقه‌ها"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:44
 msgid "You don't have any wish lists yet."
@@ -7344,47 +7087,35 @@ msgstr "شما هنوز هیچ لیست درخواستی ندارید."
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:5
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:5
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create Attribute Option Group"
-msgstr "ویژگی انتخاب گروه"
+msgstr "ساخت گروه مجموعه ویژگی ها"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:14
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:21
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Attribute Option Group"
-msgstr "ویژگی انتخاب گروه"
+msgstr "مجموعه ویژگی ها"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:31
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group?"
-msgstr "ویژگی انتخاب گروه"
+msgstr "حذف مجموعه ویژگی ها؟"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
 msgid ""
 "Please make sure all Product Attributes are assigned to another Attribute "
 "Option Group before deletion."
-msgstr ""
+msgstr "لطفا قبل از پاک کردن مطمئن شوید که همه ویژگی های محصول به یک مجموعه ویژگی دیگر اختصاص داده شده باشند"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group"
-msgstr "ویژگی انتخاب گروه"
+msgstr "حذف مجموعه ویژگی ها"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
-#, fuzzy, python-format
-#| msgid ""
-#| "Delete %(object.type)s content block <strong>%(object.name)s</strong> - "
-#| "are you sure?"
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
-msgstr ""
-"حذف %(object.type)s بلوک محتوی <strong>%(object.name)s</strong> - آیا "
-"مطمئنید؟"
+#, python-format
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgstr "حذف مجموعه ویژگی های <strong>%(name)s</strong> - آیا مطمئن هستید؟"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
 #: templates/oscar/dashboard/catalogue/product_class_form.html:34
@@ -7394,41 +7125,29 @@ msgstr "دسته بندی ها"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:55
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:70
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Group details"
-msgstr "ویژگی انتخاب گروه ها"
+msgstr "جزئیات مجموعه ویژگی ها"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:56
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:102
-#, fuzzy
-#| msgid "Attribute option"
 msgid "Attribute Options"
-msgstr "ویژگی موجود"
+msgstr "مجموعه ویژگی ها"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:6
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Groups"
-msgstr "ویژگی انتخاب گروه ها"
+msgstr "گروه مجموعه ویژگی ها"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:20
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create new Attribute Option Group"
-msgstr "ویژگی انتخاب گروه"
+msgstr "ایجاد مجموعه ویژگی جدید"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:34
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "No Attribute Option Groups found."
-msgstr "ویژگی انتخاب گروه ها"
+msgstr "هیچ مجموعه ویژگی یافت نشد"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_row_actions.html:11
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Edit Attribute Option Group"
-msgstr "ویژگی انتخاب گروه"
+msgstr "ویرایش مجموعه ویژگی"
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:14
 #: templates/oscar/dashboard/catalogue/category_delete.html:19
@@ -7443,14 +7162,13 @@ msgstr "حذف دسته بندی"
 #, python-format
 msgid ""
 "\n"
-"            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
-"p>\n"
+"            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
-msgstr ""
+msgstr "\n<p>آیا دسته‌بندی <strong>%(name)s</strong> پاک شود؟ - مطمئن هستید؟</p>"
 
 #: templates/oscar/dashboard/catalogue/category_list.html:23
 msgid "Create new category"
-msgstr ""
+msgstr "ساخت دسته‌بندی جدید"
 
 #: templates/oscar/dashboard/catalogue/category_list.html:30
 msgid "You are editing:"
@@ -7458,7 +7176,7 @@ msgstr "شما در حال ویرایش:"
 
 #: templates/oscar/dashboard/catalogue/category_list.html:44
 msgid "There are no categories."
-msgstr ""
+msgstr "هیچ دسته‌بندی وجود ندارد"
 
 #: templates/oscar/dashboard/catalogue/category_row_actions.html:12
 msgid "Edit category"
@@ -7466,7 +7184,7 @@ msgstr "ویرایش دسته بندی"
 
 #: templates/oscar/dashboard/catalogue/category_row_actions.html:17
 msgid "Add child category"
-msgstr ""
+msgstr "اضافه کردن زیرشاخه"
 
 #: templates/oscar/dashboard/catalogue/category_row_actions.html:22
 msgid "Edit children"
@@ -7488,7 +7206,7 @@ msgid ""
 "\n"
 "                    Created product variant '%(name)s'.\n"
 "                "
-msgstr ""
+msgstr "\nنوع محصول ایجاد شده «%(name)s»."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
 #, python-format
@@ -7496,7 +7214,7 @@ msgid ""
 "\n"
 "                    Created variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
+msgstr "\nنوع ایجاد شده برای «%(parent_name)s»"
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
 #, python-format
@@ -7504,7 +7222,7 @@ msgid ""
 "\n"
 "                    Updated product variant '%(name)s'.\n"
 "                "
-msgstr ""
+msgstr "\nنوع محصول «%(name)s» به روز رسانی شده."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
 #, python-format
@@ -7520,7 +7238,7 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr ""
+msgstr "\nمحصول %(name)s ساخته شد"
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -7528,7 +7246,7 @@ msgid ""
 "\n"
 "                Updated product '%(name)s'.\n"
 "            "
-msgstr ""
+msgstr "\nمحصول %(name)s بروز رسانی شد"
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
 #: templates/oscar/dashboard/pages/messages/saved.html:10
@@ -7542,38 +7260,38 @@ msgstr "نمایش در وبسایت"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:14
 msgid "Delete product type?"
-msgstr ""
+msgstr "آیا نوع محصول حذف شود؟"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
 msgid ""
 "Please make sure all products are assigned to another type before deletion."
-msgstr ""
+msgstr "لطفا مطئمن شوید که همه محصولات قبل از پاک شدن به یک نوع دیگر اختصاص داده شوند"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
 msgid "Delete product type"
-msgstr ""
+msgstr "حذف کردن نوع محصول"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:33
 #, python-format
 msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
-msgstr ""
+msgstr "آیا محصول <strong>%(name)s</strong> حذف شود؟ - مطمئن هستید؟"
 
 #: templates/oscar/dashboard/catalogue/product_class_form.html:5
 msgid "Create product type"
-msgstr ""
+msgstr "ایجاد نوع محصول"
 
 #: templates/oscar/dashboard/catalogue/product_class_form.html:39
 #: templates/oscar/dashboard/catalogue/product_class_form.html:54
 msgid "Product Class details"
-msgstr ""
+msgstr "جزئیات کلاس محصول"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:15
 msgid "Create new product type"
-msgstr ""
+msgstr "ایجاد نوع محصول جدید"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:16
 msgid "Product types"
-msgstr ""
+msgstr "انواع محصول"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:27
 msgid "Requires shipping"
@@ -7581,7 +7299,7 @@ msgstr "نیاز به ارسال"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:28
 msgid "Track stock?"
-msgstr ""
+msgstr "پیگیری موجودی انبار؟"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:46
 msgid "Edit product type"
@@ -7595,23 +7313,21 @@ msgstr ".دسته بندی محصول وجود ندارد"
 #, python-format
 msgid ""
 "\n"
-"                    Delete product variant <strong>%(title)s</strong> - are "
-"you sure?\n"
+"                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
+msgstr "\nحذف نوع محصول <strong>%(title)s</strong> - آیا مطمئن هستید؟"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:41
 #, python-format
 msgid ""
 "\n"
-"                    Delete product <strong>%(title)s</strong> - are you "
-"sure?\n"
+"                    Delete product <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
+msgstr "\nحذف محصول <strong>%(title)s</strong> - آیا مطمئن هستید؟"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:49
 msgid "This will also delete the following child products:"
-msgstr ""
+msgstr "این عمل همچنین باعث حذف محصولات کودک زیر می شود:"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:32
 msgid "Create new product"
@@ -7645,51 +7361,51 @@ msgid ""
 "                            You are currently editing a product variant of\n"
 "                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
 "                        "
-msgstr ""
+msgstr "\nشما در حال ویرایش نوع محصول <a href=\"%(parent_url)s\">%(title)s</a> هستید."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:71
 #: templates/oscar/dashboard/catalogue/product_update.html:100
 #: templates/oscar/dashboard/orders/line_detail.html:33
 msgid "Product details"
-msgstr ""
+msgstr "جزئیات محصول"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:78
 msgid "Images"
-msgstr ""
+msgstr "تصاویر"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:80
 #: templates/oscar/dashboard/catalogue/product_update.html:185
 msgid "Stock and pricing"
-msgstr ""
+msgstr "موجودی و قیمت"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:86
 msgid "Upselling"
-msgstr ""
+msgstr "ترغیب به خرید بیشتر"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:145
 msgid "Product Type:"
-msgstr ""
+msgstr "نوع محصول:"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:166
 msgid "Upload, change or remove images"
-msgstr ""
+msgstr "بارگذاری تغییر یا حذف تصاویر"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:191
 msgid "SKU"
-msgstr ""
+msgstr "واحد نگهداری موجودی"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:193
 msgid "Num in stock"
-msgstr ""
+msgstr "تعداد موجودی"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:194
 msgid "Num allocated"
-msgstr ""
+msgstr "تعداد تخصیص داده شده"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:195
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:50
 msgid "Low stock threshold"
-msgstr ""
+msgstr "آستانه کمبود موجودی"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:198
 msgid "Cost price"
@@ -7705,49 +7421,49 @@ msgstr "قیمت خرده فروشی"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:248
 msgid "Add variant"
-msgstr ""
+msgstr "افزودن انواع"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:277
 msgid "This product does not have any variants."
-msgstr ""
+msgstr "این محصول نوع دیگری ندارد"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:279
 msgid "One can't add variants to this product at this point."
-msgstr ""
+msgstr "در حال حاضر امکان افزودن نوع برای این محصول وجود ندارد"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:281
 msgid "This is likely because this product still has stock records."
-msgstr ""
+msgstr "احتمالا به دلیل وجود سابقه موجودی برای این محصول می باشد"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:326
 msgid "Save and add another variant"
-msgstr ""
+msgstr "ذخیره و افزودن انواع دیگر"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:330
 msgid "Save and continue editing"
-msgstr ""
+msgstr "ذخیره و ادامه ویرایش"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:37
 #: templates/oscar/dashboard/ranges/range_list.html:49
 msgid "All"
-msgstr ""
+msgstr "همه"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:51
 msgid "Current available stock"
-msgstr ""
+msgstr "موجود‌ی در حال حاضر"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:52
 msgid "Date alert raised"
-msgstr ""
+msgstr "اضافه کردن هشدار تاریخ"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:76
 msgid "No stock alerts found."
-msgstr ""
+msgstr "هیچ هشدار‌ی برای موجودی یافت نشد"
 
 #: templates/oscar/dashboard/comms/detail.html:38
 #: templates/oscar/dashboard/comms/detail.html:73
 msgid "Preview"
-msgstr ""
+msgstr "پیش نمایش"
 
 #: templates/oscar/dashboard/comms/detail.html:42
 msgid "Edit email"
@@ -7755,57 +7471,57 @@ msgstr "تغییر ایمیل"
 
 #: templates/oscar/dashboard/comms/detail.html:51
 msgid "Email content"
-msgstr ""
+msgstr "محتوای ایمیل"
 
 #: templates/oscar/dashboard/comms/detail.html:54
 msgid "These fields are rendered using Django's template system."
-msgstr ""
+msgstr "این ورودی ها توسط Django's template system ساخته شده است"
 
 #: templates/oscar/dashboard/comms/detail.html:55
 msgid "You can use the following variables:"
-msgstr ""
+msgstr "شما می توانید از متغیر های زیر استفاده کنید"
 
 #: templates/oscar/dashboard/comms/detail.html:58
 msgid "The full name of the user (if they have one)"
-msgstr ""
+msgstr "نام کامل کاربر (در صورت وجود)"
 
 #: templates/oscar/dashboard/comms/detail.html:60
 msgid "The user's email address"
-msgstr ""
+msgstr "آدرس ایمیل کاربر"
 
 #: templates/oscar/dashboard/comms/detail.html:62
 msgid "The name of the site (eg example.com)"
-msgstr ""
+msgstr "نام سایت (مثلا example.com)"
 
 #: templates/oscar/dashboard/comms/detail.html:77
 msgid "View a preview of this email using order:"
-msgstr ""
+msgstr "نمایش یک پیش نمایش از ایمیل استفاده شده برای سفارش:"
 
 #: templates/oscar/dashboard/comms/detail.html:80
 msgid "View preview"
-msgstr ""
+msgstr "نمایش دادن پیش نمایش"
 
 #: templates/oscar/dashboard/comms/detail.html:81
 msgid "or send a preview to:"
-msgstr ""
+msgstr "یا ارسال یک پیش نمایش به:"
 
 #: templates/oscar/dashboard/comms/detail.html:83
 #: templates/oscar/dashboard/users/detail.html:91
 #: templates/oscar/registration/password_reset_form.html:24
 msgid "Sending..."
-msgstr ""
+msgstr "در حال ارسال..."
 
 #: templates/oscar/dashboard/comms/detail.html:83
 msgid "Send preview email"
-msgstr ""
+msgstr "ارسال ایمیل پیش نمایش"
 
 #: templates/oscar/dashboard/comms/detail.html:93
 msgid "Body text"
-msgstr ""
+msgstr "متن بدنه"
 
 #: templates/oscar/dashboard/comms/list.html:52
 msgid "There are no defined emails to edit."
-msgstr ""
+msgstr "هیچ ایمیلی برای ویرایش تعریف نشده است"
 
 #: templates/oscar/dashboard/index.html:22
 msgid "Your Store Statistics"
@@ -7869,7 +7585,7 @@ msgstr "سفارشات - همه زمان ها"
 #: templates/oscar/dashboard/index.html:103
 #: templates/oscar/dashboard/index.html:121
 msgid "Total <em>open</em> baskets"
-msgstr ""
+msgstr "مجموع سبد خرید <em>باز</em>"
 
 #: templates/oscar/dashboard/index.html:113
 msgid "Total customers"
@@ -7893,11 +7609,11 @@ msgstr "تعداد کل محصولات"
 
 #: templates/oscar/dashboard/index.html:151
 msgid "<em>Open</em> stock alerts"
-msgstr ""
+msgstr "<em>باز کردن</em> هشدار موجودی"
 
 #: templates/oscar/dashboard/index.html:155
 msgid "<em>Closed</em> stock alerts"
-msgstr ""
+msgstr "هشدار موجودی های <em>مسدود</em>"
 
 #: templates/oscar/dashboard/index.html:163
 msgid "Offers, vouchers and promotions"
@@ -7905,11 +7621,11 @@ msgstr "پیشنهادات، کوپن و تبلیغات"
 
 #: templates/oscar/dashboard/index.html:165
 msgid "Active <em>Site</em> Offers"
-msgstr ""
+msgstr "پیشنهادات فعال <em>سایت</em>"
 
 #: templates/oscar/dashboard/index.html:169
 msgid "Active <em>Vouchers</em>"
-msgstr ""
+msgstr "<em>کوپن</em> فعال"
 
 #: templates/oscar/dashboard/layout.html:42
 msgid "Welcome"
@@ -7927,13 +7643,11 @@ msgstr "خارج شدن"
 msgid ""
 "Please enter a correct username and password. Note that both fields may be "
 "case-sensitive."
-msgstr ""
+msgstr "لطفا یک نام کاربری و کلمه عبور صحیح وارد کنید. ممکن است هردو به بزرگی و کوچکی حروف حساس باشند."
 
 #: templates/oscar/dashboard/login.html:41
-#, fuzzy
-#| msgid "Last login"
 msgid "Login"
-msgstr "آخرین ورود"
+msgstr "ورود"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
@@ -7944,23 +7658,22 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        Ranges can be created and edited from within the <a href="
-"\"%(range_list_url)s\">range dashboard</a>.\n"
+"        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
 "        "
-msgstr ""
+msgstr "\nدامنه می تواند ساخته و ویرایش شود در داخل <a href=\"%(range_list_url)s\">دامنه داشبورد</a>"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:28
 #: templates/oscar/dashboard/offers/condition_form.html:31
 msgid "...or choose a pre-defined one"
-msgstr ""
+msgstr "... یا یک از قبل تعریف شده انتخاب کنید"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:33
 msgid "Continue to step 3"
-msgstr ""
+msgstr "ادامه دادن به مرحله 3"
 
 #: templates/oscar/dashboard/offers/condition_form.html:18
 msgid "Build a new condition"
-msgstr ""
+msgstr "ساخت یک شرط جدید"
 
 #: templates/oscar/dashboard/offers/condition_form.html:36
 msgid "Continue to step 4"
@@ -7985,9 +7698,7 @@ msgid ""
 "\n"
 "        %(name)s | Offers\n"
 "    "
-msgstr ""
-"\n"
-"%(name)s پیشنهادات"
+msgstr "\n%(name)s پیشنهادات"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
@@ -8116,9 +7827,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"سفارش %(number)s - خط #%(id)s "
+msgstr "\nسفارش %(number)s - خط #%(id)s "
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -8304,10 +8013,9 @@ msgstr "این پیشنهاد نمیتواند وضعیت هایش را تغیی
 #, python-format
 msgid ""
 "\n"
-"                                                                %(title)s "
-"(quantity %(event_qty)s/%(total_qty)s)\n"
+"                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
+msgstr "\n%(title)s(مقدار %(event_qty)s/%(total_qty)s)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:371
 msgid "No shipping events."
@@ -8445,11 +8153,11 @@ msgstr "ویرایش آدرس حمل ونقل برای سفارش %(order.number
 
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:33
 msgid "Update address"
-msgstr ""
+msgstr "بروز رسانی آدرس"
 
 #: templates/oscar/dashboard/orders/statistics.html:9
 msgid "Order statistics"
-msgstr ""
+msgstr "آمار سفارش"
 
 #: templates/oscar/dashboard/orders/statistics.html:33
 msgid "Filter result"
@@ -8457,7 +8165,7 @@ msgstr "فیلتر نتایج"
 
 #: templates/oscar/dashboard/orders/statistics.html:39
 msgid "Summary"
-msgstr ""
+msgstr "خلاصه"
 
 #: templates/oscar/dashboard/orders/statistics.html:56
 msgid "Order status breakdown"
@@ -8468,20 +8176,20 @@ msgstr ""
 #: templates/oscar/dashboard/pages/delete.html:24
 #, python-format
 msgid "Delete page '%(title)s'?"
-msgstr ""
+msgstr "پاک کردن صفحه %(title)s ؟"
 
 #: templates/oscar/dashboard/pages/delete.html:29
 msgid "Delete page"
-msgstr ""
+msgstr "پاک کردن صفحه"
 
 #: templates/oscar/dashboard/pages/delete.html:34
 #, python-format
 msgid "Delete page <strong>%(title)s</strong> - are you sure?"
-msgstr ""
+msgstr "پاک کردن صفحه <strong>%(title)s</strong> - آیا مطئن هستید؟"
 
 #: templates/oscar/dashboard/pages/index.html:22
 msgid "Create new page"
-msgstr ""
+msgstr "ساخت صفحه جدید"
 
 #: templates/oscar/dashboard/pages/index.html:83
 msgid "No pages found."
@@ -8493,17 +8201,17 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
+msgstr "\nصفحه <strong>%(title)s</strong> ذخیره شد"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
 msgid "Oops! We found some errors"
-msgstr ""
+msgstr "اوه! مشکلی رخ داد"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
 msgid "please check the error messages below and try again"
-msgstr ""
+msgstr "لطفا پیغام های خطای زیر را بررسی کنید و دوباره امتحان کنید"
 
 #: templates/oscar/dashboard/partials/pagination.html:8
 #: templates/oscar/partials/pagination.html:8
@@ -8519,9 +8227,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"صفحه %(page_num)s از %(total_pages)s "
+msgstr "\nصفحه %(page_num)s از %(total_pages)s "
 
 #: templates/oscar/dashboard/partials/pagination.html:16
 #: templates/oscar/partials/pagination.html:16
@@ -8534,9 +8240,7 @@ msgstr "بعدی"
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"کاربر %(user_name)s از %(partner_name)s جدا شد\n"
+msgstr "\nکاربر %(user_name)s از %(partner_name)s جدا شد\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8615,20 +8319,17 @@ msgstr "به روزرسانی جزییات"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
 msgid ""
-"A partial email address can be entered (eg '@example.com') to match multiple "
-"addresses."
-msgstr ""
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
+msgstr "برای مطابقت داشتن با چندین آدرس ایمیل قسمتی از آدرس (مثلا '@example.com') می تواند وارد شود"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
 #, python-format
 msgid ""
 "\n"
-"                                                User is already linked to "
-"%(name)s.\n"
+"                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"کاربر اخیرا به %(name)s متصل شده است"
+msgstr "\nکاربر اخیرا به %(name)s متصل شده است"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:71
 msgid "Linking..."
@@ -8658,24 +8359,23 @@ msgstr "حذف بلوک محتوی"
 msgid ""
 "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are "
 "you sure?"
-msgstr ""
-"حذف %(object.type)s بلوک محتوی <strong>%(object.name)s</strong> - آیا "
-"مطمئنید؟"
+msgstr "حذف %(object.type)s بلوک محتوی <strong>%(object.name)s</strong> - آیا مطمئنید؟"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:14
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:19
 msgid "Remove promotion from page?"
-msgstr ""
+msgstr "حذف ترفیع از صفحه؟"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:24
 msgid "Remove promotion"
-msgstr ""
+msgstr "حذف ترفیع"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:28
 #, python-format
 msgid ""
-"Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
-"strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
+"Remove %(object.content_object.type)s content block "
+"<strong>%(object.name)s</strong> from page "
+"<strong>%(object.page_url)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/promotions/form.html:26
@@ -8688,19 +8388,19 @@ msgstr ""
 
 #: templates/oscar/dashboard/promotions/form.html:50
 msgid "Position on page"
-msgstr ""
+msgstr "موقعیت در صفحه"
 
 #: templates/oscar/dashboard/promotions/form.html:64
 msgid "View all blocks on this page"
-msgstr ""
+msgstr "نمایش همه بخش ها در این صفحه"
 
 #: templates/oscar/dashboard/promotions/form.html:65
 msgid "Remove from page"
-msgstr ""
+msgstr "حذف کردن از صفحه"
 
 #: templates/oscar/dashboard/promotions/form.html:72
 msgid "This promotion is not displayed anywhere at the moment."
-msgstr ""
+msgstr "این ترفیع در حال حاضر در هیچ جایی نمایش داده نشده است"
 
 #: templates/oscar/dashboard/promotions/form.html:76
 msgid "Add to a page"
@@ -8788,9 +8488,7 @@ msgstr "تعداد دفعات استفاده "
 msgid ""
 "\n"
 "    <p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr ""
-"\n"
-"<p>File <strong>%(filename)s</strong> processed\n"
+msgstr "\n<p>File <strong>%(filename)s</strong> processed\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:9
 #, python-format
@@ -8802,41 +8500,34 @@ msgid_plural ""
 "\n"
 "                <strong>%(n)s</strong> products added\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(n)s</strong> محصولات اضافه شده"
+msgstr[0] "\n<strong>%(n)s</strong> محصولات اضافه شده"
+msgstr[1] "\n<strong>%(n)s</strong> محصولات اضافه شده"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> duplicate product in the "
-"file\n"
+"                There was <strong>%(n)s</strong> duplicate product in the file\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> duplicate products in the "
-"file\n"
+"                There were <strong>%(n)s</strong> duplicate products in the file\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(n)s</strong> محصولات تکراری در فایل وجود داشت"
+msgstr[0] "\n<strong>%(n)s</strong> محصولات تکراری در فایل وجود داشت"
+msgstr[1] "\n<strong>%(n)s</strong> محصولات تکراری در فایل وجود داشت"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> product in the file that "
-"couldn't be found in the catalogue\n"
+"                There was <strong>%(n)s</strong> product in the file that couldn't be found in the catalogue\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> products in the file that "
-"couldn't be found in the catalogue\n"
+"                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(n)s</strong> محصولات در فایل وجود داشت که در کاتالوگ یافت نمیشدند"
+msgstr[0] "\n<strong>%(n)s</strong> محصولات در فایل وجود داشت که در کاتالوگ یافت نمیشدند"
+msgstr[1] "\n<strong>%(n)s</strong> محصولات در فایل وجود داشت که در کاتالوگ یافت نمیشدند"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -8851,9 +8542,7 @@ msgstr "بازگشت به گستره های صفحه اصلی"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p> گستره <strong>%(name)s</strong> ذخیره شد. </p>\n"
+msgstr "\n<p> گستره <strong>%(name)s</strong> ذخیره شد. </p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -8879,7 +8568,7 @@ msgstr "ذخیره و ویرایش محصولات"
 
 #: templates/oscar/dashboard/ranges/range_list.html:32
 msgid "Num products"
-msgstr ""
+msgstr "تعداد محصولات"
 
 #: templates/oscar/dashboard/ranges/range_list.html:71
 msgid "Edit products"
@@ -8902,10 +8591,7 @@ msgstr "محصولات"
 msgid ""
 "This range contains all products. To add products manually, please unselect "
 "the 'Includes All Products' option on the edit range page."
-msgstr ""
-"این گستره حاوی تمامی محصولات میباشد. برای اضافه کردن دستی محصولات، لطفا "
-"گزینه \" شامل تمامی محصولات\" که در صفحه ویرایش گستره است را از حالت انتخاب "
-"درآورید"
+msgstr "این گستره حاوی تمامی محصولات میباشد. برای اضافه کردن دستی محصولات، لطفا گزینه \" شامل تمامی محصولات\" که در صفحه ویرایش گستره است را از حالت انتخاب درآورید"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
 msgid "Add products"
@@ -9035,10 +8721,9 @@ msgid "Review #%(review.id)s"
 msgstr "مرور #%(review.id)s "
 
 #: templates/oscar/dashboard/reviews/review_update.html:24
-#, fuzzy, python-format
-#| msgid "Review #%(review.id)s"
+#, python-format
 msgid "Review #%(review_id)s"
-msgstr "مرور #%(review.id)s "
+msgstr "بررسی #%(review_id)s"
 
 #: templates/oscar/dashboard/reviews/review_update.html:31
 msgid "Review information"
@@ -9048,22 +8733,15 @@ msgstr "اطلاعات مرور"
 #, python-format
 msgid ""
 "\n"
-"    <p>A weight band has been added to the <strong>%(name)s</strong> "
-"shipping method.</p>\n"
-msgstr ""
-"\n"
-"<p> یک نوار وزنی به <strong>%(name)s</strong> روش حمل ونقل اضافه شده است. </"
-"p>\n"
+"    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
+msgstr "\n<p> یک نوار وزنی به <strong>%(name)s</strong> روش حمل ونقل اضافه شده است. </p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
 #, python-format
 msgid ""
 "\n"
-"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping "
-"method \n"
-msgstr ""
-"\n"
-"<p> باند وززنی از <strong>%(name)s</strong> روش حمل ونقل حذف شد\n"
+"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
+msgstr "\n<p> باند وززنی از <strong>%(name)s</strong> روش حمل ونقل حذف شد\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_updated.html:3
 msgid "Weight band updated"
@@ -9074,27 +8752,21 @@ msgstr "باند وزنی به روز رسانی شد"
 msgid ""
 "\n"
 "<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
-msgstr ""
-"\n"
-"<p> یک روش حمل ونقل <strong>%(name)s</strong> ایجاد شد. </p>\n"
+msgstr "\n<p> یک روش حمل ونقل <strong>%(name)s</strong> ایجاد شد. </p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
-msgstr ""
-"\n"
-"<p> <strong>%(name)s</strong> روش حمل ونقل حذف شده است. </p>\n"
+msgstr "\n<p> <strong>%(name)s</strong> روش حمل ونقل حذف شده است. </p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_updated.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
-msgstr ""
-"\n"
-"<p> <strong>%(name)s</strong> روش حمل ونقل به روز رسانی شده است. </p>\n"
+msgstr "\n<p> <strong>%(name)s</strong> روش حمل ونقل به روز رسانی شده است. </p>\n"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:6
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:22
@@ -9141,7 +8813,7 @@ msgstr "آیا مطمئنید که میخواهید این روش حمل ونق�
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:41
 msgid "Applies to countries"
-msgstr ""
+msgstr "شامل کشورهای"
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:47
 msgid "Default product weight (kg)"
@@ -9252,12 +8924,12 @@ msgstr "بله،خیر"
 
 #: templates/oscar/dashboard/users/detail.html:46
 msgid "Superuser"
-msgstr ""
+msgstr "سرکاربر"
 
 #: templates/oscar/dashboard/users/detail.html:47
 #: templates/oscar/dashboard/users/detail.html:51
 msgid "True,False"
-msgstr ""
+msgstr "صحیح غلط"
 
 #: templates/oscar/dashboard/users/detail.html:50
 msgid "Staff"
@@ -9273,40 +8945,40 @@ msgstr "تاریخ پیوست"
 
 #: templates/oscar/dashboard/users/detail.html:64
 msgid "Products viewed"
-msgstr ""
+msgstr "محصولات دیده شده"
 
 #: templates/oscar/dashboard/users/detail.html:68
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:47
 msgid "Number of orders"
-msgstr ""
+msgstr "تعداد سفارش ها"
 
 #: templates/oscar/dashboard/users/detail.html:72
 msgid "Number of ordered items"
-msgstr ""
+msgstr "تعداد اقلام سفارش داده شده"
 
 #: templates/oscar/dashboard/users/detail.html:82
 msgid "Reviews written"
-msgstr ""
+msgstr "بررسی‌ها ی نوشته شده"
 
 #: templates/oscar/dashboard/users/detail.html:91
 msgid "Send password reset email"
-msgstr ""
+msgstr "ارسال ایمیل بازیابی کلمه عبور"
 
 #: templates/oscar/dashboard/users/detail.html:119
 msgid "Order Number"
-msgstr ""
+msgstr "تعداد سفارش"
 
 #: templates/oscar/dashboard/users/detail.html:121
 msgid "Total value"
-msgstr ""
+msgstr "قیمت کل"
 
 #: templates/oscar/dashboard/users/detail.html:137
 msgid "This customer has not placed any orders yet."
-msgstr ""
+msgstr "این مشتری هنوز هیچ سفارشی ثبت نکرده است"
 
 #: templates/oscar/dashboard/users/detail.html:163
 msgid "This customer has not saved any addresses."
-msgstr ""
+msgstr "این مشتری هیچ آدرس را ذخیره نکرده است"
 
 #: templates/oscar/dashboard/users/detail.html:175
 msgid "Product ID"
@@ -9314,59 +8986,59 @@ msgstr "شماره محصول"
 
 #: templates/oscar/dashboard/users/detail.html:191
 msgid "This customer has not written any reviews yet."
-msgstr ""
+msgstr "این مشتری هنوز هیچ بررسی را ننوشته است"
 
 #: templates/oscar/dashboard/users/index.html:48
 msgid "No customers found."
-msgstr ""
+msgstr "مشتری یافت نشد"
 
 #: templates/oscar/dashboard/users/table.html:8
 msgid "Bulk Actions"
-msgstr ""
+msgstr "ویرایش دسته جمعی"
 
 #: templates/oscar/dashboard/users/table.html:9
 msgid "With selected customers:"
-msgstr ""
+msgstr "با مشتریان انتخاب شده:"
 
 #: templates/oscar/dashboard/users/table.html:11
 msgid "Make active"
-msgstr ""
+msgstr "فعال شود"
 
 #: templates/oscar/dashboard/users/table.html:14
 msgid "Make inactive"
-msgstr ""
+msgstr "غیر فعل شود"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:8
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:27
 #, python-format
 msgid "Delete voucher '%(name)s'?"
-msgstr ""
+msgstr "آیا کوپن «%(name)s» پاک شود؟"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:32
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:28
 msgid "Voucher details"
-msgstr ""
+msgstr "جزئیات کوپن"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:46
 msgid "Number of basket additions"
-msgstr ""
+msgstr "تعداد اضافات سبد خرید"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:53
 msgid "Recent orders"
-msgstr ""
+msgstr "سفارش‌های اخیر"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:58
 msgid "No orders have been placed that use this voucher."
-msgstr ""
+msgstr "سفارشی قابل استفاده با این کوپن داده نشده"
 
 #: templates/oscar/dashboard/vouchers/voucher_form.html:34
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:34
 msgid "Edit voucher"
-msgstr ""
+msgstr "ویرایش کوپن"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:26
 msgid "Create new voucher"
-msgstr ""
+msgstr "ایجاد کوپن جدید"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:55
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:87
@@ -9390,80 +9062,63 @@ msgstr "غیرفعال"
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:124
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:74
 msgid "No vouchers found."
-msgstr ""
+msgstr "کوپنی یافت نشد"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:25
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Update voucher set"
-msgstr "ایجاد کردن کوپن"
+msgstr "بروز رسانی مجموعه کوپن‌‎ها"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:26
-#, fuzzy
-#| msgid "Download"
 msgid "Download CSV"
-msgstr "دانلود"
+msgstr "دانلود فایل CSV"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:28
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:37
-#, fuzzy
-#| msgid "Vouchers"
 msgid "Voucher set"
-msgstr "کوپن"
+msgstr "مجموعه کوپن ها"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:46
-#, fuzzy
-#| msgid "Start date"
 msgid "Start"
-msgstr "تاریخ شروع"
+msgstr "شروع"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:50
 msgid "End"
-msgstr ""
+msgstr "پایان"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:62
-#, fuzzy
-#| msgid "Create"
 msgid "Created"
-msgstr "ساختن"
+msgstr "ایجاد شده"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Create new voucher set"
-msgstr "ایجاد کردن کوپن"
+msgstr "ایجاد مجموعه کوپن جدید"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
-#, fuzzy
-#| msgid "Number"
 msgid "Num"
-msgstr "شماره"
+msgstr "تعداد"
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
-msgstr ""
+msgstr "پنجره در حال بسته شدن..."
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:8
 #, python-format
 msgid "Change selected %(model)s"
-msgstr ""
+msgstr "تغییر %(model)s انتخاب شده"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:13
 #, python-format
 msgid "Add another %(model)s"
-msgstr ""
+msgstr "افزودن %(model)s دیگر"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:14
-#, fuzzy
-#| msgid "Address"
 msgid "Add"
-msgstr "نشانی"
+msgstr "افزودن"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:18
-#, fuzzy, python-format
-#| msgid "Delete alert #%(id)s?"
+#, python-format
 msgid "Delete selected %(model)s"
-msgstr "هشدار #%(id)s حذف شود؟"
+msgstr "پاک کردن %(model)s انتخاب شده"
 
 #: templates/oscar/error.html:9
 msgid "Sorry!"
@@ -9479,16 +9134,16 @@ msgstr "برو به صفحه خانگی"
 
 #: templates/oscar/flatpages/default.html:11
 msgid "Edit this page"
-msgstr ""
+msgstr "ویرایش این صفحه"
 
 #: templates/oscar/forms/widgets/image_input_widget.html:7
 #: templates/oscar/forms/widgets/image_input_widget.html:10
 msgid "thumbnail"
-msgstr ""
+msgstr "بند انگشتی"
 
 #: templates/oscar/forms/widgets/image_input_widget.html:12
 msgid "Unrecognized image type!"
-msgstr ""
+msgstr "نوع تصویر غیر قابل شناسایی می‌باشد"
 
 #: templates/oscar/forms/widgets/image_input_widget.html:13
 msgid "Upload Image"
@@ -9500,19 +9155,19 @@ msgstr "این صفحه فقط برای کاربرانی که در حال وار
 
 #: templates/oscar/offer/detail.html:28
 msgid " This offer is no longer available."
-msgstr ""
+msgstr "این پیشنهاد دیگر موجود نیست"
 
 #: templates/oscar/offer/detail.html:40
 msgid "What you need to do"
-msgstr ""
+msgstr "چه باید انجام دهید"
 
 #: templates/oscar/offer/list.html:26
 msgid "There are no site offers at the moment."
-msgstr ""
+msgstr "پیشنهاد سایت در حال حاضر موجود نیست"
 
 #: templates/oscar/offer/list.html:40
 msgid "Browse products in offer"
-msgstr ""
+msgstr "گشتن در محصولات با پیشنهاد ویژه"
 
 #: templates/oscar/partials/nav_accounts.html:52
 msgid "Logout"
@@ -9525,7 +9180,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
+msgstr "\nکل: %(total)s"
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -9538,7 +9193,7 @@ msgstr "بیشتر"
 #: templates/oscar/registration/password_reset_complete.html:4
 #: templates/oscar/registration/password_reset_complete.html:18
 msgid "Password reset complete"
-msgstr ""
+msgstr "بازیابی کلمه عبور انجام شد"
 
 #: templates/oscar/registration/password_reset_complete.html:12
 #: templates/oscar/registration/password_reset_confirm.html:12
@@ -9547,7 +9202,7 @@ msgstr ""
 #: templates/oscar/registration/password_reset_form.html:11
 #: templates/oscar/registration/password_reset_form.html:15
 msgid "Password reset"
-msgstr ""
+msgstr "بازیابی کلمه عبور"
 
 #: templates/oscar/registration/password_reset_complete.html:14
 msgid "Complete"
@@ -9555,7 +9210,7 @@ msgstr "کامل"
 
 #: templates/oscar/registration/password_reset_complete.html:21
 msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
+msgstr "کلمه عبور شما ارسال شد. اکنون می توانید وارد شوید."
 
 #: templates/oscar/registration/password_reset_complete.html:22
 msgid "Log in"
@@ -9571,7 +9226,7 @@ msgstr "رمز عبور جدید را وارد کنید"
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr ""
+msgstr "لطفاً دو بار کلمه عبور خود را وارد کنید تا تاید شود که به درستی تایپ شده است."
 
 #: templates/oscar/registration/password_reset_confirm.html:27
 msgid "Change my password"
@@ -9585,11 +9240,11 @@ msgstr "تغییر رمز عبور ناموفق"
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr ""
+msgstr "لینک بازیابی کلمه عبور نامعتبر بود. به احتمال آنکه پیش تر استفاده شده بود. لطفاً بار دیگر درخواست بازیابی کلمه عبور دهید."
 
 #: templates/oscar/registration/password_reset_done.html:4
 msgid "Password reset email sent"
-msgstr ""
+msgstr "ایمیل بازیابی کلمه عبور ارسال شد"
 
 #: templates/oscar/registration/password_reset_done.html:14
 #: templates/oscar/registration/password_reset_done.html:18
@@ -9599,33 +9254,31 @@ msgstr "ایمیل فرستاده شد"
 #: templates/oscar/registration/password_reset_done.html:22
 msgid ""
 "\n"
-"        We've e-mailed you instructions for resetting your password. You "
-"should be receiving it shortly.\n"
+"        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
+msgstr "\nما راهنمایی‌های لازم برای انتخاب کلمه عبور جدید را برای شما ارسال کرده‌ایم. که به زودی آن را دریافت خواهید کرد."
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
 "\n"
-"        If you don't receive an email, please make sure you've entered the "
-"address you registered with, and check\n"
+"        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
+msgstr "\nاگر ایمیلی دریافت نکرده‌اید لطفا مطمئن شوید که آدرس ایمیل ثبت شده برای این حساب کاربری را وارد کرده‌اید و پوشه‌ اسپم ایمیل خود را بررسی کنید."
 
 #: templates/oscar/registration/password_reset_form.html:21
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
+msgstr "کلمه عبور خود را فراموش کرده اید؟ آدرس ایمیل خود را اینجا وارد کنید٬ تا راهنمایی‌های لازم برای انتخاب کلمه عبور جدید برای شما ارسال شود."
 
 #: templates/oscar/registration/password_reset_form.html:24
 msgid "Send reset email"
-msgstr ""
+msgstr "ارسال کردن ایمیل بازیابی"
 
 #: templates/oscar/search/results.html:26
 msgid "Refine your search"
-msgstr ""
+msgstr "جستجو خود را تصحیح کنید"
 
 #: templates/oscar/search/results.html:38
 #, python-format
@@ -9633,31 +9286,18 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
+msgstr "\nمحصولات مرتبط با «%(q)s»"
 
 #: templates/oscar/search/results.html:53
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>%(num_results)s</strong> results, showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr ""
-"\n"
-"                   .نتیجه یافت شد <strong>%(num_results)s</strong>  "
-"<strong>\n"
-" %(end)s</strong> تا <strong>%(start)s</strong> از"
+msgstr "\n                   .نتیجه یافت شد <strong>%(num_results)s</strong>  <strong>\n %(end)s</strong> تا <strong>%(start)s</strong> از"
 
 #: templates/oscar/search/results.html:57
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                    Found <strong>%(num_results)s</strong> result.\n"
-#| "                "
-#| msgid_plural ""
-#| "\n"
-#| "                    Found <strong>%(num_results)s</strong> results. \n"
-#| "                "
+#, python-format
 msgid ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> result.\n"
@@ -9666,9 +9306,8 @@ msgid_plural ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> نتیجه یافت شد:"
+msgstr[0] "\n<strong>%(num_results)s</strong> نتیجه پیدا شد"
+msgstr[1] "\n<strong>%(num_results)s</strong> نتیجه پیدا شد"
 
 #: templates/oscar/search/results.html:68
 msgid "Found <strong>0</strong> results."
@@ -9678,31 +9317,15 @@ msgstr ".نتیجه یافت شد <strong>0</strong> "
 #, python-format
 msgid ""
 "\n"
-"                        Did you mean <a href=\"%(search_url)s?q="
-"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
+"                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
+msgstr "\nآیا منظور شما <a href=\"%(search_url)s?q=%(suggestion)s\">«%(suggestion)s»</a> بود؟"
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
-msgstr ""
+msgstr "بازگشت به نتایج جستجو"
 
 #: views/generic.py:73
 #, python-format
 msgid "You need to select some %ss"
-msgstr ""
-
-#~ msgid "Weight-based shipping"
-#~ msgstr "ارسال بر اساس وزن"
-
-#~ msgid "The phone number entered is not valid."
-#~ msgstr "شماره تلفن وارد شده معتبر نمیباشد"
-
-#~ msgid "Please choose a less common password"
-#~ msgstr "لطفا رمز عبور کمتر رایج را انتخاب کنید"
-
-#~ msgid "Build"
-#~ msgstr "ساختن"
-
-#~ msgid "Version:"
-#~ msgstr "نسخه:"
+msgstr "باید چند %s انتخاب کنید"

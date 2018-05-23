@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Costas Basdekis <costas@basdekis.io>, 2014
 # George Giannoulopoulos <vdotoree@yahoo.gr>, 2014
@@ -15,14 +15,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-03-08 11:36+0000\n"
-"Last-Translator: Konstantinos Metaxas <kmetaxas@gmail.com>\n"
-"Language-Team: Greek (Greece) (http://www.transifex.com/codeinthehole/django-"
-"oscar/language/el_GR/)\n"
-"Language: el_GR\n"
+"PO-Revision-Date: 2018-04-11 08:36+0000\n"
+"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"Language-Team: Greek (Greece) (http://www.transifex.com/codeinthehole/django-oscar/language/el_GR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: el_GR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/address/abstract_models.py:28
@@ -121,9 +120,7 @@ msgstr "Διευθύνσεις στην χώρα '%(country)s' απαιτούν 
 #: apps/address/abstract_models.py:294
 #, python-format
 msgid "The postcode '%(postcode)s' is not valid for %(country)s"
-msgstr ""
-"Ο ταχυδρομικός κώδικας '%(postcode)s' δεν είναι έγκυρος, γιατ τη χώρα "
-"'%(country)s'"
+msgstr "Ο ταχυδρομικός κώδικας '%(postcode)s' δεν είναι έγκυρος, γιατ τη χώρα '%(country)s'"
 
 #: apps/address/abstract_models.py:413
 msgid "ISO 3166-1 alpha-2"
@@ -178,8 +175,7 @@ msgstr "Οδηγίες"
 
 #: apps/address/abstract_models.py:483
 msgid "Tell us anything we should know when delivering your order."
-msgstr ""
-"Πείτε μας οτιδήποτε θα πρέπει να ξέρουμε για την παράδοση της παραγγελίας σας"
+msgstr "Πείτε μας οτιδήποτε θα πρέπει να ξέρουμε για την παράδοση της παραγγελίας σας"
 
 #: apps/address/abstract_models.py:490
 #: templates/oscar/checkout/shipping_address.html:5
@@ -217,16 +213,12 @@ msgid "Default billing address?"
 msgstr "Προεπιλεγμένη διεύθυνση τιμολογίου;"
 
 #: apps/address/abstract_models.py:533
-#, fuzzy
-#| msgid "Set as default shipping address"
 msgid "Number of Orders as Shipping Address"
-msgstr "Ορισμός ως προεπιλεγμένη διεύθυνση αποστολής"
+msgstr ""
 
 #: apps/address/abstract_models.py:537
-#, fuzzy
-#| msgid "Number of Orders"
 msgid "Number of Orders as Billing Address"
-msgstr "Αριθμός Παραγγελιών"
+msgstr ""
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -284,9 +276,10 @@ msgstr "Διευθύνσεις συνεργάτη"
 #: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:86
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:625
 #: apps/catalogue/abstract_models.py:234 apps/catalogue/abstract_models.py:363
-#: apps/catalogue/abstract_models.py:931 apps/catalogue/abstract_models.py:1188
-#: apps/order/abstract_models.py:469 apps/partner/abstract_models.py:98
-#: apps/promotions/models.py:297 apps/wishlists/abstract_models.py:121
+#: apps/catalogue/abstract_models.py:931
+#: apps/catalogue/abstract_models.py:1188 apps/order/abstract_models.py:469
+#: apps/partner/abstract_models.py:98 apps/promotions/models.py:297
+#: apps/wishlists/abstract_models.py:121
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:17
@@ -426,7 +419,8 @@ msgstr "Analytics προϊόντων"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:49 apps/catalogue/abstract_models.py:92
-#: apps/catalogue/abstract_models.py:710 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:710
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1110 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:166 apps/dashboard/catalogue/tables.py:78
 #: apps/dashboard/users/forms.py:44 apps/dashboard/vouchers/forms.py:18
@@ -568,9 +562,10 @@ msgid "Vouchers"
 msgstr "Κουπόνια"
 
 #: apps/basket/abstract_models.py:59 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:336 apps/catalogue/abstract_models.py:1198
-#: apps/customer/abstract_models.py:362 apps/order/abstract_models.py:887
-#: apps/partner/abstract_models.py:151 apps/wishlists/abstract_models.py:55
+#: apps/catalogue/abstract_models.py:336
+#: apps/catalogue/abstract_models.py:1198 apps/customer/abstract_models.py:362
+#: apps/order/abstract_models.py:887 apps/partner/abstract_models.py:151
+#: apps/wishlists/abstract_models.py:55
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/promotions/promotion_list.html:44
 #: templates/oscar/dashboard/ranges/range_list.html:34
@@ -613,18 +608,14 @@ msgstr "Καλάθια"
 #: apps/basket/abstract_models.py:90
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
-msgstr ""
-"Κατάσταση καλαθιού %(status)s  (ιδιοκτήτης: %(owner)s, εγγραφές: "
-"%(num_lines)d)"
+msgstr "Κατάσταση καλαθιού %(status)s  (ιδιοκτήτης: %(owner)s, εγγραφές: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:158
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order."
-msgstr ""
-"Λόγω των τεχνικών περιορισμών δεν είμαστε σε θέση να αποστείλουμε "
-"περισσότερα από %(threshold)d αντικείμενα σε μια παραγγελία."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
+msgstr "Λόγω των τεχνικών περιορισμών δεν είμαστε σε θέση να αποστείλουμε περισσότερα από %(threshold)d αντικείμενα σε μια παραγγελία."
 
 #: apps/basket/abstract_models.py:619
 msgid "Line Reference"
@@ -682,20 +673,16 @@ msgstr "Δεν μπορείτε να τροποποιήσετε ένα  %s κα�
 #: apps/basket/abstract_models.py:904
 #, python-format
 msgid ""
-"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"Η τιμή του '%(product)s' αυξήθηκε από %(old_price)s σε %(new_price)s από "
-"τότε που το προσθέσατε στο καλάθι σας"
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "Η τιμή του '%(product)s' αυξήθηκε από %(old_price)s σε %(new_price)s από τότε που το προσθέσατε στο καλάθι σας"
 
 #: apps/basket/abstract_models.py:909
 #, python-format
 msgid ""
-"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"Η τιμή του '%(product)s' μειώθηκε από %(old_price)s σε %(new_price)s από "
-"τότε που το προσθέσατε στο καλάθι σας"
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "Η τιμή του '%(product)s' μειώθηκε από %(old_price)s σε %(new_price)s από τότε που το προσθέσατε στο καλάθι σας"
 
 #: apps/basket/abstract_models.py:923 apps/order/abstract_models.py:766
 #: apps/order/abstract_models.py:801 apps/order/abstract_models.py:916
@@ -759,28 +746,21 @@ msgstr "Παρακαλώ επιλέξτε ένα έγκυρο προϊόν"
 #: apps/basket/forms.py:196
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order. Your basket currently has %(basket)d items."
-msgstr ""
-"Λόγω των τεχνικών περιορισμών δεν είμαστε σε θέση να αποστείλουμε "
-"περισσότερα από %(threshold)d αντικείμενα σε μια παραγγελία. Το καλάθι σας "
-"έχει αυτή τη στιγμή %(basket)d αντικείμενα."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
+msgstr "Λόγω των τεχνικών περιορισμών δεν είμαστε σε θέση να αποστείλουμε περισσότερα από %(threshold)d αντικείμενα σε μια παραγγελία. Το καλάθι σας έχει αυτή τη στιγμή %(basket)d αντικείμενα."
 
 #: apps/basket/forms.py:219
 msgid ""
-"This product cannot be added to the basket as its currency isn't the same as "
-"other products in your basket"
-msgstr ""
-"Αυτό το προϊόν δεν μπορεί να προστεθεί στο καλάθι σας καθώς η τιμή του είναι "
-"σε διαφορετικό νόμισμα από αυτήν των υπόλοιπων προϊόντων στο καλάθι σας"
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
+msgstr "Αυτό το προϊόν δεν μπορεί να προστεθεί στο καλάθι σας καθώς η τιμή του είναι σε διαφορετικό νόμισμα από αυτήν των υπόλοιπων προϊόντων στο καλάθι σας"
 
 #: apps/basket/middleware.py:174
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
-"Συγχωνεύσαμε ένα καλάθι από προηγούμενη σύνδεση. Τα περιεχόμενα του ίσως "
-"έχουν αλλάξει."
+msgstr "Συγχωνεύσαμε ένα καλάθι από προηγούμενη σύνδεση. Τα περιεχόμενα του ίσως έχουν αλλάξει."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -846,9 +826,7 @@ msgstr "Αποσταλθέντα καλάθια"
 
 #: apps/basket/views.py:165
 msgid "You can't save an item for later if you're not logged in!"
-msgstr ""
-"Δεν μπορείτε να αποθηκεύσετε ένα στοιχείο για αργότερα αν δεν είστε "
-"συνδεδεμένοι!"
+msgstr "Δεν μπορείτε να αποθηκεύσετε ένα στοιχείο για αργότερα αν δεν είστε συνδεδεμένοι!"
 
 #: apps/basket/views.py:228
 msgid ""
@@ -889,10 +867,9 @@ msgid "Please enter a voucher code"
 msgstr "Παρακαλώ εισάγετε έναν κωδικό κουπονιού"
 
 #: apps/basket/views.py:403
-#, fuzzy, python-format
-#| msgid "No voucher found with id '%d'"
+#, python-format
 msgid "No voucher found with id '%s'"
-msgstr "Δεν βρέθηκε κουπόνι με id '%d'"
+msgstr ""
 
 #: apps/basket/views.py:409
 #, python-format
@@ -998,20 +975,14 @@ msgstr "UPC"
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
-msgstr ""
-"Ο Καθολικός Κωδικός Προϊόντος (UPC) είναι ένας κωδικός για ένα προϊόν που "
-"δεν είναι συνδεδεμένος με έναν προμηθευτή, πχ το ISBN για ένα βιβλίο"
+msgstr "Ο Καθολικός Κωδικός Προϊόντος (UPC) είναι ένας κωδικός για ένα προϊόν που δεν είναι συνδεδεμένος με έναν προμηθευτή, πχ το ISBN για ένα βιβλίο"
 
 #: apps/catalogue/abstract_models.py:291
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
-"example if this is a size 4 of a particular t-shirt.  Leave blank if this is "
-"a stand-alone product (i.e. there is only one version of this product)."
-msgstr ""
-"Διαλέξτε ένα γονικό προϊόν μόνο αν δημιοργήτε ένα θυγατρικό προϊόν. Για "
-"παράδειγμα, αν αυτό είναι το νούμερο 4 για μια συγκεκριμένη μπλούζα. Αφήστε "
-"κενό αν είναι ένα ανυτόνομο προϊόν (πχ υπάρχει μόνο μια έκδοση αφτού του "
-"προϊόντος)"
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
+msgstr "Διαλέξτε ένα γονικό προϊόν μόνο αν δημιοργήτε ένα θυγατρικό προϊόν. Για παράδειγμα, αν αυτό είναι το νούμερο 4 για μια συγκεκριμένη μπλούζα. Αφήστε κενό αν είναι ένα ανυτόνομο προϊόν (πχ υπάρχει μόνο μια έκδοση αφτού του προϊόντος)"
 
 #: apps/catalogue/abstract_models.py:298 apps/catalogue/abstract_models.py:544
 #: apps/order/abstract_models.py:471 apps/wishlists/abstract_models.py:127
@@ -1040,11 +1011,9 @@ msgstr "Xαρακτηριστικά"
 
 #: apps/catalogue/abstract_models.py:316
 msgid ""
-"A product attribute is something that this product may have, such as a size, "
-"as specified by its class"
-msgstr ""
-"Ένα χαρακτηριστικό προϊόντος είναι κάτι που ένα προϊόν ίσως να έχει, όπως το "
-"μέγεθος, όπως προσδιορίζεται από την κλάση του"
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
+msgstr "Ένα χαρακτηριστικό προϊόντος είναι κάτι που ένα προϊόν ίσως να έχει, όπως το μέγεθος, όπως προσδιορίζεται από την κλάση του"
 
 #: apps/catalogue/abstract_models.py:320
 msgid "Product options"
@@ -1055,10 +1024,7 @@ msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
-msgstr ""
-"Οι επιλογές είναι οι τιμές που μπορούν να σχετίζονται με ένα στοιχείο όταν "
-"προστίθεται στο καλάθι αγορών του πελάτη. Αυτό θα μπορούσε να είναι κάτι σαν "
-"ένα εξατομικευμένο μήνυμα που θα εκτυπωθεί σε ένα μπλουζάκι."
+msgstr "Οι επιλογές είναι οι τιμές που μπορούν να σχετίζονται με ένα στοιχείο όταν προστίθεται στο καλάθι αγορών του πελάτη. Αυτό θα μπορούσε να είναι κάτι σαν ένα εξατομικευμένο μήνυμα που θα εκτυπωθεί σε ένα μπλουζάκι."
 
 #: apps/catalogue/abstract_models.py:328
 #: templates/oscar/dashboard/catalogue/product_update.html:297
@@ -1083,9 +1049,7 @@ msgstr "Μπορεί να έχει έκπτωση;"
 
 #: apps/catalogue/abstract_models.py:353
 msgid "This flag indicates if this product can be used in an offer or not"
-msgstr ""
-"Αυτή η επιλογή καθορίζει αν αυτό το προϊόν μπορεί να χρησιμοποειθεί σε "
-"προσφορά ή όχι"
+msgstr "Αυτή η επιλογή καθορίζει αν αυτό το προϊόν μπορεί να χρησιμοποειθεί σε προσφορά ή όχι"
 
 #: apps/catalogue/abstract_models.py:364 apps/dashboard/catalogue/views.py:100
 #: apps/promotions/models.py:273 defaults.py:105
@@ -1142,8 +1106,7 @@ msgstr "Το συγκεκριμένο γονικό προϊόν είναι θυ�
 
 #: apps/catalogue/abstract_models.py:485
 msgid "One can't add a child product to a product with stock records."
-msgstr ""
-"Ένα θυγατρικό προϊόν δεν μπορεί να προστεθεί σε προϊόν με καταχώριση στοκ."
+msgstr "Ένα θυγατρικό προϊόν δεν μπορεί να προστεθεί σε προϊόν με καταχώριση στοκ."
 
 #: apps/catalogue/abstract_models.py:678
 msgid "Primary product"
@@ -1161,9 +1124,7 @@ msgstr "Κατάταξη"
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
-msgstr ""
-"Καθορίζει τη σειρά εμφάνισης των προϊόντων. Ένα προϊόν με μεγαλύτερη τιμή θα "
-"εμφανιστεί πριν από ένα με μικρότερη κατάταξη."
+msgstr "Καθορίζει τη σειρά εμφάνισης των προϊόντων. Ένα προϊόν με μεγαλύτερη τιμή θα εμφανιστεί πριν από ένα με μικρότερη κατάταξη."
 
 #: apps/catalogue/abstract_models.py:693
 msgid "Product recommendation"
@@ -1177,9 +1138,7 @@ msgstr "Προϊόντα που προτείνονται"
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, and underscores, and "
 "can't start with a digit."
-msgstr ""
-"Ο κωδικός μπορεί μόνο να περιέχει τα γράμματα a-z, A-Z, αριθμούς, μείον και "
-"underscore, και δεν μπορεί να ξεκινάει με αριθμό"
+msgstr "Ο κωδικός μπορεί μόνο να περιέχει τα γράμματα a-z, A-Z, αριθμούς, μείον και underscore, και δεν μπορεί να ξεκινάει με αριθμό"
 
 #: apps/catalogue/abstract_models.py:736 apps/catalogue/abstract_models.py:933
 msgid "Text"
@@ -1213,16 +1172,12 @@ msgid "Date"
 msgstr "Ημερομηνία"
 
 #: apps/catalogue/abstract_models.py:742
-#, fuzzy
-#| msgid "Date"
 msgid "Datetime"
-msgstr "Ημερομηνία"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:744
-#, fuzzy
-#| msgid "Product Options"
 msgid "Multi Option"
-msgstr "Επιλογές προϊόντος"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:745
 msgid "Entity"
@@ -1249,10 +1204,8 @@ msgid "Option Group"
 msgstr "Ομάδα Επιλογών"
 
 #: apps/catalogue/abstract_models.py:760
-#, fuzzy
-#| msgid "Select an option group if using type \"Option\""
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
-msgstr "Διαλέξτε ένα γκρουπ επιλογών αν χρησιμοποιείτε τύπο \"Επιλογή\""
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:761
 #: templates/oscar/dashboard/catalogue/product_class_form.html:100
@@ -1286,10 +1239,8 @@ msgid "Must be a date or datetime"
 msgstr "Πρέπει να είναι μια ημερομηνία ή ημερομηνία και ώρα"
 
 #: apps/catalogue/abstract_models.py:871
-#, fuzzy
-#| msgid "Must be a date or datetime"
 msgid "Must be a datetime"
-msgstr "Πρέπει να είναι μια ημερομηνία ή ημερομηνία και ώρα"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:875
 msgid "Must be a boolean"
@@ -1333,16 +1284,12 @@ msgid "Richtext"
 msgstr "Εμπλουτισμένο κείμενο"
 
 #: apps/catalogue/abstract_models.py:939
-#, fuzzy
-#| msgid "Date"
 msgid "DateTime"
-msgstr "Ημερομηνία"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:943
-#, fuzzy
-#| msgid "Value option"
 msgid "Value multi option"
-msgstr "Τιμή επιλογής"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:949
 msgid "Value option"
@@ -1394,9 +1341,9 @@ msgstr "Λεζάντα"
 
 #: apps/catalogue/abstract_models.py:1196
 msgid ""
-"An image with a display order of zero will be the primary image for a product"
-msgstr ""
-"Μία εικόνα με σειρά εμφάνισης μηδέν θα είναι η κύρια εικόνα για ένα προϊόν"
+"An image with a display order of zero will be the primary image for a "
+"product"
+msgstr "Μία εικόνα με σειρά εμφάνισης μηδέν θα είναι η κύρια εικόνα για ένα προϊόν"
 
 #: apps/catalogue/abstract_models.py:1206
 msgid "Product image"
@@ -1586,14 +1533,11 @@ msgstr "Το email μου είναι"
 
 #: apps/checkout/forms.py:56
 msgid "I am a new customer and want to checkout as a guest"
-msgstr ""
-"Είμαι ένας καινούργιος πελάτης και θέλω να ολοκληρώσω την αγορά ως επισκέπτης"
+msgstr "Είμαι ένας καινούργιος πελάτης και θέλω να ολοκληρώσω την αγορά ως επισκέπτης"
 
 #: apps/checkout/forms.py:57
 msgid "I am a new customer and want to create an account before checking out"
-msgstr ""
-"Είμαι καινούργιος πελάτης και θέλω να δημιουργήσω ένα λογαριασμό πριν την "
-"ολοκλήρωση της αγοράς"
+msgstr "Είμαι καινούργιος πελάτης και θέλω να δημιουργήσω ένα λογαριασμό πριν την ολοκλήρωση της αγοράς"
 
 #: apps/checkout/forms.py:59
 msgid "I am a returning customer, and my password is"
@@ -1605,23 +1549,18 @@ msgstr ""
 
 #: apps/checkout/session.py:113
 msgid "You need to add some items to your basket to checkout"
-msgstr ""
-"Θα χρειαστεί να προσθέσετε κάποια στοιχεία στο καλάθι αγορών σας για το "
-"ταμείο"
+msgstr "Θα χρειαστεί να προσθέσετε κάποια στοιχεία στο καλάθι αγορών σας για το ταμείο"
 
 #: apps/checkout/session.py:131
 #, python-format
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr ""
-"Το '%(title)s' δεν είναι πλέον διαθέσιμο για αγορά (%(reason)s). Παρακαλώ "
-"διορθώστε το καλάθι σας για να συνεχίσετε"
+msgstr "Το '%(title)s' δεν είναι πλέον διαθέσιμο για αγορά (%(reason)s). Παρακαλώ διορθώστε το καλάθι σας για να συνεχίσετε"
 
 #: apps/checkout/session.py:149
 msgid "Please either sign in or enter your email address"
-msgstr ""
-"Ένας χρήστης με αυτήν τη διεύθυνση ηλεκτρονικού ταχυδρομείου υπάρχει ήδη"
+msgstr "Ένας χρήστης με αυτήν τη διεύθυνση ηλεκτρονικού ταχυδρομείου υπάρχει ήδη"
 
 #: apps/checkout/session.py:173 apps/checkout/views.py:274
 msgid "Please choose a shipping address"
@@ -1631,9 +1570,7 @@ msgstr "Παρακαλώ επιλέξτε μια διεύθυνση αποστο
 msgid ""
 "Your previously chosen shipping address is no longer valid.  Please choose "
 "another one"
-msgstr ""
-"Η προηγούμενα επιλεγμένη διεύθυνση αποστολής δεν είναι πλέον έγκυρη. "
-"Παρακαλώ επιλέξτε μία άλλη"
+msgstr "Η προηγούμενα επιλεγμένη διεύθυνση αποστολής δεν είναι πλέον έγκυρη. Παρακαλώ επιλέξτε μία άλλη"
 
 #: apps/checkout/session.py:192
 msgid "Please choose a shipping method"
@@ -1643,17 +1580,13 @@ msgstr "Παρακαλώ επιλέξτε έναν τρόπο αποστολής
 msgid ""
 "Your previously chosen shipping method is no longer valid.  Please choose "
 "another one"
-msgstr ""
-"Η προηγούμενα επιλεγμένη μέθοδος αποστολής δεν είναι πλέον έγκυρη. Παρακαλώ "
-"διαλέξτε μία άλλη"
+msgstr "Η προηγούμενα επιλεγμένη μέθοδος αποστολής δεν είναι πλέον έγκυρη. Παρακαλώ διαλέξτε μία άλλη"
 
 #: apps/checkout/views.py:91
 msgid ""
 "Create your account and then you will be redirected back to the checkout "
 "process"
-msgstr ""
-"Δημιουργήστε ένα λογαριασμό και θα οδηγηθήτε πίσω στην διαδικασία "
-"ολοκλήρωσης της αγοράς"
+msgstr "Δημιουργήστε ένα λογαριασμό και θα οδηγηθήτε πίσω στην διαδικασία ολοκλήρωσης της αγοράς"
 
 #: apps/checkout/views.py:214
 msgid "Address saved"
@@ -1664,10 +1597,9 @@ msgid "Address deleted"
 msgstr "Η διεύθυνση έχει διαγραφεί"
 
 #: apps/checkout/views.py:283
-msgid "Shipping is unavailable for your chosen address - please choose another"
-msgstr ""
-"Η αποστολή στην επιλεγμένη διεύθυνση δεν είναι διαθέσιμη - παρακαλώ επιλέξτε "
-"μία άλλη"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
+msgstr "Η αποστολή στην επιλεγμένη διεύθυνση δεν είναι διαθέσιμη - παρακαλώ επιλέξτε μία άλλη"
 
 #: apps/checkout/views.py:326
 msgid "Your submitted shipping method is not permitted"
@@ -1677,10 +1609,7 @@ msgstr "Η μέθοδος αποστολής που υποβάλλατε δεν 
 msgid ""
 "A problem occurred while processing payment for this order - no payment has "
 "been taken.  Please contact customer services if this problem persists"
-msgstr ""
-"Υπήρξε ένα πρόβλημα κατά τη διάρκεια της διαδικασίας πληρωμής για αυτήν την "
-"παραγγελία - καμία πληρωμή δεν έγινε. Παρακαλώ επικοινωνήστε με την "
-"υποστήριξη πελατών αν αυτό το πρόβλημα εξακολουθεί να συμβαίνει"
+msgstr "Υπήρξε ένα πρόβλημα κατά τη διάρκεια της διαδικασίας πληρωμής για αυτήν την παραγγελία - καμία πληρωμή δεν έγινε. Παρακαλώ επικοινωνήστε με την υποστήριξη πελατών αν αυτό το πρόβλημα εξακολουθεί να συμβαίνει"
 
 #: apps/checkout/views.py:676
 msgid "No order found"
@@ -1710,9 +1639,7 @@ msgstr "Ενεργό"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr ""
-"Καθορίζει αν ο χρήστης είναι ενεργός. Απεπιλέξτε το αντί να διαγράψετε το "
-"λογαριασμό."
+msgstr "Καθορίζει αν ο χρήστης είναι ενεργός. Απεπιλέξτε το αντί να διαγράψετε το λογαριασμό."
 
 #: apps/customer/abstract_models.py:73
 msgid "date joined"
@@ -1725,10 +1652,8 @@ msgid "Users"
 msgstr "Χρήστες"
 
 #: apps/customer/abstract_models.py:123
-#, fuzzy
-#| msgid "Email address"
 msgid "Email Address"
-msgstr "Διεύθυνση Email"
+msgstr ""
 
 #: apps/customer/abstract_models.py:124
 #: templates/oscar/customer/email/email_detail.html:19
@@ -1831,11 +1756,13 @@ msgstr "Εισερχόμενα"
 msgid "Archive"
 msgstr "Αρχείο"
 
-#: apps/customer/abstract_models.py:305 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:305
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "Ειδοποίηση"
 
-#: apps/customer/abstract_models.py:306 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:306
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "Ειδοποιήσεις"
@@ -1980,9 +1907,7 @@ msgstr "Όλες οι παραγγελίες"
 msgid ""
 "Orders placed between %(date_from)s and %(date_to)s and order number "
 "containing %(order_number)s"
-msgstr ""
-"Παραγγελίες που έγιναν μεταξύ %(date_from)s και %(date_to)s και ο αριθμός "
-"παραγγελίας να περιέχει %(order_number)s"
+msgstr "Παραγγελίες που έγιναν μεταξύ %(date_from)s και %(date_to)s και ο αριθμός παραγγελίας να περιέχει %(order_number)s"
 
 #: apps/customer/forms.py:227 apps/dashboard/orders/forms.py:42
 #, python-format
@@ -1994,9 +1919,7 @@ msgstr "Παραγγελίες που έγιναν μεταξύ %(date_from)s κ
 msgid ""
 "Orders placed since %(date_from)s and order number containing "
 "%(order_number)s"
-msgstr ""
-"Παραγγελίες που έγιναν μετά απο %(date_from)s και ο αριθμός παραγγελίας "
-"περιέχει %(order_number)s"
+msgstr "Παραγγελίες που έγιναν μετά απο %(date_from)s και ο αριθμός παραγγελίας περιέχει %(order_number)s"
 
 #: apps/customer/forms.py:234
 #, python-format
@@ -2021,8 +1944,7 @@ msgstr ""
 
 #: apps/customer/forms.py:288 apps/customer/forms.py:352
 msgid "A user with this email address already exists"
-msgstr ""
-"Υπάρχει ήδη ένας χρήστης με αυτήν τη διεύθυνση ηλεκτρονικού ταχυδρομείου "
+msgstr "Υπάρχει ήδη ένας χρήστης με αυτήν τη διεύθυνση ηλεκτρονικού ταχυδρομείου "
 
 #: apps/customer/forms.py:371
 msgid "Send notification to"
@@ -2090,8 +2012,7 @@ msgstr "Διαγραφή προφίλ"
 
 #: apps/customer/views.py:367
 msgid "Your profile has now been deleted. Thanks for using the site."
-msgstr ""
-"Το προφίλ σας έχει διαγραφεί. Ευχαριστούμε που χρησιμοποιήσατε το site μας."
+msgstr "Το προφίλ σας έχει διαγραφεί. Ευχαριστούμε που χρησιμοποιήσατε το site μας."
 
 #: apps/customer/views.py:375
 msgid "Change Password"
@@ -2125,18 +2046,14 @@ msgstr "Παραγγελία"
 #, python-format
 msgid ""
 "All available lines from order %(number)s have been added to your basket"
-msgstr ""
-"Όλες οι εγγραφές από την παραγγελία αριθ. %(number)s  προστέθηκαν στο καλάθι "
-"σας"
+msgstr "Όλες οι εγγραφές από την παραγγελία αριθ. %(number)s  προστέθηκαν στο καλάθι σας"
 
 #: apps/customer/views.py:553
 #, python-format
 msgid ""
 "It is not possible to re-order order %(number)s as none of its lines are "
 "available to purchase"
-msgstr ""
-"Δεν ήταν δυνατόν να κάνετε ξανά την παραγγελία αριθ. %(number)s καθώς καμία "
-"απ τις εγγραφές της δεν είναι διαθέσιμη προς αγορά"
+msgstr "Δεν ήταν δυνατόν να κάνετε ξανά την παραγγελία αριθ. %(number)s καθώς καμία απ τις εγγραφές της δεν είναι διαθέσιμη προς αγορά"
 
 #: apps/customer/views.py:590
 #, python-format
@@ -2351,18 +2268,15 @@ msgstr[0] "%s Κατηγορία"
 msgstr[1] "%s Κατηγορίες"
 
 #: apps/dashboard/catalogue/tables.py:82
-#, fuzzy
-#| msgid "Offer summary"
 msgid "Option summary"
-msgstr "Περίληψη προσφοράς"
+msgstr ""
 
 #: apps/dashboard/catalogue/tables.py:91
-#, fuzzy, python-format
-#| msgid "Attribute option group"
+#, python-format
 msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
-msgstr[0] "Γκρουπ επιλογών χαρακτηριστικών"
-msgstr[1] "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr[0] ""
+msgstr[1] ""
 
 #: apps/dashboard/catalogue/views.py:99
 msgid "Product search results"
@@ -2483,45 +2397,36 @@ msgid "Product type deleted successfully"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:842
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Add a new Attribute Option Group"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:846
-#, fuzzy
-#| msgid "Product type created successfully"
 msgid "Attribute Option Group created successfully"
-msgstr "Ο Τύπος προϊόντος δημιουργήθηκε με επιτυχία"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:860
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Update Attribute Option Group '%s'"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:864
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Attribute Option Group updated successfully"
-msgstr "Η κατηγορία ενημερώθηκε με επιτυχία"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:891
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Delete Attribute Option Group '%s'"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:898
 #, python-format
-msgid "%i product attributes are still assigned to this attribute option group"
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:918
-#, fuzzy
-#| msgid "Category deleted successfully"
 msgid "Attribute Option Group deleted successfully"
-msgstr "Η κατηγορία διαγράφηκε με επιτυχία"
+msgstr ""
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
@@ -2554,9 +2459,7 @@ msgstr "Παρακαλώ εισάγετε μια διεύθυνση email"
 #: apps/dashboard/communications/views.py:32
 msgid ""
 "The submitted form was not valid, please correct the errors and resubmit"
-msgstr ""
-"Η αποστολή της φόρμας δεν ήταν έγκυρη, παρακαλούμε διορθώστε τα λάθη και "
-"ξανακάντε αποστολή"
+msgstr "Η αποστολή της φόρμας δεν ήταν έγκυρη, παρακαλούμε διορθώστε τα λάθη και ξανακάντε αποστολή"
 
 #: apps/dashboard/communications/views.py:41
 msgid "Email saved"
@@ -2965,14 +2868,12 @@ msgstr "Η νέα κατάσταση '%s' δεν είναι έγκυρη για 
 #: apps/dashboard/orders/views.py:419 apps/dashboard/orders/views.py:608
 #, python-format
 msgid "Unable to change order status due to payment error: %s"
-msgstr ""
-"Αδυναμία αλλαγής της κατάστασης της παραγγελίας λόγω σφάλματος πληρωμής: %s"
+msgstr "Αδυναμία αλλαγής της κατάστασης της παραγγελίας λόγω σφάλματος πληρωμής: %s"
 
 #: apps/dashboard/orders/views.py:422 apps/dashboard/orders/views.py:600
 #, python-format
 msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
-msgstr ""
-"Η κατάσταση της παραγγελίας άλλαξε απο '%(old_status)s' σε '%(new_status)s'"
+msgstr "Η κατάσταση της παραγγελίας άλλαξε απο '%(old_status)s' σε '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:471
 msgid "No valid action submitted"
@@ -2985,8 +2886,7 @@ msgstr "Μη έγκυρη ενέργεια"
 
 #: apps/dashboard/orders/views.py:486
 msgid "You must select some lines to act on"
-msgstr ""
-"Πρέπει να επιλέξετε κάποιες εγγραφές για να γίνουν οι ενέργειες σε αυτές"
+msgstr "Πρέπει να επιλέξετε κάποιες εγγραφές για να γίνουν οι ενέργειες σε αυτές"
 
 #: apps/dashboard/orders/views.py:491
 msgid "Invalid lines requested"
@@ -3036,10 +2936,9 @@ msgstr "'%(status)s' δεν είναι έγκυρη νέα κατάσταση γ
 #: apps/dashboard/orders/views.py:652
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
-msgstr ""
-"Η κατάσταση της εγγραφής #%(line_id)d άλλαξε απο '%(old_status)s' σε "
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
 "'%(new_status)s'"
+msgstr "Η κατάσταση της εγγραφής #%(line_id)d άλλαξε απο '%(old_status)s' σε '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
 #, python-format
@@ -3084,9 +2983,7 @@ msgstr "Το πεδίο %(field)s άλλαξε απο '%(old_value)s' σε '%(ne
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"Η διεύθυνση παράδοσης ενημερώθηκε:\n"
-"%s"
+msgstr "Η διεύθυνση παράδοσης ενημερώθηκε:\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -3348,10 +3245,9 @@ msgid "No product(s) were found with SKU or UPC matching %s"
 msgstr ""
 
 #: apps/dashboard/ranges/views.py:213
-#, fuzzy, python-format
-#| msgid "There is already an order with number %s"
+#, python-format
 msgid "There are more than one product with SKU %s"
-msgstr "Υπάρχει ήδη μια παραγγελία με τον αριθμό %s"
+msgstr ""
 
 #: apps/dashboard/reports/config.py:8
 msgid "Reports dashboard"
@@ -3581,18 +3477,15 @@ msgstr "Ο κωδικός '%s' είναι ήδη σε χρήση"
 
 #: apps/dashboard/vouchers/forms.py:89
 msgid "The start date must be before the end date"
-msgstr ""
-"Η ημερομηνία έναρξης πρέπει να είναι προγενέστερη της ημερομηνίας λήξης"
+msgstr "Η ημερομηνία έναρξης πρέπει να είναι προγενέστερη της ημερομηνίας λήξης"
 
 #: apps/dashboard/vouchers/forms.py:97 apps/dashboard/vouchers/forms.py:150
 msgid "Is Active?"
 msgstr "Είναι Ενεργό;"
 
 #: apps/dashboard/vouchers/forms.py:99
-#, fuzzy
-#| msgid "Vouchers"
 msgid "In Voucherset?"
-msgstr "Κουπόνια"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:34 apps/dashboard/vouchers/views.py:360
 #: apps/dashboard/vouchers/views.py:419
@@ -3643,26 +3536,20 @@ msgid "Voucher deleted"
 msgstr "Το κουπόνι έχει διαγραφεί"
 
 #: apps/dashboard/vouchers/views.py:234
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Create voucher set"
-msgstr "Δημιουργία κουπονιού"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:274
-#, fuzzy
-#| msgid "Voucher created"
 msgid "Voucher set created"
-msgstr "Το κουπόνι δημιουργήθηκε"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:430
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:16
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:8
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:17
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:22
-#, fuzzy
-#| msgid "Voucher details"
 msgid "Voucher sets"
-msgstr "Λεπτομέρειες κουπονιού"
+msgstr ""
 
 #: apps/offer/abstract_models.py:91
 msgid "This is displayed within the customer's basket"
@@ -3722,12 +3609,10 @@ msgid ""
 msgstr ""
 
 #: apps/offer/abstract_models.py:158
-#, fuzzy
-#| msgid "Offers are active until the end of the 'end date'"
 msgid ""
 "Offers are active until the end date. Leave this empty if the offer has no "
 "expiry date."
-msgstr "Οι προσφορές είναι ενεργές μέχρι το τέλος της 'ημερομηνίας λήξης'"
+msgstr ""
 
 #: apps/offer/abstract_models.py:166
 msgid "Max global applications"
@@ -3751,9 +3636,7 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:184
 msgid "The number of times this offer can be applied to a basket (and order)"
-msgstr ""
-"Οι φορές που αυτή η προσφορά μπορεί να εφαρμοστεί σε ένα καλάθι (και "
-"παραγγελία)"
+msgstr "Οι φορές που αυτή η προσφορά μπορεί να εφαρμοστεί σε ένα καλάθι (και παραγγελία)"
 
 #: apps/offer/abstract_models.py:190
 msgid "Max discount"
@@ -3897,10 +3780,8 @@ msgid "Percentage benefits require a product range"
 msgstr ""
 
 #: apps/offer/abstract_models.py:560 apps/offer/abstract_models.py:585
-#, fuzzy
-#| msgid "Percentage discount cannot be greater than 100"
 msgid "Percentage discount benefits require a value"
-msgstr "Ποσοστό έκπτωσης δεν μπορεί να είναι μεγαλύτερο από 100"
+msgstr ""
 
 #: apps/offer/abstract_models.py:562 apps/offer/abstract_models.py:587
 msgid "Percentage discount cannot be greater than 100"
@@ -3935,15 +3816,11 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:687
 msgid "Depends on number of items in basket that are in condition range"
-msgstr ""
-"Εξαρτάται από τον αριθμό των αντικειμένων στο καλάθι, που βρίσκονται μέσα "
-"στο εύρος της συνθήκης"
+msgstr "Εξαρτάται από τον αριθμό των αντικειμένων στο καλάθι, που βρίσκονται μέσα στο εύρος της συνθήκης"
 
 #: apps/offer/abstract_models.py:689
 msgid "Depends on value of items in basket that are in condition range"
-msgstr ""
-"Εξαρτάται από την αξία των αντικειμένων στο καλάθι, που βρίσκονται μέσα στο "
-"εύρος της συνθήκης"
+msgstr "Εξαρτάται από την αξία των αντικειμένων στο καλάθι, που βρίσκονται μέσα στο εύρος της συνθήκης"
 
 #: apps/offer/abstract_models.py:691
 msgid ""
@@ -4245,8 +4122,8 @@ msgstr "Διεύθυνση email Επισκέπτη"
 #: apps/order/abstract_models.py:128
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status: "
-"'%(status)s')"
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
 msgstr ""
 
 #: apps/order/abstract_models.py:259
@@ -4468,9 +4345,7 @@ msgstr ""
 
 #: apps/order/abstract_models.py:949
 msgid "This could be the dispatch reference, or a tracking number"
-msgstr ""
-"Αυτό θα μπορούσε να είναι η αναφορά αποστολής, ή ένας αριθμός εντοπισμού "
-"(tracking)"
+msgstr "Αυτό θα μπορούσε να είναι η αναφορά αποστολής, ή ένας αριθμός εντοπισμού (tracking)"
 
 #: apps/order/abstract_models.py:956
 msgid "Shipping Event"
@@ -4908,7 +4783,8 @@ msgstr "Τύπος προβολής"
 
 #: apps/promotions/models.py:152
 msgid ""
-"This can be used to have different types of HTML blocks (eg different widths)"
+"This can be used to have different types of HTML blocks (eg different "
+"widths)"
 msgstr ""
 
 #: apps/promotions/models.py:159 apps/promotions/models.py:160
@@ -5178,26 +5054,20 @@ msgstr ""
 
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
-#, fuzzy
-#| msgid "Number of orders"
 msgid "Number of vouchers"
-msgstr "Αριθμός παραγγελιών"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:37
 msgid "Length of Code"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:52
-#, fuzzy
-#| msgid "Voucher"
 msgid "VoucherSet"
-msgstr "Κουπόνι"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:53
-#, fuzzy
-#| msgid "Vouchers"
 msgid "VoucherSets"
-msgstr "Κουπόνια"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:126
 msgid ""
@@ -5301,9 +5171,7 @@ msgstr "Ιδιωτική - Μόνο ο ιδιοκτήτης μπορεί να δ
 msgid ""
 "Shared - Only the owner and people with access to the obfuscated link can "
 "see the wish list"
-msgstr ""
-"Κοινό - Μόνο ο ιδιοκτήτης και οι άνθρωποι με πρόσβαση στον κωδικοποιημένο "
-"σύνδεσμο μπορούν να δουν τη λίστα επιθυμιών"
+msgstr "Κοινό - Μόνο ο ιδιοκτήτης και οι άνθρωποι με πρόσβαση στον κωδικοποιημένο σύνδεσμο μπορούν να δουν τη λίστα επιθυμιών"
 
 #: apps/wishlists/abstract_models.py:43
 msgid "Public - Everybody can see the wish list"
@@ -5385,10 +5253,8 @@ msgid "Stock alert requests"
 msgstr "Αιτήσεις ειδοποιήσεων στοκ"
 
 #: defaults.py:179
-#, fuzzy
-#| msgid "Voucher details"
 msgid "Voucher Sets"
-msgstr "Λεπτομέρειες κουπονιού"
+msgstr ""
 
 #: defaults.py:186
 msgid "Content"
@@ -5468,8 +5334,7 @@ msgstr "Δεν είναι έγγυρη μορφή διεθνούς ή τοπικ
 
 #: management/commands/oscar_send_alerts.py:16
 msgid "Check for products that are back in stock and send out alerts"
-msgstr ""
-"Έλεγχος για προϊόντα που είναι ξανά σε απόθεμα και στέλνουν ειδοποιήσεις"
+msgstr "Έλεγχος για προϊόντα που είναι ξανά σε απόθεμα και στέλνουν ειδοποιήσεις"
 
 #: templates/oscar/403.html:5 templates/oscar/403.html:9
 msgid "Permission denied!"
@@ -5615,8 +5480,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                <div class=\"warning\">%(message)s to qualify for the <a "
-"href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
 msgstr ""
 
@@ -5896,13 +5760,11 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    <strong>%(num_results)s</strong> result - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> result - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgid_plural ""
 "\n"
-"                    <strong>%(num_results)s</strong> results - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgstr[0] ""
 msgstr[1] ""
@@ -5932,10 +5794,8 @@ msgid "No products found."
 msgstr "Δεν βρέθηκαν προϊόντα."
 
 #: templates/oscar/catalogue/category.html:16
-#, fuzzy
-#| msgid "Edit category"
 msgid "Edit this category"
-msgstr "Επεξεργασία κατηγορίας"
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -5980,14 +5840,9 @@ msgstr "Αξιολογήσεις Πελατών"
 #, python-format
 msgid ""
 "This product does not have any reviews yet -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">be the "
-"first to write one</a>.\n"
+"                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"Αυτό το προϊόν δεν έχει καμία αξιολόγηση ακόμα -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">γράψτε "
-"την πρώτη</a>.\n"
-"                        "
+msgstr "Αυτό το προϊόν δεν έχει καμία αξιολόγηση ακόμα -\n                            <a href=\"%(add_review_url)s#addreview\">γράψτε την πρώτη</a>.\n                        "
 
 #: templates/oscar/catalogue/detail.html:164
 msgid "This product does not have any reviews yet"
@@ -6053,13 +5908,9 @@ msgstr "Δημιουργία νεας λίστας επιθυμιών"
 #, python-format
 msgid ""
 "\n"
-"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s"
-"\">'%(name)s'</a> wishlist.</span>\n"
+"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">Το προϊόν είναι στην <a href=\"%(url)s"
-"\">'%(name)s'</a> λίστα επιθυμιών.</span>"
+msgstr "\n<span class=\"pull-left\">Το προϊόν είναι στην <a href=\"%(url)s\">'%(name)s'</a> λίστα επιθυμιών.</span>"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -6071,8 +5922,7 @@ msgstr ""
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:46
 msgid "Please login to add products to a wish list."
-msgstr ""
-"Παρακαλούμε συνδεθείτε για να προσθέσετε προϊόντα σε μια λίστα επιθυμιών"
+msgstr "Παρακαλούμε συνδεθείτε για να προσθέσετε προϊόντα σε μια λίστα επιθυμιών"
 
 #: templates/oscar/catalogue/partials/review.html:23
 #, python-format
@@ -6086,8 +5936,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Reviewed by <strong>%(name)s</strong> on "
-"%(review_date)s\n"
+"                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
 msgstr ""
 
@@ -6117,13 +5966,11 @@ msgstr "Όχι"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer found this useful\n"
 "            "
 msgid_plural ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
 msgstr[0] ""
 msgstr[1] ""
@@ -6380,17 +6227,10 @@ msgstr "επιστροφή στο καλάθι"
 #, python-format
 msgid ""
 "\n"
-"                                This includes a discount of <strong>"
-"%(amount)s</strong> as\n"
-"                                your basket qualifies for the <strong>"
-"%(name)s</strong> offer.\n"
+"                                This includes a discount of <strong>%(amount)s</strong> as\n"
+"                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
-msgstr ""
-"\n"
-"                                Αυτό συμπεριλαμβάνει έκπτωση <strong>"
-"%(amount)s</strong> καθώς το καλάθι σας πληρεί τις προϋποθέσεις για την "
-"προσφορά <strong>%(name)s</strong>.\n"
-"                            "
+msgstr "\n                                Αυτό συμπεριλαμβάνει έκπτωση <strong>%(amount)s</strong> καθώς το καλάθι σας πληρεί τις προϋποθέσεις για την προσφορά <strong>%(name)s</strong>.\n                            "
 
 #: templates/oscar/checkout/shipping_methods.html:58
 msgid "Select option"
@@ -6409,8 +6249,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        Your order has been placed and a confirmation email has been sent - "
-"your order number is\n"
+"        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
 msgstr ""
@@ -6429,8 +6268,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                                Allocation of %(amount)s from type %(type)s "
-"(reference: %(reference)s)\n"
+"                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
 msgstr ""
 
@@ -6714,7 +6552,8 @@ msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
@@ -6771,8 +6610,8 @@ msgstr "Διεύθυνση αποστολής:"
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
-"title=\"order status\">here</a>"
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
@@ -6830,8 +6669,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your password has been changed at "
-"%(name)s.\n"
+"You're receiving this email because your password has been changed at %(name)s.\n"
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
@@ -6843,8 +6681,8 @@ msgstr ""
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(name)s."
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
@@ -6867,8 +6705,7 @@ msgstr "Αγαπητέ/ή %(name)s,"
 #, python-format
 msgid ""
 "\n"
-"            We are happy to inform you that our product '%(title)s' is back "
-"in stock:\n"
+"            We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "            http://%(site)s%(path)s\n"
 "        "
 msgstr ""
@@ -6876,16 +6713,14 @@ msgstr ""
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:22
 msgid ""
 "\n"
-"                Beware that the amount of items in stock is limited. Be "
-"quick or someone might get there first.\n"
+"                Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 "            "
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:29
 msgid ""
 "\n"
-"            With this email we have disabled your alert automatically and "
-"you will not\n"
+"            With this email we have disabled your alert automatically and you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
 msgstr ""
@@ -6901,8 +6736,7 @@ msgstr ""
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:5
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone "
-"might get there first.\n"
+"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
@@ -7146,8 +6980,7 @@ msgstr ""
 #: templates/oscar/customer/profile/profile_delete.html:11
 msgid ""
 "\n"
-"                This will delete all information about you from the site.  "
-"Deleting your profile cannot be\n"
+"                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
 msgstr ""
@@ -7180,8 +7013,7 @@ msgstr "Αφαίρεση προϊόντος "
 #, python-format
 msgid ""
 "\n"
-"                Are you sure you want to delete %(product_name)s from wish "
-"list %(wishlist_name)s?\n"
+"                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
 msgstr ""
 
@@ -7198,8 +7030,7 @@ msgstr "Προβολή προϊόντος"
 #, python-format
 msgid ""
 "\n"
-"                                                            Move to "
-"'%(name)s' wish list\n"
+"                                                            Move to '%(name)s' wish list\n"
 "                                                        "
 msgstr ""
 
@@ -7223,8 +7054,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    After your wishlist is created, <strong>%(title)s</"
-"strong> will be added.\n"
+"                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
 msgstr ""
 
@@ -7242,25 +7072,19 @@ msgstr "Δεν πάρχουν προς το παρόν λίστες επιθυμ
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:5
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:5
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create Attribute Option Group"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:14
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:21
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Attribute Option Group"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:31
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group?"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
 msgid ""
@@ -7269,16 +7093,14 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
-#, fuzzy, python-format
-#| msgid "Delete page <strong>%(title)s</strong> - are you sure?"
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
-msgstr "Διαγραφή της σελίδας '%(title)s' - είστε σίγουρος/η;"
+#, python-format
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
 #: templates/oscar/dashboard/catalogue/product_class_form.html:34
@@ -7288,41 +7110,29 @@ msgstr "Τομείς"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:55
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:70
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Group details"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:56
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:102
-#, fuzzy
-#| msgid "Attribute options"
 msgid "Attribute Options"
-msgstr "Επιλογές χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:6
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Groups"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:20
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create new Attribute Option Group"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:34
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "No Attribute Option Groups found."
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_row_actions.html:11
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Edit Attribute Option Group"
-msgstr "Γκρουπ επιλογών χαρακτηριστικών"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:14
 #: templates/oscar/dashboard/catalogue/category_delete.html:19
@@ -7337,8 +7147,7 @@ msgstr "Διαγραφή κατηγορίας"
 #, python-format
 msgid ""
 "\n"
-"            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
-"p>\n"
+"            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
 msgstr ""
 
@@ -7489,8 +7298,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Delete product variant <strong>%(title)s</strong> - are "
-"you sure?\n"
+"                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
 "                "
 msgstr ""
 
@@ -7498,8 +7306,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Delete product <strong>%(title)s</strong> - are you "
-"sure?\n"
+"                    Delete product <strong>%(title)s</strong> - are you sure?\n"
 "                "
 msgstr ""
 
@@ -7824,10 +7631,8 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
-#, fuzzy
-#| msgid "Last login"
 msgid "Login"
-msgstr "Τελευταία σύνδεση"
+msgstr ""
 
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
@@ -7838,8 +7643,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        Ranges can be created and edited from within the <a href="
-"\"%(range_list_url)s\">range dashboard</a>.\n"
+"        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
 "        "
 msgstr ""
 
@@ -8008,9 +7812,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"Παραγγελία %(number)s - Εγγραφή #%(id)s"
+msgstr "\nΠαραγγελία %(number)s - Εγγραφή #%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -8196,8 +7998,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                                                                %(title)s "
-"(quantity %(event_qty)s/%(total_qty)s)\n"
+"                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
 msgstr ""
 
@@ -8503,16 +8304,15 @@ msgstr ""
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
 msgid ""
-"A partial email address can be entered (eg '@example.com') to match multiple "
-"addresses."
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
 msgstr ""
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
 #, python-format
 msgid ""
 "\n"
-"                                                User is already linked to "
-"%(name)s.\n"
+"                                                User is already linked to %(name)s.\n"
 "                                            "
 msgstr ""
 
@@ -8558,8 +8358,9 @@ msgstr "Αφαίρεση προώθησης"
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:28
 #, python-format
 msgid ""
-"Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
-"strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
+"Remove %(object.content_object.type)s content block "
+"<strong>%(object.name)s</strong> from page "
+"<strong>%(object.page_url)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/promotions/form.html:26
@@ -8691,13 +8492,11 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> duplicate product in the "
-"file\n"
+"                There was <strong>%(n)s</strong> duplicate product in the file\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> duplicate products in the "
-"file\n"
+"                There were <strong>%(n)s</strong> duplicate products in the file\n"
 "            "
 msgstr[0] ""
 msgstr[1] ""
@@ -8706,13 +8505,11 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> product in the file that "
-"couldn't be found in the catalogue\n"
+"                There was <strong>%(n)s</strong> product in the file that couldn't be found in the catalogue\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> products in the file that "
-"couldn't be found in the catalogue\n"
+"                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
 "            "
 msgstr[0] ""
 msgstr[1] ""
@@ -8909,10 +8706,9 @@ msgid "Review #%(review.id)s"
 msgstr "Αξιολόγηση #%(review.id)s"
 
 #: templates/oscar/dashboard/reviews/review_update.html:24
-#, fuzzy, python-format
-#| msgid "Review #%(review.id)s"
+#, python-format
 msgid "Review #%(review_id)s"
-msgstr "Αξιολόγηση #%(review.id)s"
+msgstr ""
 
 #: templates/oscar/dashboard/reviews/review_update.html:31
 msgid "Review information"
@@ -8922,16 +8718,14 @@ msgstr "Πληροφορίες αξιολόγησης"
 #, python-format
 msgid ""
 "\n"
-"    <p>A weight band has been added to the <strong>%(name)s</strong> "
-"shipping method.</p>\n"
+"    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
 msgstr ""
 
 #: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
 #, python-format
 msgid ""
 "\n"
-"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping "
-"method \n"
+"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
 msgstr ""
 
 #: templates/oscar/dashboard/shipping/messages/band_updated.html:3
@@ -9256,51 +9050,37 @@ msgid "No vouchers found."
 msgstr "Δεν βρέθηκαν κουπόνια."
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:25
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Update voucher set"
-msgstr "Δημιουργία κουπονιού"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:26
-#, fuzzy
-#| msgid "Download"
 msgid "Download CSV"
-msgstr "Λήψη"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:28
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:37
-#, fuzzy
-#| msgid "Vouchers"
 msgid "Voucher set"
-msgstr "Κουπόνια"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:46
-#, fuzzy
-#| msgid "Start date"
 msgid "Start"
-msgstr "Ημερομηνία έναρξης"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:50
 msgid "End"
 msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:62
-#, fuzzy
-#| msgid "Create"
 msgid "Created"
-msgstr "Δημιουργία"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
-#, fuzzy
-#| msgid "Create new voucher"
 msgid "Create new voucher set"
-msgstr "Δημιουργία νέου κουπονιού"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
-#, fuzzy
-#| msgid "Number"
 msgid "Num"
-msgstr "Αριθμός"
+msgstr ""
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
@@ -9317,16 +9097,13 @@ msgid "Add another %(model)s"
 msgstr ""
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:14
-#, fuzzy
-#| msgid "Address"
 msgid "Add"
-msgstr "Διεύθυνση"
+msgstr ""
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:18
-#, fuzzy, python-format
-#| msgid "Delete alert #%(id)s?"
+#, python-format
 msgid "Delete selected %(model)s"
-msgstr "Διαγραφή ειδοποίησης  #%(id)s;"
+msgstr ""
 
 #: templates/oscar/error.html:9
 msgid "Sorry!"
@@ -9359,8 +9136,7 @@ msgstr ""
 
 #: templates/oscar/login_forbidden.html:5
 msgid "This page is only available to users who aren't logged in."
-msgstr ""
-"Αυτή η σελίδα είναι διαθέσιμη μόνο για τους χρήστες που δεν έχουν εισέλθει"
+msgstr "Αυτή η σελίδα είναι διαθέσιμη μόνο για τους χρήστες που δεν έχουν εισέλθει"
 
 #: templates/oscar/offer/detail.html:28
 msgid " This offer is no longer available."
@@ -9463,33 +9239,23 @@ msgstr ""
 #: templates/oscar/registration/password_reset_done.html:22
 msgid ""
 "\n"
-"        We've e-mailed you instructions for resetting your password. You "
-"should be receiving it shortly.\n"
+"        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
-"\n"
-"Σας στείλαμε email με οδηγίες για την επαναφορά του κωδικού. Θα το λάβετε "
-"σύντομα."
+msgstr "\nΣας στείλαμε email με οδηγίες για την επαναφορά του κωδικού. Θα το λάβετε σύντομα."
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
 "\n"
-"        If you don't receive an email, please make sure you've entered the "
-"address you registered with, and check\n"
+"        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
-"\n"
-"Αν δεν λάβετε email, παρακαλώ επιβεβαιώστε οτι εισάγατε την διεύθυνση με την "
-"οποία κάνατε εγγραφή, και ελέγξτε τον φάκελο Spam"
+msgstr "\nΑν δεν λάβετε email, παρακαλώ επιβεβαιώστε οτι εισάγατε την διεύθυνση με την οποία κάνατε εγγραφή, και ελέγξτε τον φάκελο Spam"
 
 #: templates/oscar/registration/password_reset_form.html:21
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
-"Ξεχάσατε τον κωδικό? Εισάγετε την διεύθυνση email παρακάτω, και θα σας "
-"στείλουμε οδηγίες για να εισάγετε νέο κωδικό."
+msgstr "Ξεχάσατε τον κωδικό? Εισάγετε την διεύθυνση email παρακάτω, και θα σας στείλουμε οδηγίες για να εισάγετε νέο κωδικό."
 
 #: templates/oscar/registration/password_reset_form.html:24
 msgid "Send reset email"
@@ -9511,8 +9277,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>%(num_results)s</strong> results, showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgstr ""
 
@@ -9537,14 +9302,9 @@ msgstr "Βρέθηκαν <strong>0</strong> αποτελέσματα."
 #, python-format
 msgid ""
 "\n"
-"                        Did you mean <a href=\"%(search_url)s?q="
-"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
+"                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"                        Μήπως εννοούσατε <a href=\"%(search_url)s?q="
-"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
-"                    "
+msgstr "\n                        Μήπως εννοούσατε <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n                    "
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9554,12 +9314,3 @@ msgstr "Επιστροφή στα αποτελέσματα αναζήτησης"
 #, python-format
 msgid "You need to select some %ss"
 msgstr ""
-
-#~ msgid "Please choose a less common password"
-#~ msgstr "Παρακαλώ επιλέξτε ένα λιγότερο κοινό κωδικό"
-
-#~ msgid "Version:"
-#~ msgstr "Έκδοση:"
-
-#~ msgid "You must log in to access this page"
-#~ msgstr "Πρέπει να συνδεθείτε για έχετε πρόσβαση σε αυτή την σελίδα."

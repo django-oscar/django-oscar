@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # canburak <can@canb.net>, 2013
 # canburak <can@canb.net>, 2013
@@ -24,14 +24,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-02-20 10:08+0000\n"
-"Last-Translator: DjangoOscar TR <mesut@mesut.net>\n"
-"Language-Team: Turkish (http://www.transifex.com/codeinthehole/django-oscar/"
-"language/tr/)\n"
-"Language: tr\n"
+"PO-Revision-Date: 2018-04-11 08:36+0000\n"
+"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/codeinthehole/django-oscar/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: apps/address/abstract_models.py:28
@@ -223,16 +222,12 @@ msgid "Default billing address?"
 msgstr "Varsayılan fatura adresi?"
 
 #: apps/address/abstract_models.py:533
-#, fuzzy
-#| msgid "Set as default shipping address"
 msgid "Number of Orders as Shipping Address"
-msgstr "Varsayılan kargo adresi yap"
+msgstr ""
 
 #: apps/address/abstract_models.py:537
-#, fuzzy
-#| msgid "Number of Orders"
 msgid "Number of Orders as Billing Address"
-msgstr "Sipariş adeti"
+msgstr ""
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -290,9 +285,10 @@ msgstr "Tedarikçi Adresleri"
 #: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:86
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:625
 #: apps/catalogue/abstract_models.py:234 apps/catalogue/abstract_models.py:363
-#: apps/catalogue/abstract_models.py:931 apps/catalogue/abstract_models.py:1188
-#: apps/order/abstract_models.py:469 apps/partner/abstract_models.py:98
-#: apps/promotions/models.py:297 apps/wishlists/abstract_models.py:121
+#: apps/catalogue/abstract_models.py:931
+#: apps/catalogue/abstract_models.py:1188 apps/order/abstract_models.py:469
+#: apps/partner/abstract_models.py:98 apps/promotions/models.py:297
+#: apps/wishlists/abstract_models.py:121
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:17
@@ -432,7 +428,8 @@ msgstr "Ürün Analizleri"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:49 apps/catalogue/abstract_models.py:92
-#: apps/catalogue/abstract_models.py:710 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:710
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1110 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:166 apps/dashboard/catalogue/tables.py:78
 #: apps/dashboard/users/forms.py:44 apps/dashboard/vouchers/forms.py:18
@@ -574,9 +571,10 @@ msgid "Vouchers"
 msgstr "Hediye Çekleri"
 
 #: apps/basket/abstract_models.py:59 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:336 apps/catalogue/abstract_models.py:1198
-#: apps/customer/abstract_models.py:362 apps/order/abstract_models.py:887
-#: apps/partner/abstract_models.py:151 apps/wishlists/abstract_models.py:55
+#: apps/catalogue/abstract_models.py:336
+#: apps/catalogue/abstract_models.py:1198 apps/customer/abstract_models.py:362
+#: apps/order/abstract_models.py:887 apps/partner/abstract_models.py:151
+#: apps/wishlists/abstract_models.py:55
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/promotions/promotion_list.html:44
 #: templates/oscar/dashboard/ranges/range_list.html:34
@@ -624,11 +622,9 @@ msgstr "%(status)s sepet (sahibi: %(owner)s, kalemler: %(num_lines)d)"
 #: apps/basket/abstract_models.py:158
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order."
-msgstr ""
-"Teknik kısıtlamalardan dolayı bir siparişte %(threshold)d adet üründen "
-"fazlasını gönderemiyoruz."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
+msgstr "Teknik kısıtlamalardan dolayı bir siparişte %(threshold)d adet üründen fazlasını gönderemiyoruz."
 
 #: apps/basket/abstract_models.py:619
 msgid "Line Reference"
@@ -686,20 +682,16 @@ msgstr "%s sepetini değiştiremezsiniz"
 #: apps/basket/abstract_models.py:904
 #, python-format
 msgid ""
-"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"'%(product)s' adlı ürünün fiyatı siz sepetinize eklediğinizden bu yana "
-"%(old_price)s 'dan %(new_price)s 'a arttırıldı"
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "'%(product)s' adlı ürünün fiyatı siz sepetinize eklediğinizden bu yana %(old_price)s 'dan %(new_price)s 'a arttırıldı"
 
 #: apps/basket/abstract_models.py:909
 #, python-format
 msgid ""
-"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"'%(product)s' adlı ürünün fiyatı siz sepetinize eklediğinizden bu yana "
-"%(old_price)s 'dan %(new_price)s 'a düşürüldü"
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "'%(product)s' adlı ürünün fiyatı siz sepetinize eklediğinizden bu yana %(old_price)s 'dan %(new_price)s 'a düşürüldü"
 
 #: apps/basket/abstract_models.py:923 apps/order/abstract_models.py:766
 #: apps/order/abstract_models.py:801 apps/order/abstract_models.py:916
@@ -763,27 +755,21 @@ msgstr "Lütfen geçerli bir ürün seçin"
 #: apps/basket/forms.py:196
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order. Your basket currently has %(basket)d items."
-msgstr ""
-"Teknik kısıtlamalardan dolayı bir siparişte %(threshold)d adet üründen "
-"fazlasını gönderemiyoruz. Sepetinizde şu anda %(basket)d ürün var."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
+msgstr "Teknik kısıtlamalardan dolayı bir siparişte %(threshold)d adet üründen fazlasını gönderemiyoruz. Sepetinizde şu anda %(basket)d ürün var."
 
 #: apps/basket/forms.py:219
 msgid ""
-"This product cannot be added to the basket as its currency isn't the same as "
-"other products in your basket"
-msgstr ""
-"Bu ürün, sepetinizde yer alan diğer ürünlerin kur değerleri ile aynı kur "
-"değerine sahip olmadığı için sepetinize eklenemez"
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
+msgstr "Bu ürün, sepetinizde yer alan diğer ürünlerin kur değerleri ile aynı kur değerine sahip olmadığı için sepetinize eklenemez"
 
 #: apps/basket/middleware.py:174
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
-"Alışveriş sepeti bir önceki sayfa ile birleştirildi. Sepetiniz içi değişmiş "
-"olabilir."
+msgstr "Alışveriş sepeti bir önceki sayfa ile birleştirildi. Sepetiniz içi değişmiş olabilir."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -854,8 +840,7 @@ msgstr "Giriş yapmadan sonra işlem yapmak için ürün kaydedemezsiniz"
 #: apps/basket/views.py:228
 msgid ""
 "Your basket couldn't be updated. Please correct any validation errors below."
-msgstr ""
-"Sepetiniz güncellenemedi. Lütfen aşağıdaki doğrulama hatalarını düzeltin."
+msgstr "Sepetiniz güncellenemedi. Lütfen aşağıdaki doğrulama hatalarını düzeltin."
 
 #: apps/basket/views.py:316
 #, python-format
@@ -891,10 +876,9 @@ msgid "Please enter a voucher code"
 msgstr "Lütfen kupon kodunu giriniz"
 
 #: apps/basket/views.py:403
-#, fuzzy, python-format
-#| msgid "No voucher found with id '%d'"
+#, python-format
 msgid "No voucher found with id '%s'"
-msgstr "'%d' no'lu kupon bulunamadı"
+msgstr ""
 
 #: apps/basket/views.py:409
 #, python-format
@@ -1000,19 +984,14 @@ msgstr "UPC"
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
-msgstr ""
-"Evrensel Ürün Kodu (UPC) , belirli bir tedarikçiye özgü olmayan ürüne ait "
-"bir tanımlayıcıdır. Örneğin ISBN kodunun kitaplar için olduğu gibi."
+msgstr "Evrensel Ürün Kodu (UPC) , belirli bir tedarikçiye özgü olmayan ürüne ait bir tanımlayıcıdır. Örneğin ISBN kodunun kitaplar için olduğu gibi."
 
 #: apps/catalogue/abstract_models.py:291
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
-"example if this is a size 4 of a particular t-shirt.  Leave blank if this is "
-"a stand-alone product (i.e. there is only one version of this product)."
-msgstr ""
-"Bir ana ürünü sadece bir alt ürün oluşturacaksanız seçiniz. Örneğin, eğer "
-"belirli bir tişörtün bedeni 4 ise. Eğer tek kalan bir ürünse boşluk bırakın "
-"(örn. bu ürünün sadece bir versiyonu bulunmaktadır)."
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
+msgstr "Bir ana ürünü sadece bir alt ürün oluşturacaksanız seçiniz. Örneğin, eğer belirli bir tişörtün bedeni 4 ise. Eğer tek kalan bir ürünse boşluk bırakın (örn. bu ürünün sadece bir versiyonu bulunmaktadır)."
 
 #: apps/catalogue/abstract_models.py:298 apps/catalogue/abstract_models.py:544
 #: apps/order/abstract_models.py:471 apps/wishlists/abstract_models.py:127
@@ -1041,11 +1020,9 @@ msgstr "Özellikler"
 
 #: apps/catalogue/abstract_models.py:316
 msgid ""
-"A product attribute is something that this product may have, such as a size, "
-"as specified by its class"
-msgstr ""
-"Bir ürün özelliği, ürünün sahip olabileceği her hangi bir özelliktir, beden "
-"gibi, kendi sınıfı tarafından belirtilir."
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
+msgstr "Bir ürün özelliği, ürünün sahip olabileceği her hangi bir özelliktir, beden gibi, kendi sınıfı tarafından belirtilir."
 
 #: apps/catalogue/abstract_models.py:320
 msgid "Product options"
@@ -1056,10 +1033,7 @@ msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
-msgstr ""
-"Seçenekler, ürünün müşteri sepetine eklenmesi sırasında ürünle "
-"ilişkilendirilen değerlerdir. Bu, bir tişörtün üzerine basılacak kişiye özel "
-"mesaj gibi birşey olabilir."
+msgstr "Seçenekler, ürünün müşteri sepetine eklenmesi sırasında ürünle ilişkilendirilen değerlerdir. Bu, bir tişörtün üzerine basılacak kişiye özel mesaj gibi birşey olabilir."
 
 #: apps/catalogue/abstract_models.py:328
 #: templates/oscar/dashboard/catalogue/product_update.html:297
@@ -1084,9 +1058,7 @@ msgstr "İndirim uygulanabilir mi?"
 
 #: apps/catalogue/abstract_models.py:353
 msgid "This flag indicates if this product can be used in an offer or not"
-msgstr ""
-"Bu işaret, ürünün bir teklif içerisinde yer alıp alamayacağı bilgisini "
-"gösterir."
+msgstr "Bu işaret, ürünün bir teklif içerisinde yer alıp alamayacağı bilgisini gösterir."
 
 #: apps/catalogue/abstract_models.py:364 apps/dashboard/catalogue/views.py:100
 #: apps/promotions/models.py:273 defaults.py:105
@@ -1161,9 +1133,7 @@ msgstr "Sıralama"
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
-msgstr ""
-"Ürünlerin sırasını belirler. Yüksek sıralama değerine sahip olan bir ürün "
-"daha düşük değere sahip olandan daha önce gözükür."
+msgstr "Ürünlerin sırasını belirler. Yüksek sıralama değerine sahip olan bir ürün daha düşük değere sahip olandan daha önce gözükür."
 
 #: apps/catalogue/abstract_models.py:693
 msgid "Product recommendation"
@@ -1177,9 +1147,7 @@ msgstr "Ürün önerileri"
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, and underscores, and "
 "can't start with a digit."
-msgstr ""
-"Kod yalnızca harfler a-z, A-Z, sayılar, ve alt çizgiler içerebilir, ve bir "
-"sayı ile başlayamaz."
+msgstr "Kod yalnızca harfler a-z, A-Z, sayılar, ve alt çizgiler içerebilir, ve bir sayı ile başlayamaz."
 
 #: apps/catalogue/abstract_models.py:736 apps/catalogue/abstract_models.py:933
 msgid "Text"
@@ -1213,16 +1181,12 @@ msgid "Date"
 msgstr "Tarih"
 
 #: apps/catalogue/abstract_models.py:742
-#, fuzzy
-#| msgid "End datetime"
 msgid "Datetime"
-msgstr "Bitiş tarihi"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:744
-#, fuzzy
-#| msgid "Product Options"
 msgid "Multi Option"
-msgstr "Ürün Seçenekleri"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:745
 msgid "Entity"
@@ -1249,10 +1213,8 @@ msgid "Option Group"
 msgstr "Özellik Grubu"
 
 #: apps/catalogue/abstract_models.py:760
-#, fuzzy
-#| msgid "Select an option group if using type \"Option\""
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
-msgstr "\"Özellik\" tipi kullanıyorsanız bir özellik grubu seçin"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:761
 #: templates/oscar/dashboard/catalogue/product_class_form.html:100
@@ -1286,10 +1248,8 @@ msgid "Must be a date or datetime"
 msgstr "Tarih veya tarih-zaman olmalı"
 
 #: apps/catalogue/abstract_models.py:871
-#, fuzzy
-#| msgid "Must be a date or datetime"
 msgid "Must be a datetime"
-msgstr "Tarih veya tarih-zaman olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:875
 msgid "Must be a boolean"
@@ -1300,10 +1260,8 @@ msgid "Must be a model instance"
 msgstr "Bir model örneği olmalı"
 
 #: apps/catalogue/abstract_models.py:886
-#, fuzzy
-#| msgid "Must be an AttributeOption model object instance"
 msgid "Must be a list or AttributeOption queryset"
-msgstr "AttributeOption modeli nesne örneği olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:897
 msgid "Must be an AttributeOption model object instance"
@@ -1335,16 +1293,12 @@ msgid "Richtext"
 msgstr "ZenginMetin"
 
 #: apps/catalogue/abstract_models.py:939
-#, fuzzy
-#| msgid "Date"
 msgid "DateTime"
-msgstr "Tarih"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:943
-#, fuzzy
-#| msgid "Value option"
 msgid "Value multi option"
-msgstr "Değer seçeneği"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:949
 msgid "Value option"
@@ -1396,7 +1350,8 @@ msgstr "Başlık"
 
 #: apps/catalogue/abstract_models.py:1196
 msgid ""
-"An image with a display order of zero will be the primary image for a product"
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr "Gösterim sırası sıfır olan bir resim o ürün için ana resim olacaktır"
 
 #: apps/catalogue/abstract_models.py:1206
@@ -1591,9 +1546,7 @@ msgstr "Yeni müşteriyim ve konuk olarak ödeme yapmak istiyorum"
 
 #: apps/checkout/forms.py:57
 msgid "I am a new customer and want to create an account before checking out"
-msgstr ""
-"Ben yeni bir müşteriyim ve ödeme yapmadan önce bir kullanıcı oluşturmak "
-"istiyorum"
+msgstr "Ben yeni bir müşteriyim ve ödeme yapmadan önce bir kullanıcı oluşturmak istiyorum"
 
 #: apps/checkout/forms.py:59
 msgid "I am a returning customer, and my password is"
@@ -1612,9 +1565,7 @@ msgstr "Ödeme yapmak için sepetinizi ürün eklemelisiniz"
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr ""
-"'%(title)s' artık satın almak için mevcut değil (%(reason)s). Lütfen devam "
-"etmeden önce sepetinizi düzenleyin."
+msgstr "'%(title)s' artık satın almak için mevcut değil (%(reason)s). Lütfen devam etmeden önce sepetinizi düzenleyin."
 
 #: apps/checkout/session.py:149
 msgid "Please either sign in or enter your email address"
@@ -1628,9 +1579,7 @@ msgstr "Lütfen teslimat adresini seçiniz"
 msgid ""
 "Your previously chosen shipping address is no longer valid.  Please choose "
 "another one"
-msgstr ""
-"Daha önce seçmiş olduğunuz teslimat adresi artık geçerli değil. Lütfen başka "
-"bir tane seçin"
+msgstr "Daha önce seçmiş olduğunuz teslimat adresi artık geçerli değil. Lütfen başka bir tane seçin"
 
 #: apps/checkout/session.py:192
 msgid "Please choose a shipping method"
@@ -1640,17 +1589,13 @@ msgstr "Lütfen teslimat yöntemini seçiniz"
 msgid ""
 "Your previously chosen shipping method is no longer valid.  Please choose "
 "another one"
-msgstr ""
-"Daha önce seçmiş olduğunuz teslimat yöntemi artık geçerli değil. Lütfen "
-"başka bir tane seçin"
+msgstr "Daha önce seçmiş olduğunuz teslimat yöntemi artık geçerli değil. Lütfen başka bir tane seçin"
 
 #: apps/checkout/views.py:91
 msgid ""
 "Create your account and then you will be redirected back to the checkout "
 "process"
-msgstr ""
-"Kullanıcı oluşturun, daha sonra tekrar ödeme işlemi sayfasına geri "
-"yönlendirileceksiniz"
+msgstr "Kullanıcı oluşturun, daha sonra tekrar ödeme işlemi sayfasına geri yönlendirileceksiniz"
 
 #: apps/checkout/views.py:214
 msgid "Address saved"
@@ -1661,10 +1606,9 @@ msgid "Address deleted"
 msgstr "Adres silindi"
 
 #: apps/checkout/views.py:283
-msgid "Shipping is unavailable for your chosen address - please choose another"
-msgstr ""
-"Teslimat yöntemi seçmiş olduğunuz adres için uygun değil - lütfen başka bir "
-"tane seçiniz"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
+msgstr "Teslimat yöntemi seçmiş olduğunuz adres için uygun değil - lütfen başka bir tane seçiniz"
 
 #: apps/checkout/views.py:326
 msgid "Your submitted shipping method is not permitted"
@@ -1674,10 +1618,7 @@ msgstr "Belirttiğiniz teslimat yöntemi kabul edilmedi"
 msgid ""
 "A problem occurred while processing payment for this order - no payment has "
 "been taken.  Please contact customer services if this problem persists"
-msgstr ""
-"Bu sipariş için ödeme işlemi yapılırken bir problem meydana geldi - hiç bir "
-"ödeme alınmadı. Eğer bu sorun devam ederse lütfen müşteri hizmetleri ile "
-"iletişime geçiniz"
+msgstr "Bu sipariş için ödeme işlemi yapılırken bir problem meydana geldi - hiç bir ödeme alınmadı. Eğer bu sorun devam ederse lütfen müşteri hizmetleri ile iletişime geçiniz"
 
 #: apps/checkout/views.py:676
 msgid "No order found"
@@ -1707,9 +1648,7 @@ msgstr "Aktif"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr ""
-"Bu kullanıcının aktif olarak değerlendirilip değerlendirilmeyeceğini "
-"belirler. Kullanıcıları silmek yerine bu seçimi kaldırın."
+msgstr "Bu kullanıcının aktif olarak değerlendirilip değerlendirilmeyeceğini belirler. Kullanıcıları silmek yerine bu seçimi kaldırın."
 
 #: apps/customer/abstract_models.py:73
 msgid "date joined"
@@ -1722,10 +1661,8 @@ msgid "Users"
 msgstr "Kullanıcılar"
 
 #: apps/customer/abstract_models.py:123
-#, fuzzy
-#| msgid "Email address"
 msgid "Email Address"
-msgstr "Eposta adresi"
+msgstr ""
 
 #: apps/customer/abstract_models.py:124
 #: templates/oscar/customer/email/email_detail.html:19
@@ -1763,10 +1700,9 @@ msgid "Email to %(user)s with subject '%(subject)s'"
 msgstr "%(user)s için '%(subject)s' konulu eposta"
 
 #: apps/customer/abstract_models.py:140
-#, fuzzy, python-format
-#| msgid "Email to %(user)s with subject '%(subject)s'"
+#, python-format
 msgid "Anonymous email to %(email)s with subject '%(subject)s'"
-msgstr "%(user)s için '%(subject)s' konulu eposta"
+msgstr ""
 
 #: apps/customer/abstract_models.py:162
 msgid "Code used for looking up this event programmatically"
@@ -1829,11 +1765,13 @@ msgstr "Gelen kutusu"
 msgid "Archive"
 msgstr "Arşiv"
 
-#: apps/customer/abstract_models.py:305 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:305
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "Duyuru"
 
-#: apps/customer/abstract_models.py:306 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:306
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "Duyurular"
@@ -1978,9 +1916,7 @@ msgstr "Bütün siparişler"
 msgid ""
 "Orders placed between %(date_from)s and %(date_to)s and order number "
 "containing %(order_number)s"
-msgstr ""
-"%(date_from)s ile %(date_to)s tarihleri arasında verilen ve sipariş numarası "
-"%(order_number)s içeren siparişler"
+msgstr "%(date_from)s ile %(date_to)s tarihleri arasında verilen ve sipariş numarası %(order_number)s içeren siparişler"
 
 #: apps/customer/forms.py:227 apps/dashboard/orders/forms.py:42
 #, python-format
@@ -1992,9 +1928,7 @@ msgstr "%(date_from)s ile %(date_to)s tarihleri arasında verilen siparişler"
 msgid ""
 "Orders placed since %(date_from)s and order number containing "
 "%(order_number)s"
-msgstr ""
-"%(date_from)s tarihinden itibaren verilen ve sipariş numarası "
-"%(order_number)s içeren siparişler"
+msgstr "%(date_from)s tarihinden itibaren verilen ve sipariş numarası %(order_number)s içeren siparişler"
 
 #: apps/customer/forms.py:234
 #, python-format
@@ -2005,9 +1939,7 @@ msgstr "%(date_from)s tarihinden itibaren verilen siparişler"
 #, python-format
 msgid ""
 "Orders placed until %(date_to)s and order number containing %(order_number)s"
-msgstr ""
-"%(date_to)s tarihine kadar verilen ve sipariş numarası %(order_number)s "
-"içeren siparişler"
+msgstr "%(date_to)s tarihine kadar verilen ve sipariş numarası %(order_number)s içeren siparişler"
 
 #: apps/customer/forms.py:240
 #, python-format
@@ -2130,9 +2062,7 @@ msgstr "%(number)s nolu siparişinizdeki bütün ürünler sepetinize eklendi"
 msgid ""
 "It is not possible to re-order order %(number)s as none of its lines are "
 "available to purchase"
-msgstr ""
-"%(number)s nolu siparişinizi, içindeki ürünlerin hiçbiri satın almaya uygun "
-"değil ise tekrar sipariş edemezsiniz"
+msgstr "%(number)s nolu siparişinizi, içindeki ürünlerin hiçbiri satın almaya uygun değil ise tekrar sipariş edemezsiniz"
 
 #: apps/customer/views.py:590
 #, python-format
@@ -2253,11 +2183,9 @@ msgid "'%(title)s' was removed from your '%(name)s' wish list"
 msgstr "'%(title)s' , '%(name)s' istek listenizden kaldırıldı"
 
 #: apps/customer/wishlists/views.py:317
-#, fuzzy, python-format
-#| msgid "User '%(name)s' is already linked to '%(partner_name)s'"
+#, python-format
 msgid "Wish list '%(name)s' already containing '%(title)s'"
 msgstr ""
-"'%(name)s' kullanıcısı '%(partner_name)s' tedarikçisine zaten bağlandırıldı"
 
 #: apps/customer/wishlists/views.py:325
 #, python-format
@@ -2284,14 +2212,11 @@ msgstr "Bir seçenek grubu seçiniz"
 msgid ""
 "At least one stock record must be set to a partner that you're associated "
 "with."
-msgstr ""
-"En azından bir stok kaydı bağlantılı olduğunuz tedarikçiye göre "
-"ayarlanmalıdır."
+msgstr "En azından bir stok kaydı bağlantılı olduğunuz tedarikçiye göre ayarlanmalıdır."
 
 #: apps/dashboard/catalogue/formsets.py:115
 msgid "Stand-alone and parent products must have at least one category"
-msgstr ""
-"Tek kalan ürünler ve ana ürünler en azından bir kategoriye sahip olmalıdır."
+msgstr "Tek kalan ürünler ve ana ürünler en azından bir kategoriye sahip olmalıdır."
 
 #: apps/dashboard/catalogue/formsets.py:119
 msgid "A child product should not have categories"
@@ -2352,18 +2277,15 @@ msgstr[0] "%s Kategori"
 msgstr[1] "%s Kategoriler"
 
 #: apps/dashboard/catalogue/tables.py:82
-#, fuzzy
-#| msgid "Offer summary"
 msgid "Option summary"
-msgstr "Kampanya özeti"
+msgstr ""
 
 #: apps/dashboard/catalogue/tables.py:91
-#, fuzzy, python-format
-#| msgid "Attribute option group"
+#, python-format
 msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
-msgstr[0] "Özellik seçeneği grubu"
-msgstr[1] "Özellik seçeneği grubu"
+msgstr[0] ""
+msgstr[1] ""
 
 #: apps/dashboard/catalogue/views.py:99
 msgid "Product search results"
@@ -2391,8 +2313,7 @@ msgstr "%(parent_product)sdeğişkenleri düzenleniyor"
 #: apps/dashboard/catalogue/views.py:390 apps/dashboard/catalogue/views.py:676
 #: apps/dashboard/catalogue/views.py:806
 msgid "Your submitted data was not valid - please correct the errors below"
-msgstr ""
-"Belirttiğiniz bilgiler geçerli değil - lütfen aşağıdaki hataları düzeltin"
+msgstr "Belirttiğiniz bilgiler geçerli değil - lütfen aşağıdaki hataları düzeltin"
 
 #: apps/dashboard/catalogue/views.py:454
 msgid "Delete product variant?"
@@ -2485,46 +2406,36 @@ msgid "Product type deleted successfully"
 msgstr "Ürün tipi başarıyla silindi"
 
 #: apps/dashboard/catalogue/views.py:842
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Add a new Attribute Option Group"
-msgstr "Özellik seçeneği grubu"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:846
-#, fuzzy
-#| msgid "Product type created successfully"
 msgid "Attribute Option Group created successfully"
-msgstr "Ürün türü başarı ile oluşturuldu"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:860
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Update Attribute Option Group '%s'"
-msgstr "Özellik seçeneği grupları"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:864
-#, fuzzy
-#| msgid "Product type updated successfully"
 msgid "Attribute Option Group updated successfully"
-msgstr "Ürün tipi başarı ile güncellendi"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:891
-#, fuzzy, python-format
-#| msgid "Attribute option groups"
+#, python-format
 msgid "Delete Attribute Option Group '%s'"
-msgstr "Özellik seçeneği grupları"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:898
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
-msgid "%i product attributes are still assigned to this attribute option group"
-msgstr "%iürünleri hala bu türe ait"
+#, python-format
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:918
-#, fuzzy
-#| msgid "Product type deleted successfully"
 msgid "Attribute Option Group deleted successfully"
-msgstr "Ürün tipi başarıyla silindi"
+msgstr ""
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
@@ -2557,8 +2468,7 @@ msgstr "Lütfen bir eposta adresi giriniz"
 #: apps/dashboard/communications/views.py:32
 msgid ""
 "The submitted form was not valid, please correct the errors and resubmit"
-msgstr ""
-"Belirtilen bilgiler geçerli değil, lütfen hataları düzeltip tekrar gönderiniz"
+msgstr "Belirtilen bilgiler geçerli değil, lütfen hataları düzeltip tekrar gönderiniz"
 
 #: apps/dashboard/communications/views.py:41
 msgid "Email saved"
@@ -2972,9 +2882,7 @@ msgstr "%s ödeme hatası nedeniyle sipariş durumu değiştirilememektedir"
 #: apps/dashboard/orders/views.py:422 apps/dashboard/orders/views.py:600
 #, python-format
 msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
-msgstr ""
-"Sipariş durumu '%(old_status)s'  iken '%(new_status)s olarak "
-"değiştirilmiştir."
+msgstr "Sipariş durumu '%(old_status)s'  iken '%(new_status)s olarak değiştirilmiştir."
 
 #: apps/dashboard/orders/views.py:471
 msgid "No valid action submitted"
@@ -3003,9 +2911,7 @@ msgstr "%ssatırı için girilen miktar geçersizdir"
 msgid ""
 "The entered quantity for line #%(line_id)s should not be higher than "
 "%(quantity)s"
-msgstr ""
-"#%(line_id)ssatırı için girilen miktar %(quantity)smiktarından fazla "
-"olmamalıdır"
+msgstr "#%(line_id)ssatırı için girilen miktar %(quantity)smiktarından fazla olmamalıdır"
 
 #: apps/dashboard/orders/views.py:575
 msgid "Note saved"
@@ -3025,9 +2931,7 @@ msgstr "Geçersiz form gönderimi"
 
 #: apps/dashboard/orders/views.py:614
 msgid "Unable to change order status as the requested new status is not valid"
-msgstr ""
-"İstenilen yeni durum geçerli olmadığından sipariş durumu "
-"değiştirilememektedir"
+msgstr "İstenilen yeni durum geçerli olmadığından sipariş durumu değiştirilememektedir"
 
 #: apps/dashboard/orders/views.py:628 apps/dashboard/orders/views.py:704
 msgid "Please choose a valid amount"
@@ -3041,10 +2945,9 @@ msgstr "%(line_id)dsatırı için '%(status)s'  yeni statürü geçerli değil"
 #: apps/dashboard/orders/views.py:652
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
-msgstr ""
-"#%(line_id)d statü satırı '%(old_status)s' durumundan '%(new_status)s' "
-"durumuna değiştirildi"
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
+msgstr "#%(line_id)d statü satırı '%(old_status)s' durumundan '%(new_status)s' durumuna değiştirildi"
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
 #, python-format
@@ -3089,9 +2992,7 @@ msgstr "%(field)s, '%(old_value)s' iken '%(new_value)s' olarak değiştirildi"
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"Teslimat adresi güncellendi:\n"
-"%s"
+msgstr "Teslimat adresi güncellendi:\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -3207,8 +3108,7 @@ msgstr "'%(name)s' kullanıcısı '%(partner_name)s' na bağlandırıldı"
 #: apps/dashboard/partners/views.py:209
 #, python-format
 msgid "User '%(name)s' is already linked to '%(partner_name)s'"
-msgstr ""
-"'%(name)s' kullanıcısı '%(partner_name)s' tedarikçisine zaten bağlandırıldı"
+msgstr "'%(name)s' kullanıcısı '%(partner_name)s' tedarikçisine zaten bağlandırıldı"
 
 #: apps/dashboard/partners/views.py:265
 #, python-format
@@ -3354,10 +3254,9 @@ msgid "No product(s) were found with SKU or UPC matching %s"
 msgstr "SKU ya da UPC'si %s ile eşleşen herhangi bir ürün veya ürünler yoktur"
 
 #: apps/dashboard/ranges/views.py:213
-#, fuzzy, python-format
-#| msgid "There are no product types."
+#, python-format
 msgid "There are more than one product with SKU %s"
-msgstr "Hiç ürün türü bulunmuyor."
+msgstr ""
 
 #: apps/dashboard/reports/config.py:8
 msgid "Reports dashboard"
@@ -3410,8 +3309,7 @@ msgstr "-e"
 msgid ""
 "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
 "%(name_filter)s"
-msgstr ""
-"%(main_filter)s%(date_filter)s%(status_filter)s%(kw_filter)s%(name_filter)s"
+msgstr "%(main_filter)s%(date_filter)s%(status_filter)s%(kw_filter)s%(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
 #, python-format
@@ -3595,10 +3493,8 @@ msgid "Is Active?"
 msgstr "Aktif mi?"
 
 #: apps/dashboard/vouchers/forms.py:99
-#, fuzzy
-#| msgid "Vouchers"
 msgid "In Voucherset?"
-msgstr "Hediye Çekleri"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:34 apps/dashboard/vouchers/views.py:360
 #: apps/dashboard/vouchers/views.py:419
@@ -3649,26 +3545,20 @@ msgid "Voucher deleted"
 msgstr "Kupon silindi"
 
 #: apps/dashboard/vouchers/views.py:234
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Create voucher set"
-msgstr "Kupon oluştur"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:274
-#, fuzzy
-#| msgid "Voucher created"
 msgid "Voucher set created"
-msgstr "Kupon oluşturuldu"
+msgstr ""
 
 #: apps/dashboard/vouchers/views.py:430
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:16
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:8
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:17
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:22
-#, fuzzy
-#| msgid "Voucher details"
 msgid "Voucher sets"
-msgstr "Kupon detayları"
+msgstr ""
 
 #: apps/offer/abstract_models.py:91
 msgid "This is displayed within the customer's basket"
@@ -3695,15 +3585,11 @@ msgstr "Kullanıcı kampanyası - sadece bazı kullanıcılar için geçerli"
 msgid ""
 "Session offer - temporary offer, available for a user for the duration of "
 "their session"
-msgstr ""
-"Oturum teklifi - geçici teklif, oturum süresince bir kullanıcı için "
-"kullanılabilir"
+msgstr "Oturum teklifi - geçici teklif, oturum süresince bir kullanıcı için kullanılabilir"
 
 #: apps/offer/abstract_models.py:121
-#, fuzzy
-#| msgid "Suspend offer"
 msgid "Exclusive offer"
-msgstr "Kampanyayı durdur"
+msgstr ""
 
 #: apps/offer/abstract_models.py:135 apps/offer/abstract_models.py:710
 #: templates/oscar/dashboard/offers/offer_detail.html:76
@@ -3732,12 +3618,10 @@ msgid ""
 msgstr ""
 
 #: apps/offer/abstract_models.py:158
-#, fuzzy
-#| msgid "Offers are active until the end of the 'end date'"
 msgid ""
 "Offers are active until the end date. Leave this empty if the offer has no "
 "expiry date."
-msgstr "Kampanyalar 'bitiş tarihi'ne kadar aktiftir"
+msgstr ""
 
 #: apps/offer/abstract_models.py:166
 msgid "Max global applications"
@@ -3771,9 +3655,7 @@ msgstr "Maksimum indirim"
 msgid ""
 "When an offer has given more discount to orders than this threshold, then "
 "the offer becomes unavailable"
-msgstr ""
-"Bir teklif, siparişlere bu eşikten daha fazla indirim verdiğinde, teklif "
-"sunulmaz hale gelir"
+msgstr "Bir teklif, siparişlere bu eşikten daha fazla indirim verdiğinde, teklif sunulmaz hale gelir"
 
 #: apps/offer/abstract_models.py:201
 msgid "Total Discount"
@@ -3879,9 +3761,7 @@ msgstr "En fazla etkilenen ürünler"
 msgid ""
 "Set this to prevent the discount consuming all items within the range that "
 "are in the basket."
-msgstr ""
-"Sepet içinde olan ve aralıkta bulunan tüm ürünleri tüketen indirimi önlemek "
-"için bunu ayarla."
+msgstr "Sepet içinde olan ve aralıkta bulunan tüm ürünleri tüketen indirimi önlemek için bunu ayarla."
 
 #: apps/offer/abstract_models.py:499 apps/offer/abstract_models.py:705
 #: apps/offer/abstract_models.py:812
@@ -3902,19 +3782,15 @@ msgstr "Çoklu satın alma avantajları bir değere gerek duymamaktadır"
 
 #: apps/offer/abstract_models.py:547
 msgid "Multibuy benefits don't require a 'max affected items' attribute"
-msgstr ""
-"Çoklu alım avantajları 'maksimum etkilenen ürünler' özelliği "
-"gerektirmemektedir"
+msgstr "Çoklu alım avantajları 'maksimum etkilenen ürünler' özelliği gerektirmemektedir"
 
 #: apps/offer/abstract_models.py:557
 msgid "Percentage benefits require a product range"
 msgstr "Yüzde avantajları bir indirim aralığına ihtiyaç duyar"
 
 #: apps/offer/abstract_models.py:560 apps/offer/abstract_models.py:585
-#, fuzzy
-#| msgid "Fixed discount benefits require a value"
 msgid "Percentage discount benefits require a value"
-msgstr "Sabit indirim avantajları bir değere ihtiyaç duyuyor"
+msgstr ""
 
 #: apps/offer/abstract_models.py:562 apps/offer/abstract_models.py:587
 msgid "Percentage discount cannot be greater than 100"
@@ -3932,16 +3808,12 @@ msgstr "Bu avantaj, ürünlere uygulanamadığından hiçbir aralık seçilmemel
 #: apps/offer/abstract_models.py:575 apps/offer/abstract_models.py:593
 #: apps/offer/abstract_models.py:604
 msgid "Shipping discounts don't require a 'max affected items' attribute"
-msgstr ""
-"Teslimat indirimleri 'maksimum etkilenen ürünler' özelliğine ihtiyaç "
-"duymamaktadır"
+msgstr "Teslimat indirimleri 'maksimum etkilenen ürünler' özelliğine ihtiyaç duymamaktadır"
 
 #: apps/offer/abstract_models.py:613
 msgid ""
 "No range should be selected as the condition range will be used instead."
-msgstr ""
-"Bunun yerine koşul aralığı kullanılacağından, herhangi bir aralık "
-"seçilmemelidir."
+msgstr "Bunun yerine koşul aralığı kullanılacağından, herhangi bir aralık seçilmemelidir."
 
 #: apps/offer/abstract_models.py:619
 msgid "Fixed discount benefits require a product range"
@@ -4259,11 +4131,9 @@ msgstr "Ziyaretçi mail adresi"
 #: apps/order/abstract_models.py:128
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status: "
-"'%(status)s')"
-msgstr ""
-"'%(new_status)s'  durumu %(number)ssiparişi için geçerli değildir. (Mevcut "
-"durum: '%(status)s')"
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
+msgstr "'%(new_status)s'  durumu %(number)ssiparişi için geçerli değildir. (Mevcut durum: '%(status)s')"
 
 #: apps/order/abstract_models.py:259
 msgid "In progress"
@@ -4380,8 +4250,7 @@ msgstr "Ürün '%(name)s', miktar '%(qty)s'"
 #: apps/order/abstract_models.py:570
 #, python-format
 msgid "'%(new_status)s' is not a valid status (current status: '%(status)s')"
-msgstr ""
-"'%(new_status)s' geçerli bir durum değildir(şu anki durum: '%(status)s')"
+msgstr "'%(new_status)s' geçerli bir durum değildir(şu anki durum: '%(status)s')"
 
 #: apps/order/abstract_models.py:739
 #, python-format
@@ -4923,10 +4792,9 @@ msgstr "Görüntüleme biçimi"
 
 #: apps/promotions/models.py:152
 msgid ""
-"This can be used to have different types of HTML blocks (eg different widths)"
-msgstr ""
-"Bu, farklı HTML blok türlerine sahip olmak için kullanılabilir (örneğin "
-"farklı genişlikler)"
+"This can be used to have different types of HTML blocks (eg different "
+"widths)"
+msgstr "Bu, farklı HTML blok türlerine sahip olmak için kullanılabilir (örneğin farklı genişlikler)"
 
 #: apps/promotions/models.py:159 apps/promotions/models.py:160
 msgid "Raw HTML"
@@ -4944,9 +4812,7 @@ msgstr "Bu promosyonun buraya bağlandığı yerdir:"
 msgid ""
 "Choose the Image content blocks that this block will use. (You may need to "
 "create some first)."
-msgstr ""
-"Bu bloğun kullanacağı resim içeriği bloklarını seçin. (İlk olarak sizin "
-"oluşturmanız gerekebilir)."
+msgstr "Bu bloğun kullanacağı resim içeriği bloklarını seçin. (İlk olarak sizin oluşturmanız gerekebilir)."
 
 #: apps/promotions/models.py:214
 msgid "Multi Image"
@@ -5129,9 +4995,7 @@ msgstr "Varsayılan Ağırlık"
 
 #: apps/shipping/abstract_models.py:109
 msgid "Default product weight in kg when no weight attribute is defined"
-msgstr ""
-"Herhangi bir ağırlık niteliği tanımlanmadığında tahmini olarak kg cinsinden "
-"ürün ağırlığı"
+msgstr "Herhangi bir ağırlık niteliği tanımlanmadığında tahmini olarak kg cinsinden ürün ağırlığı"
 
 #: apps/shipping/abstract_models.py:115
 msgid "Weight-based Shipping Method"
@@ -5149,9 +5013,7 @@ msgstr "Üst limit"
 msgid ""
 "Enter upper limit of this weight band in kg. The lower limit will be "
 "determined by the other weight bands."
-msgstr ""
-"Bu ağırlık bandının üst sınırını kg olarak girin. Alt limit, diğer ağırlık "
-"bantları tarafından belirlenecektir."
+msgstr "Bu ağırlık bandının üst sınırını kg olarak girin. Alt limit, diğer ağırlık bantları tarafından belirlenecektir."
 
 #: apps/shipping/abstract_models.py:202
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:35
@@ -5201,26 +5063,20 @@ msgstr "Bazı ödeme yöntemleri tanımlamanız gerekli"
 
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
-#, fuzzy
-#| msgid "Number of orders"
 msgid "Number of vouchers"
-msgstr "Sipariş sayısı"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:37
 msgid "Length of Code"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:52
-#, fuzzy
-#| msgid "Voucher"
 msgid "VoucherSet"
-msgstr "Kupon"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:53
-#, fuzzy
-#| msgid "Vouchers"
 msgid "VoucherSets"
-msgstr "Hediye Çekleri"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:126
 msgid ""
@@ -5324,9 +5180,7 @@ msgstr "Kişisel -  Sadece sahibi istek listesini görebilir"
 msgid ""
 "Shared - Only the owner and people with access to the obfuscated link can "
 "see the wish list"
-msgstr ""
-"Paylaşımlı- Sadece sahibi ve gizlenen linke erişebilen insanlar istek "
-"listesini görebilir"
+msgstr "Paylaşımlı- Sadece sahibi ve gizlenen linke erişebilen insanlar istek listesini görebilir"
 
 #: apps/wishlists/abstract_models.py:43
 msgid "Public - Everybody can see the wish list"
@@ -5408,10 +5262,8 @@ msgid "Stock alert requests"
 msgstr " Stok Uyarıları"
 
 #: defaults.py:179
-#, fuzzy
-#| msgid "Voucher details"
 msgid "Voucher Sets"
-msgstr "Kupon detayları"
+msgstr ""
 
 #: defaults.py:186
 msgid "Content"
@@ -5521,16 +5373,13 @@ msgstr "Sunucu hatası!"
 msgid ""
 "We're sorry but something went terribly wrong and we've been unable to "
 "generate the page you requested."
-msgstr ""
-"Üzgünüz ama bir şeyler ters gitti ve talep ettiğiniz sayfayı oluşturamadık."
+msgstr "Üzgünüz ama bir şeyler ters gitti ve talep ettiğiniz sayfayı oluşturamadık."
 
 #: templates/oscar/500.html:14
 msgid ""
 "This incident has been logged and will be addressed by an engineer as soon "
 "as possible."
-msgstr ""
-"Bu hata kaydedildi ve mümkün olan en kısa sürede bir mühendis tarafından ele "
-"alınacak."
+msgstr "Bu hata kaydedildi ve mümkün olan en kısa sürede bir mühendis tarafından ele alınacak."
 
 #: templates/oscar/basket/basket.html:12
 #: templates/oscar/catalogue/browse.html:17
@@ -5564,10 +5413,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"    <strong>%(title)s</strong> sepetinize eklendi.\n"
-"        "
+msgstr "\n    <strong>%(title)s</strong> sepetinize eklendi.\n        "
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5576,28 +5422,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong>'nun <strong>%(quantity)s</strong> kopyası\n"
-"sepetinize eklendi."
+msgstr "\n<strong>%(title)s</strong>'nun <strong>%(quantity)s</strong> kopyası\nsepetinize eklendi."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong>sepetinize geri taşındı.\n"
+msgstr "\n<strong>%(title)s</strong>sepetinize geri taşındı.\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> sonrası için kaydedildi.\n"
+msgstr "\n<strong>%(title)s</strong> sonrası için kaydedildi.\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5610,10 +5449,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
-"\n"
-"            Şuanki sepet tutarınız <strong>%(total)s</strong>\n"
-"            "
+msgstr "\n            Şuanki sepet tutarınız <strong>%(total)s</strong>\n            "
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5631,10 +5467,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Sepetiniz şimdi <strong>%(name)s</strong>indirimi için\n"
-" yetkilendirilmiştir.\n"
+msgstr "\nSepetiniz şimdi <strong>%(name)s</strong>indirimi için\n yetkilendirilmiştir.\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5642,10 +5475,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Sepetiniz artık <strong>%(name)s</strong>indirimi için\n"
-" yetkilendirilememektedir.\n"
+msgstr "\nSepetiniz artık <strong>%(name)s</strong>indirimi için\n yetkilendirilememektedir.\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5659,13 +5489,9 @@ msgstr "Kampanyaları kaçırabilirsin!"
 #, python-format
 msgid ""
 "\n"
-"                <div class=\"warning\">%(message)s to qualify for the <a "
-"href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div class=\"warning\">%(message)smesajı <a href=\"%(url)s\">%(offer_name)s</"
-"a>özel indirimini değerlendirmek içindir.</div>"
+msgstr "\n<div class=\"warning\">%(message)smesajı <a href=\"%(url)s\">%(offer_name)s</a>özel indirimini değerlendirmek içindir.</div>"
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5943,22 +5769,14 @@ msgstr "Tarafından düzenle"
 #, python-format
 msgid ""
 "\n"
-"                    <strong>%(num_results)s</strong> result - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> result - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgid_plural ""
 "\n"
-"                    <strong>%(num_results)s</strong> results - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong>sonucu - <strong>%(start)s</strong>'dan "
-"<strong>%(end)s</strong>'a kadar gösteriyor."
-msgstr[1] ""
-"\n"
-"<strong>%(num_results)s</strong>sonuçları - <strong>%(start)s</strong>'dan "
-"<strong>%(end)s</strong>' kadar gösteriyor."
+msgstr[0] "\n<strong>%(num_results)s</strong>sonucu - <strong>%(start)s</strong>'dan <strong>%(end)s</strong>'a kadar gösteriyor."
+msgstr[1] "\n<strong>%(num_results)s</strong>sonuçları - <strong>%(start)s</strong>'dan <strong>%(end)s</strong>' kadar gösteriyor."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5970,12 +5788,8 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong>sonucu."
-msgstr[1] ""
-"\n"
-"<strong>%(num_results)s</strong>sonuçları."
+msgstr[0] "\n<strong>%(num_results)s</strong>sonucu."
+msgstr[1] "\n<strong>%(num_results)s</strong>sonuçları."
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5989,10 +5803,8 @@ msgid "No products found."
 msgstr "Hiç ürün bulunamadı."
 
 #: templates/oscar/catalogue/category.html:16
-#, fuzzy
-#| msgid "Edit category"
 msgid "Edit this category"
-msgstr "Kategoriyi düzenle"
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -6037,14 +5849,9 @@ msgstr "Müşteri Yorumları"
 #, python-format
 msgid ""
 "This product does not have any reviews yet -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">be the "
-"first to write one</a>.\n"
+"                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"Henüz yorum yok -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">ilk "
-"yazan siz olun</a>.\n"
-"                        "
+msgstr "Henüz yorum yok -\n                            <a href=\"%(add_review_url)s#addreview\">ilk yazan siz olun</a>.\n                        "
 
 #: templates/oscar/catalogue/detail.html:164
 msgid "This product does not have any reviews yet"
@@ -6100,9 +5907,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
-"\n"
-"'%(name)s' istek listesine ekle"
+msgstr "\n'%(name)s' istek listesine ekle"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -6112,13 +5917,9 @@ msgstr "Yeni istek listesi oluştur"
 #, python-format
 msgid ""
 "\n"
-"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s"
-"\">'%(name)s'</a> wishlist.</span>\n"
+"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">Ürün, <a href=\"%(url)s\">'%(name)s'</a> istek "
-"listesinde.</span>"
+msgstr "\n<span class=\"pull-left\">Ürün, <a href=\"%(url)s\">'%(name)s'</a> istek listesinde.</span>"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -6138,20 +5939,15 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"%(review_date)starihinde sizin tarafınızdan değerlendirildi"
+msgstr "\n%(review_date)starihinde sizin tarafınızdan değerlendirildi"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
 msgid ""
 "\n"
-"                    Reviewed by <strong>%(name)s</strong> on "
-"%(review_date)s\n"
+"                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"%(review_date)starihinde <strong>%(name)s</strong> tarafından değerlendirildi"
+msgstr "\n%(review_date)starihinde <strong>%(name)s</strong> tarafından değerlendirildi"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -6179,22 +5975,14 @@ msgstr "Hayır"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer found this useful\n"
 "            "
 msgid_plural ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-"\n"
-"%(num_votes)s müşterisinin <strong>%(num_up_votes)s</strong>'si kullanışlı "
-"bulundu."
-msgstr[1] ""
-"\n"
-"%(num_votes)smüşterilerinin<strong>%(num_up_votes)s</strong>'i kullanışlı "
-"bulundu."
+msgstr[0] "\n%(num_votes)s müşterisinin <strong>%(num_up_votes)s</strong>'si kullanışlı bulundu."
+msgstr[1] "\n%(num_votes)smüşterilerinin<strong>%(num_up_votes)s</strong>'i kullanışlı bulundu."
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -6214,12 +6002,8 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
-"\n"
-"%(num_reviews)smüşteri değerlendirmesi"
-msgstr[1] ""
-"\n"
-"%(num_reviews)smüşteri değerlendirmeleri"
+msgstr[0] "\n%(num_reviews)smüşteri değerlendirmesi"
+msgstr[1] "\n%(num_reviews)smüşteri değerlendirmeleri"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:79
@@ -6367,9 +6151,7 @@ msgstr "Ödeme detaylarını gir"
 msgid ""
 "This page needs implementing within your project.  You may want to use one "
 "of Oscar's payment gateway libraries:"
-msgstr ""
-"Bu sayfanın projenizde uygulanması gerekli. Oscar'ın ödeme ağ geçidi "
-"kitaplıklarından birini kullanmak isteyebilirsiniz:"
+msgstr "Bu sayfanın projenizde uygulanması gerekli. Oscar'ın ödeme ağ geçidi kitaplıklarından birini kullanmak isteyebilirsiniz:"
 
 #: templates/oscar/checkout/preview.html:5
 msgid "Order preview"
@@ -6454,15 +6236,10 @@ msgstr "sepete geri dön"
 #, python-format
 msgid ""
 "\n"
-"                                This includes a discount of <strong>"
-"%(amount)s</strong> as\n"
-"                                your basket qualifies for the <strong>"
-"%(name)s</strong> offer.\n"
+"                                This includes a discount of <strong>%(amount)s</strong> as\n"
+"                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
-msgstr ""
-"\n"
-"Sepetiniz <strong>%(name)s</strong>indirimi için yetkilendiğinden,\n"
-"bu, <strong>%(amount)s</strong>indirimini içerir."
+msgstr "\nSepetiniz <strong>%(name)s</strong>indirimi için yetkilendiğinden,\nbu, <strong>%(amount)s</strong>indirimini içerir."
 
 #: templates/oscar/checkout/shipping_methods.html:58
 msgid "Select option"
@@ -6475,31 +6252,22 @@ msgid ""
 "\n"
 "        Order %(number)s: confirmation\n"
 "    "
-msgstr ""
-"\n"
-"Sipariş %(number)s: onaylama"
+msgstr "\nSipariş %(number)s: onaylama"
 
 #: templates/oscar/checkout/thank_you.html:25
 #, python-format
 msgid ""
 "\n"
-"        Your order has been placed and a confirmation email has been sent - "
-"your order number is\n"
+"        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
-msgstr ""
-"\n"
-"Siparişiniz verildi ve e-posta adresinize onaylanma gönderildi - sipariş "
-"numaranız \n"
-"<strong>%(number)s</strong>."
+msgstr "\nSiparişiniz verildi ve e-posta adresinize onaylanma gönderildi - sipariş numaranız \n<strong>%(number)s</strong>."
 
 #: templates/oscar/checkout/thank_you.html:29
 msgid ""
 "Please make a note of this reference or print this page and quote it in any "
 "communication with us regarding your order."
-msgstr ""
-"Lütfen bu referansı not edin veya bu sayfayı yazdırın ve siparişinizle "
-"ilgili olarak bizimle olan herhangi bir iletişiminizde belirtin."
+msgstr "Lütfen bu referansı not edin veya bu sayfayı yazdırın ve siparişinizle ilgili olarak bizimle olan herhangi bir iletişiminizde belirtin."
 
 #: templates/oscar/checkout/thank_you.html:62
 msgid "No shipping address required."
@@ -6509,12 +6277,9 @@ msgstr "Herhangi bir teslimat adresi gerekli değil."
 #, python-format
 msgid ""
 "\n"
-"                                Allocation of %(amount)s from type %(type)s "
-"(reference: %(reference)s)\n"
+"                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"%(type)stipinden %(amount)stahsisatı (referans: %(reference)s)"
+msgstr "\n%(type)stipinden %(amount)stahsisatı (referans: %(reference)s)"
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6522,9 +6287,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"%(type)stipinden %(amount)stahsisatı"
+msgstr "\n%(type)stipinden %(amount)stahsisatı"
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
@@ -6540,9 +6303,7 @@ msgid ""
 "\n"
 "                            Estimated dispatch: <strong>%(date)s</strong>\n"
 "                        "
-msgstr ""
-"\n"
-"Tahmini sevk: <strong>%(date)s</strong>"
+msgstr "\nTahmini sevk: <strong>%(date)s</strong>"
 
 #: templates/oscar/checkout/thank_you.html:227
 msgid "Shipping charge (before discounts)"
@@ -6687,8 +6448,7 @@ msgstr "Adres defterinde hiç adres yok"
 
 #: templates/oscar/customer/alerts/alert_list.html:6
 msgid "You do not have any active alerts for out-of-stock products."
-msgstr ""
-"Stokta olmayan ürünler için herhangi bir aktif uyarınız bulunmamaktadır."
+msgstr "Stokta olmayan ürünler için herhangi bir aktif uyarınız bulunmamaktadır."
 
 #: templates/oscar/customer/alerts/alert_list.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:60
@@ -6704,17 +6464,14 @@ msgstr "İptal"
 msgid ""
 "\n"
 "<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a> tekrar stokta\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a> tekrar stokta\n"
 
 #: templates/oscar/customer/alerts/message_subject.html:2
-#, fuzzy, python-format
-#| msgid "%(title|safe)s is back in stock"
+#, python-format
 msgid ""
 "\n"
 "%(title)s is back in stock\n"
-msgstr "%(title|safe)s artık stokta var."
+msgstr ""
 
 #: templates/oscar/customer/anon_order.html:8
 #: templates/oscar/dashboard/orders/order_detail.html:24
@@ -6789,32 +6546,23 @@ msgid "The %(name)s team"
 msgstr "%(name)stakımı"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "    You're receiving this email because your email address has been "
-#| "changed to <strong>%(email)s</strong>.\n"
-#| "    "
+#, python-format
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "<strong>%(email)s</strong>."
 msgstr ""
-"\n"
-"E-posta adresiniz <strong>%(email)s</strong>olarak değiştirildiği için bu e-"
-"postayı alıyorsunuz."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately and "
 "correct your email address:"
-msgstr ""
-"Eğer değiştiren siz değilseniz, lütfen hemen şifrenizi değiştirin ve e-posta "
-"adresinizi doğrulayın:"
+msgstr "Eğer değiştiren siz değilseniz, lütfen hemen şifrenizi değiştirin ve e-posta adresinizi doğrulayın:"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr "Eğer e-posta adresini değiştiren sizseniz, bu maili görmezden geliniz."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
@@ -6822,9 +6570,7 @@ msgstr "Eğer e-posta adresini değiştiren sizseniz, bu maili görmezden gelini
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "%(email)s."
-msgstr ""
-"E-posta adresiniz %(email)solarak değiştirildiği için bu e-postayı "
-"alıyorsunuz."
+msgstr "E-posta adresiniz %(email)solarak değiştirildiği için bu e-postayı alıyorsunuz."
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
 #, python-format
@@ -6838,17 +6584,11 @@ msgid "Hello,"
 msgstr "Merhaba,"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:8
-#, fuzzy, python-format
-#| msgid ""
-#| "We are pleased to confirm your order %(order_number)s has been received "
-#| "and\n"
-#| "will be processed shortly."
+#, python-format
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "        will be processed shortly."
 msgstr ""
-"%(order_number)snumaralı siparişinizin alındığını ve\n"
-"siparişiniz kısa sürede işleme alınacağını söylemekten mutluluk duyarız."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:17
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6879,11 +6619,9 @@ msgstr "Kargo adresi:"
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
-"title=\"order status\">here</a>"
-msgstr ""
-"<a href=\"%(status_url)s\" title=\"order status\">buraya</a> tıklayarak "
-"siparişin durumunu görebilirsiniz"
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
+msgstr "<a href=\"%(status_url)s\" title=\"order status\">buraya</a> tıklayarak siparişin durumunu görebilirsiniz"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -6892,11 +6630,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"Merhaba,\n"
-"\n"
-"%(order_number)snumaralı siparişinizin alındığını ve \n"
-"kısa sürede işleme alınacağını bildirmekten mutluluk duyarız."
+msgstr "Merhaba,\n\n%(order_number)snumaralı siparişinizin alındığını ve \nkısa sürede işleme alınacağını bildirmekten mutluluk duyarız."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6911,9 +6645,7 @@ msgstr "fiyat:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"Siparişinizin durumunu aşağıdaki site URL'sinden takip edebilirsiniz:\n"
-"%(status_url)s"
+msgstr "Siparişinizin durumunu aşağıdaki site URL'sinden takip edebilirsiniz:\n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6925,17 +6657,11 @@ msgid "Confirmation of order %(number)s"
 msgstr "Sipariş onayı %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "You're receiving this email because your password has been changed at "
-#| "%(name)s.\n"
+#, python-format
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
 msgstr ""
-"\n"
-"Şifreniz %(name)s'da değiştirildiği için bu e-postayı alıyorsunuz.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
@@ -6952,11 +6678,8 @@ msgstr "aksi takdirde, bu e-postayı görmezden geliniz."
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your password has been changed at "
-"%(name)s.\n"
-msgstr ""
-"\n"
-"Şifreniz %(name)s'da değiştirildiği için bu e-postayı alıyorsunuz.\n"
+"You're receiving this email because your password has been changed at %(name)s.\n"
+msgstr "\nŞifreniz %(name)s'da değiştirildiği için bu e-postayı alıyorsunuz.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6967,11 +6690,9 @@ msgstr "%(site_name)ssitesinde şifreniz değiştirildi."
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(name)s."
-msgstr ""
-"Bu e-postayı %(name)s. kullanıcısı adına bir parola sıfırlama isteği "
-"yaptığınız için alıyorsunuz."
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
+msgstr "Bu e-postayı %(name)s. kullanıcısı adına bir parola sıfırlama isteği yaptığınız için alıyorsunuz."
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:7
@@ -6990,90 +6711,42 @@ msgid "Dear %(name)s,"
 msgstr "Sevgili %(name)s, "
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:14
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "We are happy to inform you that our product '%(product|safe)s' is back in "
-#| "stock:\n"
-#| "http://%(site)s%(path)s\n"
+#, python-format
 msgid ""
 "\n"
-"            We are happy to inform you that our product '%(title)s' is back "
-"in stock:\n"
+"            We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "            http://%(site)s%(path)s\n"
 "        "
 msgstr ""
-"\n"
-"'%(product|safe)s' ürününüzün stoklara geri gelmesini size bildirmekten "
-"mutluluk duyoyoruz: \n"
-"http://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:22
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "Beware that the amount of items in stock is limited. Be quick or someone "
-#| "might get there first.\n"
 msgid ""
 "\n"
-"                Beware that the amount of items in stock is limited. Be "
-"quick or someone might get there first.\n"
+"                Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 "            "
 msgstr ""
-"\n"
-"Stoktaki ürünlerin miktarının sınırlı olduğunu unutmayın. Acele edin ya da "
-"birileri sizden önce alabilir.\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:29
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "With this email we have disabled your alert automatically and you will "
-#| "not\n"
-#| "receive any further email regarding this product.\n"
-#| "\n"
-#| "Thanks for your interest,\n"
-#| "The %(site_name)s Team\n"
 msgid ""
 "\n"
-"            With this email we have disabled your alert automatically and "
-"you will not\n"
+"            With this email we have disabled your alert automatically and you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
 msgstr ""
-"\n"
-"Bu e-postayla uyarılarını otomatik olarak devre dışı bıraktık ve \n"
-"bu ürün ile ilgili daha fazla e-posta almayacaksınız.\n"
-"\n"
-"İlginiz için teşekkürler,\n"
-"%(site_name)sTakımı\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:2
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "We are happy to inform you that our product '%(product|safe)s' is back in "
-#| "stock:\n"
-#| "http://%(site)s%(path)s\n"
+#, python-format
 msgid ""
 "\n"
 "We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
 msgstr ""
-"\n"
-"'%(product|safe)s' ürününüzün stoklara geri gelmesini size bildirmekten "
-"mutluluk duyoyoruz: \n"
-"http://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:5
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone "
-"might get there first.\n"
-msgstr ""
-"\n"
-"Stoktaki ürünlerin miktarının sınırlı olduğunu unutmayın. Acele edin ya da "
-"birileri sizden önce alabilir.\n"
+"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
+msgstr "\nStoktaki ürünlerin miktarının sınırlı olduğunu unutmayın. Acele edin ya da birileri sizden önce alabilir.\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
 #, python-format
@@ -7084,29 +6757,10 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"Bu e-postayla uyarılarını otomatik olarak devre dışı bıraktık ve \n"
-"bu ürün ile ilgili daha fazla e-posta almayacaksınız.\n"
-"\n"
-"İlginiz için teşekkürler,\n"
-"%(site_name)sTakımı\n"
+msgstr "\nBu e-postayla uyarılarını otomatik olarak devre dışı bıraktık ve \nbu ürün ile ilgili daha fazla e-posta almayacaksınız.\n\nİlginiz için teşekkürler,\n%(site_name)sTakımı\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_body.txt:1
-#, fuzzy, python-format
-#| msgid ""
-#| "Hello,\n"
-#| "\n"
-#| "Somebody (hopefully you) has requested an email alert when\n"
-#| "'%(product|safe)s' is back in stock.  Please click the following link\n"
-#| "to confirm:\n"
-#| "http://%(domain)s%(confirm_path)s\n"
-#| "\n"
-#| "You can cancel this alert at any time by clicking the following link:\n"
-#| "http://%(domain)s%(cancel_path)s\n"
-#| "\n"
-#| "Thanks for your interest,\n"
-#| "The %(site)s Team\n"
+#, python-format
 msgid ""
 "Hello,\n"
 "\n"
@@ -7121,30 +6775,15 @@ msgid ""
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
 msgstr ""
-"Merhaba,\n"
-"\n"
-"Birisi (umarım sizsinizdir) '%(product|safe)s' ürünü stoğa geri geldiğinde \n"
-"bir e-posta uyarısı almayı talep etti. Lütfen onaylamak için aşağıdaki "
-"linke\n"
-"tıklayınız:\n"
-"http://%(domain)s%(confirm_path)s\n"
-"\n"
-"Bu uyarıyı aşağıdaki linke tıklayarak istediğiniz zaman iptal "
-"edebilirsiniz:\n"
-"http://%(domain)s%(cancel_path)s\n"
-"\n"
-"İlginiz için teşekkürler,\n"
-"%(site)sTakımı\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"
 msgstr "Stok alarmı için doğrulama gerekli"
 
 #: templates/oscar/customer/emails/commtype_product_alert_subject.txt:1
-#, fuzzy, python-format
-#| msgid "%(title|safe)s is back in stock"
+#, python-format
 msgid "%(title)s is back in stock"
-msgstr "%(title|safe)s artık stokta var."
+msgstr ""
 
 #: templates/oscar/customer/emails/commtype_registration_body.html:1
 #: templates/oscar/customer/emails/commtype_registration_body.txt:1
@@ -7350,15 +6989,10 @@ msgstr "Uyarı"
 #: templates/oscar/customer/profile/profile_delete.html:11
 msgid ""
 "\n"
-"                This will delete all information about you from the site.  "
-"Deleting your profile cannot be\n"
+"                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"                Siteden tüm bilgileriniz silinecek. Profil silme işlemi\n"
-"                geri alınamaz.\n"
-"            "
+msgstr "\n                Siteden tüm bilgileriniz silinecek. Profil silme işlemi\n                geri alınamaz.\n            "
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -7378,9 +7012,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"%(name)s silmek istediğinize emin misiniz?"
+msgstr "\n%(name)s silmek istediğinize emin misiniz?"
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:18
 msgid "Remove product"
@@ -7390,13 +7022,9 @@ msgstr "Ürünü kaldır"
 #, python-format
 msgid ""
 "\n"
-"                Are you sure you want to delete %(product_name)s from wish "
-"list %(wishlist_name)s?\n"
+"                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
-"\n"
-"%(product_name)sürününü%(wishlist_name)sistek listesinden silmek "
-"istediğinize emin misiniz?"
+msgstr "\n%(product_name)sürününü%(wishlist_name)sistek listesinden silmek istediğinize emin misiniz?"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -7411,12 +7039,9 @@ msgstr "Ürünü görüntüle"
 #, python-format
 msgid ""
 "\n"
-"                                                            Move to "
-"'%(name)s' wish list\n"
+"                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
-"\n"
-"'%(name)s' istek listesine taşı"
+msgstr "\n'%(name)s' istek listesine taşı"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:100
 msgid "Update quantities"
@@ -7438,13 +7063,9 @@ msgstr "Yeni istek listenizin ismi nedir?"
 #, python-format
 msgid ""
 "\n"
-"                    After your wishlist is created, <strong>%(title)s</"
-"strong> will be added.\n"
+"                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
-"\n"
-"İstek listeniz oluşturulduktan sonra, <strong>%(title)s</strong> "
-"eklenecektir."
+msgstr "\nİstek listeniz oluşturulduktan sonra, <strong>%(title)s</strong> eklenecektir."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -7460,49 +7081,35 @@ msgstr "Henüz hiçbir istek listesine sahip değilsiniz."
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:5
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:5
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create Attribute Option Group"
-msgstr "Özellik seçeneği grubu"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:14
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:21
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Attribute Option Group"
-msgstr "Özellik seçeneği grubu"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:31
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group?"
-msgstr "Özellik seçeneği grubu"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
-#, fuzzy
-#| msgid ""
-#| "Please make sure all products are assigned to another type before "
-#| "deletion."
 msgid ""
 "Please make sure all Product Attributes are assigned to another Attribute "
 "Option Group before deletion."
 msgstr ""
-"Lütfen silme işleminden önce tüm ürünlerin başka bir ürün türüne "
-"atandığından emin olun."
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Delete Attribute Option Group"
-msgstr "Özellik seçeneği grubu"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
-#, fuzzy, python-format
-#| msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
-msgstr "<strong>%(name)s</strong> ürün türü sil - emin misiniz?"
+#, python-format
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
 #: templates/oscar/dashboard/catalogue/product_class_form.html:34
@@ -7512,41 +7119,29 @@ msgstr "Bölümler"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:55
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:70
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Group details"
-msgstr "Özellik seçeneği grupları"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:56
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:102
-#, fuzzy
-#| msgid "Attribute options"
 msgid "Attribute Options"
-msgstr "Özellik seçenekleri"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:6
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "Attribute Option Groups"
-msgstr "Özellik seçeneği grupları"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:20
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Create new Attribute Option Group"
-msgstr "Özellik seçeneği grubu"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:34
-#, fuzzy
-#| msgid "Attribute option groups"
 msgid "No Attribute Option Groups found."
-msgstr "Özellik seçeneği grupları"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_row_actions.html:11
-#, fuzzy
-#| msgid "Attribute option group"
 msgid "Edit Attribute Option Group"
-msgstr "Özellik seçeneği grubu"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:14
 #: templates/oscar/dashboard/catalogue/category_delete.html:19
@@ -7561,13 +7156,9 @@ msgstr "Kategoriyi sil"
 #, python-format
 msgid ""
 "\n"
-"            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
-"p>\n"
+"            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
-msgstr ""
-"\n"
-"            <p>Kategoriyi sil <strong>%(name)s</strong> - emin misiniz?</p>\n"
-"        "
+msgstr "\n            <p>Kategoriyi sil <strong>%(name)s</strong> - emin misiniz?</p>\n        "
 
 #: templates/oscar/dashboard/catalogue/category_list.html:23
 msgid "Create new category"
@@ -7609,9 +7200,7 @@ msgid ""
 "\n"
 "                    Created product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"'%(name)s'ürün varyantı oluşturuldu."
+msgstr "\n'%(name)s'ürün varyantı oluşturuldu."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
 #, python-format
@@ -7619,9 +7208,7 @@ msgid ""
 "\n"
 "                    Created variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"'%(parent_name)s'nun varyantı oluşturuldu."
+msgstr "\n'%(parent_name)s'nun varyantı oluşturuldu."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
 #, python-format
@@ -7629,9 +7216,7 @@ msgid ""
 "\n"
 "                    Updated product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"'%(name)s' ürün varyantı güncellendi."
+msgstr "\n'%(name)s' ürün varyantı güncellendi."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
 #, python-format
@@ -7639,9 +7224,7 @@ msgid ""
 "\n"
 "                    Updated a variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"'%(parent_name)s'nun varyantı güncellendi."
+msgstr "\n'%(parent_name)s'nun varyantı güncellendi."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
 #, python-format
@@ -7649,10 +7232,7 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"                Oluşturulan ürün '%(name)s'.\n"
-"            "
+msgstr "\n                Oluşturulan ürün '%(name)s'.\n            "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -7660,10 +7240,7 @@ msgid ""
 "\n"
 "                Updated product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"                Güncellenen ürün '%(name)s'.\n"
-"            "
+msgstr "\n                Güncellenen ürün '%(name)s'.\n            "
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
 #: templates/oscar/dashboard/pages/messages/saved.html:10
@@ -7682,9 +7259,7 @@ msgstr "Ürün türünü sil?"
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
 msgid ""
 "Please make sure all products are assigned to another type before deletion."
-msgstr ""
-"Lütfen silme işleminden önce tüm ürünlerin başka bir ürün türüne "
-"atandığından emin olun."
+msgstr "Lütfen silme işleminden önce tüm ürünlerin başka bir ürün türüne atandığından emin olun."
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
 msgid "Delete product type"
@@ -7732,26 +7307,17 @@ msgstr "Hiç ürün türü bulunmuyor."
 #, python-format
 msgid ""
 "\n"
-"                    Delete product variant <strong>%(title)s</strong> - are "
-"you sure?\n"
+"                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-"                     <strong>%(title)s</strong> ürün varyantını sil - emin "
-"misiniz?\n"
-"                "
+msgstr "\n                     <strong>%(title)s</strong> ürün varyantını sil - emin misiniz?\n                "
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:41
 #, python-format
 msgid ""
 "\n"
-"                    Delete product <strong>%(title)s</strong> - are you "
-"sure?\n"
+"                    Delete product <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-"                    <strong>%(title)s</strong> ürünleri sil - emin misiniz?\n"
-"                "
+msgstr "\n                    <strong>%(title)s</strong> ürünleri sil - emin misiniz?\n                "
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:49
 msgid "This will also delete the following child products:"
@@ -7789,10 +7355,7 @@ msgid ""
 "                            You are currently editing a product variant of\n"
 "                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
 "                        "
-msgstr ""
-"\n"
-"Şu anda <a href=\"%(parent_url)s\">%(title)s</a>'in\n"
-"bir ürün çeşidine ait bir düzenleme yapıyorsunuz."
+msgstr "\nŞu anda <a href=\"%(parent_url)s\">%(title)s</a>'in\nbir ürün çeşidine ait bir düzenleme yapıyorsunuz."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:71
 #: templates/oscar/dashboard/catalogue/product_update.html:100
@@ -7864,8 +7427,7 @@ msgstr "Bu noktada bu ürüne varyant eklenemez."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:281
 msgid "This is likely because this product still has stock records."
-msgstr ""
-"Bunun nedeni büyük olasılıkla bu ürünün hala stok kayıtları bulunmasıdır."
+msgstr "Bunun nedeni büyük olasılıkla bu ürünün hala stok kayıtları bulunmasıdır."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:326
 msgid "Save and add another variant"
@@ -8078,10 +7640,8 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
-#, fuzzy
-#| msgid "Last login"
 msgid "Login"
-msgstr "Son giriş"
+msgstr ""
 
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
@@ -8092,13 +7652,9 @@ msgstr "Yeni bir teşvik oluşturun"
 #, python-format
 msgid ""
 "\n"
-"        Ranges can be created and edited from within the <a href="
-"\"%(range_list_url)s\">range dashboard</a>.\n"
+"        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
 "        "
-msgstr ""
-"\n"
-"Aralıklar <a href=\"%(range_list_url)s\">aralık panosu</a>içerisinden "
-"oluşturabilir ve düzenlenebilir."
+msgstr "\nAralıklar <a href=\"%(range_list_url)s\">aralık panosu</a>içerisinden oluşturabilir ve düzenlenebilir."
 
 #: templates/oscar/dashboard/offers/benefit_form.html:28
 #: templates/oscar/dashboard/offers/condition_form.html:31
@@ -8136,10 +7692,7 @@ msgid ""
 "\n"
 "        %(name)s | Offers\n"
 "    "
-msgstr ""
-"\n"
-"%(name)s | Kampanyalar\n"
-" "
+msgstr "\n%(name)s | Kampanyalar\n "
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
@@ -8268,9 +7821,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"Sipariş%(number)s-Satır #%(id)s"
+msgstr "\nSipariş%(number)s-Satır #%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -8456,12 +8007,9 @@ msgstr "Bu siparişin  durumu değiştirilemez."
 #, python-format
 msgid ""
 "\n"
-"                                                                %(title)s "
-"(quantity %(event_qty)s/%(total_qty)s)\n"
+"                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
-"\n"
-"%(title)s(miktar %(event_qty)s/%(total_qty)s)"
+msgstr "\n%(title)s(miktar %(event_qty)s/%(total_qty)s)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:371
 msgid "No shipping events."
@@ -8647,9 +8195,7 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong>sayfası kaydedildi!"
+msgstr "\n<strong>%(title)s</strong>sayfası kaydedildi!"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
@@ -8675,9 +8221,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"%(total_pages)s'nun %(page_num)ssayfası"
+msgstr "\n%(total_pages)s'nun %(page_num)ssayfası"
 
 #: templates/oscar/dashboard/partials/pagination.html:16
 #: templates/oscar/partials/pagination.html:16
@@ -8690,9 +8234,7 @@ msgstr "sıradaki"
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"%(user_name)skullanıcısının %(partner_name)sile bağlantısı koparıldı.\n"
+msgstr "\n%(user_name)skullanıcısının %(partner_name)sile bağlantısı koparıldı.\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8771,22 +8313,17 @@ msgstr "Güncelleme detayları"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
 msgid ""
-"A partial email address can be entered (eg '@example.com') to match multiple "
-"addresses."
-msgstr ""
-"Birden fazla adresi eşleştirmek için kısmi bir e-posta adresi (örn. '@örnek."
-"com') girilebilir."
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
+msgstr "Birden fazla adresi eşleştirmek için kısmi bir e-posta adresi (örn. '@örnek.com') girilebilir."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
 #, python-format
 msgid ""
 "\n"
-"                                                User is already linked to "
-"%(name)s.\n"
+"                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"Kullanıcı zaten %(name)s'a bağlandı."
+msgstr "\nKullanıcı zaten %(name)s'a bağlandı."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:71
 msgid "Linking..."
@@ -8816,9 +8353,7 @@ msgstr "İçerik bloğunu sil"
 msgid ""
 "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are "
 "you sure?"
-msgstr ""
-"%(object.type)s içerik bloğu <strong>%(object.name)s</strong>'nu sil - emin "
-"misiniz?"
+msgstr "%(object.type)s içerik bloğu <strong>%(object.name)s</strong>'nu sil - emin misiniz?"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:14
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:19
@@ -8832,12 +8367,10 @@ msgstr "Promosyonu kaldır"
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:28
 #, python-format
 msgid ""
-"Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
-"strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
-msgstr ""
-" %(object.content_object.type)s içerik bloğu <strong>%(object.name)s</"
-"strong>'nu <strong>%(object.page_url)s</strong> sayfasından kaldır - emin "
-"misiniz?"
+"Remove %(object.content_object.type)s content block "
+"<strong>%(object.name)s</strong> from page "
+"<strong>%(object.page_url)s</strong> - are you sure?"
+msgstr " %(object.content_object.type)s içerik bloğu <strong>%(object.name)s</strong>'nu <strong>%(object.page_url)s</strong> sayfasından kaldır - emin misiniz?"
 
 #: templates/oscar/dashboard/promotions/form.html:26
 msgid "Content block"
@@ -8949,9 +8482,7 @@ msgstr "Kullanım sayısı"
 msgid ""
 "\n"
 "    <p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr ""
-"\n"
-"<p>Dosya<strong>%(filename)s</strong> işlendi.</p>\n"
+msgstr "\n<p>Dosya<strong>%(filename)s</strong> işlendi.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:9
 #, python-format
@@ -8963,52 +8494,34 @@ msgid_plural ""
 "\n"
 "                <strong>%(n)s</strong> products added\n"
 "            "
-msgstr[0] ""
-"\n"
-"                <strong>%(n)s</strong> adet ürün eklendi\n"
-"            "
-msgstr[1] ""
-"\n"
-"                <strong>%(n)s</strong> adet ürün eklendi\n"
-"            "
+msgstr[0] "\n                <strong>%(n)s</strong> adet ürün eklendi\n            "
+msgstr[1] "\n                <strong>%(n)s</strong> adet ürün eklendi\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> duplicate product in the "
-"file\n"
+"                There was <strong>%(n)s</strong> duplicate product in the file\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> duplicate products in the "
-"file\n"
+"                There were <strong>%(n)s</strong> duplicate products in the file\n"
 "            "
-msgstr[0] ""
-"\n"
-"Dosyada <strong>%(n)s</strong>tane aynı üründen vardı"
-msgstr[1] ""
-"\n"
-"Dosyada <strong>%(n)s</strong>tane aynı ürünlerden vardı."
+msgstr[0] "\nDosyada <strong>%(n)s</strong>tane aynı üründen vardı"
+msgstr[1] "\nDosyada <strong>%(n)s</strong>tane aynı ürünlerden vardı."
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> product in the file that "
-"couldn't be found in the catalogue\n"
+"                There was <strong>%(n)s</strong> product in the file that couldn't be found in the catalogue\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> products in the file that "
-"couldn't be found in the catalogue\n"
+"                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
 "            "
-msgstr[0] ""
-"\n"
-"Dosyada katalogda bulunamayan <strong>%(n)s</strong>ürünü bulundu"
-msgstr[1] ""
-"\n"
-"Dosyada katalogda bulunamayan <strong>%(n)s</strong>ürünleri bulundu."
+msgstr[0] "\nDosyada katalogda bulunamayan <strong>%(n)s</strong>ürünü bulundu"
+msgstr[1] "\nDosyada katalogda bulunamayan <strong>%(n)s</strong>ürünleri bulundu."
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -9023,9 +8536,7 @@ msgstr "Aralık listesine geri dön"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p>Aralık<strong>%(name)s</strong>kaydedildi.</p>\n"
+msgstr "\n<p>Aralık<strong>%(name)s</strong>kaydedildi.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -9074,9 +8585,7 @@ msgstr "ürünler"
 msgid ""
 "This range contains all products. To add products manually, please unselect "
 "the 'Includes All Products' option on the edit range page."
-msgstr ""
-"Bu aralık tüm ürünleri içermektedir. Ürünleri el ile eklemek için, lütfen "
-"düzenleme aralığı sayfasındaki 'Tüm Ürünleri Dahil Et' seçeneğini kaldırın."
+msgstr "Bu aralık tüm ürünleri içermektedir. Ürünleri el ile eklemek için, lütfen düzenleme aralığı sayfasındaki 'Tüm Ürünleri Dahil Et' seçeneğini kaldırın."
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
 msgid "Add products"
@@ -9206,10 +8715,9 @@ msgid "Review #%(review.id)s"
 msgstr "Değerlendirme #%(review.id)s"
 
 #: templates/oscar/dashboard/reviews/review_update.html:24
-#, fuzzy, python-format
-#| msgid "Review #%(review.id)s"
+#, python-format
 msgid "Review #%(review_id)s"
-msgstr "Değerlendirme #%(review.id)s"
+msgstr ""
 
 #: templates/oscar/dashboard/reviews/review_update.html:31
 msgid "Review information"
@@ -9219,22 +8727,15 @@ msgstr "Değerlendirme bilgisi"
 #, python-format
 msgid ""
 "\n"
-"    <p>A weight band has been added to the <strong>%(name)s</strong> "
-"shipping method.</p>\n"
-msgstr ""
-"\n"
-"<p>Bir ağırlık bandı, <strong>%(name)s</strong>teslimat yöntemine "
-"eklenmiştir.</p>\n"
+"    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
+msgstr "\n<p>Bir ağırlık bandı, <strong>%(name)s</strong>teslimat yöntemine eklenmiştir.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
 #, python-format
 msgid ""
 "\n"
-"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping "
-"method \n"
-msgstr ""
-"\n"
-"<p>Ağırlık bandı <strong>%(name)s</strong>teslimat yönteminden silindi\n"
+"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
+msgstr "\n<p>Ağırlık bandı <strong>%(name)s</strong>teslimat yönteminden silindi\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_updated.html:3
 msgid "Weight band updated"
@@ -9245,27 +8746,21 @@ msgstr "Ağırlık bandı güncellendi"
 msgid ""
 "\n"
 "<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
-msgstr ""
-"\n"
-"<p><strong>%(name)s</strong> isimli teslimat methodu oluşturuldu.</p>\n"
+msgstr "\n<p><strong>%(name)s</strong> isimli teslimat methodu oluşturuldu.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
-msgstr ""
-"\n"
-"    <p><strong>%(name)s</strong> isimli teslimat methodu silindi.</p>\n"
+msgstr "\n    <p><strong>%(name)s</strong> isimli teslimat methodu silindi.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_updated.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
-msgstr ""
-"\n"
-"    <p><strong>%(name)s</strong> isimli teslimat methodu güncellendi.</p>\n"
+msgstr "\n    <p><strong>%(name)s</strong> isimli teslimat methodu güncellendi.</p>\n"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:6
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:22
@@ -9564,51 +9059,37 @@ msgid "No vouchers found."
 msgstr "Hiçbir kupon bulunamadı."
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:25
-#, fuzzy
-#| msgid "Create voucher"
 msgid "Update voucher set"
-msgstr "Kupon oluştur"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:26
-#, fuzzy
-#| msgid "Download"
 msgid "Download CSV"
-msgstr "İndirme"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:28
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:37
-#, fuzzy
-#| msgid "Vouchers"
 msgid "Voucher set"
-msgstr "Hediye Çekleri"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:46
-#, fuzzy
-#| msgid "Start date"
 msgid "Start"
-msgstr "Başlangıç tarihi"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:50
 msgid "End"
 msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:62
-#, fuzzy
-#| msgid "Create"
 msgid "Created"
-msgstr "Oluştur"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
-#, fuzzy
-#| msgid "Create new voucher"
 msgid "Create new voucher set"
-msgstr "Yeni kupon oluştur"
+msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
-#, fuzzy
-#| msgid "Number"
 msgid "Num"
-msgstr "Numara"
+msgstr ""
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
@@ -9625,16 +9106,13 @@ msgid "Add another %(model)s"
 msgstr ""
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:14
-#, fuzzy
-#| msgid "Address"
 msgid "Add"
-msgstr "Adres"
+msgstr ""
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:18
-#, fuzzy, python-format
-#| msgid "Delete alert #%(id)s?"
+#, python-format
 msgid "Delete selected %(model)s"
-msgstr "#%(id)s uyarısı silinsin mi?"
+msgstr ""
 
 #: templates/oscar/error.html:9
 msgid "Sorry!"
@@ -9696,10 +9174,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"                        Toplam: %(total)s\n"
-"                    "
+msgstr "\n                        Toplam: %(total)s\n                    "
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -9745,8 +9220,7 @@ msgstr "Yeni bir parola girin"
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr ""
-"Doğru olarak yazıldığını doğrulamamız için lütfen parolanızı iki kez girin."
+msgstr "Doğru olarak yazıldığını doğrulamamız için lütfen parolanızı iki kez girin."
 
 #: templates/oscar/registration/password_reset_confirm.html:27
 msgid "Change my password"
@@ -9760,9 +9234,7 @@ msgstr "Parola sıfırlama başarısız"
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr ""
-"Parola sıfırlama bağlantısı geçersiz, önceden kullanılmış olabilir. Lütfen, "
-"yeni bir parolama sıfırlaması isteyin."
+msgstr "Parola sıfırlama bağlantısı geçersiz, önceden kullanılmış olabilir. Lütfen, yeni bir parolama sıfırlaması isteyin."
 
 #: templates/oscar/registration/password_reset_done.html:4
 msgid "Password reset email sent"
@@ -9776,36 +9248,23 @@ msgstr "E-posta gönderildi"
 #: templates/oscar/registration/password_reset_done.html:22
 msgid ""
 "\n"
-"        We've e-mailed you instructions for resetting your password. You "
-"should be receiving it shortly.\n"
+"        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
-"\n"
-"        Size parola sıfırlama işlemlerini içeren bir e-posta gönderdik. Kısa "
-"zamanda size ulaşmış olacaktır.\n"
-"    "
+msgstr "\n        Size parola sıfırlama işlemlerini içeren bir e-posta gönderdik. Kısa zamanda size ulaşmış olacaktır.\n    "
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
 "\n"
-"        If you don't receive an email, please make sure you've entered the "
-"address you registered with, and check\n"
+"        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
-"\n"
-"        Eğer bir e-posta almadıysanız, girdiğiniz e-posta adresinin üye "
-"olduğunuz adres olduğundan emin olun\n"
-"        ve spam dosyanızı da kontrol edin.\n"
-"    "
+msgstr "\n        Eğer bir e-posta almadıysanız, girdiğiniz e-posta adresinin üye olduğunuz adres olduğundan emin olun\n        ve spam dosyanızı da kontrol edin.\n    "
 
 #: templates/oscar/registration/password_reset_form.html:21
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
-"Parolanızı mı unuttunuz? Aşağıdaki alana e-posta adresinizi girin, bizde "
-"size yeni şifrenizi oluşturmak için yapmanız gereken işlemleri gönderelim."
+msgstr "Parolanızı mı unuttunuz? Aşağıdaki alana e-posta adresinizi girin, bizde size yeni şifrenizi oluşturmak için yapmanız gereken işlemleri gönderelim."
 
 #: templates/oscar/registration/password_reset_form.html:24
 msgid "Send reset email"
@@ -9821,33 +9280,18 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"        \"%(q)s\" ile eşleşen ürünler\n"
-"    "
+msgstr "\n        \"%(q)s\" ile eşleşen ürünler\n    "
 
 #: templates/oscar/search/results.html:53
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>%(num_results)s</strong> results, showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr ""
-"\n"
-"<strong>%(start)s</strong>'dan <strong>%(end)s</strong>'a kadar gösteren  "
-"<strong>%(num_results)s</strong>sonuçları bulundu."
+msgstr "\n<strong>%(start)s</strong>'dan <strong>%(end)s</strong>'a kadar gösteren  <strong>%(num_results)s</strong>sonuçları bulundu."
 
 #: templates/oscar/search/results.html:57
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                    Found <strong>%(num_results)s</strong> result.\n"
-#| "                "
-#| msgid_plural ""
-#| "\n"
-#| "                    Found <strong>%(num_results)s</strong> results. \n"
-#| "                "
+#, python-format
 msgid ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> result.\n"
@@ -9857,13 +9301,7 @@ msgid_plural ""
 "                    Found <strong>%(num_results)s</strong> results.\n"
 "                "
 msgstr[0] ""
-"\n"
-"                    <strong>%(num_results)s</strong> sonuç bulundu.\n"
-"                "
 msgstr[1] ""
-"\n"
-"                    <strong>%(num_results)s</strong> sonuç bulundu.\n"
-"                "
 
 #: templates/oscar/search/results.html:68
 msgid "Found <strong>0</strong> results."
@@ -9873,14 +9311,9 @@ msgstr "<strong>0</strong> sonuç bulundu."
 #, python-format
 msgid ""
 "\n"
-"                        Did you mean <a href=\"%(search_url)s?q="
-"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
+"                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"                        Bunu mu demek istediniz <a href=\"%(search_url)s?q="
-"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
-"                    "
+msgstr "\n                        Bunu mu demek istediniz <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n                    "
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9890,30 +9323,3 @@ msgstr "Arama sonuçlarına geri dön"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Bazı %slar seçmeniz gerekli"
-
-#~ msgid "Weight-based shipping"
-#~ msgstr "Ağırlık bazlı nakliye"
-
-#~ msgid "The phone number entered is not valid."
-#~ msgstr "Girilen telefon numarası geçerli değil."
-
-#~ msgid "Please choose a less common password"
-#~ msgstr "Lütfen yaygın olarak kullanılmayan parola seçiniz"
-
-#~ msgid "Build"
-#~ msgstr "Oluşturma"
-
-#~ msgid "Version:"
-#~ msgstr "Sürüm:"
-
-#~ msgid ""
-#~ "\n"
-#~ "    You're receiving this e-mail because your password has been changed "
-#~ "at %(name)s.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Şifreniz %(name)s'da değiştirildiği için bu e-postayı alıyorsunuz."
-
-#~ msgid "You must log in to access this page"
-#~ msgstr "Bu sayfaya ulaşabilmek için giriş yapmalısınız"
