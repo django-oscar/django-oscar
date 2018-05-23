@@ -1,0 +1,39 @@
+=======================
+Oscar 2.0 release notes
+=======================
+
+:release: tbd
+
+Welcome to Oscar 2.0
+
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_2.0:
+
+Compatibility
+-------------
+
+.. _new_in_2.0:
+
+What's new in Oscar 2.0?
+------------------------
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Minor changes
+~~~~~~~~~~~~~
+
+Dependency changes
+------------------
+
+.. _deprecated_features_in_2.0:
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
