@@ -106,3 +106,8 @@ class WebTestCase(WebTest):
         self.assertContext(response)
         self.assertTrue(key in response.context,
                         "Context should contain a variable '%s'" % key)
+
+    def assertNotInContext(self, response, key):
+        self.assertContext(response)
+        self.assertTrue(key not in response.context,
+                        "Context should not contain a variable '%s'" % key)
