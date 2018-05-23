@@ -9,6 +9,31 @@ from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_order
 
 
+GENERIC_STATS_KEYS = (
+    'total_orders_last_day',
+    'total_lines_last_day',
+    'average_order_costs',
+    'total_revenue_last_day',
+    'hourly_report_dict',
+    'total_customers_last_day',
+    'total_open_baskets_last_day',
+    'total_products',
+    'total_open_stock_alerts',
+    'total_closed_stock_alerts',
+    'total_customers',
+    'total_open_baskets',
+    'total_orders',
+    'total_lines',
+    'total_revenue',
+    'order_status_breakdown',
+)
+STAFF_STATS_KEYS = (
+    'total_site_offers',
+    'total_vouchers',
+    'total_promotions',
+)
+
+
 class TestDashboardIndexForAnonUser(WebTestCase):
     is_anonymous = True
 
@@ -26,7 +51,7 @@ class TestDashboardIndexForStaffUser(WebTestCase):
                 'dashboard:users-index',)
         for name in urls:
             response = self.get(reverse(name))
-            self.assertTrue('Password' not in response.content.decode('utf8'))
+            self.assertContains(response, 'Welcome')
 
     def test_includes_hourly_report_with_no_orders(self):
         report = IndexView().get_hourly_report(Order.objects.all())
@@ -53,21 +78,33 @@ class TestDashboardIndexForStaffUser(WebTestCase):
 
     def test_has_stats_vars_in_context(self):
         response = self.get(reverse('dashboard:index'))
+        for key in GENERIC_STATS_KEYS + STAFF_STATS_KEYS:
+            self.assertInContext(response, key)
 
-        self.assertInContext(response, 'total_orders_last_day')
-        self.assertInContext(response, 'total_lines_last_day')
-        self.assertInContext(response, 'average_order_costs')
-        self.assertInContext(response, 'total_revenue_last_day')
-        self.assertInContext(response, 'hourly_report_dict')
 
-        self.assertInContext(response, 'total_products')
-        self.assertInContext(response, 'total_open_stock_alerts')
-        self.assertInContext(response, 'total_closed_stock_alerts')
+class TestDashboardIndexForPartnerUser(WebTestCase):
+    permissions = ['partner.dashboard_access']
 
-        self.assertInContext(response, 'total_site_offers')
-        self.assertInContext(response, 'total_vouchers')
+    def test_is_available(self):
+        urls = ('dashboard:index', 'dashboard:order-list')
+        for name in urls:
+            response = self.get(reverse(name))
+            self.assertContains(response, 'Welcome')
 
-        self.assertInContext(response, 'total_orders')
-        self.assertInContext(response, 'total_lines')
-        self.assertInContext(response, 'total_revenue')
-        self.assertInContext(response, 'order_status_breakdown')
+    def test_is_not_available(self):
+        urls = ('dashboard:users-index',
+                'dashboard:partner-list',
+                'dashboard:partner-create',
+                'dashboard:offer-list',
+                'dashboard:reports-index')
+        for name in urls:
+            response = self.get(reverse(name), expect_errors=True)
+            self.assertContains(response, 'Permission denied!',
+                                status_code=403)
+
+    def test_stats(self):
+        response = self.get(reverse('dashboard:index'))
+        for key in GENERIC_STATS_KEYS:
+            self.assertInContext(response, key)
+        for key in STAFF_STATS_KEYS:
+            self.assertNotInContext(response, key)
