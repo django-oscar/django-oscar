@@ -83,3 +83,6 @@ class RelatedFieldWidgetWrapper(Widget):
 
     def id_for_label(self, id_):
         return self.widget.id_for_label(id_)
+
+    def subwidgets(self, name, value, attrs=None):
+        return self.widget.subwidgets(name, value, attrs)

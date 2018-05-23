@@ -42,3 +42,11 @@ class RelatedFieldWidgetWrapperTests(TestCase):
         self.assertTrue(context, 'add_related_url')
         self.assertTrue(context, 'change_related_template_url')
         self.assertTrue(context, 'delete_related_template_url')
+
+    def test_subwidgets(self):
+        # issue 2702
+        remote_field = Member._meta.get_field('band').remote_field
+        widget = forms.Select()
+        wrapper = RelatedFieldWidgetWrapper(widget, remote_field)
+        # just make sure that generator can be made into a list.
+        self.assertTrue(isinstance(list(wrapper.subwidgets('name','value')),list))
