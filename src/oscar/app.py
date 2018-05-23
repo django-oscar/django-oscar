@@ -39,22 +39,26 @@ class Shop(Application):
             # we can't namespace these urls as that prevents
             # the reverse function from working.
             url(r'^password-reset/$',
-                login_forbidden(auth_views.password_reset),
-                {'password_reset_form': self.password_reset_form,
-                 'post_reset_redirect': reverse_lazy('password-reset-done')},
+                login_forbidden(
+                    auth_views.PasswordResetView.as_view(
+                        form_class=self.password_reset_form,
+                        success_url=reverse_lazy('password-reset-done')
+                    )
+                ),
                 name='password-reset'),
             url(r'^password-reset/done/$',
-                login_forbidden(auth_views.password_reset_done),
+                login_forbidden(auth_views.PasswordResetDoneView.as_view()),
                 name='password-reset-done'),
             url(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
-                login_forbidden(auth_views.password_reset_confirm),
-                {
-                    'post_reset_redirect': reverse_lazy('password-reset-complete'),
-                    'set_password_form': self.set_password_form,
-                },
+                login_forbidden(
+                    auth_views.PasswordResetConfirmView.as_view(
+                        form_class=self.set_password_form,
+                        success_url=reverse_lazy('password-reset-complete')
+                    )
+                ),
                 name='password-reset-confirm'),
             url(r'^password-reset/complete/$',
-                login_forbidden(auth_views.password_reset_complete),
+                login_forbidden(auth_views.PasswordResetCompleteView.as_view()),
                 name='password-reset-complete'),
         ]
 

@@ -30,6 +30,9 @@ Removal of deprecated features
 Minor changes
 ~~~~~~~~~~~~~
 
+- Replaced use of Django's procedural auth views with the corresponding
+  class-based views.
+
 Dependency changes
 ------------------
 

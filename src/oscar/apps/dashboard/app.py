@@ -45,13 +45,11 @@ class DashboardApplication(BaseDashboardApplication):
             url(r'^comms/', self.comms_app.urls),
             url(r'^shipping/', self.shipping_app.urls),
 
-            url(r'^login/$', auth_views.login, {
-                'template_name': 'dashboard/login.html',
-                'authentication_form': AuthenticationForm,
-            }, name='login'),
-            url(r'^logout/$', auth_views.logout, {
-                'next_page': '/',
-            }, name='logout'),
+            url(r'^login/$',
+                auth_views.LoginView.as_view(template_name='dashboard/login.html',
+                                             authentication_form=AuthenticationForm),
+                name='login'),
+            url(r'^logout/$', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
         ]
         return self.post_process_urls(urls)

@@ -35,8 +35,10 @@ class TestAUserWhoseForgottenHerPassword(WebTest):
         self.assertTrue('path' in matches.groupdict())
         path = matches.groupdict()['path']
 
-        # Reset password and check we get redirect
-        reset_page = self.app.get(path)
+        # Reset password and check we get redirected
+        reset_page_redirect = self.app.get(path)
+        # The link in the email will redirect us to the password reset view
+        reset_page = self.app.get(reset_page_redirect.location)
         form = reset_page.forms['password_reset_form']
         form['new_password1'] = 'crazymonkey'
         form['new_password2'] = 'crazymonkey'
