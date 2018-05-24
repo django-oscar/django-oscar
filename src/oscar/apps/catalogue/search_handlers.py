@@ -43,10 +43,10 @@ class SolrProductSearchHandler(SearchHandler):
 
     def __init__(self, request_data, full_path, categories=None):
         self.categories = categories
-        super(SolrProductSearchHandler, self).__init__(request_data, full_path)
+        super().__init__(request_data, full_path)
 
     def get_search_queryset(self):
-        sqs = super(SolrProductSearchHandler, self).get_search_queryset()
+        sqs = super().get_search_queryset()
         if self.categories:
             # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
             # opposed to filtering using 'q'.
@@ -67,10 +67,10 @@ class ESProductSearchHandler(SearchHandler):
 
     def __init__(self, request_data, full_path, categories=None):
         self.categories = categories
-        super(ESProductSearchHandler, self).__init__(request_data, full_path)
+        super().__init__(request_data, full_path)
 
     def get_search_queryset(self):
-        sqs = super(ESProductSearchHandler, self).get_search_queryset()
+        sqs = super().get_search_queryset()
         if self.categories:
             for category in self.categories:
                 sqs = sqs.filter_or(category=category.full_name)

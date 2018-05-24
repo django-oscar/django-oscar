@@ -47,7 +47,7 @@ class TestIndexView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         reload_url_conf()
-        super(TestIndexView, self).setUp()
+        super().setUp()
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:index'))
@@ -110,7 +110,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         reload_url_conf()
-        super(TestShippingAddressView, self).setUp()
+        super().setUp()
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:shipping-address'))
@@ -159,7 +159,7 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         reload_url_conf()
-        super(TestShippingMethodView, self).setUp()
+        super().setUp()
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:shipping-method'))
@@ -265,7 +265,7 @@ class TestPaymentMethodView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         reload_url_conf()
-        super(TestPaymentMethodView, self).setUp()
+        super().setUp()
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:payment-method'))
@@ -310,7 +310,7 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         reload_url_conf()
-        super(TestPaymentDetailsView, self).setUp()
+        super().setUp()
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:payment-details'))
@@ -428,7 +428,7 @@ class TestPaymentDetailsWithPreview(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         reload_url_conf()
-        super(TestPaymentDetailsWithPreview, self).setUp()
+        super().setUp()
 
     def test_payment_form_being_submitted_from_payment_details_view(self):
         payment_details = self.reach_payment_details_page(is_guest=True)
@@ -451,7 +451,7 @@ class TestPlacingOrder(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         reload_url_conf()
-        super(TestPlacingOrder, self).setUp()
+        super().setUp()
 
     def test_saves_guest_email_with_order(self):
         preview = self.ready_to_place_an_order(is_guest=True)

@@ -57,7 +57,7 @@ class PageListView(ListView):
         Get context data with *form* and *queryset_description* data
         added to it.
         """
-        context = super(PageListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['form'] = self.form
         context['queryset_description'] = self.desc_template % self.desc_ctx
         return context
@@ -88,7 +88,7 @@ class PageCreateUpdateMixin(object):
 class PageCreateView(PageCreateUpdateMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
-        ctx = super(PageCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = _('Create New Page')
         return ctx
 
@@ -110,7 +110,7 @@ class PageCreateView(PageCreateUpdateMixin, generic.CreateView):
         except ValidationError:
             pass
         else:
-            return super(PageCreateView, self).form_valid(form)
+            return super().form_valid(form)
 
         ctx = self.get_context_data()
         ctx['form'] = form
@@ -122,7 +122,7 @@ class PageUpdateView(PageCreateUpdateMixin, generic.UpdateView):
     View for updating flatpages from the dashboard.
     """
     def get_context_data(self, **kwargs):
-        ctx = super(PageUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = self.object.title
         return ctx
 

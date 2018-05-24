@@ -29,7 +29,7 @@ class PostActionMixin(object):
                 return self.response
             else:
                 messages.error(request, _("Invalid form submission"))
-        return super(PostActionMixin, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 
 class BulkEditMixin(object):

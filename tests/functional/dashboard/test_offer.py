@@ -10,7 +10,7 @@ class TestAnAdmin(testcases.WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(TestAnAdmin, self).setUp()
+        super().setUp()
         self.range = models.Range.objects.create(
             name="All products", includes_all_products=True)
 

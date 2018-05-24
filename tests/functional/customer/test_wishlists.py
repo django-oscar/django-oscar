@@ -13,7 +13,7 @@ class WishListTestMixin(object):
     is_anonymous = False
 
     def setUp(self):
-        super(WishListTestMixin, self).setUp()
+        super().setUp()
         self.product = create_product()
 
 
@@ -37,7 +37,7 @@ class TestProductDetailPage(WishListTestMixin, WebTestCase):
 
 class TestMoveProductToAnotherWishList(WishListTestMixin, WebTestCase):
     def setUp(self):
-        super(TestMoveProductToAnotherWishList, self).setUp()
+        super().setUp()
         self.wishlist1 = WishListFactory(owner=self.user)
         self.wishlist2 = WishListFactory(owner=self.user)
 

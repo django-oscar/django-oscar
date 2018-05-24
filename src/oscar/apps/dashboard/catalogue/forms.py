@@ -40,7 +40,7 @@ class ProductClassSelectForm(forms.Form):
         """
         If there's only one product class, pre-select it
         """
-        super(ProductClassSelectForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         qs = self.fields['product_class'].queryset
         if not kwargs.get('initial') and len(qs) == 1:
             self.fields['product_class'].initial = qs[0]
@@ -52,7 +52,7 @@ class ProductSearchForm(forms.Form):
         max_length=255, required=False, label=_('Product title'))
 
     def clean(self):
-        cleaned_data = super(ProductSearchForm, self).clean()
+        cleaned_data = super().clean()
         cleaned_data['upc'] = cleaned_data['upc'].strip()
         cleaned_data['title'] = cleaned_data['title'].strip()
         return cleaned_data
@@ -64,7 +64,7 @@ class StockRecordForm(forms.ModelForm):
         # The user kwarg is not used by stock StockRecordForm. We pass it
         # anyway in case one wishes to customise the partner queryset
         self.user = user
-        super(StockRecordForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Restrict accessible partners for non-staff users
         if not self.user.is_staff:
@@ -191,7 +191,7 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, product_class, data=None, parent=None, *args, **kwargs):
         self.set_initial(product_class, parent, kwargs)
-        super(ProductForm, self).__init__(data, *args, **kwargs)
+        super().__init__(data, *args, **kwargs)
         if parent:
             self.instance.parent = parent
             # We need to set the correct product structures explicitly to pass
@@ -279,7 +279,7 @@ class ProductForm(forms.ModelForm):
             if field_name in self.cleaned_data:
                 value = self.cleaned_data[field_name]
                 setattr(self.instance.attr, attribute.code, value)
-        super(ProductForm, self)._post_clean()
+        super()._post_clean()
 
 
 class StockAlertSearchForm(forms.Form):
@@ -309,7 +309,7 @@ class ProductImageForm(forms.ModelForm):
         # We infer the display order of the image based on the order of the
         # image fields within the formset.
         kwargs['commit'] = False
-        obj = super(ProductImageForm, self).save(*args, **kwargs)
+        obj = super().save(*args, **kwargs)
         obj.display_order = self.get_display_order()
         obj.save()
         return obj
@@ -338,7 +338,7 @@ class ProductClassForm(forms.ModelForm):
 class ProductAttributesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(ProductAttributesForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # because we'll allow submission of the form with blank
         # codes so that we can generate them.

@@ -60,7 +60,7 @@ class AbstractWishList(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk or kwargs.get('force_insert', False):
             self.key = self.__class__.random_key()
-        super(AbstractWishList, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @classmethod
     def random_key(cls, length=6):

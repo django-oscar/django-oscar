@@ -113,7 +113,7 @@ class OrderSearchForm(forms.Form):
                     data = data.dict()
                 data['response_format'] = 'html'
 
-        super(OrderSearchForm, self).__init__(data, *args, **kwargs)
+        super().__init__(data, *args, **kwargs)
         self.fields['payment_method'].choices = self.payment_method_choices()
 
     def payment_method_choices(self):
@@ -128,7 +128,7 @@ class OrderNoteForm(forms.ModelForm):
         fields = ['message']
 
     def __init__(self, order, user, *args, **kwargs):
-        super(OrderNoteForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.instance.order = order
         self.instance.user = user
 
@@ -149,7 +149,7 @@ class OrderStatusForm(forms.Form):
     new_status = forms.ChoiceField(label=_("New order status"), choices=())
 
     def __init__(self, order, *args, **kwargs):
-        super(OrderStatusForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Set the choices
         choices = [(x, x) for x in order.available_statuses()]

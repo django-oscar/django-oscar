@@ -30,7 +30,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
                       "%(kw_filter)s %(name_filter)s")
 
     def get(self, request, *args, **kwargs):
-        response = super(ReviewListView, self).get(request, **kwargs)
+        response = super().get(request, **kwargs)
         self.form = self.form_class()
         return response
 
@@ -134,7 +134,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
         return queryset
 
     def get_context_data(self, **kwargs):
-        context = super(ReviewListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['review_form'] = self.review_form_class()
         context['form'] = self.form
         context['description'] = self.desc_template % self.desc_ctx

@@ -50,7 +50,7 @@ class PermissionBasedDashboardOrderTestsBase(WebTestCase):
         """
         Creates two orders. order_in has self.user in it's partner users list.
         """
-        super(PermissionBasedDashboardOrderTestsBase, self).setUp()
+        super().setUp()
         self.address = ShippingAddressFactory()
         self.basket_in = create_basket()
         self.basket_out = create_basket()
@@ -218,7 +218,7 @@ class TestOrderDetailPage(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(TestOrderDetailPage, self).setUp()
+        super().setUp()
         # ensures that initial statuses are as expected
         self.order = create_order()
         self.event_type = PaymentEventType.objects.create(name='foo')
@@ -276,7 +276,7 @@ class TestChangingOrderStatus(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(TestChangingOrderStatus, self).setUp()
+        super().setUp()
 
         Order.pipeline = {'A': ('B', 'C')}
         self.order = create_order(status='A')
@@ -305,7 +305,7 @@ class TestChangingOrderStatusFromFormOnOrderListView(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(TestChangingOrderStatusFromFormOnOrderListView, self).setUp()
+        super().setUp()
 
         Order.pipeline = {'A': ('B', 'C'), 'B': ('A', 'C'), 'C': ('A', 'B')}
         self.order = create_order(status='A')
@@ -340,7 +340,7 @@ class LineDetailTests(WebTestCase):
         self.url = reverse('dashboard:order-line-detail',
                            kwargs={'number': self.order.number,
                                    'line_id': self.line.id})
-        super(LineDetailTests, self).setUp()
+        super().setUp()
 
     def test_line_detail_page_exists(self):
         response = self.get(self.url)

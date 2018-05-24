@@ -31,10 +31,10 @@ class OfferDetailView(ListView):
                 slug=self.kwargs['slug'])
         except ConditionalOffer.DoesNotExist:
             raise http.Http404
-        return super(OfferDetailView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(OfferDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['offer'] = self.offer
         ctx['upsell_message'] = self.offer.get_upsell_message(
             self.request.basket)
@@ -51,7 +51,7 @@ class RangeDetailView(ListView):
     def dispatch(self, request, *args, **kwargs):
         self.range = get_object_or_404(
             Range, slug=kwargs['slug'], is_public=True)
-        return super(RangeDetailView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get_queryset(self):
@@ -59,6 +59,6 @@ class RangeDetailView(ListView):
         return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):
-        ctx = super(RangeDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['range'] = self.range
         return ctx

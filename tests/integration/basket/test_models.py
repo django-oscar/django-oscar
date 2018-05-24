@@ -227,12 +227,12 @@ class TestANonEmptyBasket(TestCase):
             def availability_policy(self, product, stockrecord):
                 if product == new_product:
                     return availability.Unavailable()
-                return super(UnavailableProductStrategy, self).availability_policy(product, stockrecord)
+                return super().availability_policy(product, stockrecord)
 
             def pricing_policy(self, product, stockrecord):
                 if product == new_product:
                     return prices.Unavailable()
-                return super(UnavailableProductStrategy, self).pricing_policy(product, stockrecord)
+                return super().pricing_policy(product, stockrecord)
 
         self.basket.strategy = UnavailableProductStrategy()
         line = self.basket.all_lines()[1]

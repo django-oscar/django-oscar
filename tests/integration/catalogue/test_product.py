@@ -20,7 +20,7 @@ class ProductTests(TestCase):
 class ProductCreationTests(ProductTests):
 
     def setUp(self):
-        super(ProductCreationTests, self).setUp()
+        super().setUp()
         ProductAttribute.objects.create(product_class=self.product_class,
                                         name='Number of pages',
                                         code='num_pages',
@@ -76,7 +76,7 @@ class TopLevelProductTests(ProductTests):
 class ChildProductTests(ProductTests):
 
     def setUp(self):
-        super(ChildProductTests, self).setUp()
+        super().setUp()
         self.parent = Product.objects.create(
             title="Parent product",
             product_class=self.product_class,
@@ -149,7 +149,7 @@ class ProductAttributeCreationTests(TestCase):
 class ProductRecommendationTests(ProductTests):
 
     def setUp(self):
-        super(ProductRecommendationTests, self).setUp()
+        super().setUp()
         self.primary_product = Product.objects.create(
             upc='1234', product_class=self.product_class, title='Primary Product'
         )

@@ -67,7 +67,7 @@ class RangeProductViewTest(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(RangeProductViewTest, self).setUp()
+        super().setUp()
         self.range = Range.objects.create(name='dummy')
         self.url = reverse('dashboard:range-products', args=(self.range.id,))
         self.product1 = create_product(

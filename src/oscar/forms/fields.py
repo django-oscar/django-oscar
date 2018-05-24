@@ -23,4 +23,4 @@ class ExtendedURLField(fields.URLField):
         # every value so that local URLs are valid.
         if value and value.startswith('/'):
             return value
-        return super(ExtendedURLField, self).to_python(value)
+        return super().to_python(value)

@@ -16,7 +16,7 @@ class BasketLineForm(forms.ModelForm):
         initial=False, required=False, label=_('Save for Later'))
 
     def __init__(self, strategy, *args, **kwargs):
-        super(BasketLineForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.instance.strategy = strategy
 
         max_allowed_quantity = None
@@ -70,10 +70,10 @@ class SavedLineForm(forms.ModelForm):
     def __init__(self, strategy, basket, *args, **kwargs):
         self.strategy = strategy
         self.basket = basket
-        super(SavedLineForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self):
-        cleaned_data = super(SavedLineForm, self).clean()
+        cleaned_data = super().clean()
         if not cleaned_data['move_to_basket']:
             # skip further validation (see issue #666)
             return cleaned_data
@@ -96,7 +96,7 @@ class BasketVoucherForm(forms.Form):
     code = forms.CharField(max_length=128, label=_('Code'))
 
     def __init__(self, *args, **kwargs):
-        super(BasketVoucherForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean_code(self):
         return self.cleaned_data['code'].strip().upper()
@@ -113,7 +113,7 @@ class AddToBasketForm(forms.Form):
         self.basket = basket
         self.parent_product = product
 
-        super(AddToBasketForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Dynamically build fields
         if product.is_parent:
@@ -261,7 +261,7 @@ class SimpleAddToBasketForm(AddToBasketForm):
     """
 
     def __init__(self, *args, **kwargs):
-        super(SimpleAddToBasketForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if 'quantity' in self.fields:
             self.fields['quantity'].initial = 1
             self.fields['quantity'].widget = forms.HiddenInput()

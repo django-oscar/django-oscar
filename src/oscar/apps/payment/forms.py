@@ -36,7 +36,7 @@ class BankcardNumberField(forms.CharField):
                                            'unknown: %s' % difference)
 
         _kwargs.update(kwargs)
-        super(BankcardNumberField, self).__init__(*args, **_kwargs)
+        super().__init__(*args, **_kwargs)
 
     def clean(self, value):
         """
@@ -56,7 +56,7 @@ class BankcardNumberField(forms.CharField):
                 raise forms.ValidationError(
                     _("%s cards are not accepted." % card_type))
 
-        return super(BankcardNumberField, self).clean(value)
+        return super().clean(value)
 
 
 class BankcardMonthWidget(forms.MultiWidget):
@@ -101,7 +101,7 @@ class BankcardMonthField(forms.MultiValueField):
         if 'widget' not in kwargs:
             kwargs['widget'] = BankcardMonthWidget(
                 widgets=[fields[0].widget, fields[1].widget])
-        super(BankcardMonthField, self).__init__(fields, *args, **kwargs)
+        super().__init__(fields, *args, **kwargs)
 
     def month_choices(self):
         return []
@@ -121,7 +121,7 @@ class BankcardExpiryMonthField(BankcardMonthField):
             'initial': ["%.2d" % today.month, today.year]
         }
         _kwargs.update(kwargs)
-        super(BankcardExpiryMonthField, self).__init__(*args, **_kwargs)
+        super().__init__(*args, **_kwargs)
 
     def month_choices(self):
         return [("%.2d" % x, "%.2d" % x) for x in range(1, 13)]
@@ -132,7 +132,7 @@ class BankcardExpiryMonthField(BankcardMonthField):
             date.today().year + self.num_years)]
 
     def clean(self, value):
-        expiry_date = super(BankcardExpiryMonthField, self).clean(value)
+        expiry_date = super().clean(value)
         if expiry_date and date.today() > expiry_date:
             raise forms.ValidationError(
                 _("The expiration date you entered is in the past."))
@@ -162,7 +162,7 @@ class BankcardStartingMonthField(BankcardMonthField):
             'label': _("Valid from"),
         }
         _kwargs.update(kwargs)
-        super(BankcardStartingMonthField, self).__init__(*args, **_kwargs)
+        super().__init__(*args, **_kwargs)
 
     def month_choices(self):
         months = [("%.2d" % x, "%.2d" % x) for x in range(1, 13)]
@@ -178,7 +178,7 @@ class BankcardStartingMonthField(BankcardMonthField):
         return years
 
     def clean(self, value):
-        starting_date = super(BankcardMonthField, self).clean(value)
+        starting_date = super().clean(value)
         if starting_date and date.today() < starting_date:
             raise forms.ValidationError(
                 _("The starting date you entered is in the future."))
@@ -211,13 +211,13 @@ class BankcardCCVField(forms.RegexField):
                            "on the back of your bankcard")
         }
         _kwargs.update(kwargs)
-        super(BankcardCCVField, self).__init__(
+        super().__init__(
             r'^\d{3,4}$', *args, **_kwargs)
 
     def clean(self, value):
         if value is not None:
             value = value.strip()
-        return super(BankcardCCVField, self).clean(value)
+        return super().clean(value)
 
 
 class BankcardForm(forms.ModelForm):
@@ -267,7 +267,7 @@ class BankcardForm(forms.ModelForm):
 class BillingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     def __init__(self, *args, **kwargs):
-        super(BillingAddressForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.set_country_queryset()
 
     def set_country_queryset(self):

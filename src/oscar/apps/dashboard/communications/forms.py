@@ -31,7 +31,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
         if data:
             self.show_preview = 'show_preview' in data
             self.send_preview = 'send_preview' in data
-        super(CommunicationEventTypeForm, self).__init__(data, *args, **kwargs)
+        super().__init__(data, *args, **kwargs)
 
     def validate_template(self, value):
         try:

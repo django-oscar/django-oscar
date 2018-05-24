@@ -31,7 +31,7 @@ class UpdateView(generic.UpdateView):
         messages.error(self.request,
                        _("The submitted form was not valid, please correct "
                          "the errors and resubmit"))
-        return super(UpdateView, self).form_invalid(form)
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         if 'send_preview' in self.request.POST:
@@ -39,7 +39,7 @@ class UpdateView(generic.UpdateView):
         if 'show_preview' in self.request.POST:
             return self.show_preview(form)
         messages.success(self.request, _("Email saved"))
-        return super(UpdateView, self).form_valid(form)
+        return super().form_valid(form)
 
     def get_messages_context(self, form):
         ctx = {'user': self.request.user,
@@ -48,7 +48,7 @@ class UpdateView(generic.UpdateView):
         return ctx
 
     def show_preview(self, form):
-        ctx = super(UpdateView, self).get_context_data()
+        ctx = super().get_context_data()
         ctx['form'] = form
 
         commtype = form.save(commit=False)
@@ -64,7 +64,7 @@ class UpdateView(generic.UpdateView):
         return self.render_to_response(ctx)
 
     def send_preview(self, form):
-        ctx = super(UpdateView, self).get_context_data()
+        ctx = super().get_context_data()
         ctx['form'] = form
 
         commtype = form.save(commit=False)

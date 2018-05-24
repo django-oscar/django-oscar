@@ -37,7 +37,7 @@ CustomSluggedTestModel = get_model('model_tests_app', 'CustomSluggedTestModel')
 
 class AutoSlugFieldTest(TestCase):
     def tearDown(self):
-        super(AutoSlugFieldTest, self).tearDown()
+        super().tearDown()
 
         SluggedTestModel.objects.all().delete()
 

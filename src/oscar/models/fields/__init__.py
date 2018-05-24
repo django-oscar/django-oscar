@@ -44,13 +44,13 @@ class ExtendedURLField(CharField):
             'form_class': fields.ExtendedURLField,
         }
         defaults.update(kwargs)
-        return super(ExtendedURLField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
     def deconstruct(self):
         """
         deconstruct() is needed by Django's migration framework
         """
-        name, path, args, kwargs = super(ExtendedURLField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         # We have a default value for max_length; remove it in that case
         if self.max_length == 200:
             del kwargs['max_length']
@@ -63,7 +63,7 @@ class PositiveDecimalField(DecimalField):
     restricts values to be non-negative.
     """
     def formfield(self, **kwargs):
-        return super(PositiveDecimalField, self).formfield(min_value=0)
+        return super().formfield(min_value=0)
 
 
 class UppercaseCharField(CharField):
@@ -76,7 +76,7 @@ class UppercaseCharField(CharField):
     """
 
     def contribute_to_class(self, cls, name, **kwargs):
-        super(UppercaseCharField, self).contribute_to_class(
+        super().contribute_to_class(
             cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
@@ -84,7 +84,7 @@ class UppercaseCharField(CharField):
         return self.to_python(value)
 
     def to_python(self, value):
-        val = super(UppercaseCharField, self).to_python(value)
+        val = super().to_python(value)
         if isinstance(val, six.string_types):
             return val.upper()
         else:
@@ -105,10 +105,10 @@ class NullCharField(CharField):
             raise ImproperlyConfigured(
                 "NullCharField implies null==blank==True")
         kwargs['null'] = kwargs['blank'] = True
-        super(NullCharField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def contribute_to_class(self, cls, name, **kwargs):
-        super(NullCharField, self).contribute_to_class(cls, name, **kwargs)
+        super().contribute_to_class(cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
     def from_db_value(self, value, expression, connection, context):
@@ -117,14 +117,14 @@ class NullCharField(CharField):
         return value if value is not None else ''
 
     def get_prep_value(self, value):
-        prepped = super(NullCharField, self).get_prep_value(value)
+        prepped = super().get_prep_value(value)
         return prepped if prepped != "" else None
 
     def deconstruct(self):
         """
         deconstruct() is needed by Django's migration framework
         """
-        name, path, args, kwargs = super(NullCharField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         del kwargs['null']
         del kwargs['blank']
         return name, path, args, kwargs

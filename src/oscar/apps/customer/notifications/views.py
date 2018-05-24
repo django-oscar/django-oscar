@@ -23,7 +23,7 @@ class NotificationListView(PageTitleMixin, generic.ListView):
     active_tab = 'notifications'
 
     def get_context_data(self, **kwargs):
-        ctx = super(NotificationListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['list_type'] = self.list_type
         return ctx
 
@@ -53,7 +53,7 @@ class DetailView(PageTitleMixin, generic.DetailView):
     active_tab = 'notifications'
 
     def get_object(self, queryset=None):
-        obj = super(DetailView, self).get_object()
+        obj = super().get_object()
         if not obj.date_read:
             obj.date_read = now()
             obj.save()

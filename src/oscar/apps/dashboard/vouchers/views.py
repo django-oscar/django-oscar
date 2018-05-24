@@ -73,7 +73,7 @@ class VoucherListView(generic.ListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         if self.form.is_bound:
             description = self.description_template % self.description_ctx
         else:
@@ -89,7 +89,7 @@ class VoucherCreateView(generic.FormView):
     form_class = VoucherForm
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = _('Create voucher')
         return ctx
 
@@ -140,7 +140,7 @@ class VoucherStatsView(generic.DetailView):
     context_object_name = 'voucher'
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherStatsView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         discounts = OrderDiscount.objects.filter(voucher_id=self.object.id)
         discounts = discounts.order_by('-order__date_placed')
         ctx['discounts'] = discounts
@@ -158,13 +158,13 @@ class VoucherUpdateView(generic.FormView):
         return self.voucher
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = self.voucher.name
         ctx['voucher'] = self.voucher
         return ctx
 
     def get_form_kwargs(self):
-        kwargs = super(VoucherUpdateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['voucher'] = self.get_voucher()
         return kwargs
 
@@ -230,7 +230,7 @@ class VoucherSetCreateView(generic.CreateView):
     form_class = VoucherSetForm
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherSetCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = _('Create voucher set')
         return ctx
 
@@ -281,7 +281,7 @@ class VoucherSetUpdateView(generic.UpdateView):
     form_class = VoucherSetForm
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherSetUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = self.object.name
         ctx['voucher'] = self.object
         return ctx
@@ -363,7 +363,7 @@ class VoucherSetDetailView(generic.ListView):
     def dispatch(self, request, *args, **kwargs):
         pk = args[0]
         self.voucher_set = get_object_or_404(VoucherSet, pk=pk)
-        return super(VoucherSetDetailView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get_queryset(self):
@@ -405,7 +405,7 @@ class VoucherSetDetailView(generic.ListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherSetDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['voucher_set'] = self.voucher_set
         ctx['description'] = self.voucher_set.name
         ctx['form'] = self.form
@@ -427,7 +427,7 @@ class VoucherSetListView(generic.ListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        ctx = super(VoucherSetListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         description = _("Voucher sets")
         ctx['description'] = description
         return ctx

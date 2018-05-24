@@ -100,7 +100,7 @@ class AbstractUser(auth_models.AbstractBaseUser,
         alerts.update(user=self, key='', email='')
 
     def save(self, *args, **kwargs):
-        super(AbstractUser, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         # Migrate any "anonymous" product alerts to the registered user
         # Ideally, this would be done via a post-save signal. But we can't
         # use get_user_model to wire up signals to custom user models
@@ -430,7 +430,7 @@ class AbstractProductAlert(models.Model):
         if self.status == self.CLOSED and self.date_closed is None:
             self.date_closed = timezone.now()
 
-        return super(AbstractProductAlert, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def get_random_key(self):
         """

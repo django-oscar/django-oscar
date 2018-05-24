@@ -86,7 +86,7 @@ class AbstractVoucherSet(models.Model):
     def save(self, *args, **kwargs):
         self.count = max(self.count, self.vouchers.count())
         with transaction.atomic():
-            super(AbstractVoucherSet, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
             self.generate_vouchers()
             self.vouchers.update(
                 start_datetime=self.start_datetime,
@@ -179,7 +179,7 @@ class AbstractVoucher(models.Model):
 
     def save(self, *args, **kwargs):
         self.code = self.code.upper()
-        super(AbstractVoucher, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def is_active(self, test_datetime=None):
         """

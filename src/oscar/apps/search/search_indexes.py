@@ -86,7 +86,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return result.stockrecord.net_stock_level
 
     def prepare(self, obj):
-        prepared_data = super(ProductIndex, self).prepare(obj)
+        prepared_data = super().prepare(obj)
 
         # We use Haystack's dynamic fields to ensure that the title field used
         # for sorting is of type "string'.

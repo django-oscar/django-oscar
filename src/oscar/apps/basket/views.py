@@ -41,7 +41,7 @@ class BasketView(ModelFormSetView):
     template_name = 'basket/basket.html'
 
     def get_formset_kwargs(self):
-        kwargs = super(BasketView, self).get_formset_kwargs()
+        kwargs = super().get_formset_kwargs()
         kwargs['strategy'] = self.request.strategy
         return kwargs
 
@@ -95,7 +95,7 @@ class BasketView(ModelFormSetView):
         return BasketVoucherForm()
 
     def get_context_data(self, **kwargs):
-        context = super(BasketView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['voucher_form'] = self.get_basket_voucher_form()
 
         # Shipping information is included to give an idea of the total order
@@ -174,7 +174,7 @@ class BasketView(ModelFormSetView):
             response = redirect(self.get_success_url())
         else:
             # Save changes to basket as per normal
-            response = super(BasketView, self).formset_valid(formset)
+            response = super().formset_valid(formset)
 
         # If AJAX submission, don't redirect but reload the basket content HTML
         if self.request.is_ajax():
@@ -236,7 +236,7 @@ class BasketView(ModelFormSetView):
             return self.json_response(ctx, flash_messages)
 
         flash_messages.apply_to_request(self.request)
-        return super(BasketView, self).formset_invalid(formset)
+        return super().formset_invalid(formset)
 
 
 class BasketAddView(FormView):
@@ -253,10 +253,10 @@ class BasketAddView(FormView):
     def post(self, request, *args, **kwargs):
         self.product = shortcuts.get_object_or_404(
             self.product_model, pk=kwargs['pk'])
-        return super(BasketAddView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
-        kwargs = super(BasketAddView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['basket'] = self.request.basket
         kwargs['product'] = self.product
         return kwargs
@@ -288,7 +288,7 @@ class BasketAddView(FormView):
             sender=self, product=form.product, user=self.request.user,
             request=self.request)
 
-        return super(BasketAddView, self).form_valid(form)
+        return super().form_valid(form)
 
     def get_success_message(self, form):
         return render_to_string(
@@ -438,7 +438,7 @@ class SavedView(ModelFormSetView):
         return safe_referrer(self.request, 'basket:summary')
 
     def get_formset_kwargs(self):
-        kwargs = super(SavedView, self).get_formset_kwargs()
+        kwargs = super().get_formset_kwargs()
         kwargs['prefix'] = 'saved'
         kwargs['basket'] = self.request.basket
         kwargs['strategy'] = self.request.strategy
@@ -464,7 +464,7 @@ class SavedView(ModelFormSetView):
             BasketMessageGenerator().apply_messages(self.request, offers_before)
             response = redirect(self.get_success_url())
         else:
-            response = super(SavedView, self).formset_valid(formset)
+            response = super().formset_valid(formset)
         return response
 
     def formset_invalid(self, formset):

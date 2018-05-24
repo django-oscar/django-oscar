@@ -31,7 +31,7 @@ class TestIndexView(CheckoutMixin, WebTestCase):
 class TestShippingAddressView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
-        super(TestShippingAddressView, self).setUp()
+        super().setUp()
         self.user_address = factories.UserAddressFactory(
             user=self.user, country=self.create_shipping_country())
 
@@ -84,7 +84,7 @@ class TestUserAddressUpdateView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         country = self.create_shipping_country()
-        super(TestUserAddressUpdateView, self).setUp()
+        super().setUp()
         self.user_address = factories.UserAddressFactory(
             user=self.user, country=country)
 
@@ -125,7 +125,7 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
 class TestDeleteUserAddressView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
-        super(TestDeleteUserAddressView, self).setUp()
+        super().setUp()
         self.country = self.create_shipping_country()
         self.user_address = factories.UserAddressFactory(
             user=self.user, country=self.country)

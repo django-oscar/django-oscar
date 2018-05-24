@@ -36,22 +36,22 @@ class CreateProductReview(CreateView):
             messages.warning(self.request, message)
             return redirect(self.product.get_absolute_url())
 
-        return super(CreateProductReview, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(CreateProductReview, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['product'] = self.product
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(CreateProductReview, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['product'] = self.product
         kwargs['user'] = self.request.user
         return kwargs
 
     def form_valid(self, form):
-        response = super(CreateProductReview, self).form_valid(form)
+        response = super().form_valid(form)
         self.send_signal(self.request, response, self.object)
         return response
 
@@ -71,7 +71,7 @@ class ProductReviewDetail(DetailView):
     model = ProductReview
 
     def get_context_data(self, **kwargs):
-        context = super(ProductReviewDetail, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['product'] = get_object_or_404(
             Product, pk=self.kwargs['product_pk'])
         return context
@@ -123,7 +123,7 @@ class ProductReviewList(ListView):
         return qs.order_by('-score')
 
     def get_context_data(self, **kwargs):
-        context = super(ProductReviewList, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['product'] = get_object_or_404(
             self.product_model, pk=self.kwargs['product_pk'])
         context['form'] = self.form

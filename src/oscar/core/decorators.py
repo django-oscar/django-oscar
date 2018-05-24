@@ -27,5 +27,5 @@ def _deprecated_cls(cls, warn_cls=RemovedInOscar20Warning):
                 "removed in the next version of django-oscar" \
                 % cls.__name__
             warnings.warn(message, warn_cls, stacklevel=2)
-            super(Deprecated, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
     return Deprecated

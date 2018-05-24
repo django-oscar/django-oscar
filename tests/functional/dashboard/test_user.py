@@ -19,7 +19,7 @@ class IndexViewTests(WebTestCase):
     csrf_checks = False
 
     def setUp(self):
-        super(IndexViewTests, self).setUp()
+        super().setUp()
         for i in range(1, 25):
             UserFactory(is_active=True)
         for i in range(1, 25):
@@ -66,7 +66,7 @@ class TestDetailViewForStaffUser(WebTestCase):
     def setUp(self):
         self.customer = UserFactory(
             username='jane', email='jane@example.org', password='password')
-        super(TestDetailViewForStaffUser, self).setUp()
+        super().setUp()
 
     def test_password_reset_url_only_available_via_post(self):
         try:
@@ -113,7 +113,7 @@ class SearchTests(WebTestCase):
         UserFactory(
             username='robalan', email='robalan@example.org', first_name='Rob Alan', last_name='Lewis'
         )
-        super(SearchTests, self).setUp()
+        super().setUp()
 
     def _search_by_user_name(self, name):
         response = self.get(self.url)

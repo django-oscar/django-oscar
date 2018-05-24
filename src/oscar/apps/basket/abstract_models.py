@@ -75,7 +75,7 @@ class AbstractBasket(models.Model):
     saved = SavedBasketManager()
 
     def __init__(self, *args, **kwargs):
-        super(AbstractBasket, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # We keep a cached copy of the basket lines as we refer to them often
         # within the same request cycle.  Also, applying offers will append
@@ -650,7 +650,7 @@ class AbstractLine(models.Model):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
-        super(AbstractLine, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Instance variables used to persist discount information
         self._discount_excl_tax = D('0.00')
         self._discount_incl_tax = D('0.00')
@@ -677,7 +677,7 @@ class AbstractLine(models.Model):
             raise PermissionDenied(
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
-        return super(AbstractLine, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     # =============
     # Offer methods

@@ -53,7 +53,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['upc', 'title']
 
     def get_queryset(self, request):
-        qs = super(ProductAdmin, self).get_queryset(request)
+        qs = super().get_queryset(request)
         return (
             qs
             .select_related('product_class', 'parent')

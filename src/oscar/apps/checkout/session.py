@@ -66,7 +66,7 @@ class CheckoutSessionMixin(object):
         except exceptions.PassedSkipCondition as e:
             return http.HttpResponseRedirect(e.url)
 
-        return super(CheckoutSessionMixin, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def check_pre_conditions(self, request):
@@ -249,7 +249,7 @@ class CheckoutSessionMixin(object):
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
         # order kwargs so they are easily available too.
-        ctx = super(CheckoutSessionMixin, self).get_context_data()
+        ctx = super().get_context_data()
         ctx.update(self.build_submission(**kwargs))
         ctx.update(kwargs)
         ctx.update(ctx['order_kwargs'])

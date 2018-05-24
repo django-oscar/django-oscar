@@ -123,7 +123,7 @@ class AbstractSource(models.Model):
         return description
 
     def save(self, *args, **kwargs):
-        super(AbstractSource, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self.deferred_txns:
             for txn in self.deferred_txns:
                 self._create_transaction(*txn)
@@ -282,7 +282,7 @@ class AbstractBankcard(models.Model):
         self.start_date = kwargs.pop('start_date', None)
         self.issue_number = kwargs.pop('issue_number', None)
         self.ccv = kwargs.pop('ccv', None)
-        super(AbstractBankcard, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Initialise the card-type
         if self.id is None:
@@ -299,7 +299,7 @@ class AbstractBankcard(models.Model):
     def save(self, *args, **kwargs):
         if not self.number.startswith('X'):
             self.prepare_for_save()
-        super(AbstractBankcard, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def prepare_for_save(self):
         # This is the first time this card instance is being saved.  We

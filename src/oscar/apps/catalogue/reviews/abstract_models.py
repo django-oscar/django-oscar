@@ -106,11 +106,11 @@ class AbstractProductReview(models.Model):
         self.votes.create(user=user, delta=AbstractVote.DOWN)
 
     def save(self, *args, **kwargs):
-        super(AbstractProductReview, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.product.update_rating()
 
     def delete(self, *args, **kwargs):
-        super(AbstractProductReview, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
         if self.product is not None:
             self.product.update_rating()
 
@@ -229,5 +229,5 @@ class AbstractVote(models.Model):
                 "You can only vote once on a review"))
 
     def save(self, *args, **kwargs):
-        super(AbstractVote, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.review.update_totals()

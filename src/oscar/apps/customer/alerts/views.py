@@ -38,7 +38,7 @@ class ProductAlertCreateView(generic.CreateView):
     template_name = 'customer/alerts/form.html'
 
     def get_context_data(self, **kwargs):
-        ctx = super(ProductAlertCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['product'] = self.product
         ctx['alert_form'] = ctx.pop('form')
         return ctx
@@ -49,17 +49,17 @@ class ProductAlertCreateView(generic.CreateView):
 
     def post(self, request, *args, **kwargs):
         self.product = get_object_or_404(Product, pk=self.kwargs['pk'])
-        return super(ProductAlertCreateView, self).post(request, *args,
+        return super().post(request, *args,
                                                         **kwargs)
 
     def get_form_kwargs(self):
-        kwargs = super(ProductAlertCreateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         kwargs['product'] = self.product
         return kwargs
 
     def form_valid(self, form):
-        response = super(ProductAlertCreateView, self).form_valid(form)
+        response = super().form_valid(form)
         if self.object.is_anonymous:
             utils.send_alert_confirmation(self.object)
         return response
@@ -80,7 +80,7 @@ class ProductAlertConfirmView(generic.RedirectView):
     def get(self, request, *args, **kwargs):
         self.alert = get_object_or_404(ProductAlert, key=kwargs['key'])
         self.update_alert()
-        return super(ProductAlertConfirmView, self).get(request, *args,
+        return super().get(request, *args,
                                                         **kwargs)
 
     def update_alert(self):
@@ -116,7 +116,7 @@ class ProductAlertCancelView(generic.RedirectView):
         else:
             raise Http404
         self.update_alert()
-        return super(ProductAlertCancelView, self).get(request, *args,
+        return super().get(request, *args,
                                                        **kwargs)
 
     def update_alert(self):

@@ -15,7 +15,7 @@ Country = get_model('address', 'Country')
 class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     def __init__(self, *args, **kwargs):
-        super(ShippingAddressForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.adjust_country_field()
 
     def adjust_country_field(self):
@@ -45,7 +45,7 @@ class ShippingMethodForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         methods = kwargs.pop('methods', [])
-        super(ShippingMethodForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['method_code'].choices = ((m.code, m.name) for m in methods)
 
 
@@ -73,7 +73,7 @@ class GatewayForm(AuthenticationForm):
                     msg = _("A user with that email address already exists")
                     self._errors["username"] = self.error_class([msg])
             return self.cleaned_data
-        return super(GatewayForm, self).clean()
+        return super().clean()
 
     def is_guest_checkout(self):
         return self.cleaned_data.get('options', None) == self.GUEST

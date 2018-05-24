@@ -94,7 +94,7 @@ class TestAStaffUser(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(TestAStaffUser, self).setUp()
+        super().setUp()
         self.partner = PartnerFactory()
 
     def test_can_create_a_product_without_stockrecord(self):
@@ -246,7 +246,7 @@ class TestANonStaffUser(TestAStaffUser):
     permissions = ['partner.dashboard_access', ]
 
     def setUp(self):
-        super(TestANonStaffUser, self).setUp()
+        super().setUp()
         add_permissions(self.user, self.permissions)
         self.partner.users.add(self.user)
 
@@ -594,7 +594,7 @@ class TestAttributeOptionGroupUpdateView(AttributeOptionGroupUpdateMixin,
     is_staff = True
 
     def setUp(self):
-        super(TestAttributeOptionGroupUpdateView, self).setUp()
+        super().setUp()
 
         self.attribute_option_group = AttributeOptionGroupFactory()
         AttributeOptionFactory(group=self.attribute_option_group)
@@ -682,7 +682,7 @@ class TestAttributeOptionGroupDeleteView(AttributeOptionGroupDeleteMixin,
     is_staff = True
 
     def setUp(self):
-        super(TestAttributeOptionGroupDeleteView, self).setUp()
+        super().setUp()
 
         self.attribute_option_group = AttributeOptionGroupFactory()
         AttributeOptionFactory(group=self.attribute_option_group)

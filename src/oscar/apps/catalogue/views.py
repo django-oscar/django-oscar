@@ -41,7 +41,7 @@ class ProductDetailView(DetailView):
         if redirect is not None:
             return redirect
 
-        response = super(ProductDetailView, self).get(request, **kwargs)
+        response = super().get(request, **kwargs)
         self.send_signal(request, response, product)
         return response
 
@@ -50,7 +50,7 @@ class ProductDetailView(DetailView):
         if hasattr(self, 'object'):
             return self.object
         else:
-            return super(ProductDetailView, self).get_object(queryset)
+            return super().get_object(queryset)
 
     def redirect_if_necessary(self, current_path, product):
         if self.enforce_parent and product.is_child:
@@ -63,7 +63,7 @@ class ProductDetailView(DetailView):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_context_data(self, **kwargs):
-        ctx = super(ProductDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
         return ctx
@@ -125,7 +125,7 @@ class CatalogueView(TemplateView):
             # Redirect to page one.
             messages.error(request, _('The given page number was invalid.'))
             return redirect('catalogue:index')
-        return super(CatalogueView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_search_handler(self, *args, **kwargs):
         return get_product_search_handler_class()(*args, **kwargs)
@@ -162,7 +162,7 @@ class ProductCategoryView(TemplateView):
             messages.error(request, _('The given page number was invalid.'))
             return redirect(self.category.get_absolute_url())
 
-        return super(ProductCategoryView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_category(self):
         if 'pk' in self.kwargs:
@@ -221,7 +221,7 @@ class ProductCategoryView(TemplateView):
         return self.category.get_descendants_and_self()
 
     def get_context_data(self, **kwargs):
-        context = super(ProductCategoryView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['category'] = self.category
         search_context = self.search_handler.get_search_context_data(
             self.context_object_name)

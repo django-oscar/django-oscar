@@ -259,7 +259,7 @@ class AbstractAddress(models.Model):
 
     def save(self, *args, **kwargs):
         self._update_search_text()
-        super(AbstractAddress, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def clean(self):
         # Strip all whitespace
@@ -553,7 +553,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         # Ensure that each user only has one default shipping address
         # and billing address
         self._ensure_defaults_integrity()
-        super(AbstractUserAddress, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def _ensure_defaults_integrity(self):
         if self.is_default_for_shipping:
@@ -574,7 +574,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         unique_together = ('user', 'hash')
 
     def validate_unique(self, exclude=None):
-        super(AbstractAddress, self).validate_unique(exclude)
+        super().validate_unique(exclude)
         qs = self.__class__.objects.filter(
             user=self.user,
             hash=self.generate_hash())

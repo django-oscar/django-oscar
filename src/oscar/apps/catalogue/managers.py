@@ -47,4 +47,4 @@ class BrowsableProductManager(ProductManager):
     """
 
     def get_queryset(self):
-        return super(BrowsableProductManager, self).get_queryset().browsable()
+        return super().get_queryset().browsable()

@@ -381,7 +381,7 @@ class AbstractOrder(models.Model):
         # this gives us the ability to set the date_placed explicitly (which is
         # useful when importing orders from another system).
         self.set_date_placed_default()
-        super(AbstractOrder, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -1046,7 +1046,7 @@ class ShippingEventQuantity(models.Model):
         if not self.line.is_shipping_event_permitted(
                 self.event.event_type, self.quantity):
             raise exceptions.InvalidShippingEvent
-        super(ShippingEventQuantity, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return _("%(product)s - quantity %(qty)d") % {
@@ -1156,7 +1156,7 @@ class AbstractOrderDiscount(models.Model):
             if voucher:
                 self.voucher_code = voucher.code
 
-        super(AbstractOrderDiscount, self).save(**kwargs)
+        super().save(**kwargs)
 
     def __str__(self):
         return _("Discount of %(amount)r from order %(order)s") % {

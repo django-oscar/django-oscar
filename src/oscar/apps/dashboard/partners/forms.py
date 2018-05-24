@@ -21,7 +21,7 @@ class PartnerSearchForm(forms.Form):
 class PartnerCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(PartnerCreateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Partner.name is optional and that is okay. But if creating through
         # the dashboard, it seems sensible to enforce as it's the only field
         # in the form.
@@ -44,11 +44,11 @@ class NewUserForm(EmailUserCreationForm):
 
     def __init__(self, partner, *args, **kwargs):
         self.partner = partner
-        super(NewUserForm, self).__init__(host=None, *args, **kwargs)
+        super().__init__(host=None, *args, **kwargs)
 
     def save(self):
         role = self.cleaned_data.get('role', 'limited')
-        user = super(NewUserForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.is_staff = role == 'staff'
         user.save()
         self.partner.users.add(user)
@@ -96,11 +96,11 @@ class ExistingUserForm(forms.ModelForm):
         user = kwargs['instance']
         role = 'staff' if user.is_staff else 'limited'
         kwargs.get('initial', {}).setdefault('role', role)
-        super(ExistingUserForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def save(self):
         role = self.cleaned_data.get('role', 'none')
-        user = super(ExistingUserForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.is_staff = role == 'staff'
         if self.cleaned_data['password1']:
             user.set_password(self.cleaned_data['password1'])

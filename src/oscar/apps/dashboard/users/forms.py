@@ -18,7 +18,7 @@ class UserSearchForm(forms.Form):
 class ProductAlertUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(ProductAlertUpdateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         alert = kwargs['instance']
         if alert.user:
             # Remove 'unconfirmed' from list of available choices when editing

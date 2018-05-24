@@ -12,7 +12,7 @@ class BaseCatalogueApplication(Application):
     range_view = get_class('offer.views', 'RangeDetailView')
 
     def get_urls(self):
-        urlpatterns = super(BaseCatalogueApplication, self).get_urls()
+        urlpatterns = super().get_urls()
         urlpatterns += [
             url(r'^$', self.catalogue_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
@@ -32,7 +32,7 @@ class ReviewsApplication(Application):
     reviews_app = get_class('catalogue.reviews.app', 'application')
 
     def get_urls(self):
-        urlpatterns = super(ReviewsApplication, self).get_urls()
+        urlpatterns = super().get_urls()
         urlpatterns += [
             url(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/',
                 self.reviews_app.urls)

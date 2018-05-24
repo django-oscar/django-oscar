@@ -54,10 +54,10 @@ you. It is explained in detail in :doc:`fork_app`. Run it like this::
 .. note::
 
    For forking app in project root directory, call ``oscar_fork_app`` with ``.`` (dot) instead of ``yourproject/`` path.
-   
-   Example: 
-   
-   Calling ``./manage.py oscar_fork_app order yourproject/`` ``order`` app will be placed in ``project_root/yourproject/`` directory. 
+
+   Example:
+
+   Calling ``./manage.py oscar_fork_app order yourproject/`` ``order`` app will be placed in ``project_root/yourproject/`` directory.
    Calling ``./manage.py oscar_fork_app order .`` ``order`` app will be placed in ``project_root/`` directory.
 
 Replace Oscar's app with your own in ``INSTALLED_APPS``
@@ -127,5 +127,5 @@ could subclass the class from Oscar or not::
     class OrderNumberGenerator(CoreOrderNumberGenerator):
 
         def order_number(self, basket=None):
-            num = super(OrderNumberGenerator, self).order_number(basket)
+            num = super().order_number(basket)
             return "SHOP-%s" % num

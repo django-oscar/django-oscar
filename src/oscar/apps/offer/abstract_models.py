@@ -231,7 +231,7 @@ class AbstractConditionalOffer(models.Model):
             else:
                 self.status = self.OPEN
 
-        return super(AbstractConditionalOffer, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('offer:detail', kwargs={'slug': self.slug})

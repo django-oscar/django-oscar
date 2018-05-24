@@ -189,7 +189,7 @@ class TestCategoryFactory(TestCase):
 class TestCategoryTemplateTags(TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestCategoryTemplateTags, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.template = """
           {% if tree_categories %}
               <ul>

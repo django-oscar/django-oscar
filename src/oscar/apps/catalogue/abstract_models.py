@@ -160,10 +160,10 @@ class AbstractCategory(MP_Node):
         """
         if self.slug:
             # Slug was supplied. Hands off!
-            super(AbstractCategory, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
         else:
             self.slug = self.generate_slug()
-            super(AbstractCategory, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
             # We auto-generated a slug, so we need to make sure that it's
             # unique. As we need to be able to inspect the category's siblings
             # for that, we need to wait until the instance is saved. We
@@ -364,7 +364,7 @@ class AbstractProduct(models.Model):
         verbose_name_plural = _('Products')
 
     def __init__(self, *args, **kwargs):
-        super(AbstractProduct, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.attr = ProductAttributesContainer(product=self)
 
     def __str__(self):
@@ -456,7 +456,7 @@ class AbstractProduct(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.get_title())
-        super(AbstractProduct, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.attr.save()
 
     # Properties
@@ -1220,7 +1220,7 @@ class AbstractProductImage(models.Model):
         Always keep the display_order as consecutive integers. This avoids
         issue #855.
         """
-        super(AbstractProductImage, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
         for idx, image in enumerate(self.product.images.all()):
             image.display_order = idx
             image.save()

@@ -80,7 +80,7 @@ class AutoSlugField(SlugField):
         if settings.OSCAR_SLUG_ALLOW_UNICODE:
             kwargs.setdefault('allow_unicode', settings.OSCAR_SLUG_ALLOW_UNICODE)
 
-        super(AutoSlugField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _slug_strip(self, value):
         """
@@ -178,7 +178,7 @@ class AutoSlugField(SlugField):
         return "SlugField"
 
     def deconstruct(self):
-        name, path, args, kwargs = super(AutoSlugField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         kwargs['populate_from'] = self._populate_from_org
         if not self.separator == six.u('-'):
             kwargs['separator'] = self.separator

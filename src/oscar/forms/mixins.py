@@ -29,7 +29,7 @@ class PhoneNumberMixin(object):
     }
 
     def __init__(self, *args, **kwargs):
-        super(PhoneNumberMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # We can't use the PhoneNumberField here since we want validate the
         # phonenumber based on the selected country as a fallback when a local
@@ -104,7 +104,7 @@ class PhoneNumberMixin(object):
 
     def clean(self):
         self.set_country_and_region_code()
-        cleaned_data = super(PhoneNumberMixin, self).clean()
+        cleaned_data = super().clean()
         for field_name in self.phone_number_fields:
             cleaned_data[field_name] = self.clean_phone_number_field(field_name)
         return cleaned_data

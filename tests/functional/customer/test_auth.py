@@ -143,7 +143,7 @@ class TestAStaffUser(WebTestCase):
     def setUp(self):
         self.staff = factories.UserFactory.create(
             password=self.password, is_staff=True)
-        super(TestAStaffUser, self).setUp()
+        super().setUp()
 
     def test_gets_redirected_to_the_dashboard_when_they_login(self):
         page = self.get(reverse('customer:login'))
