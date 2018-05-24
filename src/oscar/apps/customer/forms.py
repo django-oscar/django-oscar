@@ -1,4 +1,3 @@
-import random
 import string
 
 from django import forms
@@ -8,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
+from django.utils.crypto import get_random_string
 from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -27,8 +27,8 @@ User = get_user_model()
 
 def generate_username():
     letters = string.ascii_letters
-    uname = ''.join([random.choice(letters + string.digits + '_')
-                     for i in range(30)])
+    allowed_chars = letters + string.digits + '_'
+    uname = get_random_string(length=30, allowed_chars=allowed_chars)
     try:
         User.objects.get(username=uname)
         return generate_username()
