@@ -104,10 +104,10 @@ class TestUserAddress(TestCase):
 
     def test_can_be_hashed_including_non_ascii(self):
         a = factories.UserAddressFactory.build(
-            first_name=u"\u0141ukasz Smith",
-            last_name=u'Smith',
-            line1=u"75 Smith Road",
-            postcode=u"n4 8ty",
+            first_name="\u0141ukasz Smith",
+            last_name='Smith',
+            line1="75 Smith Road",
+            postcode="n4 8ty",
             country=self.country,
             user=self.user)
         hash = a.generate_hash()

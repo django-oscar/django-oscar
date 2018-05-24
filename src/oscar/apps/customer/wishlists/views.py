@@ -181,7 +181,7 @@ class WishListDeleteView(PageTitleMixin, DeleteView):
     active_tab = "wishlists"
 
     def get_page_title(self):
-        return _(u'Delete %s') % self.object.name
+        return _('Delete %s') % self.object.name
 
     def get_object(self, queryset=None):
         return get_object_or_404(WishList, owner=self.request.user,
@@ -267,7 +267,7 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
     active_tab = "wishlists"
 
     def get_page_title(self):
-        return _(u'Remove %s') % self.object.get_title()
+        return _('Remove %s') % self.object.get_title()
 
     def get_object(self, queryset=None):
         self.fetch_line(

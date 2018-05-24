@@ -32,7 +32,7 @@ class AbstractProductReview(models.Model):
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
 
     title = models.CharField(
-        verbose_name=pgettext_lazy(u"Product review title", u"Title"),
+        verbose_name=pgettext_lazy("Product review title", "Title"),
         max_length=255, validators=[validators.non_whitespace])
 
     body = models.TextField(_("Body"))
@@ -47,7 +47,7 @@ class AbstractProductReview(models.Model):
 
     # Fields to be completed if user is anonymous
     name = models.CharField(
-        pgettext_lazy(u"Anonymous reviewer name", u"Name"),
+        pgettext_lazy("Anonymous reviewer name", "Name"),
         max_length=255, blank=True)
     email = models.EmailField(_("Email"), blank=True)
     homepage = models.URLField(_("URL"), blank=True)
@@ -172,12 +172,12 @@ class AbstractProductReview(models.Model):
         review
         """
         if not user.is_authenticated:
-            return False, _(u"Only signed in users can vote")
+            return False, _("Only signed in users can vote")
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
         except ValidationError as e:
-            return False, u"%s" % e
+            return False, "%s" % e
         return True, ""
 
 
@@ -214,7 +214,7 @@ class AbstractVote(models.Model):
         verbose_name_plural = _('Votes')
 
     def __str__(self):
-        return u"%s vote for %s" % (self.delta, self.review)
+        return "%s vote for %s" % (self.delta, self.review)
 
     def clean(self):
         if not self.review.is_anonymous and self.review.user == self.user:

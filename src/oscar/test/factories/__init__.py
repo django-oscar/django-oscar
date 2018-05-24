@@ -82,8 +82,8 @@ def create_purchase_info(record):
     )
 
 
-def create_product(upc=None, title=u"Dùｍϻϒ title",
-                   product_class=u"Dùｍϻϒ item class",
+def create_product(upc=None, title="Dùｍϻϒ title",
+                   product_class="Dùｍϻϒ item class",
                    partner_name=None, partner_sku=None, price=None,
                    num_in_stock=None, attributes=None,
                    partner_users=None, **kwargs):
@@ -181,7 +181,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     return order
 
 
-def create_offer(name=u"Dùｍϻϒ offer", offer_type="Site",
+def create_offer(name="Dùｍϻϒ offer", offer_type="Site",
                  max_basket_applications=None, range=None, condition=None,
                  benefit=None, priority=0, status=None, start=None, end=None):
     """
@@ -189,7 +189,7 @@ def create_offer(name=u"Dùｍϻϒ offer", offer_type="Site",
     """
     if range is None:
         range, __ = Range.objects.get_or_create(
-            name=u"All products räñgë", includes_all_products=True)
+            name="All products räñgë", includes_all_products=True)
     if condition is None:
         condition, __ = Condition.objects.get_or_create(
             range=range, type=Condition.COUNT, value=1)
@@ -223,7 +223,7 @@ def create_voucher(**kwargs):
     Helper method for creating a voucher
     """
     defaults = {
-        'name': u"Dùｍϻϒ voucher",
+        'name': "Dùｍϻϒ voucher",
         'code': "test",
         'start_datetime': timezone.now(),
         'end_datetime': timezone.now() + datetime.timedelta(days=12)

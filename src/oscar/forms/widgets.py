@@ -130,7 +130,7 @@ class DateTimeWidgetMixin(object):
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         attrs = super(DateTimeWidgetMixin, self).build_attrs(base_attrs, extra_attrs)
-        attrs['data-inputmask'] = u"'mask': '{mask}'".format(
+        attrs['data-inputmask'] = "'mask': '{mask}'".format(
             mask=datetime_format_to_js_input_mask(self.get_format()))
         return attrs
 

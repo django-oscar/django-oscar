@@ -303,7 +303,7 @@ class AbstractOrder(models.Model):
         verbose_name_plural = _("Orders")
 
     def __str__(self):
-        return u"#%s" % (self.number,)
+        return "#%s" % (self.number,)
 
     def verification_hash(self):
         signer = Signer(salt='oscar.apps.order.Order')
@@ -424,7 +424,7 @@ class AbstractOrderNote(models.Model):
         verbose_name_plural = _("Order Notes")
 
     def __str__(self):
-        return u"'%s' (%s)" % (self.message[0:50], self.user)
+        return "'%s' (%s)" % (self.message[0:50], self.user)
 
     def is_editable(self):
         if self.note_type == self.SYSTEM:
@@ -514,7 +514,7 @@ class AbstractLine(models.Model):
         'catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
         verbose_name=_("Product"))
     title = models.CharField(
-        pgettext_lazy(u"Product title", u"Title"), max_length=255)
+        pgettext_lazy("Product title", "Title"), max_length=255)
     # UPC can be null because it's usually set as the product's UPC, and that
     # can be null as well
     upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
@@ -1181,4 +1181,4 @@ class AbstractOrderDiscount(models.Model):
     def description(self):
         if self.voucher_code:
             return self.voucher_code
-        return self.offer_name or u""
+        return self.offer_name or ""

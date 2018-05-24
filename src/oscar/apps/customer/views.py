@@ -122,9 +122,9 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
 
     def post(self, request, *args, **kwargs):
         # Use the name of the submit button to determine which form to validate
-        if u'login_submit' in request.POST:
+        if 'login_submit' in request.POST:
             return self.validate_login_form()
-        elif u'registration_submit' in request.POST:
+        elif 'registration_submit' in request.POST:
             return self.validate_registration_form()
         return http.HttpResponseBadRequest()
 
@@ -425,7 +425,7 @@ class EmailDetailView(PageTitleMixin, generic.DetailView):
 
     def get_page_title(self):
         """Append email subject to page title"""
-        return u'%s: %s' % (_('Email'), self.object.subject)
+        return '%s: %s' % (_('Email'), self.object.subject)
 
 
 # =============
@@ -492,7 +492,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
         """
         Order number as page title
         """
-        return u'%s #%s' % (_('Order'), self.object.number)
+        return '%s #%s' % (_('Order'), self.object.number)
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, user=self.request.user,

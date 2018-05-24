@@ -18,10 +18,10 @@ AbstractAddressForm = get_class('address.forms', 'AbstractAddressForm')
 
 class OrderStatsForm(forms.Form):
     date_from = forms.DateField(
-        required=False, label=pgettext_lazy(u"start date", u"From"),
+        required=False, label=pgettext_lazy("start date", "From"),
         widget=DatePickerInput)
     date_to = forms.DateField(
-        required=False, label=pgettext_lazy(u"end date", u"To"),
+        required=False, label=pgettext_lazy("end date", "To"),
         widget=DatePickerInput)
 
     _filters = _description = None

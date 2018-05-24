@@ -87,7 +87,7 @@ class AbstractBasket(models.Model):
 
     def __str__(self):
         return _(
-            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
+            "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
             % {'status': self.status,
                'owner': self.owner,
                'num_lines': self.num_lines}
@@ -667,8 +667,8 @@ class AbstractLine(models.Model):
 
     def __str__(self):
         return _(
-            u"Basket #%(basket_id)d, Product #%(product_id)d, quantity"
-            u" %(quantity)d") % {'basket_id': self.basket.pk,
+            "Basket #%(basket_id)d, Product #%(product_id)d, quantity"
+            " %(quantity)d") % {'basket_id': self.basket.pk,
                                  'product_id': self.product.pk,
                                  'quantity': self.quantity}
 
@@ -887,7 +887,7 @@ class AbstractLine(models.Model):
         This could be things like the price has changed
         """
         if isinstance(self.purchase_info.availability, Unavailable):
-            msg = u"'%(product)s' is no longer available"
+            msg = "'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 
         if not self.price_incl_tax:

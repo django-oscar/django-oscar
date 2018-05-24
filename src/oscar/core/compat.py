@@ -184,7 +184,7 @@ class UnicodeCSVWriter:
         # file for compatibility with MS Excel.
         if (self.encoding == 'utf-8'
                 and getattr(settings, 'OSCAR_CSV_INCLUDE_BOM', False)):
-            self.f.write(u'\ufeff' if PY3 else codecs.BOM_UTF8)
+            self.f.write('\ufeff' if PY3 else codecs.BOM_UTF8)
 
     def writerow(self, row):
         if self.writer is None:

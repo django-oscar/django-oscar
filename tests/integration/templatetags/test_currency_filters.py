@@ -24,7 +24,7 @@ class TestCurrencyFilter(TestCase):
         out = self.template.render(template.Context({
             'price': D('10.23'),
         }))
-        self.assertTrue(u'£10.23' in out)
+        self.assertTrue('£10.23' in out)
 
     def test_handles_none_price_gracefully(self):
         self.template.render(template.Context({
@@ -52,7 +52,7 @@ class TestCurrencyFilter(TestCase):
         },
         'EUR': {
             'currency_digits': True,
-            'format': u'#,## \u20ac'
+            'format': '#,## \u20ac'
         }
     })
     def test_formatting_settings(self):
@@ -63,7 +63,7 @@ class TestCurrencyFilter(TestCase):
         out1 = template1.render(template.Context({
             'price': D('10.23'),
         }))
-        self.assertEqual(out1, u'A$10.23')
+        self.assertEqual(out1, 'A$10.23')
         template2 = template.Template(
             "{% load currency_filters %}"
             "{{ price|currency:'USD' }}"
@@ -71,7 +71,7 @@ class TestCurrencyFilter(TestCase):
         out2 = template2.render(template.Context({
             'price': D('10.23'),
         }))
-        self.assertEqual(out2, u'$10.23')
+        self.assertEqual(out2, '$10.23')
         template3 = template.Template(
             "{% load currency_filters %}"
             "{{ price|currency:'EUR' }}"
@@ -79,4 +79,4 @@ class TestCurrencyFilter(TestCase):
         out3 = template3.render(template.Context({
             'price': D('10.23'),
         }))
-        self.assertEqual(out3, u'10.23 €')
+        self.assertEqual(out3, '10.23 €')

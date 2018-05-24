@@ -56,14 +56,14 @@ class TestBasketLine(TestCase):
 
         line = basket.lines.first()
         BasketLineAttributeFactory(
-            line=line, value=u'\u2603', option__name='with')
-        self.assertEqual(line.description, u"A product (with = '\u2603')")
+            line=line, value='\u2603', option__name='with')
+        self.assertEqual(line.description, "A product (with = '\u2603')")
 
     def test_create_line_reference(self):
         basket = BasketFactory()
         product = ProductFactory(title="A product")
         option = OptionFactory(name="product_option", code="product_option")
-        option_product = ProductFactory(title=u'Asunción')
+        option_product = ProductFactory(title='Asunción')
         options = [{'option': option, 'value': option_product}]
         basket.add_product(product, options=options)
 
@@ -236,7 +236,7 @@ class TestANonEmptyBasket(TestCase):
 
         self.basket.strategy = UnavailableProductStrategy()
         line = self.basket.all_lines()[1]
-        self.assertEqual(line.get_warning(), u"'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")
+        self.assertEqual(line.get_warning(), "'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")
         self.assertIsNone(line.line_price_excl_tax)
         self.assertIsNone(line.line_price_incl_tax)
         self.assertIsNone(line.line_price_excl_tax_incl_discounts)

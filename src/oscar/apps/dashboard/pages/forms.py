@@ -13,7 +13,7 @@ class PageSearchForm(forms.Form):
     Search form to filter pages by *title.
     """
     title = forms.CharField(
-        required=False, label=pgettext_lazy(u"Page title", u"Title"))
+        required=False, label=pgettext_lazy("Page title", "Title"))
 
 
 class PageUpdateForm(forms.ModelForm):

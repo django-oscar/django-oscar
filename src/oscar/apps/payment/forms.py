@@ -67,8 +67,8 @@ class BankcardMonthWidget(forms.MultiWidget):
         return [value.month, value.year] if value else [None, None]
 
     def format_output(self, rendered_widgets):
-        html = u' '.join(rendered_widgets)
-        return u'<span style="white-space: nowrap">%s</span>' % html
+        html = ' '.join(rendered_widgets)
+        return '<span style="white-space: nowrap">%s</span>' % html
 
 
 class BankcardMonthField(forms.MultiValueField):

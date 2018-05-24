@@ -44,7 +44,7 @@ class AbstractTransaction(models.Model):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def __str__(self):
-        return _(u"%(type)s of %(amount).2f") % {
+        return _("%(type)s of %(amount).2f") % {
             'type': self.txn_type,
             'amount': self.amount}
 
@@ -272,7 +272,7 @@ class AbstractBankcard(models.Model):
     ccv = None
 
     def __str__(self):
-        return _(u"%(card_type)s %(number)s (Expires: %(expiry)s)") % {
+        return _("%(card_type)s %(number)s (Expires: %(expiry)s)") % {
             'card_type': self.card_type,
             'number': self.number,
             'expiry': self.expiry_month()}
@@ -304,7 +304,7 @@ class AbstractBankcard(models.Model):
     def prepare_for_save(self):
         # This is the first time this card instance is being saved.  We
         # remove all sensitive data
-        self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
+        self.number = "XXXX-XXXX-XXXX-%s" % self.number[-4:]
         self.start_date = self.issue_number = self.ccv = None
 
     @property
@@ -313,7 +313,7 @@ class AbstractBankcard(models.Model):
 
     @property
     def obfuscated_number(self):
-        return u'XXXX-XXXX-XXXX-%s' % self.number[-4:]
+        return 'XXXX-XXXX-XXXX-%s' % self.number[-4:]
 
     def start_month(self, format='%m/%y'):
         return self.start_date.strftime(format)

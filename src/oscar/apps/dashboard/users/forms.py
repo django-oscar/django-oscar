@@ -12,7 +12,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 class UserSearchForm(forms.Form):
     email = forms.CharField(required=False, label=_("Email"))
     name = forms.CharField(
-        required=False, label=pgettext_lazy(u"User's name", u"Name"))
+        required=False, label=pgettext_lazy("User's name", "Name"))
 
 
 class ProductAlertUpdateForm(forms.ModelForm):

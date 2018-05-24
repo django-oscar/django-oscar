@@ -132,7 +132,7 @@ class TestAStaffUser(WebTestCase):
                                            kwargs={'pk': product.id}))
 
     def test_can_update_a_product_without_stockrecord(self):
-        new_title = u'foobar'
+        new_title = 'foobar'
         category = CategoryFactory()
         product = ProductFactory(stockrecords=[])
 

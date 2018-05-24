@@ -42,7 +42,7 @@ class ProductCreationTests(ProductTests):
                           title='testing', upc=None)
         product.save()
         product.refresh_from_db()
-        self.assertEqual(product.upc, u'')
+        self.assertEqual(product.upc, '')
 
     def test_upc_uniqueness_enforced(self):
         Product.objects.create(product_class=self.product_class,
@@ -64,12 +64,12 @@ class TopLevelProductTests(ProductTests):
         self.assertRaises(ValidationError, product.clean)
 
     def test_top_level_products_must_have_product_class(self):
-        product = Product(title=u"Kopfhörer")
+        product = Product(title="Kopfhörer")
         self.assertRaises(ValidationError, product.clean)
 
     def test_top_level_products_are_part_of_browsable_set(self):
         product = Product.objects.create(
-            product_class=self.product_class, title=u"Kopfhörer")
+            product_class=self.product_class, title="Kopfhörer")
         self.assertEqual(set([product]), set(Product.browsable.all()))
 
 

@@ -84,7 +84,7 @@ class AttributeOptionFactory(factory.DjangoModelFactory):
 
 
 class AttributeOptionGroupFactory(factory.DjangoModelFactory):
-    name = u'Grüppchen'
+    name = 'Grüppchen'
 
     class Meta:
         model = get_model('catalogue', 'AttributeOptionGroup')

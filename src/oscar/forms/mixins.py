@@ -78,7 +78,7 @@ class PhoneNumberMixin(object):
                 # There is no shipping country, not a valid international number
                 self.add_error(
                     field_name,
-                    _(u'This is not a valid international phone format.'))
+                    _('This is not a valid international phone format.'))
                 return number
 
             # The PhoneNumber class does not allow specifying
@@ -91,13 +91,13 @@ class PhoneNumberMixin(object):
                 if not phone_number.is_valid():
                     self.add_error(
                         field_name,
-                        _(u'This is not a valid local phone format for %s.')
+                        _('This is not a valid local phone format for %s.')
                         % self.country)
             except phonenumbers.NumberParseException:
                 # Not a valid local or international phone number
                 self.add_error(
                     field_name,
-                    _(u'This is not a valid local or international phone format.'))
+                    _('This is not a valid local or international phone format.'))
                 return number
 
         return phone_number

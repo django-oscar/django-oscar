@@ -55,7 +55,7 @@ class AbstractWishList(models.Model):
         _('Date created'), auto_now_add=True, editable=False)
 
     def __str__(self):
-        return u"%s's Wish List '%s'" % (self.owner, self.name)
+        return "%s's Wish List '%s'" % (self.owner, self.name)
 
     def save(self, *args, **kwargs):
         if not self.pk or kwargs.get('force_insert', False):
@@ -124,10 +124,10 @@ class AbstractLine(models.Model):
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
     #: Store the title in case product gets deleted
     title = models.CharField(
-        pgettext_lazy(u"Product title", u"Title"), max_length=255)
+        pgettext_lazy("Product title", "Title"), max_length=255)
 
     def __str__(self):
-        return u'%sx %s on %s' % (self.quantity, self.title,
+        return '%sx %s on %s' % (self.quantity, self.title,
                                   self.wishlist.name)
 
     def get_title(self):

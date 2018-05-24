@@ -284,7 +284,7 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-        self.assertEqual(discount.description(), u'')
+        self.assertEqual(discount.description(), '')
 
     def test_can_be_created_with_an_offer(self):
         offer = create_offer()
@@ -330,7 +330,7 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-        self.assertEqual(discount.description(), u'Get 200% off')
+        self.assertEqual(discount.description(), 'Get 200% off')
 
     def test_contains_voucher_details_after_voucher_is_deleted(self):
         voucher = create_voucher()

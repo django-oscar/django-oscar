@@ -21,7 +21,7 @@ class TestSlugify(TestCase):
 
     def test_handles_unicode(self):
         self.assertEqual('konig-der-strasse',
-                         utils.slugify(u'König der Straße'))
+                         utils.slugify('König der Straße'))
 
     def test_works_with_custom_slugifier(self):
         for fn in [sluggish, 'tests.integration.core.test_utils.sluggish']:

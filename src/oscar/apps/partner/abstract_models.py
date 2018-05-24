@@ -26,7 +26,7 @@ class AbstractPartner(models.Model):
     code = AutoSlugField(_("Code"), max_length=128, unique=True,
                          populate_from='name')
     name = models.CharField(
-        pgettext_lazy(u"Partner's name", u"Name"), max_length=128, blank=True)
+        pgettext_lazy("Partner's name", "Name"), max_length=128, blank=True)
 
     #: A partner can have users assigned to it. This is used
     #: for access modelling in the permission-based dashboard
@@ -153,10 +153,10 @@ class AbstractStockRecord(models.Model):
                                         db_index=True)
 
     def __str__(self):
-        msg = u"Partner: %s, product: %s" % (
+        msg = "Partner: %s, product: %s" % (
             self.partner.display_name, self.product,)
         if self.partner_sku:
-            msg = u"%s (%s)" % (msg, self.partner_sku)
+            msg = "%s (%s)" % (msg, self.partner_sku)
         return msg
 
     class Meta:

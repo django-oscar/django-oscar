@@ -114,11 +114,11 @@ class NullCharField(CharField):
     def from_db_value(self, value, expression, connection, context):
         value = self.to_python(value)
         # If the value was stored as null, return empty string instead
-        return value if value is not None else u''
+        return value if value is not None else ''
 
     def get_prep_value(self, value):
         prepped = super(NullCharField, self).get_prep_value(value)
-        return prepped if prepped != u"" else None
+        return prepped if prepped != "" else None
 
     def deconstruct(self):
         """

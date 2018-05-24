@@ -61,7 +61,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'django-oscar'
+project = 'django-oscar'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -208,8 +208,8 @@ htmlhelp_basename = 'django-oscardoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django-oscar.tex', u'django-oscar Documentation',
-   u'David Winterbottom', 'manual'),
+  ('index', 'django-oscar.tex', 'django-oscar Documentation',
+   'David Winterbottom', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -241,8 +241,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'django-oscar', u'django-oscar Documentation',
-     [u'David Winterbottom'], 1)
+    ('index', 'django-oscar', 'django-oscar Documentation',
+     ['David Winterbottom'], 1)
 ]
 
 # Autodoc settings
@@ -281,14 +281,14 @@ def process_docstring(app, what, name, obj, options, lines):
             if help_text:
                 # Add the model field to the end of the docstring as a param
                 # using the help text as the description
-                lines.append(u':param %s: %s' % (field.attname, help_text))
+                lines.append(':param %s: %s' % (field.attname, help_text))
             else:
                 # Add the model field to the end of the docstring as a param
                 # using the verbose name as the description
-                lines.append(u':param %s: %s' % (field.attname, verbose_name))
+                lines.append(':param %s: %s' % (field.attname, verbose_name))
 
             # Add the field's type to the docstring
-            lines.append(u':type %s: %s' % (field.attname, type(field).__name__))
+            lines.append(':type %s: %s' % (field.attname, type(field).__name__))
 
     # Return the extended docstring
     return lines

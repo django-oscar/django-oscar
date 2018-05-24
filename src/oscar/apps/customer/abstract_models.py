@@ -134,10 +134,10 @@ class AbstractEmail(models.Model):
 
     def __str__(self):
         if self.user:
-            return _(u"Email to %(user)s with subject '%(subject)s'") % {
+            return _("Email to %(user)s with subject '%(subject)s'") % {
                 'user': self.user.get_username(), 'subject': self.subject}
         else:
-            return _(u"Anonymous email to %(email)s with subject '%(subject)s'") % {
+            return _("Anonymous email to %(email)s with subject '%(subject)s'") % {
                 'email': self.email, 'subject': self.subject}
 
 

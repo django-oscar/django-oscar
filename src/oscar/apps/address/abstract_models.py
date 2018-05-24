@@ -218,7 +218,7 @@ class AbstractAddress(models.Model):
     }
 
     title = models.CharField(
-        pgettext_lazy(u"Treatment Pronouns for the customer", u"Title"),
+        pgettext_lazy("Treatment Pronouns for the customer", "Title"),
         max_length=64, choices=TITLE_CHOICES, blank=True)
     first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
@@ -318,7 +318,7 @@ class AbstractAddress(models.Model):
         Returns a single string summary of the address,
         separating fields using commas.
         """
-        return u", ".join(self.active_address_fields())
+        return ", ".join(self.active_address_fields())
 
     @property
     def salutation(self):
@@ -327,11 +327,11 @@ class AbstractAddress(models.Model):
         """
         return self.join_fields(
             ('title', 'first_name', 'last_name'),
-            separator=u" ")
+            separator=" ")
 
     @property
     def name(self):
-        return self.join_fields(('first_name', 'last_name'), separator=u" ")
+        return self.join_fields(('first_name', 'last_name'), separator=" ")
 
     # Helpers
 
@@ -371,7 +371,7 @@ class AbstractAddress(models.Model):
         # `& 0xffffffff` expression.
         return zlib.crc32(', '.join(field_values).upper().encode('UTF8')) & 0xffffffff
 
-    def join_fields(self, fields, separator=u", "):
+    def join_fields(self, fields, separator=", "):
         """
         Join a sequence of fields using the specified separator
         """
@@ -456,7 +456,7 @@ class AbstractCountry(models.Model):
         but the database might still contain non-padded strings. That's why
         the padding is kept.
         """
-        return u"%.03d" % int(self.iso_3166_1_numeric)
+        return "%.03d" % int(self.iso_3166_1_numeric)
 
 
 class AbstractShippingAddress(AbstractAddress):

@@ -59,8 +59,8 @@ class TestAnAuthenticatedUser(WebTestCase):
         page = self.get(reverse('customer:change-password'))
         form = page.forms['change_password_form']
         form['old_password'] = self.password
-        form['new_password1'] = u'anotherfancypassword'
-        form['new_password2'] = u'anotherfancypassword'
+        form['new_password1'] = 'anotherfancypassword'
+        form['new_password2'] = 'anotherfancypassword'
         page = form.submit()
 
         self.assertEqual(len(mail.outbox), 1)

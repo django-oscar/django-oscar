@@ -92,8 +92,8 @@ class TestAUserWithAnActiveStockAlert(WebTest):
         self.stockrecord.save()
         mock_notify.assert_called_once_with(
             self.user,
-            u'{} is back in stock'.format(self.product.title),
-            body=u'<a href="{}">{}</a> is back in stock'.format(
+            '{} is back in stock'.format(self.product.title),
+            body='<a href="{}">{}</a> is back in stock'.format(
                 self.product.get_absolute_url(), self.product.title)
         )
 
@@ -109,8 +109,8 @@ class TestAUserWithAnActiveStockAlert(WebTest):
 
         mock_notify.assert_called_once_with(
             self.user,
-            u'{} is back in stock'.format(self.product.title[:200]),
-            body=u'<a href="{}">{}</a> is back in stock'.format(
+            '{} is back in stock'.format(self.product.title[:200]),
+            body='<a href="{}">{}</a> is back in stock'.format(
                 self.product.get_absolute_url(), self.product.title)
         )
 

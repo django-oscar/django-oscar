@@ -25,7 +25,7 @@ class PageListView(ListView):
     model = FlatPage
     form_class = PageSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
-    desc_template = u'%(main_filter)s %(title_filter)s'
+    desc_template = '%(main_filter)s %(title_filter)s'
 
     def get_queryset(self):
         """

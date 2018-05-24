@@ -30,7 +30,7 @@ class CatalogueImporter(object):
         self._flush = flush
 
     def handle(self, file_path=None):
-        u"""Handles the actual import process"""
+        """Handles the actual import process"""
         if not file_path:
             raise ImportingError(_("No file path supplied"))
         Validator().validate(file_path)
@@ -40,7 +40,7 @@ class CatalogueImporter(object):
         self._import(file_path)
 
     def _flush_product_data(self):
-        u"""Flush out product and stock models"""
+        """Flush out product and stock models"""
         Product.objects.all().delete()
         ProductClass.objects.all().delete()
         Partner.objects.all().delete()
@@ -48,7 +48,7 @@ class CatalogueImporter(object):
 
     @atomic
     def _import(self, file_path):
-        u"""Imports given file"""
+        """Imports given file"""
         stats = {'new_items': 0,
                  'updated_items': 0}
         row_number = 0
@@ -125,17 +125,17 @@ class Validator(object):
         self._is_readable(file_path)
 
     def _exists(self, file_path):
-        u"""Check whether a file exists"""
+        """Check whether a file exists"""
         if not os.path.exists(file_path):
             raise ImportingError(_("%s does not exist") % (file_path))
 
     def _is_file(self, file_path):
-        u"""Check whether file is actually a file type"""
+        """Check whether file is actually a file type"""
         if not os.path.isfile(file_path):
             raise ImportingError(_("%s is not a file") % (file_path))
 
     def _is_readable(self, file_path):
-        u"""Check file is readable"""
+        """Check file is readable"""
         try:
             f = open(file_path, 'r')
             f.close()
