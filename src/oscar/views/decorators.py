@@ -1,3 +1,4 @@
+import collections
 from functools import wraps
 
 from django.contrib.auth.decorators import user_passes_test
@@ -41,7 +42,7 @@ def check_permissions(user, permissions):
         attributes = [getattr(user, perm) for perm in conditions]
         # evaluates methods, explicitly casts properties to booleans
         passes_conditions = all([
-            attr() if callable(attr) else bool(attr) for attr in attributes])
+            attr() if isinstance(attr, collections.Callable) else bool(attr) for attr in attributes])
         return passes_conditions and user.has_perms(regular_permissions)
 
     if not permissions:

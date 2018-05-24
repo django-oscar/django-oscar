@@ -1,18 +1,10 @@
-try:
-    from types import ClassType
-except ImportError:
-    # Python 3
-    CHECK_TYPES = (type,)
-else:
-    # Python 2: new and old-style classes
-    CHECK_TYPES = (type, ClassType)
 import warnings
 
 from oscar.utils.deprecation import RemovedInOscar20Warning
 
 
 def deprecated(obj):
-    if isinstance(obj, CHECK_TYPES):
+    if isinstance(obj, type):
         return _deprecated_cls(cls=obj)
     else:
         return _deprecated_func(f=obj)

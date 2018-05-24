@@ -13,7 +13,6 @@ import sys
 from setuptools import find_packages, setup
 
 PROJECT_DIR = os.path.dirname(__file__)
-PY3 = sys.version_info >= (3, 0)
 
 sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip

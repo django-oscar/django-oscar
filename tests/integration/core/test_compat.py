@@ -103,37 +103,3 @@ class TestUnicodeCSVWriter(TestCase):
 
         # Clean up
         os.unlink(csv_file.name)
-
-
-class TestPython3Compatibility(TestCase):
-
-    def test_models_define_python_3_compatible_representation(self):
-        """
-        In Python 2, models can define __unicode__ to get a text representation,
-        in Python 3 this is achieved by defining __str__. The
-        python_2_unicode_compatible decorator helps with that. We must use it
-        every time we define a text representation; this test checks that it's
-        used correctly.
-        """
-        from django.apps import apps
-        models = [
-            model for model in apps.get_models() if 'oscar' in repr(model)]
-        invalid_models = []
-        for model in models:
-            # Use abstract model if it exists
-            if 'oscar' in repr(model.__base__):
-                model = model.__base__
-
-            dict_ = model.__dict__
-            if '__str__' in dict_:
-                if six.PY2:
-                    valid = '__unicode__' in dict_
-                else:
-                    valid = '__unicode__' not in dict_
-            else:
-                valid = '__unicode__' not in dict_
-            if not valid:
-                invalid_models.append(model)
-        if invalid_models:
-            self.fail(
-                "Those models don't use the python_2_compatible decorator or define __unicode__: %s" % invalid_models)

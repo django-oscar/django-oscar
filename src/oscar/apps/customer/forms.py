@@ -26,11 +26,7 @@ User = get_user_model()
 
 
 def generate_username():
-    # Python 3 uses ascii_letters. If not available, fallback to letters
-    try:
-        letters = string.ascii_letters
-    except AttributeError:
-        letters = string.letters
+    letters = string.ascii_letters
     uname = ''.join([random.choice(letters + string.digits + '_')
                      for i in range(30)])
     try:
