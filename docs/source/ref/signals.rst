@@ -2,8 +2,10 @@
 Signals
 =======
 
-Oscar implements a number of custom signals that provide useful hook-points for
-adding functionality.
+Oscar implements a number of custom signals_ that provide useful hook-points
+for adding functionality.
+
+.. _signals: https://docs.djangoproject.com/en/stable/topics/signals/
 
 ``product_viewed``
 ------------------
