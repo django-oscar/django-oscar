@@ -1,9 +1,7 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
-from django.utils import six
 from django.utils.encoding import smart_str
-from django.utils.six.moves import map
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 
@@ -94,7 +92,7 @@ class ObjectLookupView(View):
     def format_object(self, obj):
         return {
             'id': obj.pk,
-            'text': six.text_type(obj),
+            'text': str(obj),
         }
 
     def initial_filter(self, qs, value):

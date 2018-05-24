@@ -1,5 +1,6 @@
+from http import client as http_client
+
 from django.urls import reverse
-from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model, get_class
 from oscar.test import factories

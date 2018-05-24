@@ -5,7 +5,6 @@ import sys
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import six
 from http.cookies import _unquote
 
 from oscar.core.loading import get_model
@@ -73,13 +72,6 @@ def existing_user_fields(fields):
 
 
 # Python3 compatibility layer
-
-def unquote_cookie(cookie_value):
-    """
-    Make sure a cookie value is unescaped from double quotes
-    """
-    return _unquote(cookie_value)
-
 
 """
 Unicode compatible wrapper for CSV reader and writer that abstracts away

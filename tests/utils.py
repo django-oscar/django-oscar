@@ -1,8 +1,7 @@
+import queue
 import threading
 
 from django.db import connection
-
-from six.moves import queue
 
 
 def run_concurrently(fn, kwargs=None, num_threads=5):

@@ -5,7 +5,6 @@ from decimal import ROUND_UP
 
 from django.db.models import Avg, Count, Sum
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.timezone import now
 from django.views.generic import TemplateView
 
@@ -247,8 +246,8 @@ class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
                 attr = obj._meta.pk.attname
             value = obj.serializable_value(attr)
             popup_response_data = json.dumps({
-                'value': six.text_type(value),
-                'obj': six.text_type(obj),
+                'value': str(value),
+                'obj': str(obj),
             })
             return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,
@@ -283,9 +282,9 @@ class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
             new_value = obj.serializable_value(attr)
             popup_response_data = json.dumps({
                 'action': 'change',
-                'value': six.text_type(value),
-                'obj': six.text_type(obj),
-                'new_value': six.text_type(new_value),
+                'value': str(value),
+                'obj': str(obj),
+                'new_value': str(new_value),
             })
             return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,
@@ -325,7 +324,7 @@ class PopUpWindowDeleteMixin(object):
             obj_id = obj.pk
             popup_response_data = json.dumps({
                 'action': 'delete',
-                'value': six.text_type(obj_id),
+                'value': str(obj_id),
             })
             return TemplateResponse(request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,

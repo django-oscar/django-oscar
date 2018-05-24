@@ -1,7 +1,8 @@
+from http import client as http_client
+
 from django.conf import settings
 from django.core.cache import cache
 from django.urls import reverse
-from django.utils.six.moves import http_client
 from django.utils.translation import ugettext
 
 from oscar.apps.catalogue.models import Category

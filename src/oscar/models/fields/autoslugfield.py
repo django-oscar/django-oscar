@@ -27,7 +27,6 @@ THE SOFTWARE.
 import re
 
 from django.conf import settings
-from django.utils import six
 
 from oscar.core.utils import slugify
 
@@ -70,7 +69,7 @@ class AutoSlugField(SlugField):
         else:
             self._populate_from = populate_from
             self._populate_from_org = populate_from
-        self.separator = kwargs.pop('separator', six.u('-'))
+        self.separator = kwargs.pop('separator', '-')
         self.overwrite = kwargs.pop('overwrite', False)
         self.uppercase = kwargs.pop('uppercase', False)
         self.allow_duplicates = kwargs.pop('allow_duplicates', False)
@@ -180,7 +179,7 @@ class AutoSlugField(SlugField):
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
         kwargs['populate_from'] = self._populate_from_org
-        if not self.separator == six.u('-'):
+        if not self.separator == '-':
             kwargs['separator'] = self.separator
         if self.overwrite is not False:
             kwargs['overwrite'] = True

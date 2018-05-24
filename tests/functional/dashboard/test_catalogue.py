@@ -1,10 +1,10 @@
+from http import client as http_client
 import json
 
 from django.conf import settings
 from django.contrib.messages import ERROR, INFO
 from django.urls import reverse
 from django.utils.http import urlencode
-from django.utils.six.moves import http_client
 from django.utils.translation import ugettext
 
 from oscar.core.loading import get_class, get_model

@@ -8,7 +8,7 @@ from django.db import models
 from django.template import TemplateDoesNotExist, engines
 from django.template.loader import get_template
 from django.urls import reverse
-from django.utils import six, timezone
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -152,7 +152,7 @@ class AbstractCommunicationEventType(models.Model):
     # it's a useful convention that's been enforced in previous Oscar versions
     code = AutoSlugField(
         _('Code'), max_length=128, unique=True, populate_from='name',
-        separator=six.u("_"), uppercase=True, editable=True,
+        separator="_", uppercase=True, editable=True,
         validators=[
             RegexValidator(
                 regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',

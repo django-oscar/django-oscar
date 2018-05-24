@@ -1,6 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
-from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -85,7 +84,7 @@ class UppercaseCharField(CharField):
 
     def to_python(self, value):
         val = super().to_python(value)
-        if isinstance(val, six.string_types):
+        if isinstance(val, str):
             return val.upper()
         else:
             return val

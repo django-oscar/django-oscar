@@ -6,7 +6,6 @@ from django.forms.models import ModelChoiceIterator
 from django.forms.widgets import FileInput
 from django.utils import formats
 from django.utils.encoding import force_text
-from django.utils.six.moves import map
 
 
 class ImageInput(FileInput):

@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.utils import six
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views import generic
@@ -586,7 +585,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # their bankcard has expired, wrong card number - that kind of
             # thing. This type of exception is supposed to set a friendly error
             # message that makes sense to the customer.
-            msg = six.text_type(e)
+            msg = str(e)
             logger.warning(
                 "Order #%s: unable to take payment (%s) - restoring basket",
                 order_number, msg)
@@ -603,7 +602,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # It makes sense to configure the checkout logger to
             # mail admins on an error as this issue warrants some further
             # investigation.
-            msg = six.text_type(e)
+            msg = str(e)
             logger.error("Order #%s: payment error (%s)", order_number, msg,
                          exc_info=True)
             self.restore_frozen_basket()
@@ -633,7 +632,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # actually place an order.  Not a good situation to be in as a
             # payment transaction may already have taken place, but needs
             # to be handled gracefully.
-            msg = six.text_type(e)
+            msg = str(e)
             logger.error("Order #%s: unable to place order - %s",
                          order_number, msg, exc_info=True)
             self.restore_frozen_basket()

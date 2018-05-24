@@ -2,7 +2,6 @@ import pytest
 from decimal import Decimal as D
 
 import mock
-import six
 from django.test import TestCase
 
 from oscar.apps.basket.models import Basket
@@ -237,7 +236,7 @@ class TestConditionProxyModels(object):
             assert all([
                 condition.name,
                 condition.description,
-                six.text_type(condition)])
+                str(condition)])
 
     def test_proxy(self, range):
         for type, __ in models.Condition.TYPE_CHOICES:

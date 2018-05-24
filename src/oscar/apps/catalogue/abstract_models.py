@@ -13,7 +13,6 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Sum
 from django.urls import reverse
-from django.utils import six
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
@@ -846,8 +845,8 @@ class AbstractProductAttribute(models.Model):
     # Validators
 
     def _validate_text(self, value):
-        if not isinstance(value, six.string_types):
-            raise ValidationError(_("Must be str or unicode"))
+        if not isinstance(value, str):
+            raise ValidationError(_("Must be str"))
     _validate_richtext = _validate_text
 
     def _validate_float(self, value):
@@ -974,7 +973,7 @@ class AbstractProductAttributeValue(models.Model):
     def _set_value(self, new_value):
         attr_name = 'value_%s' % self.attribute.type
 
-        if self.attribute.is_option and isinstance(new_value, six.string_types):
+        if self.attribute.is_option and isinstance(new_value, str):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
@@ -1028,7 +1027,7 @@ class AbstractProductAttributeValue(models.Model):
         Returns the unicode representation of the related model. You likely
         want to customise this (and maybe _entity_as_html) if you use entities.
         """
-        return six.text_type(self.value)
+        return str(self.value)
 
     @property
     def value_as_html(self):

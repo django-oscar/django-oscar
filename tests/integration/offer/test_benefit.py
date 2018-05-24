@@ -1,8 +1,5 @@
 import pytest
 
-from django.utils import six
-
-
 from oscar.apps.offer.models import Benefit
 from oscar.test import factories
 
@@ -33,7 +30,7 @@ class TestBenefitProxyModels(object):
             assert all([
                 benefit.name,
                 benefit.description,
-                six.text_type(benefit)])
+                str(benefit)])
 
     def test_proxy(self, range):
         for benefit_type, __ in Benefit.TYPE_CHOICES:

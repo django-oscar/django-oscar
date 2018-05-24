@@ -1,8 +1,9 @@
+from http import client as http_client
+
 from oscar.test.testcases import WebTestCase
 from oscar.apps.customer.notifications import services
 from oscar.test.factories import UserFactory
 from django.urls import reverse
-from django.utils.six.moves import http_client
 
 from oscar.apps.customer.models import Notification
 

@@ -1,6 +1,7 @@
+from http import client as http_client
+
 from django.conf import settings
 from django.urls import reverse
-from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model
 from oscar.apps.order.models import (

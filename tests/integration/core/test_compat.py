@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import codecs
 import datetime
+import io
 import os
 from tempfile import NamedTemporaryFile
-from django.utils import six
 from django.utils.encoding import smart_text
-from django.utils.six.moves import cStringIO
 
 from django.test import TestCase, override_settings
 
@@ -20,9 +19,6 @@ class unicodeobj(object):
     def __str__(self):
         return self.s
 
-    def __unicode__(self):
-        return self.s
-
 
 class TestExistingUserFields(TestCase):
 
@@ -34,7 +30,7 @@ class TestExistingUserFields(TestCase):
 class TestUnicodeCSVWriter(TestCase):
 
     def test_can_write_different_values(self):
-        writer = UnicodeCSVWriter(open_file=cStringIO())
+        writer = UnicodeCSVWriter(open_file=io.StringIO())
         s = 'ünįcodē'
         rows = [[s, unicodeobj(s), 123, datetime.date.today()], ]
         writer.writerows(rows)

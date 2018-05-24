@@ -1,12 +1,13 @@
-import sys
 from importlib import import_module
+from http import client as http_client
+import sys
+import mock
 
 from django.test.utils import override_settings
 from django.conf import settings
 from django.urls import clear_url_caches, reverse
 from django.utils.http import urlquote
-from django.utils.six.moves import http_client
-import mock
+
 
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_classes, get_model

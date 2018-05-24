@@ -1,7 +1,6 @@
 import datetime
 
 from django import forms
-from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_model
@@ -61,7 +60,7 @@ class ConditionForm(forms.ModelForm):
             proxy_class=None)
         if len(custom_conditions) > 0:
             # Initialise custom_condition field
-            choices = [(c.id, six.text_type(c)) for c in custom_conditions]
+            choices = [(c.id, str(c)) for c in custom_conditions]
             choices.insert(0, ('', ' --------- '))
             self.fields['custom_condition'].choices = choices
             condition = kwargs.get('instance')
@@ -115,7 +114,7 @@ class BenefitForm(forms.ModelForm):
             proxy_class=None)
         if len(custom_benefits) > 0:
             # Initialise custom_benefit field
-            choices = [(c.id, six.text_type(c)) for c in custom_benefits]
+            choices = [(c.id, str(c)) for c in custom_benefits]
             choices.insert(0, ('', ' --------- '))
             self.fields['custom_benefit'].choices = choices
             benefit = kwargs.get('instance')

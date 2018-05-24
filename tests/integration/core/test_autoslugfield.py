@@ -174,7 +174,6 @@ class AutoSlugFieldTest(TestCase):
         import oscar
         from django.db import migrations
         from django.db.migrations.writer import MigrationWriter
-        from django.utils import six
         from oscar.models.fields import AutoSlugField
         fields = {
             'autoslugfield': AutoSlugField(populate_from='otherfield'),
@@ -190,7 +189,7 @@ class AutoSlugFieldTest(TestCase):
         writer = MigrationWriter(migration)
         output = writer.as_string()
 
-        if isinstance(output, six.text_type):
+        if isinstance(output, str):
             output = output.encode('utf-8')
 
         # We don't test the output formatting - that's too fragile.

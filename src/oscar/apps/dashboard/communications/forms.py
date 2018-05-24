@@ -1,6 +1,5 @@
 from django import forms
 from django.template import Template, TemplateSyntaxError
-from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.utils import normalise_email
@@ -37,7 +36,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
         try:
             Template(value)
         except TemplateSyntaxError as e:
-            raise forms.ValidationError(six.text_type(e))
+            raise forms.ValidationError(str(e))
 
     def clean_email_subject_template(self):
         subject = self.cleaned_data['email_subject_template']
