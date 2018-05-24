@@ -1,7 +1,7 @@
 from decimal import Decimal as D
 from decimal import ROUND_UP
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ungettext
 
 from oscar.core.loading import get_classes, get_model

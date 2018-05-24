@@ -4,7 +4,7 @@ from datetime import date
 
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
 from oscar.forms.mixins import PhoneNumberMixin

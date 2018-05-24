@@ -2,7 +2,7 @@ from urllib import parse
 
 from django import template
 from django.urls import Resolver404, resolve
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.customer import history
 from oscar.core.loading import get_model

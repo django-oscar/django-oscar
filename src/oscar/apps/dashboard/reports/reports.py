@@ -2,7 +2,7 @@ from datetime import datetime, time
 
 from django.http import HttpResponse
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core import utils
 from oscar.core.compat import UnicodeCSVWriter

@@ -1,6 +1,6 @@
 from django.core import mail
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from webtest import AppError
 
 from oscar.apps.customer.models import ProductAlert

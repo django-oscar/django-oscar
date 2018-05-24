@@ -5,7 +5,7 @@ from django.core.paginator import InvalidPage
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.http import urlquote
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, TemplateView
 
 from oscar.apps.catalogue.signals import product_viewed

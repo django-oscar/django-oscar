@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import Sum
 from django.utils.encoding import smart_text
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes

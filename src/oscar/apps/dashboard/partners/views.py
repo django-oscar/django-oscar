@@ -3,7 +3,7 @@ from django.contrib.auth.models import Permission
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.utils import normalise_email

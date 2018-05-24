@@ -3,7 +3,7 @@ from django.db.models import F, Value, signals
 from django.db.models.functions import Coalesce
 from django.utils.functional import cached_property
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.partner.exceptions import InvalidStockAdjustment

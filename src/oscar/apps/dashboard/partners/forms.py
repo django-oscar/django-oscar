@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Permission
 from django.contrib.auth.password_validation import validate_password
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.core.compat import existing_user_fields, get_user_model

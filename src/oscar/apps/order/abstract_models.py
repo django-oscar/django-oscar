@@ -11,7 +11,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.utils.crypto import constant_time_compare
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.order.signals import (

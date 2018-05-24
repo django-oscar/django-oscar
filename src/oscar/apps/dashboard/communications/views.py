@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.template import TemplateSyntaxError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from oscar.core.loading import get_class, get_model
