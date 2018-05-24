@@ -1,8 +1,8 @@
 from decimal import Decimal as D
+from unittest import mock
 
 from django.test import TestCase, override_settings
 from django.conf import settings
-import mock
 
 from oscar.apps.basket import forms, formsets
 from oscar.apps.offer.utils import Applicator

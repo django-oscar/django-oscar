@@ -1,7 +1,7 @@
 import pytest
 from decimal import Decimal as D
+from unittest import mock
 
-import mock
 from django.test import TestCase
 
 from oscar.apps.basket.models import Basket

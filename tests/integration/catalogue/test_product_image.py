@@ -1,6 +1,6 @@
-import mock
 import os
 import tempfile
+from unittest import mock
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase, override_settings

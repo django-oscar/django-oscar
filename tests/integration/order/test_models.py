@@ -1,11 +1,11 @@
 from datetime import timedelta, datetime
 from decimal import Decimal as D
+from unittest import mock
 
 from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-import mock
 
 from oscar.apps.order.exceptions import (
     InvalidOrderStatus, InvalidLineStatus, InvalidShippingEvent)

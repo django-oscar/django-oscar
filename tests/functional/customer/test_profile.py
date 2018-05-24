@@ -1,5 +1,5 @@
-from mock import patch
 from decimal import Decimal as D
+from unittest.mock import patch
 
 from django.urls import reverse
 

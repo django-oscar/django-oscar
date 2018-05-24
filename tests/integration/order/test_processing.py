@@ -1,5 +1,5 @@
 from decimal import Decimal as D
-import mock
+from unittest import mock
 
 from django.test import TestCase
 

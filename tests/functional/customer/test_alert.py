@@ -1,5 +1,5 @@
-import mock
 import warnings
+from unittest import mock
 
 from django_webtest import WebTest
 

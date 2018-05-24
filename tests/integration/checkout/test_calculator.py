@@ -1,7 +1,7 @@
 from decimal import Decimal as D
+from unittest import mock
 
 from django.test import TestCase
-import mock
 
 from oscar.apps.checkout import calculators
 from oscar.core import prices
