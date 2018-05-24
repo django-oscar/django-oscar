@@ -1,12 +1,13 @@
 from itertools import zip_longest
-import random
+
 from django.db import connection
+from django.utils.crypto import get_random_string
 
 
 def generate_code(length, chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
                   group_length=4, separator='-'):
     """Create a string of 16 chars grouped by 4 chars."""
-    random_string = (random.choice(chars) for i in range(length))
+    random_string = (i for i in get_random_string(length=length, allowed_chars=chars))
     return separator.join(
         ''.join(filter(None, a))
         for a in zip_longest(*[random_string] * group_length)

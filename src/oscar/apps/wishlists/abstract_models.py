@@ -1,8 +1,6 @@
-import hashlib
-import random
-
 from django.db import models
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
@@ -62,11 +60,11 @@ class AbstractWishList(models.Model):
     @classmethod
     def random_key(cls, length=6):
         """
-        Get a unique random generated key based on SHA-1 and owner
+        Get a unique random generated key
         """
         while True:
-            rand = str(random.random()).encode('utf8')
-            key = hashlib.sha1(rand).hexdigest()[:length]
+            key = get_random_string(length=length,
+                                    allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
             if not cls._default_manager.filter(key=key).exists():
                 return key
 

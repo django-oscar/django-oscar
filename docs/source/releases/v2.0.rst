@@ -35,6 +35,11 @@ Minor changes
 - Replaced use of Django's procedural auth views with the corresponding
   class-based views.
 
+- Updated several methods that generate random strings to use Django's random
+  string generator instead of ``random()``. The methods affected are
+  ``customer.ProductAlert.get_random_key``, ``customer.forms.generate_username``,
+  ``voucher.utils.generate_code`` and ``wishlists.Wishlist.random_key``.
+
 Dependency changes
 ------------------
 

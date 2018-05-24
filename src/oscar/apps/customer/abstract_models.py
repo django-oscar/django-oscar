@@ -1,6 +1,3 @@
-import hashlib
-import random
-
 from django.conf import settings
 from django.contrib.auth import models as auth_models
 from django.core.validators import RegexValidator
@@ -9,6 +6,7 @@ from django.template import TemplateDoesNotExist, engines
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
@@ -429,15 +427,10 @@ class AbstractProductAlert(models.Model):
         return super().save(*args, **kwargs)
 
     def get_random_key(self):
-        """
-        Get a random generated key based on SHA-1 and email address
-        """
-        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()
-        return hashlib.sha1((salt + self.email).encode('utf8')).hexdigest()
+        return get_random_string(length=40, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
 
     def get_confirm_url(self):
         return reverse('customer:alerts-confirm', kwargs={'key': self.key})
 
     def get_cancel_url(self):
-        return reverse('customer:alerts-cancel-by-key', kwargs={'key':
-                                                                self.key})
+        return reverse('customer:alerts-cancel-by-key', kwargs={'key': self.key})
