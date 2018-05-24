@@ -43,8 +43,7 @@ class WishListDetailView(PageTitleMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_wishlist_or_404(kwargs['key'], request.user)
-        return super().dispatch(request, *args,
-                                                        **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_wishlist_or_404(self, key, user):
         wishlist = get_object_or_404(WishList, key=key)

@@ -91,8 +91,7 @@ class OfferWizardStepView(FormView):
                 request, _("%s step not complete") % (
                     self.previous_view.step_name.title(),))
             return HttpResponseRedirect(self.get_back_url())
-        return super().dispatch(request, *args,
-                                                         **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def is_previous_step_complete(self, request):
         if not self.previous_view:

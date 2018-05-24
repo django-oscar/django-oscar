@@ -669,8 +669,8 @@ class AbstractLine(models.Model):
         return _(
             "Basket #%(basket_id)d, Product #%(product_id)d, quantity"
             " %(quantity)d") % {'basket_id': self.basket.pk,
-                                 'product_id': self.product.pk,
-                                 'quantity': self.quantity}
+                                'product_id': self.product.pk,
+                                'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
         if not self.basket.can_be_edited:

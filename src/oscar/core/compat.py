@@ -1,11 +1,8 @@
-import codecs
 import csv
-import sys
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from http.cookies import _unquote
 
 from oscar.core.loading import get_model
 
@@ -142,8 +139,6 @@ class UnicodeCSVWriter:
     def __enter__(self):
         assert self.filename is not None
         self.f = open(self.filename, 'wt', encoding=self.encoding, newline='')
-
-
         self.add_bom(self.f)
         return self
 

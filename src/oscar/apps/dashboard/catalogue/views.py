@@ -558,8 +558,7 @@ class CategoryDetailListView(SingleTableMixin, generic.DetailView):
         return self.object.get_children()
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super().get_context_data(*args,
-                                                                   **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['child_categories'] = self.object.get_children()
         ctx['ancestors'] = self.object.get_ancestors_and_self()
         return ctx
@@ -738,8 +737,7 @@ class ProductClassListView(generic.ListView):
     model = ProductClass
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super().get_context_data(*args,
-                                                                 **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['title'] = _("Product Types")
         return ctx
 
@@ -750,8 +748,7 @@ class ProductClassDeleteView(generic.DeleteView):
     form_class = ProductClassForm
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super().get_context_data(*args,
-                                                                   **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['title'] = _("Delete product type '%s'") % self.object.name
         product_count = self.object.products.count()
 

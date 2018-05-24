@@ -126,8 +126,7 @@ class AbstractLine(models.Model):
         pgettext_lazy("Product title", "Title"), max_length=255)
 
     def __str__(self):
-        return '%sx %s on %s' % (self.quantity, self.title,
-                                  self.wishlist.name)
+        return '%sx %s on %s' % (self.quantity, self.title, self.wishlist.name)
 
     def get_title(self):
         if self.product:

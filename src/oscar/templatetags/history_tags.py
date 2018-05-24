@@ -67,4 +67,4 @@ def get_back_button(context):
     if title is None:
         return None
 
-    return {'url': referrer, 'title':str(title), 'match': match}
+    return {'url': referrer, 'title': str(title), 'match': match}

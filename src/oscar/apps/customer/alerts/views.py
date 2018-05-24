@@ -49,8 +49,7 @@ class ProductAlertCreateView(generic.CreateView):
 
     def post(self, request, *args, **kwargs):
         self.product = get_object_or_404(Product, pk=self.kwargs['pk'])
-        return super().post(request, *args,
-                                                        **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -80,8 +79,7 @@ class ProductAlertConfirmView(generic.RedirectView):
     def get(self, request, *args, **kwargs):
         self.alert = get_object_or_404(ProductAlert, key=kwargs['key'])
         self.update_alert()
-        return super().get(request, *args,
-                                                        **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def update_alert(self):
         if self.alert.can_be_confirmed:
@@ -116,8 +114,7 @@ class ProductAlertCancelView(generic.RedirectView):
         else:
             raise Http404
         self.update_alert()
-        return super().get(request, *args,
-                                                       **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def update_alert(self):
         if self.alert.can_be_cancelled:
