@@ -4,7 +4,6 @@ import zlib
 from django.conf import settings
 from django.core import exceptions
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from phonenumber_field.modelfields import PhoneNumberField
@@ -14,7 +13,6 @@ from oscar.core.decorators import deprecated
 from oscar.models.fields import UppercaseCharField
 
 
-@python_2_unicode_compatible
 class AbstractAddress(models.Model):
     """
     Superclass address object
@@ -400,7 +398,6 @@ class AbstractAddress(models.Model):
         return self.get_address_field_values(self.base_fields)
 
 
-@python_2_unicode_compatible
 class AbstractCountry(models.Model):
     """
     International Organization for Standardization (ISO) 3166-1 Country list.

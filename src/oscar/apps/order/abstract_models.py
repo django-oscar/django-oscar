@@ -10,7 +10,6 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.crypto import constant_time_compare
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -28,7 +27,6 @@ from . import exceptions
 logger = logging.getLogger('oscar.order')
 
 
-@python_2_unicode_compatible
 class AbstractOrder(models.Model):
     """
     The main order model
@@ -384,7 +382,6 @@ class AbstractOrder(models.Model):
         super().save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class AbstractOrderNote(models.Model):
     """
     A note against an order.
@@ -433,7 +430,6 @@ class AbstractOrderNote(models.Model):
         return delta.seconds < self.editable_lifetime
 
 
-@python_2_unicode_compatible
 class AbstractCommunicationEvent(models.Model):
     """
     An order-level event involving a communication to the customer, such
@@ -465,7 +461,6 @@ class AbstractCommunicationEvent(models.Model):
 # LINES
 
 
-@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     An order line
@@ -800,7 +795,6 @@ class AbstractLine(models.Model):
         return True, None
 
 
-@python_2_unicode_compatible
 class AbstractLineAttribute(models.Model):
     """
     An attribute of a line
@@ -826,7 +820,6 @@ class AbstractLineAttribute(models.Model):
         return "%s = %s" % (self.type, self.value)
 
 
-@python_2_unicode_compatible
 class AbstractLinePrice(models.Model):
     """
     For tracking the prices paid for each unit within a line.
@@ -872,7 +865,6 @@ class AbstractLinePrice(models.Model):
 # PAYMENT EVENTS
 
 
-@python_2_unicode_compatible
 class AbstractPaymentEventType(models.Model):
     """
     Payment event types are things like 'Paid', 'Failed', 'Refunded'.
@@ -894,7 +886,6 @@ class AbstractPaymentEventType(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class AbstractPaymentEvent(models.Model):
     """
     A payment event for an order
@@ -972,7 +963,6 @@ class PaymentEventQuantity(models.Model):
 # SHIPPING EVENTS
 
 
-@python_2_unicode_compatible
 class AbstractShippingEvent(models.Model):
     """
     An event is something which happens to a group of lines such as
@@ -1012,7 +1002,6 @@ class AbstractShippingEvent(models.Model):
         return self.lines.count()
 
 
-@python_2_unicode_compatible
 class ShippingEventQuantity(models.Model):
     """
     A "through" model linking lines to shipping events.
@@ -1054,7 +1043,6 @@ class ShippingEventQuantity(models.Model):
             'qty': self.quantity}
 
 
-@python_2_unicode_compatible
 class AbstractShippingEventType(models.Model):
     """
     A type of shipping/fulfillment event
@@ -1081,7 +1069,6 @@ class AbstractShippingEventType(models.Model):
 # DISCOUNTS
 
 
-@python_2_unicode_compatible
 class AbstractOrderDiscount(models.Model):
     """
     A discount against an order.

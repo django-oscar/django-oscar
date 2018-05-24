@@ -13,7 +13,6 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Sum
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
@@ -34,7 +33,6 @@ ProductAttributesContainer = get_class(
 Selector = get_class('partner.strategy', 'Selector')
 
 
-@python_2_unicode_compatible
 class AbstractProductClass(models.Model):
     """
     Used for defining options and attributes for a subset of products.
@@ -80,7 +78,6 @@ class AbstractProductClass(models.Model):
         return self.attributes.exists()
 
 
-@python_2_unicode_compatible
 class AbstractCategory(MP_Node):
     """
     A product category. Merely used for navigational purposes; has no
@@ -222,7 +219,6 @@ class AbstractCategory(MP_Node):
         return self.get_children().count()
 
 
-@python_2_unicode_compatible
 class AbstractProductCategory(models.Model):
     """
     Joining model between products and categories. Exists to allow customising.
@@ -248,7 +244,6 @@ class AbstractProductCategory(models.Model):
         return "<productcategory for product '%s'>" % self.product
 
 
-@python_2_unicode_compatible
 class AbstractProduct(models.Model):
     """
     The base product object
@@ -693,7 +688,6 @@ class AbstractProductRecommendation(models.Model):
         verbose_name_plural = _('Product recomendations')
 
 
-@python_2_unicode_compatible
 class AbstractProductAttribute(models.Model):
     """
     Defines an attribute for a product class. (For example, number_of_pages for
@@ -910,7 +904,6 @@ class AbstractProductAttribute(models.Model):
     _validate_image = _validate_file
 
 
-@python_2_unicode_compatible
 class AbstractProductAttributeValue(models.Model):
     """
     The "through" model for the m2m relationship between catalogue.Product and
@@ -1044,7 +1037,6 @@ class AbstractProductAttributeValue(models.Model):
         return mark_safe(self.value)
 
 
-@python_2_unicode_compatible
 class AbstractAttributeOptionGroup(models.Model):
     """
     Defines a group of options that collectively may be used as an
@@ -1069,7 +1061,6 @@ class AbstractAttributeOptionGroup(models.Model):
         return ", ".join(options)
 
 
-@python_2_unicode_compatible
 class AbstractAttributeOption(models.Model):
     """
     Provides an option within an option group for an attribute type
@@ -1093,7 +1084,6 @@ class AbstractAttributeOption(models.Model):
         verbose_name_plural = _('Attribute options')
 
 
-@python_2_unicode_compatible
 class AbstractOption(models.Model):
     """
     An option that can be selected for a particular item when the product
@@ -1175,7 +1165,6 @@ class MissingProductImage(object):
                                            settings.MEDIA_ROOT))
 
 
-@python_2_unicode_compatible
 class AbstractProductImage(models.Model):
     """
     An image of a product

@@ -4,7 +4,6 @@ from django.core import exceptions
 from django.db import models, transaction
 from django.db.models import Sum
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.voucher.utils import get_unused_code
@@ -12,7 +11,6 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
 
 
-@python_2_unicode_compatible
 class AbstractVoucherSet(models.Model):
     """A collection of vouchers (potentially auto-generated)
 
@@ -109,7 +107,6 @@ class AbstractVoucherSet(models.Model):
         return value['result']
 
 
-@python_2_unicode_compatible
 class AbstractVoucher(models.Model):
     """
     A voucher.  This is simply a link to a collection of offers.
@@ -253,7 +250,6 @@ class AbstractVoucher(models.Model):
         return self.offers.all()[0].benefit
 
 
-@python_2_unicode_compatible
 class AbstractVoucherApplication(models.Model):
     """
     For tracking how often a voucher has been used in an order.

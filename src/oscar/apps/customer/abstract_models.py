@@ -9,7 +9,6 @@ from django.template import TemplateDoesNotExist, engines
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
@@ -108,7 +107,6 @@ class AbstractUser(auth_models.AbstractBaseUser,
         self._migrate_alerts_to_user()
 
 
-@python_2_unicode_compatible
 class AbstractEmail(models.Model):
     """
     This is a record of all emails sent to a customer.
@@ -141,7 +139,6 @@ class AbstractEmail(models.Model):
                 'email': self.email, 'subject': self.subject}
 
 
-@python_2_unicode_compatible
 class AbstractCommunicationEventType(models.Model):
     """
     A 'type' of communication.  Like an order confirmation email.
@@ -266,7 +263,6 @@ class AbstractCommunicationEventType(models.Model):
         return self.category == self.USER_RELATED
 
 
-@python_2_unicode_compatible
 class AbstractNotification(models.Model):
     recipient = models.ForeignKey(
         AUTH_USER_MODEL,

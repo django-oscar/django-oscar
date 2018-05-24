@@ -21,9 +21,7 @@ class TestBenefitProxyModels(object):
         """
         Tests that the benefit proxy classes all return a name and
         description. Unfortunately, the current implementations means
-        a valid range is required.
-        This test became necessary because the complex name/description logic
-        broke with the python_2_unicode_compatible decorator.
+        a valid range is required.w
         """
         for benefit_type, __ in Benefit.TYPE_CHOICES:
             benefit = Benefit(type=benefit_type, range=range)

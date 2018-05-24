@@ -1,7 +1,6 @@
 from django.db import models, router
 from django.db.models import F, Value, signals
 from django.db.models.functions import Coalesce
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -13,7 +12,6 @@ from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
 
 
-@python_2_unicode_compatible
 class AbstractPartner(models.Model):
     """
     A fulfillment partner. An individual or company who can fulfil products.
@@ -80,7 +78,6 @@ class AbstractPartner(models.Model):
         return self.display_name
 
 
-@python_2_unicode_compatible
 class AbstractStockRecord(models.Model):
     """
     A stock record.
@@ -267,7 +264,6 @@ class AbstractStockRecord(models.Model):
         return self.net_stock_level < self.low_stock_threshold
 
 
-@python_2_unicode_compatible
 class AbstractStockAlert(models.Model):
     """
     A stock alert. E.g. used to notify users when a product is 'back in stock'.

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import models
 from django.db.models import Sum
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from django.utils.encoding import smart_text
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -21,7 +21,6 @@ LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
 OpenBasketManager, SavedBasketManager = get_classes('basket.managers', ['OpenBasketManager', 'SavedBasketManager'])
 
 
-@python_2_unicode_compatible
 class AbstractBasket(models.Model):
     """
     Basket object
@@ -585,7 +584,6 @@ class AbstractBasket(models.Model):
             return 0
 
 
-@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """A line of a basket (product and a quantity)
 

@@ -3,14 +3,12 @@ import random
 
 from django.db import models
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.core.compat import AUTH_USER_MODEL
 
 
-@python_2_unicode_compatible
 class AbstractWishList(models.Model):
     """
     Represents a user's wish lists of products.
@@ -106,7 +104,6 @@ class AbstractWishList(models.Model):
             line.save()
 
 
-@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     One entry in a wish list. Similar to order lines or basket lines.
