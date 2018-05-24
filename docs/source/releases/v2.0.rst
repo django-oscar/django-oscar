@@ -19,6 +19,8 @@ Table of contents:
 Compatibility
 -------------
 
+Oscar 2.0 requires Python 3.4 or higher.
+
 .. _new_in_2.0:
 
 What's new in Oscar 2.0?
