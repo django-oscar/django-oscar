@@ -38,7 +38,6 @@ OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode', 'country')
 
 # Pagination settings
-
 OSCAR_OFFERS_PER_PAGE = 20
 OSCAR_PRODUCTS_PER_PAGE = 20
 OSCAR_REVIEWS_PER_PAGE = 20
