@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
@@ -40,7 +38,6 @@ OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode', 'country')
 
 # Pagination settings
-
 OSCAR_OFFERS_PER_PAGE = 20
 OSCAR_PRODUCTS_PER_PAGE = 20
 OSCAR_REVIEWS_PER_PAGE = 20
@@ -216,40 +213,48 @@ OSCAR_DASHBOARD_NAVIGATION = [
 ]
 OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_access_fn'  # noqa
 
-# Search facets
-OSCAR_SEARCH_FACETS = {
-    'fields': OrderedDict([
-        # The key for these dicts will be used when passing facet data
-        # to the template. Same for the 'queries' dict below.
-        ('product_class', {'name': _('Type'), 'field': 'product_class'}),
-        ('rating', {'name': _('Rating'), 'field': 'rating'}),
-        # You can specify an 'options' element that will be passed to the
-        # SearchQuerySet.facet() call.
-        # For instance, with Elasticsearch backend, 'options': {'order': 'term'}
-        # will sort items in a facet by title instead of number of items.
-        # It's hard to get 'missing' to work
-        # correctly though as of Solr's hilarious syntax for selecting
-        # items without a specific facet:
-        # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method
-        # 'options': {'missing': 'true'}
-    ]),
-    'queries': OrderedDict([
-        ('price_range',
-         {
-             'name': _('Price range'),
-             'field': 'price',
-             'queries': [
-                 # This is a list of (name, query) tuples where the name will
-                 # be displayed on the front-end.
-                 (_('0 to 20'), u'[0 TO 20]'),
-                 (_('20 to 40'), u'[20 TO 40]'),
-                 (_('40 to 60'), u'[40 TO 60]'),
-                 (_('60+'), u'[60 TO *]'),
-             ]
-         }),
-    ]),
-}
-
 
 OSCAR_PROMOTIONS_ENABLED = True
-OSCAR_PRODUCT_SEARCH_HANDLER = None
+OSCAR_PRODUCT_SEARCH_HANDLER = OSCAR_PRODUCT_BROWSE_SEARCH_HANDLER = 'oscar.apps.catalogue.search_handlers.ProductSearchHandler'
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    }
+}
+ELASTICSEARCH_DSL_AUTOSYNC = True
+
+OSCAR_SEARCH = {
+    "ANALYZERS": [
+        "oscar.apps.search.analyzers.ngram_analyzer",
+        "oscar.apps.search.analyzers.edgengram_analyzer"
+    ],
+    "INDEX_CONFIG": {
+        "index.requests.cache.enable": True,
+        "number_of_shards": 1,
+        "number_of_replicas": 0
+    },
+    "INDEX_NAME": "oscar",
+    "INDEXED_FIELDS": {},
+    "SHOW_PRICE_RANGE_FACET": False,
+    "PRODUCTS": {
+        "facets": {},
+        "query": {
+            "query_type": "multi_match",
+            "fields": ["all_skus", "upc", "title^2", "description"],
+            "minimum_should_match": "70%",
+        },
+        "aggregate_search": True
+    },
+    "RELATED_PRODUCTS": {
+        "filter_in_stock": True
+    },
+    "TOP_PRODUCTS": {
+        "filter_in_stock": True
+    },
+}
+
+OSCAR_PRODUCTS_HAVE_STOCKRECORDS = True
+
+OSCAR_SETTINGS = dict(
+    [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

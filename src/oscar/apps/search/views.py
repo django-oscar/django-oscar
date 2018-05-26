@@ -1,68 +1,65 @@
-from haystack import views
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+from django.views import View
+from purl import URL
 
-from oscar.apps.search.signals import user_search
-from oscar.core.loading import get_class, get_model
-
-Product = get_model('catalogue', 'Product')
-FacetMunger = get_class('search.facets', 'FacetMunger')
+from django.core.paginator import InvalidPage
+from django.http import HttpResponseRedirect, JsonResponse
+from django.views.generic import TemplateView
 
 
-class FacetedSearchView(views.FacetedSearchView):
-    """
-    A modified version of Haystack's FacetedSearchView
+class BaseSearchView(TemplateView):
+    search_handler_class = None
+    search_signal = None
 
-    Note that facets are configured when the ``SearchQuerySet`` is initialised.
-    This takes place in the search application class.
+    def get_search_handler(self):
+        return self.search_handler_class(self.request.GET, self.request.get_full_path())
 
-    See https://django-haystack.readthedocs.io/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
-    """
-
-    # Haystack uses a different class attribute to CBVs
-    template = "search/results.html"
-    search_signal = user_search
-
-    def __call__(self, request):
-        response = super(FacetedSearchView, self).__call__(request)
+    def get(self, request, *args, **kwargs):
+        try:
+            search_handler = self.get_search_handler()
+            self.context = search_handler.context
+        except InvalidPage:
+            messages.error(request, _('The given page number was invalid.'))
+            return HttpResponseRedirect(
+                self.remove_page_arg(request.get_full_path()))
 
         # Raise a signal for other apps to hook into for analytics
         self.search_signal.send(
-            sender=self, session=self.request.session,
-            user=self.request.user, query=self.query)
+            sender=self, session=request.session,
+            user=request.user,
+            query=search_handler.form.cleaned_data.get('q'))
 
-        return response
+        return super(BaseSearchView, self).get(request, *args, **kwargs)
 
-    # Override this method to add the spelling suggestion to the context and to
-    # convert Haystack's default facet data into a more useful structure so we
-    # have to do less work in the template.
-    def extra_context(self):
-        extra = super(FacetedSearchView, self).extra_context()
+    @staticmethod
+    def remove_page_arg(url):
+        url = URL(url)
+        return url.remove_query_param('page').as_string()
 
-        # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
-        # if there are some results, which seems a bit weird to me.
-        if self.results.query.backend.include_spelling:
-            # Note, this triggers an extra call to the search backend
-            suggestion = self.form.get_suggestion()
-            if suggestion != self.query:
-                extra['suggestion'] = suggestion
+    def get_context_data(self, **kwargs):
+        return self.context
 
-        # Convert facet data into a more useful data structure
-        if 'fields' in extra['facets']:
-            munger = FacetMunger(
-                self.request.get_full_path(),
-                self.form.selected_multi_facets,
-                self.results.facet_counts())
-            extra['facet_data'] = munger.facet_data()
-            has_facets = any([len(data['results']) for
-                              data in extra['facet_data'].values()])
-            extra['has_facets'] = has_facets
 
-        # Pass list of selected facets so they can be included in the sorting
-        # form.
-        extra['selected_facets'] = self.request.GET.getlist('selected_facets')
+class BaseAutoSuggestView(View):
 
-        return extra
+    form_class = None
+    query_class = None
 
-    def get_results(self):
-        # We're only interested in products (there might be other content types
-        # in the Solr index).
-        return super(FacetedSearchView, self).get_results().models(Product)
+    def get_query(self, form):
+        return self.query_class(**self.get_query_kwargs(form))
+
+    def get_query_kwargs(self, form):
+        kwargs = {
+            'query': form.cleaned_data['q']
+        }
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            s = self.get_query(form)
+            results = s.get_suggestions()
+            return JsonResponse(results, safe=False)
+        else:
+            return JsonResponse([], safe=False, status=400)

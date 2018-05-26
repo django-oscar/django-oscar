@@ -11,12 +11,21 @@ from django.views.generic import DetailView, TemplateView
 from oscar.apps.catalogue.signals import product_viewed
 from oscar.core.loading import get_class, get_model
 
+from oscar.apps.search import signals
+
+BaseSearchView = get_class('search.views', 'BaseSearchView')
 Product = get_model('catalogue', 'product')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 get_product_search_handler_class = get_class(
     'catalogue.search_handlers', 'get_product_search_handler_class')
+
+
+class CatalogueSearchView(BaseSearchView):
+    template_name = 'catalogue/search/results.html'
+    search_signal = signals.user_search
+    search_handler_class = get_product_search_handler_class()
 
 
 class ProductDetailView(DetailView):
@@ -157,7 +166,7 @@ class ProductCategoryView(TemplateView):
 
         try:
             self.search_handler = self.get_search_handler(
-                request.GET, request.get_full_path(), self.get_categories())
+                request.GET, request.get_full_path(), self.get_categories(), currency=request.currency)
         except InvalidPage:
             messages.error(request, _('The given page number was invalid.'))
             return redirect(self.category.get_absolute_url())
@@ -212,7 +221,7 @@ class ProductCategoryView(TemplateView):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_search_handler(self, *args, **kwargs):
-        return get_product_search_handler_class()(*args, **kwargs)
+        return get_product_search_handler_class(search=False)(*args, **kwargs)
 
     def get_categories(self):
         """
