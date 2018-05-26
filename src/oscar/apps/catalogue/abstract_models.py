@@ -98,6 +98,13 @@ class AbstractCategory(MP_Node):
     _slug_separator = '/'
     _full_name_separator = ' > '
 
+    class Meta:
+        abstract = True
+        app_label = 'catalogue'
+        ordering = ['path']
+        verbose_name = _('Category')
+        verbose_name_plural = _('Categories')
+
     def __str__(self):
         return self.full_name
 
@@ -200,6 +207,9 @@ class AbstractCategory(MP_Node):
         you change that logic, you'll have to reconsider the caching
         approach.
         """
+        if not settings.OSCAR_FRONTEND_ENABLED:
+            return
+
         cache_key = self.get_url_cache_key()
         url = cache.get(cache_key)
         if not url:
@@ -208,13 +218,6 @@ class AbstractCategory(MP_Node):
                 kwargs={'category_slug': self.full_slug, 'pk': self.pk})
             cache.set(cache_key, url)
         return url
-
-    class Meta:
-        abstract = True
-        app_label = 'catalogue'
-        ordering = ['path']
-        verbose_name = _('Category')
-        verbose_name_plural = _('Categories')
 
     def has_children(self):
         return self.get_num_children() > 0
@@ -379,6 +382,9 @@ class AbstractProduct(models.Model):
         """
         Return a product's absolute url
         """
+        if not settings.OSCAR_FRONTEND_ENABLED:
+            return
+
         return reverse('catalogue:detail',
                        kwargs={'product_slug': self.slug, 'pk': self.id})
 

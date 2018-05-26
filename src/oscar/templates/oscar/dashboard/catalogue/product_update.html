@@ -1,4 +1,5 @@
 {% extends 'dashboard/layout.html' %}
+{% load display_tags %}
 {% load i18n %}
 {% load thumbnail %}
 {% load staticfiles %}
@@ -333,7 +334,9 @@
                         </button>
                     </div>
                     {% if product %}
+                        {% ifwithfrontend %}
                         <a class="btn btn-success btn-lg" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+                        {% endifwithfrontend %}
                     {% endif %}
                 </div>
             </div>

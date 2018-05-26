@@ -31,8 +31,11 @@ class Node(object):
 
     @property
     def url(self):
-        return reverse(self.url_name, args=self.url_args,
-                       kwargs=self.url_kwargs)
+        try:
+            return reverse(
+                self.url_name, args=self.url_args, kwargs=self.url_kwargs)
+        except NoReverseMatch:
+            pass
 
     def add_child(self, node):
         self.children.append(node)
