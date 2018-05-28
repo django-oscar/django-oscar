@@ -17,7 +17,7 @@ def currency(value, currency=None):
     try:
         value = D(value)
     except (TypeError, InvalidOperation):
-        return u""
+        return ""
     # Using Babel's currency formatting
     # http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency
     OSCAR_CURRENCY_FORMAT = getattr(settings, 'OSCAR_CURRENCY_FORMAT', None)

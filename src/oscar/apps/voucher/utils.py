@@ -1,5 +1,5 @@
+from itertools import zip_longest
 import random
-from six.moves import zip_longest
 from django.db import connection
 
 

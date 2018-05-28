@@ -76,8 +76,7 @@ def get_core_apps(overrides=None):
 
     # Conservative import to ensure that this file can be loaded
     # without the presence Django.
-    from django.utils import six
-    if isinstance(overrides, six.string_types):
+    if isinstance(overrides, str):
         raise ValueError(
             "get_core_apps expects a list or tuple of apps "
             "to override")

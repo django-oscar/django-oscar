@@ -8,7 +8,7 @@ class TestHiddenFeatures(WebTestCase):
     is_anonymous = False
 
     def setUp(self):
-        super(TestHiddenFeatures, self).setUp()
+        super().setUp()
         self.product = create_product()
         self.wishlists_url = reverse('customer:wishlists-list')
 

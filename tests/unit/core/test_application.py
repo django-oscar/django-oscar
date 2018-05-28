@@ -1,4 +1,4 @@
-import mock
+from unittest import mock
 
 from django.conf.urls import url
 from django.test import TestCase

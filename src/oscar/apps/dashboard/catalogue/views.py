@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
@@ -89,7 +89,7 @@ class ProductListView(SingleTableView):
     context_table_name = 'products'
 
     def get_context_data(self, **kwargs):
-        ctx = super(ProductListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['form'] = self.form
         ctx['productclass_form'] = self.productclass_form_class()
         return ctx
@@ -103,7 +103,7 @@ class ProductListView(SingleTableView):
         if 'recently_edited' in self.request.GET:
             kwargs.update(dict(orderable=False))
 
-        table = super(ProductListView, self).get_table(**kwargs)
+        table = super().get_table(**kwargs)
         table.caption = self.get_description(self.form)
         return table
 
@@ -209,14 +209,14 @@ class ProductCreateUpdateView(generic.UpdateView):
     stockrecord_formset = StockRecordFormSet
 
     def __init__(self, *args, **kwargs):
-        super(ProductCreateUpdateView, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.formsets = {'category_formset': self.category_formset,
                          'image_formset': self.image_formset,
                          'recommended_formset': self.recommendations_formset,
                          'stockrecord_formset': self.stockrecord_formset}
 
     def dispatch(self, request, *args, **kwargs):
-        resp = super(ProductCreateUpdateView, self).dispatch(
+        resp = super().dispatch(
             request, *args, **kwargs)
         return self.check_objects_or_redirect() or resp
 
@@ -266,13 +266,13 @@ class ProductCreateUpdateView(generic.UpdateView):
 
             return None  # success
         else:
-            product = super(ProductCreateUpdateView, self).get_object(queryset)
+            product = super().get_object(queryset)
             self.product_class = product.get_product_class()
             self.parent = product.parent
             return product
 
     def get_context_data(self, **kwargs):
-        ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
         ctx['parent'] = self.parent
         ctx['title'] = self.get_page_title()
@@ -300,7 +300,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                     'parent_product': self.parent.title}
 
     def get_form_kwargs(self):
-        kwargs = super(ProductCreateUpdateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['product_class'] = self.product_class
         kwargs['parent'] = self.parent
         return kwargs
@@ -449,7 +449,7 @@ class ProductDeleteView(generic.DeleteView):
         return filter_products(Product.objects.all(), self.request.user)
 
     def get_context_data(self, **kwargs):
-        ctx = super(ProductDeleteView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         if self.object.is_child:
             ctx['title'] = _("Delete product variant?")
         else:
@@ -515,7 +515,7 @@ class StockAlertListView(generic.ListView):
     paginate_by = settings.OSCAR_STOCK_ALERTS_PER_PAGE
 
     def get_context_data(self, **kwargs):
-        ctx = super(StockAlertListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['form'] = self.form
         ctx['description'] = self.description
         return ctx
@@ -542,7 +542,7 @@ class CategoryListView(SingleTableView):
         return Category.get_root_nodes()
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(CategoryListView, self).get_context_data(*args, **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['child_categories'] = Category.get_root_nodes()
         return ctx
 
@@ -558,8 +558,7 @@ class CategoryDetailListView(SingleTableMixin, generic.DetailView):
         return self.object.get_children()
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(CategoryDetailListView, self).get_context_data(*args,
-                                                                   **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['child_categories'] = self.object.get_children()
         ctx['ancestors'] = self.object.get_ancestors_and_self()
         return ctx
@@ -582,17 +581,17 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
     form_class = CategoryForm
 
     def get_context_data(self, **kwargs):
-        ctx = super(CategoryCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = _("Add a new category")
         return ctx
 
     def get_success_url(self):
         messages.info(self.request, _("Category created successfully"))
-        return super(CategoryCreateView, self).get_success_url()
+        return super().get_success_url()
 
     def get_initial(self):
         # set child category if set in the URL kwargs
-        initial = super(CategoryCreateView, self).get_initial()
+        initial = super().get_initial()
         if 'parent' in self.kwargs:
             initial['_ref_node_id'] = self.kwargs['parent']
         return initial
@@ -604,13 +603,13 @@ class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
     form_class = CategoryForm
 
     def get_context_data(self, **kwargs):
-        ctx = super(CategoryUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = _("Update category '%s'") % self.object.name
         return ctx
 
     def get_success_url(self):
         messages.info(self.request, _("Category updated successfully"))
-        return super(CategoryUpdateView, self).get_success_url()
+        return super().get_success_url()
 
 
 class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
@@ -618,13 +617,13 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
     model = Category
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(CategoryDeleteView, self).get_context_data(*args, **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['parent'] = self.object.get_parent()
         return ctx
 
     def get_success_url(self):
         messages.info(self.request, _("Category deleted successfully"))
-        return super(CategoryDeleteView, self).get_success_url()
+        return super().get_success_url()
 
 
 class ProductLookupView(ObjectLookupView):
@@ -689,7 +688,7 @@ class ProductClassCreateUpdateView(generic.UpdateView):
     form_valid = form_invalid = process_all_forms
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductClassCreateUpdateView, self).get_context_data(
+        ctx = super().get_context_data(
             *args, **kwargs)
 
         if "attributes_formset" not in ctx:
@@ -738,8 +737,7 @@ class ProductClassListView(generic.ListView):
     model = ProductClass
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductClassListView, self).get_context_data(*args,
-                                                                 **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['title'] = _("Product Types")
         return ctx
 
@@ -750,8 +748,7 @@ class ProductClassDeleteView(generic.DeleteView):
     form_class = ProductClassForm
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductClassDeleteView, self).get_context_data(*args,
-                                                                   **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['title'] = _("Delete product type '%s'") % self.object.name
         product_count = self.object.products.count()
 
@@ -819,7 +816,7 @@ class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
     form_valid = form_invalid = process_all_forms
 
     def get_context_data(self, **kwargs):
-        ctx = super(AttributeOptionGroupCreateUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx.setdefault("attribute_option_formset", self.attribute_option_formset(instance=self.object))
         ctx["title"] = self.get_title()
         return ctx
@@ -874,7 +871,7 @@ class AttributeOptionGroupListView(SingleTableView):
     context_table_name = 'attribute_option_groups'
 
     def get_context_data(self, **kwargs):
-        ctx = super(AttributeOptionGroupListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['querystring'] = self.request.GET.urlencode()
         return ctx
 
@@ -886,7 +883,7 @@ class AttributeOptionGroupDeleteView(PopUpWindowDeleteMixin, generic.DeleteView)
     form_class = AttributeOptionGroupForm
 
     def get_context_data(self, **kwargs):
-        ctx = super(AttributeOptionGroupDeleteView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
 
         ctx['title'] = _("Delete Attribute Option Group '%s'") % self.object.name
 

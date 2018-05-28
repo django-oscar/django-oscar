@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 from oscar.core.loading import get_class, get_classes
@@ -27,7 +27,7 @@ class RawHTMLForm(forms.ModelForm):
         fields = ['name', 'body']
 
     def __init__(self, *args, **kwargs):
-        super(RawHTMLForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['body'].widget.attrs['class'] = "no-widget-init"
 
 

@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.utils import six
 
 
 class FlashMessages(object):
@@ -36,7 +35,7 @@ class FlashMessages(object):
         payload = {}
         for level, msgs in self.msgs.items():
             tag = messages.DEFAULT_TAGS.get(level, 'info')
-            payload[tag] = [six.text_type(msg) for msg in msgs]
+            payload[tag] = [str(msg) for msg in msgs]
         return payload
 
     def apply_to_request(self, request):

@@ -1,8 +1,7 @@
 from decimal import Decimal as D
 from decimal import ROUND_UP
 
-from django.utils import six
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ungettext
 
 from oscar.core.loading import get_classes, get_model
@@ -27,7 +26,7 @@ class CountCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': six.text_type(self.range).lower()}
+            'range': str(self.range).lower()}
 
     @property
     def description(self):
@@ -117,7 +116,7 @@ class CoverageCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': six.text_type(self.range).lower()}
+            'range': str(self.range).lower()}
 
     @property
     def description(self):
@@ -221,7 +220,7 @@ class ValueCondition(Condition):
     def name(self):
         return self._description % {
             'amount': currency(self.value),
-            'range': six.text_type(self.range).lower()}
+            'range': str(self.range).lower()}
 
     @property
     def description(self):

@@ -3,7 +3,7 @@ from django.contrib.auth.models import Permission
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.utils import normalise_email
@@ -51,7 +51,7 @@ class PartnerListView(generic.ListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
         ctx['is_filtered'] = self.is_filtered
@@ -65,7 +65,7 @@ class PartnerCreateView(generic.CreateView):
     success_url = reverse_lazy('dashboard:partner-list')
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = _('Create new partner')
         return ctx
 
@@ -96,7 +96,7 @@ class PartnerManageView(generic.UpdateView):
         return {'name': self.partner.name}
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerManageView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['partner'] = self.partner
         ctx['title'] = self.partner.name
         ctx['users'] = self.partner.users.all()
@@ -108,7 +108,7 @@ class PartnerManageView(generic.UpdateView):
             self.partner.name)
         self.partner.name = form.cleaned_data['name']
         self.partner.save()
-        return super(PartnerManageView, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class PartnerDeleteView(generic.DeleteView):
@@ -135,17 +135,17 @@ class PartnerUserCreateView(generic.CreateView):
     def dispatch(self, request, *args, **kwargs):
         self.partner = get_object_or_404(
             Partner, pk=kwargs.get('partner_pk', None))
-        return super(PartnerUserCreateView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerUserCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['partner'] = self.partner
         ctx['title'] = _('Create user')
         return ctx
 
     def get_form_kwargs(self):
-        kwargs = super(PartnerUserCreateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['partner'] = self.partner
         return kwargs
 
@@ -164,7 +164,7 @@ class PartnerUserSelectView(generic.ListView):
     def dispatch(self, request, *args, **kwargs):
         self.partner = get_object_or_404(
             Partner, pk=kwargs.get('partner_pk', None))
-        return super(PartnerUserSelectView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -172,10 +172,10 @@ class PartnerUserSelectView(generic.ListView):
         if 'email' in request.GET:
             data = request.GET
         self.form = self.form_class(data)
-        return super(PartnerUserSelectView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerUserSelectView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['partner'] = self.partner
         ctx['form'] = self.form
         return ctx
@@ -283,7 +283,7 @@ class PartnerUserUpdateView(generic.UpdateView):
                                  partners__pk=self.kwargs['partner_pk'])
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         name = self.object.get_full_name() or self.object.email
         ctx['partner'] = self.partner
         ctx['title'] = _("Edit user '%s'") % name

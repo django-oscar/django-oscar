@@ -7,7 +7,6 @@ from django.contrib.auth.models import (
     AbstractUser, BaseUserManager, AbstractBaseUser)
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 
 from oscar.core import compat
 from oscar.apps.customer import abstract_models
@@ -47,7 +46,6 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password)
 
 # A user model which doesn't extend AbstractUser
-@python_2_unicode_compatible
 class CustomUserModel(AbstractBaseUser):
     name = models.CharField(max_length=255, blank=True)
     email = models.EmailField(unique=True)

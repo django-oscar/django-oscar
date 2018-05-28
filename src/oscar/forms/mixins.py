@@ -1,7 +1,7 @@
 import phonenumbers
 from django import forms
 from django.core import validators
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from phonenumber_field.phonenumber import PhoneNumber
 
 
@@ -29,7 +29,7 @@ class PhoneNumberMixin(object):
     }
 
     def __init__(self, *args, **kwargs):
-        super(PhoneNumberMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # We can't use the PhoneNumberField here since we want validate the
         # phonenumber based on the selected country as a fallback when a local
@@ -78,7 +78,7 @@ class PhoneNumberMixin(object):
                 # There is no shipping country, not a valid international number
                 self.add_error(
                     field_name,
-                    _(u'This is not a valid international phone format.'))
+                    _('This is not a valid international phone format.'))
                 return number
 
             # The PhoneNumber class does not allow specifying
@@ -91,20 +91,20 @@ class PhoneNumberMixin(object):
                 if not phone_number.is_valid():
                     self.add_error(
                         field_name,
-                        _(u'This is not a valid local phone format for %s.')
+                        _('This is not a valid local phone format for %s.')
                         % self.country)
             except phonenumbers.NumberParseException:
                 # Not a valid local or international phone number
                 self.add_error(
                     field_name,
-                    _(u'This is not a valid local or international phone format.'))
+                    _('This is not a valid local or international phone format.'))
                 return number
 
         return phone_number
 
     def clean(self):
         self.set_country_and_region_code()
-        cleaned_data = super(PhoneNumberMixin, self).clean()
+        cleaned_data = super().clean()
         for field_name in self.phone_number_fields:
             cleaned_data[field_name] = self.clean_phone_number_field(field_name)
         return cleaned_data

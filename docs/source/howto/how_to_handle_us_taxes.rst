@@ -32,7 +32,7 @@ to the submission.
     class CheckoutSessionMixin(session.CheckoutSessionMixin):
 
         def build_submission(self, **kwargs):
-            submission = super(CheckoutSessionMixin, self).build_submission(
+            submission = super().build_submission(
                 **kwargs)
 
             if submission['shipping_address'] and submission['shipping_method']:

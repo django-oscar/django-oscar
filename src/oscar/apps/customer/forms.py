@@ -9,7 +9,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.utils.http import is_safe_url
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
@@ -26,11 +26,7 @@ User = get_user_model()
 
 
 def generate_username():
-    # Python 3 uses ascii_letters. If not available, fallback to letters
-    try:
-        letters = string.ascii_letters
-    except AttributeError:
-        letters = string.letters
+    letters = string.ascii_letters
     uname = ''.join([random.choice(letters + string.digits + '_')
                      for i in range(30)])
     try:
@@ -107,7 +103,7 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def __init__(self, host, *args, **kwargs):
         self.host = host
-        super(EmailAuthenticationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
@@ -124,7 +120,7 @@ class ConfirmPasswordForm(forms.Form):
     password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
     def __init__(self, user, *args, **kwargs):
-        super(ConfirmPasswordForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.user = user
 
     def clean_password(self):
@@ -150,7 +146,7 @@ class EmailUserCreationForm(forms.ModelForm):
 
     def __init__(self, host=None, *args, **kwargs):
         self.host = host
-        super(EmailUserCreationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean_email(self):
         """
@@ -178,7 +174,7 @@ class EmailUserCreationForm(forms.ModelForm):
         return settings.LOGIN_REDIRECT_URL
 
     def save(self, commit=True):
-        user = super(EmailUserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
 
         if 'username' in [f.name for f in User._meta.fields]:
@@ -202,7 +198,7 @@ class OrderSearchForm(forms.Form):
                                         self.cleaned_data['date_to'],
                                         self.cleaned_data['order_number']]):
             raise forms.ValidationError(_("At least one field is required."))
-        return super(OrderSearchForm, self).clean()
+        return super().clean()
 
     def description(self):
         """
@@ -270,7 +266,7 @@ class UserForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         self.user = user
         kwargs['instance'] = user
-        super(UserForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if 'email' in self.fields:
             self.fields['email'].required = True
 
@@ -307,7 +303,7 @@ if Profile:  # noqa (too complex (12))
                 instance = Profile(user=user)
             kwargs['instance'] = instance
 
-            super(UserAndProfileForm, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
 
             # Get profile field names to help with ordering later
             profile_field_names = list(self.fields.keys())
@@ -360,7 +356,7 @@ if Profile:  # noqa (too complex (12))
                 setattr(user, field_name, self.cleaned_data[field_name])
             user.save()
 
-            return super(ProfileForm, self).save(*args, **kwargs)
+            return super().save(*args, **kwargs)
 
     ProfileForm = UserAndProfileForm
 else:
@@ -368,7 +364,7 @@ else:
 
 
 class ProductAlertForm(forms.ModelForm):
-    email = forms.EmailField(required=True, label=_(u'Send notification to'),
+    email = forms.EmailField(required=True, label=_('Send notification to'),
                              widget=forms.TextInput(attrs={
                                  'placeholder': _('Enter your email')
                              }))
@@ -376,7 +372,7 @@ class ProductAlertForm(forms.ModelForm):
     def __init__(self, user, product, *args, **kwargs):
         self.user = user
         self.product = product
-        super(ProductAlertForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Only show email field to unauthenticated users
         if user and user.is_authenticated:
@@ -384,7 +380,7 @@ class ProductAlertForm(forms.ModelForm):
             self.fields['email'].required = False
 
     def save(self, commit=True):
-        alert = super(ProductAlertForm, self).save(commit=False)
+        alert = super().save(commit=False)
         if self.user.is_authenticated:
             alert.user = self.user
         alert.product = self.product

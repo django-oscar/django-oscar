@@ -7,7 +7,7 @@ from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import HttpResponse
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
@@ -143,7 +143,7 @@ class CreateView(PromotionMixin, generic.CreateView):
                                'pk': self.object.id})
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(CreateView, self).get_context_data(*args, **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['heading'] = self.get_heading()
         return ctx
 
@@ -217,7 +217,7 @@ class UpdateView(PromotionMixin, generic.UpdateView):
     link_form_class = PagePromotionForm
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(UpdateView, self).get_context_data(*args, **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         ctx['heading'] = _("Update content block")
         ctx['promotion'] = self.get_object()
         ctx['link_form'] = self.link_form_class()
@@ -231,7 +231,7 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         if action in self.actions:
             self.object = self.get_object()
             return getattr(self, action)(self.object, request, *args, **kwargs)
-        return super(UpdateView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.info(self.request, _("Content block updated successfully"))

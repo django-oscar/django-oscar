@@ -11,10 +11,9 @@ from django.db import models
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.timezone import get_current_timezone, now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes, get_model
@@ -27,7 +26,6 @@ ZERO_DISCOUNT = get_class('offer.results', 'ZERO_DISCOUNT')
 load_proxy, unit_price = get_classes('offer.utils', ['load_proxy', 'unit_price'])
 
 
-@python_2_unicode_compatible
 class BaseOfferMixin(models.Model):
     class Meta:
         abstract = True
@@ -81,7 +79,6 @@ class BaseOfferMixin(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class AbstractConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
@@ -231,7 +228,7 @@ class AbstractConditionalOffer(models.Model):
             else:
                 self.status = self.OPEN
 
-        return super(AbstractConditionalOffer, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('offer:detail', kwargs={'slug': self.slug})
@@ -772,7 +769,6 @@ class AbstractCondition(BaseOfferMixin, models.Model):
         return sorted(line_tuples, key=key)
 
 
-@python_2_unicode_compatible
 class AbstractRange(models.Model):
     """
     Represents a range of products that can be used within an offer.

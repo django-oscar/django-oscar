@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.core.loading import get_model
@@ -13,7 +13,7 @@ class PageSearchForm(forms.Form):
     Search form to filter pages by *title.
     """
     title = forms.CharField(
-        required=False, label=pgettext_lazy(u"Page title", u"Title"))
+        required=False, label=pgettext_lazy("Page title", "Title"))
 
 
 class PageUpdateForm(forms.ModelForm):

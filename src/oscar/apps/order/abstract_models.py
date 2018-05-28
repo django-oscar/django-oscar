@@ -10,9 +10,8 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.crypto import constant_time_compare
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.order.signals import (
@@ -28,7 +27,6 @@ from . import exceptions
 logger = logging.getLogger('oscar.order')
 
 
-@python_2_unicode_compatible
 class AbstractOrder(models.Model):
     """
     The main order model
@@ -303,7 +301,7 @@ class AbstractOrder(models.Model):
         verbose_name_plural = _("Orders")
 
     def __str__(self):
-        return u"#%s" % (self.number,)
+        return "#%s" % (self.number,)
 
     def verification_hash(self):
         signer = Signer(salt='oscar.apps.order.Order')
@@ -381,10 +379,9 @@ class AbstractOrder(models.Model):
         # this gives us the ability to set the date_placed explicitly (which is
         # useful when importing orders from another system).
         self.set_date_placed_default()
-        super(AbstractOrder, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class AbstractOrderNote(models.Model):
     """
     A note against an order.
@@ -424,7 +421,7 @@ class AbstractOrderNote(models.Model):
         verbose_name_plural = _("Order Notes")
 
     def __str__(self):
-        return u"'%s' (%s)" % (self.message[0:50], self.user)
+        return "'%s' (%s)" % (self.message[0:50], self.user)
 
     def is_editable(self):
         if self.note_type == self.SYSTEM:
@@ -433,7 +430,6 @@ class AbstractOrderNote(models.Model):
         return delta.seconds < self.editable_lifetime
 
 
-@python_2_unicode_compatible
 class AbstractCommunicationEvent(models.Model):
     """
     An order-level event involving a communication to the customer, such
@@ -465,7 +461,6 @@ class AbstractCommunicationEvent(models.Model):
 # LINES
 
 
-@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     An order line
@@ -514,7 +509,7 @@ class AbstractLine(models.Model):
         'catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
         verbose_name=_("Product"))
     title = models.CharField(
-        pgettext_lazy(u"Product title", u"Title"), max_length=255)
+        pgettext_lazy("Product title", "Title"), max_length=255)
     # UPC can be null because it's usually set as the product's UPC, and that
     # can be null as well
     upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
@@ -800,7 +795,6 @@ class AbstractLine(models.Model):
         return True, None
 
 
-@python_2_unicode_compatible
 class AbstractLineAttribute(models.Model):
     """
     An attribute of a line
@@ -826,7 +820,6 @@ class AbstractLineAttribute(models.Model):
         return "%s = %s" % (self.type, self.value)
 
 
-@python_2_unicode_compatible
 class AbstractLinePrice(models.Model):
     """
     For tracking the prices paid for each unit within a line.
@@ -872,7 +865,6 @@ class AbstractLinePrice(models.Model):
 # PAYMENT EVENTS
 
 
-@python_2_unicode_compatible
 class AbstractPaymentEventType(models.Model):
     """
     Payment event types are things like 'Paid', 'Failed', 'Refunded'.
@@ -894,7 +886,6 @@ class AbstractPaymentEventType(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class AbstractPaymentEvent(models.Model):
     """
     A payment event for an order
@@ -972,7 +963,6 @@ class PaymentEventQuantity(models.Model):
 # SHIPPING EVENTS
 
 
-@python_2_unicode_compatible
 class AbstractShippingEvent(models.Model):
     """
     An event is something which happens to a group of lines such as
@@ -1012,7 +1002,6 @@ class AbstractShippingEvent(models.Model):
         return self.lines.count()
 
 
-@python_2_unicode_compatible
 class ShippingEventQuantity(models.Model):
     """
     A "through" model linking lines to shipping events.
@@ -1046,7 +1035,7 @@ class ShippingEventQuantity(models.Model):
         if not self.line.is_shipping_event_permitted(
                 self.event.event_type, self.quantity):
             raise exceptions.InvalidShippingEvent
-        super(ShippingEventQuantity, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return _("%(product)s - quantity %(qty)d") % {
@@ -1054,7 +1043,6 @@ class ShippingEventQuantity(models.Model):
             'qty': self.quantity}
 
 
-@python_2_unicode_compatible
 class AbstractShippingEventType(models.Model):
     """
     A type of shipping/fulfillment event
@@ -1081,7 +1069,6 @@ class AbstractShippingEventType(models.Model):
 # DISCOUNTS
 
 
-@python_2_unicode_compatible
 class AbstractOrderDiscount(models.Model):
     """
     A discount against an order.
@@ -1156,7 +1143,7 @@ class AbstractOrderDiscount(models.Model):
             if voucher:
                 self.voucher_code = voucher.code
 
-        super(AbstractOrderDiscount, self).save(**kwargs)
+        super().save(**kwargs)
 
     def __str__(self):
         return _("Discount of %(amount)r from order %(order)s") % {
@@ -1181,4 +1168,4 @@ class AbstractOrderDiscount(models.Model):
     def description(self):
         if self.voucher_code:
             return self.voucher_code
-        return self.offer_name or u""
+        return self.offer_name or ""

@@ -18,7 +18,7 @@ class RequestFactory(BaseRequestFactory):
     selector = get_class('partner.strategy', 'Selector')()
 
     def request(self, user=None, **request):
-        request = super(RequestFactory, self).request(**request)
+        request = super().request(**request)
         request.user = user or AnonymousUser()
         request.session = SessionStore()
         request._messages = FallbackStorage(request)

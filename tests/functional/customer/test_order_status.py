@@ -1,5 +1,6 @@
+from http import client as http_client
+
 from django.urls import reverse
-from django.utils.six.moves import http_client
 
 from oscar.test.factories import create_order
 from oscar.test.testcases import WebTestCase

@@ -1,5 +1,4 @@
 from datetime import datetime, date
-import six
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -142,9 +141,6 @@ class TestTextAttributes(TestCase):
 
     def test_validate_string_and_unicode_values(self):
         self.assertIsNone(self.attr.validate_value('String'))
-        if six.PY2:
-            self.assertIsNone(self.attr.validate_value(unicode('ascii_unicode', 'ascii'))) # noqa F821
-            self.assertIsNone(self.attr.validate_value(unicode('utf-8_unicode', 'utf-8'))) # noqa F821
 
     def test_validate_invalid_float_values(self):
         with self.assertRaises(ValidationError):

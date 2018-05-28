@@ -5,9 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.utils import six
 from django.utils.http import urlquote
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views import generic
 
 from oscar.core.loading import get_class, get_classes, get_model
@@ -64,10 +63,10 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
             signals.start_checkout.send_robust(
                 sender=self, request=request)
             return self.get_success_response()
-        return super(IndexView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_form_kwargs(self):
-        kwargs = super(IndexView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         email = self.checkout_session.get_guest_email()
         if email:
             kwargs['initial'] = {
@@ -153,7 +152,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
         return initial
 
     def get_context_data(self, **kwargs):
-        ctx = super(ShippingAddressView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             # Look up address book data
             ctx['addresses'] = self.get_available_addresses()
@@ -182,7 +181,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
             else:
                 return http.HttpResponseBadRequest()
         else:
-            return super(ShippingAddressView, self).post(
+            return super().post(
                 request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -191,7 +190,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
             (k, v) for (k, v) in form.instance.__dict__.items()
             if not k.startswith('_'))
         self.checkout_session.ship_to_new_address(address_fields)
-        return super(ShippingAddressView, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
@@ -206,13 +205,13 @@ class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
         return self.request.user.addresses.all()
 
     def get_form_kwargs(self):
-        kwargs = super(UserAddressUpdateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
 
     def get_success_url(self):
         messages.info(self.request, _("Address saved"))
-        return super(UserAddressUpdateView, self).get_success_url()
+        return super().get_success_url()
 
 
 class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
@@ -227,7 +226,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
 
     def get_success_url(self):
         messages.info(self.request, _("Address deleted"))
-        return super(UserAddressDeleteView, self).get_success_url()
+        return super().get_success_url()
 
 
 # ===============
@@ -255,7 +254,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
 
     def post(self, request, *args, **kwargs):
         self._methods = self.get_available_shipping_methods()
-        return super(ShippingMethodView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         # These pre-conditions can't easily be factored out into the normal
@@ -291,15 +290,15 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
 
         # Must be more than one available shipping method, we present them to
         # the user to make a choice.
-        return super(ShippingMethodView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs = super(ShippingMethodView, self).get_context_data(**kwargs)
+        kwargs = super().get_context_data(**kwargs)
         kwargs['methods'] = self._methods
         return kwargs
 
     def get_form_kwargs(self):
-        kwargs = super(ShippingMethodView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['methods'] = self._methods
         return kwargs
 
@@ -325,7 +324,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
     def form_invalid(self, form):
         messages.error(self.request, _("Your submitted shipping method is not"
                                        " permitted"))
-        return super(ShippingMethodView, self).form_invalid(form)
+        return super().form_invalid(form)
 
     def get_success_response(self):
         return redirect('checkout:payment-method')
@@ -418,13 +417,13 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # The preview view needs to ensure payment information has been
             # correctly captured.
             return self.pre_conditions + ['check_payment_data_is_captured']
-        return super(PaymentDetailsView, self).get_pre_conditions(request)
+        return super().get_pre_conditions(request)
 
     def get_skip_conditions(self, request):
         if not self.preview:
             # Payment details should only be collected if necessary
             return ['skip_unless_payment_is_required']
-        return super(PaymentDetailsView, self).get_skip_conditions(request)
+        return super().get_skip_conditions(request)
 
     def post(self, request, *args, **kwargs):
         # Posting to payment-details isn't the right thing to do.  Form
@@ -586,7 +585,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # their bankcard has expired, wrong card number - that kind of
             # thing. This type of exception is supposed to set a friendly error
             # message that makes sense to the customer.
-            msg = six.text_type(e)
+            msg = str(e)
             logger.warning(
                 "Order #%s: unable to take payment (%s) - restoring basket",
                 order_number, msg)
@@ -603,7 +602,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # It makes sense to configure the checkout logger to
             # mail admins on an error as this issue warrants some further
             # investigation.
-            msg = six.text_type(e)
+            msg = str(e)
             logger.error("Order #%s: payment error (%s)", order_number, msg,
                          exc_info=True)
             self.restore_frozen_basket()
@@ -633,7 +632,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # actually place an order.  Not a good situation to be in as a
             # payment transaction may already have taken place, but needs
             # to be handled gracefully.
-            msg = six.text_type(e)
+            msg = str(e)
             logger.error("Order #%s: unable to place order - %s",
                          order_number, msg, exc_info=True)
             self.restore_frozen_basket()
@@ -678,7 +677,7 @@ class ThankYouView(generic.DetailView):
         return order
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(ThankYouView, self).get_context_data(*args, **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         # Remember whether this view has been loaded.
         # Only send tracking information on the first load.
         key = 'order_{}_thankyou_viewed'.format(ctx['order'].pk)

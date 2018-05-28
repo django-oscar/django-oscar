@@ -2,38 +2,38 @@ from collections import OrderedDict
 
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.search import facets
 
 FACET_COUNTS = {
-    u'dates': {},
-    u'fields': {
+    'dates': {},
+    'fields': {
         'category': [('Fiction', 12), ('Horror', 6), ('Comedy', 3)],
         'product_class': [('Book', 18), ('DVD', 3)],
         'rating': [],
     },
-    u'queries': {
-        u'price_exact:[0 TO 20]': 15,
-        u'price_exact:[20 TO 40]': 5,
-        u'price_exact:[40 TO 60]': 1,
-        u'price_exact:[60 TO *]': 0,
+    'queries': {
+        'price_exact:[0 TO 20]': 15,
+        'price_exact:[20 TO 40]': 5,
+        'price_exact:[40 TO 60]': 1,
+        'price_exact:[60 TO *]': 0,
     }
 }
 
 
 FACET_COUNTS_WITH_PRICE_RANGE_SELECTED = {
-    u'dates': {},
-    u'fields': {
+    'dates': {},
+    'fields': {
         'category': [('Fiction', 12), ('Horror', 6), ('Comedy', 3)],
         'product_class': [('Book', 18), ('DVD', 3)],
         'rating': [],
     },
-    u'queries': {
-        u'price_exact:[0 TO 20]': 0,
-        u'price_exact:[20 TO 40]': 21,
-        u'price_exact:[40 TO 60]': 0,
-        u'price_exact:[60 TO *]': 0,
+    'queries': {
+        'price_exact:[0 TO 20]': 0,
+        'price_exact:[20 TO 40]': 21,
+        'price_exact:[40 TO 60]': 0,
+        'price_exact:[60 TO *]': 0,
     }
 }
 
@@ -50,10 +50,10 @@ SEARCH_FACETS = {
              'name': _('Price range'),
              'field': 'price',
              'queries': [
-                 (_('0 to 20'), u'[0 TO 20]'),
-                 (_('20 to 40'), u'[20 TO 40]'),
-                 (_('40 to 60'), u'[40 TO 60]'),
-                 (_('60+'), u'[60 TO *]'),
+                 (_('0 to 20'), '[0 TO 20]'),
+                 (_('20 to 40'), '[20 TO 40]'),
+                 (_('40 to 60'), '[40 TO 60]'),
+                 (_('60+'), '[60 TO *]'),
              ]
          }),
     ]),
@@ -97,7 +97,7 @@ class TestFacetMunger(TestCase):
     def test_with_price_facets_selected(self):
         munger = facets.FacetMunger(
             path='/search?q=test&selected_facets=price_exact%3A%5B20+TO+40%5D',
-            selected_multi_facets={'price_exact': [u'[20 TO 40]']},
+            selected_multi_facets={'price_exact': ['[20 TO 40]']},
             facet_counts=FACET_COUNTS_WITH_PRICE_RANGE_SELECTED)
         data = munger.facet_data()
 

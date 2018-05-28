@@ -1,7 +1,6 @@
 from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import six
 
 from oscar.apps.basket import views
 from oscar.test import factories
@@ -18,7 +17,7 @@ class TestVoucherAddView(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def _get_voucher_message(self, request):
-        return '\n'.join(six.text_type(m.message) for m in get_messages(request))
+        return '\n'.join(str(m.message) for m in get_messages(request))
 
     def test_post_valid(self):
         voucher = factories.VoucherFactory()

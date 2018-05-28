@@ -1,6 +1,7 @@
+from http import client as http_client
+
 from django.contrib.auth.models import Permission
 from django.urls import reverse
-from django.utils.six.moves import http_client
 from django_webtest import WebTest
 from purl import URL
 

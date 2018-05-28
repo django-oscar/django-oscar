@@ -5,7 +5,7 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.urls import resolve, get_urlconf
-from django.utils.translation import ugettext_lazy as _, get_language_from_path, get_language, override
+from django.utils.translation import gettext_lazy as _, get_language_from_path, get_language, override
 
 from oscar.core.loading import get_model
 
@@ -14,11 +14,11 @@ class ExtendedURLValidator(validators.URLValidator):
 
     def __init__(self, *args, **kwargs):
         self.is_local_url = False
-        super(ExtendedURLValidator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __call__(self, value):
         try:
-            super(ExtendedURLValidator, self).__call__(value)
+            super().__call__(value)
         except ValidationError:
             # The parent validator will raise an exception if the URL is not a
             # valid absolute URL so we test here to see if it is a local URL.

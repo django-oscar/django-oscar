@@ -37,7 +37,7 @@ CustomSluggedTestModel = get_model('model_tests_app', 'CustomSluggedTestModel')
 
 class AutoSlugFieldTest(TestCase):
     def tearDown(self):
-        super(AutoSlugFieldTest, self).tearDown()
+        super().tearDown()
 
         SluggedTestModel.objects.all().delete()
 
@@ -67,28 +67,28 @@ class AutoSlugFieldTest(TestCase):
 
     def test_auto_create_unicode_slug(self):
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
-            m = SluggedTestModel(title=u'Château Margaux 1960')
+            m = SluggedTestModel(title='Château Margaux 1960')
             m.save()
-            self.assertEqual(m.slug, u'château-margaux-1960')
+            self.assertEqual(m.slug, 'château-margaux-1960')
 
     def test_auto_create_next_unicode_slug(self):
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
-            m1 = SluggedTestModel(title=u'Château Margaux 1960')
+            m1 = SluggedTestModel(title='Château Margaux 1960')
             m1.save()
 
-            m2 = SluggedTestModel(title=u'Château Margaux 1960')
+            m2 = SluggedTestModel(title='Château Margaux 1960')
             m2.save()
 
-            self.assertEqual(m2.slug, u'château-margaux-1960-2')
+            self.assertEqual(m2.slug, 'château-margaux-1960-2')
 
     def test_switch_to_unicode_slug(self):
-        m = SluggedTestModel(title=u'Château Margaux 1960')
+        m = SluggedTestModel(title='Château Margaux 1960')
         m.save()
         self.assertEqual(m.slug, 'chateau-margaux-1960')
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
-            m = SluggedTestModel(title=u'Château Margaux 1960')
+            m = SluggedTestModel(title='Château Margaux 1960')
             m.save()
-            self.assertEqual(m.slug, u'château-margaux-1960')
+            self.assertEqual(m.slug, 'château-margaux-1960')
 
     def test_autoslugfield_allow_unicode_kwargs_precedence(self):
         from oscar.models.fields import AutoSlugField
@@ -174,7 +174,6 @@ class AutoSlugFieldTest(TestCase):
         import oscar
         from django.db import migrations
         from django.db.migrations.writer import MigrationWriter
-        from django.utils import six
         from oscar.models.fields import AutoSlugField
         fields = {
             'autoslugfield': AutoSlugField(populate_from='otherfield'),
@@ -190,7 +189,7 @@ class AutoSlugFieldTest(TestCase):
         writer = MigrationWriter(migration)
         output = writer.as_string()
 
-        if isinstance(output, six.text_type):
+        if isinstance(output, str):
             output = output.encode('utf-8')
 
         # We don't test the output formatting - that's too fragile.

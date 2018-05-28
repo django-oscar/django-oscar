@@ -5,7 +5,6 @@ from decimal import ROUND_UP
 
 from django.db.models import Avg, Count, Sum
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.timezone import now
 from django.views.generic import TemplateView
 
@@ -40,7 +39,7 @@ class IndexView(TemplateView):
             return ['dashboard/index_nonstaff.html', 'dashboard/index.html']
 
     def get_context_data(self, **kwargs):
-        ctx = super(IndexView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx.update(self.get_stats())
         return ctx
 
@@ -200,7 +199,7 @@ class IndexView(TemplateView):
 class PopUpWindowCreateUpdateMixin(object):
 
     def get_context_data(self, **kwargs):
-        ctx = super(PopUpWindowCreateUpdateMixin, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
 
         if RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.GET or RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.POST:
             to_field = self.request.GET.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR,
@@ -223,7 +222,7 @@ class PopUpWindowCreateUpdateMixin(object):
         if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
             self.is_popup = True
 
-        return super(PopUpWindowCreateUpdateMixin, self).forms_valid(form, formset)
+        return super().forms_valid(form, formset)
 
 
 class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
@@ -236,7 +235,7 @@ class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
     # forms_valid, which should be defined in the base view class, to in
     # addition save the formset, and return a redirect to the success URL.
     def forms_valid(self, form, formset):
-        response = super(PopUpWindowCreateMixin, self).forms_valid(form, formset)
+        response = super().forms_valid(form, formset)
 
         if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
             obj = form.instance
@@ -247,8 +246,8 @@ class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
                 attr = obj._meta.pk.attname
             value = obj.serializable_value(attr)
             popup_response_data = json.dumps({
-                'value': six.text_type(value),
-                'obj': six.text_type(obj),
+                'value': str(value),
+                'obj': str(obj),
             })
             return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,
@@ -268,7 +267,7 @@ class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
     # forms_valid, which should be defined in the base view class, to in
     # addition save the formset, and return a redirect to the success URL.
     def forms_valid(self, form, formset):
-        response = super(PopUpWindowUpdateMixin, self).forms_valid(form, formset)
+        response = super().forms_valid(form, formset)
 
         if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
             obj = form.instance
@@ -283,9 +282,9 @@ class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
             new_value = obj.serializable_value(attr)
             popup_response_data = json.dumps({
                 'action': 'change',
-                'value': six.text_type(value),
-                'obj': six.text_type(obj),
-                'new_value': six.text_type(new_value),
+                'value': str(value),
+                'obj': str(obj),
+                'new_value': str(new_value),
             })
             return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,
@@ -298,7 +297,7 @@ class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
 class PopUpWindowDeleteMixin(object):
 
     def get_context_data(self, **kwargs):
-        ctx = super(PopUpWindowDeleteMixin, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
 
         if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET:
             ctx['is_popup'] = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR)
@@ -319,13 +318,13 @@ class PopUpWindowDeleteMixin(object):
 
         obj = self.get_object()
 
-        response = super(PopUpWindowDeleteMixin, self).delete(request, *args, **kwargs)
+        response = super().delete(request, *args, **kwargs)
 
         if RelatedFieldWidgetWrapper.IS_POPUP_VAR in request.POST:
             obj_id = obj.pk
             popup_response_data = json.dumps({
                 'action': 'delete',
-                'value': six.text_type(obj_id),
+                'value': str(obj_id),
             })
             return TemplateResponse(request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,

@@ -13,7 +13,7 @@ class AbstractAddressForm(forms.ModelForm):
         """
         Set fields in OSCAR_REQUIRED_ADDRESS_FIELDS as required.
         """
-        super(AbstractAddressForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         field_names = (set(self.fields) &
                        set(settings.OSCAR_REQUIRED_ADDRESS_FIELDS))
         for field_name in field_names:
@@ -32,5 +32,5 @@ class UserAddressForm(PhoneNumberMixin, AbstractAddressForm):
         ]
 
     def __init__(self, user, *args, **kwargs):
-        super(UserAddressForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.instance.user = user

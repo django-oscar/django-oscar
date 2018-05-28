@@ -1,5 +1,3 @@
-from django.utils.six.moves import map
-
 VISA, VISA_ELECTRON, MASTERCARD, AMEX, MAESTRO, DISCOVER = (
     'Visa', 'Visa Electron', 'Mastercard', 'American Express',
     'Maestro', 'Discover')

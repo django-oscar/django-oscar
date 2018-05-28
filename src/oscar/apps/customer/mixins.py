@@ -31,7 +31,7 @@ class PageTitleMixin(object):
         return self.page_title
 
     def get_context_data(self, **kwargs):
-        ctx = super(PageTitleMixin, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx.setdefault('page_title', self.get_page_title())
         ctx.setdefault('active_tab', self.active_tab)
         return ctx

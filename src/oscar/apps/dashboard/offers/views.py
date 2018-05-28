@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, FormView, ListView
 
 from oscar.core.loading import get_class, get_classes, get_model
@@ -65,7 +65,7 @@ class OfferListView(ListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        ctx = super(OfferListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
         ctx['is_filtered'] = self.is_filtered
@@ -91,8 +91,7 @@ class OfferWizardStepView(FormView):
                 request, _("%s step not complete") % (
                     self.previous_view.step_name.title(),))
             return HttpResponseRedirect(self.get_back_url())
-        return super(OfferWizardStepView, self).dispatch(request, *args,
-                                                         **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def is_previous_step_complete(self, request):
         if not self.previous_view:
@@ -179,13 +178,13 @@ class OfferWizardStepView(FormView):
             form_kwargs['instance'] = self.get_instance()
         session_kwargs = self._fetch_form_kwargs()
         form_kwargs.update(session_kwargs)
-        parent_kwargs = super(OfferWizardStepView, self).get_form_kwargs(
+        parent_kwargs = super().get_form_kwargs(
             *args, **kwargs)
         form_kwargs.update(parent_kwargs)
         return form_kwargs
 
     def get_context_data(self, **kwargs):
-        ctx = super(OfferWizardStepView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         if self.update:
             ctx['offer'] = self.offer
         ctx['session_offer'] = self._fetch_session_offer()
@@ -212,7 +211,7 @@ class OfferWizardStepView(FormView):
             return self.save_offer(self.offer)
         else:
             # Proceed to next page
-            return super(OfferWizardStepView, self).form_valid(form)
+            return super().form_valid(form)
 
     def save_offer(self, offer):
         # We update the offer with the name/description from step 1
@@ -339,7 +338,7 @@ class OfferDetailView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         self.offer = get_object_or_404(ConditionalOffer, pk=kwargs['pk'])
-        return super(OfferDetailView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if 'suspend' in request.POST:
@@ -373,7 +372,7 @@ class OfferDetailView(ListView):
             .select_related('order')
 
     def get_context_data(self, **kwargs):
-        ctx = super(OfferDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['offer'] = self.offer
         return ctx
 
@@ -382,4 +381,4 @@ class OfferDetailView(ListView):
             formatter = OrderDiscountCSVFormatter()
             return formatter.generate_response(context['order_discounts'],
                                                offer=self.offer)
-        return super(OfferDetailView, self).render_to_response(context)
+        return super().render_to_response(context)

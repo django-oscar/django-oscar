@@ -57,7 +57,7 @@ class TestCreateParentProduct(ProductWebTest):
 
     def setUp(self):
         self.pclass = ProductClassFactory(name='Books', slug='books')
-        super(TestCreateParentProduct, self).setUp()
+        super().setUp()
 
     def submit(self, title=None, category=None, upc=None):
         url = reverse('dashboard:catalogue-product-create',
@@ -112,7 +112,7 @@ class TestCreateChildProduct(ProductWebTest):
     def setUp(self):
         self.pclass = ProductClassFactory(name='Books', slug='books')
         self.parent = ProductFactory(structure='parent', stockrecords=[])
-        super(TestCreateChildProduct, self).setUp()
+        super().setUp()
 
     def test_categories_are_not_required(self):
         url = reverse('dashboard:catalogue-product-create-child',
@@ -151,7 +151,7 @@ class TestProductUpdate(ProductWebTest):
 
 class TestProductClass(ProductWebTest):
     def setUp(self):
-        super(TestProductClass, self).setUp()
+        super().setUp()
         self.pclass = ProductClassFactory(name='T-Shirts', slug='tshirts')
 
         for attribute_type, __ in ProductAttribute.TYPE_CHOICES:

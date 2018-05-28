@@ -5,9 +5,9 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import models
 from django.db.models import Sum
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from django.utils.encoding import smart_text
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes
@@ -21,7 +21,6 @@ LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
 OpenBasketManager, SavedBasketManager = get_classes('basket.managers', ['OpenBasketManager', 'SavedBasketManager'])
 
 
-@python_2_unicode_compatible
 class AbstractBasket(models.Model):
     """
     Basket object
@@ -75,7 +74,7 @@ class AbstractBasket(models.Model):
     saved = SavedBasketManager()
 
     def __init__(self, *args, **kwargs):
-        super(AbstractBasket, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # We keep a cached copy of the basket lines as we refer to them often
         # within the same request cycle.  Also, applying offers will append
@@ -87,7 +86,7 @@ class AbstractBasket(models.Model):
 
     def __str__(self):
         return _(
-            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
+            "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
             % {'status': self.status,
                'owner': self.owner,
                'num_lines': self.num_lines}
@@ -585,7 +584,6 @@ class AbstractBasket(models.Model):
             return 0
 
 
-@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """A line of a basket (product and a quantity)
 
@@ -650,7 +648,7 @@ class AbstractLine(models.Model):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
-        super(AbstractLine, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Instance variables used to persist discount information
         self._discount_excl_tax = D('0.00')
         self._discount_incl_tax = D('0.00')
@@ -667,17 +665,17 @@ class AbstractLine(models.Model):
 
     def __str__(self):
         return _(
-            u"Basket #%(basket_id)d, Product #%(product_id)d, quantity"
-            u" %(quantity)d") % {'basket_id': self.basket.pk,
-                                 'product_id': self.product.pk,
-                                 'quantity': self.quantity}
+            "Basket #%(basket_id)d, Product #%(product_id)d, quantity"
+            " %(quantity)d") % {'basket_id': self.basket.pk,
+                                'product_id': self.product.pk,
+                                'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
         if not self.basket.can_be_edited:
             raise PermissionDenied(
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
-        return super(AbstractLine, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     # =============
     # Offer methods
@@ -887,7 +885,7 @@ class AbstractLine(models.Model):
         This could be things like the price has changed
         """
         if isinstance(self.purchase_info.availability, Unavailable):
-            msg = u"'%(product)s' is no longer available"
+            msg = "'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 
         if not self.price_incl_tax:

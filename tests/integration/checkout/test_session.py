@@ -1,7 +1,8 @@
+from unittest import mock
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.sessions.middleware import SessionMiddleware
-import mock
 
 from oscar.apps.checkout.utils import CheckoutSessionData
 

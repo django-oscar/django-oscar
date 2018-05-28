@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from oscar.test.factories import create_product
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.offer import custom
 
@@ -17,7 +17,7 @@ class CustomRange(object):
 
 
 class CustomRangeLazy(object):
-    name = _("Custom range with ugettext_lazy")
+    name = _("Custom range with gettext_lazy")
 
     def contains_product(self, product):
         return product.title.startswith("B")
@@ -38,14 +38,14 @@ class TestACustomRange(TestCase):
         except ValidationError:
             pass
         else:
-            self.fail("Range can't have ugettext titles")
+            self.fail("Range can't have gettext titles")
 
     def test_correctly_includes_match(self):
         rng = custom.create_range(CustomRange)
-        test_product = create_product(title=u"A tale")
+        test_product = create_product(title="A tale")
         self.assertTrue(rng.contains_product(test_product))
 
     def test_correctly_excludes_nonmatch(self):
         rng = custom.create_range(CustomRange)
-        test_product = create_product(title=u"B tale")
+        test_product = create_product(title="B tale")
         self.assertFalse(rng.contains_product(test_product))

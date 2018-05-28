@@ -40,16 +40,16 @@ class WeightBasedDetailView(generic.CreateView):
     def dispatch(self, request, *args, **kwargs):
         self.method = shortcuts.get_object_or_404(
             WeightBased, pk=kwargs['pk'])
-        return super(WeightBasedDetailView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get_form_kwargs(self, **kwargs):
-        kwargs = super(WeightBasedDetailView, self).get_form_kwargs(**kwargs)
+        kwargs = super().get_form_kwargs(**kwargs)
         kwargs['method'] = self.method
         return kwargs
 
     def get_context_data(self, **kwargs):
-        ctx = super(WeightBasedDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['method'] = self.method
         return ctx
 
@@ -86,14 +86,14 @@ class WeightBandUpdateView(generic.UpdateView):
     def dispatch(self, request, *args, **kwargs):
         self.method = shortcuts.get_object_or_404(
             WeightBased, pk=kwargs['method_pk'])
-        return super(WeightBandUpdateView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get_queryset(self):
         return self.method.bands.all()
 
     def get_form_kwargs(self, **kwargs):
-        kwargs = super(WeightBandUpdateView, self).get_form_kwargs(**kwargs)
+        kwargs = super().get_form_kwargs(**kwargs)
         kwargs['method'] = self.method
         return kwargs
 
@@ -114,7 +114,7 @@ class WeightBandDeleteView(generic.DeleteView):
     def dispatch(self, request, *args, **kwargs):
         self.method = shortcuts.get_object_or_404(
             WeightBased, pk=kwargs['method_pk'])
-        return super(WeightBandDeleteView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs)
 
     def get_queryset(self):

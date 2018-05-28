@@ -18,7 +18,7 @@ class TestPageDashboard(WebTestCase):
             title='title2', url='/url2/',
             content='other content')
 
-        super(TestPageDashboard, self).setUp()
+        super().setUp()
 
     def test_dashboard_index_is_for_staff_only(self):
         response = self.get(reverse('dashboard:page-list'))

@@ -3,7 +3,7 @@ from collections import defaultdict
 from django import forms
 from django.conf import settings
 from django.forms.widgets import Input
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from haystack.forms import FacetedSearchForm
 
 from oscar.core.loading import get_class
@@ -123,13 +123,13 @@ class SearchForm(FacetedSearchForm):
                 # Query facet - don't wrap value in speech marks and don't
                 # clean value. Query values should have been validated by this
                 # point and so we don't need to escape them.
-                sqs = sqs.narrow(u'%s:(%s)' % (
+                sqs = sqs.narrow('%s:(%s)' % (
                     field, " OR ".join(values)))
             else:
                 # Field facet - clean and quote the values
                 clean_values = [
                     '"%s"' % sqs.query.clean(val) for val in values]
-                sqs = sqs.narrow(u'%s:(%s)' % (
+                sqs = sqs.narrow('%s:(%s)' % (
                     field, " OR ".join(clean_values)))
 
         if self.is_valid() and 'sort_by' in self.cleaned_data:

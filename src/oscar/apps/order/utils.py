@@ -3,7 +3,7 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import transaction
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.order.signals import order_placed
 from oscar.core.loading import get_model

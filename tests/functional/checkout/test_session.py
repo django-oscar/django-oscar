@@ -8,7 +8,7 @@ from . import CheckoutMixin
 class TestCheckoutOfDigitalGoods(CheckoutMixin, testcases.WebTestCase):
 
     def setUp(self):
-        super(TestCheckoutOfDigitalGoods, self).setUp()
+        super().setUp()
         product = self.create_digital_product()
         self.add_product_to_basket(product)
 

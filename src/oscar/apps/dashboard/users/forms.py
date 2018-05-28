@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.core.compat import get_user_model
@@ -12,13 +12,13 @@ ProductAlert = get_model('customer', 'ProductAlert')
 class UserSearchForm(forms.Form):
     email = forms.CharField(required=False, label=_("Email"))
     name = forms.CharField(
-        required=False, label=pgettext_lazy(u"User's name", u"Name"))
+        required=False, label=pgettext_lazy("User's name", "Name"))
 
 
 class ProductAlertUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(ProductAlertUpdateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         alert = kwargs['instance']
         if alert.user:
             # Remove 'unconfirmed' from list of available choices when editing

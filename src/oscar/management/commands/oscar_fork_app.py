@@ -1,7 +1,6 @@
 import logging
 
 from django.core.management.base import BaseCommand, CommandError
-from django.utils import six
 
 from oscar.core import customisation
 
@@ -26,4 +25,4 @@ class Command(BaseCommand):
         try:
             customisation.fork_app(app_label, folder_path, logger)
         except Exception as e:
-            raise CommandError(six.text_type(e))
+            raise CommandError(str(e))

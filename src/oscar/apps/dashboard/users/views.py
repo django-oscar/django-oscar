@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     DeleteView, DetailView, FormView, ListView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
@@ -38,13 +38,13 @@ class IndexView(BulkEditMixin, FormMixin, SingleTableView):
     def dispatch(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         self.form = self.get_form(form_class)
-        return super(IndexView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         """
         Only bind search form if it was submitted.
         """
-        kwargs = super(IndexView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
 
         if 'search' in self.request.GET:
             kwargs.update({
@@ -94,12 +94,12 @@ class IndexView(BulkEditMixin, FormMixin, SingleTableView):
         return queryset
 
     def get_table(self, **kwargs):
-        table = super(IndexView, self).get_table(**kwargs)
+        table = super().get_table(**kwargs)
         table.caption = self.desc_template % self.desc_ctx
         return table
 
     def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['form'] = self.form
         return context
 
@@ -131,17 +131,17 @@ class PasswordResetView(SingleObjectMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        return super(PasswordResetView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
-        kwargs = super(PasswordResetView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['data'] = {'email': self.object.email}
         return kwargs
 
     def form_valid(self, form):
         # The PasswordResetForm's save method sends the reset email
         form.save(request=self.request)
-        return super(PasswordResetView, self).form_valid(form)
+        return super().form_valid(form)
 
     def get_success_url(self):
         messages.success(
@@ -203,7 +203,7 @@ class ProductAlertListView(ListView):
         return queryset
 
     def get_context_data(self, **kwargs):
-        context = super(ProductAlertListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['form'] = self.form
         context['queryset_description'] = self.description
         return context

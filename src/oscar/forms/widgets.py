@@ -6,7 +6,6 @@ from django.forms.models import ModelChoiceIterator
 from django.forms.widgets import FileInput
 from django.utils import formats
 from django.utils.encoding import force_text
-from django.utils.six.moves import map
 
 
 class ImageInput(FileInput):
@@ -23,10 +22,10 @@ class ImageInput(FileInput):
         if not attrs:
             attrs = {}
         attrs['accept'] = 'image/*'
-        super(ImageInput, self).__init__(attrs=attrs)
+        super().__init__(attrs=attrs)
 
     def get_context(self, name, value, attrs):
-        ctx = super(ImageInput, self).get_context(name, value, attrs)
+        ctx = super().get_context(name, value, attrs)
 
         ctx['image_url'] = ''
         if value and not isinstance(value, InMemoryUploadedFile):
@@ -43,7 +42,7 @@ class WYSIWYGTextArea(forms.Textarea):
         kwargs.setdefault('attrs', {})
         kwargs['attrs'].setdefault('class', '')
         kwargs['attrs']['class'] += ' wysiwyg'
-        super(WYSIWYGTextArea, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 def datetime_format_to_js_date_format(format):
@@ -129,8 +128,8 @@ class DateTimeWidgetMixin(object):
         return self.format or formats.get_format(self.format_key)[0]
 
     def build_attrs(self, base_attrs, extra_attrs=None):
-        attrs = super(DateTimeWidgetMixin, self).build_attrs(base_attrs, extra_attrs)
-        attrs['data-inputmask'] = u"'mask': '{mask}'".format(
+        attrs = super().build_attrs(base_attrs, extra_attrs)
+        attrs['data-inputmask'] = "'mask': '{mask}'".format(
             mask=datetime_format_to_js_input_mask(self.get_format()))
         return attrs
 
@@ -143,7 +142,7 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
     format_key = 'TIME_INPUT_FORMATS'
 
     def get_context(self, name, value, attrs):
-        ctx = super(TimePickerInput, self).get_context(name, value, attrs)
+        ctx = super().get_context(name, value, attrs)
         ctx['div_attrs'] = {
             'data-oscarWidget': 'time',
             'data-timeFormat': datetime_format_to_js_time_format(self.get_format()),
@@ -160,7 +159,7 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
     format_key = 'DATE_INPUT_FORMATS'
 
     def get_context(self, name, value, attrs):
-        ctx = super(DatePickerInput, self).get_context(name, value, attrs)
+        ctx = super().get_context(name, value, attrs)
         ctx['div_attrs'] = {
             'data-oscarWidget': 'date',
             'data-dateFormat': datetime_format_to_js_date_format(self.get_format()),
@@ -185,13 +184,13 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
 
     def __init__(self, *args, **kwargs):
         include_seconds = kwargs.pop('include_seconds', False)
-        super(DateTimePickerInput, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if not include_seconds and self.format:
             self.format = re.sub(':?%S', '', self.format)
 
     def get_context(self, name, value, attrs):
-        ctx = super(DateTimePickerInput, self).get_context(name, value, attrs)
+        ctx = super().get_context(name, value, attrs)
         ctx['div_attrs'] = {
             'data-oscarWidget': 'datetime',
             'data-datetimeFormat': datetime_format_to_js_datetime_format(self.get_format()),
@@ -210,10 +209,10 @@ class AdvancedSelect(forms.Select):
 
     def __init__(self, attrs=None, choices=(), disabled_values=()):
         self.disabled_values = set(force_text(v) for v in disabled_values)
-        super(AdvancedSelect, self).__init__(attrs, choices)
+        super().__init__(attrs, choices)
 
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
-        option = super(AdvancedSelect, self).create_option(name, value, label, selected, index, subindex, attrs)
+        option = super().create_option(name, value, label, selected, index, subindex, attrs)
         if force_text(value) in self.disabled_values:
             option['attrs']['disabled'] = True
         return option
@@ -233,10 +232,10 @@ class RemoteSelect(forms.Select):
         if self.lookup_url is None:
             raise ValueError("RemoteSelect requires a lookup URL")
 
-        super(RemoteSelect, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def build_attrs(self, *args, **kwargs):
-        attrs = super(RemoteSelect, self).build_attrs(*args, **kwargs)
+        attrs = super().build_attrs(*args, **kwargs)
         attrs.update({
             'data-ajax-url': self.lookup_url,
             'data-multiple': 'multiple' if self.allow_multiple_selected else '',
@@ -261,7 +260,7 @@ class RemoteSelect(forms.Select):
 
         # If thi is not a model choice field then just return all choices
         if not isinstance(self.choices, ModelChoiceIterator):
-            return super(RemoteSelect, self).optgroups(name, value, attrs=attrs)
+            return super().optgroups(name, value, attrs=attrs)
 
         selected_choices = {
             c for c in selected_choices if c not in self.choices.field.empty_values

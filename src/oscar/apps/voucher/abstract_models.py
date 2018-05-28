@@ -4,15 +4,13 @@ from django.core import exceptions
 from django.db import models, transaction
 from django.db.models import Sum
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.voucher.utils import get_unused_code
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
 
 
-@python_2_unicode_compatible
 class AbstractVoucherSet(models.Model):
     """A collection of vouchers (potentially auto-generated)
 
@@ -86,7 +84,7 @@ class AbstractVoucherSet(models.Model):
     def save(self, *args, **kwargs):
         self.count = max(self.count, self.vouchers.count())
         with transaction.atomic():
-            super(AbstractVoucherSet, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
             self.generate_vouchers()
             self.vouchers.update(
                 start_datetime=self.start_datetime,
@@ -109,7 +107,6 @@ class AbstractVoucherSet(models.Model):
         return value['result']
 
 
-@python_2_unicode_compatible
 class AbstractVoucher(models.Model):
     """
     A voucher.  This is simply a link to a collection of offers.
@@ -179,7 +176,7 @@ class AbstractVoucher(models.Model):
 
     def save(self, *args, **kwargs):
         self.code = self.code.upper()
-        super(AbstractVoucher, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def is_active(self, test_datetime=None):
         """
@@ -253,7 +250,6 @@ class AbstractVoucher(models.Model):
         return self.offers.all()[0].benefit
 
 
-@python_2_unicode_compatible
 class AbstractVoucherApplication(models.Model):
     """
     For tracking how often a voucher has been used in an order.

@@ -1,7 +1,7 @@
 from django import forms
 from django.core import exceptions
 from django.forms.models import inlineformset_factory
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_classes, get_model
 
@@ -50,7 +50,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
                                                        partner__in=user.partners.all())
             })
 
-        super(StockRecordFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.set_initial_data()
 
     def set_initial_data(self):
@@ -78,7 +78,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
     def _construct_form(self, i, **kwargs):
         kwargs['product_class'] = self.product_class
         kwargs['user'] = self.user
-        return super(StockRecordFormSet, self)._construct_form(
+        return super()._construct_form(
             i, **kwargs)
 
     def clean(self):
@@ -107,7 +107,7 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
     def __init__(self, product_class, user, *args, **kwargs):
         # This function just exists to drop the extra arguments
-        super(ProductCategoryFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self):
         if not self.instance.is_child and self.get_num_categories() == 0:
@@ -136,7 +136,7 @@ BaseProductImageFormSet = inlineformset_factory(
 class ProductImageFormSet(BaseProductImageFormSet):
 
     def __init__(self, product_class, user, *args, **kwargs):
-        super(ProductImageFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 BaseProductRecommendationFormSet = inlineformset_factory(
@@ -147,7 +147,7 @@ BaseProductRecommendationFormSet = inlineformset_factory(
 class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
 
     def __init__(self, product_class, user, *args, **kwargs):
-        super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 ProductAttributesFormSet = inlineformset_factory(ProductClass,

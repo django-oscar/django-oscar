@@ -1,10 +1,8 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
-from django.utils import six
 from django.utils.encoding import smart_str
-from django.utils.six.moves import map
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import View
 
 from oscar.core.utils import safe_referrer
@@ -29,7 +27,7 @@ class PostActionMixin(object):
                 return self.response
             else:
                 messages.error(request, _("Invalid form submission"))
-        return super(PostActionMixin, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 
 class BulkEditMixin(object):
@@ -94,7 +92,7 @@ class ObjectLookupView(View):
     def format_object(self, obj):
         return {
             'id': obj.pk,
-            'text': six.text_type(obj),
+            'text': str(obj),
         }
 
     def initial_filter(self, qs, value):

@@ -1,5 +1,6 @@
+from unittest import mock
+
 from django.test import TestCase
-import mock
 
 from oscar.apps.shipping import repository, methods
 

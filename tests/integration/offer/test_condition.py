@@ -1,8 +1,7 @@
 import pytest
 from decimal import Decimal as D
+from unittest import mock
 
-import mock
-import six
 from django.test import TestCase
 
 from oscar.apps.basket.models import Basket
@@ -229,15 +228,13 @@ class TestConditionProxyModels(object):
         Tests that the condition proxy classes all return a name and
         description. Unfortunately, the current implementations means
         a valid range and value are required.
-        This test became necessary because the complex name/description logic
-        broke with the python_2_unicode_compatible decorator.
         """
         for type, __ in models.Condition.TYPE_CHOICES:
             condition = models.Condition(type=type, range=range, value=5)
             assert all([
                 condition.name,
                 condition.description,
-                six.text_type(condition)])
+                str(condition)])
 
     def test_proxy(self, range):
         for type, __ in models.Condition.TYPE_CHOICES:

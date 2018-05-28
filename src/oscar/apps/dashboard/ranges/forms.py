@@ -2,7 +2,7 @@ import re
 
 from django import forms
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_model
 
@@ -31,10 +31,10 @@ class RangeProductForm(forms.Form):
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
-        super(RangeProductForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self):
-        clean_data = super(RangeProductForm, self).clean()
+        clean_data = super().clean()
         if not clean_data.get('query') and not clean_data.get('file_upload'):
             raise forms.ValidationError(
                 _("You must submit either a list of SKU/UPCs or a file"))

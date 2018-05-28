@@ -1,11 +1,11 @@
 from datetime import timedelta, datetime
 from decimal import Decimal as D
+from unittest import mock
 
 from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase, override_settings
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-import mock
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.order.exceptions import (
     InvalidOrderStatus, InvalidLineStatus, InvalidShippingEvent)
@@ -284,7 +284,7 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-        self.assertEqual(discount.description(), u'')
+        self.assertEqual(discount.description(), '')
 
     def test_can_be_created_with_an_offer(self):
         offer = create_offer()
@@ -330,7 +330,7 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-        self.assertEqual(discount.description(), u'Get 200% off')
+        self.assertEqual(discount.description(), 'Get 200% off')
 
     def test_contains_voucher_details_after_voucher_is_deleted(self):
         voucher = create_voucher()

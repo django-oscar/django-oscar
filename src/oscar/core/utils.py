@@ -1,12 +1,9 @@
-from __future__ import absolute_import  # for logging import below
-
 import datetime
 import logging
 
 from django.conf import settings
 from django.shortcuts import redirect, resolve_url
 from django.template.defaultfilters import date as date_filter
-from django.utils import six
 from django.utils.http import is_safe_url
 from django.utils.module_loading import import_string
 from django.utils.text import slugify as django_slugify
@@ -33,15 +30,15 @@ def slugify(value):
     # Allow an alternative slugify function to be specified
     # Recommended way to specify a function is as a string
     slugifier = getattr(settings, 'OSCAR_SLUG_FUNCTION', default_slugifier)
-    if isinstance(slugifier, six.string_types):
+    if isinstance(slugifier, str):
         slugifier = import_string(slugifier)
 
     # Use unidecode to convert non-ASCII strings to ASCII equivalents where
     # possible if unicode is not allowed to contain in slug.
     if not settings.OSCAR_SLUG_ALLOW_UNICODE:
-        value = unidecode(six.text_type(value))
+        value = unidecode(str(value))
 
-    value = slugifier(six.text_type(value))
+    value = slugifier(str(value))
     # Remove stopwords
     for word in settings.OSCAR_SLUG_BLACKLIST:
         value = value.replace(word + '-', '')

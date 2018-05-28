@@ -1,8 +1,8 @@
 from decimal import Decimal as D
+from unittest import mock
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-import mock
 
 from oscar.apps.offer import models
 from oscar.test.basket import add_product, add_products

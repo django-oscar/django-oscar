@@ -1,6 +1,7 @@
 import pytest
+from unittest.mock import Mock
+
 from django.contrib.sessions.middleware import SessionMiddleware
-from mock import Mock
 
 from oscar.apps.checkout.forms import ShippingAddressForm
 from oscar.apps.checkout.utils import CheckoutSessionData

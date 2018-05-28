@@ -8,7 +8,7 @@ import zlib
 from django.core.exceptions import FieldError
 from django.core.files import File
 from django.db.transaction import atomic
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from PIL import Image
 
 from oscar.apps.catalogue.exceptions import (

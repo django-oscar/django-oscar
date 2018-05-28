@@ -13,7 +13,6 @@ import sys
 from setuptools import find_packages, setup
 
 PROJECT_DIR = os.path.dirname(__file__)
-PY3 = sys.version_info >= (3, 0)
 
 sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
@@ -39,8 +38,6 @@ install_requires = [
     # For phone number field
     'phonenumbers',
     'django-phonenumber-field>=2.0,<2.1',
-    # Used for oscar.test.contextmanagers.mock_signal_receiver
-    'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
@@ -103,8 +100,6 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: Unix',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',

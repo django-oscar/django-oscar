@@ -16,9 +16,9 @@ class ThankYouViewTestCase(TestCase):
         session['checkout_order_id'] = order.pk
         session.save()
 
-        r1 = self.client.get(reverse('checkout:thank-you'))
+        r1 = self.client.get(reverse('checkout:thank-you'), follow=True)
         self.assertTrue(r1.context['send_analytics_event'])
 
         # Request the view a second time
-        r2 = self.client.get(reverse('checkout:thank-you'))
+        r2 = self.client.get(reverse('checkout:thank-you'), follow=True)
         self.assertFalse(r2.context['send_analytics_event'])

@@ -13,12 +13,10 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Sum
 from django.urls import reverse
-from django.utils import six
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
@@ -35,7 +33,6 @@ ProductAttributesContainer = get_class(
 Selector = get_class('partner.strategy', 'Selector')
 
 
-@python_2_unicode_compatible
 class AbstractProductClass(models.Model):
     """
     Used for defining options and attributes for a subset of products.
@@ -81,7 +78,6 @@ class AbstractProductClass(models.Model):
         return self.attributes.exists()
 
 
-@python_2_unicode_compatible
 class AbstractCategory(MP_Node):
     """
     A product category. Merely used for navigational purposes; has no
@@ -160,10 +156,10 @@ class AbstractCategory(MP_Node):
         """
         if self.slug:
             # Slug was supplied. Hands off!
-            super(AbstractCategory, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
         else:
             self.slug = self.generate_slug()
-            super(AbstractCategory, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
             # We auto-generated a slug, so we need to make sure that it's
             # unique. As we need to be able to inspect the category's siblings
             # for that, we need to wait until the instance is saved. We
@@ -223,7 +219,6 @@ class AbstractCategory(MP_Node):
         return self.get_children().count()
 
 
-@python_2_unicode_compatible
 class AbstractProductCategory(models.Model):
     """
     Joining model between products and categories. Exists to allow customising.
@@ -246,10 +241,9 @@ class AbstractProductCategory(models.Model):
         verbose_name_plural = _('Product categories')
 
     def __str__(self):
-        return u"<productcategory for product '%s'>" % self.product
+        return "<productcategory for product '%s'>" % self.product
 
 
-@python_2_unicode_compatible
 class AbstractProduct(models.Model):
     """
     The base product object
@@ -295,7 +289,7 @@ class AbstractProduct(models.Model):
                     " this product)."))
 
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(pgettext_lazy(u'Product title', u'Title'),
+    title = models.CharField(pgettext_lazy('Product title', 'Title'),
                              max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
@@ -364,14 +358,14 @@ class AbstractProduct(models.Model):
         verbose_name_plural = _('Products')
 
     def __init__(self, *args, **kwargs):
-        super(AbstractProduct, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.attr = ProductAttributesContainer(product=self)
 
     def __str__(self):
         if self.title:
             return self.title
         if self.attribute_summary:
-            return u"%s (%s)" % (self.get_title(), self.attribute_summary)
+            return "%s (%s)" % (self.get_title(), self.attribute_summary)
         else:
             return self.get_title()
 
@@ -456,7 +450,7 @@ class AbstractProduct(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.get_title())
-        super(AbstractProduct, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.attr.save()
 
     # Properties
@@ -541,7 +535,7 @@ class AbstractProduct(models.Model):
         if not title and self.parent_id:
             title = self.parent.title
         return title
-    get_title.short_description = pgettext_lazy(u"Product title", u"Title")
+    get_title.short_description = pgettext_lazy("Product title", "Title")
 
     def get_product_class(self):
         """
@@ -694,7 +688,6 @@ class AbstractProductRecommendation(models.Model):
         verbose_name_plural = _('Product recomendations')
 
 
-@python_2_unicode_compatible
 class AbstractProductAttribute(models.Model):
     """
     Defines an attribute for a product class. (For example, number_of_pages for
@@ -846,8 +839,8 @@ class AbstractProductAttribute(models.Model):
     # Validators
 
     def _validate_text(self, value):
-        if not isinstance(value, six.string_types):
-            raise ValidationError(_("Must be str or unicode"))
+        if not isinstance(value, str):
+            raise ValidationError(_("Must be str"))
     _validate_richtext = _validate_text
 
     def _validate_float(self, value):
@@ -911,7 +904,6 @@ class AbstractProductAttribute(models.Model):
     _validate_image = _validate_file
 
 
-@python_2_unicode_compatible
 class AbstractProductAttributeValue(models.Model):
     """
     The "through" model for the m2m relationship between catalogue.Product and
@@ -974,7 +966,7 @@ class AbstractProductAttributeValue(models.Model):
     def _set_value(self, new_value):
         attr_name = 'value_%s' % self.attribute.type
 
-        if self.attribute.is_option and isinstance(new_value, six.string_types):
+        if self.attribute.is_option and isinstance(new_value, str):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
@@ -1002,7 +994,7 @@ class AbstractProductAttributeValue(models.Model):
         Gets a string representation of both the attribute and it's value,
         used e.g in product summaries.
         """
-        return u"%s: %s" % (self.attribute.name, self.value_as_text)
+        return "%s: %s" % (self.attribute.name, self.value_as_text)
 
     @property
     def value_as_text(self):
@@ -1028,7 +1020,7 @@ class AbstractProductAttributeValue(models.Model):
         Returns the unicode representation of the related model. You likely
         want to customise this (and maybe _entity_as_html) if you use entities.
         """
-        return six.text_type(self.value)
+        return str(self.value)
 
     @property
     def value_as_html(self):
@@ -1045,7 +1037,6 @@ class AbstractProductAttributeValue(models.Model):
         return mark_safe(self.value)
 
 
-@python_2_unicode_compatible
 class AbstractAttributeOptionGroup(models.Model):
     """
     Defines a group of options that collectively may be used as an
@@ -1070,7 +1061,6 @@ class AbstractAttributeOptionGroup(models.Model):
         return ", ".join(options)
 
 
-@python_2_unicode_compatible
 class AbstractAttributeOption(models.Model):
     """
     Provides an option within an option group for an attribute type
@@ -1094,7 +1084,6 @@ class AbstractAttributeOption(models.Model):
         verbose_name_plural = _('Attribute options')
 
 
-@python_2_unicode_compatible
 class AbstractOption(models.Model):
     """
     An option that can be selected for a particular item when the product
@@ -1176,7 +1165,6 @@ class MissingProductImage(object):
                                            settings.MEDIA_ROOT))
 
 
-@python_2_unicode_compatible
 class AbstractProductImage(models.Model):
     """
     An image of a product
@@ -1207,7 +1195,7 @@ class AbstractProductImage(models.Model):
         verbose_name_plural = _('Product images')
 
     def __str__(self):
-        return u"Image of '%s'" % self.product
+        return "Image of '%s'" % self.product
 
     def is_primary(self):
         """
@@ -1220,7 +1208,7 @@ class AbstractProductImage(models.Model):
         Always keep the display_order as consecutive integers. This avoids
         issue #855.
         """
-        super(AbstractProductImage, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
         for idx, image in enumerate(self.product.images.all()):
             image.display_order = idx
             image.save()

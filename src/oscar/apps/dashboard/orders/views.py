@@ -10,7 +10,7 @@ from django.db.models import Count, Q, Sum, fields
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
 from oscar.apps.order import exceptions as order_exceptions
@@ -82,12 +82,12 @@ class OrderStatsView(FormView):
         return self.render_to_response(ctx)
 
     def get_form_kwargs(self):
-        kwargs = super(OrderStatsView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['data'] = self.request.GET
         return kwargs
 
     def get_context_data(self, **kwargs):
-        ctx = super(OrderStatsView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         filters = kwargs.get('filters', {})
         ctx.update(self.get_stats(filters))
         ctx['title'] = kwargs['form'].get_filter_description()
@@ -122,7 +122,7 @@ class OrderListView(BulkEditMixin, ListView):
         # base_queryset is equal to all orders the user is allowed to access
         self.base_queryset = queryset_orders_for_user(
             request.user).order_by('-date_placed')
-        return super(OrderListView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         if 'order_number' in request.GET and request.GET.get(
@@ -136,7 +136,7 @@ class OrderListView(BulkEditMixin, ListView):
             else:
                 return redirect(
                     'dashboard:order-detail', number=order.number)
-        return super(OrderListView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):  # noqa (too complex (19))
         """
@@ -333,7 +333,7 @@ class OrderListView(BulkEditMixin, ListView):
         return descriptions
 
     def get_context_data(self, **kwargs):
-        ctx = super(OrderListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['form'] = self.form
         ctx['order_statuses'] = Order.all_statuses()
         ctx['search_filters'] = self.get_search_filter_descriptions()
@@ -350,7 +350,7 @@ class OrderListView(BulkEditMixin, ListView):
             return self.download_selected_orders(
                 self.request,
                 context['object_list'])
-        return super(OrderListView, self).render_to_response(
+        return super().render_to_response(
             context, **response_kwargs)
 
     def get_download_filename(self, request):
@@ -523,7 +523,7 @@ class OrderDetailView(DetailView):
         return HttpResponseRedirect(url)
 
     def get_context_data(self, **kwargs):
-        ctx = super(OrderDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['active_tab'] = kwargs.get('active_tab', 'lines')
 
         # Forms
@@ -748,7 +748,7 @@ class LineDetailView(DetailView):
             raise Http404()
 
     def get_context_data(self, **kwargs):
-        ctx = super(LineDetailView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['order'] = self.object.order
         return ctx
 
@@ -803,13 +803,13 @@ class ShippingAddressUpdateView(UpdateView):
         return get_object_or_404(self.model, order=order)
 
     def get_context_data(self, **kwargs):
-        ctx = super(ShippingAddressUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['order'] = self.object.order
         return ctx
 
     def form_valid(self, form):
         old_address = ShippingAddress.objects.get(id=self.object.id)
-        response = super(ShippingAddressUpdateView, self).form_valid(form)
+        response = super().form_valid(form)
         changes = get_change_summary(old_address, self.object)
         if changes:
             msg = _("Delivery address updated:\n%s") % changes

@@ -1,8 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import get_default_currency
@@ -12,7 +11,6 @@ from oscar.templatetags.currency_filters import currency
 from . import bankcards
 
 
-@python_2_unicode_compatible
 class AbstractTransaction(models.Model):
     """
     A transaction for a particular payment source.
@@ -44,7 +42,7 @@ class AbstractTransaction(models.Model):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def __str__(self):
-        return _(u"%(type)s of %(amount).2f") % {
+        return _("%(type)s of %(amount).2f") % {
             'type': self.txn_type,
             'amount': self.amount}
 
@@ -56,7 +54,6 @@ class AbstractTransaction(models.Model):
         verbose_name_plural = _("Transactions")
 
 
-@python_2_unicode_compatible
 class AbstractSource(models.Model):
     """
     A source of payment for an order.
@@ -123,7 +120,7 @@ class AbstractSource(models.Model):
         return description
 
     def save(self, *args, **kwargs):
-        super(AbstractSource, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self.deferred_txns:
             for txn in self.deferred_txns:
                 self._create_transaction(*txn)
@@ -201,7 +198,6 @@ class AbstractSource(models.Model):
         return self.amount_debited - self.amount_refunded
 
 
-@python_2_unicode_compatible
 class AbstractSourceType(models.Model):
     """
     A type of payment source.
@@ -224,7 +220,6 @@ class AbstractSourceType(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class AbstractBankcard(models.Model):
     """
     Model representing a user's bankcard.  This is used for two purposes:
@@ -272,7 +267,7 @@ class AbstractBankcard(models.Model):
     ccv = None
 
     def __str__(self):
-        return _(u"%(card_type)s %(number)s (Expires: %(expiry)s)") % {
+        return _("%(card_type)s %(number)s (Expires: %(expiry)s)") % {
             'card_type': self.card_type,
             'number': self.number,
             'expiry': self.expiry_month()}
@@ -282,7 +277,7 @@ class AbstractBankcard(models.Model):
         self.start_date = kwargs.pop('start_date', None)
         self.issue_number = kwargs.pop('issue_number', None)
         self.ccv = kwargs.pop('ccv', None)
-        super(AbstractBankcard, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Initialise the card-type
         if self.id is None:
@@ -299,12 +294,12 @@ class AbstractBankcard(models.Model):
     def save(self, *args, **kwargs):
         if not self.number.startswith('X'):
             self.prepare_for_save()
-        super(AbstractBankcard, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def prepare_for_save(self):
         # This is the first time this card instance is being saved.  We
         # remove all sensitive data
-        self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
+        self.number = "XXXX-XXXX-XXXX-%s" % self.number[-4:]
         self.start_date = self.issue_number = self.ccv = None
 
     @property
@@ -313,7 +308,7 @@ class AbstractBankcard(models.Model):
 
     @property
     def obfuscated_number(self):
-        return u'XXXX-XXXX-XXXX-%s' % self.number[-4:]
+        return 'XXXX-XXXX-XXXX-%s' % self.number[-4:]
 
     def start_month(self, format='%m/%y'):
         return self.start_date.strftime(format)

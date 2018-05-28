@@ -3,8 +3,7 @@ from django.contrib.contenttypes import fields
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.core.loading import get_model
@@ -39,7 +38,6 @@ class LinkedPromotion(models.Model):
     record_click.alters_data = True
 
 
-@python_2_unicode_compatible
 class PagePromotion(LinkedPromotion):
     """
     A promotion embedded on a particular page.
@@ -48,7 +46,7 @@ class PagePromotion(LinkedPromotion):
         _('Page URL'), max_length=128, db_index=True)
 
     def __str__(self):
-        return u"%s on %s" % (self.content_object, self.page_url)
+        return "%s on %s" % (self.content_object, self.page_url)
 
     def get_link(self):
         return reverse('promotions:page-click',
@@ -136,7 +134,6 @@ class AbstractPromotion(models.Model):
         return page_count + keyword_count
 
 
-@python_2_unicode_compatible
 class RawHTML(AbstractPromotion):
     """
     Simple promotion - just raw HTML
@@ -163,7 +160,6 @@ class RawHTML(AbstractPromotion):
         return self.name
 
 
-@python_2_unicode_compatible
 class Image(AbstractPromotion):
     """
     An image promotion is simply a named image which has an optional
@@ -190,7 +186,6 @@ class Image(AbstractPromotion):
         verbose_name_plural = _("Image")
 
 
-@python_2_unicode_compatible
 class MultiImage(AbstractPromotion):
     """
     A multi-image promotion is simply a collection of image promotions
@@ -215,7 +210,6 @@ class MultiImage(AbstractPromotion):
         verbose_name_plural = _("Multi Images")
 
 
-@python_2_unicode_compatible
 class SingleProduct(AbstractPromotion):
     _type = 'Single product'
     name = models.CharField(_("Name"), max_length=128)
@@ -235,14 +229,13 @@ class SingleProduct(AbstractPromotion):
         verbose_name_plural = _("Single product")
 
 
-@python_2_unicode_compatible
 class AbstractProductList(AbstractPromotion):
     """
     Abstract superclass for promotions which are essentially a list
     of products.
     """
     name = models.CharField(
-        pgettext_lazy(u"Promotion product list title", u"Title"),
+        pgettext_lazy("Promotion product list title", "Title"),
         max_length=255)
     description = models.TextField(_("Description"), blank=True)
     link_url = ExtendedURLField(_('Link URL'), blank=True)
@@ -353,7 +346,7 @@ class TabbedBlock(AbstractPromotion):
 
     _type = 'Tabbed block'
     name = models.CharField(
-        pgettext_lazy(u"Tabbed block title", u"Title"), max_length=255)
+        pgettext_lazy("Tabbed block title", "Title"), max_length=255)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:

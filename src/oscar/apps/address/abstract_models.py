@@ -4,9 +4,7 @@ import zlib
 from django.conf import settings
 from django.core import exceptions
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.six.moves import filter
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -15,7 +13,6 @@ from oscar.core.decorators import deprecated
 from oscar.models.fields import UppercaseCharField
 
 
-@python_2_unicode_compatible
 class AbstractAddress(models.Model):
     """
     Superclass address object
@@ -218,7 +215,7 @@ class AbstractAddress(models.Model):
     }
 
     title = models.CharField(
-        pgettext_lazy(u"Treatment Pronouns for the customer", u"Title"),
+        pgettext_lazy("Treatment Pronouns for the customer", "Title"),
         max_length=64, choices=TITLE_CHOICES, blank=True)
     first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
@@ -259,7 +256,7 @@ class AbstractAddress(models.Model):
 
     def save(self, *args, **kwargs):
         self._update_search_text()
-        super(AbstractAddress, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def clean(self):
         # Strip all whitespace
@@ -318,7 +315,7 @@ class AbstractAddress(models.Model):
         Returns a single string summary of the address,
         separating fields using commas.
         """
-        return u", ".join(self.active_address_fields())
+        return ", ".join(self.active_address_fields())
 
     @property
     def salutation(self):
@@ -327,11 +324,11 @@ class AbstractAddress(models.Model):
         """
         return self.join_fields(
             ('title', 'first_name', 'last_name'),
-            separator=u" ")
+            separator=" ")
 
     @property
     def name(self):
-        return self.join_fields(('first_name', 'last_name'), separator=u" ")
+        return self.join_fields(('first_name', 'last_name'), separator=" ")
 
     # Helpers
 
@@ -371,7 +368,7 @@ class AbstractAddress(models.Model):
         # `& 0xffffffff` expression.
         return zlib.crc32(', '.join(field_values).upper().encode('UTF8')) & 0xffffffff
 
-    def join_fields(self, fields, separator=u", "):
+    def join_fields(self, fields, separator=", "):
         """
         Join a sequence of fields using the specified separator
         """
@@ -401,7 +398,6 @@ class AbstractAddress(models.Model):
         return self.get_address_field_values(self.base_fields)
 
 
-@python_2_unicode_compatible
 class AbstractCountry(models.Model):
     """
     International Organization for Standardization (ISO) 3166-1 Country list.
@@ -456,7 +452,7 @@ class AbstractCountry(models.Model):
         but the database might still contain non-padded strings. That's why
         the padding is kept.
         """
-        return u"%.03d" % int(self.iso_3166_1_numeric)
+        return "%.03d" % int(self.iso_3166_1_numeric)
 
 
 class AbstractShippingAddress(AbstractAddress):
@@ -553,7 +549,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         # Ensure that each user only has one default shipping address
         # and billing address
         self._ensure_defaults_integrity()
-        super(AbstractUserAddress, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def _ensure_defaults_integrity(self):
         if self.is_default_for_shipping:
@@ -574,7 +570,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         unique_together = ('user', 'hash')
 
     def validate_unique(self, exclude=None):
-        super(AbstractAddress, self).validate_unique(exclude)
+        super().validate_unique(exclude)
         qs = self.__class__.objects.filter(
             user=self.user,
             hash=self.generate_hash())

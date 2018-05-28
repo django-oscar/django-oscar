@@ -9,7 +9,7 @@ class ProductSelect(RemoteSelect):
     lookup_url = reverse_lazy('dashboard:catalogue-product-lookup')
 
     def __init__(self, *args, **kwargs):
-        super(ProductSelect, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.attrs['class'] = 'select2 product-select'
 
 

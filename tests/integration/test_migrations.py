@@ -4,15 +4,12 @@ https://github.com/torchbox/wagtail/blob/d82e38e11e9f6c27b6ad6dfc6467e2754b5ab22
 
 
 """
-from __future__ import absolute_import
-
 from django.apps import apps
 from django.db.migrations.autodetector import MigrationAutodetector
 from django.db.migrations.loader import MigrationLoader
 from django.db.migrations.questioner import MigrationQuestioner
 from django.db.migrations.state import ProjectState
 from django.test import TransactionTestCase
-from django.utils.six import iteritems
 
 
 class TestForMigrations(TransactionTestCase):
@@ -25,7 +22,7 @@ class TestForMigrations(TransactionTestCase):
 
         conflicts = dict(
             (app_label, conflict)
-            for app_label, conflict in iteritems(loader.detect_conflicts())
+            for app_label, conflict in iter(loader.detect_conflicts())
             if app_label in app_labels
         )
 

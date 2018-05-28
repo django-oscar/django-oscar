@@ -1,11 +1,11 @@
+from http import client as http_client
 import json
 
 from django.conf import settings
 from django.contrib.messages import ERROR, INFO
 from django.urls import reverse
 from django.utils.http import urlencode
-from django.utils.six.moves import http_client
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 from oscar.core.loading import get_class, get_model
 from oscar.test.factories import (
@@ -94,7 +94,7 @@ class TestAStaffUser(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(TestAStaffUser, self).setUp()
+        super().setUp()
         self.partner = PartnerFactory()
 
     def test_can_create_a_product_without_stockrecord(self):
@@ -132,7 +132,7 @@ class TestAStaffUser(WebTestCase):
                                            kwargs={'pk': product.id}))
 
     def test_can_update_a_product_without_stockrecord(self):
-        new_title = u'foobar'
+        new_title = 'foobar'
         category = CategoryFactory()
         product = ProductFactory(stockrecords=[])
 
@@ -246,7 +246,7 @@ class TestANonStaffUser(TestAStaffUser):
     permissions = ['partner.dashboard_access', ]
 
     def setUp(self):
-        super(TestANonStaffUser, self).setUp()
+        super().setUp()
         add_permissions(self.user, self.permissions)
         self.partner.users.add(self.user)
 
@@ -298,7 +298,7 @@ class AttributeOptionGroupCreateMixin(object):
 
     def _set_up_display_create_form_vars(self):
         self.url_name = 'dashboard:catalogue-attribute-option-group-create'
-        self.title = ugettext("Add a new Attribute Option Group")
+        self.title = gettext("Add a new Attribute Option Group")
 
     def _test_display_create_form_response(self):
         response = self.response
@@ -321,7 +321,7 @@ class AttributeOptionGroupCreateMixin(object):
 
     def _set_up_create_success_vars(self):
         self.success_url_name = 'dashboard:catalogue-attribute-option-group-list'
-        self.success_message = ugettext("Attribute Option Group created successfully")
+        self.success_message = gettext("Attribute Option Group created successfully")
 
     def _test_creation_of_objects(self):
         # Test the creation of the attribute option group
@@ -341,7 +341,7 @@ class AttributeOptionGroupUpdateMixin(object):
     def _set_up_display_update_form_vars(self):
         url_name = 'dashboard:catalogue-attribute-option-group-update'
         self.url = reverse(url_name, kwargs={'pk': self.attribute_option_group.pk})
-        self.title = ugettext("Update Attribute Option Group '%s'") % self.attribute_option_group.name
+        self.title = gettext("Update Attribute Option Group '%s'") % self.attribute_option_group.name
 
     def _test_display_update_form_response(self):
         response = self.response
@@ -365,7 +365,7 @@ class AttributeOptionGroupUpdateMixin(object):
 
     def _set_up_update_success_vars(self):
         self.success_url_name = 'dashboard:catalogue-attribute-option-group-list'
-        self.success_message = ugettext("Attribute Option Group updated successfully")
+        self.success_message = gettext("Attribute Option Group updated successfully")
 
     def _test_update_of_objects(self):
         # Test the update of the attribute option group
@@ -383,11 +383,11 @@ class AttributeOptionGroupDeleteMixin(object):
         self.url = reverse(url_name, kwargs={'pk': self.attribute_option_group.pk})
 
     def _set_up_display_delete_form_allowed_vars(self):
-        self.title = ugettext("Delete Attribute Option Group '%s'") % self.attribute_option_group.name
+        self.title = gettext("Delete Attribute Option Group '%s'") % self.attribute_option_group.name
 
     def _set_up_display_delete_form_disallowed_vars(self):
-        self.title = ugettext("Unable to delete '%s'") % self.attribute_option_group.name
-        self.error_message = ugettext("1 product attributes are still assigned to this attribute option group")
+        self.title = gettext("Unable to delete '%s'") % self.attribute_option_group.name
+        self.error_message = gettext("1 product attributes are still assigned to this attribute option group")
 
     def _test_display_delete_form_response(self):
         response = self.response
@@ -413,7 +413,7 @@ class AttributeOptionGroupDeleteMixin(object):
 
     def _set_up_delete_success_vars(self):
         self.success_url_name = 'dashboard:catalogue-attribute-option-group-list'
-        self.success_message = ugettext("Attribute Option Group deleted successfully")
+        self.success_message = gettext("Attribute Option Group deleted successfully")
 
     def _test_deletion_of_objects(self):
         # Test the deletion of the attribute option group
@@ -594,7 +594,7 @@ class TestAttributeOptionGroupUpdateView(AttributeOptionGroupUpdateMixin,
     is_staff = True
 
     def setUp(self):
-        super(TestAttributeOptionGroupUpdateView, self).setUp()
+        super().setUp()
 
         self.attribute_option_group = AttributeOptionGroupFactory()
         AttributeOptionFactory(group=self.attribute_option_group)
@@ -682,7 +682,7 @@ class TestAttributeOptionGroupDeleteView(AttributeOptionGroupDeleteMixin,
     is_staff = True
 
     def setUp(self):
-        super(TestAttributeOptionGroupDeleteView, self).setUp()
+        super().setUp()
 
         self.attribute_option_group = AttributeOptionGroupFactory()
         AttributeOptionFactory(group=self.attribute_option_group)

@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ungettext
 from django.views.generic import (
     CreateView, DeleteView, ListView, UpdateView, View)
@@ -48,7 +48,7 @@ class RangeCreateView(CreateView):
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
-        ctx = super(RangeCreateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['title'] = _("Create range")
         return ctx
 
@@ -59,7 +59,7 @@ class RangeUpdateView(UpdateView):
     form_class = RangeForm
 
     def get_object(self):
-        obj = super(RangeUpdateView, self).get_object()
+        obj = super().get_object()
         if not obj.is_editable:
             raise exceptions.PermissionDenied("Not allowed")
         return obj
@@ -76,7 +76,7 @@ class RangeUpdateView(UpdateView):
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
-        ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['range'] = self.object
         ctx['title'] = self.object.name
         return ctx
@@ -104,7 +104,7 @@ class RangeProductListView(BulkEditMixin, ListView):
         self.object_list = self.get_queryset()
         if request.POST.get('action', None) == 'add_products':
             return self.add_products(request)
-        return super(RangeProductListView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def get_range(self):
         if not hasattr(self, '_range'):
@@ -116,7 +116,7 @@ class RangeProductListView(BulkEditMixin, ListView):
         return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):
-        ctx = super(RangeProductListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         range = self.get_range()
         ctx['range'] = range
         if 'form' not in ctx:

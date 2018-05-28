@@ -11,8 +11,8 @@ from oscar.templatetags.category_tags import get_annotated_list
 class TestCategory(TestCase):
 
     def setUp(self):
-        self.products = Category.add_root(name=u"Pröducts")
-        self.books = self.products.add_child(name=u"Bücher")
+        self.products = Category.add_root(name="Pröducts")
+        self.books = self.products.add_child(name="Bücher")
 
     def tearDown(self):
         cache.clear()
@@ -42,21 +42,21 @@ class TestCategory(TestCase):
 
     @override_settings(OSCAR_SLUG_ALLOW_UNICODE=True)
     def test_unicode_slug(self):
-        root_category = Category.add_root(name=u"Vins français")
-        child_category = root_category.add_child(name=u"Château d'Yquem")
-        self.assertEqual(root_category.slug, u'vins-français')
+        root_category = Category.add_root(name="Vins français")
+        child_category = root_category.add_child(name="Château d'Yquem")
+        self.assertEqual(root_category.slug, 'vins-français')
         self.assertEqual(
             root_category.get_absolute_url(), '/catalogue/category/vins-fran%C3%A7ais_{}/'.format(root_category.pk)
         )
-        self.assertEqual(child_category.slug, u'château-dyquem')
+        self.assertEqual(child_category.slug, 'château-dyquem')
         self.assertEqual(
             child_category.get_absolute_url(),
-            u'/catalogue/category/vins-fran%C3%A7ais/ch%C3%A2teau-dyquem_{}/'.format(child_category.pk)
+            '/catalogue/category/vins-fran%C3%A7ais/ch%C3%A2teau-dyquem_{}/'.format(child_category.pk)
         )
 
     @override_settings(OSCAR_SLUG_ALLOW_UNICODE=True)
     def test_url_caching(self):
-        category = self.products.add_child(name=u"Fromages français")
+        category = self.products.add_child(name="Fromages français")
         absolute_url = category.get_absolute_url()
         url = cache.get(category.get_url_cache_key())
         self.assertEqual(url, '/catalogue/category/products/fromages-fran%C3%A7ais_{}/'.format(category.pk))
@@ -189,7 +189,7 @@ class TestCategoryFactory(TestCase):
 class TestCategoryTemplateTags(TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestCategoryTemplateTags, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.template = """
           {% if tree_categories %}
               <ul>

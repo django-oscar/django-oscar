@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.html import strip_tags
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ungettext
 from django.views import generic
 
@@ -23,7 +23,7 @@ class NotificationListView(PageTitleMixin, generic.ListView):
     active_tab = 'notifications'
 
     def get_context_data(self, **kwargs):
-        ctx = super(NotificationListView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx['list_type'] = self.list_type
         return ctx
 
@@ -53,7 +53,7 @@ class DetailView(PageTitleMixin, generic.DetailView):
     active_tab = 'notifications'
 
     def get_object(self, queryset=None):
-        obj = super(DetailView, self).get_object()
+        obj = super().get_object()
         if not obj.date_read:
             obj.date_read = now()
             obj.save()
@@ -62,7 +62,7 @@ class DetailView(PageTitleMixin, generic.DetailView):
     def get_page_title(self):
         """Append subject to page title"""
         title = strip_tags(self.object.subject)
-        return u'%s: %s' % (_('Notification'), title)
+        return '%s: %s' % (_('Notification'), title)
 
     def get_queryset(self):
         return self.model._default_manager.filter(
