@@ -38,6 +38,7 @@ coverage.xml
 violations.txt
 nosetests.xml
 /.cache/
+/.pytest_cache/
 /htmlcov/*
 /.tox/*
 
