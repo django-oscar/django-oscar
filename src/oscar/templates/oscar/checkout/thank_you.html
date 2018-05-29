@@ -109,68 +109,71 @@
         </div>
     </div>
 
-    <div class="sub-header">
-        <h2>{% trans "Order contents" %}</h2>
-    </div>
-
-    <div class="basket-title">
-        <div class="row">
-            <p class="col-sm-9 h4">{% trans "Items purchased" %}</p>
-            <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
-            <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
+    {% block order_contents %}
+        <div class="sub-header">
+            <h2>{% trans "Order contents" %}</h2>
         </div>
-    </div>
 
-    {% for line in order.lines.all %}
-        <div class="basket-items">
+        <div class="basket-title">
             <div class="row">
-                <div class="col-sm-2">
-                    <div class="image_container">
-                        {% with image=line.product.primary_image %}
-                            {% thumbnail image.original "200x200" upscale=False as thumb %}
-                            <a href="{{ line.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-                            {% endthumbnail %}
-                        {% endwith %}
+                <p class="col-sm-9 h4">{% trans "Items purchased" %}</p>
+                <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
+                <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
+            </div>
+        </div>
+
+        {% for line in order.lines.all %}
+            <div class="basket-items">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="image_container">
+                            {% with image=line.product.primary_image %}
+                                {% thumbnail image.original "200x200" upscale=False as thumb %}
+                                <a href="{{ line.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                                {% endthumbnail %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
+                        <p>
+                        {% if line.upc %}{{ line.upc }}<br/>{% endif %}
+                        {% if line.est_dispatch_date %}
+                            {% blocktrans with date=line.est_dispatch_date %}
+                                Estimated dispatch: <strong>{{ date }}</strong>
+                            {% endblocktrans %}
+                        {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-sm-1 align-center">
+                        {{ line.quantity }}
+                    </div>
+                    <div class="col-sm-2 align-right">
+                        <p class="price_color">
+                            {% if show_tax_separately %}
+                                {{ line.line_price_before_discounts_excl_tax|currency:order.currency }}
+                            {% else %}
+                                {{ line.line_price_before_discounts_incl_tax|currency:order.currency }}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
-                <div class="col-sm-7">
-                    <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
-                    <p>
-                    {% if line.upc %}{{ line.upc }}<br/>{% endif %}
-                    {% if line.est_dispatch_date %}
-                        {% blocktrans with date=line.est_dispatch_date %}
-                            Estimated dispatch: <strong>{{ date }}</strong>
-                        {% endblocktrans %}
-                    {% endif %}
-                    </p>
-                </div>
-                <div class="col-sm-1 align-center">
-                    {{ line.quantity }}
-                </div>
-                <div class="col-sm-2 align-right">
-                    <p class="price_color">
-                        {% if show_tax_separately %}
-                            {{ line.line_price_before_discounts_excl_tax|currency:order.currency }}
-                        {% else %}
-                            {{ line.line_price_before_discounts_incl_tax|currency:order.currency }}
-                        {% endif %}
-                    </p>
-                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
 
-    {% block basket_totals %}
-        <div class="row">
-            <div class="col-sm-6">&nbsp;</div>
-            <div class="col-sm-6">
-                <div class="sub-header">
-                    <h2>{% trans 'Totals' %}</h2>
+        {% block basket_totals %}
+            <div class="row">
+                <div class="col-sm-6">&nbsp;</div>
+                <div class="col-sm-6">
+                    <div class="sub-header">
+                        <h2>{% trans 'Totals' %}</h2>
+                    </div>
+                    {% include 'order/partials/basket_totals.html' %}
                 </div>
-                {% include 'order/partials/basket_totals.html' %}
             </div>
-        </div>
-    {% endblock basket_totals %}
+        {% endblock basket_totals %}
+
+    {% endblock order_contents %}
 
     {% block order_tracking %}
         {% if not order.user %}
