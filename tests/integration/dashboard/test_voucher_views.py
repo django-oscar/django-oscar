@@ -24,3 +24,12 @@ class TestDashboardVoucherSets:
         assert response.context_data['paginator']
         assert response.context_data['page_obj']
         assert response.status_code == 200
+
+    def test_voucher_set_detail_view(self, rf):
+        voucher.VoucherSetFactory(count=10)
+        vs2 = voucher.VoucherSetFactory(count=15)
+        request = rf.get('/')
+        response = views.VoucherSetDetailView.as_view()(request, pk=vs2.pk)
+        # The view should only list vouchers for vs2
+        assert len(response.context_data['vouchers']) == 15
+        assert response.status_code == 200
