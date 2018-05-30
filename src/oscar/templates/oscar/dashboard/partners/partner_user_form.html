@@ -28,7 +28,7 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form action="." method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
+    <form method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'dashboard/partials/form_fields.html' with form=form %}
         <div class="form-actions">

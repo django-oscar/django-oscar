@@ -37,7 +37,7 @@
             {% endif %}
         </h2>
     </div>
-    <form action="." method="post" class="well form-stacked">
+    <form method="post" class="well form-stacked">
         {% csrf_token %}
         {% include "dashboard/partials/form_fields.html" with form=form %}
         {% block form_actions %}

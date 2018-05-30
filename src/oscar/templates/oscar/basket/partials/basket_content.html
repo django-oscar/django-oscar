@@ -35,7 +35,7 @@
     {% endblock %}
 
     {% block basket_form_main %}
-        <form action="." method="post" class="basket_summary" id="basket_formset">
+        <form method="post" class="basket_summary" id="basket_formset">
             {% csrf_token %}
             {{ formset.management_form }}
 

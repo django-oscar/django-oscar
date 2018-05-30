@@ -3,7 +3,7 @@
 
 {% block tabcontent %}
     <p>{% trans "Please confirm your password to delete your profile." %}</p>
-    <form id="delete_profile_form" action="." method="post" class="form-horizontal">
+    <form id="delete_profile_form" method="post" class="form-horizontal">
         {% csrf_token %}
         {% include "partials/form_fields.html" %}
         <div class="alert alert-warning">

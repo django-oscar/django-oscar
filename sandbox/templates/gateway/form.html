@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-    <form action="." method="post">
+    <form method="post">
         <p>{% trans "Let us know your email address and we'll create a dashboard user for you and email you the details." %}</p>
         {% csrf_token %}
         {% include 'partials/form_fields.html' with form=form %}

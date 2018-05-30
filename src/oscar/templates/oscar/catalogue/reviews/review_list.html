@@ -36,7 +36,7 @@
         {% include 'catalogue/reviews/review_product.html' %}
 
         {% if reviews %}
-            <form action="." method="get" class="form-inline">
+            <form method="get" class="form-inline">
                 {% for field in form %}
                     {{ field.label }}
                     {{ field }}

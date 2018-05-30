@@ -26,7 +26,7 @@
             <h2>{% trans "Content block" %}</h2>
         </div>
 
-        <form action="." method="post" enctype="multipart/form-data" class="well form-stacked wysiwyg">
+        <form method="post" enctype="multipart/form-data" class="well form-stacked wysiwyg">
             {% csrf_token %}
             {% include "dashboard/partials/form_fields.html" with form=form %}
 
@@ -57,7 +57,7 @@
                             <td><a href="{{ link.page_url }}">{{ link.page_url }}</a></td>
                             <td>{{ link.position }}</td>
                             <td>
-                                <form action="." method="post" >
+                                <form method="post" >
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="remove_from_page" />
                                     <input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
@@ -76,7 +76,7 @@
             <h3>{% trans "Add to a page" %}</h3>
         </div>
         <div class="well">
-            <form action="." method="post" class="form-stacked">
+            <form method="post" class="form-stacked">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_to_page" />
                 {% include "dashboard/partials/form_fields.html" with form=link_form %}

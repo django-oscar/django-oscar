@@ -6,7 +6,7 @@ Forms
 
 Forms should be marked-up as::
 
-    <form method="post" action="." class="form-horizontal">
+    <form method="post" class="form-horizontal">
         {% csrf_token %}
         {% include 'partials/form_fields.html' %}
         <div class="form-group col-sm-offset-4 col-sm-8">
@@ -19,7 +19,7 @@ The ``.col-sm-offset-4`` class aligns the buttons with the fields.
 
 Alternatively, use::
     
-    <form method="post" action="." class="form-horizontal">
+    <form method="post" class="form-horizontal">
         {% csrf_token %}
         {% include 'partials/form_fields.html' %}
         <div class="control-group">

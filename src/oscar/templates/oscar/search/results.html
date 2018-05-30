@@ -41,7 +41,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="get" action="." class="form-horizontal">
+    <form method="get" class="form-horizontal">
         {# Render other search params as hidden inputs #}
         {% for value in selected_facets %}
             <input type="hidden" name="selected_facets" value="{{ value }}" />

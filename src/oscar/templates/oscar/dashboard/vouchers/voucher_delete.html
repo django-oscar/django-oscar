@@ -42,7 +42,7 @@
                 <tr><th>{% trans "Discount" %}</th><td>{{ voucher.benefit.description|safe }}</td></tr>
             </tbody>
         </table>
-        <form action="." method="post">
+        <form method="post">
             {% csrf_token %}
             <div class="form-actions">
                 <button class="btn btn-danger btn-lg" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}

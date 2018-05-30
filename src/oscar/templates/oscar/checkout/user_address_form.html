@@ -18,7 +18,7 @@
 
 {% block shipping_address %}
     <div class="well">
-        <form id="update_user_address" action="." method="post" class="form form-horizontal">
+        <form id="update_user_address" method="post" class="form form-horizontal">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form style='horizontal' %}
             <div class="form-group">

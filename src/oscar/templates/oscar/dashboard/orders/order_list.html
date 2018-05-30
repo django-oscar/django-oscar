@@ -30,7 +30,7 @@
         <h3><i class="icon-search icon-large"></i>{% trans "Search" %}</h3>
     </div>
     <div class="well">
-        <form action="." method="get" class="form-inline" id="search_form">
+        <form method="get" class="form-inline" id="search_form">
             {% for field in form %}
                 {% if "order" in field.id_for_label %}
                     {% if field.is_hidden %}
@@ -60,7 +60,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h3>{% trans "Advanced Search" %}</h3>
                     </div>
-                    <form action="." method="get" class="form-horizontal">
+                    <form method="get" class="form-horizontal">
                         <div class="modal-body">
                             <div class="container-fluid">
                             {% csrf_token %}
@@ -89,7 +89,7 @@
     </div>
 
     {% if orders %}
-        <form action="." method="post" class="order_table" id="orders_form">
+        <form method="post" class="order_table" id="orders_form">
             {% csrf_token %}
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
 

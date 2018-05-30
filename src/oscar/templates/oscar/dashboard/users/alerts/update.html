@@ -27,7 +27,7 @@
     <div class="table-header">
         <h2 class="pull-left">{% blocktrans with id=alert.id %}Product alert #{{ id }}{% endblocktrans %}</h2>
         <div class="pull-right">
-            <form action="." method="post" class="form-inline">
+            <form method="post" class="form-inline">
                 {% csrf_token %}
                 {% include 'dashboard/partials/form_fields_inline.html' %}
                 <button type='submit' class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>

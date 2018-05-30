@@ -29,7 +29,7 @@
 
 {% block dashboard_content %}
     <div class="well">
-        <form action="." method="post" class="form-stacked">
+        <form method="post" class="form-stacked">
             {% csrf_token %}
             {% include "dashboard/partials/form_fields.html" with form=form %}
             {% block form_actions %}

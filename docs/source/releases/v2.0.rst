@@ -31,6 +31,8 @@ Removal of deprecated features
 
 Minor changes
 ~~~~~~~~~~~~~
+ - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
+   and as per the HTML5 specification.
 
 - Replaced use of Django's procedural auth views with the corresponding
   class-based views.

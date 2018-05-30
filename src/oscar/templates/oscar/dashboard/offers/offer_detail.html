@@ -22,7 +22,7 @@
 
 {% block header %}
     <div class="page-header">
-        <form id="status_form" class="pull-right" method="post" action=".">
+        <form id="status_form" class="pull-right" method="post">
             {% csrf_token %}
             {% if offer.is_suspended %}
                 <button type="submit" class="btn btn-success" name="unsuspend" data-loading-text="{% trans 'Reinstating...' %}">{% trans "Reinstate offer" %}</button>

@@ -17,7 +17,7 @@
 {% block checkout_title %}{% trans "Delete address?" %}{% endblock %}
 
 {% block shipping_address %}
-    <form action="." method="post" id="delete_address_{{ object.id }}">
+    <form method="post" id="delete_address_{{ object.id }}">
         {% csrf_token %}
         <div class="well">
             <address>
