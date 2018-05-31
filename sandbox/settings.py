@@ -173,6 +173,9 @@ MIDDLEWARE = [
 
     # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
+
+    # Adds the current currency to the request
+    'oscar.apps.catalogue.middleware.CurrencyMiddleware',
 ]
 
 ROOT_URLCONF = 'urls'
