@@ -353,6 +353,7 @@ class VoucherSetUpdateView(generic.UpdateView):
 
 
 class VoucherSetDetailView(generic.ListView):
+
     model = Voucher
     context_object_name = 'vouchers'
     template_name = 'dashboard/vouchers/voucher_set_detail.html'
@@ -361,10 +362,8 @@ class VoucherSetDetailView(generic.ListView):
     paginate_by = 50
 
     def dispatch(self, request, *args, **kwargs):
-        pk = args[0]
-        self.voucher_set = get_object_or_404(VoucherSet, pk=pk)
-        return super().dispatch(
-            request, *args, **kwargs)
+        self.voucher_set = get_object_or_404(VoucherSet, pk=kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = (
