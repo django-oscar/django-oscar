@@ -90,6 +90,7 @@ setup(
         'docs': docs_requires,
         'test': test_requires,
     },
+    zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
