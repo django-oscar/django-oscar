@@ -270,7 +270,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         return reverse('checkout:thank-you')
 
     def send_confirmation_message(self, order, code, **kwargs):
-        ctx = self.get_message_context(order)
+        ctx = self.get_message_context(order, code)
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
@@ -292,7 +292,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             logger.warning("Order #%s - no %s communication event type",
                            order.number, code)
 
-    def get_message_context(self, order):
+    def get_message_context(self, order, code):
         ctx = {
             'user': self.request.user,
             'order': order,
