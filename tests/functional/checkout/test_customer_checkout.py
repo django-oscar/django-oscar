@@ -265,5 +265,5 @@ class TestOrderPlacementMixin(CheckoutMixin, WebTestCase):
             self.enter_shipping_address()
             self.place_order()
 
-        mock_logger.warning.assert_called_once()
+        self.assertTrue(mock_logger.warning.called)
         self.assertTrue(get_message_context.called)
