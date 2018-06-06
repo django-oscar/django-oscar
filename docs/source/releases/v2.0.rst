@@ -37,6 +37,9 @@ Minor changes
 - Replaced use of Django's procedural auth views with the corresponding
   class-based views.
 
+- ``OrderPlacementMixin.get_message_context()`` is now passed a ``code`` argument
+  specifying the communication event type code for a message being sent.
+
 Dependency changes
 ------------------
 
