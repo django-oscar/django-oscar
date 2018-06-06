@@ -270,7 +270,17 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         return reverse('checkout:thank-you')
 
     def send_confirmation_message(self, order, code, **kwargs):
-        ctx = self.get_message_context(order)
+        try:
+            ctx = self.get_message_context(order, code)
+        except TypeError:
+            # It seems like the get_message_context method was overridden and
+            # it does not support the code argument yet
+            logger.warning(
+                'The signature of the get_message_context method has changed, '
+                'please update it in your codebase'
+            )
+            ctx = self.get_message_context(order)
+
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
@@ -292,7 +302,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             logger.warning("Order #%s - no %s communication event type",
                            order.number, code)
 
-    def get_message_context(self, order):
+    def get_message_context(self, order, code=None):
         ctx = {
             'user': self.request.user,
             'order': order,
