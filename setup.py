@@ -45,6 +45,9 @@ install_requires = [
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
+    # Used by the search app
+    'elasticsearch-dsl>=6.0.0,<7.0.0',
+    'django-elasticsearch-dsl>=0.5.0,<0.6'
 ]
 
 docs_requires = [

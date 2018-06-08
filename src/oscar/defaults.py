@@ -250,6 +250,19 @@ OSCAR_SEARCH_FACETS = {
     ]),
 }
 
+# Search settings
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    }
+}
+ELASTICSEARCH_DSL_AUTOSYNC = True
+
+OSCAR_SEARCH = {
+    'DEFAULT_ITEMS_PER_PAGE': 20,
+    'INDEX_PREFIX': 'oscar'
+}
+
 
 OSCAR_PROMOTIONS_ENABLED = True
 OSCAR_PRODUCT_SEARCH_HANDLER = None

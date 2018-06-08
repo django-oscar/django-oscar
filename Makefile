@@ -32,6 +32,7 @@ sandbox_load_data:
 	sandbox/manage.py loaddata sandbox/fixtures/orders.json sandbox/fixtures/promotions.json
 	sandbox/manage.py clear_index --noinput
 	sandbox/manage.py update_index catalogue
+	sandbox/manage.py update_oscar_index --rebuild
 	sandbox/manage.py thumbnail cleanup
 	sandbox/manage.py collectstatic --noinput
 

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # contains models we need for testing
     'tests._site.model_tests_app',
     'tests._site.myauth',
+    'tests._site.search_tests_app',
 
     # Use a custom partner app to test overriding models.  I can't
     # find a way of doing this on a per-test basis, so I'm using a
@@ -123,3 +124,5 @@ OSCAR_LINE_STATUS_PIPELINE = {'a': ('b', ), 'b': ()}
 
 SECRET_KEY = 'notverysecret'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+ELASTICSEARCH_DSL_AUTOSYNC = False

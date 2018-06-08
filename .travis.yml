@@ -32,6 +32,7 @@ env:
     # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
     - secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
 
+    - ES_VERSION=6.x
     # These two environment variables could be set by Travis itself, or Travis
     # could configure itself in /etc/, ~/, or inside of the virtual
     # environments. In any case if these two values get configured then end
@@ -50,8 +51,22 @@ cache:
     - $HOME/.cache/pip
 
 
+before_install:
+  # work around https://github.com/travis-ci/travis-ci/issues/8363
+  - pip install codecov
+  - wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+  - echo "deb https://artifacts.elastic.co/packages/$ES_VERSION/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-$ES_VERSION.list
+  - sudo apt-get update && sudo apt-get install elasticsearch -y
+  - sudo service elasticsearch start
+
+
 install:
   - pip install tox codecov
+
+
+# sleep for elasticsearch
+before_script:
+  - sleep 10
 
 
 script:

@@ -43,6 +43,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.customer',
     'oscar.apps.promotions',
     'oscar.apps.search',
+    'oscar.apps.es_search',
     'oscar.apps.voucher',
     'oscar.apps.wishlists',
     'oscar.apps.dashboard',
@@ -64,6 +65,7 @@ OSCAR_CORE_APPS = [
     'treebeard',
     'sorl.thumbnail',
     'django_tables2',
+    'django_elasticsearch_dsl'
 ]
 
 
