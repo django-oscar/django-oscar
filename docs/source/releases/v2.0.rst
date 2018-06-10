@@ -29,6 +29,20 @@ What's new in Oscar 2.0?
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+- Support for deprecated product alert email templates was removed The templates
+  for these emails have been replaced as follows:
+
+    - ``customer/alerts/emails/confirmation_subject.txt`` is replaced by
+      ``customer/emails/commtype_product_alert_confirmation_subject.txt``
+    - ``customer/alerts/emails/confirmation_body.txt`` is replaced by
+      ``customer/emails/commtype_product_alert_confirmation_body.txt``
+    - ``customer/alerts/emails/alert_subject.txt`` is replaced by
+      ``customer/emails/commtype_product_alert_subject.txt``
+    - ``customer/alerts/emails/alert_body.txt`` is replaced by
+      ``customer/emails/commtype_product_alert_body.txt``
+
+  Product alert emails are now sent as Communication Events.
+
 Minor changes
 ~~~~~~~~~~~~~
  - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
