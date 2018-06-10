@@ -1,4 +1,3 @@
-import warnings
 from unittest import mock
 
 from django_webtest import WebTest
@@ -7,7 +6,6 @@ from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 from django.core import mail
 from django.test import TestCase
-from oscar.utils.deprecation import RemovedInOscar20Warning
 
 from oscar.apps.customer.alerts.utils import (
     send_alert_confirmation, send_product_alerts)
@@ -259,64 +257,3 @@ class TestAlertMessageSending(TestCase):
         ProductAlert.objects.create(user=self.user, product=self.product)
         send_product_alerts(self.product)
         self.assertEqual(self.user.emails.count(), 1)
-
-    @staticmethod
-    def _load_deprecated_template(path):
-        from django.template.loader import select_template
-        # Replace the old template paths with new ones, thereby mocking
-        # the presence of the deprecated templates.
-        if path.startswith('customer/alerts/emails/'):
-            old_path = path.replace('customer/alerts/emails/', '')
-            path_map = {
-                'confirmation_body.txt': 'confirmation_body.txt',
-                'confirmation_subject.txt': 'confirmation_subject.txt',
-                'alert_body.txt': 'body.txt',
-                'alert_subject.txt': 'subject.txt',
-            }
-            new_path = 'customer/emails/commtype_product_alert_{}'.format(
-                path_map[old_path]
-            )
-            # We use 'select_template' because 'load_template' is mocked...
-            return select_template([new_path])
-        return select_template([path])
-
-    @mock.patch('oscar.apps.customer.alerts.utils.loader.get_template')
-    def test_deprecated_notification_templates_work(self, mock_loader):
-        """
-        This test can be removed when support for the deprecated templates is
-        dropped.
-        """
-        mock_loader.side_effect = self._load_deprecated_template
-        with warnings.catch_warnings(record=True) as warning_list:
-            warnings.simplefilter("always")
-
-            alert = ProductAlert.objects.create(
-                email='test@example.com',
-                key='dummykey',
-                status=ProductAlert.UNCONFIRMED,
-                product=self.product
-            )
-            send_alert_confirmation(alert)
-            # Check that warnings were raised
-            self.assertTrue(
-                any(item.category == RemovedInOscar20Warning for item in warning_list))
-            # Check that alerts were still sent
-            self.assertEqual(len(mail.outbox), 1)
-
-    @mock.patch('oscar.apps.customer.alerts.utils.loader.get_template')
-    def test_deprecated_alert_templates_work(self, mock_loader):
-        """
-        This test can be removed when support for the deprecated templates is
-        dropped.
-        """
-        mock_loader.side_effect = self._load_deprecated_template
-        with warnings.catch_warnings(record=True) as warning_list:
-            warnings.simplefilter("always")
-
-            ProductAlert.objects.create(user=self.user, product=self.product)
-            send_product_alerts(self.product)
-            # Check that warnings were raised
-            self.assertTrue(
-                any(item.category == RemovedInOscar20Warning for item in warning_list))
-            # Check that alerts were still sent
-            self.assertEqual(len(mail.outbox), 1)

@@ -1,14 +1,12 @@
 import logging
-import warnings
 
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.db.models import Max
-from django.template import TemplateDoesNotExist, loader
+from django.template import loader
 
 from oscar.apps.customer.notifications import services
 from oscar.core.loading import get_class, get_model
-from oscar.utils.deprecation import RemovedInOscar20Warning
 
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
@@ -40,34 +38,8 @@ def send_alert_confirmation(alert):
         'site': Site.objects.get_current(),
     }
 
-    # For backwards compability, we check if the old (non-communication-event)
-    # templates exist, and use them if they do.
-    # This will be removed in Oscar 2.0
-    try:
-        subject_tpl = loader.get_template('customer/alerts/emails/'
-                                          'confirmation_subject.txt')
-        body_tpl = loader.get_template('customer/alerts/emails/'
-                                       'confirmation_body.txt')
-        warnings.warn(
-            "Product alert notifications now use the CommunicationEvent. "
-            "Move '{}' to '{}', and '{}' to '{}'".format(
-                'customer/alerts/emails/confirmation_subject.txt',
-                'customer/emails/commtype_product_alert_confirmation_subject.txt',
-                'customer/alerts/emails/confirmation_body.txt',
-                'customer/emails/commtype_product_alert_confirmation_body.txt',
-            ),
-            category=RemovedInOscar20Warning, stacklevel=2
-        )
-
-        messages = {
-            'subject': subject_tpl.render(ctx).strip(),
-            'body': body_tpl.render(ctx),
-            'html': '',
-            'sms': '',
-        }
-    except TemplateDoesNotExist:
-        code = 'PRODUCT_ALERT_CONFIRMATION'
-        messages = CommunicationEventType.objects.get_and_render(code, ctx)
+    code = 'PRODUCT_ALERT_CONFIRMATION'
+    messages = CommunicationEventType.objects.get_and_render(code, ctx)
 
     if messages and messages['body']:
         Dispatcher().dispatch_direct_messages(alert.email, messages)
@@ -100,34 +72,11 @@ def send_product_alerts(product):   # noqa C901 too complex
     # hurry_mode is false if num_in_stock is None
     hurry_mode = num_in_stock is not None and alerts.count() > num_in_stock
 
-    # For backwards compability, we check if the old (non-communication-event)
-    # templates exist, and use them if they do.
-    # This will be removed in Oscar 2.0
+    code = 'PRODUCT_ALERT'
     try:
-        email_subject_tpl = loader.get_template('customer/alerts/emails/'
-                                                'alert_subject.txt')
-        email_body_tpl = loader.get_template('customer/alerts/emails/'
-                                             'alert_body.txt')
-
-        use_deprecated_templates = True
-        warnings.warn(
-            "Product alert notifications now use the CommunicationEvent. "
-            "Move '{}' to '{}', and '{}' to '{}'".format(
-                'customer/alerts/emails/alert_subject.txt',
-                'customer/emails/commtype_product_alert_subject.txt',
-                'customer/alerts/emails/alert_body.txt',
-                'customer/emails/commtype_product_alert_body.txt',
-            ),
-            category=RemovedInOscar20Warning, stacklevel=2
-        )
-
-    except TemplateDoesNotExist:
-        code = 'PRODUCT_ALERT'
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            event_type = CommunicationEventType.objects.model(code=code)
-        use_deprecated_templates = False
+        event_type = CommunicationEventType.objects.get(code=code)
+    except CommunicationEventType.DoesNotExist:
+        event_type = CommunicationEventType.objects.model(code=code)
 
     messages_to_send = []
     user_messages_to_send = []
@@ -157,15 +106,7 @@ def send_product_alerts(product):   # noqa C901 too complex
             )
 
         # Build message and add to list
-        if use_deprecated_templates:
-            messages = {
-                'subject': email_subject_tpl.render(ctx).strip(),
-                'body': email_body_tpl.render(ctx),
-                'html': '',
-                'sms': '',
-            }
-        else:
-            messages = event_type.get_messages(ctx)
+        messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:
             if alert.user:
