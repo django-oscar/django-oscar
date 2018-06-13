@@ -4,9 +4,11 @@ Oscar 1.6.2 release notes
 
 :release: tbd
 
-This is Oscar 1.6.1, a bugfix release.
+This is Oscar 1.6.2, a bugfix release.
 
 Bug fixes
 =========
 
 - Fixed kwarg handling in dashboard voucher set detail view.
+
+- Fixed "Number of Orders" column heading in dashboard customer list view.
