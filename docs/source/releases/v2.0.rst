@@ -57,6 +57,43 @@ Removal of deprecated features
   ``num_orders_as_shipping_address`` and ``num_orders_as_billing_address``
   instead.
 
+- Backward-compatible dynamic loading of formset classes that have moved in Oscar was
+  removed. Projects must update their ``get_class`` calls to use the new paths.
+
+  The paths that have changed are as follows:
+
+  ================================  ==================================  ================
+  Old path                          New path                            Affected classes
+  ================================  ==================================  ================
+  ``basket.forms``                  ``basket.formsets``                 ``BaseBasketLineFormSet``
+
+                                                                        ``BasketLineFormSet``
+
+                                                                        ``BaseSavedLineFormSet``
+
+                                                                        ``SavedLineFormSet``
+  ``dashboard.catalogue.forms``     ``dashboard.catalogue.formsets``    ``BaseStockRecordFormSet``
+
+                                                                        ``StockRecordFormSet``
+
+                                                                        ``BaseProductCategoryFormSet``
+
+                                                                        ``ProductCategoryFormSet``
+
+                                                                        ``BaseProductImageFormSet``
+
+                                                                        ``ProductImageFormSet``
+
+                                                                        ``BaseProductRecommendationFormSet``
+
+                                                                        ``ProductRecommendationFormSet``
+
+                                                                        ``ProductAttributesFormSet``
+
+  ``dashboard.promotions.forms``    ``dashboard.promotions.formsets``   ``OrderedProductFormSet``
+  ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
+  ================================  ==================================  ================
+
 Minor changes
 ~~~~~~~~~~~~~
 - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django

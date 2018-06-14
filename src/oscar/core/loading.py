@@ -1,6 +1,5 @@
 import sys
 import traceback
-import warnings
 from importlib import import_module
 
 from django.apps import apps
@@ -12,33 +11,6 @@ from django.utils.module_loading import import_string
 
 from oscar.core.exceptions import (
     AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
-
-# To preserve backwards compatibility of loading classes which moved
-# from one Oscar module to another, we look into the dictionary below
-# for the moved items during loading.
-MOVED_ITEMS = {
-    'oscar.apps.basket.forms': (
-        'oscar.apps.basket.formsets', ('BaseBasketLineFormSet', 'BasketLineFormSet',
-                                       'BaseSavedLineFormSet', 'SavedLineFormSet')
-    ),
-    'oscar.apps.dashboard.catalogue.forms': (
-        'oscar.apps.dashboard.catalogue.formsets', ('BaseStockRecordFormSet',
-                                                    'StockRecordFormSet',
-                                                    'BaseProductCategoryFormSet',
-                                                    'ProductCategoryFormSet',
-                                                    'BaseProductImageFormSet',
-                                                    'ProductImageFormSet',
-                                                    'BaseProductRecommendationFormSet',
-                                                    'ProductRecommendationFormSet',
-                                                    'ProductAttributesFormSet')
-    ),
-    'oscar.apps.dashboard.promotions.forms': (
-        'oscar.apps.dashboard.promotions.formsets', ('OrderedProductFormSet',)
-    ),
-    'oscar.apps.wishlists.forms': (
-        'oscar.apps.wishlists.formsets', ('LineFormset',)
-    )
-}
 
 
 def get_class(module_label, classname, module_prefix='oscar.apps'):
@@ -140,27 +112,7 @@ def default_class_loader(module_label, classnames, module_prefix):
         local_module_label = installed_apps_entry + sub_module
         local_module = _import_module(local_module_label, classnames)
 
-    # Checking whether module label has corresponding move module in the MOVED_ITEMS dictionary.
-    # If it does, checking if any of the loading classes moved to another module.
-    # Finally, it they did, importing move module and showing deprecation warning as well.
-    oscar_move_item = MOVED_ITEMS.get(oscar_module_label, None)
-    if oscar_move_item:
-        oscar_move_module_label = oscar_move_item[0]
-        oscar_move_classnames = oscar_move_item[1]
-        oscar_moved_classnames = list(set(oscar_move_classnames).intersection(classnames))
-        if oscar_moved_classnames:
-            warnings.warn(
-                'Classes %s has recently moved to the new destination module - %s, '
-                'please update your imports.' % (', '.join(oscar_moved_classnames),
-                                                 oscar_move_module_label),
-                DeprecationWarning, stacklevel=2)
-            oscar_move_module = _import_module(oscar_move_module_label, classnames)
-        else:
-            oscar_move_module = None
-    else:
-        oscar_move_module = None
-
-    if oscar_module is oscar_move_module is local_module is None:
+    if oscar_module is local_module is None:
         # This intentionally doesn't raise an ImportError, because ImportError
         # can get masked in complex circular import scenarios.
         raise ModuleNotFoundError(
@@ -170,7 +122,7 @@ def default_class_loader(module_label, classnames, module_prefix):
         )
 
     # return imported classes, giving preference to ones from the local package
-    return _pluck_classes([local_module, oscar_module, oscar_move_module], classnames)
+    return _pluck_classes([local_module, oscar_module], classnames)
 
 
 def _import_module(module_label, classnames):
