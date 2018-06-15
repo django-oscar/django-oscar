@@ -43,6 +43,12 @@ Removal of deprecated features
 
   Product alert emails are now sent as Communication Events.
 
+- Support for category URLs without a primary key was removed.
+
+  Enforcement of unique slugs for categories was also removed, as enforcing
+  this was inefficient and not threadsafe. Since a primary key is now required
+  for category URLs, there is no need for slugs to be unique.
+
 Minor changes
 ~~~~~~~~~~~~~
  - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
