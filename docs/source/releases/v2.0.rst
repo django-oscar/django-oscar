@@ -40,6 +40,14 @@ Minor changes
 - ``OrderPlacementMixin.get_message_context()`` is now passed a ``code`` argument
   specifying the communication event type code for a message being sent.
 
+- We've dropped the dependency on Unidecode due to license incompatibilities,
+  ``oscar.core.utils.default_slugifier`` now uses ``oscar.core.utils.cautious_slugify``
+  to handle unicode characters in slugs when ``OSCAR_SLUG_ALLOW_UNICODE`` is ``False``.
+
+- ``OSCAR_SLUG_FUNCTION`` previously accepted a function as its value. It now
+  only accepts a dotted path to a function as its value. Such functions must
+  also now take a ``allow_unicode`` kwarg.
+
 Dependency changes
 ------------------
 

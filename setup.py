@@ -31,8 +31,6 @@ install_requires = [
     'sorl-thumbnail>=12.4.1,<12.5',
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
-    # For converting non-ASCII to ASCII when creating slugs
-    'Unidecode>=1.0,<1.1',
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
