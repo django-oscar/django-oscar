@@ -1,0 +1,13 @@
+=========================
+Oscar 1.6.3 release notes
+=========================
+
+:release: tbd
+
+This is Oscar 1.6.3, a bugfix release.
+
+Bug fixes
+=========
+
+- Replaced use of Django's procedural auth views with the corresponding
+  class-based views.
