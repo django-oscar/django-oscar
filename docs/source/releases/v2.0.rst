@@ -19,7 +19,10 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 2.0 requires Python 3.4 or higher.
+Oscar 2.0 is compatible with Django 1.11, Django 2.0 and Django 2.1 as well as
+Python 3.5 and 3.6.
+
+Support for Python 2.7 and Python 3.4 has been dropped.
 
 .. _new_in_2.0:
 
