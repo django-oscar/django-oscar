@@ -2,12 +2,12 @@
 Oscar 1.6.3 release notes
 =========================
 
-:release: tbd
+:release: 2018-08-03
 
-This is Oscar 1.6.3, a bugfix release.
+This is Oscar 1.6.3, a compatibility release adding support for Django 2.1.
 
-Bug fixes
-=========
+Minor changes
+~~~~~~~~~~~~~
 
 - Replaced use of Django's procedural auth views with the corresponding
   class-based views.
