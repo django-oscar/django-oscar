@@ -43,10 +43,21 @@ Removal of deprecated features
 
   Product alert emails are now sent as Communication Events.
 
+- ``customer.forms.SetPasswordForm`` and ``customer.forms.PasswordChangeForm``
+  have been removed. Use ``django.contrib.auth.forms.SetPasswordForm`` and
+  ``django.contrib.auth.forms.PasswordChangeForm`` instead.
+
+- The ``views.decorators.staff_member_required`` decorator has been removed. Use
+  ``permissions_required(['is_staff']`` instead.
+
+- The ``UserAddress.num_orders`` property has been removed. Use
+  ``num_orders_as_shipping_address`` and ``num_orders_as_billing_address``
+  instead.
+
 Minor changes
 ~~~~~~~~~~~~~
- - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
-   and as per the HTML5 specification.
+- Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
+  and as per the HTML5 specification.
 
 - Replaced use of Django's procedural auth views with the corresponding
   class-based views.

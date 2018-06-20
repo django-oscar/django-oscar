@@ -1,12 +1,11 @@
 import warnings
 
 from django.contrib.auth.models import AnonymousUser, Permission
-from django.core.exceptions import PermissionDenied
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 
 from oscar.core.decorators import deprecated
 from oscar.test import factories
-from oscar.views.decorators import check_permissions, staff_member_required
+from oscar.views.decorators import check_permissions
 
 
 class TestPermissionsDecorator(TestCase):
@@ -37,26 +36,6 @@ class TestPermissionsDecorator(TestCase):
             check_permissions(user_with_perm, ['address.add_country']))
         self.assertFalse(
             check_permissions(user_without_perm, ['address.add_country']))
-
-    def test_staff_member_required_decorator(self):
-        staff_user = factories.UserFactory(is_staff=True)
-        non_staff_user = factories.UserFactory()
-        logged_out_user = AnonymousUser()
-
-        dummy_view = lambda request: True
-
-        request = RequestFactory().get('/')
-
-        request.user = staff_user
-        self.assertEqual(True, staff_member_required(dummy_view)(request))
-
-        request.user = non_staff_user
-        with self.assertRaises(PermissionDenied):
-            staff_member_required(dummy_view)(request)
-
-        request.user = logged_out_user
-        response = staff_member_required(dummy_view)(request)
-        self.assertEqual(response.status_code, 302)     # Redirect to login
 
 
 class TestDeprecatedDecorator(TestCase):

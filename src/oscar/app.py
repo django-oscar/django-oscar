@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import SetPasswordForm
 from django.urls import reverse_lazy
 
 from oscar.core.application import Application
@@ -23,7 +24,7 @@ class Shop(Application):
     offer_app = get_class('offer.app', 'application')
 
     password_reset_form = get_class('customer.forms', 'PasswordResetForm')
-    set_password_form = get_class('customer.forms', 'SetPasswordForm')
+    set_password_form = SetPasswordForm
 
     def get_urls(self):
         urls = [
