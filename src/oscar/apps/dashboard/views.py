@@ -201,13 +201,15 @@ class PopUpWindowCreateUpdateMixin(object):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        if RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.GET or RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.POST:
+        if (RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.GET or
+                RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.POST):
             to_field = self.request.GET.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR,
                                             self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR))
             ctx['to_field'] = to_field
             ctx['to_field_var'] = RelatedFieldWidgetWrapper.TO_FIELD_VAR
 
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET or RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
+        if (RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET or
+                RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST):
             is_popup = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR,
                                             self.request.POST.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR))
             ctx['is_popup'] = is_popup

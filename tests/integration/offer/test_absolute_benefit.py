@@ -136,7 +136,7 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
         self.assertEqual(4, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
-    def test_applies_correctly_to_basket_which_exceeds_condition_with_smaller_prices_than_discount_and_higher_prices_first(self):
+    def test_applies_basket_exceeding_condition_smaller_prices_than_discount_higher_prices_first(self):
         add_products(self.basket, [
             (D('2.00'), 2), (D('4.00'), 2)])
         result = self.benefit.apply(self.basket, self.condition, self.offer)

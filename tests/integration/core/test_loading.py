@@ -224,7 +224,8 @@ class TestMovedClasses(TestCase):
         self.assertTrue(isinstance(LineFormset(instance=self.wishlist).forms[0], WishListLineForm))
 
     def test_load_formsets_mixed_destination(self):
-        BaseBasketLineFormSet, BasketLineForm = get_classes('basket.forms', ('BaseBasketLineFormSet', 'BasketLineForm'))
+        BaseBasketLineFormSet, BasketLineForm = get_classes(
+            'basket.forms', ('BaseBasketLineFormSet', 'BasketLineForm'))
         self.assertEqual('oscar.apps.basket.formsets', BaseBasketLineFormSet.__module__)
         self.assertEqual('oscar.apps.basket.forms', BasketLineForm.__module__)
         StockRecordForm, StockRecordFormSet = get_classes(
