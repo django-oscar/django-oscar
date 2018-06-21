@@ -186,6 +186,28 @@ you will also need to include Django's i18n URLs:
         url(r'', include(application.urls)),
     ]
 
+For `Django > 1.9`_ pass ``application.urls`` directly to ``path``. For `Django > 2.0`_ use ``path`` and ``re_path`` instead of ``url``.:
+
+.. _`Django > 2.0`: https://docs.djangoproject.com/en/2.0/releases/2.0/#simplified-url-routing-syntax
+.. _`Django > 1.9`: https://docs.djangoproject.com/en/2.0/releases/1.9/#passing-a-3-tuple-or-an-app-name-to-include
+
+.. code-block:: django
+
+    from django.contrib import admin
+    from django.urls import path, include, re_path
+    from oscar.app import application
+
+    urlpatterns = [
+        re_path('^i18n/', include('django.conf.urls.i18n')),
+
+        # The Django admin is not officially supported; expect breakage.
+        # Nonetheless, it's often useful for debugging.
+        re_path('^admin/', admin.site.urls),
+    
+        path('', application.urls),
+    ]
+
+
 Search backend
 ==============
 If you're happy with basic search for now, you can just add Haystack's simple
