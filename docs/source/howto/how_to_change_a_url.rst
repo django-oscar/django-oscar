@@ -41,8 +41,8 @@ illustrates this nicely::
 
         def get_urls(self):
             urls = [
-                url(r'^catalogue/', include(self.catalogue_app.urls)),
-                url(r'^basket/', include(self.basket_app.urls)),
+                url(r'^catalogue/', self.catalogue_app.urls),
+                url(r'^basket/', self.basket_app.urls),
                 # ...
             ]
 
@@ -55,7 +55,7 @@ property from the root app::
 
     urlpatterns = [
         # Your other URLs
-        url(r'', include(application.urls)),
+        url(r'', application.urls),
     ]
 
 Changing sub app
@@ -103,7 +103,7 @@ instead of Oscar's default instance.  Hence, create a subclass of Oscar's main
         # Override get_urls method
         def get_urls(self):
             urlpatterns = [
-                url(r'^catalog/', include(self.catalogue_app.urls)),
+                url(r'^catalog/', self.catalogue_app.urls),
                 # all the remaining URLs, removed for simplicity
                 # ...
             ]
@@ -119,7 +119,7 @@ it to use your new application instance instead of Oscar's default::
 
     urlpatterns = [
        # Your other URLs
-       url(r'', include(application.urls)),
+       url(r'', application.urls),
     ]
 
 All URLs containing ``catalogue`` previously are now displayed as ``catalog``.
