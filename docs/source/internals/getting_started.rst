@@ -172,19 +172,25 @@ you will also need to include Django's i18n URLs:
 
 .. code-block:: django
 
-    from django.conf.urls import include, url
+    from django.conf.urls import include, url  # < Django-2.0
+    # from django.urls import include, path  # > Django-2.0
     from django.contrib import admin
     from oscar.app import application
 
     urlpatterns = [
         url(r'^i18n/', include('django.conf.urls.i18n')),
+        # path('i18n/', include('django.conf.urls.i18n')),  # > Django-2.0
 
         # The Django admin is not officially supported; expect breakage.
         # Nonetheless, it's often useful for debugging.
-        url(r'^admin/', admin.site.urls),
 
-        url(r'', include(application.urls)),
+        url(r'^admin/', admin.site.urls),
+        # path('admin/', admin.site.urls),  # > Django-2.0
+
+        url(r'', application.urls),
+        # path('', application.urls),  # > Django-2.0
     ]
+
 
 Search backend
 ==============

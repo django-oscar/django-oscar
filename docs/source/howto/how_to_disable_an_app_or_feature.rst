@@ -16,10 +16,10 @@ over the URLs structure.  So your root ``urls.py`` should have::
 
     urlpatterns = [
         ...
-        url(r'', include(application.urls)),
+        url(r'', application.urls),
     ]
 
-where ``application`` is a subclass of ``oscar.app.Shop`` which overrides the 
+where ``application`` is a subclass of ``oscar.app.Shop`` which overrides the
 link to the dashboard app::
 
     # myproject/app.py
@@ -28,12 +28,12 @@ link to the dashboard app::
 
     class MyShop(Shop):
 
-        # Override the core dashboard_app instance to use a blank application 
+        # Override the core dashboard_app instance to use a blank application
         # instance.  This means no dashboard URLs are included.
         dashboard_app = Application()
 
 The only remaining task is to ensure your templates don't reference any
-dashboard URLs. 
+dashboard URLs.
 
 How to disable Oscar feature
 ============================
