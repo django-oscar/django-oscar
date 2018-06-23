@@ -25,8 +25,8 @@ class ProductManager(models.Manager):
     """
     Uses ProductQuerySet and proxies its methods to allow chaining
 
-    Once Django 1.7 lands, this class can probably be removed:
-    https://docs.djangoproject.com/en/dev/releases/1.7/#calling-custom-queryset-methods-from-the-manager  # noqa
+    Use of this class is deprecated. Use ProductQuerySet.as_manager()
+    instead.
     """
 
     def get_queryset(self):
@@ -43,7 +43,8 @@ class BrowsableProductManager(ProductManager):
     """
     Excludes non-canonical products
 
-    Could be deprecated after Oscar 0.7 is released
+    Use of this class is deprecated. Use ProductQuerySet.as_manager().browsable()
+    instead.
     """
 
     def get_queryset(self):
