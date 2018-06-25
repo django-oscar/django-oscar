@@ -348,7 +348,7 @@ class AbstractProduct(models.Model):
             "or not"))
 
     objects = ProductQuerySet.as_manager()
-    browsable = ProductQuerySet.as_manager().browsable()
+    browsable = BrowsableProductQuerySet.as_manager()
 
     class Meta:
         abstract = True

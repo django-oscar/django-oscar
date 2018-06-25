@@ -17,16 +17,25 @@ class ProductQuerySet(models.query.QuerySet):
     def browsable(self):
         """
         Excludes non-canonical products.
+
+        Method is deprecated. Use BrowsableProductQuerySet instead.
         """
         return self.filter(parent=None)
+
+class BrowsableProductQuerySet(ProductQuerySet):
+
+    def base_queryset(self):
+        """
+        Excludes non-canonical products
+        """
+        return super().base_queryset().filter(parent=None)
 
 
 class ProductManager(models.Manager):
     """
     Uses ProductQuerySet and proxies its methods to allow chaining
 
-    Use of this class is deprecated. Use ProductQuerySet.as_manager()
-    instead.
+    Use of this class is deprecated. Use ProductQuerySet.as_manager() instead.
     """
 
     def get_queryset(self):
@@ -43,8 +52,7 @@ class BrowsableProductManager(ProductManager):
     """
     Excludes non-canonical products
 
-    Use of this class is deprecated. Use ProductQuerySet.as_manager().browsable()
-    instead.
+    Use of this class is deprecated. Use BrowsableProductQuerySet.as_manager() instead.
     """
 
     def get_queryset(self):
