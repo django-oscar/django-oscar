@@ -83,3 +83,5 @@ Dependency changes
 
 Deprecated features
 ~~~~~~~~~~~~~~~~~~~
+
+- ``offer.Range.contains()`` is deprecated. Use ``contains_product()`` instead.
