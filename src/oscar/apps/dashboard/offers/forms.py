@@ -144,6 +144,10 @@ class BenefitForm(forms.ModelForm):
                 raise forms.ValidationError(
                     _("No other options can be set if you are using a "
                       "custom incentive"))
+        elif not data.get('type'):
+            raise forms.ValidationError(
+                _("Please either choose a range, type and value OR "
+                  "select a custom incentive"))
 
         return data
 
