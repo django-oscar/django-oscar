@@ -5,8 +5,8 @@ from django.test import TestCase
 from oscar.apps.dashboard.offers import forms
 from oscar.apps.offer.custom import create_benefit
 from oscar.apps.offer.models import Range, Benefit
-from oscar.apps.offer.results import PostOrderAction
 from oscar.test.factories import create_product
+
 from tests._site.model_tests_app.models import CustomBenefitModel
 
 
