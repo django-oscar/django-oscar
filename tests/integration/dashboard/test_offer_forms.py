@@ -7,6 +7,7 @@ from oscar.apps.offer.custom import create_benefit
 from oscar.apps.offer.models import Range, Benefit
 from oscar.apps.offer.results import PostOrderAction
 from oscar.test.factories import create_product
+from tests._site.model_tests_app.models import CustomBenefitModel
 
 
 class TestBenefitForm(TestCase):
@@ -27,7 +28,7 @@ class TestBenefitForm(TestCase):
         """
         If a custom benefit exists, the type field should not be required.
         """
-        create_benefit(NoBenefit)
+        create_benefit(CustomBenefitModel)
         form = forms.BenefitForm()
         self.assertFalse(form.fields['type'].required)
         self.assertEqual(form.fields['custom_benefit'].initial, None)
@@ -37,7 +38,7 @@ class TestBenefitForm(TestCase):
         If a custom benefit exists and the kwargs instance is passed to init, the initial value for the custom_benefit
         should be the instance.
         """
-        benefit = create_benefit(NoBenefit)
+        benefit = create_benefit(CustomBenefitModel)
         form = forms.BenefitForm(instance=benefit)
         self.assertFalse(form.fields['type'].required)
         self.assertEqual(form.fields['custom_benefit'].initial, benefit.id)
@@ -100,7 +101,7 @@ class TestBenefitForm(TestCase):
         """
         If a custom benefit is selected, the form should be valid.
         """
-        benefit = create_benefit(NoBenefit)
+        benefit = create_benefit(CustomBenefitModel)
 
         form = forms.BenefitForm(data={
             'range': '',
@@ -123,7 +124,7 @@ class TestBenefitForm(TestCase):
         If a custom benefit exists, the type field is not required. Still, the clean method should throw a
         ValidationError, if only the range is supplied.
         """
-        benefit = create_benefit(NoBenefit)
+        benefit = create_benefit(CustomBenefitModel)
 
         form = forms.BenefitForm(data={
             'range': self.range,
@@ -140,7 +141,8 @@ class TestBenefitForm(TestCase):
         If a custom benefit exists, and the data for range, type and value is supplied, the form should validate to true.
         Clean should return the cleaned data.
         """
-        create_benefit(NoBenefit)
+
+        create_benefit(CustomBenefitModel)
 
         form = forms.BenefitForm(data={
             'range': self.range.id,
@@ -157,30 +159,3 @@ class TestBenefitForm(TestCase):
             'custom_benefit': '',
             'max_affected_items': None
         }, form.clean())
-
-
-class NoBenefit(Benefit):
-    """
-    An offer benefit that does not give any special benefit.
-    """
-    _description = 'No benefits'
-
-    @property
-    def name(self):
-        return str(self._description)
-
-    @property
-    def description(self):
-        return str(self._description)
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-        verbose_name = "No special benefit"
-        verbose_name_plural = "No special benefit"
-
-    def apply(self, basket, condition, offer, discount_percent=None, max_total_discount=None):
-        return PostOrderAction('No benefits')
-
-    def apply_deferred(self, basket, order, application):
-        return 'No benefits'
