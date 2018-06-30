@@ -124,7 +124,7 @@ class TestBenefitForm(TestCase):
         If a custom benefit exists, the type field is not required. Still, the clean method should throw a
         ValidationError, if only the range is supplied.
         """
-        benefit = create_benefit(CustomBenefitModel)
+        create_benefit(CustomBenefitModel)
 
         form = forms.BenefitForm(data={
             'range': self.range,
@@ -138,7 +138,7 @@ class TestBenefitForm(TestCase):
 
     def test_clean_validation_custom_exists(self):
         """
-        If a custom benefit exists, and the data for range, type and value is supplied, the form should validate to true.
+        If a custom benefit exists, and the data for range, type and value is supplied, the form should validate.
         Clean should return the cleaned data.
         """
 
