@@ -1,10 +1,10 @@
 from os.path import dirname
 import sys
 
+from django.apps import AppConfig, apps
 from django.test import override_settings, TestCase
 from django.conf import settings
 
-import oscar
 from oscar.core.loading import (
     get_model, AppNotFoundError, get_classes, get_class, get_class_loader,
     ClassNotFoundError)
@@ -40,26 +40,32 @@ class TestClassLoading(TestCase):
 
     def test_raise_importerror_if_app_raises_importerror(self):
         """
-        This tests that Oscar doesn't fall back to using the Oscar catalogue
-        app if the overriding app throws an ImportError.
+        This tests that Oscar doesn't fall back to using the Oscar core
+        app class if the overriding app class throws an ImportError.
+
+        "get_class()" returns None in this case, since there is no such named
+        class in the core app. We use this fictitious class because classes in
+        the "models" and "views" modules (along with modules they are related
+        to) are imported as part of the Django app-loading process, which is
+        triggered when we override the INSTALLED_APPS setting.
         """
         apps = list(settings.INSTALLED_APPS)
         apps[apps.index('tests._site.apps.catalogue')] = 'tests._site.import_error_app.catalogue'
         with override_settings(INSTALLED_APPS=apps):
             with self.assertRaises(ImportError):
-                get_class('catalogue.app', 'CatalogueApplication')
+                get_class('catalogue.import_error_module', 'ImportErrorClass')
 
 
 class ClassLoadingWithLocalOverrideTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests._site.shipping'
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests._site.apps.shipping'
 
     def test_loading_class_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
-            self.assertEqual('tests._site.shipping.methods', Free.__module__)
+            self.assertEqual('tests._site.apps.shipping.methods', Free.__module__)
 
     def test_loading_class_which_is_not_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
@@ -74,7 +80,7 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
     def test_loading_classes_defined_in_both_local_and_oscar_modules(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
             (Free, FixedPrice) = get_classes('shipping.methods', ('Free', 'FixedPrice'))
-            self.assertEqual('tests._site.shipping.methods', Free.__module__)
+            self.assertEqual('tests._site.apps.shipping.methods', Free.__module__)
             self.assertEqual('oscar.apps.shipping.methods', FixedPrice.__module__)
 
     def test_loading_classes_with_root_app(self):
@@ -82,18 +88,19 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
         path = dirname(dirname(tests._site.shipping.__file__))
         with temporary_python_path([path]):
             self.installed_apps[
-                self.installed_apps.index('tests._site.shipping')] = 'shipping'
+                self.installed_apps.index('tests._site.apps.shipping')] = 'shipping'
             with override_settings(INSTALLED_APPS=self.installed_apps):
                 (Free,) = get_classes('shipping.methods', ('Free',))
                 self.assertEqual('shipping.methods', Free.__module__)
 
     def test_overriding_view_is_possible_without_overriding_app(self):
-        from oscar.apps.customer.app import application, CustomerApplication
         # If test fails, it's helpful to know if it's caused by order of
         # execution
-        self.assertEqual(CustomerApplication().summary_view.__module__,
+        customer_app_config = AppConfig.create('oscar.apps.customer')
+        customer_app_config.ready()
+        self.assertEqual(customer_app_config.summary_view.__module__,
                          'tests._site.apps.customer.views')
-        self.assertEqual(application.summary_view.__module__,
+        self.assertEqual(apps.get_app_config('customer').summary_view.__module__,
                          'tests._site.apps.customer.views')
 
 
@@ -107,27 +114,6 @@ class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):
         with override_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
             self.assertEqual('tests._site.apps.shipping.methods', Free.__module__)
-
-
-class TestGetCoreAppsFunction(TestCase):
-    """
-    oscar.get_core_apps function
-    """
-
-    def test_returns_core_apps_when_no_overrides_specified(self):
-        apps = oscar.get_core_apps()
-        self.assertEqual(oscar.OSCAR_CORE_APPS, apps)
-
-    def test_uses_non_dashboard_override_when_specified(self):
-        apps = oscar.get_core_apps(overrides=['apps.shipping'])
-        self.assertTrue('apps.shipping' in apps)
-        self.assertTrue('oscar.apps.shipping' not in apps)
-
-    def test_uses_dashboard_override_when_specified(self):
-        apps = oscar.get_core_apps(overrides=['apps.dashboard.catalogue'])
-        self.assertTrue('apps.dashboard.catalogue' in apps)
-        self.assertTrue('oscar.apps.dashboard.catalogue' not in apps)
-        self.assertTrue('oscar.apps.catalogue' in apps)
 
 
 class TestOverridingCoreApps(TestCase):
@@ -181,11 +167,11 @@ class TestDynamicLoadingOn3rdPartyApps(TestCase):
             self.assertEqual('thirdparty_package.apps.myapp.models', Goat.__module__)
 
     def test_load_overriden_3rd_party_class_correctly(self):
-        self.installed_apps.append('apps.myapp')
+        self.installed_apps.append('tests._site.apps.myapp')
         with override_settings(INSTALLED_APPS=self.installed_apps):
             Cow, Goat = get_classes('myapp.models', ('Cow', 'Goat'), self.core_app_prefix)
             self.assertEqual('thirdparty_package.apps.myapp.models', Cow.__module__)
-            self.assertEqual('apps.myapp.models', Goat.__module__)
+            self.assertEqual('tests._site.apps.myapp.models', Goat.__module__)
 
 
 class OverriddenClassLoadingTestCase(TestCase):

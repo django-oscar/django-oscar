@@ -1,1 +1,1 @@
-default_app_config = 'oscar.apps.partner.config.PartnerConfig'
+default_app_config = 'oscar.apps.partner.apps.PartnerConfig'

@@ -1,1 +1,1 @@
-default_app_config = 'oscar.apps.offer.config.OfferConfig'
+default_app_config = 'oscar.apps.offer.apps.OfferConfig'

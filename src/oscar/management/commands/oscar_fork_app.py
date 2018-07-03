@@ -13,6 +13,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('app_label', help='The application to fork')
         parser.add_argument('target_path', help='The path to copy the files to')
+        parser.add_argument('new_app_subpackage', nargs='?', help='Dotted path to the new app, inside the target path')
 
     def handle(self, *args, **options):
         # Use a stdout logger
@@ -21,8 +22,10 @@ class Command(BaseCommand):
         logger.addHandler(stream)
         logger.setLevel(logging.DEBUG)
 
-        app_label, folder_path = options['app_label'], options['target_path']
+        app_label = options['app_label']
+        target_path = options['target_path']
+        new_app_subpackage = options['new_app_subpackage']
         try:
-            customisation.fork_app(app_label, folder_path, logger)
+            customisation.fork_app(app_label, target_path, new_app_subpackage, logger)
         except Exception as e:
             raise CommandError(str(e))

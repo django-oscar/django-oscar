@@ -1,2 +1,2 @@
 default_app_config = (
-    'oscar.apps.dashboard.communications.config.CommunicationsDashboardConfig')
+    'oscar.apps.dashboard.communications.apps.CommunicationsDashboardConfig')

@@ -64,21 +64,8 @@ Replace Oscar's app with your own in ``INSTALLED_APPS``
 =======================================================
 
 You will need to let Django know that you replaced one of Oscar's core
-apps. You can do that by supplying an extra argument to
-``get_core_apps`` function::
-
-    # settings.py
-
-    from oscar import get_core_apps
-    # ...
-    INSTALLED_APPS = [
-        # all your non-Oscar apps
-    ] + get_core_apps(['yourappsfolder.order'])
-
-``get_core_apps([])`` will return a list of Oscar core apps. If you supply a
-list of additional apps, they will be used to replace the Oscar core apps.
-In the above example, ``yourproject.order`` will be returned instead of
-``oscar.apps.order``.
+apps. You can do that by replacing its entry in the ``INSTALLED_APPS`` setting,
+with that for your own app.
 
 .. note::
 
@@ -93,7 +80,7 @@ In the above example, ``yourproject.order`` will be returned instead of
 
         INSTALLED_APPS = [
             # all your non-Oscar apps
-        ] + get_core_apps([
+            ...
             # core applications
             'yourappsfolder.catalogue',
             'yourappsfolder.order',
@@ -101,7 +88,7 @@ In the above example, ``yourproject.order`` will be returned instead of
             'yourappsfolder.dashboard',
             'yourappsfolder.dashboard.orders',
             'yourappsfolder.dashboard.reports',
-        ])
+        ]
 
 
 Start customising!
@@ -129,3 +116,6 @@ could subclass the class from Oscar or not::
         def order_number(self, basket=None):
             num = super().order_number(basket)
             return "SHOP-%s" % num
+
+To obtain an Oscar app's app config instance, look it up in the Django app
+registry.

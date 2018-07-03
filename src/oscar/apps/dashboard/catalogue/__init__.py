@@ -1,2 +1,2 @@
 default_app_config = (
-    'oscar.apps.dashboard.catalogue.config.CatalogueDashboardConfig')
+    'oscar.apps.dashboard.catalogue.apps.CatalogueDashboardConfig')

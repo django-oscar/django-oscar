@@ -1,1 +1,1 @@
-default_app_config = 'oscar.apps.customer.config.CustomerConfig'
+default_app_config = 'oscar.apps.customer.apps.CustomerConfig'

@@ -20,27 +20,63 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
     'django.contrib.admin',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'django.contrib.staticfiles',
-    'widget_tweaks',
 
-    # contains models we need for testing
+    'oscar',
+    'oscar.apps.analytics',
+    'oscar.apps.checkout',
+    'oscar.apps.address',
+    'oscar.apps.shipping',
+    'oscar.apps.catalogue',
+    'oscar.apps.catalogue.reviews',
+    'oscar.apps.partner',
+    'oscar.apps.basket',
+    'oscar.apps.payment',
+    'oscar.apps.offer',
+    'oscar.apps.order',
+    'oscar.apps.customer',
+    'oscar.apps.promotions',
+    'oscar.apps.search',
+    'oscar.apps.voucher',
+    'oscar.apps.wishlists',
+    'oscar.apps.dashboard',
+    'oscar.apps.dashboard.reports',
+    'oscar.apps.dashboard.users',
+    'oscar.apps.dashboard.orders',
+    'oscar.apps.dashboard.promotions',
+    'oscar.apps.dashboard.catalogue',
+    'oscar.apps.dashboard.offers',
+    'oscar.apps.dashboard.partners',
+    'oscar.apps.dashboard.pages',
+    'oscar.apps.dashboard.ranges',
+    'oscar.apps.dashboard.reviews',
+    'oscar.apps.dashboard.vouchers',
+    'oscar.apps.dashboard.communications',
+    'oscar.apps.dashboard.shipping',
+
+    # 3rd-party apps that oscar depends on
+    'widget_tweaks',
+    'haystack',
+    'treebeard',
+    'sorl.thumbnail',
+    'django_tables2',
+
+    # Contains models we need for testing
     'tests._site.model_tests_app',
     'tests._site.myauth',
+]
 
-    # Use a custom partner app to test overriding models.  I can't
-    # find a way of doing this on a per-test basis, so I'm using a
-    # global change.
-] + oscar.get_core_apps([
-    'tests._site.apps.partner',
-    'tests._site.apps.customer',
-    'tests._site.apps.catalogue'
-])
+# Use a custom partner app to test overriding models. I can't find a way of
+# doing this on a per-test basis, so I'm using a global change.
+INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.partner')] = 'tests._site.apps.partner'
+INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.customer')] = 'tests._site.apps.customer'
+INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.catalogue')] = 'tests._site.apps.catalogue'
 
 AUTH_USER_MODEL = 'myauth.User'
 

@@ -1,27 +1,13 @@
+from django.conf import settings
 from django.test import TestCase
 from django.template import loader, TemplateDoesNotExist
 
-import oscar
 
-
-class TestOscarCoreAppsList(TestCase):
+class TestOscarInstalledAppsList(TestCase):
 
     def test_includes_oscar_itself(self):
-        core_apps = oscar.OSCAR_CORE_APPS
-        self.assertTrue('oscar' in core_apps)
-
-    def test_can_be_retrieved_through_fn(self):
-        core_apps = oscar.get_core_apps()
-        self.assertTrue('oscar' in core_apps)
-
-    def test_can_be_retrieved_with_overrides(self):
-        apps = oscar.get_core_apps(overrides=['apps.shipping'])
-        self.assertTrue('apps.shipping' in apps)
-        self.assertTrue('oscar.apps.shipping' not in apps)
-
-    def test_raises_exception_for_string_arg(self):
-        with self.assertRaises(ValueError):
-            oscar.get_core_apps('forks.catalogue')
+        installed_apps = settings.INSTALLED_APPS
+        self.assertTrue('oscar' in installed_apps)
 
 
 class TestOscarTemplateSettings(TestCase):
