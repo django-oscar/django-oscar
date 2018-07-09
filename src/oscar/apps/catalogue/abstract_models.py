@@ -20,14 +20,14 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
 
-ProductQuerySet = get_class(
-    'catalogue.managers', 'ProductQuerySet')
+ProductQuerySet, BrowsableProductQuerySet = get_classes(
+    'catalogue.managers', ['ProductQuerySet', 'BrowsableProductQuerySet'])
 ProductAttributesContainer = get_class(
     'catalogue.product_attributes', 'ProductAttributesContainer')
 Selector = get_class('partner.strategy', 'Selector')

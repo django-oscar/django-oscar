@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Count
-
+from oscar.core.decorators import deprecated
 
 class ProductQuerySet(models.query.QuerySet):
 
@@ -30,7 +30,7 @@ class BrowsableProductQuerySet(ProductQuerySet):
         """
         return super().base_queryset().filter(parent=None)
 
-
+@deprecated
 class ProductManager(models.Manager):
     """
     Uses ProductQuerySet and proxies its methods to allow chaining
@@ -47,7 +47,7 @@ class ProductManager(models.Manager):
     def base_queryset(self):
         return self.get_queryset().base_queryset()
 
-
+@deprecated
 class BrowsableProductManager(ProductManager):
     """
     Excludes non-canonical products
