@@ -72,7 +72,7 @@ class StockRecordForm(forms.ModelForm):
 
         # If not tracking stock, we hide the fields
         if not product_class.track_stock:
-            for field_name in ['num_in_stock', 'low_stock_treshold']:
+            for field_name in ['num_in_stock', 'low_stock_threshold']:
                 if field_name in self.fields:
                     del self.fields[field_name]
         else:
