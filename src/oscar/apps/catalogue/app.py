@@ -19,9 +19,6 @@ class BaseCatalogueApplication(Application):
                 self.detail_view.as_view(), name='detail'),
             url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$',
                 self.category_view.as_view(), name='category'),
-            # Fallback URL if a user chops of the last part of the URL
-            url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
-                self.category_view.as_view()),
             url(r'^ranges/(?P<slug>[\w-]+)/$',
                 self.range_view.as_view(), name='range')]
         return self.post_process_urls(urlpatterns)

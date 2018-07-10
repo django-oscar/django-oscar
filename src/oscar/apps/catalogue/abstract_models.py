@@ -130,22 +130,6 @@ class AbstractCategory(MP_Node):
         """
         return slugify(self.name)
 
-    def ensure_slug_uniqueness(self):
-        """
-        Ensures that the category's slug is unique amongst it's siblings.
-        This is inefficient and probably not thread-safe.
-        """
-        unique_slug = self.slug
-        siblings = self.get_siblings().exclude(pk=self.pk)
-        next_num = 2
-        while siblings.filter(slug=unique_slug).exists():
-            unique_slug = '{slug}_{end}'.format(slug=self.slug, end=next_num)
-            next_num += 1
-
-        if unique_slug != self.slug:
-            self.slug = unique_slug
-            self.save()
-
     def save(self, *args, **kwargs):
         """
         Oscar traditionally auto-generated slugs from names. As that is
@@ -154,17 +138,10 @@ class AbstractCategory(MP_Node):
         instances with a slug already set, or expose a field on the
         appropriate forms.
         """
-        if self.slug:
-            # Slug was supplied. Hands off!
-            super().save(*args, **kwargs)
-        else:
+        if not self.slug:
             self.slug = self.generate_slug()
-            super().save(*args, **kwargs)
-            # We auto-generated a slug, so we need to make sure that it's
-            # unique. As we need to be able to inspect the category's siblings
-            # for that, we need to wait until the instance is saved. We
-            # update the slug and save again if necessary.
-            self.ensure_slug_uniqueness()
+
+        super().save(*args, **kwargs)
 
     def get_ancestors_and_self(self):
         """

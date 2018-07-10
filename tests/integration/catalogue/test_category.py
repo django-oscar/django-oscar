@@ -27,17 +27,9 @@ class TestCategory(TestCase):
         self.assertTrue(self.products.slug)
         self.assertTrue(self.books.slug)
 
-    def test_enforces_slug_uniqueness(self):
-        more_books = self.products.add_child(name=self.books.name)
-        self.assertTrue(more_books.slug and more_books.slug != self.books.slug)
-
     def test_supplied_slug_is_not_altered(self):
         more_books = self.products.add_child(
             name=self.books.name, slug=self.books.slug)
-        self.assertEqual(more_books.slug, self.books.slug)
-
-    def test_duplicate_slugs_allowed_for_non_siblings(self):
-        more_books = Category.add_root(name=self.books.name)
         self.assertEqual(more_books.slug, self.books.slug)
 
     @override_settings(OSCAR_SLUG_ALLOW_UNICODE=True)
