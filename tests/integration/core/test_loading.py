@@ -8,7 +8,6 @@ import oscar
 from oscar.core.loading import (
     get_model, AppNotFoundError, get_classes, get_class, get_class_loader,
     ClassNotFoundError)
-from oscar.test.factories import create_product, WishListFactory, UserFactory
 from tests import temporary_python_path
 from tests._site.loader import DummyClass
 
@@ -187,58 +186,6 @@ class TestDynamicLoadingOn3rdPartyApps(TestCase):
             Cow, Goat = get_classes('myapp.models', ('Cow', 'Goat'), self.core_app_prefix)
             self.assertEqual('thirdparty_package.apps.myapp.models', Cow.__module__)
             self.assertEqual('apps.myapp.models', Goat.__module__)
-
-
-class TestMovedClasses(TestCase):
-    def setUp(self):
-        user = UserFactory()
-        product = create_product()
-        self.wishlist = WishListFactory(owner=user)
-        self.wishlist.add(product)
-
-    def test_load_formset_old_destination(self):
-        BaseBasketLineFormSet = get_class('basket.forms', 'BaseBasketLineFormSet')
-        self.assertEqual('oscar.apps.basket.formsets', BaseBasketLineFormSet.__module__)
-        StockRecordFormSet = get_class('dashboard.catalogue.forms', 'StockRecordFormSet')
-        self.assertEqual('oscar.apps.dashboard.catalogue.formsets', StockRecordFormSet.__module__)
-        OrderedProductFormSet = get_class('dashboard.promotions.forms', 'OrderedProductFormSet')
-        OrderedProductForm = get_class('dashboard.promotions.forms', 'OrderedProductForm')
-        # Since OrderedProductFormSet created with metaclass, it has __module__
-        # attribute pointing to the Django module. Thus, we test if formset was
-        # loaded correctly by initiating class instance and checking its forms.
-        self.assertTrue(isinstance(OrderedProductFormSet().forms[0], OrderedProductForm))
-        LineFormset = get_class('wishlists.forms', 'LineFormset')
-        WishListLineForm = get_class('wishlists.forms', 'WishListLineForm')
-        self.assertTrue(isinstance(LineFormset(instance=self.wishlist).forms[0], WishListLineForm))
-
-    def test_load_formset_new_destination(self):
-        BaseBasketLineFormSet = get_class('basket.formsets', 'BaseBasketLineFormSet')
-        self.assertEqual('oscar.apps.basket.formsets', BaseBasketLineFormSet.__module__)
-        StockRecordFormSet = get_class('dashboard.catalogue.formsets', 'StockRecordFormSet')
-        self.assertEqual('oscar.apps.dashboard.catalogue.formsets', StockRecordFormSet.__module__)
-        OrderedProductFormSet = get_class('dashboard.promotions.formsets', 'OrderedProductFormSet')
-        OrderedProductForm = get_class('dashboard.promotions.forms', 'OrderedProductForm')
-        self.assertTrue(isinstance(OrderedProductFormSet().forms[0], OrderedProductForm))
-        LineFormset = get_class('wishlists.formsets', 'LineFormset')
-        WishListLineForm = get_class('wishlists.forms', 'WishListLineForm')
-        self.assertTrue(isinstance(LineFormset(instance=self.wishlist).forms[0], WishListLineForm))
-
-    def test_load_formsets_mixed_destination(self):
-        BaseBasketLineFormSet, BasketLineForm = get_classes('basket.forms', ('BaseBasketLineFormSet', 'BasketLineForm'))
-        self.assertEqual('oscar.apps.basket.formsets', BaseBasketLineFormSet.__module__)
-        self.assertEqual('oscar.apps.basket.forms', BasketLineForm.__module__)
-        StockRecordForm, StockRecordFormSet = get_classes(
-            'dashboard.catalogue.forms', ('StockRecordForm', 'StockRecordFormSet')
-        )
-        self.assertEqual('oscar.apps.dashboard.catalogue.forms', StockRecordForm.__module__)
-        OrderedProductForm, OrderedProductFormSet = get_classes(
-            'dashboard.promotions.forms', ('OrderedProductForm', 'OrderedProductFormSet')
-        )
-        self.assertEqual('oscar.apps.dashboard.promotions.forms', OrderedProductForm.__module__)
-        self.assertTrue(isinstance(OrderedProductFormSet().forms[0], OrderedProductForm))
-        LineFormset, WishListLineForm = get_classes('wishlists.forms', ('LineFormset', 'WishListLineForm'))
-        self.assertEqual('oscar.apps.wishlists.forms', WishListLineForm.__module__)
-        self.assertTrue(isinstance(LineFormset(instance=self.wishlist).forms[0], WishListLineForm))
 
 
 class OverriddenClassLoadingTestCase(TestCase):

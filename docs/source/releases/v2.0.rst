@@ -19,7 +19,10 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 2.0 requires Python 3.4 or higher.
+Oscar 2.0 is compatible with Django 1.11, Django 2.0 and Django 2.1 as well as
+Python 3.5 and 3.6.
+
+Support for Python 2.7 and Python 3.4 has been dropped.
 
 .. _new_in_2.0:
 
@@ -49,16 +52,75 @@ Removal of deprecated features
   this was inefficient and not threadsafe. Since a primary key is now required
   for category URLs, there is no need for slugs to be unique.
 
+- ``customer.forms.SetPasswordForm`` and ``customer.forms.PasswordChangeForm``
+  have been removed. Use ``django.contrib.auth.forms.SetPasswordForm`` and
+  ``django.contrib.auth.forms.PasswordChangeForm`` instead.
+
+- The ``views.decorators.staff_member_required`` decorator has been removed. Use
+  ``permissions_required(['is_staff']`` instead.
+
+- The ``UserAddress.num_orders`` property has been removed. Use
+  ``num_orders_as_shipping_address`` and ``num_orders_as_billing_address``
+  instead.
+
+- Backward-compatible dynamic loading of formset classes that have moved in Oscar was
+  removed. Projects must update their ``get_class`` calls to use the new paths.
+
+  The paths that have changed are as follows:
+
+  ================================  ==================================  ================
+  Old path                          New path                            Affected classes
+  ================================  ==================================  ================
+  ``basket.forms``                  ``basket.formsets``                 ``BaseBasketLineFormSet``
+
+                                                                        ``BasketLineFormSet``
+
+                                                                        ``BaseSavedLineFormSet``
+
+                                                                        ``SavedLineFormSet``
+  ``dashboard.catalogue.forms``     ``dashboard.catalogue.formsets``    ``BaseStockRecordFormSet``
+
+                                                                        ``StockRecordFormSet``
+
+                                                                        ``BaseProductCategoryFormSet``
+
+                                                                        ``ProductCategoryFormSet``
+
+                                                                        ``BaseProductImageFormSet``
+
+                                                                        ``ProductImageFormSet``
+
+                                                                        ``BaseProductRecommendationFormSet``
+
+                                                                        ``ProductRecommendationFormSet``
+
+                                                                        ``ProductAttributesFormSet``
+
+  ``dashboard.promotions.forms``    ``dashboard.promotions.formsets``   ``OrderedProductFormSet``
+  ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
+  ================================  ==================================  ================
+
 Minor changes
 ~~~~~~~~~~~~~
- - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
-   and as per the HTML5 specification.
+- Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
+  and as per the HTML5 specification.
 
 - Replaced use of Django's procedural auth views with the corresponding
   class-based views.
 
 - ``OrderPlacementMixin.get_message_context()`` is now passed a ``code`` argument
   specifying the communication event type code for a message being sent.
+
+- We've dropped the dependency on Unidecode due to license incompatibilities,
+  ``oscar.core.utils.default_slugifier`` now uses ``oscar.core.utils.cautious_slugify``
+  to handle unicode characters in slugs when ``OSCAR_SLUG_ALLOW_UNICODE`` is ``False``.
+
+- ``OSCAR_SLUG_FUNCTION`` previously accepted a function as its value. It now
+  only accepts a dotted path to a function as its value. Such functions must
+  also now take a ``allow_unicode`` kwarg.
+  
+- Fixed input validation for ``dashboard.offers.forms.BenefitForm`` when a ``range`` 
+  was specified but other fields were empty.
 
 Dependency changes
 ------------------
@@ -67,3 +129,5 @@ Dependency changes
 
 Deprecated features
 ~~~~~~~~~~~~~~~~~~~
+
+- ``offer.Range.contains()`` is deprecated. Use ``contains_product()`` instead.

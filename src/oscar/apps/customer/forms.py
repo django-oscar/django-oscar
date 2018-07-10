@@ -15,7 +15,6 @@ from django.utils.translation import pgettext_lazy
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.compat import (
     existing_user_fields, get_user_model)
-from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.forms import widgets
 
@@ -73,22 +72,6 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
             get_password_reset_url(user))
 
         return reset_url
-
-
-@deprecated
-class SetPasswordForm(auth_forms.SetPasswordForm):
-    """
-    Deprecated - use django.contrib.auth.forms.SetPasswordForm instead.
-    """
-    pass
-
-
-@deprecated
-class PasswordChangeForm(auth_forms.PasswordChangeForm):
-    """
-    Deprecated - use django.contrib.auth.forms.PasswordChangeForm instead.
-    """
-    pass
 
 
 class EmailAuthenticationForm(AuthenticationForm):

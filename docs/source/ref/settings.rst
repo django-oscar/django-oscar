@@ -428,51 +428,54 @@ Such files should always be deleted afterwards.
 Slug settings
 =============
 
+``OSCAR_SLUG_FUNCTION``
+-----------------------
+
+Default: ``'oscar.core.utils.default_slugifier'``
+
+A dotted path to the slugify function to use.
+
+Example::
+
+    # in myproject.utils
+    def some_slugify(value, allow_unicode=False):
+        return value
+
+    # in settings.py
+    OSCAR_SLUG_FUNCTION = 'myproject.utils.some_slugify'
+
 ``OSCAR_SLUG_MAP``
 ------------------
 
 Default: ``{}``
 
-A dictionary to map strings to more readable versions for including in URL
-slugs.  This mapping is appled before the slugify function.
-This is useful when names contain characters which would normally be
-stripped.  For instance::
+A dictionary to target:replacement strings that the slugify will apply before
+slugifying the value. This is useful when names contain characters which would
+normally be stripped. For instance::
 
     OSCAR_SLUG_MAP = {
         'c++': 'cpp',
         'f#': 'fsharp',
     }
 
-``OSCAR_SLUG_FUNCTION``
------------------------
-
-Default: ``'oscar.core.utils.default_slugifier'``
-
-The slugify function to use.  Note that is used within Oscar's slugify wrapper
-(in ``oscar.core.utils``) which applies the custom map and blacklist. String
-notation is recommended, but specifying a callable is supported for
-backwards-compatibility.
-
-Example::
-
-    # in myproject.utils
-    def some_slugify(value):
-        return value
-
-    # in settings.py
-    OSCAR_SLUG_FUNCTION = 'myproject.utils.some_slugify'
-
-
 ``OSCAR_SLUG_BLACKLIST``
 ------------------------
 
 Default: ``[]``
 
-A list of words to exclude from slugs.
+An iterable of words the slugify will try to remove after the value has been
+slugified. Note, a word will not be removed from the slug if it would
+result in an empty slug.
 
 Example::
 
-    OSCAR_SLUG_BLACKLIST = ['the', 'a', 'but']
+    # With OSCAR_SLUG_BLACKLIST = ['the']
+    slugify('The cat')
+    > 'cat'
+
+    # With OSCAR_SLUG_BLACKLIST = ['the', 'cat']
+    slugify('The cat')
+    > 'cat'
 
 ``OSCAR_SLUG_ALLOW_UNICODE``
 ----------------------------

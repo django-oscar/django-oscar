@@ -353,7 +353,9 @@ class AttributeOptionGroupUpdateMixin(object):
         self.assertEqual(response.context['form'].instance, self.attribute_option_group)
         self.assertInContext(response, 'attribute_option_formset')
         self.assertIsInstance(response.context['attribute_option_formset'], AttributeOptionFormSet)
-        self.assertEqual(response.context['attribute_option_formset'].initial_forms[0].instance, self.attribute_option_group.options.first())
+        self.assertEqual(
+            response.context['attribute_option_formset'].initial_forms[0].instance,
+            self.attribute_option_group.options.first())
         self.assertInContext(response, 'title')
         self.assertEqual(response.context['title'], self.title)
 
@@ -708,7 +710,8 @@ class TestAttributeOptionGroupDeleteView(AttributeOptionGroupDeleteMixin,
         self._set_up_display_delete_form_disallowed_vars()
         self._set_up_pop_up_window_vars()
 
-        ProductAttributeFactory(type='multi_option', name='Sizes', code='sizes', option_group=self.attribute_option_group)
+        ProductAttributeFactory(
+            type='multi_option', name='Sizes', code='sizes', option_group=self.attribute_option_group)
 
         params = {
             self.is_popup_var: self.is_popup,
@@ -736,7 +739,8 @@ class TestAttributeOptionGroupDeleteView(AttributeOptionGroupDeleteMixin,
         self._set_up_display_delete_form_vars()
         self._set_up_display_delete_form_disallowed_vars()
 
-        ProductAttributeFactory(type='multi_option', name='Sizes', code='sizes', option_group=self.attribute_option_group)
+        ProductAttributeFactory(
+            type='multi_option', name='Sizes', code='sizes', option_group=self.attribute_option_group)
 
         self.response = self.get(self.url)
 

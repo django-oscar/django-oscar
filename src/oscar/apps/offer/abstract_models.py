@@ -16,6 +16,7 @@ from django.utils.timezone import get_current_timezone, now
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
@@ -655,8 +656,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         for line in basket.all_lines():
             product = line.product
 
-            if (not range.contains(product) or
-                    not self.can_apply_benefit(line)):
+            if (not range.contains_product(product) or not self.can_apply_benefit(line)):
                 continue
 
             price = unit_price(offer, line)
@@ -907,8 +907,10 @@ class AbstractRange(models.Model):
                         return True
         return False
 
-    # Shorter alias
-    contains = contains_product
+    # Deprecated alias
+    @deprecated
+    def contains(self, product):
+        return self.contains_product(product)
 
     def __get_pks_and_child_pks(self, queryset):
         """

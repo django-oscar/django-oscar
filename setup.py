@@ -18,7 +18,7 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=1.11,<2.1',
+    'django>=1.11,<2.2',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=4.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
@@ -31,8 +31,6 @@ install_requires = [
     'sorl-thumbnail>=12.4.1,<12.5',
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
-    # For converting non-ASCII to ASCII when creating slugs
-    'Unidecode>=1.0,<1.1',
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
@@ -96,12 +94,12 @@ setup(
         'Framework :: Django',
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: Unix',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Application Frameworks']

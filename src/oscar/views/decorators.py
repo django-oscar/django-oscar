@@ -6,13 +6,6 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.urls import reverse_lazy
 
-from oscar.core.decorators import deprecated
-
-
-@deprecated
-def staff_member_required(view_func, login_url=None):
-    return permissions_required(['is_staff'], login_url=login_url)(view_func)
-
 
 def check_permissions(user, permissions):
     """
@@ -24,8 +17,6 @@ def check_permissions(user, permissions):
     (e.g. 'is_active', 'is_superuser').
 
     Example usage:
-    - permissions_required(['is_staff', ])
-      would replace staff_member_required
     - permissions_required(['is_anonymous', ])
       would replace login_forbidden
     - permissions_required((['is_staff',], ['partner.dashboard_access']))
