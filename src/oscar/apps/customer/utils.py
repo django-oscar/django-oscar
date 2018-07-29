@@ -1,4 +1,5 @@
 import logging
+import smtplib
 
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
@@ -38,16 +39,19 @@ class Dispatcher(object):
         """
         if order.is_anonymous:
             email = kwargs.get('email_address', order.guest_email)
-            dispatched_messages = self.dispatch_anonymous_messages(email, messages)
+            dispatched_messages = self.dispatch_anonymous_messages(
+                email, messages)
         else:
-            dispatched_messages = self.dispatch_user_messages(order.user, messages)
+            dispatched_messages = self.dispatch_user_messages(
+                order.user, messages)
 
         self.create_communication_event(order, event_type, dispatched_messages)
 
     def dispatch_anonymous_messages(self, email, messages):
         dispatched_messages = {}
         if email:
-            dispatched_messages['email'] = self.send_email_messages(email, messages), None
+            dispatched_messages['email'] = self.send_email_messages(
+                email, messages), None
         return dispatched_messages
 
     def dispatch_user_messages(self, user, messages):
@@ -56,9 +60,11 @@ class Dispatcher(object):
         """
         dispatched_messages = {}
         if messages['subject'] and (messages['body'] or messages['html']):
-            dispatched_messages['email'] = self.send_user_email_messages(user, messages)
+            dispatched_messages['email'] = self.send_user_email_messages(
+                user, messages)
         if messages['sms']:
-            dispatched_messages['sms'] = self.send_text_message(user, messages['sms'])
+            dispatched_messages['sms'] = self.send_text_message(
+                user, messages['sms'])
         return dispatched_messages
 
     # Internal
@@ -68,7 +74,8 @@ class Dispatcher(object):
         Create order communications event for audit
         """
         if dispatched_messages and event_type is not None:
-            CommunicationEvent._default_manager.create(order=order, event_type=event_type)
+            CommunicationEvent._default_manager.create(
+                order=order, event_type=event_type)
 
     def create_customer_email(self, user, messages, email):
         """
@@ -120,7 +127,11 @@ class Dispatcher(object):
         if self.mail_connection:
             self.mail_connection.send_messages([email])
         else:
-            email.send()
+            try:
+                email.send()
+            except smtplib.SMTPRecipientsRefused:
+                self.logger.warning(
+                    "Sending email to %s failed. [SMTPRecipientsRefused]" % recipient)
 
         return email
 
