@@ -1,7 +1,8 @@
 from datetime import datetime, time
 
-from django.http import HttpResponse
 from django.utils import timezone
+from django.http import HttpResponse
+from django.template.defaultfilters import date
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core import utils
@@ -29,8 +30,8 @@ class ReportGenerator(object):
     def report_description(self):
         return _('%(report_filter)s between %(start_date)s and %(end_date)s') \
             % {'report_filter': self.description,
-               'start_date': self.start_date,
-               'end_date': self.end_date,
+               'start_date': date(self.start_date, 'DATE_FORMAT'),
+               'end_date': date(self.end_date, 'DATE_FORMAT')
                }
 
     def generate(self):
