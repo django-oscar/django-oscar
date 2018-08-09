@@ -151,13 +151,16 @@ class AbstractWeightBased(AbstractBase):
             return D('0.00')
 
         top_band = self.top_band
-        if weight < top_band.upper_limit:
+        if weight <= top_band.upper_limit:
             band = self.get_band_for_weight(weight)
             return band.charge
         else:
             quotient, remaining_weight = divmod(weight, top_band.upper_limit)
-            remainder_band = self.get_band_for_weight(remaining_weight)
-            return quotient * top_band.charge + remainder_band.charge
+            if remaining_weight:
+                remainder_band = self.get_band_for_weight(remaining_weight)
+                return quotient * top_band.charge + remainder_band.charge
+            else:
+                return quotient * top_band.charge
 
     def get_band_for_weight(self, weight):
         """
