@@ -222,3 +222,26 @@ class WeightBasedMethodTests(TestCase):
         method = Repository().apply_shipping_offer(
             basket, self.standard, offer)
         self.assertEqual(D('0.00'), method.discount(basket))
+
+    def test_get_charge_when_weight_is_divided_by_top_band_upper_limit_without_remainder(self):
+        # In case we have next bands
+        #       Upper limit, kg    Charge, USD
+        #       1                  2.00
+        #       2                  6.00
+        self.standard.bands.create(upper_limit=1, charge=D('2.00'))
+        self.standard.bands.create(upper_limit=2, charge=D('6.00'))
+
+        # for weight 100 kg we should get charge 300 USD:
+        # 100 kg / 2 kg * 6 USD = 300 USD
+        self.assertEqual(D('300.00'), self.standard.get_charge(100))
+
+        # for weight 100.01 kg we should get charge 302 USD:
+        #  (100 kg / 2 kg * 6 USD = 300 USD) + (2 USD for remainder 0.01 kg) = 302 USD
+        self.assertEqual(D('302.00'), self.standard.get_charge(100.01))
+
+        # for weight 2 kg we should get charge 6 USD
+        self.assertEqual(D('6.00'), self.standard.get_charge(2))
+
+        # for weight 2.01 kg we should get charge 8 USD:
+        # (2 kg / 2 kg * 6 USD = 6 USD) + (2 USD for remainder 0.01 kg) = 8 USD
+        self.assertEqual(D('8.00'), self.standard.get_charge(2.01))
