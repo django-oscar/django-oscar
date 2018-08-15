@@ -118,9 +118,12 @@ Minor changes
 - ``OSCAR_SLUG_FUNCTION`` previously accepted a function as its value. It now
   only accepts a dotted path to a function as its value. Such functions must
   also now take a ``allow_unicode`` kwarg.
-  
-- Fixed input validation for ``dashboard.offers.forms.BenefitForm`` when a ``range`` 
+
+- Fixed input validation for ``dashboard.offers.forms.BenefitForm`` when a ``range``
   was specified but other fields were empty.
+
+- Fixed calculation of weight-based shipping charges in cases where the basket
+  weight is an exact multiple of a weight band's upper limit.
 
 Dependency changes
 ------------------
