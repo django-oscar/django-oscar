@@ -56,4 +56,5 @@ class SortReviewsForm(forms.Form):
         choices=SORT_REVIEWS_BY_CHOICES,
         label=_('Sort by'),
         initial=SORT_BY_SCORE,
+        required=False
     )
