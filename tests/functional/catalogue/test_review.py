@@ -1,3 +1,4 @@
+from django.urls import reverse
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_product, UserFactory
 from oscar.apps.catalogue.reviews.signals import review_added
@@ -8,6 +9,13 @@ class TestACustomer(WebTestCase):
 
     def setUp(self):
         self.product = create_product()
+
+    def test_reviews_list_sorting_form(self):
+        reviews_page = self.app.get(reverse(
+            'catalogue:reviews-list',
+            kwargs={'product_slug': self.product.slug, 'product_pk': self.product.id}
+        ))
+        self.assertFalse(reviews_page.context['form'].errors)
 
     def test_can_add_a_review_when_anonymous(self):
         detail_page = self.app.get(self.product.get_absolute_url())

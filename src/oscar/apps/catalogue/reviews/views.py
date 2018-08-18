@@ -116,7 +116,7 @@ class ProductReviewList(ListView):
     def get_queryset(self):
         qs = self.model.objects.approved().filter(product=self.kwargs['product_pk'])
         self.form = SortReviewsForm(self.request.GET)
-        if self.form.is_valid():
+        if self.request.GET and self.form.is_valid():
             sort_by = self.form.cleaned_data['sort_by']
             if sort_by == SortReviewsForm.SORT_BY_RECENCY:
                 return qs.order_by('-date_created')
