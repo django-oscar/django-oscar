@@ -26,8 +26,8 @@ from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
 
-ProductManager, BrowsableProductManager = get_classes(
-    'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
+ProductQuerySet, BrowsableProductQuerySet = get_classes(
+    'catalogue.managers', ['ProductQuerySet', 'BrowsableProductQuerySet'])
 ProductAttributesContainer = get_class(
     'catalogue.product_attributes', 'ProductAttributesContainer')
 Selector = get_class('partner.strategy', 'Selector')
@@ -324,8 +324,8 @@ class AbstractProduct(models.Model):
             "This flag indicates if this product can be used in an offer "
             "or not"))
 
-    objects = ProductManager()
-    browsable = BrowsableProductManager()
+    objects = ProductQuerySet.as_manager()
+    browsable = BrowsableProductQuerySet.as_manager()
 
     class Meta:
         abstract = True

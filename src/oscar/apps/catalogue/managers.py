@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Count
-
+from oscar.core.decorators import deprecated
 
 class ProductQuerySet(models.query.QuerySet):
 
@@ -17,16 +17,25 @@ class ProductQuerySet(models.query.QuerySet):
     def browsable(self):
         """
         Excludes non-canonical products.
+
+        Method is deprecated. Use BrowsableProductQuerySet instead.
         """
         return self.filter(parent=None)
 
+class BrowsableProductQuerySet(ProductQuerySet):
 
+    def base_queryset(self):
+        """
+        Excludes non-canonical products
+        """
+        return super().base_queryset().filter(parent=None)
+
+@deprecated
 class ProductManager(models.Manager):
     """
     Uses ProductQuerySet and proxies its methods to allow chaining
 
-    Once Django 1.7 lands, this class can probably be removed:
-    https://docs.djangoproject.com/en/dev/releases/1.7/#calling-custom-queryset-methods-from-the-manager  # noqa
+    Use of this class is deprecated. Use ProductQuerySet.as_manager() instead.
     """
 
     def get_queryset(self):
@@ -38,12 +47,12 @@ class ProductManager(models.Manager):
     def base_queryset(self):
         return self.get_queryset().base_queryset()
 
-
+@deprecated
 class BrowsableProductManager(ProductManager):
     """
     Excludes non-canonical products
 
-    Could be deprecated after Oscar 0.7 is released
+    Use of this class is deprecated. Use BrowsableProductQuerySet.as_manager() instead.
     """
 
     def get_queryset(self):
