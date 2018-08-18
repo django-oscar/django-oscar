@@ -125,6 +125,10 @@ Minor changes
 - Fixed calculation of weight-based shipping charges in cases where the basket
   weight is an exact multiple of a weight band's upper limit.
 
+- The ``sort_by`` field on ``catalogue.reviews.SortReviewsForm`` was made optional
+  and the logic in ``ProductReviewList`` adjusted so that the form fields
+  don't have to be rendered manually because of form errors.
+
 Dependency changes
 ------------------
 
