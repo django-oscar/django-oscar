@@ -138,3 +138,9 @@ Deprecated features
 ~~~~~~~~~~~~~~~~~~~
 
 - ``offer.Range.contains()`` is deprecated. Use ``contains_product()`` instead.
+
+- ``catalogue.managers.ProductManager`` is deprecated.
+  Use ``catalogue.managers.ProductQuerySet.as_manager()`` instead.
+
+- ``catalogue.managers.BrowsableProductManager`` is deprecated.
+  Use ``Product.objects.browsable()`` instead.
