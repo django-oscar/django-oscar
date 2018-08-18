@@ -23,14 +23,14 @@ class ProductOptionTests(TestCase):
 
     def test_queryset_per_product_class(self):
         self.product_class.options.add(self.option)
-        qs = Product.browsable.base_queryset().filter(id=self.product.id)
+        qs = Product.objects.browsable().base_queryset().filter(id=self.product.id)
         product = qs.first()
         self.assertTrue(product.has_options)
         self.assertEquals(product.num_product_class_options, 1)
 
     def test_queryset_per_product(self):
         self.product.product_options.add(self.option)
-        qs = Product.browsable.base_queryset().filter(id=self.product.id)
+        qs = Product.objects.browsable().base_queryset().filter(id=self.product.id)
         product = qs.first()
         self.assertTrue(product.has_options)
         self.assertEquals(product.num_product_options, 1)

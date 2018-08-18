@@ -20,14 +20,14 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.loading import get_class, get_classes, get_model
+from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
 
-ProductManager, BrowsableProductManager = get_classes(
-    'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
+BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManager')
+ProductQuerySet = get_class('catalogue.managers', 'ProductQuerySet')
 ProductAttributesContainer = get_class(
     'catalogue.product_attributes', 'ProductAttributesContainer')
 Selector = get_class('partner.strategy', 'Selector')
@@ -324,7 +324,9 @@ class AbstractProduct(models.Model):
             "This flag indicates if this product can be used in an offer "
             "or not"))
 
-    objects = ProductManager()
+    objects = ProductQuerySet.as_manager()
+    # browsable property is deprecated and will be removed in Oscar 2.1
+    # Use Product.objects.browsable() instead.
     browsable = BrowsableProductManager()
 
     class Meta:
