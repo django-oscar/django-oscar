@@ -74,7 +74,7 @@ test_requires = [
     'pytest-django==3.1.2',
     'pytest-xdist>=1.22<1.23',
     'tox>=3.0,<3.1',
-]
+] + safe_install_requires
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
     long_description = re.sub(
