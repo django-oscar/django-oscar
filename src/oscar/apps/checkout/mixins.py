@@ -175,13 +175,14 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         Update the user's address book based on the new shipping address
         """
+        # Create a new user address
+        user_addr = UserAddress(user=user)
+        addr.populate_alternative_model(user_addr)
         try:
             user_addr = user.addresses.get(
-                hash=addr.generate_hash())
+                hash=user_addr.generate_hash())
         except ObjectDoesNotExist:
-            # Create a new user address
-            user_addr = UserAddress(user=user)
-            addr.populate_alternative_model(user_addr)
+            pass
         if isinstance(addr, ShippingAddress):
             user_addr.num_orders_as_shipping_address += 1
         if isinstance(addr, BillingAddress):
