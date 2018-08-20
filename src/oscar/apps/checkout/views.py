@@ -251,6 +251,9 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
     pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
                       'check_user_email_is_captured']
+    success_url = redirect('checkout:payment-method')
+
+
 
     def post(self, request, *args, **kwargs):
         self._methods = self.get_available_shipping_methods()
@@ -327,7 +330,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
         return super().form_invalid(form)
 
     def get_success_response(self):
-        return redirect('checkout:payment-method')
+        return self.success_url
 
 
 # ==============
@@ -349,6 +352,7 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
         'check_user_email_is_captured',
         'check_shipping_data_is_captured']
     skip_conditions = ['skip_unless_payment_is_required']
+    success_url = redirect('checkout:payment-details')
 
     def get(self, request, *args, **kwargs):
         # By default we redirect straight onto the payment details view. Shops
@@ -357,7 +361,7 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
         return self.get_success_response()
 
     def get_success_response(self):
-        return redirect('checkout:payment-details')
+        return self.success_url
 
 
 # ================
