@@ -2,7 +2,7 @@ VENV = venv
 PYTEST = $(PWD)/$(VENV)/bin/py.test
 
 # These targets are not files
-.PHONY: install sandbox docs coverage lint messages compiledmessages css clean sandbox_image
+.PHONY: install sandbox docs coverage lint messages compiledmessages css clean sandbox_image build-tools
 
 install:
 	pip install -r requirements.txt
@@ -83,6 +83,7 @@ clean:
 	# Remove files not in source control
 	find . -type f -name "*.pyc" -delete
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
+	rm -rf dist
 
 todo:
 	# Look for areas of the code that need updating when some event has taken place (like
@@ -91,9 +92,13 @@ todo:
 	-grep -rnH TODO src/oscar/apps/
 	-grep -rnH "django.VERSION" src/oscar/apps
 
-
-release: clean
+build-tools:
 	pip install twine wheel
-	rm -rf dist/*
+
+dist: build-tools clean
 	python setup.py sdist bdist_wheel
+	$(MAKE) -w -C metapackage dist
+
+release: dist
 	twine upload -s dist/*
+	$(MAKE) -C metapackage release

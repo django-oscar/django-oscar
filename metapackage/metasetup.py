@@ -12,57 +12,39 @@ import sys
 
 from setuptools import find_packages, setup
 
-PROJECT_DIR = os.path.dirname(__file__)
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
+OSCAR_VERSION = get_version().replace(' ', '-')
 install_requires = [
-    'django>=1.11',
+    'oscar==%s' % OSCAR_VERSION,
+    'django>=1.11,<2.2',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=4.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
-    'django-extra-views>=0.11',
+    'django-extra-views>=0.11,<0.12',
     # Search support
-    'django-haystack>=2.5.0',
+    'django-haystack>=2.5.0,<3.0.0',
     # Treebeard is used for categories
     'django-treebeard>=4.3.0',
     # Sorl is used as the default thumbnailer
-    'sorl-thumbnail>=12.4.1',
+    'sorl-thumbnail>=12.4.1,<12.5',
     # Babel is used for currency formatting
-    'Babel>=1.0',
+    'Babel>=1.0,<3.0',
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
     'phonenumbers',
-    'django-phonenumber-field>=2.0',
+    'django-phonenumber-field>=2.0,<2.1',
     # Used for oscar.test.newfactories
-    'factory-boy>=2.4.1',
+    'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
-    'django-tables2>=1.19',
+    'django-tables2>=1.19,<2.0',
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
-]
-
-docs_requires = [
-    'Sphinx==1.7.2',
-    'sphinxcontrib-napoleon==0.6.1',
-    'sphinx_rtd_theme==0.3.0',
-    'sphinx-issues==0.4.0',
-]
-
-test_requires = [
-    'WebTest>=2.0,<2.1',
-    'coverage>=4.5,<4.6',
-    'django-webtest==1.9.2',
-    'py>=1.4.31',
-    'psycopg2>=2.7,<2.8',
-    'pytest>=3.5,<3.6',
-    'pytest-cov==2.5.1',
-    'pytest-django==3.1.2',
-    'pytest-xdist>=1.22<1.23',
-    'tox>=3.0,<3.1',
 ]
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
@@ -70,8 +52,8 @@ with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
         '^.. start-no-pypi.*^.. end-no-pypi', '', fh.read(), flags=re.M | re.S)
 
 setup(
-    name='oscar',
-    version=get_version().replace(' ', '-'),
+    name='django-oscar',
+    version=OSCAR_VERSION,
     url='https://github.com/django-oscar/django-oscar',
     author="David Winterbottom",
     author_email="david.winterbottom@gmail.com",
@@ -80,14 +62,11 @@ setup(
     keywords="E-commerce, Django, domain-driven",
     license='BSD',
     platforms=['linux'],
-    package_dir={'': 'src'},
-    packages=find_packages('src'),
-    include_package_data=True,
+    package_dir=None,
+    packages=[],
+    py_modules=[],
+    include_package_data=False,
     install_requires=install_requires,
-    extras_require={
-        'docs': docs_requires,
-        'test': test_requires,
-    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
