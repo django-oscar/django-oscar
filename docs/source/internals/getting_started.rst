@@ -14,14 +14,22 @@ scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
 Install Oscar and its dependencies
 ==================================
 
+
 Install Oscar (which will install Django as a dependency), then create the
 project:
 
 .. code-block:: bash
 
     $ mkvirtualenv oscar
-    $ pip install django-oscar
+    $ pip install django-oscar[safe]
     $ django-admin.py startproject frobshop
+
+..note::
+
+  Oscar depends on some external packages. Sometimes the latest of these
+  packages is not compatible with oscar anymore. pip install django-oscar[safe]
+  limits dependencies to versions that are safe to use with oscar. If you
+  decide to install oscar without [safe], you might run into problems!
 
 If you do not have mkvirtualenv, then replace that line with::
 
