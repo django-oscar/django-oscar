@@ -10,7 +10,7 @@ import os
 import re
 import sys
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
