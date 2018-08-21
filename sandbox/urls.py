@@ -41,12 +41,11 @@ if settings.DEBUG:
     import debug_toolbar
 
     # Server statics and uploaded media
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # Allow error pages to be tested
     urlpatterns += [
-        url(r'^403$', handler403),
-        url(r'^404$', handler404),
+        url(r'^403$', handler403, {'exception': Exception()}),
+        url(r'^404$', handler404, {'exception': Exception()}),
         url(r'^500$', handler500),
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
