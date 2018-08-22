@@ -104,7 +104,6 @@ Oscar's core apps. Also set ``SITE_ID``:
         'django.contrib.staticfiles',
         'django.contrib.flatpages',
         ...
-        'compressor',
         'widget_tweaks',
     ] + get_core_apps()
 
@@ -118,11 +117,10 @@ More info about installing ``flatpages`` is in the `Django docs`_.
 
 .. tip::
 
-    Oscar's default templates use django-compressor_ and django-widget-tweaks_
-    but it's optional really.  You may decide to use your own templates that
+    Oscar's default templates use django-widget-tweaks_ but it's
+    optional really.  You may decide to use your own templates that
     don't use either.  Hence why they are not in the 'core apps'.
 
-.. _django-compressor: https://github.com/jezdez/django_compressor
 .. _django-widget-tweaks: https://github.com/kmike/django-widget-tweaks
 
 Next, add ``oscar.apps.basket.middleware.BasketMiddleware`` and
