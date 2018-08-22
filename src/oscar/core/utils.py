@@ -2,9 +2,11 @@ import datetime
 import logging
 import re
 import unicodedata
+from babel.dates import format_timedelta as format_td
 
 from django.conf import settings
 from django.shortcuts import redirect, resolve_url
+from django.utils.translation import get_language, to_locale
 from django.template.defaultfilters import date as date_filter
 from django.utils.http import is_safe_url
 from django.utils.module_loading import import_string
@@ -92,6 +94,17 @@ def slugify(value):
         slug = slug.replace('-' + word, '')
 
     return slug
+
+
+def format_timedelta(td):
+    """
+    Takes an instance of timedelta and formats it as a readable translated string
+    """
+    return format_td(
+        td,
+        threshold=2,
+        locale=to_locale(get_language() or settings.LANGUAGE_CODE)
+    )
 
 
 def format_datetime(dt, format=None):

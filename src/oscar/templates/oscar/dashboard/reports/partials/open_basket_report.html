@@ -1,5 +1,6 @@
 {% extends 'dashboard/reports/index.html' %}
 {% load currency_filters %}
+{% load datetime_filters %}
 {% load i18n %}
 
 {% block report %}
@@ -31,7 +32,7 @@
                 <td>{{ basket.num_lines }}</td>
                 <td>{{ basket.num_items }}</td>
                 <td>{{ basket.date_created }}</td>
-                <td>{{ basket.time_since_creation }}</td>
+                <td>{{ basket.time_since_creation|timedelta }}</td>
             </tr>
         {% endfor %}
     </table>
