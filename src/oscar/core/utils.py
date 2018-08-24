@@ -1,7 +1,9 @@
 import datetime
+import decimal
 import logging
 import re
 import unicodedata
+
 from babel.dates import format_timedelta as format_td
 
 from django.conf import settings
@@ -168,3 +170,18 @@ def get_default_currency():
     OSCAR_DEFAULT_CURRENCY as something it needs to generate a migration for.
     """
     return settings.OSCAR_DEFAULT_CURRENCY
+
+
+def round_half_up(money):
+    """
+    Explicitly round a decimal to 2 places half up, as should be used for
+    money.
+
+    >>> exponent = decimal.Decimal('0.01')
+    >>> should_not_be_one = decimal.Decimal('1.005')
+    >>> should_not_be_one.quantize(exponent)
+    Decimal('1.00')
+    >>> round_half_up(should_not_be_one)
+    Decimal('1.01')
+    """
+    return money.quantize(decimal.Decimal('0.01'), decimal.ROUND_HALF_UP)
