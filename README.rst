@@ -163,6 +163,9 @@ The following extensions are stable and ready for use:
 
 * django_oscar_docdata_ - Integration with Docdata_ payment gateway.
 
+* django_oscar_invoices_ - Invoices or receipts generation for the
+  Oscar
+
 .. _django-oscar-api: https://github.com/django-oscar/django-oscar-api
 .. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
@@ -181,6 +184,7 @@ The following extensions are stable and ready for use:
 .. _eWay: https://www.eway.com.au
 .. _django_oscar_docdata: https://github.com/django-oscar/django-oscar-docdata
 .. _Docdata: https://www.docdatapayments.com/
+.. _django_oscar_invoices: https://github.com/django-oscar/django-oscar-invoices
 
 The following are community-written extensions:
 
