@@ -95,6 +95,9 @@ class ReportFormatter(object):
             return ''
         return utils.format_datetime(d, 'DATE_FORMAT')
 
+    def format_timedelta(self, td):
+        return utils.format_timedelta(td)
+
     def filename(self):
         return self.filename_template
 
