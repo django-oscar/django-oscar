@@ -124,3 +124,23 @@ Argument             Description
 ``basket``           The basket instance to calculate shipping charges for
 ``name``             The variable name to assign the charge to
 ===================  =====================================================
+
+Datetime filters
+-------------
+
+Load these tags using ``{% load datetime_filters %}``.
+
+``timedelta``
+~~~~~~~~~~~~~~~~~
+
+Returns a human-readable string representation of a time delta, in the current locale:
+
+.. code-block:: html+django
+
+    Time since creation: {{ basket.time_since_creation|timedelta }}
+
+This renders something like:
+
+.. code-block:: html
+
+    Time since creation: 2 days
