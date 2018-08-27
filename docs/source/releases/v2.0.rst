@@ -129,6 +129,9 @@ Minor changes
   and the logic in ``ProductReviewList`` adjusted so that the form fields
   don't have to be rendered manually because of form errors.
 
+- Added a ``datetime_filters`` tag library that provides a ``timedelta`` template
+  filter for rendering time deltas in human readable format.
+
 Dependency changes
 ------------------
 
