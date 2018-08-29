@@ -440,12 +440,7 @@ class AbstractConditionalOffer(models.Model):
         if not self.has_products:
             return Product.objects.none()
 
-        cond_range = self.condition.range
-        if cond_range.includes_all_products:
-            # Return ALL the products
-            queryset = Product.objects.browsable()
-        else:
-            queryset = cond_range.all_products()
+        queryset = self.condition.range.all_products()
         return queryset.filter(is_discountable=True).exclude(
             structure=Product.CHILD)
 
@@ -1007,8 +1002,9 @@ class AbstractRange(models.Model):
 
         Product = get_model("catalogue", "Product")
         if self.includes_all_products:
-            # Filter out child products
-            return Product.objects.browsable()
+            # Filter out child products and blacklisted products
+            return Product.objects.browsable().exclude(
+                id__in=self._excluded_product_ids())
 
         return Product.objects.filter(
             Q(id__in=self._included_product_ids()) |
