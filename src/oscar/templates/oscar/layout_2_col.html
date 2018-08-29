@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-{% load promotion_tags %}
 
 {% comment %}
 Keep the same header and footer as the standard layout template but override the 
@@ -12,12 +11,6 @@ main content area to split it into a sidebar and a content block
         <div class="row">
 
             <aside class="sidebar col-sm-4 col-md-3">
-                {# Render promotions at the top of the left-hand sidebar #}
-                <div id="promotions_left">
-                    {% for promotion in promotions_left %}
-                        {% render_promotion promotion %}
-                    {% endfor %}
-                </div>
                 {% block column_left %}{% endblock %}
             </aside>
 
@@ -29,12 +22,6 @@ main content area to split it into a sidebar and a content block
                 {% endblock %}
 
                 {% include "partials/alert_messages.html" %}
-
-                <div id="promotions">
-                    {% for promotion in promotions_page %}
-                        {% render_promotion promotion %}
-                    {% endfor %}
-                </div>
 
                 {% block content %}{% endblock %}
             </div>

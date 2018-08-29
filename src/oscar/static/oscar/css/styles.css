@@ -8498,60 +8498,6 @@ a:hover .thumbnail {
 .star-rating.Five i {
   color: #E6CE31;
 }
-.promotion_single .image_container {
-  min-height: 210px;
-  margin-bottom: 20px;
-}
-.promotion_single .image_container img {
-  max-height: 200px;
-}
-.sidebar .promotion_single h2 {
-  font-family: inherit;
-  font-weight: 500;
-  line-height: 1.1;
-  color: inherit;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-size: 24px;
-  font-size: 17.5px;
-  line-height: 1.4;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.sidebar .promotion_single h2 small,
-.sidebar .promotion_single h2 .small {
-  font-weight: 400;
-  line-height: 1;
-  color: #777777;
-}
-.sidebar .promotion_single h2 small,
-.sidebar .promotion_single h2 .small {
-  font-size: 65%;
-}
-.sidebar .promotion_single h3 {
-  font-family: inherit;
-  font-weight: 500;
-  line-height: 1.1;
-  color: inherit;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  line-height: 1.42857143;
-}
-.sidebar .promotion_single h3 small,
-.sidebar .promotion_single h3 .small {
-  font-weight: 400;
-  line-height: 1;
-  color: #777777;
-}
-.sidebar .promotion_single h3 small,
-.sidebar .promotion_single h3 .small {
-  font-size: 75%;
-}
-.sidebar .promotion_single .row > [class*="col-"] {
-  float: none;
-  width: auto;
-}
 input[type="text"][id*="quantity"],
 input[type="number"][id*="quantity"] {
   max-width: 55px;
