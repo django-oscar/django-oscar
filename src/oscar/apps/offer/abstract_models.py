@@ -811,6 +811,7 @@ class AbstractRange(models.Model):
 
     __included_product_ids = None
     __excluded_product_ids = None
+    __included_categories = None
     __class_ids = None
     __category_ids = None
 
@@ -890,7 +891,8 @@ class AbstractRange(models.Model):
             return False
         if self.includes_all_products:
             return True
-        if product.get_product_class().id in self._class_ids():
+        class_ids = self._class_ids()
+        if class_ids and product.get_product_class().id in class_ids:
             return True
         included_product_ids = self._included_product_ids()
         # If the product's parent is in the range, the child is automatically included as well
@@ -898,7 +900,7 @@ class AbstractRange(models.Model):
             return True
         if product.id in included_product_ids:
             return True
-        test_categories = self.included_categories.all()
+        test_categories = self._included_categories()
         if test_categories:
             for category in product.get_categories().all():
                 for test_category in test_categories:
@@ -926,6 +928,13 @@ class AbstractRange(models.Model):
         # Ensure uniqueness and remove None; {4, 5, 10, 11}
         return set(flat_iterable) - {None}
 
+    def _included_categories(self):
+        if not self.id:
+            return self.included_categories.none()
+        if self.__included_categories is None:
+            self.__included_categories = self.included_categories.all()
+        return self.__included_categories
+
     def _included_product_ids(self):
         if not self.id:
             return []
@@ -949,19 +958,20 @@ class AbstractRange(models.Model):
 
     def _category_ids(self):
         if self.__category_ids is None:
-            category_ids_list = list(
-                self.included_categories.values_list('pk', flat=True))
-            for category in self.included_categories.all():
+            ids = []
+            for category in self._included_categories():
                 children_ids = category.get_descendants().values_list(
                     'pk', flat=True)
-                category_ids_list.extend(list(children_ids))
+                ids.append(category.pk)
+                ids.extend(list(children_ids))
 
-            self.__category_ids = category_ids_list
+            self.__category_ids = ids
 
         return self.__category_ids
 
     def invalidate_cached_ids(self):
         self.__category_ids = None
+        self.__included_categories = None
         self.__included_product_ids = None
         self.__excluded_product_ids = None
 
@@ -1007,7 +1017,7 @@ class AbstractRange(models.Model):
         """
         Test whether products for the range can be re-ordered.
         """
-        return len(self._class_ids()) == 0 and len(self._category_ids()) == 0
+        return len(self._class_ids()) == 0 and len(self._included_categories()) == 0
 
 
 class AbstractRangeProduct(models.Model):
