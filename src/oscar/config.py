@@ -4,6 +4,7 @@ from django.apps import apps
 from django.conf import settings
 from django.conf.urls import url
 from django.urls import reverse_lazy
+from django.views.generic.base import RedirectView
 
 from oscar.core.application import OscarConfig
 from oscar.core.loading import get_class
@@ -32,6 +33,7 @@ class Shop(OscarConfig):
         from oscar.views.decorators import login_forbidden
 
         urls = [
+            url(r'^$', RedirectView.as_view(url=reverse_lazy('catalogue:index')), name='home'),
             url(r'^catalogue/', self.catalogue_app.urls),
             url(r'^basket/', self.basket_app.urls),
             url(r'^checkout/', self.checkout_app.urls),
