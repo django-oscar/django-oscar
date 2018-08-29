@@ -902,7 +902,8 @@ class AbstractRange(models.Model):
             return True
         test_categories = self._included_categories()
         if test_categories:
-            for category in product.get_categories().all():
+            for category in product.get_categories().only(
+                    *self._category_comparison_fields):
                 for test_category in test_categories:
                     if category == test_category \
                             or category.is_descendant_of(test_category):
@@ -928,11 +929,21 @@ class AbstractRange(models.Model):
         # Ensure uniqueness and remove None; {4, 5, 10, 11}
         return set(flat_iterable) - {None}
 
+    @cached_property
+    def _category_comparison_fields(self):
+        # Overwritten Category models could contain a lot of data, e.g CMS
+        # content. Hence, this avoids fetching unneeded data in the costly
+        # range comparison queries. Note that using .only() with an empty list
+        # is a no-op essentially, so nothing breaks when the field is missing.
+        Category = get_model('catalogue', 'Category')
+        return getattr(Category, 'COMPARISON_FIELDS', ())
+
     def _included_categories(self):
         if not self.id:
             return self.included_categories.none()
         if self.__included_categories is None:
-            self.__included_categories = self.included_categories.all()
+            self.__included_categories = self.included_categories.only(
+                *self._category_comparison_fields)
         return self.__included_categories
 
     def _included_product_ids(self):
