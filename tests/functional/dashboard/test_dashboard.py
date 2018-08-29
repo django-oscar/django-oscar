@@ -33,7 +33,6 @@ GENERIC_STATS_KEYS = (
 STAFF_STATS_KEYS = (
     'total_site_offers',
     'total_vouchers',
-    'total_promotions',
 )
 
 

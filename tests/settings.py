@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'oscar.apps.offer',
     'oscar.apps.order',
     'oscar.apps.customer',
-    'oscar.apps.promotions',
     'oscar.apps.search',
     'oscar.apps.voucher',
     'oscar.apps.wishlists',
@@ -49,7 +48,6 @@ INSTALLED_APPS = [
     'oscar.apps.dashboard.reports',
     'oscar.apps.dashboard.users',
     'oscar.apps.dashboard.orders',
-    'oscar.apps.dashboard.promotions',
     'oscar.apps.dashboard.catalogue',
     'oscar.apps.dashboard.offers',
     'oscar.apps.dashboard.partners',
@@ -105,7 +103,6 @@ TEMPLATES = [
 
                 'oscar.apps.search.context_processors.search_form',
                 'oscar.apps.customer.notifications.context_processors.notifications',
-                'oscar.apps.promotions.context_processors.promotions',
                 'oscar.apps.checkout.context_processors.checkout',
                 'oscar.core.context_processors.metadata',
             ]

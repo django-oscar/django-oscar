@@ -78,7 +78,6 @@ context processors.
                     'django.contrib.messages.context_processors.messages',
 
                     'oscar.apps.search.context_processors.search_form',
-                    'oscar.apps.promotions.context_processors.promotions',
                     'oscar.apps.checkout.context_processors.checkout',
                     'oscar.apps.customer.notifications.context_processors.notifications',
                     'oscar.core.context_processors.metadata',
@@ -117,7 +116,6 @@ depends on. Also set ``SITE_ID``:
         'oscar.apps.offer',
         'oscar.apps.order',
         'oscar.apps.customer',
-        'oscar.apps.promotions',
         'oscar.apps.search',
         'oscar.apps.voucher',
         'oscar.apps.wishlists',
@@ -125,7 +123,6 @@ depends on. Also set ``SITE_ID``:
         'oscar.apps.dashboard.reports',
         'oscar.apps.dashboard.users',
         'oscar.apps.dashboard.orders',
-        'oscar.apps.dashboard.promotions',
         'oscar.apps.dashboard.catalogue',
         'oscar.apps.dashboard.offers',
         'oscar.apps.dashboard.partners',

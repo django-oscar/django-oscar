@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% load i18n %}
-{% load promotion_tags %}
 {% load category_tags %}
 
 {% block layout %}
@@ -43,11 +42,6 @@
 
             {% block content %}{% endblock %}
 
-            <div id="promotions">
-                {% for promotion in promotions_page %}
-                    {% render_promotion promotion %}
-                {% endfor %}
-            </div>
         </div><!-- /page_inner -->
     </div>
     {% include "partials/footer_checkout.html" %}

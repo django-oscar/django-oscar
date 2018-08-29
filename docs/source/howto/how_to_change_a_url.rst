@@ -84,16 +84,16 @@ by looking them up in the Django app registry::
 
 That means you just need to create another app config class. It will usually
 inherit from Oscar's version. Say you'd want to add another view to the
-``promotions`` app. You only need to create a class called ``PromotionsConfig``
+``offer`` app. You only need to create a class called ``OfferConfig``
 (and usually inherit from Oscar's version) and add your view and its URL
 configuration::
 
-    # yourproject/promotions/apps.py
+    # yourproject/offer/apps.py
 
-    from oscar.apps.promotions.apps import PromotionsConfig as CorePromotionsConfig
+    from oscar.apps.offer.apps import OfferConfig as CoreOfferConfig
     from .views import MyExtraView
 
-    class PromotionsConfig(CorePromotionsConfig):
+    class OfferConfig(CoreOfferConfig):
         def ready(self):
             super().ready()
             self.extra_view = MyExtraView

@@ -116,7 +116,6 @@ Removal of deprecated features
 
                                                                         ``ProductAttributesFormSet``
 
-  ``dashboard.promotions.forms``    ``dashboard.promotions.formsets``   ``OrderedProductFormSet``
   ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
   ================================  ==================================  ================
 
@@ -220,6 +219,11 @@ Backwards incompatible changes in Oscar 2.0
   new app, from which, together with the ``target_path``, the full Python path
   to the app will be derived. If a ``new_app_subpackage`` is omitted, then the
   subpackage of the app being forked will be used instead.
+
+- Promotions application completely removed from the Oscar core and dashboard
+  and will be available as external application - `django_oscar_promotions`_.
+
+.. _`django_oscar_promotions`: https://github.com/django-oscar/django-oscar-promotions
 
 Migrating forked apps
 ~~~~~~~~~~~~~~~~~~~~~

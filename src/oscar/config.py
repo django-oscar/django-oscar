@@ -19,7 +19,6 @@ class Shop(OscarConfig):
         self.customer_app = apps.get_app_config('customer')
         self.basket_app = apps.get_app_config('basket')
         self.checkout_app = apps.get_app_config('checkout')
-        self.promotions_app = apps.get_app_config('promotions')
         self.search_app = apps.get_app_config('search')
         self.dashboard_app = apps.get_app_config('dashboard')
         self.offer_app = apps.get_app_config('offer')
@@ -67,7 +66,4 @@ class Shop(OscarConfig):
                 login_forbidden(auth_views.PasswordResetCompleteView.as_view()),
                 name='password-reset-complete'),
         ]
-
-        if settings.OSCAR_PROMOTIONS_ENABLED:
-            urls.append(url(r'', self.promotions_app.urls))
         return urls

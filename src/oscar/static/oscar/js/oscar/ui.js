@@ -41,13 +41,6 @@ var oscar = (function(o, $) {
         }
     };
 
-    // This block may need removing after reworking of promotions app
-    o.promotions = {
-        init: function() {
-
-        }
-    };
-
     // Notifications inbox within 'my account' section.
     o.notifications = {
         init: function() {

@@ -130,18 +130,6 @@ Default::
 
     None
 
-``OSCAR_PROMOTION_POSITIONS``
------------------------------
-
-Default::
-
-    OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
-                                 ('right', 'Right-hand sidebar'),
-                                 ('left', 'Left-hand sidebar'))
-
-The choice of display locations available when editing a promotion. Only
-useful when using a new set of templates.
-
 .. _OSCAR_DASHBOARD_NAVIGATION:
 
 ``OSCAR_DASHBOARD_NAVIGATION``
@@ -410,14 +398,6 @@ Default: ``True``
 If enabled, a ``post_delete`` hook will attempt to delete any image files and
 created thumbnails when a model with an ``ImageField`` is deleted. This is
 usually desired, but might not be what you want when using a remote storage.
-
-
-``OSCAR_PROMOTION_FOLDER``
---------------------------
-
-Default: ``images/promotions/``
-
-The folder within ``MEDIA_ROOT`` used for uploaded promotion images.
 
 .. _missing-image-label:
 

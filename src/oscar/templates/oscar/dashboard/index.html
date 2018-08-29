@@ -160,7 +160,7 @@
     <div class="col-md-6">
         {% if user.is_staff %}
         <table class="table table-striped table-bordered table-hover">
-            <caption><i class="icon-gift icon-large"></i>{% trans "Offers, vouchers and promotions" %}</caption>
+            <caption><i class="icon-gift icon-large"></i>{% trans "Offers, vouchers" %}</caption>
             <tr>
                 <th class="col-md-10">{% trans "Active <em>Site</em> Offers" %}</th>
                 <td class="col-md-2" >{{ total_site_offers }}</td>
@@ -168,10 +168,6 @@
             <tr>
                 <th class="col-md-10">{% trans "Active <em>Vouchers</em>" %}</th>
                 <td class="col-md-2" >{{ total_vouchers }}</td>
-            </tr>
-            <tr>
-                <th class="col-md-10">{% trans "Promotions" %}</th>
-                <td class="col-md-2" >{{ total_promotions }}</td>
             </tr>
         </table>
         {% endif %}

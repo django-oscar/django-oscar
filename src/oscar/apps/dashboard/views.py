@@ -9,7 +9,6 @@ from django.template.response import TemplateResponse
 from django.utils.timezone import now
 from django.views.generic import TemplateView
 
-from oscar.apps.promotions.models import AbstractPromotion
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 
@@ -59,21 +58,6 @@ class IndexView(TemplateView):
         is filtered by end date greater then the current date.
         """
         return Voucher.objects.filter(end_datetime__gt=now())
-
-    def get_number_of_promotions(self, abstract_base=AbstractPromotion):
-        """
-        Get the number of promotions for all promotions derived from
-        *abstract_base*. All subclasses of *abstract_base* are queried
-        and if another abstract base class is found this method is executed
-        recursively.
-        """
-        total = 0
-        for cls in abstract_base.__subclasses__():
-            if cls._meta.abstract:
-                total += self.get_number_of_promotions(cls)
-            else:
-                total += cls.objects.count()
-        return total
 
     def get_hourly_report(self, orders, hours=24, segments=10):
         """
@@ -203,7 +187,6 @@ class IndexView(TemplateView):
             stats.update(
                 total_site_offers=self.get_active_site_offers().count(),
                 total_vouchers=self.get_active_vouchers().count(),
-                total_promotions=self.get_number_of_promotions(),
             )
         return stats
 

@@ -23,7 +23,6 @@ class DashboardConfig(OscarDashboardConfig):
         self.reports_app = apps.get_app_config('reports_dashboard')
         self.orders_app = apps.get_app_config('orders_dashboard')
         self.users_app = apps.get_app_config('users_dashboard')
-        self.promotions_app = apps.get_app_config('promotions_dashboard')
         self.pages_app = apps.get_app_config('pages_dashboard')
         self.partners_app = apps.get_app_config('partners_dashboard')
         self.offers_app = apps.get_app_config('offers_dashboard')
@@ -43,7 +42,6 @@ class DashboardConfig(OscarDashboardConfig):
             url(r'^reports/', include(self.reports_app.urls[0])),
             url(r'^orders/', include(self.orders_app.urls[0])),
             url(r'^users/', include(self.users_app.urls[0])),
-            url(r'^content-blocks/', include(self.promotions_app.urls[0])),
             url(r'^pages/', include(self.pages_app.urls[0])),
             url(r'^partners/', include(self.partners_app.urls[0])),
             url(r'^offers/', include(self.offers_app.urls[0])),
