@@ -132,6 +132,18 @@ Minor changes
 - Added a ``datetime_filters`` tag library that provides a ``timedelta`` template
   filter for rendering time deltas in human readable format.
 
+.. _incompatible_in_2.0:
+
+Backwards incompatible changes in Oscar 2.0
+-------------------------------------------
+
+- Redirection to parent product detail page was disabled for variant products,
+  which allows to display their price and images separately on their own
+  pages. If it's intended to handle data (price and images) update on variant
+  selection on parent product page,
+  ``oscar.apps.catalogue.views.ProductDetailView.enforce_parent`` needs to be
+  set to `False`.
+
 Dependency changes
 ------------------
 
