@@ -26,8 +26,10 @@ class ProductDetailView(DetailView):
     # Whether to redirect to the URL with the right path
     enforce_paths = True
 
-    # Whether to redirect child products to their parent's URL
-    enforce_parent = True
+    # Whether to redirect child products to their parent's URL. If it's disabled,
+    # we display variant product details on the separate page. Otherwise, details
+    # displayed on parent product page.
+    enforce_parent = False
 
     def get(self, request, **kwargs):
         """
@@ -105,7 +107,7 @@ class ProductDetailView(DetailView):
                 self.template_folder, self.object.upc),
             '%s/detail-for-class-%s.html' % (
                 self.template_folder, self.object.get_product_class().slug),
-            '%s/detail.html' % (self.template_folder)]
+            '%s/detail.html' % self.template_folder]
 
 
 class CatalogueView(TemplateView):
