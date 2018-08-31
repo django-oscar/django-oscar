@@ -132,17 +132,22 @@ Minor changes
 - Added a ``datetime_filters`` tag library that provides a ``timedelta`` template
   filter for rendering time deltas in human readable format.
 
+- Fixed the logic of ``offers.Range.all_products()`` to make it consistent with
+  ``Range.contains_product()`` in excluding products specified in ``excluded_product_ids``.
+
+- Added a ``COMPARISON_FIELDS`` constant to ``catalogue.Category`` to restrict
+  which fields are fetched from the database when performing category comparison queries.
+
 .. _incompatible_in_2.0:
 
 Backwards incompatible changes in Oscar 2.0
 -------------------------------------------
 
-- Redirection to parent product detail page was disabled for variant products,
-  which allows to display their price and images separately on their own
-  pages. If it's intended to handle data (price and images) update on variant
-  selection on parent product page,
-  ``oscar.apps.catalogue.views.ProductDetailView.enforce_parent`` needs to be
-  set to `False`.
+- Redirection to the parent detail view for child products is disabled by default.
+  Child products now have their own detail view, which allows displaying their price
+  and images independently from the parent product. To revert to the previous behaviour
+  of redirecting to the parent product, set
+  ``oscar.apps.catalogue.views.ProductDetailView.enforce_parent`` to ``False``.
 
 Dependency changes
 ------------------
