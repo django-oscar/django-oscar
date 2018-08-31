@@ -4,7 +4,7 @@
 Werkzeug==0.14.1
 django-debug-toolbar==1.9.1
 django-extensions==2.1.2
-psycopg2==2.7.5
+psycopg2 --no-binary==2.7.5
 
 # Sandbox
 Pillow==5.2.0
