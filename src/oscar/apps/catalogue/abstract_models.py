@@ -85,6 +85,11 @@ class AbstractCategory(MP_Node):
 
     Uses django-treebeard.
     """
+    #: Allow comparison of categories on a limited number of fields by ranges.
+    #: When the Category model is overwriten to provide CMS content, defining
+    #: this avoids fetching a lot of unneeded extra data from the database.
+    COMPARISON_FIELDS = ('pk', 'path', 'depth')
+
     name = models.CharField(_('Name'), max_length=255, db_index=True)
     description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
