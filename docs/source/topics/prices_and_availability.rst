@@ -13,7 +13,6 @@ Simpler e-commerce frameworks often tie prices to the product model directly:
 
 .. code-block:: python
 
-   >>> from decimal import Decimal
    >>> product = Product.objects.get(id=1)
    >>> product.price
    Decimal('17.99')
@@ -25,7 +24,6 @@ calculating prices and availability information.
 .. code-block:: python
 
    >>> from oscar.apps.partner.strategy import Selector
-   >>> from decimal import Decimal
    >>> product = Product.objects.get(id=1)
    >>> strategy = Selector().strategy()
    >>> info = strategy.fetch_for_product(product)
@@ -280,9 +278,8 @@ Here's an example ``strategy.py`` module which is used to charge VAT on prices.
 .. code-block:: python
 
     # myproject/partner/strategy.py
-
-    from oscar.apps.partner import strategy, prices
     from decimal import Decimal as D
+    from oscar.apps.partner import strategy, prices
 
 
     class Selector(object):
