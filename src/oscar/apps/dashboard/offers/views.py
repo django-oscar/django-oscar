@@ -113,8 +113,7 @@ class OfferWizardStepView(FormView):
         form_data = form.cleaned_data.copy()
         range = form_data.get('range', None)
         if range is not None:
-            form_data['range_id'] = range.id
-            del form_data['range']
+            form_data['range'] = range.id
         form_kwargs = {'data': form_data}
         json_data = json.dumps(form_kwargs, cls=DjangoJSONEncoder)
 
@@ -127,12 +126,7 @@ class OfferWizardStepView(FormView):
         session_data = self.request.session.setdefault(self.wizard_name, {})
         json_data = session_data.get(self._key(step_name), None)
         if json_data:
-            form_kwargs = json.loads(json_data)
-            if 'range_id' in form_kwargs['data']:
-                form_kwargs['data']['range'] = Range.objects.get(
-                    id=form_kwargs['data']['range_id'])
-                del form_kwargs['data']['range_id']
-            return form_kwargs
+            return json.loads(json_data)
 
         return {}
 

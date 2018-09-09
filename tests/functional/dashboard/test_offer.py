@@ -146,3 +146,67 @@ class TestAnAdmin(testcases.WebTestCase):
         offer.refresh_from_db()
 
         self.assertEqual(offer.priority, 12)
+
+    def test_jump_back_to_incentive_step_for_new_offer(self):
+        list_page = self.get(reverse('dashboard:offer-list'))
+
+        metadata_page = list_page.click('Create new offer')
+        metadata_form = metadata_page.form
+        metadata_form['name'] = "Test offer"
+
+        benefit_page = metadata_form.submit().follow()
+        benefit_form = benefit_page.form
+        benefit_form['range'] = self.range.id
+        benefit_form['type'] = "Percentage"
+        benefit_form['value'] = "25"
+
+        benefit_form.submit()
+        benefit_page = self.get(reverse('dashboard:offer-benefit'))
+        # Accessing through context because WebTest form does not include an 'errors' field
+        benefit_form = benefit_page.context['form']
+
+        self.assertFalse('range' in benefit_form.errors)
+        self.assertEqual(len(benefit_form.errors), 0)
+
+    def test_jump_back_to_condition_step_for_new_offer(self):
+        list_page = self.get(reverse('dashboard:offer-list'))
+
+        metadata_page = list_page.click('Create new offer')
+        metadata_form = metadata_page.form
+        metadata_form['name'] = "Test offer"
+
+        benefit_page = metadata_form.submit().follow()
+        benefit_form = benefit_page.form
+        benefit_form['range'] = self.range.id
+        benefit_form['type'] = "Percentage"
+        benefit_form['value'] = "25"
+
+        condition_page = benefit_form.submit().follow()
+        condition_form = condition_page.form
+        condition_form['range'] = self.range.id
+        condition_form['type'] = "Count"
+        condition_form['value'] = "3"
+
+        condition_form.submit()
+        condition_page = self.get(reverse('dashboard:offer-condition'))
+
+        self.assertFalse('range' in condition_page.errors)
+        self.assertEqual(len(condition_page.errors), 0)
+
+    def test_jump_to_incentive_step_for_existing_offer(self):
+        offer = factories.create_offer()
+        url = reverse('dashboard:offer-benefit', kwargs={'pk': offer.id})
+
+        condition_page = self.get(url)
+
+        self.assertFalse('range' in condition_page.errors)
+        self.assertEqual(len(condition_page.errors), 0)
+
+    def test_jump_to_condition_step_for_existing_offer(self):
+        offer = factories.create_offer()
+        url = reverse('dashboard:offer-condition', kwargs={'pk': offer.id})
+
+        condition_page = self.get(url)
+
+        self.assertFalse('range' in condition_page.errors)
+        self.assertEqual(len(condition_page.errors), 0)
