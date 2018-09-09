@@ -278,7 +278,7 @@
                                                             {% trans "One can't add variants to this product at this point." %}
                                                             {% if product.pk is None %}
                                                                 {% trans "Please save the product before trying to add variants." %}
-                                                            {% if product.has_stockrecords %}
+                                                            {% elif product.has_stockrecords %}
                                                                 {% trans 'This is likely because this product still has stock records.' %}
                                                             {% endif %}
                                                         {% endif %}
