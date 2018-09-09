@@ -193,7 +193,7 @@ class TestAnAdmin(testcases.WebTestCase):
         self.assertFalse('range' in condition_page.errors)
         self.assertEqual(len(condition_page.errors), 0)
 
-    def test_jump_back_to_incentive_step_for_existing_offer(self):
+    def test_jump_to_incentive_step_for_existing_offer(self):
         offer = factories.create_offer()
         url = reverse('dashboard:offer-benefit', kwargs={'pk': offer.id})
 
@@ -202,7 +202,7 @@ class TestAnAdmin(testcases.WebTestCase):
         self.assertFalse('range' in condition_page.errors)
         self.assertEqual(len(condition_page.errors), 0)
 
-    def test_jump_back_to_condition_step_for_existing_offer(self):
+    def test_jump_to_condition_step_for_existing_offer(self):
         offer = factories.create_offer()
         url = reverse('dashboard:offer-condition', kwargs={'pk': offer.id})
 
