@@ -47,6 +47,7 @@ class SolrProductSearchHandler(SearchHandler):
 
     def get_search_queryset(self):
         sqs = super().get_search_queryset()
+        sqs = sqs.filter(is_enabled=True)
         if self.categories:
             # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
             # opposed to filtering using 'q'.
@@ -71,6 +72,7 @@ class ESProductSearchHandler(SearchHandler):
 
     def get_search_queryset(self):
         sqs = super().get_search_queryset()
+        sqs = sqs.filter(is_enabled=True)
         if self.categories:
             for category in self.categories:
                 sqs = sqs.filter_or(category=category.full_name)
@@ -95,6 +97,7 @@ class SimpleProductSearchHandler(MultipleObjectMixin):
 
     def get_queryset(self):
         qs = Product.objects.browsable().base_queryset()
+        qs = qs.filter(is_enabled=True)
         if self.categories:
             qs = qs.filter(categories__in=self.categories).distinct()
         return qs

@@ -140,10 +140,12 @@
             </tr>
         {% endif %}
         {% for av in product.attribute_values.all %}
+            {% if av.attribute.display %} 
             <tr>
                 <th>{{ av.attribute.name }}</th>
                 <td>{{ av.value_as_html }}</td>
             </tr>
+            {% endif %}
         {% endfor %}
         {% iffeature "reviews" %}
             <tr>
