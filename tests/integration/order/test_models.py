@@ -83,6 +83,16 @@ class OrderStatusPipelineTests(TestCase):
             self.order.set_status('SHIPPED')
             self.assertEqual(receiver.call_count, 1)
 
+    def test_set_status_signal_creates_a_order_status_change_object(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('SHIPPED')
+
+        order_status_change = self.order.status_changes.first()
+
+        self.assertEqual(self.order.status_changes.count(), 1)
+        self.assertEqual(order_status_change.old_status, 'PENDING')
+        self.assertEqual(order_status_change.new_status, 'SHIPPED')
+
 
 class OrderNoteTests(TestCase):
 
