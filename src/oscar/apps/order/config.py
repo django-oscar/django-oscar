@@ -8,5 +8,5 @@ class OrderConfig(AppConfig):
     verbose_name = _('Order')
 
     def ready(self):
-        from . import receivers
+        from . import receivers  # noqa
         super(OrderConfig, self).ready()
