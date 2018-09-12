@@ -6,3 +6,7 @@ class OrderConfig(AppConfig):
     label = 'order'
     name = 'oscar.apps.order'
     verbose_name = _('Order')
+
+    def ready(self):
+        from . import receivers
+        super(OrderConfig, self).ready()
