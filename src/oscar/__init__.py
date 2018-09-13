@@ -45,6 +45,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.search',
     'oscar.apps.voucher',
     'oscar.apps.wishlists',
+    'oscar.apps.system',
     'oscar.apps.dashboard',
     'oscar.apps.dashboard.reports',
     'oscar.apps.dashboard.users',
@@ -59,6 +60,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.vouchers',
     'oscar.apps.dashboard.communications',
     'oscar.apps.dashboard.shipping',
+    'oscar.apps.dashboard.system',
     # 3rd-party apps that oscar depends on
     'haystack',
     'treebeard',
