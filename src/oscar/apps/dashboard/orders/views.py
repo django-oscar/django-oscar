@@ -50,7 +50,7 @@ def queryset_orders_for_user(user):
         'billing_address', 'billing_address__country',
         'shipping_address', 'shipping_address__country',
         'user'
-    ).prefetch_related('lines')
+    ).prefetch_related('lines', 'status_changes')
     if user.is_staff:
         return queryset
     else:
