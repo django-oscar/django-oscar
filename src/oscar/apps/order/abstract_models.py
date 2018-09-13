@@ -149,7 +149,13 @@ class AbstractOrder(models.Model):
                                   new_status=new_status,
                                   )
 
+        self._create_order_status_change(old_status, new_status)
+
     set_status.alters_data = True
+
+    def _create_order_status_change(self, old_status, new_status):
+        # Not setting the status on the order as that should be handled before
+        self.status_changes.create(old_status=old_status, new_status=new_status)
 
     @property
     def is_anonymous(self):
@@ -449,7 +455,7 @@ class AbstractOrderStatusChange(models.Model):
         ordering = ['-date_created']
 
     def __str__(self):
-        return '{order} has changed status from {old_status} to {new_status}'.format(
+        return _('{order} has changed status from {old_status} to {new_status}').format(
             order=self.order, old_status=self.old_status, new_status=self.new_status
         )
 
