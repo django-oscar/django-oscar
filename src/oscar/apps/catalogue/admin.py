@@ -45,8 +45,8 @@ class ProductClassAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_created'
     list_display = ('get_title', 'upc', 'get_product_class', 'structure',
-                    'attribute_summary', 'date_created')
-    list_filter = ['structure', 'is_discountable']
+                    'attribute_summary', 'is_enabled', 'date_created')
+    list_filter = ['structure', 'is_discountable', 'is_enabled']
     raw_id_fields = ['parent']
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
     prepopulated_fields = {"slug": ("title",)}

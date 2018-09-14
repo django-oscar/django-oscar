@@ -27,6 +27,7 @@ class DashboardApplication(BaseDashboardApplication):
     vouchers_app = get_class('dashboard.vouchers.app', 'application')
     comms_app = get_class('dashboard.communications.app', 'application')
     shipping_app = get_class('dashboard.shipping.app', 'application')
+    system_app = get_class('dashboard.system.app', 'application')
 
     def get_urls(self):
         urls = [
@@ -44,6 +45,7 @@ class DashboardApplication(BaseDashboardApplication):
             url(r'^vouchers/', self.vouchers_app.urls),
             url(r'^comms/', self.comms_app.urls),
             url(r'^shipping/', self.shipping_app.urls),
+            url(r'^system/', self.system_app.urls),
 
             url(r'^login/$',
                 auth_views.LoginView.as_view(template_name='dashboard/login.html',

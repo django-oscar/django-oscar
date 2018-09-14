@@ -329,6 +329,14 @@ class AbstractProduct(models.Model):
             "This flag indicates if this product can be used in an offer "
             "or not"))
 
+    #: Determines if a product is live on the site.
+    #: Note that this flag is ignored for child products; they inherit from
+    #: the parent product.
+    is_enabled = models.BooleanField(
+        _("Is enabled?"), default=True, help_text=_(
+            "This flag indicates if this product will be displayed "
+            "or not"))
+
     objects = ProductQuerySet.as_manager()
     # browsable property is deprecated and will be removed in Oscar 2.1
     # Use Product.objects.browsable() instead.
@@ -736,6 +744,9 @@ class AbstractProductAttribute(models.Model):
         verbose_name=_("Option Group"),
         help_text=_('Select an option group if using type "Option" or "Multi Option"'))
     required = models.BooleanField(_('Required'), default=False)
+    
+    # Display on frontend
+    display = models.BooleanField(_('Display'), default=True)
 
     class Meta:
         abstract = True

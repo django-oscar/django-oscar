@@ -97,6 +97,7 @@
                                                 <th>{% trans "Code" %}</th>
                                                 <th>{% trans "Type" %}</th>
                                                 <th>{% trans "Required" %}</th>
+                                                <th>{% trans "Display" %}</th>
                                                 <th>{% trans "Delete?" %}</th>
                                             </tr>
                                         </thead>
@@ -114,6 +115,7 @@
                                                         {% include 'dashboard/partials/form_field.html' with field=attribute_form.option_group nolabel=True %}
                                                     </td>
                                                     <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.required nolabel=True %}</td>
+                                                    <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.display nolabel=True %}</td>
                                                     <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.DELETE nolabel=True %}</td>
                                                 </tr>
                                             {% endfor %}

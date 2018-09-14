@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.paginator import InvalidPage
+from django.core.exceptions import SuspiciousOperation
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.http import urlquote
@@ -8,6 +9,7 @@ from django.views.generic import DetailView, TemplateView
 
 from oscar.apps.catalogue.signals import product_viewed
 from oscar.core.loading import get_class, get_model
+from oscar.views import handler404
 
 Product = get_model('catalogue', 'product')
 Category = get_model('catalogue', 'category')
@@ -36,10 +38,15 @@ class ProductDetailView(DetailView):
         Ensures that the correct URL is used before rendering a response
         """
         self.object = product = self.get_object()
-
+        
         redirect = self.redirect_if_necessary(request.path, product)
         if redirect is not None:
             return redirect
+        
+        # A non-admin user is trying to view a disabled product
+        if not product.is_enabled and not request.user.is_staff:
+            msg = "{} is disabled".format(product)
+            return handler404(request, SuspiciousOperation(msg))
 
         response = super().get(request, **kwargs)
         self.send_signal(request, response, product)

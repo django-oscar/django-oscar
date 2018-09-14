@@ -184,7 +184,8 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'title', 'upc', 'description', 'is_discountable', 'structure']
+            'title', 'upc', 'description', 'is_discountable',
+            'is_enabled', 'structure']
         widgets = {
             'structure': forms.HiddenInput()
         }
@@ -361,7 +362,7 @@ class ProductAttributesForm(forms.ModelForm):
 
     class Meta:
         model = ProductAttribute
-        fields = ["name", "code", "type", "option_group", "required"]
+        fields = ["name", "code", "type", "option_group", "required", "display"]
 
 
 class AttributeOptionGroupForm(forms.ModelForm):
