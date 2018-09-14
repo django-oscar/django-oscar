@@ -158,9 +158,28 @@
     $('.nav-list a').on('shown.bs.tab', function (e) {
         window.location.hash = e.target.hash;
     });
-
+    
+    // Customize based on system configuration
     options = {
-      'languageCode': '{{ LANGUAGE_CODE }}'
+      'languageCode': '{{ LANGUAGE_CODE }}',
+      'dateFormat': '{{ shop_date_format }}',
+      'timeFormat': '{{ shop_time_format }}',
+      'datetimeFormat': '{{ shop_datetime_format }}',
+      'stepMinute': {{ shop_date_picker_minute_step }},      
+      'tinyConfig': {
+        entity_encoding: 'raw',
+        statusbar: false,
+        menubar: '{{ dashboard_editor_menubar }}',
+        browser_spellcheck: true,
+        plugins: '{{ dashboard_editor_plugins }}',
+        style_formats: [
+            {title: 'Text', block: 'p'},
+            {title: 'Heading', block: 'h2'},
+            {title: 'Subheading', block: 'h3'}
+        ],
+        toolbar: '{{ dashboard_editor_toolbar_layout }}',
+        contextmenu: '{{ dashboard_editor_context_menu }}'
+      }
     };
     oscar.dashboard.init(options);
 {% endblock %}
