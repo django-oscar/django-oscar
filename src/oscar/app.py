@@ -27,14 +27,23 @@ class Shop(Application):
     set_password_form = SetPasswordForm
 
     def get_urls(self):
-        urls = [
-            url(r'^catalogue/', self.catalogue_app.urls),
-            url(r'^basket/', self.basket_app.urls),
-            url(r'^checkout/', self.checkout_app.urls),
-            url(r'^accounts/', self.customer_app.urls),
-            url(r'^search/', self.search_app.urls),
+        urls = []
+        if settings.OSCAR_FRONTEND_ENABLED:
+            urls.extend([
+                url(r'^catalogue/', self.catalogue_app.urls),
+                url(r'^basket/', self.basket_app.urls),
+                url(r'^checkout/', self.checkout_app.urls),
+                url(r'^accounts/', self.customer_app.urls),
+                url(r'^search/', self.search_app.urls),
+                url(r'^offers/', self.offer_app.urls),
+            ])
+
+            if settings.OSCAR_PROMOTIONS_ENABLED:
+                urls.append(url(r'', self.promotions_app.urls))
+
+        # Dashboard and password reset views
+        urls.extend([
             url(r'^dashboard/', self.dashboard_app.urls),
-            url(r'^offers/', self.offer_app.urls),
 
             # Password reset - as we're using Django's default view functions,
             # we can't namespace these urls as that prevents
@@ -61,10 +70,7 @@ class Shop(Application):
             url(r'^password-reset/complete/$',
                 login_forbidden(auth_views.PasswordResetCompleteView.as_view()),
                 name='password-reset-complete'),
-        ]
-
-        if settings.OSCAR_PROMOTIONS_ENABLED:
-            urls.append(url(r'', self.promotions_app.urls))
+        ])
         return urls
 
 application = Shop()

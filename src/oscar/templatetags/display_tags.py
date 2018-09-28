@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 
 from oscar.core.loading import feature_hidden
 
@@ -68,3 +69,27 @@ class ConditionalOutputNode(template.Node):
             return output
         else:
             return ''
+
+
+@register.tag()
+def ifwithfrontend(parser, token):
+    nodelist = parser.parse(('endifwithfrontend',))
+    try:
+        tag_name, = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError(
+            "%r tag requires a single argument" % token.contents.split()[0])
+    parser.delete_first_token()
+    return FrontendOutputNode(nodelist)
+
+
+class FrontendOutputNode(template.Node):
+    def __init__(self, nodelist):
+        self.nodelist = nodelist
+
+    def render(self, context):
+        if settings.OSCAR_FRONTEND_ENABLED:
+            return self.nodelist.render(context)
+        else:
+            return ''
+

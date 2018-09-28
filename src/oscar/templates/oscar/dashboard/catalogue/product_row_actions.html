@@ -1,4 +1,5 @@
 {% load django_tables2 %}
+{% load display_tags %}
 {% load i18n %}
 <div class="btn-toolbar">
     <div class="btn-group">
@@ -10,9 +11,11 @@
             <li>
                 <a href="{% url 'dashboard:catalogue-product' pk=record.id %}{% querystring %}">{% trans "Edit" %}</a>
             </li>
+            {% ifwithfrontend %}
             <li>
                 <a href="{{ record.get_absolute_url }}"> {% trans "View on site" %}</a>
             </li>
+            {% endifwithfrontend %}
             <li>
                 <a href="{% url 'dashboard:catalogue-product-delete' pk=record.id %}">{% trans "Delete" %}</a>
             </li>
