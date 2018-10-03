@@ -219,6 +219,25 @@ class AbstractVoucher(models.Model):
                                 "a previous order")
         return is_available, message
 
+    def is_available_for_basket(self, basket):
+        """
+        Tests whether this voucher is available to the passed basket.
+
+        Returns a tuple of a boolean for whether it is successful, and a
+        availability message.
+        """
+        is_available, message = self.is_available_to_user(user=basket.owner)
+        if not is_available:
+            return False, message
+
+        is_available, message = False, _("This voucher is not available for this basket")
+        for offer in self.offers.all():
+            if offer.is_condition_satisfied(basket=basket):
+                is_available = True
+                message = ''
+                break
+        return is_available, message
+
     def record_usage(self, order, user):
         """
         Records a usage of this voucher in an order.
