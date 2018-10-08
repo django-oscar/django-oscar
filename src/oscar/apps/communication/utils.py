@@ -1,4 +1,5 @@
 import logging
+import six
 import warnings
 
 from django.conf import settings
@@ -41,14 +42,14 @@ class Dispatcher(object):
 
     # Public API methods
 
-    def dispatch_direct_messages(self, recipient_email, messages):
+    def dispatch_direct_messages(self, recipient_email, messages, attachments=None):
         """
         Dispatch one-off messages to explicitly specified recipient email.
         """
         if messages['subject'] and (messages['body'] or messages['html']):
-            return self.send_email_messages(recipient_email, messages)
+            return self.send_email_messages(recipient_email, messages, attachments=attachments)
 
-    def dispatch_order_messages(self, order, messages, event_code, **kwargs):
+    def dispatch_order_messages(self, order, messages, event_code, attachments=None, **kwargs):
         """
         Dispatch order-related messages to the customer.
         """
@@ -56,9 +57,9 @@ class Dispatcher(object):
             "Order #%s - sending %s messages", order.number, event_code)
         if order.is_anonymous:
             email = kwargs.get('email_address', order.guest_email)
-            dispatched_messages = self.dispatch_anonymous_messages(email, messages)
+            dispatched_messages = self.dispatch_anonymous_messages(email, messages, attachments)
         else:
-            dispatched_messages = self.dispatch_user_messages(order.user, messages)
+            dispatched_messages = self.dispatch_user_messages(order.user, messages, attachments)
 
         try:
             event_type = CommunicationEventType.objects.get(code=event_code)
@@ -67,19 +68,19 @@ class Dispatcher(object):
 
         self.create_communication_event(order, event_type, dispatched_messages)
 
-    def dispatch_anonymous_messages(self, email, messages):
+    def dispatch_anonymous_messages(self, email, messages, attachments=None):
         dispatched_messages = {}
         if email:
-            dispatched_messages['email'] = self.send_email_messages(email, messages), None
+            dispatched_messages['email'] = self.send_email_messages(email, messages, attachments=attachments), None
         return dispatched_messages
 
-    def dispatch_user_messages(self, user, messages):
+    def dispatch_user_messages(self, user, messages, attachments=None):
         """
         Send messages to a site user
         """
         dispatched_messages = {}
         if messages['subject'] and (messages['body'] or messages['html']):
-            dispatched_messages['email'] = self.send_user_email_messages(user, messages)
+            dispatched_messages['email'] = self.send_user_email_messages(user, messages, attachments)
         if messages['sms']:
             dispatched_messages['sms'] = self.send_text_message(user, messages['sms'])
         return dispatched_messages
@@ -118,7 +119,7 @@ class Dispatcher(object):
                                                  body_text=email.body,
                                                  body_html=messages['html'])
 
-    def send_user_email_messages(self, user, messages):
+    def send_user_email_messages(self, user, messages, attachments=None):
         """
         Send message to the registered user / customer and collect data in database.
         """
@@ -127,32 +128,43 @@ class Dispatcher(object):
                                 " no email address", user.id)
             return None, None
 
-        email = self.send_email_messages(user.email, messages)
+        email = self.send_email_messages(user.email, messages, attachments=attachments)
 
         if getattr(settings, 'OSCAR_SAVE_SENT_EMAILS_TO_DB', True):
             self.create_customer_email(user, messages, email)
 
         return email
 
-    def send_email_messages(self, recipient_email, messages, from_email=None):
+    def send_email_messages(self, recipient_email, messages, from_email=None, attachments=None):
         """
         Send email to recipient, HTML attachment optional.
         """
         if hasattr(settings, 'OSCAR_FROM_EMAIL'):
             from_email = settings.OSCAR_FROM_EMAIL
 
+        content_attachments, file_attachments = self.prepare_attachments(attachments)
+
         # Determine whether we are sending a HTML version too
         if messages['html']:
-            email = EmailMultiAlternatives(messages['subject'],
-                                           messages['body'],
-                                           from_email=from_email,
-                                           to=[recipient_email])
+            email = EmailMultiAlternatives(
+                messages['subject'],
+                messages['body'],
+                from_email=from_email,
+                to=[recipient_email],
+                attachments=content_attachments,
+            )
             email.attach_alternative(messages['html'], "text/html")
         else:
-            email = EmailMessage(messages['subject'],
-                                 messages['body'],
-                                 from_email=from_email,
-                                 to=[recipient_email])
+            email = EmailMessage(
+                messages['subject'],
+                messages['body'],
+                from_email=from_email,
+                to=[recipient_email],
+                attachments=content_attachments,
+            )
+        for attachment in file_attachments:
+            email.attach_file(attachment)
+
         self.logger.info("Sending email to %s" % recipient_email)
 
         if self.mail_connection:
@@ -164,6 +176,22 @@ class Dispatcher(object):
 
     def send_text_message(self, user, event_type):
         raise NotImplementedError
+
+    def prepare_attachments(self, attachments):
+        content_attachments = []
+        file_attachments = []
+        if attachments is not None:
+            for attachment in attachments:
+                if isinstance(attachment, six.string_types):
+                    # Here `attachment` is path to file from instance of `FileField` based fields
+                    file_attachments.append(attachment)
+                else:
+                    # Here attachment is one of:
+                    #   * instance of `MIMEBase` (from `email.mime.base`)
+                    #   * list `[filename, content, mimetype]`
+                    content_attachments.append(attachment)
+
+        return content_attachments, file_attachments
 
     def get_base_context(self):
         """
@@ -203,10 +231,10 @@ class Dispatcher(object):
             self.EMAIL_CHANGED_EVENT_CODE, extra_context)
         self.dispatch_user_messages(user, messages)
 
-    def send_order_placed_email_for_user(self, order, extra_context):
+    def send_order_placed_email_for_user(self, order, extra_context, attachments=None):
         event_code = self.ORDER_PLACED_EVENT_CODE
         messages = self.get_messages(event_code, extra_context)
-        self.dispatch_order_messages(order, messages, event_code)
+        self.dispatch_order_messages(order, messages, event_code, attachments=attachments)
 
     def notify_user_about_product_alert(self, user, context):
         subj_tpl = loader.get_template('communication/alerts/message_subject.html')

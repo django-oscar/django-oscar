@@ -1,15 +1,19 @@
 # coding=utf-8
+import os
+
 from django.test import TestCase
 
 from django.contrib.sites.models import Site
 from django.core import mail
+from django.core.files.uploadedfile import SimpleUploadedFile
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 from oscar.test.factories import (
     ProductAlertFactory, UserFactory, create_order, create_product)
 
 
 Dispatcher = get_class('communication.utils', 'Dispatcher')
+ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class TestConcreteEmailsSending(TestCase):
@@ -100,6 +104,37 @@ class TestConcreteEmailsSending(TestCase):
         self.assertIn('Your order contains:', mail.outbox[0].body)
         product_title = order.lines.first().title
         self.assertIn(product_title, mail.outbox[0].body)
+
+    def test_send_order_placed_email_with_attachments_for_user(self):
+        order_number = 'SOME-NUM00042'
+        order = create_order(number=order_number, user=self.user)
+
+        extra_context = {
+            'order': order,
+            'lines': order.lines.all()
+        }
+        line = order.lines.first()
+        product_image = ProductImage.objects.create(
+            product=line.product,
+            original=SimpleUploadedFile('fake_image.jpeg', b'file_content', content_type='image/jpeg'),
+            caption='Fake Product Image',
+        )
+        attachments = [
+            ['fake_file.html', b'file_content', 'text/html'],
+            ['fake_image.png', b'file_content', 'image/png'],
+            product_image.original.path,  # To test sending file from `FileField` based field
+        ]
+        self.dispatcher.send_order_placed_email_for_user(order, extra_context, attachments)
+
+        # All attachments were sent with email
+        self.assertEqual(len(mail.outbox[0].attachments), 3)
+        self.assertListEqual(
+            [attachment[0] for attachment in mail.outbox[0].attachments],
+            ['fake_file.html', 'fake_image.png', 'fake_image.jpeg']
+        )
+
+        # Remove test file
+        os.remove(product_image.original.path)
 
     def test_send_product_alert_email_for_user(self):
         product = create_product(num_in_stock=5)
