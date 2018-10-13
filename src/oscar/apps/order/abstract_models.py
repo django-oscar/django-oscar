@@ -149,7 +149,13 @@ class AbstractOrder(models.Model):
                                   new_status=new_status,
                                   )
 
+        self._create_order_status_change(old_status, new_status)
+
     set_status.alters_data = True
+
+    def _create_order_status_change(self, old_status, new_status):
+        # Not setting the status on the order as that should be handled before
+        self.status_changes.create(old_status=old_status, new_status=new_status)
 
     @property
     def is_anonymous(self):
@@ -428,6 +434,30 @@ class AbstractOrderNote(models.Model):
             return False
         delta = timezone.now() - self.date_updated
         return delta.seconds < self.editable_lifetime
+
+
+class AbstractOrderStatusChange(models.Model):
+    order = models.ForeignKey(
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name='status_changes',
+        verbose_name=_('Order Status Changes')
+    )
+    old_status = models.CharField(_('Old Status'), max_length=100, blank=True)
+    new_status = models.CharField(_('New Status'), max_length=100, blank=True)
+    date_created = models.DateTimeField(_('Date Created'), auto_now_add=True)
+
+    class Meta:
+        abstract = True
+        app_label = 'order'
+        verbose_name = _('Order Status Change')
+        verbose_name_plural = _('Order Status Changes')
+        ordering = ['-date_created']
+
+    def __str__(self):
+        return _('{order} has changed status from {old_status} to {new_status}').format(
+            order=self.order, old_status=self.old_status, new_status=self.new_status
+        )
 
 
 class AbstractCommunicationEvent(models.Model):

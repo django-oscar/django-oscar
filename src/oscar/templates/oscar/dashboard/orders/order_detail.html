@@ -329,6 +329,40 @@
                     {% endblock %}
                 </form>
 
+                {% block order_status_changes %}
+                    <div class="table-header">
+                        <h3>{% trans "Status Changes" %}</h3>
+                    </div>
+                    {% with status_changes=order.status_changes.all %}
+                        <table class="table table-striped table-bordered table-hover">
+                            {% if status_changes %}
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "From" %}</th>
+                                        <th>{% trans "To" %}</th>
+                                        <th>{% trans "Date" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for status_change in status_changes %}
+                                        <tr>
+                                            <td>{{ status_change.old_status }}</td>
+                                            <td>{{ status_change.new_status }}</td>
+                                            <td>{{ status_change.date_created }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            {% else %}
+                                <tbody>
+                                    <tr>
+                                        <td>{% trans "No status changes." %}</td>
+                                    </tr>
+                                </tbody>
+                            {% endif %}
+                        </table>
+                    {% endwith %}
+                {% endblock %}
+
                 {% block shipping_events %}
                     <div class="table-header">
                         <h3>{% trans "Shipping Events" %}</h3>
