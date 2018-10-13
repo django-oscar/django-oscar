@@ -317,6 +317,18 @@ Default: Round down to the nearest hundredth of a unit using ``decimal.Decimal.q
 A function responsible for rounding decimal amounts when offer discount
 calculations don't lead to legitimate currency values.
 
+``OSCAR_OFFERS_INCL_TAX``
+
+Default: ``False``
+
+If ``True``, offers will be applied to prices including taxes instead of on
+prices excluding tax. Oscar used to always calculate offers on prices excluding
+tax so the default is ``False``. This setting also affects the meaning of
+absolute prices in offers. So a flat discount of 10 pounds in an offer will
+be treated as 10 pounds before taxes if ``OSCAR_OFFERS_INCL_TAX`` remains
+``False`` and 10 pounds after taxes if ``OSCAR_OFFERS_INCL_TAX`` is set to
+``True``.
+
 Basket settings
 ===============
 

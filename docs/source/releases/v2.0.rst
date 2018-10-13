@@ -29,6 +29,10 @@ Support for Python 2.7 and Python 3.4 has been dropped.
 What's new in Oscar 2.0?
 ------------------------
 
+- Added an ``OSCAR_OFFERS_INCL_TAX`` setting which can be used to configure whether
+  offer discounts are applied on the tax-inclusive amount. This defaults to ``False``,
+  to preserve the original behaviour of discount application.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

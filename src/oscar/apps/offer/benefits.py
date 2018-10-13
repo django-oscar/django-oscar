@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_classes, get_model
@@ -19,11 +20,13 @@ __all__ = [
 ]
 
 
-def apply_discount(line, discount, quantity, offer=None):
+def apply_discount(line, discount, quantity, offer=None, incl_tax=None):
     """
     Apply a given discount to the passed basket
     """
-    line.discount(discount, quantity, incl_tax=False, offer=offer)
+    # use OSCAR_OFFERS_INCL_TAX setting if incl_tax is left unspecified.
+    incl_tax = incl_tax if incl_tax is not None else settings.OSCAR_OFFERS_INCL_TAX
+    line.discount(discount, quantity, incl_tax=incl_tax, offer=offer)
 
 
 class PercentageDiscountBenefit(Benefit):
