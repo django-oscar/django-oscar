@@ -108,14 +108,14 @@ def datetime_format_to_js_input_mask(format):
         return regex.sub(lambda mo: dict[mo.string[mo.start():mo.end()]], text)
 
     replacements = {
-        '%Y': 'y',
-        '%y': '99',
-        '%m': 'm',
-        '%d': 'd',
-        '%H': 'h',
-        '%I': 'h',
-        '%M': 's',
-        '%S': 's',
+        '%Y': 'yyyy',
+        '%y': 'yy',
+        '%m': 'mm',
+        '%d': 'dd',
+        '%H': 'HH',
+        '%I': 'hh',
+        '%M': 'MM',
+        '%S': 'ss',
     }
     return multiple_replace(replacements, format).strip()
 
@@ -129,7 +129,7 @@ class DateTimeWidgetMixin(object):
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         attrs = super().build_attrs(base_attrs, extra_attrs)
-        attrs['data-inputmask'] = "'mask': '{mask}'".format(
+        attrs['data-inputmask'] = "'alias': 'datetime', 'inputFormat': '{mask}'".format(
             mask=datetime_format_to_js_input_mask(self.get_format()))
         return attrs
 
