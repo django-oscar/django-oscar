@@ -159,6 +159,8 @@ Backwards incompatible changes in Oscar 2.0
 Dependency changes
 ------------------
 
+- Upgraded TinyMCE to version 4.8.3.
+
 .. _deprecated_features_in_2.0:
 
 Deprecated features
