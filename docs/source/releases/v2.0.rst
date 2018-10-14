@@ -161,6 +161,8 @@ Dependency changes
 
 - Upgraded TinyMCE to version 4.8.3.
 
+- Upgraded jQuery inputmask to version 4.0.2.
+
 .. _deprecated_features_in_2.0:
 
 Deprecated features
