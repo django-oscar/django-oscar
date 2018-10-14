@@ -91,7 +91,17 @@ var oscar = (function(o, $) {
             var $selects = $(el).find('select').not('.no-widget-init select').not('.no-widget-init');
             $selects.filter('.form-stacked select').css('width', '95%');
             $selects.filter('.form-inline select').css('width', '300px');
-            $selects.select2({width: 'resolve'});
+            $selects.not('.related-widget-wrapper select').select2({width: 'resolve'});
+            $selects.filter('.related-widget-wrapper select').select2({
+                // Keep updated labels after editing related obj
+                templateResult: function (data) {
+                    return $(data.element).text();
+                },
+                templateSelection: function (data) {
+                    return $(data.element).text();
+                },
+                width: 'resolve'
+            });
             $(el).find('select.select2').each(function(i, e) {
                 var opts = {};
                 if($(e).data('ajax-url')) {
