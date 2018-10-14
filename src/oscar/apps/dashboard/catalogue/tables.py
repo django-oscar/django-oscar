@@ -10,6 +10,7 @@ DashboardTable = get_class('dashboard.tables', 'DashboardTable')
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
+Option = get_model('catalogue', 'Option')
 
 
 class ProductTable(DashboardTable):
@@ -94,4 +95,24 @@ class AttributeOptionGroupTable(DashboardTable):
         model = AttributeOptionGroup
         fields = ('name',)
         sequence = ('name', 'option_summary', 'actions')
+        per_page = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
+
+
+class OptionTable(DashboardTable):
+    name = TemplateColumn(
+        verbose_name=_('Name'),
+        template_name='dashboard/catalogue/option_row_name.html',
+        order_by='name')
+    actions = TemplateColumn(
+        verbose_name=_('Actions'),
+        template_name='dashboard/catalogue/option_row_actions.html',
+        orderable=False)
+
+    icon = "reorder"
+    caption = ungettext_lazy("%s Option", "%s Options")
+
+    class Meta(DashboardTable.Meta):
+        model = Option
+        fields = ('name', 'type')
+        sequence = ('name', 'type', 'actions')
         per_page = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE

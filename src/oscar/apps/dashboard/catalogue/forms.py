@@ -17,6 +17,7 @@ ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 AttributeOption = get_model('catalogue', 'AttributeOption')
+Option = get_model('catalogue', 'Option')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 RelatedFieldWidgetWrapper = get_class('dashboard.widgets',
                                       'RelatedFieldWidgetWrapper')
@@ -376,3 +377,10 @@ class AttributeOptionForm(forms.ModelForm):
     class Meta:
         model = AttributeOption
         fields = ['option']
+
+
+class OptionForm(forms.ModelForm):
+
+    class Meta:
+        model = Option
+        fields = ['name', 'type']
