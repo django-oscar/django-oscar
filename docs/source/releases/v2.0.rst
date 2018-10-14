@@ -107,6 +107,8 @@ Removal of deprecated features
   ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
   ================================  ==================================  ================
 
+- Added the ability to manage ``catalogue.Option`` objects from the dashboard.
+
 Minor changes
 ~~~~~~~~~~~~~
 - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
