@@ -455,8 +455,8 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
 
             # If the user has just entered an order number, try and look it up
             # and redirect immediately to the order detail page.
-            if data['order_number'] and not (data['date_to'] or
-                                             data['date_from']):
+            if data['order_number'] and not (data['date_to']
+                                             or data['date_from']):
                 try:
                     order = Order.objects.get(
                         number=data['order_number'], user=self.request.user)

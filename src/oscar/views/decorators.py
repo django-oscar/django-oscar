@@ -26,9 +26,9 @@ def check_permissions(user, permissions):
         regular_permissions = [perm for perm in perms if '.' in perm]
         conditions = [perm for perm in perms if '.' not in perm]
         # always check for is_active if not checking for is_anonymous
-        if (conditions and
-                'is_anonymous' not in conditions and
-                'is_active' not in conditions):
+        if (conditions
+                and 'is_anonymous' not in conditions
+                and 'is_active' not in conditions):
             conditions.append('is_active')
         attributes = [getattr(user, perm) for perm in conditions]
         # evaluates methods, explicitly casts properties to booleans

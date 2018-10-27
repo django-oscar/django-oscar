@@ -238,8 +238,8 @@ class AbstractConditionalOffer(models.Model):
         return self.name
 
     def clean(self):
-        if (self.start_datetime and self.end_datetime and
-                self.start_datetime > self.end_datetime):
+        if (self.start_datetime and self.end_datetime
+                and self.start_datetime > self.end_datetime):
             raise exceptions.ValidationError(
                 _('End date should be later than start date'))
 
@@ -321,8 +321,8 @@ class AbstractConditionalOffer(models.Model):
         # when there are not other caps.
         limits = [10000]
         if self.max_user_applications and user:
-            limits.append(max(0, self.max_user_applications -
-                          self.get_num_user_applications(user)))
+            limits.append(max(0, self.max_user_applications
+                              - self.get_num_user_applications(user)))
         if self.max_basket_applications:
             limits.append(self.max_basket_applications)
         if self.max_global_applications:
@@ -847,8 +847,8 @@ class AbstractRange(models.Model):
             range=self, product=product,
             defaults={'display_order': initial_order})
 
-        if (display_order is not None and
-                relation.display_order != display_order):
+        if (display_order is not None
+                and relation.display_order != display_order):
             relation.display_order = display_order
             relation.save()
 
@@ -1007,9 +1007,9 @@ class AbstractRange(models.Model):
                 id__in=self._excluded_product_ids())
 
         return Product.objects.filter(
-            Q(id__in=self._included_product_ids()) |
-            Q(product_class_id__in=self._class_ids()) |
-            Q(productcategory__category_id__in=self._category_ids())
+            Q(id__in=self._included_product_ids())
+            | Q(product_class_id__in=self._class_ids())
+            | Q(productcategory__category_id__in=self._category_ids())
         ).exclude(id__in=self._excluded_product_ids()).distinct()
 
     @property
@@ -1120,8 +1120,8 @@ class AbstractRangeProductFileUpload(models.Model):
 
         Product = get_model('catalogue', 'Product')
         products = Product._default_manager.filter(
-            models.Q(stockrecords__partner_sku__in=new_ids) |
-            models.Q(upc__in=new_ids))
+            models.Q(stockrecords__partner_sku__in=new_ids)
+            | models.Q(upc__in=new_ids))
         for product in products:
             self.range.add_product(product)
 
@@ -1143,7 +1143,7 @@ class AbstractRangeProductFileUpload(models.Model):
         """
         with open(self.filepath, 'r') as fh:
             for line in fh:
-                for id in re.split('[^\w:\.-]', line):
+                for id in re.split(r'[^\w:\.-]', line):
                     if id:
                         yield id
 

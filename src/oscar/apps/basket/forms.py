@@ -219,8 +219,8 @@ class AddToBasketForm(forms.Form):
                   "price could not be determined for it."))
 
         # Check currencies are sensible
-        if (self.basket.currency and
-                info.price.currency != self.basket.currency):
+        if (self.basket.currency
+                and info.price.currency != self.basket.currency):
             raise forms.ValidationError(
                 _("This product cannot be added to the basket as its currency "
                   "isn't the same as other products in your basket"))

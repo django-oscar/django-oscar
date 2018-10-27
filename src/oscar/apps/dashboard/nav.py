@@ -95,7 +95,7 @@ def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
     # label that can be loaded by get_class (e.g.
     # 'dashboard.catalogue.app), which then essentially checks
     # INSTALLED_APPS for the right module to load
-    match = re.search('(dashboard[\w\.]*)\.views$', view_module)
+    match = re.search(r'(dashboard[\w\.]*)\.views$', view_module)
     if not match:
         raise exception
     app_label_str = match.groups()[0] + '.app'

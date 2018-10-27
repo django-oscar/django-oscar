@@ -60,8 +60,8 @@ class RangeProductForm(forms.Form):
                   " this range") % (', '.join(ids)))
 
         self.products = Product._default_manager.filter(
-            Q(stockrecords__partner_sku__in=new_ids) |
-            Q(upc__in=new_ids))
+            Q(stockrecords__partner_sku__in=new_ids)
+            | Q(upc__in=new_ids))
         if len(self.products) == 0:
             raise forms.ValidationError(
                 _("No products exist with a SKU or UPC matching %s")
