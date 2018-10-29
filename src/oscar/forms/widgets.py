@@ -271,8 +271,8 @@ class RemoteSelect(forms.Select):
         )
         for option_value, option_label in choices:
             selected = (
-                str(option_value) in value and
-                (has_selected is False or self.allow_multiple_selected)
+                str(option_value) in value
+                and (has_selected is False or self.allow_multiple_selected)
             )
             if selected is True and has_selected is False:
                 has_selected = True

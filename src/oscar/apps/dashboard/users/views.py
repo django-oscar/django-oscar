@@ -186,16 +186,16 @@ class ProductAlertListView(ListView):
                 ).distinct()
             else:
                 queryset = queryset.filter(
-                    Q(user__first_name__istartswith=parts[0]) |
-                    Q(user__last_name__istartswith=parts[-1])
+                    Q(user__first_name__istartswith=parts[0])
+                    | Q(user__last_name__istartswith=parts[-1])
                 ).distinct()
             self.description \
                 += _(" with customer name matching '%s'") % data['name']
 
         if data['email']:
             queryset = queryset.filter(
-                Q(user__email__icontains=data['email']) |
-                Q(email__icontains=data['email'])
+                Q(user__email__icontains=data['email'])
+                | Q(email__icontains=data['email'])
             )
             self.description \
                 += _(" with customer email matching '%s'") % data['email']

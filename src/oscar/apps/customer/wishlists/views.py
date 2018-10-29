@@ -289,8 +289,8 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
         # We post directly to this view on product pages; and should send the
         # user back there if that was the case
         referrer = safe_referrer(self.request, '')
-        if (referrer and self.product and
-                self.product.get_absolute_url() in referrer):
+        if (referrer and self.product
+                and self.product.get_absolute_url() in referrer):
             return referrer
         else:
             return reverse(

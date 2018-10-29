@@ -76,8 +76,8 @@ class AbstractOrderAndItemCharges(AbstractBase):
         verbose_name_plural = _("Order and Item Charges")
 
     def calculate(self, basket):
-        if (self.free_shipping_threshold is not None and
-                basket.total_incl_tax >= self.free_shipping_threshold):
+        if (self.free_shipping_threshold is not None
+                and basket.total_incl_tax >= self.free_shipping_threshold):
             return prices.Price(
                 currency=basket.currency, excl_tax=D('0.00'),
                 incl_tax=D('0.00'))

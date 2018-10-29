@@ -200,13 +200,13 @@ class AbstractOrder(models.Model):
 
     @property
     def total_before_discounts_incl_tax(self):
-        return (self.basket_total_before_discounts_incl_tax +
-                self.shipping_incl_tax)
+        return (self.basket_total_before_discounts_incl_tax
+                + self.shipping_incl_tax)
 
     @property
     def total_before_discounts_excl_tax(self):
-        return (self.basket_total_before_discounts_excl_tax +
-                self.shipping_excl_tax)
+        return (self.basket_total_before_discounts_excl_tax
+                + self.shipping_excl_tax)
 
     @property
     def total_discount_incl_tax(self):

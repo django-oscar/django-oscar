@@ -151,8 +151,8 @@ class BasketView(ModelFormSetView):
         flash_messages = ajax.FlashMessages()
 
         for form in formset:
-            if (hasattr(form, 'cleaned_data') and
-                    form.cleaned_data['save_for_later']):
+            if (hasattr(form, 'cleaned_data')
+                    and form.cleaned_data['save_for_later']):
                 line = form.instance
                 if self.request.user.is_authenticated:
                     self.move_line_to_saved_basket(line)
