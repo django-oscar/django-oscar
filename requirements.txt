@@ -24,7 +24,7 @@ flake8-blind-except==0.1.1
 isort==4.3.4
 
 # Helpers
-pyprof2calltree==1.4.3
+pyprof2calltree==1.4.4
 ipdb==0.11
 ipython==7.0.1
 
