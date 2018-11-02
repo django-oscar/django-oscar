@@ -22,10 +22,12 @@ class TestWholeSiteRange(TestCase):
     def test_whitelisting(self):
         self.range.add_product(self.prod)
         self.assertTrue(self.range.contains_product(self.prod))
+        self.assertIn(self.prod, self.range.all_products())
 
     def test_blacklisting(self):
         self.range.excluded_products.add(self.prod)
         self.assertFalse(self.range.contains_product(self.prod))
+        self.assertNotIn(self.prod, self.range.all_products())
 
 
 class TestChildRange(TestCase):

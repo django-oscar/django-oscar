@@ -51,6 +51,6 @@ class Price(object):
         """
         Two price objects are equal if currency, price.excl_tax and tax match.
         """
-        return (self.currency == other.currency and
-                self.excl_tax == other.excl_tax and
-                self.incl_tax == other.incl_tax)
+        return (self.currency == other.currency
+                and self.excl_tax == other.excl_tax
+                and self.incl_tax == other.incl_tax)

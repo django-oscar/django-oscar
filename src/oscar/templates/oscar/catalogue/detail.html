@@ -10,7 +10,7 @@
 {% load purchase_info_tags %}
 
 {% block title %}
-    {{ product.title }} | {{ block.super }}
+    {{ product.get_title }} | {{ block.super }}
 {% endblock %}
 
 {% block description %}
@@ -28,7 +28,7 @@
             <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
         </li>
         {% endfor %}
-        <li class="active">{{ product.title }}</li>
+        <li class="active">{{ product.get_title }}</li>
 
         {% get_back_button as backbutton %}
         {% if backbutton %}
@@ -78,9 +78,21 @@
 
             <hr/>
 
-            {% block product_basket_form %}
-                {% include "catalogue/partials/add_to_basket_form.html" %}
-            {% endblock %}
+            {% if not product.is_parent %}
+                {% block product_basket_form %}
+                    {% include "catalogue/partials/add_to_basket_form.html" %}
+                {% endblock %}
+            {% else %}
+                {% block variants %}
+                    <h2>{% trans 'Variants:' %}</h2>
+                    {% for child in product.children.all %}
+                        {% purchase_info_for_product request child as child_session %}
+                        {% if child_session.availability.is_available_to_buy %}
+                            <a href="{{ child.get_absolute_url }}">{{ child.get_title }}</a><br>
+                        {% endif %}
+                    {% endfor %}
+                {% endblock %}
+            {% endif %}
         </div><!-- /col-sm-6 -->
         {% endblock %}
 

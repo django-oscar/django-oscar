@@ -4,6 +4,7 @@ from oscar.core.loading import get_model
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
+OrderStatusChange = get_model('order', 'OrderStatusChange')
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 BillingAddress = get_model('order', 'BillingAddress')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -68,6 +69,7 @@ class OrderDiscountAdmin(admin.ModelAdmin):
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderNote)
+admin.site.register(OrderStatusChange)
 admin.site.register(ShippingAddress)
 admin.site.register(Line, LineAdmin)
 admin.site.register(LinePrice, LinePriceAdmin)

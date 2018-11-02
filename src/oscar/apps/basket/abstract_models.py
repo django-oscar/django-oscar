@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes
-from oscar.core.utils import get_default_currency
+from oscar.core.utils import get_default_currency, round_half_up
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
@@ -736,7 +736,7 @@ class AbstractLine(models.Model):
             item_incl_tax_discount = (
                 self.discount_value / int(self.consumer.consumed()))
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
-            item_excl_tax_discount = item_excl_tax_discount.quantize(D('0.01'))
+            item_excl_tax_discount = round_half_up(item_excl_tax_discount)
             prices.append((self.unit_price_incl_tax - item_incl_tax_discount,
                            self.unit_price_excl_tax - item_excl_tax_discount,
                            self.consumer.consumed()))
@@ -846,8 +846,9 @@ class AbstractLine(models.Model):
             # against tax inclusive prices but we need to guess how much of the
             # discount applies to tax-exclusive prices.  We do this by
             # assuming a linear tax and scaling down the original discount.
-            return self.line_price_excl_tax \
-                - self._tax_ratio * self._discount_incl_tax
+            return self.line_price_excl_tax - round_half_up(
+                self._tax_ratio * self._discount_incl_tax
+            )
         return self.line_price_excl_tax
 
     @property
@@ -855,13 +856,17 @@ class AbstractLine(models.Model):
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
         # including tax
-        if self.line_price_incl_tax is not None:
-            return self.line_price_incl_tax - self.discount_value
+        if self.line_price_incl_tax is not None and self._discount_incl_tax:
+            return self.line_price_incl_tax - self._discount_incl_tax
+        elif self.line_price_excl_tax is not None and self._discount_excl_tax:
+            return round_half_up((self.line_price_excl_tax - self._discount_excl_tax) / self._tax_ratio)
+
+        return self.line_price_incl_tax
 
     @property
     def line_tax(self):
         if self.is_tax_known:
-            return self.quantity * self.unit_tax
+            return self.line_price_incl_tax_incl_discounts - self.line_price_excl_tax_incl_discounts
 
     @property
     def line_price_incl_tax(self):

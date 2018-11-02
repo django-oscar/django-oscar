@@ -106,8 +106,8 @@ class ReviewListView(BulkEditMixin, generic.ListView):
     def add_filter_keyword(self, queryset, keyword):
         if keyword:
             queryset = queryset.filter(
-                Q(title__icontains=keyword) |
-                Q(body__icontains=keyword)
+                Q(title__icontains=keyword)
+                | Q(body__icontains=keyword)
             ).distinct()
             self.desc_ctx['kw_filter'] \
                 = _(" with keyword matching '%s'") % keyword
@@ -125,8 +125,8 @@ class ReviewListView(BulkEditMixin, generic.ListView):
                 ).distinct()
             else:
                 queryset = queryset.filter(
-                    Q(user__first_name__istartswith=parts[0]) |
-                    Q(user__last_name__istartswith=parts[-1])
+                    Q(user__first_name__istartswith=parts[0])
+                    | Q(user__last_name__istartswith=parts[-1])
                 ).distinct()
             self.desc_ctx['name_filter'] \
                 = _(" with customer name matching '%s'") % name

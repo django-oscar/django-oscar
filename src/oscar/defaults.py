@@ -87,6 +87,9 @@ OSCAR_SLUG_ALLOW_UNICODE = False
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 
+# Offers
+OSCAR_OFFERS_INCL_TAX = False
+
 # Hidden Oscar features, e.g. wishlists or reviews
 OSCAR_HIDDEN_FEATURES = []
 
@@ -120,6 +123,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
             {
                 'label': _('Low stock alerts'),
                 'url_name': 'dashboard:stock-alert-list',
+            },
+            {
+                'label': _('Options'),
+                'url_name': 'dashboard:catalogue-option-list',
             },
         ]
     },

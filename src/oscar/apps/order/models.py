@@ -20,6 +20,13 @@ if not is_model_registered('order', 'OrderNote'):
     __all__.append('OrderNote')
 
 
+if not is_model_registered('order', 'OrderStatusChange'):
+    class OrderStatusChange(AbstractOrderStatusChange):
+        pass
+
+    __all__.append('OrderStatusChange')
+
+
 if not is_model_registered('order', 'CommunicationEvent'):
     class CommunicationEvent(AbstractCommunicationEvent):
         pass

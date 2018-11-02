@@ -1,0 +1,146 @@
+[
+{
+    "model": "offer.conditionaloffer",
+    "pk": 1,
+    "fields": {
+        "name": "Offer for coupon 'henk'",
+        "slug": "offer-for-coupon-henk",
+        "description": "",
+        "offer_type": "Voucher",
+        "exclusive": true,
+        "status": "Open",
+        "condition": 1,
+        "benefit": 1,
+        "priority": 0,
+        "start_datetime": null,
+        "end_datetime": null,
+        "max_global_applications": null,
+        "max_user_applications": null,
+        "max_basket_applications": null,
+        "max_discount": null,
+        "total_discount": "0.00",
+        "num_applications": 0,
+        "num_orders": 0,
+        "redirect_url": "",
+        "date_created": "2018-08-20T14:45:23.650Z"
+    }
+},
+{
+    "model": "offer.conditionaloffer",
+    "pk": 2,
+    "fields": {
+        "name": "korting",
+        "slug": "korting",
+        "description": "",
+        "offer_type": "Site",
+        "exclusive": false,
+        "status": "Open",
+        "condition": 2,
+        "benefit": 2,
+        "priority": 0,
+        "start_datetime": "2018-08-20T00:00:00Z",
+        "end_datetime": "2019-03-06T16:45:00Z",
+        "max_global_applications": null,
+        "max_user_applications": null,
+        "max_basket_applications": null,
+        "max_discount": null,
+        "total_discount": "0.00",
+        "num_applications": 0,
+        "num_orders": 0,
+        "redirect_url": "",
+        "date_created": "2018-08-20T14:48:46.515Z"
+    }
+},
+{
+    "model": "offer.benefit",
+    "pk": 1,
+    "fields": {
+        "range": 1,
+        "type": "Shipping percentage",
+        "value": "10.00",
+        "max_affected_items": null,
+        "proxy_class": ""
+    }
+},
+{
+    "model": "offer.benefit",
+    "pk": 2,
+    "fields": {
+        "range": 1,
+        "type": "Absolute",
+        "value": "10.00",
+        "max_affected_items": null,
+        "proxy_class": ""
+    }
+},
+{
+    "model": "offer.condition",
+    "pk": 1,
+    "fields": {
+        "range": 1,
+        "type": "Count",
+        "value": "1.00",
+        "proxy_class": ""
+    }
+},
+{
+    "model": "offer.condition",
+    "pk": 2,
+    "fields": {
+        "range": 2,
+        "type": "Count",
+        "value": "1.00",
+        "proxy_class": ""
+    }
+},
+{
+    "model": "offer.range",
+    "pk": 1,
+    "fields": {
+        "name": "henk",
+        "slug": "de-range",
+        "description": "<p>Dikke range bo</p>",
+        "is_public": true,
+        "includes_all_products": false,
+        "proxy_class": "",
+        "date_created": "2018-08-20T14:43:16.775Z",
+        "excluded_products": [],
+        "classes": [],
+        "included_categories": []
+    }
+},
+{
+    "model": "offer.range",
+    "pk": 2,
+    "fields": {
+        "name": "lekker wijf",
+        "slug": "lekker-wijf",
+        "description": "",
+        "is_public": true,
+        "includes_all_products": false,
+        "proxy_class": "",
+        "date_created": "2018-08-20T14:44:40.015Z",
+        "excluded_products": [],
+        "classes": [],
+        "included_categories": []
+    }
+},
+{
+    "model": "offer.rangeproduct",
+    "pk": 1,
+    "fields": {
+        "range": 1,
+        "product": 3,
+        "display_order": 0
+    }
+},
+{
+    "model": "offer.rangeproduct",
+    "pk": 2,
+    "fields": {
+        "range": 2,
+        "product": 2,
+        "display_order": 0
+    }
+}
+]

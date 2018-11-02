@@ -50,7 +50,7 @@ def queryset_orders_for_user(user):
         'billing_address', 'billing_address__country',
         'shipping_address', 'shipping_address__country',
         'user'
-    ).prefetch_related('lines')
+    ).prefetch_related('lines', 'status_changes')
     if user.is_staff:
         return queryset
     else:
@@ -607,7 +607,7 @@ class OrderDetailView(DetailView):
             messages.error(
                 request, _("Unable to change order status due to "
                            "payment error: %s") % e)
-        except order_exceptions.InvalidOrderStatus as e:
+        except order_exceptions.InvalidOrderStatus:
             # The form should validate against this, so we should only end up
             # here during race conditions.
             messages.error(

@@ -29,6 +29,13 @@ Support for Python 2.7 and Python 3.4 has been dropped.
 What's new in Oscar 2.0?
 ------------------------
 
+- Added an ``order.OrderStatusChange`` model that is used to log order status changes
+  applied by ``Order.set_status()``. This is a new model which will require database migrations to be applied.
+
+- Added an ``OSCAR_OFFERS_INCL_TAX`` setting which can be used to configure whether
+  offer discounts are applied on the tax-inclusive amount. This defaults to ``False``,
+  to preserve the original behaviour of discount application.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -100,6 +107,8 @@ Removal of deprecated features
   ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
   ================================  ==================================  ================
 
+- Added the ability to manage ``catalogue.Option`` objects from the dashboard.
+
 Minor changes
 ~~~~~~~~~~~~~
 - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
@@ -135,8 +144,29 @@ Minor changes
 - ``OSCAR_OFFER_ROUNDING_FUNCTION`` previously accepted a function as its value. It now
   only accepts a dotted path to a function as its value
 
+- Fixed the logic of ``offers.Range.all_products()`` to make it consistent with
+  ``Range.contains_product()`` in excluding products specified in ``excluded_product_ids``.
+
+- Added a ``COMPARISON_FIELDS`` constant to ``catalogue.Category`` to restrict
+  which fields are fetched from the database when performing category comparison queries.
+
+.. _incompatible_in_2.0:
+
+Backwards incompatible changes in Oscar 2.0
+-------------------------------------------
+
+- Redirection to the parent detail view for child products is disabled by default.
+  Child products now have their own detail view, which allows displaying their price
+  and images independently from the parent product. To revert to the previous behaviour
+  of redirecting to the parent product, set
+  ``oscar.apps.catalogue.views.ProductDetailView.enforce_parent`` to ``False``.
+
 Dependency changes
 ------------------
+
+- Upgraded TinyMCE to version 4.8.3.
+
+- Upgraded jQuery inputmask to version 4.0.2.
 
 .. _deprecated_features_in_2.0:
 

@@ -278,7 +278,7 @@ Here's an example ``strategy.py`` module which is used to charge VAT on prices.
 .. code-block:: python
 
     # myproject/partner/strategy.py
-
+    from decimal import Decimal as D
     from oscar.apps.partner import strategy, prices
 
 

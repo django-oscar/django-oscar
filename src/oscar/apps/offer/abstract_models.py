@@ -238,8 +238,8 @@ class AbstractConditionalOffer(models.Model):
         return self.name
 
     def clean(self):
-        if (self.start_datetime and self.end_datetime and
-                self.start_datetime > self.end_datetime):
+        if (self.start_datetime and self.end_datetime
+                and self.start_datetime > self.end_datetime):
             raise exceptions.ValidationError(
                 _('End date should be later than start date'))
 
@@ -321,8 +321,8 @@ class AbstractConditionalOffer(models.Model):
         # when there are not other caps.
         limits = [10000]
         if self.max_user_applications and user:
-            limits.append(max(0, self.max_user_applications -
-                          self.get_num_user_applications(user)))
+            limits.append(max(0, self.max_user_applications
+                              - self.get_num_user_applications(user)))
         if self.max_basket_applications:
             limits.append(self.max_basket_applications)
         if self.max_global_applications:
@@ -440,12 +440,7 @@ class AbstractConditionalOffer(models.Model):
         if not self.has_products:
             return Product.objects.none()
 
-        cond_range = self.condition.range
-        if cond_range.includes_all_products:
-            # Return ALL the products
-            queryset = Product.objects.browsable()
-        else:
-            queryset = cond_range.all_products()
+        queryset = self.condition.range.all_products()
         return queryset.filter(is_discountable=True).exclude(
             structure=Product.CHILD)
 
@@ -814,6 +809,7 @@ class AbstractRange(models.Model):
 
     __included_product_ids = None
     __excluded_product_ids = None
+    __included_categories = None
     __class_ids = None
     __category_ids = None
 
@@ -854,8 +850,8 @@ class AbstractRange(models.Model):
             range=self, product=product,
             defaults={'display_order': initial_order})
 
-        if (display_order is not None and
-                relation.display_order != display_order):
+        if (display_order is not None
+                and relation.display_order != display_order):
             relation.display_order = display_order
             relation.save()
 
@@ -893,7 +889,8 @@ class AbstractRange(models.Model):
             return False
         if self.includes_all_products:
             return True
-        if product.get_product_class().id in self._class_ids():
+        class_ids = self._class_ids()
+        if class_ids and product.get_product_class().id in class_ids:
             return True
         included_product_ids = self._included_product_ids()
         # If the product's parent is in the range, the child is automatically included as well
@@ -901,9 +898,10 @@ class AbstractRange(models.Model):
             return True
         if product.id in included_product_ids:
             return True
-        test_categories = self.included_categories.all()
+        test_categories = self._included_categories()
         if test_categories:
-            for category in product.get_categories().all():
+            for category in product.get_categories().only(
+                    *self._category_comparison_fields):
                 for test_category in test_categories:
                     if category == test_category \
                             or category.is_descendant_of(test_category):
@@ -929,6 +927,23 @@ class AbstractRange(models.Model):
         # Ensure uniqueness and remove None; {4, 5, 10, 11}
         return set(flat_iterable) - {None}
 
+    @cached_property
+    def _category_comparison_fields(self):
+        # Overwritten Category models could contain a lot of data, e.g CMS
+        # content. Hence, this avoids fetching unneeded data in the costly
+        # range comparison queries. Note that using .only() with an empty list
+        # is a no-op essentially, so nothing breaks when the field is missing.
+        Category = get_model('catalogue', 'Category')
+        return getattr(Category, 'COMPARISON_FIELDS', ())
+
+    def _included_categories(self):
+        if not self.id:
+            return self.included_categories.none()
+        if self.__included_categories is None:
+            self.__included_categories = self.included_categories.only(
+                *self._category_comparison_fields)
+        return self.__included_categories
+
     def _included_product_ids(self):
         if not self.id:
             return []
@@ -952,19 +967,20 @@ class AbstractRange(models.Model):
 
     def _category_ids(self):
         if self.__category_ids is None:
-            category_ids_list = list(
-                self.included_categories.values_list('pk', flat=True))
-            for category in self.included_categories.all():
+            ids = []
+            for category in self._included_categories():
                 children_ids = category.get_descendants().values_list(
                     'pk', flat=True)
-                category_ids_list.extend(list(children_ids))
+                ids.append(category.pk)
+                ids.extend(list(children_ids))
 
-            self.__category_ids = category_ids_list
+            self.__category_ids = ids
 
         return self.__category_ids
 
     def invalidate_cached_ids(self):
         self.__category_ids = None
+        self.__included_categories = None
         self.__included_product_ids = None
         self.__excluded_product_ids = None
 
@@ -989,13 +1005,14 @@ class AbstractRange(models.Model):
 
         Product = get_model("catalogue", "Product")
         if self.includes_all_products:
-            # Filter out child products
-            return Product.objects.browsable()
+            # Filter out child products and blacklisted products
+            return Product.objects.browsable().exclude(
+                id__in=self._excluded_product_ids())
 
         return Product.objects.filter(
-            Q(id__in=self._included_product_ids()) |
-            Q(product_class_id__in=self._class_ids()) |
-            Q(productcategory__category_id__in=self._category_ids())
+            Q(id__in=self._included_product_ids())
+            | Q(product_class_id__in=self._class_ids())
+            | Q(productcategory__category_id__in=self._category_ids())
         ).exclude(id__in=self._excluded_product_ids()).distinct()
 
     @property
@@ -1010,7 +1027,7 @@ class AbstractRange(models.Model):
         """
         Test whether products for the range can be re-ordered.
         """
-        return len(self._class_ids()) == 0 and len(self._category_ids()) == 0
+        return len(self._class_ids()) == 0 and len(self._included_categories()) == 0
 
 
 class AbstractRangeProduct(models.Model):
@@ -1106,8 +1123,8 @@ class AbstractRangeProductFileUpload(models.Model):
 
         Product = get_model('catalogue', 'Product')
         products = Product._default_manager.filter(
-            models.Q(stockrecords__partner_sku__in=new_ids) |
-            models.Q(upc__in=new_ids))
+            models.Q(stockrecords__partner_sku__in=new_ids)
+            | models.Q(upc__in=new_ids))
         for product in products:
             self.range.add_product(product)
 
@@ -1129,7 +1146,7 @@ class AbstractRangeProductFileUpload(models.Model):
         """
         with open(self.filepath, 'r') as fh:
             for line in fh:
-                for id in re.split('[^\w:\.-]', line):
+                for id in re.split(r'[^\w:\.-]', line):
                     if id:
                         yield id
 

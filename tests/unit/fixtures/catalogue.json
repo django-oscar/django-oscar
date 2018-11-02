@@ -1,0 +1,199 @@
+[
+{
+    "model": "catalogue.product",
+    "pk": 2,
+    "fields": {
+        "structure": "standalone",
+        "upc": "673873",
+        "parent": null,
+        "title": "Hermes Bikini",
+        "slug": "dikke-shit-ouwe",
+        "description": "<p>Vet ding dit hoor</p>",
+        "product_class": 1,
+        "rating": null,
+        "date_created": "2018-06-27T09:11:35.813Z",
+        "date_updated": "2018-08-22T13:25:11.724Z",
+        "is_discountable": true,
+        "product_options": []
+    }
+},
+{
+    "model": "catalogue.product",
+    "pk": 3,
+    "fields": {
+        "structure": "standalone",
+        "upc": "piet",
+        "parent": null,
+        "title": "Hubble Photo",
+        "slug": "henk",
+        "description": "<p>30cm x 55cm</p>",
+        "product_class": 1,
+        "rating": null,
+        "date_created": "2018-07-10T13:06:53.822Z",
+        "date_updated": "2018-08-22T13:25:58.500Z",
+        "is_discountable": true,
+        "product_options": []
+    }
+},
+{
+    "model": "catalogue.productclass",
+    "pk": 1,
+    "fields": {
+        "name": "Spullen",
+        "slug": "dik-products",
+        "requires_shipping": true,
+        "track_stock": false,
+        "options": []
+    }
+},
+{
+    "model": "catalogue.category",
+    "pk": 1,
+    "fields": {
+        "path": "0001",
+        "depth": 1,
+        "numchild": 0,
+        "name": "Ambulant goods",
+        "description": "<p>Some ambulant goods</p>",
+        "image": "",
+        "slug": "root"
+    }
+},
+{
+    "model": "catalogue.productcategory",
+    "pk": 1,
+    "fields": {
+        "product": 2,
+        "category": 1
+    }
+},
+{
+    "model": "catalogue.productcategory",
+    "pk": 2,
+    "fields": {
+        "product": 3,
+        "category": 1
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 1,
+    "fields": {
+        "product_class": 1,
+        "name": "henk",
+        "code": "henkie",
+        "type": "text",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 2,
+    "fields": {
+        "attribute": 1,
+        "product": 2,
+        "value_text": "bka",
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 3,
+    "fields": {
+        "attribute": 1,
+        "product": 3,
+        "value_text": "bah bah",
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productimage",
+    "pk": 1,
+    "fields": {
+        "product": 3,
+        "original": "images/products/2018/07/ActiOn_35.jpg",
+        "caption": "",
+        "display_order": 0,
+        "date_created": "2018-07-10T13:08:38.050Z"
+    }
+},
+{
+    "model": "catalogue.productimage",
+    "pk": 2,
+    "fields": {
+        "product": 2,
+        "original": "images/products/2018/08/11lekkerECHICKORIG-large-4x3.jpg",
+        "caption": "",
+        "display_order": 0,
+        "date_created": "2018-08-20T14:44:21.688Z"
+    }
+},
+{
+    "model": "partner.stockrecord",
+    "pk": 1,
+    "fields": {
+        "product": 2,
+        "partner": 1,
+        "partner_sku": "henk",
+        "price_currency": "EUR",
+        "price_excl_tax": "400.00",
+        "price_retail": "500.00",
+        "cost_price": "300.00",
+        "num_in_stock": 23,
+        "num_allocated": null,
+        "low_stock_threshold": null,
+        "date_created": "2018-06-27T14:29:31.007Z",
+        "date_updated": "2018-07-09T10:54:12.295Z"
+    }
+},
+{
+    "model": "partner.stockrecord",
+    "pk": 2,
+    "fields": {
+        "product": 3,
+        "partner": 1,
+        "partner_sku": "asdasd",
+        "price_currency": "EUR",
+        "price_excl_tax": "23.00",
+        "price_retail": "0.05",
+        "cost_price": null,
+        "num_in_stock": null,
+        "num_allocated": null,
+        "low_stock_threshold": null,
+        "date_created": "2018-07-10T13:06:53.849Z",
+        "date_updated": "2018-08-10T12:34:05.460Z"
+    }
+},
+{
+    "model": "partner.partner",
+    "pk": 1,
+    "fields": {
+        "code": "mezelf",
+        "name": "mezelf",
+        "users": []
+    }
+}
+]

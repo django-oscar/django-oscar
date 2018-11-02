@@ -240,8 +240,8 @@ class ValueCondition(Condition):
         """
         value_of_matches = D('0.00')
         for line in basket.all_lines():
-            if (self.can_apply_condition(line) and
-                    line.quantity_without_offer_discount(offer) > 0):
+            if (self.can_apply_condition(line)
+                    and line.quantity_without_offer_discount(offer) > 0):
                 price = unit_price(offer, line)
                 value_of_matches += price * int(
                     line.quantity_without_offer_discount(offer)
@@ -255,8 +255,8 @@ class ValueCondition(Condition):
             return getattr(self, '_value_of_matches')
         value_of_matches = D('0.00')
         for line in basket.all_lines():
-            if (self.can_apply_condition(line) and
-                    line.quantity_without_offer_discount(offer) > 0):
+            if (self.can_apply_condition(line)
+                    and line.quantity_without_offer_discount(offer) > 0):
                 price = unit_price(offer, line)
                 value_of_matches += price * int(
                     line.quantity_without_offer_discount(offer)
