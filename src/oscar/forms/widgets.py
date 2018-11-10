@@ -4,8 +4,14 @@ from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.models import ModelChoiceIterator
 from django.forms.widgets import FileInput
+from django.forms.utils import flatatt
 from django.utils import formats
 from django.utils.encoding import force_text
+from django.utils.html import escape, conditional_escape
+from django.utils.safestring import mark_safe
+from django.template import loader
+
+from itertools import chain
 
 
 class ImageInput(FileInput):
@@ -286,3 +292,61 @@ class RemoteSelect(forms.Select):
 
 class MultipleRemoteSelect(RemoteSelect):
     allow_multiple_selected = True
+    
+    
+class SelectMultipleTransfer(forms.SelectMultiple):
+    template_name = 'oscar/dashboard/widgets/select_transfer.html'
+    verbose_name = ''
+    is_stacked = False
+
+    def render_opt(self, selected_choices, option_value, option_label):
+        option_value = force_text(option_value)
+        return (u'<option value="%s">%s</option>' % (
+            escape(option_value), 
+            conditional_escape(force_text(option_label))),
+            bool(option_value in selected_choices))
+
+    def render(self, name, value, attrs=None, choices=(), renderer=None):
+        if attrs is None:
+            attrs = {}
+        attrs['class'] = ''
+        if self.is_stacked:
+            attrs['class'] += 'stacked'
+        if value is None:
+            value = []
+        
+        final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
+        selected_choices = set(force_text(v) for v in value)
+        available_output = []
+        chosen_output = []
+
+        for option_value, option_label in chain(self.choices, choices):
+            if isinstance(option_label, (list, tuple)):
+                available_output.append(u'<optgroup label="%s">' %
+                                        escape(force_text(option_value)))
+                for option in option_label:
+                    output, selected = self.render_opt(
+                        selected_choices, *option)
+                    if selected:
+                        chosen_output.append(output)
+                    else:
+                        available_output.append(output)
+                available_output.append(u'</optgroup>')
+            else:
+                output, selected = self.render_opt(
+                    selected_choices, option_value, option_label)
+                if selected:
+                    chosen_output.append(output)
+                else:
+                    available_output.append(output)
+
+        context = {
+            'verbose_name': name or self.verbose_name,
+            'attrs': attrs,
+            'field_id': attrs['id'],
+            'flatatts': flatatt(final_attrs),
+            'available_options': u'\n'.join(available_output),
+            'chosen_options': u'\n'.join(chosen_output),
+        }
+        return mark_safe(loader.render_to_string(self.template_name, context))
+

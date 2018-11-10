@@ -1,0 +1,101 @@
+
+.selector {
+    position: relative;
+    float: left;
+    overflow: hidden;
+    width: 100%;
+}
+.selector-available, .selector-chosen {
+    float: left;
+    width: 45%;
+}
+.selector.stacked .selector-available, .selector.stacked .selector-chosen {
+    width: 756px;
+}
+.selector p.title {
+    padding: 7px 5px 0px 7px;
+    font-size: 14px;
+    line-height: 13px;
+    font-weight: bold;
+}
+
+.selector .selector-filter {
+    width: 100%;
+}
+.selector .selector-available .selector-filter {
+}
+.selector .selector-chosen .selector-filter {
+}
+.selector.stacked .selector-filter input[type=text] {
+    width: 716px !important;
+    max-width: 716px !important;
+}
+.selector select[multiple=multiple] {
+    margin: 0;
+    padding-left: 3px;
+    width: 100%;
+    height: 200px;
+    display: block;
+    max-width: none !important;
+}
+.selector .selector-chosen select[multiple=multiple] {
+    height: 230px;
+}
+.selector.stacked select[multiple=multiple] {
+    width: 757px !important;
+    max-width: 757px !important;
+}
+.selector ul.selector-chooser {
+    float: left;
+    margin: 100px 2px 0;
+    padding: 0;
+    width: 31px;
+    list-style: none;
+}
+.selector ul.selector-chooser li {
+    margin-top: 10px;
+}
+.selector.stacked ul.selector-chooser {
+    margin: 4px 0 0 356px;
+    width: 36px;
+}
+.selector.stacked ul.selector-chooser li {
+    float: left;
+}
+a.selector-chooseall, a.selector-clearall {
+    display: block;
+    margin: 0;
+    padding: 2px 7px;
+    font-size: 11px;
+    line-height: 20px;
+    font-weight: bold;
+}
+.selector-available, .selector-chosen {
+    border: 1px solid #ddd;
+    border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+    background: #eee;
+}
+.selector h3, .inline-group .selector h3, 
+.inline-related fieldset .selector-available h3, .inline-related fieldset .selector-chosen h3 {
+    border: 0;
+    border-bottom: 1px solid #d0d0d0;
+    background: transparent;
+}
+.selector select[multiple=multiple] {
+    border-left: 0;
+    border-top: 1px solid #d0d0d0;
+    border-bottom: 1px solid #d0d0d0;
+    border-radius: 0; -moz-border-radius: 0; -webkit-border-radius: 0;
+}
+
+a.selector-chooseall, a.selector-clearall {
+    border-top: 1px solid #e4e4e4;
+}
+
+.selector h3 + select {
+    border-top: 0;
+}
+
+a.selector-chooseall, a.selector-clearall {
+    border-top: 1px solid #e4e4e4;
+}
