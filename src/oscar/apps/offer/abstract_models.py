@@ -139,7 +139,7 @@ class AbstractConditionalOffer(models.Model):
 
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(
-        _("Priority"), default=0,
+        _("Priority"), default=0, db_index=True,
         help_text=_("The highest priority offers are applied first"))
 
     # AVAILABILITY
@@ -1054,7 +1054,7 @@ class AbstractRangeProductFileUpload(models.Model):
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name=_("Uploaded By"))
-    date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True)
+    date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True, db_index=True)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
     choices = (

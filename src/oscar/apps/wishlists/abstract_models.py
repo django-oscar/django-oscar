@@ -47,7 +47,7 @@ class AbstractWishList(models.Model):
     # That is a rare enough case to handle it by convention instead of a
     # BooleanField.
     date_created = models.DateTimeField(
-        _('Date created'), auto_now_add=True, editable=False)
+        _('Date created'), auto_now_add=True, editable=False, db_index=True)
 
     def __str__(self):
         return "%s's Wish List '%s'" % (self.owner, self.name)

@@ -412,7 +412,7 @@ class AbstractCountry(models.Model):
         _('ISO 3166-1 numeric'), blank=True, max_length=3)
 
     #: The commonly used name; e.g. 'United Kingdom'
-    printable_name = models.CharField(_('Country name'), max_length=128)
+    printable_name = models.CharField(_('Country name'), max_length=128, db_index=True)
     #: The full official name of a country
     #: e.g. 'United Kingdom of Great Britain and Northern Ireland'
     name = models.CharField(_('Official name'), max_length=128)

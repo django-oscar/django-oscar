@@ -16,8 +16,8 @@ class AbstractBase(models.Model):
     Implements the interface declared by shipping.base.Base
     """
     code = AutoSlugField(_("Slug"), max_length=128, unique=True,
-                         populate_from='name')
-    name = models.CharField(_("Name"), max_length=128, unique=True)
+                         populate_from='name', db_index=True)
+    name = models.CharField(_("Name"), max_length=128, unique=True, db_index=True)
     description = models.TextField(_("Description"), blank=True)
 
     # We allow shipping methods to be linked to a specific set of countries
@@ -194,7 +194,7 @@ class AbstractWeightBand(models.Model):
         related_name='bands',
         verbose_name=_("Method"))
     upper_limit = models.DecimalField(
-        _("Upper Limit"), decimal_places=3, max_digits=12,
+        _("Upper Limit"), decimal_places=3, max_digits=12, db_index=True,
         validators=[MinValueValidator(D('0.00'))],
         help_text=_("Enter upper limit of this weight band in kg. The lower "
                     "limit will be determined by the other weight bands."))

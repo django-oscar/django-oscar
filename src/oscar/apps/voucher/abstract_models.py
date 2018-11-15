@@ -140,8 +140,8 @@ class AbstractVoucher(models.Model):
     usage = models.CharField(_("Usage"), max_length=128,
                              choices=USAGE_CHOICES, default=MULTI_USE)
 
-    start_datetime = models.DateTimeField(_('Start datetime'))
-    end_datetime = models.DateTimeField(_('End datetime'))
+    start_datetime = models.DateTimeField(_('Start datetime'), db_index=True)
+    end_datetime = models.DateTimeField(_('End datetime'), db_index=True)
 
     # Reporting information. Not used to enforce any consumption limits.
     num_basket_additions = models.PositiveIntegerField(
