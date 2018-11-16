@@ -141,6 +141,9 @@ Minor changes
 - Added a ``datetime_filters`` tag library that provides a ``timedelta`` template
   filter for rendering time deltas in human readable format.
 
+- ``OSCAR_OFFER_ROUNDING_FUNCTION`` previously accepted a function as its value. It now
+  only accepts a dotted path to a function as its value
+
 - Fixed the logic of ``offers.Range.all_products()`` to make it consistent with
   ``Range.contains_product()`` in excluding products specified in ``excluded_product_ids``.
 

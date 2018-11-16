@@ -314,8 +314,8 @@ Offer settings
 
 Default: Round down to the nearest hundredth of a unit using ``decimal.Decimal.quantize``
 
-A function responsible for rounding decimal amounts when offer discount
-calculations don't lead to legitimate currency values.
+A dotted path to a function responsible for rounding decimal amounts
+when offer discount calculations don't lead to legitimate currency values.
 
 ``OSCAR_OFFERS_INCL_TAX``
 

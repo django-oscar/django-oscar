@@ -278,3 +278,8 @@ def is_model_registered(app_label, model_name):
         return False
     else:
         return True
+
+
+@lru_cache(maxsize=128)
+def cached_import_string(path):
+    return import_string(path)

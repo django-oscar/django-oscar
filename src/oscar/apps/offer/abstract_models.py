@@ -17,7 +17,7 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.decorators import deprecated
-from oscar.core.loading import get_class, get_classes, get_model
+from oscar.core.loading import get_class, get_classes, get_model, cached_import_string
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
 
@@ -620,8 +620,11 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         """
         Apply rounding to discount amount
         """
-        if hasattr(settings, 'OSCAR_OFFER_ROUNDING_FUNCTION'):
-            return settings.OSCAR_OFFER_ROUNDING_FUNCTION(amount)
+        rounding_function_path = getattr(settings, 'OSCAR_OFFER_ROUNDING_FUNCTION', None)
+        if rounding_function_path:
+            rounding_function = cached_import_string(rounding_function_path)
+            return rounding_function(amount)
+
         return amount.quantize(D('.01'), ROUND_DOWN)
 
     def _effective_max_affected_items(self):
