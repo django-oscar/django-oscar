@@ -10,7 +10,6 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
 from django_tables2 import SingleTableView
 
-from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views.generic import BulkEditMixin
@@ -74,7 +73,7 @@ class IndexView(BulkEditMixin, FormMixin, SingleTableView):
         Function is split out to allow customisation with little boilerplate.
         """
         if data['email']:
-            email = normalise_email(data['email'])
+            email = data['email']
             queryset = queryset.filter(email__istartswith=email)
             self.desc_ctx['email_filter'] \
                 = _(" with email matching '%s'") % email

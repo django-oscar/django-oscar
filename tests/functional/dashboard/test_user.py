@@ -115,30 +115,31 @@ class SearchTests(WebTestCase):
         )
         super().setUp()
 
-    def _search_by_user_name(self, name):
+    def _search_by_form_args(self, form_args):
         response = self.get(self.url)
         search_form = response.forms[0]
-        search_form['name'] = name
+        for field_name, val in form_args.items():
+            search_form[field_name] = val
         search_response = search_form.submit('search')
         data = search_response.context['users'].data
         return data
 
     def test_user_name_2_parts(self):
-        data = self._search_by_user_name('Owen Davies')
+        data = self._search_by_form_args({'name': 'Owen Davies'})
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0].email, 'owen@example.org')
         self.assertEqual(data[0].first_name, 'Owen')
         self.assertEqual(data[0].last_name, 'Davies')
 
     def test_user_name_3_parts(self):
-        data = self._search_by_user_name('Rob Alan Lewis')
+        data = self._search_by_form_args({'name': 'Rob Alan Lewis'})
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0].email, 'robalan@example.org')
         self.assertEqual(data[0].first_name, 'Rob Alan')
         self.assertEqual(data[0].last_name, 'Lewis')
 
     def test_user_name_4_parts(self):
-        data = self._search_by_user_name('Lars van der Berg')
+        data = self._search_by_form_args({'name': 'Lars van der Berg'})
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0].email, 'lars@example.org')
         self.assertEqual(data[0].first_name, 'Lars')
