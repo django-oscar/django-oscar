@@ -15,6 +15,7 @@ ALLOWED_HOSTS = [
     'master.oscarcommerce.com',
     'localhost',
     '127.0.0.1',
+    'ec2-18-185-68-253.eu-central-1.compute.amazonaws.com',
 ]
 
 # This is needed for the hosted version of the sandbox
