@@ -11,7 +11,7 @@
     "extend": ">=3.0.2",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
-    "gulp-less": "^4.0.1",
+    "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "inputmask": "^5.0.3",
     "jquery": "^3.4.1",
