@@ -1,0 +1,11 @@
+// OSCAR PAGE STRUCTURE
+// -----------
+
+body {
+    background-color: $gray-200;
+}
+
+.container-fluid {
+    // Here is the page width: editable in page/mixins.less
+    max-width: $oscar-page-width;
+}

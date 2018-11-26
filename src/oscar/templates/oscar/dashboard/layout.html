@@ -9,7 +9,8 @@
     {% if use_less %}
         <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/dashboard.less" %}" />
     {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard-bootstrap4.css" %}" />
+        {# <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" /> #}
     {% endif %}
 {% endblock %}
 
@@ -132,7 +133,8 @@
 {# Local scripts #}
 {% block scripts %}
     <!-- Twitter Bootstrap -->
-    <script src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4/bootstrap.bundle.min.js" %}"></script>
+    {# <script src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script> #}
     <!-- Oscar -->
     <script src="{% static "oscar/js/oscar/ui.js" %}"></script>
 {% endblock %}
