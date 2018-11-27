@@ -799,8 +799,10 @@ class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
     def forms_valid(self, form, attribute_option_formset):
         form.save()
         attribute_option_formset.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+        if self.is_popup:
+            return self.popup_response(form.instance)
+        else:
+            return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, attribute_option_formset):
         messages.error(self.request,
@@ -843,8 +845,7 @@ class AttributeOptionGroupCreateView(PopUpWindowCreateMixin, AttributeOptionGrou
         return _("Add a new Attribute Option Group")
 
     def get_success_url(self):
-        if not self.is_popup:
-            messages.info(self.request, _("Attribute Option Group created successfully"))
+        self.add_success_message(_("Attribute Option Group created successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
@@ -861,8 +862,7 @@ class AttributeOptionGroupUpdateView(PopUpWindowUpdateMixin, AttributeOptionGrou
         return _("Update Attribute Option Group '%s'") % self.object.name
 
     def get_success_url(self):
-        if not self.is_popup:
-            messages.info(self.request, _("Attribute Option Group updated successfully"))
+        self.add_success_message(_("Attribute Option Group updated successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
@@ -915,8 +915,7 @@ class AttributeOptionGroupDeleteView(PopUpWindowDeleteMixin, generic.DeleteView)
         return "?".join(url_parts)
 
     def get_success_url(self):
-        if not self.is_popup:
-            messages.info(self.request, _("Attribute Option Group deleted successfully"))
+        self.add_success_message(_("Attribute Option Group deleted successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
@@ -935,20 +934,29 @@ class OptionCreateUpdateView(generic.UpdateView):
     model = Option
     form_class = OptionForm
 
-    def forms_invalid(self, *args, **kwargs):
+    def form_valid(self, form):
+        self.object = form.save()
+        if self.is_popup:
+            return self.popup_response(form.instance)
+        else:
+            return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['title'] = self.get_title()
+        return ctx
+
+    def form_invalid(self, form):
         messages.error(
             self.request,
             _("Your submitted data was not valid - please correct the errors below")
         )
-        return super().form_invalid(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["title"] = self.get_title()
-        return ctx
+        return super().form_invalid(form)
 
 
-class OptionCreateView(OptionCreateUpdateView):
+class OptionCreateView(PopUpWindowCreateMixin, OptionCreateUpdateView):
+
+    creating = True
 
     def get_object(self):
         return None
@@ -957,12 +965,13 @@ class OptionCreateView(OptionCreateUpdateView):
         return _("Add a new Option")
 
     def get_success_url(self):
-        messages.info(self.request, _("Option created successfully"))
-        url = reverse("dashboard:catalogue-option-list")
-        return url
+        self.add_success_message(_("Option created successfully"))
+        return reverse("dashboard:catalogue-option-list")
 
 
-class OptionUpdateView(OptionCreateUpdateView):
+class OptionUpdateView(PopUpWindowUpdateMixin, OptionCreateUpdateView):
+
+    creating = False
 
     def get_object(self):
         attribute_option_group = get_object_or_404(Option, pk=self.kwargs['pk'])
@@ -972,12 +981,11 @@ class OptionUpdateView(OptionCreateUpdateView):
         return _("Update Option '%s'") % self.object.name
 
     def get_success_url(self):
-        messages.info(self.request, _("Option updated successfully"))
-        url = reverse("dashboard:catalogue-option-list")
-        return url
+        self.add_success_message(_("Option updated successfully"))
+        return reverse("dashboard:catalogue-option-list")
 
 
-class OptionDeleteView(generic.DeleteView):
+class OptionDeleteView(PopUpWindowDeleteMixin, generic.DeleteView):
 
     template_name = 'dashboard/catalogue/option_delete.html'
     model = Option
@@ -1006,6 +1014,5 @@ class OptionDeleteView(generic.DeleteView):
         return ctx
 
     def get_success_url(self):
-        messages.info(self.request, _("Option deleted successfully"))
-        url = reverse("dashboard:catalogue-option-list")
-        return url
+        self.add_success_message(_("Option deleted successfully"))
+        return reverse("dashboard:catalogue-option-list")

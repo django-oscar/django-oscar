@@ -92,7 +92,7 @@ var oscar = (function(o, $) {
             $selects.filter('.form-stacked select').css('width', '95%');
             $selects.filter('.form-inline select').css('width', '300px');
             $selects.not('.related-widget-wrapper select').select2({width: 'resolve'});
-            $selects.filter('.related-widget-wrapper select').select2({
+            $selects.filter('.related-widget-wrapper.single select').select2({
                 // Keep updated labels after editing related obj
                 templateResult: function (data) {
                     return $(data.element).text();
@@ -101,6 +101,35 @@ var oscar = (function(o, $) {
                     return $(data.element).text();
                 },
                 width: 'resolve'
+            });
+            $selects.filter('.related-widget-wrapper.multiple select').select2({
+                templateResult: function (data) {
+                    return $(data.element).text();
+                },
+                templateSelection: function (data) {
+                    var $this = $(data.element).closest('.related-widget-wrapper');
+                    var siblings = $this.find('.change-related, .delete-related');
+                    if (!siblings.length) {
+                        return;
+                    }
+                    var value = data.id;
+                    var label = $(data.element).text();
+                    if (value) {
+                        siblings.each(function() {
+                            var elm = $(this);
+                            elm.attr('href', elm.attr('data-href-template').replace('__fk__', value));
+                            label += ' ';
+                            label += elm[0].outerHTML;
+                        });
+                    } else {
+                        siblings.removeAttr('href');
+                    }
+                    return label;
+                },
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                width: '95%'
             });
             $(el).find('select.select2').each(function(i, e) {
                 var opts = {};
