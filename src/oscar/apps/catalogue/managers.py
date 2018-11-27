@@ -1,3 +1,4 @@
+import django
 from django.db import models
 from django.db.models import Count
 from django.db.models.constants import LOOKUP_SEP
@@ -5,6 +6,8 @@ from django.db.models.constants import LOOKUP_SEP
 from oscar.core.decorators import deprecated
 
 from .query import FilteredRelationQuery
+
+ENABLE_FILTER_BY_ATTRIBUTES = django.VERSION >= (2, 0)
 
 
 class AttributeFilter(dict):
@@ -45,7 +48,7 @@ class AttributeFilter(dict):
 
 class ProductQuerySet(models.query.QuerySet):
     def __init__(self, model=None, query=None, using=None, hints=None):
-        if query is None:  # override query to solve bug in django.
+        if ENABLE_FILTER_BY_ATTRIBUTES and query is None:  # override query to solve bug in django.
             query = FilteredRelationQuery(model)
 
         super(ProductQuerySet, self).__init__(model, query, using, hints)
@@ -77,6 +80,9 @@ class ProductQuerySet(models.query.QuerySet):
             DESC
 
         """
+        if not ENABLE_FILTER_BY_ATTRIBUTES:
+            raise AttributeError("'%s' object has no attribute 'filter_by_attributes'" % self.__class__.__name__)
+
         attribute_filter = AttributeFilter(filter_kwargs)
 
         # build prefetch query to select relevant attributes of the ProductClass
