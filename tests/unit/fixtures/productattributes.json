@@ -1,0 +1,879 @@
+[
+{
+    "model": "catalogue.productclass",
+    "pk": 1,
+    "fields": {
+        "name": "Spullen",
+        "requires_shipping": true,
+        "track_stock": false,
+        "slug": "dik-products",
+        "options": []
+    }
+},
+{
+    "model": "catalogue.productclass",
+    "pk": 2,
+    "fields": {
+        "name": "serious",
+        "requires_shipping": true,
+        "track_stock": true,
+        "slug": "serious",
+        "options": []
+    }
+},
+{
+    "model": "catalogue.product",
+    "pk": 2,
+    "fields": {
+        "structure": "standalone",
+        "upc": "673873",
+        "parent": null,
+        "title": "Hermes Bikini",
+        "slug": "dikke-shit-ouwe",
+        "description": "<p>Vet ding dit hoor</p>",
+        "product_class": 1,
+        "rating": null,
+        "date_created": "2018-06-27T09:11:35.813Z",
+        "date_updated": "2018-08-22T13:25:11.724Z",
+        "is_discountable": true,
+        "product_options": []
+    }
+},
+{
+    "model": "catalogue.product",
+    "pk": 3,
+    "fields": {
+        "structure": "standalone",
+        "upc": "piet",
+        "parent": null,
+        "title": "Hubble Photo",
+        "slug": "henk",
+        "description": "<p>30cm x 55cm</p>",
+        "product_class": 1,
+        "rating": null,
+        "date_created": "2018-07-10T13:06:53.822Z",
+        "date_updated": "2018-08-22T13:25:58.500Z",
+        "is_discountable": true,
+        "product_options": []
+    }
+},
+{
+    "model": "catalogue.product",
+    "pk": 4,
+    "fields": {
+        "structure": "standalone",
+        "upc": "1234tyser",
+        "parent": null,
+        "title": "serious product",
+        "slug": "serious-product",
+        "description": "<p style=\"margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica;\">Nulla dui purus, eleifend vel, consequat non, dictum porta, nulla. Duis ante mi, laoreet ut, commodo eleifend, cursus nec, lorem. Aenean eu est. Etiam imperdiet turpis. Praesent nec augue. Curabitur ligula quam, rutrum id, tempor sed, consequat ac, dui. Vestibulum accumsan eros nec magna. Vestibulum vitae dui. Vestibulum nec ligula et lorem consequat ullamcorper. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Phasellus eget nisl ut elit porta ullamcorper. Maecenas tincidunt velit quis orci. Sed in dui. Nullam ut mauris eu mi mollis luctus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Sed cursus cursus velit. Sed a massa. Duis dignissim euismod quam. Nullam euismod metus ut orci. Vestibulum erat libero, scelerisque et, porttitor et, varius a, leo.</p>",
+        "product_class": 2,
+        "rating": null,
+        "date_created": "2018-11-16T08:24:18.704Z",
+        "date_updated": "2018-11-16T08:24:18.704Z",
+        "is_discountable": true,
+        "product_options": []
+    }
+},
+{
+    "model": "catalogue.product",
+    "pk": 5,
+    "fields": {
+        "structure": "standalone",
+        "upc": "368yhfjkf",
+        "parent": null,
+        "title": "second",
+        "slug": "second",
+        "description": "<p style=\"margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica;\">Nullam sapien eros, facilisis vel, eleifend non, auctor dapibus, pede.</p>",
+        "product_class": 2,
+        "rating": null,
+        "date_created": "2018-11-16T08:28:11.730Z",
+        "date_updated": "2018-11-16T08:37:39.853Z",
+        "is_discountable": true,
+        "product_options": []
+    }
+},
+{
+    "model": "catalogue.category",
+    "pk": 1,
+    "fields": {
+        "path": "0001",
+        "depth": 1,
+        "numchild": 0,
+        "name": "Ambulant goods",
+        "description": "<p>Some ambulant goods</p>",
+        "image": "",
+        "slug": "root"
+    }
+},
+{
+    "model": "catalogue.productcategory",
+    "pk": 1,
+    "fields": {
+        "product": 2,
+        "category": 1
+    }
+},
+{
+    "model": "catalogue.productcategory",
+    "pk": 2,
+    "fields": {
+        "product": 3,
+        "category": 1
+    }
+},
+{
+    "model": "catalogue.productcategory",
+    "pk": 3,
+    "fields": {
+        "product": 4,
+        "category": 1
+    }
+},
+{
+    "model": "catalogue.productcategory",
+    "pk": 4,
+    "fields": {
+        "product": 5,
+        "category": 1
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 1,
+    "fields": {
+        "product_class": 1,
+        "name": "henk",
+        "code": "henkie",
+        "type": "text",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 2,
+    "fields": {
+        "product_class": 2,
+        "name": "subtitle",
+        "code": "subtitle",
+        "type": "text",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 3,
+    "fields": {
+        "product_class": 2,
+        "name": "facets",
+        "code": "facets",
+        "type": "integer",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 4,
+    "fields": {
+        "product_class": 2,
+        "name": "available",
+        "code": "available",
+        "type": "boolean",
+        "option_group": null,
+        "required": false
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 5,
+    "fields": {
+        "product_class": 2,
+        "name": "hypothenusa",
+        "code": "hypothenusa",
+        "type": "float",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 6,
+    "fields": {
+        "product_class": 2,
+        "name": "additional info",
+        "code": "additional_info",
+        "type": "richtext",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 7,
+    "fields": {
+        "product_class": 2,
+        "name": "releasedate",
+        "code": "releasedate",
+        "type": "date",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 8,
+    "fields": {
+        "product_class": 2,
+        "name": "starttime",
+        "code": "starttime",
+        "type": "datetime",
+        "option_group": null,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 9,
+    "fields": {
+        "product_class": 2,
+        "name": "kind",
+        "code": "kind",
+        "type": "option",
+        "option_group": 1,
+        "required": true
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 10,
+    "fields": {
+        "product_class": 2,
+        "name": "subkinds",
+        "code": "subkinds",
+        "type": "multi_option",
+        "option_group": 1,
+        "required": false
+    }
+},
+{
+    "model": "catalogue.productattribute",
+    "pk": 11,
+    "fields": {
+        "product_class": 2,
+        "name": "henk",
+        "code": "henkie",
+        "type": "text",
+        "option_group": null,
+        "required": false
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 2,
+    "fields": {
+        "attribute": 1,
+        "product": 2,
+        "value_text": "bka",
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 3,
+    "fields": {
+        "attribute": 1,
+        "product": 3,
+        "value_text": "bah bah",
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 4,
+    "fields": {
+        "attribute": 6,
+        "product": 4,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": "<p style=\"margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica;\">Lorem ipsum dolor sit amet, <strong>consectetuer</strong> adipiscing elit. Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id pulvinar odio lorem non turpis. Nullam sit amet enim. Suspendisse id velit vitae ligula <em>volutpat</em> condimentum. Aliquam erat volutpat.</p>\r\n<p>\u00a0</p>\r\n<p style=\"margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; min-height: 14px;\">\u00a0</p>",
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 5,
+    "fields": {
+        "attribute": 4,
+        "product": 4,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": true,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 6,
+    "fields": {
+        "attribute": 3,
+        "product": 4,
+        "value_text": null,
+        "value_integer": 4,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 7,
+    "fields": {
+        "attribute": 5,
+        "product": 4,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": 2.4567,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 8,
+    "fields": {
+        "attribute": 9,
+        "product": 4,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": 6,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 9,
+    "fields": {
+        "attribute": 7,
+        "product": 4,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": "2018-11-16",
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 10,
+    "fields": {
+        "attribute": 8,
+        "product": 4,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": "2018-11-16T09:15:00Z",
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 11,
+    "fields": {
+        "attribute": 10,
+        "product": 4,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": [
+            1,
+            3,
+            5
+        ]
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 12,
+    "fields": {
+        "attribute": 2,
+        "product": 4,
+        "value_text": "kekjo",
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 13,
+    "fields": {
+        "attribute": 6,
+        "product": 5,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": "<p style=\"margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica;\">Vivamus auctor leo vel dui. Aliquam erat volutpat. Phasellus nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras tempor. Morbi egestas, <em>urna</em> non consequat tempus, <strong>nunc</strong> arcu mollis enim, eu aliquam erat nulla non nibh. Duis consectetuer malesuada velit. Nam ante nulla, interdum vel, tristique ac, condimentum non, tellus. Proin ornare feugiat nisl. Suspendisse dolor nisl, ultrices at, eleifend vel, consequat at, dolor.</p>",
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 14,
+    "fields": {
+        "attribute": 4,
+        "product": 5,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": false,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 15,
+    "fields": {
+        "attribute": 3,
+        "product": 5,
+        "value_text": null,
+        "value_integer": 8,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 16,
+    "fields": {
+        "attribute": 5,
+        "product": 5,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": 1.25,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 17,
+    "fields": {
+        "attribute": 9,
+        "product": 5,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": 4,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 18,
+    "fields": {
+        "attribute": 7,
+        "product": 5,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": "1999-11-11",
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 19,
+    "fields": {
+        "attribute": 8,
+        "product": 5,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": "2018-11-16T09:15:00Z",
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 20,
+    "fields": {
+        "attribute": 10,
+        "product": 5,
+        "value_text": null,
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": [
+            3,
+            5
+        ]
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 21,
+    "fields": {
+        "attribute": 2,
+        "product": 5,
+        "value_text": "superhenk",
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.productattributevalue",
+    "pk": 22,
+    "fields": {
+        "attribute": 11,
+        "product": 5,
+        "value_text": "bah bah",
+        "value_integer": null,
+        "value_boolean": null,
+        "value_float": null,
+        "value_richtext": null,
+        "value_date": null,
+        "value_datetime": null,
+        "value_option": null,
+        "value_file": "",
+        "value_image": "",
+        "entity_content_type": null,
+        "entity_object_id": null,
+        "value_multi_option": []
+    }
+},
+{
+    "model": "catalogue.attributeoptiongroup",
+    "pk": 1,
+    "fields": {
+        "name": "kind"
+    }
+},
+{
+    "model": "catalogue.attributeoption",
+    "pk": 1,
+    "fields": {
+        "group": 1,
+        "option": "grand"
+    }
+},
+{
+    "model": "catalogue.attributeoption",
+    "pk": 2,
+    "fields": {
+        "group": 1,
+        "option": "omnimous"
+    }
+},
+{
+    "model": "catalogue.attributeoption",
+    "pk": 3,
+    "fields": {
+        "group": 1,
+        "option": "verocious"
+    }
+},
+{
+    "model": "catalogue.attributeoption",
+    "pk": 4,
+    "fields": {
+        "group": 1,
+        "option": "totalitarian"
+    }
+},
+{
+    "model": "catalogue.attributeoption",
+    "pk": 5,
+    "fields": {
+        "group": 1,
+        "option": "megalomane"
+    }
+},
+{
+    "model": "catalogue.attributeoption",
+    "pk": 6,
+    "fields": {
+        "group": 1,
+        "option": "bombastic"
+    }
+},
+{
+    "model": "catalogue.productimage",
+    "pk": 1,
+    "fields": {
+        "product": 3,
+        "original": "images/products/2018/07/ActiOn_35.jpg",
+        "caption": "",
+        "display_order": 0,
+        "date_created": "2018-07-10T13:08:38.050Z"
+    }
+},
+{
+    "model": "catalogue.productimage",
+    "pk": 2,
+    "fields": {
+        "product": 2,
+        "original": "images/products/2018/08/11lekkerECHICKORIG-large-4x3.jpg",
+        "caption": "",
+        "display_order": 0,
+        "date_created": "2018-08-20T14:44:21.688Z"
+    }
+},
+{
+    "model": "partner.stockrecord",
+    "pk": 1,
+    "fields": {
+        "product": 2,
+        "partner": 1,
+        "partner_sku": "henk",
+        "price_currency": "EUR",
+        "price_excl_tax": "400.00",
+        "price_retail": "500.00",
+        "cost_price": "300.00",
+        "num_in_stock": 23,
+        "num_allocated": null,
+        "low_stock_threshold": null,
+        "date_created": "2018-06-27T14:29:31.007Z",
+        "date_updated": "2018-07-09T10:54:12.295Z"
+    }
+},
+{
+    "model": "partner.stockrecord",
+    "pk": 2,
+    "fields": {
+        "product": 3,
+        "partner": 1,
+        "partner_sku": "asdasd",
+        "price_currency": "EUR",
+        "price_excl_tax": "23.00",
+        "price_retail": "0.05",
+        "cost_price": null,
+        "num_in_stock": null,
+        "num_allocated": null,
+        "low_stock_threshold": null,
+        "date_created": "2018-07-10T13:06:53.849Z",
+        "date_updated": "2018-08-10T12:34:05.460Z"
+    }
+},
+{
+    "model": "partner.stockrecord",
+    "pk": 3,
+    "fields": {
+        "product": 4,
+        "partner": 1,
+        "partner_sku": "err56",
+        "price_currency": "EUR",
+        "price_excl_tax": "234.00",
+        "price_retail": "123.00",
+        "cost_price": null,
+        "num_in_stock": 345,
+        "num_allocated": null,
+        "low_stock_threshold": 12,
+        "date_created": "2018-11-16T08:24:18.773Z",
+        "date_updated": "2018-11-16T08:24:18.773Z"
+    }
+},
+{
+    "model": "partner.stockrecord",
+    "pk": 4,
+    "fields": {
+        "product": 5,
+        "partner": 1,
+        "partner_sku": "23478",
+        "price_currency": "EUR",
+        "price_excl_tax": "12.00",
+        "price_retail": "11.00",
+        "cost_price": null,
+        "num_in_stock": 34,
+        "num_allocated": null,
+        "low_stock_threshold": 8,
+        "date_created": "2018-11-16T08:28:11.797Z",
+        "date_updated": "2018-11-16T08:28:11.797Z"
+    }
+},
+{
+    "model": "partner.partner",
+    "pk": 1,
+    "fields": {
+        "code": "mezelf",
+        "name": "mezelf",
+        "users": []
+    }
+}
+]
