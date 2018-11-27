@@ -36,6 +36,11 @@ What's new in Oscar 2.0?
   offer discounts are applied on the tax-inclusive amount. This defaults to ``False``,
   to preserve the original behaviour of discount application.
 
+- Added database index definitions for commonly queried fields in a range of models. See `#2875`_.
+  This will require projects that have forked Oscar apps to generate corresponding migrations.
+
+.. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
