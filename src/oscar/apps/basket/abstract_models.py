@@ -645,7 +645,7 @@ class AbstractLine(models.Model):
         _('Price incl. Tax'), decimal_places=2, max_digits=12, null=True)
 
     # Track date of first addition
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True, db_index=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

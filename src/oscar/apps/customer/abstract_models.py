@@ -289,7 +289,7 @@ class AbstractNotification(models.Model):
     location = models.CharField(max_length=32, choices=choices,
                                 default=INBOX)
 
-    date_sent = models.DateTimeField(auto_now_add=True)
+    date_sent = models.DateTimeField(auto_now_add=True, db_index=True)
     date_read = models.DateTimeField(blank=True, null=True)
 
     class Meta:

@@ -309,7 +309,8 @@ class AbstractProduct(models.Model):
     # Product has no ratings if rating is None
     rating = models.FloatField(_('Rating'), null=True, editable=False)
 
-    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    date_created = models.DateTimeField(
+        _("Date created"), auto_now_add=True, db_index=True)
 
     # This field is used by Haystack to reindex search
     date_updated = models.DateTimeField(
@@ -659,7 +660,7 @@ class AbstractProductRecommendation(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Recommended product"))
     ranking = models.PositiveSmallIntegerField(
-        _('Ranking'), default=0,
+        _('Ranking'), default=0, db_index=True,
         help_text=_('Determines order of the products. A product with a higher'
                     ' value will appear before one with a lower ranking.'))
 
@@ -1164,7 +1165,7 @@ class AbstractProductImage(models.Model):
 
     #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(
-        _("Display order"), default=0,
+        _("Display order"), default=0, db_index=True,
         help_text=_("An image with a display order of zero will be the primary"
                     " image for a product"))
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
