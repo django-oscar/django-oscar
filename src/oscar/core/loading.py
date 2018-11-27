@@ -210,8 +210,8 @@ def feature_hidden(feature_name):
     """
     Test if a certain Oscar feature is disabled.
     """
-    return (feature_name is not None and
-            feature_name in settings.OSCAR_HIDDEN_FEATURES)
+    return (feature_name is not None
+            and feature_name in settings.OSCAR_HIDDEN_FEATURES)
 
 
 def get_model(app_label, model_name):
@@ -258,3 +258,8 @@ def is_model_registered(app_label, model_name):
         return False
     else:
         return True
+
+
+@lru_cache(maxsize=128)
+def cached_import_string(path):
+    return import_string(path)

@@ -16,8 +16,8 @@ CARD_TYPES = [
     (DINERS_CLUB, (14,), ('300', '301', '302', '303', '304', '305')),
     (DINERS_CLUB, (14,), ('36',)),
     (DISCOVER, (16,),
-     list(map(str, list(range(622126, 622926)))) +
-     list(map(str, list(range(644, 650)))) + ['6011', '65']),
+     list(map(str, list(range(622126, 622926))))
+     + list(map(str, list(range(644, 650)))) + ['6011', '65']),
     (JCB, (16,), list(map(str, list(range(3528, 3590))))),
     (LASER, list(range(16, 20)), ('6304', '6706', '6771', '6709')),
     (MAESTRO, list(range(12, 20)), ('5018', '5020', '5038', '5893', '6304',

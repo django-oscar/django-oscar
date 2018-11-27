@@ -34,7 +34,7 @@ class Base(object):
         """
         Return the shipping charge for the given basket
         """
-        raise NotImplemented()
+        raise NotImplementedError
 
     def discount(self, basket):
         """

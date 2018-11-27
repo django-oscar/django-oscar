@@ -26,7 +26,7 @@ var gulp = require("gulp"),
             .pipe(concat("bootstrap-datetimepicker.all.js"))
             .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker/locales"));
 
-        gulp.src("node_modules/jquery.inputmask/dist/jquery.inputmask.bundle.js")
+        gulp.src("node_modules/inputmask/dist/jquery.inputmask.bundle.js")
             .pipe(gulp.dest("src/oscar/static/oscar/js/inputmask"));
 
         gulp.src("node_modules/jquery-mousewheel/jquery.mousewheel.js")

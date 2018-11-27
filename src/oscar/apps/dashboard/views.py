@@ -3,6 +3,7 @@ from datetime import timedelta
 from decimal import Decimal as D
 from decimal import ROUND_UP
 
+from django.contrib import messages
 from django.db.models import Avg, Count, Sum
 from django.template.response import TemplateResponse
 from django.utils.timezone import now
@@ -196,114 +197,98 @@ class IndexView(TemplateView):
         return stats
 
 
-class PopUpWindowCreateUpdateMixin(object):
+class PopUpWindowMixin:
+
+    @property
+    def is_popup(self):
+        return self.request.GET.get(
+            RelatedFieldWidgetWrapper.IS_POPUP_VAR,
+            self.request.POST.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR))
+
+    @property
+    def is_popup_var(self):
+        return RelatedFieldWidgetWrapper.IS_POPUP_VAR
+
+    def add_success_message(self, message):
+        if not self.is_popup:
+            messages.info(self.request, message)
+
+
+class PopUpWindowCreateUpdateMixin(PopUpWindowMixin):
+
+    @property
+    def to_field(self):
+        return self.request.GET.get(
+            RelatedFieldWidgetWrapper.TO_FIELD_VAR,
+            self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR))
+
+    @property
+    def to_field_var(self):
+        return RelatedFieldWidgetWrapper.TO_FIELD_VAR
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        if (RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.GET or
-                RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.POST):
-            to_field = self.request.GET.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR,
-                                            self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR))
-            ctx['to_field'] = to_field
-            ctx['to_field_var'] = RelatedFieldWidgetWrapper.TO_FIELD_VAR
-
-        if (RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET or
-                RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST):
-            is_popup = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR,
-                                            self.request.POST.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR))
-            ctx['is_popup'] = is_popup
-            ctx['is_popup_var'] = RelatedFieldWidgetWrapper.IS_POPUP_VAR
+        if self.is_popup:
+            ctx['to_field'] = self.to_field
+            ctx['to_field_var'] = self.to_field_var
+            ctx['is_popup'] = self.is_popup
+            ctx['is_popup_var'] = self.is_popup_var
 
         return ctx
-
-    def forms_valid(self, form, formset):
-        # So that base view classes can do pop-up window specific things, like
-        # not displaying notification messages using the messages framework
-        self.is_popup = False
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
-            self.is_popup = True
-
-        return super().forms_valid(form, formset)
 
 
 class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
 
-    # form_valid and form_invalid are called, depending on the validation
-    # result of just the form, and return a redirect to the success URL or
-    # redisplay the form, respectively. In both cases we need to check our
-    # formsets as well, so both methods should do the same.
-    # If both the form and formset are valid, then they should call
-    # forms_valid, which should be defined in the base view class, to in
-    # addition save the formset, and return a redirect to the success URL.
-    def forms_valid(self, form, formset):
-        response = super().forms_valid(form, formset)
-
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
-            obj = form.instance
-            to_field = self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR)
-            if to_field:
-                attr = str(to_field)
-            else:
-                attr = obj._meta.pk.attname
-            value = obj.serializable_value(attr)
-            popup_response_data = json.dumps({
-                'value': str(value),
-                'obj': str(obj),
-            })
-            return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
-                'popup_response_data': popup_response_data,
-            })
-
+    def popup_response(self, obj):
+        if self.to_field:
+            attr = str(self.to_field)
         else:
-            return response
+            attr = obj._meta.pk.attname
+        value = obj.serializable_value(attr)
+        popup_response_data = json.dumps({
+            'value': str(value),
+            'obj': str(obj),
+        })
+        return TemplateResponse(
+            self.request,
+            'dashboard/widgets/popup_response.html',
+            {'popup_response_data': popup_response_data, }
+        )
 
 
 class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
 
-    # form_valid and form_invalid are called, depending on the validation
-    # result of just the form, and return a redirect to the success URL or
-    # redisplay the form, respectively. In both cases we need to check our
-    # formsets as well, so both methods should do the same.
-    # If both the form and formset are valid, then they should call
-    # forms_valid, which should be defined in the base view class, to in
-    # addition save the formset, and return a redirect to the success URL.
-    def forms_valid(self, form, formset):
-        response = super().forms_valid(form, formset)
-
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
-            obj = form.instance
-            opts = obj._meta
-            to_field = self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR)
-            if to_field:
-                attr = str(to_field)
-            else:
-                attr = opts.pk.attname
-            # Retrieve the `object_id` from the resolved pattern arguments.
-            value = self.request.resolver_match.kwargs['pk']
-            new_value = obj.serializable_value(attr)
-            popup_response_data = json.dumps({
-                'action': 'change',
-                'value': str(value),
-                'obj': str(obj),
-                'new_value': str(new_value),
-            })
-            return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
-                'popup_response_data': popup_response_data,
-            })
-
+    def popup_response(self, obj):
+        opts = obj._meta
+        if self.to_field:
+            attr = str(self.to_field)
         else:
-            return response
+            attr = opts.pk.attname
+        # Retrieve the `object_id` from the resolved pattern arguments.
+        value = self.request.resolver_match.kwargs['pk']
+        new_value = obj.serializable_value(attr)
+        popup_response_data = json.dumps({
+            'action': 'change',
+            'value': str(value),
+            'obj': str(obj),
+            'new_value': str(new_value),
+        })
+        return TemplateResponse(
+            self.request,
+            'dashboard/widgets/popup_response.html',
+            {'popup_response_data': popup_response_data, }
+        )
 
 
-class PopUpWindowDeleteMixin(object):
+class PopUpWindowDeleteMixin(PopUpWindowMixin):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET:
-            ctx['is_popup'] = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR)
-            ctx['is_popup_var'] = RelatedFieldWidgetWrapper.IS_POPUP_VAR
+        if self.is_popup:
+            ctx['is_popup'] = self.is_popup
+            ctx['is_popup_var'] = self.is_popup_var
 
         return ctx
 
@@ -312,25 +297,20 @@ class PopUpWindowDeleteMixin(object):
         Calls the delete() method on the fetched object and then
         redirects to the success URL, or closes the popup, it it is one.
         """
-        # So that base view classes can do pop-up window specific things, like
-        # not displaying notification messages using the messages framework
-        self.is_popup = False
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
-            self.is_popup = True
-
         obj = self.get_object()
 
         response = super().delete(request, *args, **kwargs)
 
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in request.POST:
+        if self.is_popup:
             obj_id = obj.pk
             popup_response_data = json.dumps({
                 'action': 'delete',
                 'value': str(obj_id),
             })
-            return TemplateResponse(request, 'dashboard/widgets/popup_response.html', {
-                'popup_response_data': popup_response_data,
-            })
-
+            return TemplateResponse(
+                request,
+                'dashboard/widgets/popup_response.html',
+                {'popup_response_data': popup_response_data, }
+            )
         else:
             return response

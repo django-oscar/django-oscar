@@ -36,6 +36,11 @@ What's new in Oscar 2.0?
   offer discounts are applied on the tax-inclusive amount. This defaults to ``False``,
   to preserve the original behaviour of discount application.
 
+- Added database index definitions for commonly queried fields in a range of models. See `#2875`_.
+  This will require projects that have forked Oscar apps to generate corresponding migrations.
+
+.. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -107,6 +112,8 @@ Removal of deprecated features
   ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
   ================================  ==================================  ================
 
+- Added the ability to manage ``catalogue.Option`` objects from the dashboard.
+
 Minor changes
 ~~~~~~~~~~~~~
 - Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
@@ -138,6 +145,9 @@ Minor changes
 
 - Added a ``datetime_filters`` tag library that provides a ``timedelta`` template
   filter for rendering time deltas in human readable format.
+
+- ``OSCAR_OFFER_ROUNDING_FUNCTION`` previously accepted a function as its value. It now
+  only accepts a dotted path to a function as its value
 
 - Fixed the logic of ``offers.Range.all_products()`` to make it consistent with
   ``Range.contains_product()`` in excluding products specified in ``excluded_product_ids``.
@@ -248,6 +258,10 @@ Migrating forked apps
 
 Dependency changes
 ------------------
+
+- Upgraded TinyMCE to version 4.8.3.
+
+- Upgraded jQuery inputmask to version 4.0.2.
 
 .. _deprecated_features_in_2.0:
 

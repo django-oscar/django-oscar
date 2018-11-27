@@ -66,6 +66,11 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         self.attribute_option_group_delete_view = get_class('dashboard.catalogue.views',
                                                             'AttributeOptionGroupDeleteView')
 
+        self.option_list_view = get_class('dashboard.catalogue.views', 'OptionListView')
+        self.option_create_view = get_class('dashboard.catalogue.views', 'OptionCreateView')
+        self.option_update_view = get_class('dashboard.catalogue.views', 'OptionUpdateView')
+        self.option_delete_view = get_class('dashboard.catalogue.views', 'OptionDeleteView')
+
     def get_urls(self):
         urls = [
             url(r'^products/(?P<pk>\d+)/$',
@@ -133,5 +138,17 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
             url(r'^attribute-option-group/(?P<pk>\w+)/delete/$',
                 self.attribute_option_group_delete_view.as_view(),
                 name='catalogue-attribute-option-group-delete'),
+            url(r'^option/$',
+                self.option_list_view.as_view(),
+                name='catalogue-option-list'),
+            url(r'^option/create/$',
+                self.option_create_view.as_view(),
+                name='catalogue-option-create'),
+            url(r'^option/(?P<pk>\w+)/update/$',
+                self.option_update_view.as_view(),
+                name='catalogue-option-update'),
+            url(r'^option/(?P<pk>\w+)/delete/$',
+                self.option_delete_view.as_view(),
+                name='catalogue-option-delete'),
         ]
         return self.post_process_urls(urls)

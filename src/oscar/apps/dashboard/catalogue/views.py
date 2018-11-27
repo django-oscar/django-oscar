@@ -12,13 +12,15 @@ from django_tables2 import SingleTableMixin, SingleTableView
 from oscar.core.loading import get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 
+
 (ProductForm,
  ProductClassSelectForm,
  ProductSearchForm,
  ProductClassForm,
  CategoryForm,
  StockAlertSearchForm,
- AttributeOptionGroupForm) \
+ AttributeOptionGroupForm,
+ OptionForm) \
     = get_classes('dashboard.catalogue.forms',
                   ('ProductForm',
                    'ProductClassSelectForm',
@@ -26,7 +28,8 @@ from oscar.views.generic import ObjectLookupView
                    'ProductClassForm',
                    'CategoryForm',
                    'StockAlertSearchForm',
-                   'AttributeOptionGroupForm'))
+                   'AttributeOptionGroupForm',
+                   'OptionForm'))
 (StockRecordFormSet,
  ProductCategoryFormSet,
  ProductImageFormSet,
@@ -40,10 +43,10 @@ from oscar.views.generic import ObjectLookupView
                    'ProductRecommendationFormSet',
                    'ProductAttributesFormSet',
                    'AttributeOptionFormSet'))
-ProductTable, CategoryTable, AttributeOptionGroupTable \
+ProductTable, CategoryTable, AttributeOptionGroupTable, OptionTable \
     = get_classes('dashboard.catalogue.tables',
                   ('ProductTable', 'CategoryTable',
-                   'AttributeOptionGroupTable'))
+                   'AttributeOptionGroupTable', 'OptionTable'))
 (PopUpWindowCreateMixin,
  PopUpWindowUpdateMixin,
  PopUpWindowDeleteMixin) \
@@ -60,6 +63,7 @@ StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
 Partner = get_model('partner', 'Partner')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
+Option = get_model('catalogue', 'Option')
 
 
 def filter_products(queryset, user):
@@ -143,8 +147,8 @@ class ProductListView(SingleTableView):
             # that contain the UPC
             matches_upc = Product.objects.filter(upc=data['upc'])
             qs_match = queryset.filter(
-                Q(id__in=matches_upc.values('id')) |
-                Q(id__in=matches_upc.values('parent_id')))
+                Q(id__in=matches_upc.values('id'))
+                | Q(id__in=matches_upc.values('parent_id')))
 
             if qs_match.exists():
                 queryset = qs_match
@@ -795,8 +799,10 @@ class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
     def forms_valid(self, form, attribute_option_formset):
         form.save()
         attribute_option_formset.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+        if self.is_popup:
+            return self.popup_response(form.instance)
+        else:
+            return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, attribute_option_formset):
         messages.error(self.request,
@@ -839,8 +845,7 @@ class AttributeOptionGroupCreateView(PopUpWindowCreateMixin, AttributeOptionGrou
         return _("Add a new Attribute Option Group")
 
     def get_success_url(self):
-        if not self.is_popup:
-            messages.info(self.request, _("Attribute Option Group created successfully"))
+        self.add_success_message(_("Attribute Option Group created successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
@@ -857,8 +862,7 @@ class AttributeOptionGroupUpdateView(PopUpWindowUpdateMixin, AttributeOptionGrou
         return _("Update Attribute Option Group '%s'") % self.object.name
 
     def get_success_url(self):
-        if not self.is_popup:
-            messages.info(self.request, _("Attribute Option Group updated successfully"))
+        self.add_success_message(_("Attribute Option Group updated successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
@@ -911,7 +915,104 @@ class AttributeOptionGroupDeleteView(PopUpWindowDeleteMixin, generic.DeleteView)
         return "?".join(url_parts)
 
     def get_success_url(self):
-        if not self.is_popup:
-            messages.info(self.request, _("Attribute Option Group deleted successfully"))
+        self.add_success_message(_("Attribute Option Group deleted successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
+
+
+class OptionListView(SingleTableView):
+
+    template_name = 'dashboard/catalogue/option_list.html'
+    model = Option
+    table_class = OptionTable
+    context_table_name = 'options'
+
+
+class OptionCreateUpdateView(generic.UpdateView):
+
+    template_name = 'dashboard/catalogue/option_form.html'
+    model = Option
+    form_class = OptionForm
+
+    def form_valid(self, form):
+        self.object = form.save()
+        if self.is_popup:
+            return self.popup_response(form.instance)
+        else:
+            return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['title'] = self.get_title()
+        return ctx
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            _("Your submitted data was not valid - please correct the errors below")
+        )
+        return super().form_invalid(form)
+
+
+class OptionCreateView(PopUpWindowCreateMixin, OptionCreateUpdateView):
+
+    creating = True
+
+    def get_object(self):
+        return None
+
+    def get_title(self):
+        return _("Add a new Option")
+
+    def get_success_url(self):
+        self.add_success_message(_("Option created successfully"))
+        return reverse("dashboard:catalogue-option-list")
+
+
+class OptionUpdateView(PopUpWindowUpdateMixin, OptionCreateUpdateView):
+
+    creating = False
+
+    def get_object(self):
+        attribute_option_group = get_object_or_404(Option, pk=self.kwargs['pk'])
+        return attribute_option_group
+
+    def get_title(self):
+        return _("Update Option '%s'") % self.object.name
+
+    def get_success_url(self):
+        self.add_success_message(_("Option updated successfully"))
+        return reverse("dashboard:catalogue-option-list")
+
+
+class OptionDeleteView(PopUpWindowDeleteMixin, generic.DeleteView):
+
+    template_name = 'dashboard/catalogue/option_delete.html'
+    model = Option
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+
+        ctx['title'] = _("Delete Option '%s'") % self.object.name
+
+        products = self.object.product_set.count()
+        product_classes = self.object.productclass_set.count()
+        if any([products, product_classes]):
+            ctx['disallow'] = True
+            ctx['title'] = _("Unable to delete '%s'") % self.object.name
+            if products:
+                messages.error(
+                    self.request,
+                    _("%i products are still assigned to this option") % products
+                )
+            if product_classes:
+                messages.error(
+                    self.request,
+                    _("%i product classes are still assigned to this option") % product_classes
+                )
+
+        return ctx
+
+    def get_success_url(self):
+        self.add_success_message(_("Option deleted successfully"))
+        return reverse("dashboard:catalogue-option-list")

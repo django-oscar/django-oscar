@@ -200,13 +200,13 @@ class AbstractOrder(models.Model):
 
     @property
     def total_before_discounts_incl_tax(self):
-        return (self.basket_total_before_discounts_incl_tax +
-                self.shipping_incl_tax)
+        return (self.basket_total_before_discounts_incl_tax
+                + self.shipping_incl_tax)
 
     @property
     def total_before_discounts_excl_tax(self):
-        return (self.basket_total_before_discounts_excl_tax +
-                self.shipping_excl_tax)
+        return (self.basket_total_before_discounts_excl_tax
+                + self.shipping_excl_tax)
 
     @property
     def total_discount_incl_tax(self):
@@ -445,7 +445,7 @@ class AbstractOrderStatusChange(models.Model):
     )
     old_status = models.CharField(_('Old Status'), max_length=100, blank=True)
     new_status = models.CharField(_('New Status'), max_length=100, blank=True)
-    date_created = models.DateTimeField(_('Date Created'), auto_now_add=True)
+    date_created = models.DateTimeField(_('Date Created'), auto_now_add=True, db_index=True)
 
     class Meta:
         abstract = True
@@ -474,7 +474,7 @@ class AbstractCommunicationEvent(models.Model):
         'customer.CommunicationEventType',
         on_delete=models.CASCADE,
         verbose_name=_("Event Type"))
-    date_created = models.DateTimeField(_("Date"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date"), auto_now_add=True, db_index=True)
 
     class Meta:
         abstract = True
@@ -951,7 +951,7 @@ class AbstractPaymentEvent(models.Model):
         null=True,
         on_delete=models.CASCADE,
         related_name='payment_events')
-    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True, db_index=True)
 
     class Meta:
         abstract = True
@@ -1014,7 +1014,7 @@ class AbstractShippingEvent(models.Model):
         _("Event notes"), blank=True,
         help_text=_("This could be the dispatch reference, or a "
                     "tracking number"))
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True, db_index=True)
 
     class Meta:
         abstract = True

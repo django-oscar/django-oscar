@@ -3,7 +3,7 @@ from django.core import exceptions
 from django.utils.translation import gettext_lazy as _
 from treebeard.forms import movenodeform_factory
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_model, get_classes
 from oscar.core.utils import slugify
 from oscar.forms.widgets import DateTimePickerInput, ImageInput
 
@@ -17,9 +17,12 @@ ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 AttributeOption = get_model('catalogue', 'AttributeOption')
+Option = get_model('catalogue', 'Option')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
-RelatedFieldWidgetWrapper = get_class('dashboard.widgets',
-                                      'RelatedFieldWidgetWrapper')
+(RelatedFieldWidgetWrapper,
+ RelatedMultipleFieldWidgetWrapper) = get_classes('dashboard.widgets',
+                                                  ('RelatedFieldWidgetWrapper',
+                                                   'RelatedMultipleFieldWidgetWrapper'))
 
 CategoryForm = movenodeform_factory(
     Category,
@@ -330,6 +333,12 @@ class ProductRecommendationForm(forms.ModelForm):
 
 class ProductClassForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        remote_field = self._meta.model._meta.get_field('options').remote_field
+        self.fields["options"].widget = RelatedMultipleFieldWidgetWrapper(
+            self.fields["options"].widget, remote_field)
+
     class Meta:
         model = ProductClass
         fields = ['name', 'requires_shipping', 'track_stock', 'options']
@@ -376,3 +385,10 @@ class AttributeOptionForm(forms.ModelForm):
     class Meta:
         model = AttributeOption
         fields = ['option']
+
+
+class OptionForm(forms.ModelForm):
+
+    class Meta:
+        model = Option
+        fields = ['name', 'type']

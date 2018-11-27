@@ -39,7 +39,7 @@ class AbstractTransaction(models.Model):
     amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12)
     reference = models.CharField(_("Reference"), max_length=128, blank=True)
     status = models.CharField(_("Status"), max_length=128, blank=True)
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True, db_index=True)
 
     def __str__(self):
         return _("%(type)s of %(amount).2f") % {
@@ -187,8 +187,8 @@ class AbstractSource(models.Model):
         """
         Return the balance of this source
         """
-        return (self.amount_allocated - self.amount_debited +
-                self.amount_refunded)
+        return (self.amount_allocated - self.amount_debited
+                + self.amount_refunded)
 
     @property
     def amount_available_for_refund(self):

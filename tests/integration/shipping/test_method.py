@@ -50,8 +50,8 @@ class TestNoShippingRequired(TestCase):
         self.assertEqual(D('0.00'), self.charge.excl_tax)
 
     def test_has_a_different_code_to_free(self):
-        self.assertTrue(methods.NoShippingRequired.code !=
-                        methods.Free.code)
+        self.assertTrue(methods.NoShippingRequired.code
+                        != methods.Free.code)
 
 
 class TestFixedPriceShippingWithoutTax(TestCase):

@@ -1,0 +1,98 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block navbar %}
+{% if not is_popup %}
+    {{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block dashboard_nav %}
+{% if not is_popup %}
+    {{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+{% if not is_popup %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:catalogue-option-list' %}">{% trans "Options" %}</a>
+        </li>
+        <li class="active">{{ title }}</li>
+    </ul>
+{% endif %}
+{% endblock %}
+
+{% block headertext %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+    <form class="form-stacked wysiwyg fixed-actions" method="post" data-behaviour="affix-nav-errors">
+        {% csrf_token %}
+
+        <div class="row">
+            {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="{{ is_popup }}" />{% endif %}
+            {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}" />{% endif %}
+            <div class="col-md-12">
+                <div class="tab-content">
+                    {% block option_details %}
+                        <div class="tab-pane active" id="option_details">
+                            <div class="table-header">
+                                <h3>{% trans "Option details" %}</h3>
+                            </div>
+                            <div class="well option-details">
+
+                                {% comment %}
+                                    If the Option form has field_errors, partials/form_fields.html
+                                    will render an error message.
+                                    This means that there'll be 2 error messages,
+                                    one from the partial and one from the view. Perhaps there should be
+                                    an option allowing hiding of the error message in the template.
+                                    For now we copy paste what we need from the template.
+                                {% endcomment %}
+
+                                {% if form.non_field_errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <div class="alert alert-error control-group error">
+                                            <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                {% for field in form %}
+                                    {% include 'dashboard/partials/form_field.html' with field=field %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% block fixed_actions_group %}
+            <div class="fixed-actions-group">
+                <div class="form-actions">
+                    <div class="pull-right">
+                        <a href="#" {% if not is_popup %}onclick="window.history.go(-1);return false"{% else %}onclick="window.close();return false;"{% endif %}>
+                            {% trans "Cancel" %}
+                        </a>
+                        {% trans "or" %}
+                        <button class="btn btn-large btn-primary" type="submit">
+                            {% trans "Save" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endblock fixed_actions_group %}
+    </form>
+
+{% endblock dashboard_content %}
