@@ -9,7 +9,16 @@ from django.utils.timezone import utc
 from oscar.apps.voucher.models import Voucher
 from oscar.core.compat import get_user_model
 from oscar.test.factories import (
-    OrderFactory, UserFactory, VoucherFactory, VoucherSetFactory)
+    ConditionFactory,
+    create_basket,
+    create_offer,
+    create_product,
+    OrderFactory,
+    RangeFactory,
+    UserFactory,
+    VoucherFactory,
+    VoucherSetFactory
+)
 
 
 START_DATETIME = datetime.datetime(2011, 1, 1).replace(tzinfo=utc)
@@ -96,6 +105,26 @@ class TestOncePerCustomerVoucher(TestCase):
             self.voucher.record_usage(order, user)
             is_voucher_available_to_user, __ = self.voucher.is_available_to_user(user=user)
             self.assertFalse(is_voucher_available_to_user)
+
+
+class TestAvailableForBasket(TestCase):
+
+    def setUp(self):
+        self.basket = create_basket(empty=True)
+        self.product = create_product(price=100)
+        range = RangeFactory(products=[self.product])
+        condition = ConditionFactory(range=range, value=2)
+        self.voucher = VoucherFactory()
+        self.voucher.offers.add(create_offer(offer_type='Voucher', range=range, condition=condition))
+
+    def test_is_available_for_basket(self):
+        self.basket.add_product(product=self.product)
+        is_voucher_available_for_basket, __ = self.voucher.is_available_for_basket(self.basket)
+        self.assertFalse(is_voucher_available_for_basket)
+
+        self.basket.add_product(product=self.product)
+        is_voucher_available_for_basket, __ = self.voucher.is_available_for_basket(self.basket)
+        self.assertTrue(is_voucher_available_for_basket)
 
 
 @pytest.mark.django_db
