@@ -51,7 +51,7 @@ class TestCategory(TestCase):
         category = self.products.add_child(name="Fromages français")
         absolute_url = category.get_absolute_url()
         url = cache.get(category.get_url_cache_key())
-        self.assertEqual(url, '/catalogue/category/products/fromages-fran%C3%A7ais_{}/'.format(category.pk))
+        self.assertEqual(url, 'products/fromages-français')
         self.assertEqual(absolute_url, '/catalogue/category/products/fromages-fran%C3%A7ais_{}/'.format(category.pk))
 
 
@@ -222,6 +222,7 @@ class TestCategoryTemplateTags(TestCase):
         """
         annotated_list = get_annotated_list(depth, parent)
         names = [category.name for category, __ in annotated_list]
+
         names_set = set(names)
         # We return a set to ease testing, but need to be sure we're not
         # losing any duplicates through that conversion.
