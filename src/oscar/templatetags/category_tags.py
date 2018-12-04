@@ -86,14 +86,15 @@ def get_annotated_list(depth=None, parent=None):
     else:
         categories = Category.get_tree()
 
+    if max_depth is not None:
+        categories = categories.filter(depth__lte=max_depth)
+
     info = CheapCategoryInfo(parent, url="")
 
     for node in categories:
         node_depth = node.get_depth()
         if start_depth is None:
             start_depth = node_depth
-        if max_depth is not None and node_depth > max_depth:
-            continue
 
         # Update previous node's info
         if prev_depth is None or node_depth > prev_depth:
