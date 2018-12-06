@@ -1,3 +1,4 @@
+# pylint: disable=arguments-differ,too-many-function-args
 from django.db.models import sql
 
 
