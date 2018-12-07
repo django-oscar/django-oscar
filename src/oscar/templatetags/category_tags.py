@@ -50,6 +50,10 @@ class CheapCategoryInfo(with_metaclass(CategoryFieldPassThroughMetaClass, dict))
         super(CheapCategoryInfo, self).__init__(info)
         self.category = category
 
+    @property
+    def pk(self):
+        return self.category.pk
+
     def get_absolute_url(self):
         return self["url"]
 
