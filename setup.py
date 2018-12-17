@@ -58,10 +58,10 @@ test_requires = [
     'django-webtest==1.9.2',
     'py>=1.4.31',
     'psycopg2>=2.7,<2.8',
-    'pytest>=3.5,<3.6',
-    'pytest-cov==2.5.1',
-    'pytest-django==3.1.2',
-    'pytest-xdist>=1.22<1.23',
+    'pytest>=4.0,<4.1',
+    'pytest-cov==2.6.0',
+    'pytest-django==3.4.4',
+    'pytest-xdist>=1.25,<1.26',
     'tox>=3.0,<3.1',
 ]
 
