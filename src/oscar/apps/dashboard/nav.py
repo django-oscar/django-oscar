@@ -1,10 +1,14 @@
+import inspect
 import logging
-import re
+import sys
+from collections import OrderedDict
 
+from django.apps import apps
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch, resolve, reverse
 
-from oscar.core.loading import AppNotFoundError, get_class
+from oscar.core.application import OscarDashboardConfig
+from oscar.core.exceptions import AppNotFoundError
 from oscar.views.decorators import check_permissions
 
 logger = logging.getLogger('oscar.dashboard')
@@ -58,22 +62,18 @@ class Node(object):
         return len(self.children) > 0
 
 
-def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
+def default_access_fn(user, url_name, url_args=None, url_kwargs=None):  # noqa C901 too complex
     """
     Given a url_name and a user, this function tries to assess whether the
     user has the right to access the URL.
-    The application instance of the view is fetched via dynamic imports,
-    and those assumptions will only hold true if the standard Oscar layout
-    is followed.
+    The application instance of the view is fetched via the Django app
+    registry.
     Once the permissions for the view are known, the access logic used
     by the dashboard decorator is evaluated
 
     This function might seem costly, but a simple comparison with DTT
     did not show any change in response time
     """
-    exception = ImproperlyConfigured(
-        "Please follow Oscar's default dashboard app layout or set a "
-        "custom access_fn")
     if url_name is None:  # it's a heading
         return True
 
@@ -89,26 +89,51 @@ def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
 
     view_module = resolve(url).func.__module__
 
-    # We can't assume that the view has the same parent module as the app,
-    # as either the app or view can be customised. So we turn the module
-    # string (e.g. 'oscar.apps.dashboard.catalogue.views') into an app
-    # label that can be loaded by get_class (e.g.
-    # 'dashboard.catalogue.app), which then essentially checks
-    # INSTALLED_APPS for the right module to load
-    match = re.search(r'(dashboard[\w\.]*)\.views$', view_module)
-    if not match:
-        raise exception
-    app_label_str = match.groups()[0] + '.app'
-
-    try:
-        app_instance = get_class(app_label_str, 'application')
-    except AppNotFoundError:
-        raise exception
+    # We can't assume that the view has the same parent module as the app
+    # config, as either the app config or view can be customised. So we first
+    # look it up in the app registry using "get_containing_app_config", and if
+    # it isn't found, then we walk up the package tree, looking for an
+    # OscarDashboardConfig class, from which we get an app label, and use that
+    # to look it up again in the app registry using "get_app_config".
+    app_config_instance = apps.get_containing_app_config(view_module)
+    if app_config_instance is None:
+        try:
+            app_config_class = get_app_config_class(view_module)
+        except AppNotFoundError:
+            raise ImproperlyConfigured(
+                "Please provide an OscarDashboardConfig subclass in the apps "
+                "module or set a custom access_fn")
+        if hasattr(app_config_class, 'label'):
+            app_label = app_config_class.label
+        else:
+            app_label = app_config_class.name.rpartition('.')[2]
+        try:
+            app_config_instance = apps.get_app_config(app_label)
+        except LookupError:
+            raise AppNotFoundError(
+                "Couldn't find an app with the label %s" % app_label)
+        if not isinstance(app_config_instance, OscarDashboardConfig):
+            raise AppNotFoundError(
+                "Couldn't find an Oscar Dashboard app with the label %s" % app_label)
 
     # handle name-spaced view names
     if ':' in url_name:
         view_name = url_name.split(':')[1]
     else:
         view_name = url_name
-    permissions = app_instance.get_permissions(view_name)
+    permissions = app_config_instance.get_permissions(view_name)
     return check_permissions(user, permissions)
+
+
+def get_app_config_class(module_name):
+    apps_module_name = module_name.rpartition('.')[0] + '.apps'
+    if apps_module_name in sys.modules:
+        oscar_dashboard_config_classes = []
+        apps_module_classes = inspect.getmembers(sys.modules[apps_module_name], inspect.isclass)
+        for klass in OrderedDict(apps_module_classes).values():
+            if issubclass(klass, OscarDashboardConfig):
+                oscar_dashboard_config_classes.append(klass)
+        if oscar_dashboard_config_classes:
+            return oscar_dashboard_config_classes[-1]
+    raise AppNotFoundError(
+        "Couldn't find an app to import %s from" % module_name)

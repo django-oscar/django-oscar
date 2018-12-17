@@ -1,2 +1,2 @@
 default_app_config = (
-    'oscar.apps.dashboard.shipping.config.ShippingDashboardConfig')
+    'oscar.apps.dashboard.shipping.apps.ShippingDashboardConfig')

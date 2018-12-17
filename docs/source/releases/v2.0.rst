@@ -166,6 +166,96 @@ Backwards incompatible changes in Oscar 2.0
   of redirecting to the parent product, set
   ``oscar.apps.catalogue.views.ProductDetailView.enforce_parent`` to ``False``.
 
+- Renamed the modules containing the Django app config classes for Oscar apps
+  (apart from the ``oscar`` app), from ``config`` to ``apps``.
+
+- Removed the ``app`` modules of Oscar apps, moving the configs (related to
+  permissions, URLconfs, and feature hiding) they contained into the apps'
+  Django app config classes. They include the following attributes: ``name``
+  (since renamed ``namespace``), ``login_url``, ``hidable_feature_name``,
+  ``permissions_map``, and ``default_permissions``; methods:
+  :meth:``get_urls``, :meth:``post_process_urls``, :meth:``get_permissions``,
+  :meth:``get_url_decorator``, and :meth:``urls``; and their respective view
+  classes. The composite config classes for normal Oscar apps are subclasses of
+  ``oscar.core.application.OscarConfig`` (previously
+  ``oscar.core.application.Application``), and for Oscar Dashboard apps
+  ``oscar.core.application.OscarDashboardConfig`` (previously
+  ``oscar.core.application.DashboardApplication``).
+
+- Removed the ``application`` variable, which previously held an Oscar app
+  config instance, from the Oscar app config module. A single Django/Oscar app
+  config instance is now registered in the Django app registry, for each app
+  label. It should be obtained by looking it up in the Django app registry.
+
+- Changed the values returned by the Oscar app config ``urls`` property. It now
+  returns a tuple containing the list of URL patterns, the app namespace (which
+  could previously be None, but not any more), and the instance namespace
+  (which would previously be overiden by the app namespace, if left blank, but
+  must now be explicitly set). To include URLs with an instance namespace, use
+  the form ``app_config.urls``, and to include URLs without an instance
+  namespace, use the form ``django.conf.urls.include(app_config.urls[0])``.
+
+- Removed :meth:``oscar.get_core_apps``. Overridding apps is now done by
+  replacing the Oscar app entry in the ``INSTALLED_APPS`` setting with that of
+  the forked app.
+
+- Changed the calling signature for the ``oscar_fork_app`` management command.
+  The ``app_label`` argument is the Django app label of the app to be forked.
+  ``target_path`` is the directory into which the new app shall be copied.
+  ``new_app_subpackage`` is the optional dotted path to the subpackage of the
+  new app, from which, together with the ``target_path``, the full Python path
+  to the app will be derived. If a ``new_app_subpackage`` is omitted, then the
+  subpackage of the app being forked will be used instead.
+
+Migrating forked apps
+~~~~~~~~~~~~~~~~~~~~~
+
+- For each forked app:
+  - Rename the module that contains the Django app config class, from
+    ``config.py`` to ``apps.py``.
+  - Change the ``default_app_config`` variable in the ``__.init__.py`` module to
+    point to the new Django app config class.
+  - Change the Django app config class's inheritance base class to the one in
+    the parent app's ``apps`` module (it should be a
+    ``oscar.core.application.OscarConfig`` or
+    ``oscar.core.application.OscarDashboardConfig`` subclass).
+  - Move the Oscar app configs from the ``oscar.core.application.Application``
+    or ``oscar.core.application.DashboardApplication`` subclass in its
+    ``app.py`` module, to the corresponding
+    ``oscar.core.application.OscarConfig`` or
+    ``oscar.core.application.OscarDashboardConfig`` subclass in the ``apps.py``
+    module.
+    - These include the following overridden attributes:
+      - Rename ``name`` to ``namespace``
+      - ``login_url``
+      - ``hidable_feature_name``
+      - ``permissions_map``
+      - ``default_permissions``
+    - These include the following overridden methods:
+      - :meth:``get_urls``
+      - :meth:``post_process_urls``
+      - :meth:``get_permissions``
+      - :meth:``get_url_decorator``
+      - :meth:``urls``
+  - For URLconfs that include Oscar app URLs (e.g. in the ``dashboard`` app):
+    - Obtain the app's Django/Oscar app config instance from the Django app
+      registry, instead of from the app's previous config module's (``app.py``)
+      ``application`` variable.
+    - If the to-be-included URLs have an instance namespace, use the form
+      ``app_config.urls``, which passes in the list of URL patterns, the app
+      namespace, and the instance namespace.
+    - If the to-be-included URLs do not have an instance namespace, use the
+      form ``include(app_config.urls[0])``, which only passes in the list of
+      URL patterns.
+
+- For the main app's URLconf:
+  - Obtain the ``oscar`` app's Django/Oscar app config instance from the Django
+    app registry, instead of from the previous config module's (``config.py``)
+    ``application`` variable.
+  - Include the ``oscar`` app's URLs using the form
+    ``include(app_config.urls[0])``, to only pass in the list of URL patterns,
+    and not an app or instance namespace.
+
 Dependency changes
 ------------------
 

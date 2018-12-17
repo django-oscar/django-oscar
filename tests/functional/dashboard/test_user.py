@@ -1,5 +1,5 @@
 from django.core import mail
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from webtest import AppError
 
@@ -103,7 +103,7 @@ class TestDetailViewForStaffUser(WebTestCase):
 
 class SearchTests(WebTestCase):
     is_staff = True
-    url = reverse('dashboard:users-index')
+    url = reverse_lazy('dashboard:users-index')
 
     def setUp(self):
         UserFactory(

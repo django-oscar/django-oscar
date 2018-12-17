@@ -18,9 +18,8 @@ is replaced by::
 
     Repository = get_class('shipping.repository', 'Repository')
 
-.. note:: This is done for almost all classes: views, models, Application
-          instances, etc. Every class imported by ``get_class`` can be
-          overridden.
+.. note:: This is done for almost all classes: views, models, etc. Every class
+          imported by ``get_class`` can be overridden.
 
 Why?
 ----

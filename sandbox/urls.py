@@ -1,11 +1,11 @@
 import django
+from django.apps import apps
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps import views
-from oscar.app import application
 from oscar.views import handler403, handler404, handler500
 
 from apps.gateway import urls as gateway_urls
@@ -34,7 +34,7 @@ urlpatterns += i18n_patterns(
     # Custom functionality to allow dashboard users to be created
     url(r'gateway/', include(gateway_urls)),
     # Oscar's normal URLs
-    url(r'^', application.urls),
+    url(r'^', include(apps.get_app_config('oscar').urls[0])),
 )
 
 if settings.DEBUG:

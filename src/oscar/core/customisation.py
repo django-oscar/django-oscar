@@ -1,10 +1,11 @@
 import logging
 import os
 import shutil
-import textwrap
-from os.path import exists, join
+from os.path import dirname, exists, join
 
-import oscar
+from django.apps import apps
+
+from oscar.core.application import OscarConfig
 
 
 def create_local_app_folder(local_app_path):
@@ -29,106 +30,105 @@ def subfolders(path):
     folders = []
     while path not in ('/', ''):
         folders.append(path)
-        path = os.path.dirname(path)
+        path = dirname(path)
     folders.reverse()
     return folders
 
 
-def inherit_app_config(local_app_path, app_package, app_label):
-    if 'dashboard' in app_label and app_label != 'dashboard':
-        config_name = '%sDashboardConfig' % app_label.split('.').pop().title()
-    elif app_label == 'catalogue.reviews':
-        # This embedded app needs special handling
-        config_name = 'CatalogueReviewsConfig'
-    else:
-        config_name = app_label.title() + 'Config'
+def inherit_app_config(local_app_folder_path, local_app_name, app_config):
     create_file(
-        join(local_app_path, '__init__.py'),
-        "default_app_config = '{app_package}.config.{config_name}'\n".format(
-            app_package=app_package, config_name=config_name))
-    create_file(
-        join(local_app_path, 'config.py'),
-        "from oscar.apps.{app_label} import config\n\n\n"
-        "class {config_name}(config.{config_name}):\n"
-        "    name = '{app_package}'\n".format(
-            app_package=app_package,
-            app_label=app_label,
-            config_name=config_name))
+        join(local_app_folder_path, 'apps.py'),
+        "import {app_config_class_module} as apps\n\n\n"
+        "class {app_config_class_name}(apps.{app_config_class_name}):\n"
+        "    label = '{app_label}'\n"
+        "    name = '{app_name}'\n"
+        "    verbose_name = '{app_verbose_name}'\n".format(
+            app_config_class_module=app_config.__module__,
+            app_config_class_name=app_config.__class__.__name__,
+            app_label=app_config.label,
+            app_name=local_app_name,
+            app_verbose_name=app_config.verbose_name))
 
 
-def fork_app(label, folder_path, logger=None):
+def fork_app(label, local_folder_path, local_app_subpackage=None, logger=None):
     """
-    Create a custom version of one of Oscar's apps
+    Create a custom version of one of Oscar's apps.
 
-    The first argument isn't strictly an app label as we allow things like
-    'catalogue' or 'dashboard.ranges'.
+    The first argument is the app label of the Oscar app to fork.
+
+    The second argument is a folder path, for where to copy the forked app.
+
+    The third optional argument is the subpackage (inside the local folder path
+    package) for the new app.
     """
     if logger is None:
         logger = logging.getLogger(__name__)
 
     # Check label is valid
-    valid_labels = [x.replace('oscar.apps.', '') for x in oscar.OSCAR_CORE_APPS
-                    if x.startswith('oscar')]
-    if label not in valid_labels:
-        raise ValueError("There is no Oscar app that matches '%s'" % label)
+    try:
+        app_config = apps.get_app_config(label)
+    except LookupError:
+        raise ValueError("There is no app with the label '{}'".format(label))
+    else:
+        if not isinstance(app_config, OscarConfig):
+            raise ValueError("There is no Oscar app with the label '{}'".format(label))
 
-    # Check folder_path is current catalog
-    if folder_path == '.':
-        folder_path = ''
+    # Check local_folder_path is current folder
+    if local_folder_path == '.':
+        local_folder_path = ''
+
+    local_apps_package = local_folder_path.replace('/', '.')
+    if local_app_subpackage is None:
+        local_app_subpackage = app_config.name.replace('oscar.apps.', '')
+        # In case this is a fork of a fork
+        local_app_subpackage = local_app_subpackage.replace(local_apps_package, '')
 
     # Create folder
-    label_folder = label.replace('.', '/')  # eg 'dashboard/ranges'
-    local_app_path = join(folder_path, label_folder)
-    logger.info("Creating package %s" % local_app_path)
-    create_local_app_folder(local_app_path)
+    local_app_subfolder_path = local_app_subpackage.replace('.', '/')  # eg 'dashboard/ranges'
+    local_app_folder_path = join(local_folder_path, local_app_subfolder_path)
+    logger.info("Creating package {}".format(local_app_folder_path))
+    create_local_app_folder(local_app_folder_path)
 
     # Create minimum app files
-    app_package = local_app_path.replace('/', '.')
+    app_folder_path = app_config.path
 
-    oscar_app_path = join(oscar.__path__[0], 'apps', label_folder)
-    if exists(os.path.join(oscar_app_path, 'admin.py')):
+    if exists(join(app_folder_path, 'admin.py')):
         logger.info("Creating admin.py")
-        create_file(join(local_app_path, 'admin.py'),
-                    "from oscar.apps.%s.admin import *  # noqa\n" % label)
+        create_file(
+            join(local_app_folder_path, 'admin.py'),
+            "from {app_name}.admin import *  # noqa\n".format(
+                app_name=app_config.name))
 
     logger.info("Creating app config")
-    inherit_app_config(local_app_path, app_package, label)
+    local_app_name = local_apps_package + '.' + local_app_subpackage
+    inherit_app_config(local_app_folder_path, local_app_name, app_config)
 
-    # Only create models.py and migrations if it exists in the Oscar app
-    oscar_models_path = join(oscar_app_path, 'models.py')
-    if exists(oscar_models_path):
+    # Only create models.py and migrations if they exist in the Oscar app
+    models_file_path = join(app_folder_path, 'models.py')
+    if exists(models_file_path):
         logger.info("Creating models.py")
         create_file(
-            join(local_app_path, 'models.py'),
-            "from oscar.apps.%s.models import *  # noqa isort:skip\n" % label)
+            join(local_app_folder_path, 'models.py'),
+            "from {app_name}.models import *  # noqa isort:skip\n".format(
+                app_name=app_config.name))
 
-        migrations_path = 'migrations'
-        source = join(oscar_app_path, migrations_path)
-        if exists(source):
-            logger.info("Creating %s folder", migrations_path)
-            destination = join(local_app_path, migrations_path)
-            shutil.copytree(source, destination)
+        migrations_subfolder_path = 'migrations'
+        migrations_folder_path = join(app_folder_path, migrations_subfolder_path)
+        if exists(migrations_folder_path):
+            logger.info("Creating %s folder", migrations_subfolder_path)
+            local_migrations_folder_path = join(local_app_folder_path, migrations_subfolder_path)
+            shutil.copytree(migrations_folder_path, local_migrations_folder_path)
 
     # Final step needs to be done by hand
-    msg = (
-        "The final step is to add '%s' to INSTALLED_APPS "
-        "(replacing the equivalent Oscar app). This can be "
-        "achieved using Oscar's get_core_apps function - e.g.:"
-    ) % app_package
-    snippet = (
-        "  # settings.py\n"
-        "  ...\n"
-        "  INSTALLED_APPS = [\n"
-        "      'django.contrib.auth',\n"
-        "      ...\n"
-        "  ]\n"
-        "  from oscar import get_core_apps\n"
-        "  INSTALLED_APPS = INSTALLED_APPS + get_core_apps(\n"
-        "      ['%s'])"
-    ) % app_package
-    record = "\n%s\n\n%s" % (
-        "\n".join(textwrap.wrap(msg)), snippet)
-    logger.info(record)
+    app_config_class_path = "{class_module}.{class_name}".format(
+                            class_module=app_config.__module__,
+                            class_name=app_config.__class__.__name__)
+    local_app_config_class_path = "{local_app_name}.apps.{class_name}".format(
+                                  local_app_name=local_app_name,
+                                  class_name=app_config.__class__.__name__)
+    msg = "Replace the entry '{}' with '{}' in INSTALLED_APPS".format(
+        app_config_class_path, local_app_config_class_path)
+    logger.info(msg)
 
 
 def create_file(filepath, content=''):

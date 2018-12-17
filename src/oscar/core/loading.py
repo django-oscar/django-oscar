@@ -45,7 +45,7 @@ def default_class_loader(module_label, classnames, module_prefix):
     """
     Dynamically import a list of classes from the given module.
 
-    This works by looping over ``INSTALLED_APPS`` and looking for a match
+    This works by looking up a matching app from the app registry,
     against the passed module label.  If the requested class can't be found in
     the matching module, then we attempt to import it from the corresponding
     core app.
@@ -101,15 +101,14 @@ def default_class_loader(module_label, classnames, module_prefix):
     # returns e.g. 'oscar.apps.dashboard.catalogue',
     # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue',
     # depending on what is set in INSTALLED_APPS
-    installed_apps_entry, app_name = _find_installed_apps_entry(module_label)
-    if installed_apps_entry.startswith('%s.' % module_prefix):
+    app_name = _find_registered_app_name(module_label)
+    if app_name.startswith('%s.' % module_prefix):
         # The entry is obviously an Oscar one, we don't import again
         local_module = None
     else:
         # Attempt to import the classes from the local module
         # e.g. 'yourproject.dashboard.catalogue.forms'
-        sub_module = module_label.replace(app_name, '', 1)
-        local_module_label = installed_apps_entry + sub_module
+        local_module_label = '.'.join(app_name.split('.') + module_label.split('.')[1:])
         local_module = _import_module(local_module_label, classnames)
 
     if oscar_module is local_module is None:
@@ -172,42 +171,23 @@ def _pluck_classes(modules, classnames):
     return klasses
 
 
-def _get_installed_apps_entry(app_name):
+def _find_registered_app_name(module_label):
     """
-    Given an app name (e.g. 'catalogue'), walk through INSTALLED_APPS
-    and return the first match, or None.
-    This does depend on the order of INSTALLED_APPS and will break if
-    e.g. 'dashboard.catalogue' comes before 'catalogue' in INSTALLED_APPS.
+    Given a module label, finds the name of the matching Oscar app from the
+    Django app registry.
     """
-    for installed_app in settings.INSTALLED_APPS:
-        # match root-level apps ('catalogue') or apps with same name at end
-        # ('shop.catalogue'), but don't match 'fancy_catalogue'
-        if installed_app == app_name or installed_app.endswith('.' + app_name):
-            return installed_app
-    return None
+    from oscar.core.application import OscarConfig
 
-
-def _find_installed_apps_entry(module_label):
-    """
-    Given a module label, finds the best matching INSTALLED_APPS entry.
-
-    This is made trickier by the fact that we don't know what part of the
-    module_label is part of the INSTALLED_APPS entry. So we try all possible
-    combinations, trying the longer versions first. E.g. for
-    'dashboard.catalogue.forms', 'dashboard.catalogue' is attempted before
-    'dashboard'
-    """
-    modules = module_label.split('.')
-    # if module_label is 'dashboard.catalogue.forms.widgets', combinations
-    # will be ['dashboard.catalogue.forms', 'dashboard.catalogue', 'dashboard']
-    combinations = [
-        '.'.join(modules[:-count]) for count in range(1, len(modules))]
-    for app_name in combinations:
-        entry = _get_installed_apps_entry(app_name)
-        if entry:
-            return entry, app_name
-    raise AppNotFoundError(
-        "Couldn't find an app to import %s from" % module_label)
+    app_label = module_label.split('.')[0]
+    try:
+        app_config = apps.get_app_config(app_label)
+    except LookupError:
+        raise AppNotFoundError(
+            "Couldn't find an app to import %s from" % module_label)
+    if not isinstance(app_config, OscarConfig):
+        raise AppNotFoundError(
+            "Couldn't find an Oscar app to import %s from" % module_label)
+    return app_config.name
 
 
 def get_profile_class():

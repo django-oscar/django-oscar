@@ -1,2 +1,2 @@
 default_app_config = (
-    'oscar.apps.dashboard.vouchers.config.VouchersDashboardConfig')
+    'oscar.apps.dashboard.vouchers.apps.VouchersDashboardConfig')

@@ -62,14 +62,14 @@ runs startup code. You need to make sure that happens.
 
 .. code-block: django
 
-    # yourproject/order/config.py
+    # yourproject/order/apps.py
 
-    from oscar.apps.order import config
+    from oscar.apps.order import apps
 
 
-    class OrderConfig(config.OrderConfig):
+    class OrderConfig(apps.OrderConfig):
         name = 'yourproject.order'
 
     # yourproject/order/__init__.py
 
-    default_app_config = 'yourproject.order.config.OrderConfig'
+    default_app_config = 'yourproject.order.apps.OrderConfig'

@@ -261,22 +261,64 @@ LOGGING = {
 
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.admin',
-    'django.contrib.flatpages',
     'django.contrib.staticfiles',
-    'django.contrib.sitemaps',
-    'django_extensions',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
 
-    # Debug toolbar + extensions
-    'debug_toolbar',
-    'apps.gateway',     # For allowing dashboard access
+    'oscar',
+    'oscar.apps.analytics',
+    'oscar.apps.checkout',
+    'oscar.apps.address',
+    'oscar.apps.shipping',
+    'oscar.apps.catalogue',
+    'oscar.apps.catalogue.reviews',
+    'oscar.apps.partner',
+    'oscar.apps.basket',
+    'oscar.apps.payment',
+    'oscar.apps.offer',
+    'oscar.apps.order',
+    'oscar.apps.customer',
+    'oscar.apps.promotions',
+    'oscar.apps.search',
+    'oscar.apps.voucher',
+    'oscar.apps.wishlists',
+    'oscar.apps.dashboard',
+    'oscar.apps.dashboard.reports',
+    'oscar.apps.dashboard.users',
+    'oscar.apps.dashboard.orders',
+    'oscar.apps.dashboard.promotions',
+    'oscar.apps.dashboard.catalogue',
+    'oscar.apps.dashboard.offers',
+    'oscar.apps.dashboard.partners',
+    'oscar.apps.dashboard.pages',
+    'oscar.apps.dashboard.ranges',
+    'oscar.apps.dashboard.reviews',
+    'oscar.apps.dashboard.vouchers',
+    'oscar.apps.dashboard.communications',
+    'oscar.apps.dashboard.shipping',
+
+    # 3rd-party apps that Oscar depends on
     'widget_tweaks',
-] + oscar.get_core_apps()
+    'haystack',
+    'treebeard',
+    'sorl.thumbnail',
+    'django_tables2',
+
+    # Django apps that the sandbox depends on
+    'django.contrib.sitemaps',
+
+    # 3rd-party apps that the sandbox depends on
+    'django_extensions',
+    'debug_toolbar',
+
+    # For allowing dashboard access
+    'apps.gateway',
+]
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.

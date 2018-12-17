@@ -1,1 +1,1 @@
-default_app_config = 'oscar.apps.payment.config.PaymentConfig'
+default_app_config = 'oscar.apps.payment.apps.PaymentConfig'
