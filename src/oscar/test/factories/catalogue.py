@@ -49,6 +49,7 @@ class CategoryFactory(factory.DjangoModelFactory):
 
 class ProductCategoryFactory(factory.DjangoModelFactory):
     category = factory.SubFactory(CategoryFactory)
+    product = factory.SubFactory(ProductFactory)
 
     class Meta:
         model = get_model('catalogue', 'ProductCategory')

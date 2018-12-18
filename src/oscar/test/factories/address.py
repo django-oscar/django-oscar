@@ -27,7 +27,8 @@ class UserAddressFactory(factory.DjangoModelFactory):
     phone_number = PhoneNumber.from_string('+49 351 3296645')
     country = factory.SubFactory(CountryFactory)
     user = factory.SubFactory(
-        'oscar.test.factories.UserFactory')
+        'oscar.test.factories.UserFactory'
+    )
 
     class Meta:
         model = get_model('address', 'UserAddress')

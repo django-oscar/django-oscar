@@ -4,6 +4,8 @@ import factory
 
 from oscar.core.loading import get_model
 
+from .catalogue import ProductFactory
+
 __all__ = [
     'PartnerFactory', 'StockRecordFactory',
 ]
@@ -28,6 +30,7 @@ class PartnerFactory(factory.DjangoModelFactory):
 class StockRecordFactory(factory.DjangoModelFactory):
     partner = factory.SubFactory(PartnerFactory)
     partner_sku = factory.Sequence(lambda n: 'unit%d' % n)
+    product = factory.SubFactory(ProductFactory)
     price_currency = "GBP"
     price_excl_tax = D('9.99')
     num_in_stock = 100
