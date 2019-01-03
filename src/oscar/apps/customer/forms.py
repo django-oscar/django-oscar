@@ -131,6 +131,18 @@ class EmailUserCreationForm(forms.ModelForm):
         self.host = host
         super().__init__(*args, **kwargs)
 
+    def _post_clean(self):
+        super()._post_clean()
+        password = self.cleaned_data.get('password2')
+        # Validate after self.instance is updated with form data
+        # otherwise validators can't access email
+        # see django.contrib.auth.forms.UserCreationForm
+        if password:
+            try:
+                validate_password(password, self.instance)
+            except forms.ValidationError as error:
+                self.add_error('password2', error)
+
     def clean_email(self):
         """
         Checks for existing users with the supplied email address.
@@ -147,7 +159,6 @@ class EmailUserCreationForm(forms.ModelForm):
         if password1 != password2:
             raise forms.ValidationError(
                 _("The two password fields didn't match."))
-        validate_password(password2, self.instance)
         return password2
 
     def clean_redirect_url(self):
