@@ -1,11 +1,11 @@
 {
   "name": "django-oscar",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "description": "A domain-driven e-commerce framework for Django",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.0",
     "bootstrap-datetime-picker": "^2.4.4",
     "eslint": "^4.19.1",
     "gulp": "^4.0.0",
