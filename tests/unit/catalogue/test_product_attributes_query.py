@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 
 Product = get_model("catalogue", "Product")
 
+
 class ProductAttributeQuerysetTest(TestCase):
     fixtures = ["productattributes"]
 
