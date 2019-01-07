@@ -52,8 +52,12 @@ class AttributeFilter(dict):
             typedict[code].append(attribute_type)
 
         for code, (lookup, value) in self.items():
+            selected_values = self._select_value(typedict[code], lookup, value)
+            if not selected_values:  # if no value clause can be formed, no result can be formed.
+                return queryset.none()
+
             qs = qs.filter(
-                self._select_value(typedict[code], lookup, value),
+                selected_values,
                 attribute_values__attribute__code=code,
             )
 
