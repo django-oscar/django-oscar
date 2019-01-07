@@ -1,12 +1,9 @@
-import unittest
 from django.test import TestCase
 from oscar.core.loading import get_model
-from oscar.apps.catalogue.managers import ENABLE_FILTER_BY_ATTRIBUTES
 from django.core.exceptions import ValidationError
 
 Product = get_model("catalogue", "Product")
 
-@unittest.skipIf(not ENABLE_FILTER_BY_ATTRIBUTES, "This version of django does not support this feature")  # noqa
 class ProductAttributeQuerysetTest(TestCase):
     fixtures = ["productattributes"]
 
