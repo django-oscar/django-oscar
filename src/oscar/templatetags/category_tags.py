@@ -47,7 +47,7 @@ class CheapCategoryInfo(with_metaclass(CategoryFieldPassThroughMetaClass, dict))
     """
 
     def __init__(self, category, **info):
-        super(CheapCategoryInfo, self).__init__(info)
+        super().__init__(info)
         self.category = category
 
     @property
@@ -117,7 +117,7 @@ def get_annotated_list(depth=None, parent=None):
 
         info = CheapCategoryInfo(
             node,
-            url=node.get_absolute_url(tree_slug),
+            url=node._get_absolute_url(tree_slug),
             num_to_close=[],
             level=node_depth - start_depth,
         )
@@ -127,7 +127,7 @@ def get_annotated_list(depth=None, parent=None):
 
     if prev_depth is not None:
         # close last leaf
-        info["num_to_close"] = list(range(0, prev_depth - start_depth))
-        info["has_children"] = prev_depth > prev_depth
+        info['num_to_close'] = list(range(0, prev_depth - start_depth))
+        info['has_children'] = prev_depth > prev_depth
 
     return annotated_categories

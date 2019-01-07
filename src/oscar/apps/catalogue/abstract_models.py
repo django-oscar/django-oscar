@@ -184,7 +184,7 @@ class AbstractCategory(MP_Node):
         cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
         return cache_key
 
-    def get_absolute_url(self, parent_slug=None):
+    def _get_absolute_url(self, parent_slug=None):
         """
         Our URL scheme means we have to look up the category's ancestors. As
         that is a bit more expensive, we cache the generated URL. That is
@@ -196,6 +196,9 @@ class AbstractCategory(MP_Node):
         return reverse('catalogue:category', kwargs={
             'category_slug': self.get_full_slug(parent_slug=parent_slug), 'pk': self.pk
         })
+
+    def get_absolute_url(self):
+        return self._get_absolute_url()
 
     class Meta:
         abstract = True
