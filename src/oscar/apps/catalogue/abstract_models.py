@@ -30,7 +30,6 @@ BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManag
 ProductQuerySet = get_class('catalogue.managers', 'ProductQuerySet')
 ProductAttributesContainer = get_class(
     'catalogue.product_attributes', 'ProductAttributesContainer')
-Selector = get_class('partner.strategy', 'Selector')
 
 
 class AbstractProductClass(models.Model):
