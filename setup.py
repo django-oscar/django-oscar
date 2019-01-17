@@ -18,28 +18,28 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=1.11,<2.2',
+    'django>=1.11',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=4.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
-    'django-extra-views>=0.11,<0.12',
+    'django-extra-views>=0.11',
     # Search support
-    'django-haystack>=2.5.0,<3.0.0',
+    'django-haystack>=2.5.0',
     # Treebeard is used for categories
     'django-treebeard>=4.3.0',
     # Sorl is used as the default thumbnailer
-    'sorl-thumbnail>=12.4.1,<12.5',
+    'sorl-thumbnail>=12.4.1',
     # Babel is used for currency formatting
-    'Babel>=1.0,<3.0',
+    'Babel>=1.0',
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
     'phonenumbers',
-    'django-phonenumber-field>=2.0,<2.1',
+    'django-phonenumber-field>=2.0',
     # Used for oscar.test.newfactories
-    'factory-boy>=2.4.1,<3.0',
+    'factory-boy>=2.4.1',
     # Used for automatically building larger HTML tables
-    'django-tables2>=1.19,<2.0',
+    'django-tables2>=1.19',
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
@@ -70,7 +70,7 @@ with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
         '^.. start-no-pypi.*^.. end-no-pypi', '', fh.read(), flags=re.M | re.S)
 
 setup(
-    name='django-oscar',
+    name='oscar',
     version=get_version().replace(' ', '-'),
     url='https://github.com/django-oscar/django-oscar',
     author="David Winterbottom",
