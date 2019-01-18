@@ -1,0 +1,8 @@
+=========================
+Oscar 1.6.5 release notes
+=========================
+
+:release: 2018-01-18
+
+This is Oscar 1.6.5, a security release that upgrades Bootstrap to version 3.4.0
+to fix various cross-site scripting vulnerabilities present in version 3.3.7.
