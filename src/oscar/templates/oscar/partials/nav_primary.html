@@ -45,8 +45,8 @@
                             <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
                             {% if tree_categories %}
                                 <li class="divider"></li>
-                                {% for tree_category, info in tree_categories %}
-                                    {% if info.has_children %}
+                                {% for tree_category in tree_categories %}
+                                    {% if tree_category.has_children %}
                                         <li class="dropdown-submenu">
                                             <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
                                             <ul class="dropdown-menu">
@@ -54,7 +54,7 @@
                                                 <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
                                             {% endif %}
 
-                                            {% for close in info.num_to_close %}
+                                            {% for close in tree_category.num_to_close %}
                                                 </ul></li>
                                             {% endfor %}
                                 {% endfor %}

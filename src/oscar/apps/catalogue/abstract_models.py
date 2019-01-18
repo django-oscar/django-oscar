@@ -114,6 +114,19 @@ class AbstractCategory(MP_Node):
         names = [category.name for category in self.get_ancestors_and_self()]
         return self._full_name_separator.join(names)
 
+    def get_full_slug(self, parent_slug=None):
+        if self.is_root():
+            return self.slug
+
+        cache_key = self.get_url_cache_key()
+        full_slug = cache.get(cache_key)
+        if full_slug is None:
+            parent_slug = parent_slug if parent_slug is not None else self.get_parent().full_slug
+            full_slug = "%s%s%s" % (parent_slug, self._slug_separator, self.slug)
+            cache.set(cache_key, full_slug)
+
+        return full_slug
+
     @property
     def full_slug(self):
         """
@@ -124,8 +137,7 @@ class AbstractCategory(MP_Node):
         has been re-purposed to only store this category's slug and to not
         include it's ancestors' slugs.
         """
-        slugs = [category.slug for category in self.get_ancestors_and_self()]
-        return self._slug_separator.join(slugs)
+        return self.get_full_slug()
 
     def generate_slug(self):
         """
@@ -153,6 +165,9 @@ class AbstractCategory(MP_Node):
         if you don't want to include the category itself. It's a separate
         function as it's commonly used in templates.
         """
+        if self.is_root():
+            return [self]
+
         return list(self.get_ancestors()) + [self]
 
     def get_descendants_and_self(self):
@@ -168,7 +183,7 @@ class AbstractCategory(MP_Node):
         cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
         return cache_key
 
-    def get_absolute_url(self):
+    def _get_absolute_url(self, parent_slug=None):
         """
         Our URL scheme means we have to look up the category's ancestors. As
         that is a bit more expensive, we cache the generated URL. That is
@@ -177,14 +192,12 @@ class AbstractCategory(MP_Node):
         you change that logic, you'll have to reconsider the caching
         approach.
         """
-        cache_key = self.get_url_cache_key()
-        url = cache.get(cache_key)
-        if not url:
-            url = reverse(
-                'catalogue:category',
-                kwargs={'category_slug': self.full_slug, 'pk': self.pk})
-            cache.set(cache_key, url)
-        return url
+        return reverse('catalogue:category', kwargs={
+            'category_slug': self.get_full_slug(parent_slug=parent_slug), 'pk': self.pk
+        })
+
+    def get_absolute_url(self):
+        return self._get_absolute_url()
 
     class Meta:
         abstract = True
