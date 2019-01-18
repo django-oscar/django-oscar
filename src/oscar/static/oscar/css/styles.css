@@ -3078,12 +3078,12 @@ select[multiple].input-lg {
   margin-bottom: 0;
   font-weight: normal;
   text-align: center;
+  white-space: nowrap;
   vertical-align: middle;
   touch-action: manipulation;
   cursor: pointer;
   background-image: none;
   border: 1px solid transparent;
-  white-space: nowrap;
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
@@ -3110,8 +3110,8 @@ select[multiple].input-lg {
 }
 .btn:active,
 .btn.active {
-  outline: 0;
   background-image: none;
+  outline: 0;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
@@ -3471,8 +3471,8 @@ fieldset[disabled] .btn-danger.focus {
   background-color: #fff;
 }
 .btn-link {
+  font-weight: 400;
   color: #337ab7;
-  font-weight: normal;
   border-radius: 0;
 }
 .btn-link,
@@ -3785,12 +3785,12 @@ tbody.collapse.in {
   outline: 0;
 }
 .btn-group > .btn + .dropdown-toggle {
-  padding-left: 8px;
   padding-right: 8px;
+  padding-left: 8px;
 }
 .btn-group > .btn-lg + .dropdown-toggle {
-  padding-left: 12px;
   padding-right: 12px;
+  padding-left: 12px;
 }
 .btn-group.open .dropdown-toggle {
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
@@ -3863,8 +3863,8 @@ tbody.collapse.in {
 }
 .btn-group-justified > .btn,
 .btn-group-justified > .btn-group {
-  float: none;
   display: table-cell;
+  float: none;
   width: 1%;
 }
 .btn-group-justified > .btn-group .btn {
@@ -4768,9 +4768,9 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   display: inline-block;
 }
 .breadcrumb > li + li:before {
-  content: "/\00a0";
   padding: 0 5px;
   color: #ccc;
+  content: "/\00a0";
 }
 .breadcrumb > .active {
   color: #777777;
@@ -4982,11 +4982,11 @@ a.label:focus {
   padding: 3px 7px;
   font-size: 12px;
   font-weight: bold;
-  color: #fff;
   line-height: 1;
-  vertical-align: middle;
-  white-space: nowrap;
+  color: #fff;
   text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
   background-color: #777777;
   border-radius: 10px;
 }
@@ -7758,12 +7758,12 @@ a .icon-flip-vertical:before {
 }
 .carousel-inner {
   position: relative;
-  overflow: hidden;
   width: 100%;
+  overflow: hidden;
 }
 .carousel-inner > .item {
-  display: none;
   position: relative;
+  display: none;
   -webkit-transition: 0.6s ease-in-out left;
   -o-transition: 0.6s ease-in-out left;
   transition: 0.6s ease-in-out left;
@@ -7838,16 +7838,16 @@ a .icon-flip-vertical:before {
 .carousel-control {
   position: absolute;
   top: 0;
-  left: 0;
   bottom: 0;
+  left: 0;
   width: 15%;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
   font-size: 20px;
   color: #fff;
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   background-color: rgba(0, 0, 0, 0);
+  opacity: 0.5;
+  filter: alpha(opacity=50);
 }
 .carousel-control.left {
   background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
@@ -7857,8 +7857,8 @@ a .icon-flip-vertical:before {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
 }
 .carousel-control.right {
-  left: auto;
   right: 0;
+  left: auto;
   background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
   background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
@@ -7867,9 +7867,9 @@ a .icon-flip-vertical:before {
 }
 .carousel-control:hover,
 .carousel-control:focus {
-  outline: 0;
   color: #fff;
   text-decoration: none;
+  outline: 0;
   opacity: 0.9;
   filter: alpha(opacity=90);
 }
@@ -7879,9 +7879,9 @@ a .icon-flip-vertical:before {
 .carousel-control .glyphicon-chevron-right {
   position: absolute;
   top: 50%;
-  margin-top: -10px;
   z-index: 5;
   display: inline-block;
+  margin-top: -10px;
 }
 .carousel-control .icon-prev,
 .carousel-control .glyphicon-chevron-left {
@@ -7897,14 +7897,14 @@ a .icon-flip-vertical:before {
 .carousel-control .icon-next {
   width: 20px;
   height: 20px;
-  line-height: 1;
   font-family: serif;
+  line-height: 1;
 }
 .carousel-control .icon-prev:before {
-  content: '\2039';
+  content: "\2039";
 }
 .carousel-control .icon-next:before {
-  content: '\203a';
+  content: "\203a";
 }
 .carousel-indicators {
   position: absolute;
@@ -7912,10 +7912,10 @@ a .icon-flip-vertical:before {
   left: 50%;
   z-index: 15;
   width: 60%;
-  margin-left: -30%;
   padding-left: 0;
-  list-style: none;
+  margin-left: -30%;
   text-align: center;
+  list-style: none;
 }
 .carousel-indicators li {
   display: inline-block;
@@ -7923,23 +7923,23 @@ a .icon-flip-vertical:before {
   height: 10px;
   margin: 1px;
   text-indent: -999px;
-  border: 1px solid #fff;
-  border-radius: 10px;
   cursor: pointer;
   background-color: #000 \9;
   background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #fff;
+  border-radius: 10px;
 }
 .carousel-indicators .active {
-  margin: 0;
   width: 12px;
   height: 12px;
+  margin: 0;
   background-color: #fff;
 }
 .carousel-caption {
   position: absolute;
-  left: 15%;
   right: 15%;
   bottom: 20px;
+  left: 15%;
   z-index: 10;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -7969,8 +7969,8 @@ a .icon-flip-vertical:before {
     margin-right: -10px;
   }
   .carousel-caption {
-    left: 20%;
     right: 20%;
+    left: 20%;
     padding-bottom: 30px;
   }
   .carousel-indicators {

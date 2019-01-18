@@ -4002,9 +4002,9 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   display: inline-block;
 }
 .breadcrumb > li + li:before {
-  content: "/\00a0";
   padding: 0 5px;
   color: #ccc;
+  content: "/\00a0";
 }
 .breadcrumb > .active {
   color: #777777;
@@ -4216,11 +4216,11 @@ a.label:focus {
   padding: 3px 7px;
   font-size: 12px;
   font-weight: bold;
-  color: #fff;
   line-height: 1;
-  vertical-align: middle;
-  white-space: nowrap;
+  color: #fff;
   text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
   background-color: #777777;
   border-radius: 10px;
 }
