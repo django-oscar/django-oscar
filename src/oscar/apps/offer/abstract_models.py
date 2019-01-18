@@ -1128,7 +1128,7 @@ class AbstractRangeProductFileUpload(models.Model):
         """
         with open(self.filepath, 'r') as fh:
             for line in fh:
-                for id in re.split('[^\w:\.-]', line):
+                for id in re.split(r'[^\w:\.-]', line):
                     if id:
                         yield id
 

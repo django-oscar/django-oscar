@@ -46,7 +46,7 @@ class User(AbstractUser):
         help_text=_('Required. 30 characters or fewer. Letters, numbers and '
                     '@/./+/-/_ characters'),
         validators=[
-            validators.RegexValidator(re.compile('^[\w.@+-]+$'), _('Enter a valid username.'), 'invalid')
+            validators.RegexValidator(re.compile(r'^[\w.@+-]+$'), _('Enter a valid username.'), 'invalid')
         ])
     extra_field = models.CharField(
         _('Nobody needs me'), max_length=5, blank=True)
