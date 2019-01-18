@@ -155,6 +155,8 @@ Minor changes
 - Added a ``COMPARISON_FIELDS`` constant to ``catalogue.Category`` to restrict
   which fields are fetched from the database when performing category comparison queries.
 
+- Significantly improved the database efficiency of the ``category_tree`` template tag.
+
 .. _incompatible_in_2.0:
 
 Backwards incompatible changes in Oscar 2.0
