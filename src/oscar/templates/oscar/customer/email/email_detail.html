@@ -38,7 +38,7 @@
     $(function() {
         // Sets the HTML email preview so it's css doesn't touch the page.
         var el_preview_html = document.getElementById('preview_box');
-        var html = $(el_preview_html).html();
+        var html = $(el_preview_html).text();
         var doc = el_preview_html.contentWindow.document;
         doc.open();
         doc.write(html);
