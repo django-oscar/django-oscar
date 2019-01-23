@@ -11,6 +11,12 @@
 {% endblock %}
 
 {% block tabcontent %}
+    {% if order.status %}
+    <h2>{% trans 'Status' %}</h2>
+    <p>{{ order.status }}</p>
+    <hr>
+    {% endif %}
+
     <table class="table table-striped table-bordered">
         <thead>
             <tr>

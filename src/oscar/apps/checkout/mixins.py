@@ -310,19 +310,21 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             'lines': order.lines.all()
         }
 
-        if not self.request.user.is_authenticated:
-            # Attempt to add the anon order status URL to the email template
-            # ctx.
-            try:
+        # Attempt to add the order status URL to the email template ctx.
+        try:
+            if self.request.user.is_authenticated:
+                path = reverse('customer:order',
+                               kwargs={'order_number': order.number})
+            else:
                 path = reverse('customer:anon-order',
                                kwargs={'order_number': order.number,
                                        'hash': order.verification_hash()})
-            except NoReverseMatch:
-                # We don't care that much if we can't resolve the URL
-                pass
-            else:
-                site = Site.objects.get_current()
-                ctx['status_url'] = 'http://%s%s' % (site.domain, path)
+        except NoReverseMatch:
+            # We don't care that much if we can't resolve the URL
+            pass
+        else:
+            site = Site.objects.get_current()
+            ctx['status_url'] = 'http://%s%s' % (site.domain, path)
         return ctx
 
     # Basket helpers
