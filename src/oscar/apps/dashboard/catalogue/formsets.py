@@ -8,7 +8,6 @@ from oscar.core.loading import get_classes, get_model
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
-Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
