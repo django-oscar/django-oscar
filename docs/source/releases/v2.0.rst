@@ -157,6 +157,8 @@ Minor changes
 
 - Significantly improved the database efficiency of the ``category_tree`` template tag.
 
+- Order confirmation emails now include an order status link for authenticated users, as well as guest users, and order status is displayed consistently in both logged-in and anonymous order detail views.
+
 .. _incompatible_in_2.0:
 
 Backwards incompatible changes in Oscar 2.0
