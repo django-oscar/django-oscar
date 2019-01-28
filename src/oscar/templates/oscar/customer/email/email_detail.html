@@ -21,10 +21,6 @@
         </tr>
         <tr>
             <th>{% trans 'Body' %}</th>
-            <td><pre>{{ email.body_text }}</pre></td>
-        </tr>
-        <tr>
-            <th>{% trans 'Body HTML' %}</th>
             <td>
                 <iframe id="preview_box" width="100%" height="400">{{ email.body_html|safe }}</iframe>
             </td>
