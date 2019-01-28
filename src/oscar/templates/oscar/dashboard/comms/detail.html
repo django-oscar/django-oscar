@@ -95,7 +95,9 @@
                         </tr>
                         <tr>
                             <th>{% trans "Body HTML" %}</th>
-                            <td>{{ preview.html }}</td>
+                            <td>
+                                <iframe id="preview_box" width="100%" height="400">{{ preview.html }}</iframe>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -109,3 +111,18 @@
     </form>
 
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+{{ block.super }}
+
+$(function() {
+    // Sets the HTML email preview so it's css doesn't touch the page.
+    var el_preview_html = document.getElementById('preview_box');
+    var html = $(el_preview_html).text();
+    var doc = el_preview_html.contentWindow.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+});
+
+{% endblock %}
