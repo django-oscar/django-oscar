@@ -35,7 +35,6 @@ Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
-ProductAlert = get_model('customer', 'ProductAlert')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 User = get_user_model()

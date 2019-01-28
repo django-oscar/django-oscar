@@ -3,10 +3,6 @@ from decimal import Decimal as D
 from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.order import exceptions
-from oscar.core.loading import get_model
-
-ShippingEventQuantity = get_model('order', 'ShippingEventQuantity')
-PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 
 
 class EventHandler(object):

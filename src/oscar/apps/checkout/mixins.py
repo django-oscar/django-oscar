@@ -21,7 +21,6 @@ PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
-UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')

@@ -3,7 +3,6 @@ from django.db.models import F
 from oscar.core.loading import get_model
 
 ProductRecord = get_model('analytics', 'ProductRecord')
-Product = get_model('catalogue', 'Product')
 
 
 class Calculator(object):
