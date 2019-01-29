@@ -117,4 +117,5 @@ any model. For example, you can customise the ``Product`` form in
 
 
 Finally, make sure that you have overridden the dashboard app in your settings:
-``get_core_apps(['apps.dashboard.catalogue']``.
+replace ``'oscar.apps.dashboard.catalogue'`` with ``'apps.dashboard.catalogue'``
+in the ``INSTALLED_APPS`` setting.

@@ -26,7 +26,7 @@ Why?
 
 This structure enables a project to create a local ``shipping.repository``
 module, and optionally subclass the class from
-``oscar.app.shipping.repository``.  When Oscar tries to load the
+``oscar.apps.shipping.repository``.  When Oscar tries to load the
 ``Repository`` class, it will load the one from your local project.
 
 This way, most classes can be overridden with minimal duplication, as only

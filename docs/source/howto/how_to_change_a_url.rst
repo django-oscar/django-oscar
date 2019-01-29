@@ -13,31 +13,37 @@ read it first and ensure that you've:
 * Added it as Django app to ``INSTALLED_APPS``
 * Added a ``models.py`` and ``admin.py``
 
-The application class
----------------------
-
-Each Oscar app comes with an application instance which inherits from
-:class:`oscar.core.application.Application`. They're mainly used to gather
-URLs (with the correct permissions) for each Oscar app. This structure makes
-Oscar apps more modular as each app is responsible for its own URLs. And as
-it is a class, it can be overridden like any other Oscar class; hence making
-it straightforward to change URLs or add new views.
-Each app instance exposes a ``urls`` property, which is used to access the
-list of URLs of an app.
-
-The application tree
+The app config class
 --------------------
 
-Oscar's app instances are organised in a tree structure. The root application
-illustrates this nicely::
+Each Oscar app comes with an app config class which inherits from
+:class:`oscar.core.application.OscarConfig` or
+:class:`oscar.core.application.OscarDashboardConfig`. They're mainly used to
+gather URLs (with the correct permissions) for each Oscar app. This structure
+makes Oscar apps more modular as each app is responsible for its own URLs. And
+as it is a class, it can be overridden like any other Oscar class; hence making
+it straightforward to change URLs or add new views.
+Each app config instance exposes a ``urls`` property, which is used to access
+the list of URLs of an app, together with their application and instance
+namespace.
 
-    # oscar/app.py
-    class Shop(Application):
-        name = None
+The app config tree
+-------------------
 
-        catalogue_app = get_class('catalogue.app', 'application')
-        basket_app = get_class('basket.app', 'application')
-        # ...
+Oscar's app config instances are organised in a tree structure. The root app
+config class illustrates this nicely::
+
+    # oscar/config.py
+    from django.apps import apps
+    from oscar.core.application import OscarConfig
+
+    class Shop(OscarConfig):
+        name = 'oscar'
+
+        def ready(self):
+            self.catalogue_app = apps.get_app_config('catalogue')
+            self.basket_app = apps.get_app_config('basket')
+            # ...
 
         def get_urls(self):
             urls = [
@@ -46,60 +52,71 @@ illustrates this nicely::
                 # ...
             ]
 
-The root app pulls in the URLs from its children. That means to add
-all Oscar URLs to your Django project, you only need to include the ``urls``
-property from the root app::
+The root app config pulls in the URLs from its children. That means to add
+all Oscar URLs to your Django project, you only need to include the list of URLs
+(the first element of the ``urls`` property's value) from the root app config::
 
     # urls.py
-    from oscar.app import application
+    from django.apps import apps
 
     urlpatterns = [
         # Your other URLs
-        url(r'', application.urls),
+        url(r'^', include(apps.get_app_config('oscar').urls[0])),
     ]
 
-Changing sub app
-----------------
+Changing sub apps
+-----------------
 
-Sub-apps such as the ``catalogue`` app are loaded dynamically, just as most
-other classes in Oscar::
+App configs of sub apps such as the ``catalogue`` app are dynamically obtained
+by looking them up in the Django app registry::
 
-    # oscar/app.py
-    class Shop(Application):
-        name = None
+    # oscar/config.py
+    from django.apps import apps
+    from oscar.core.application import OscarConfig
 
-        catalogue_app = get_class('catalogue.app', 'application')
-        customer_app = get_class('customer.app', 'application')
-        # ...
+    class Shop(OscarConfig):
+        name = 'oscar'
 
-That means you just need to create another
-``application`` instance. It will usually inherit from Oscar's version. Say
-you'd want to add another view to the promotions app. You only need to
-create a class called ``PromotionsApplication`` (and usually inherit from
-Oscar's version) and add your view::
+        def ready(self):
+            self.catalogue_app = apps.get_app_config('catalogue')
+            self.customer_app = apps.get_app_config('customer')
+            # ...
 
-    # yourproject/promotions/app.py
+That means you just need to create another app config class. It will usually
+inherit from Oscar's version. Say you'd want to add another view to the
+``promotions`` app. You only need to create a class called ``PromotionsConfig``
+(and usually inherit from Oscar's version) and add your view and its URL
+configuration::
 
-    from oscar.apps.promotions.app import PromotionsApplication as CorePromotionsApplication
+    # yourproject/promotions/apps.py
+
+    from oscar.apps.promotions.apps import PromotionsConfig as CorePromotionsConfig
     from .views import MyExtraView
 
-    class PromotionsApplication(CorePromotionsApplication):
-        extra_view = MyExtraView
+    class PromotionsConfig(CorePromotionsConfig):
+        def ready(self):
+            super().ready()
+            self.extra_view = MyExtraView
 
-    application = PromotionsApplication()
+        def get_urls(self):
+            urls = super().get_urls()
+            urls += [
+                url(r'extra/$', self.extra_view.as_view(), name='extra'),
+            ]
+            return self.post_process_urls(urls)
 
 Changing the root app
 ---------------------
 
-If you want to e.g. change the URL for the catalogue app from ``/catalogue``
-to ``/catalog``, you need to use a custom root app instance
-instead of Oscar's default instance.  Hence, create a subclass of Oscar's main
-``Application`` class and override the ``get_urls`` method::
+If you want to e.g. change the URL for the ``catalogue`` app from ``/catalogue``
+to ``/catalog``, you need to use a custom root app config class,  instead of
+Oscar's default class. Hence, create a subclass of Oscar's main ``OscarConfig``
+class and override the ``get_urls`` method::
 
-    # myproject/app.py
-    from oscar import app
+    # myproject/apps.py
+    from oscar import config
 
-    class MyShop(app.Shop):
+    class MyShop(config.Shop):
         # Override get_urls method
         def get_urls(self):
             urlpatterns = [
@@ -109,17 +126,18 @@ instead of Oscar's default instance.  Hence, create a subclass of Oscar's main
             ]
             return urlpatterns
 
-    application = MyShop()
+    # myproject/__init__.py
+    default_app_config = 'myproject.apps.MyShop'
 
-As the root app is hardcoded in your project's ``urls.py``, you need to modify
-it to use your new application instance instead of Oscar's default::
+As the root app config is hardcoded in your project's ``urls.py``, you need to
+modify it to use your new app config instead of Oscar's default::
 
     # urls.py
-    from myproject.app import application
+    from django.apps import apps
 
     urlpatterns = [
        # Your other URLs
-       url(r'', application.urls),
+       url(r'^', include(apps.get_app_config('myproject').urls[0])),
     ]
 
-All URLs containing ``catalogue`` previously are now displayed as ``catalog``.
+All URLs containing ``/catalogue/`` previously are now displayed as ``/catalog/``.
