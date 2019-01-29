@@ -73,11 +73,14 @@ def fork_app(label, local_folder_path, local_app_subpackage=None, logger=None):
         if not isinstance(app_config, OscarConfig):
             raise ValueError("There is no Oscar app with the label '{}'".format(label))
 
-    # Check local_folder_path is current folder
+    # Remove trailing slash from folder path
+    local_folder_path = local_folder_path.rstrip('/')
+
+    # Check if local_folder_path is current folder
     if local_folder_path == '.':
         local_folder_path = ''
 
-    local_apps_package = local_folder_path.replace('/', '.')
+    local_apps_package = local_folder_path.lstrip('/').replace('/', '.')
     if local_app_subpackage is None:
         local_app_subpackage = app_config.name.replace('oscar.apps.', '')
         # In case this is a fork of a fork
@@ -100,7 +103,7 @@ def fork_app(label, local_folder_path, local_app_subpackage=None, logger=None):
                 app_name=app_config.name))
 
     logger.info("Creating app config")
-    local_app_name = local_apps_package + '.' + local_app_subpackage
+    local_app_name = local_apps_package + ('.' if local_apps_package else '') + local_app_subpackage
     inherit_app_config(local_app_folder_path, local_app_name, app_config)
 
     # Only create models.py and migrations if they exist in the Oscar app
