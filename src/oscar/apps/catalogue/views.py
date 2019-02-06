@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core.paginator import InvalidPage
-from django.http import HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.http import urlquote
 from django.utils.translation import gettext_lazy as _
@@ -40,6 +40,10 @@ class ProductDetailView(DetailView):
         redirect = self.redirect_if_necessary(request.path, product)
         if redirect is not None:
             return redirect
+
+        # Do allow staff members so they can test layout etc.
+        if not product.is_enabled and not request.user.is_staff:
+            raise Http404(_("Product is disabled"))
 
         response = super().get(request, **kwargs)
         self.send_signal(request, response, product)

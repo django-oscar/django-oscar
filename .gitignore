@@ -6,6 +6,13 @@ __pycache__
 /build/
 /node_modules/
 
+# venv
+/bin/
+/lib/
+/share
+/pyvenv.cfg
+/pip-selfcheck.json
+
 # Vagrant
 .vagrant
 
