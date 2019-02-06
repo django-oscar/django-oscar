@@ -84,6 +84,15 @@ class TestCatalogueViews(WebTestCase):
         self.assertIn(product2, products_on_page)
         self.assertNotIn(product3, products_on_page)
 
+    def test_is_public(self):
+        # Can I still find non-public products in dashboard?
+        product = create_product(is_public=False, upc="kleine-bats")
+        page = self.get("%s?upc=%s" % (
+            reverse('dashboard:catalogue-product-list'), product.upc
+        ))
+        products_on_page = [row.record for row in page.context['products'].page.object_list]
+        self.assertEqual(products_on_page, [product])
+
 
 class TestAStaffUser(WebTestCase):
     is_staff = True
