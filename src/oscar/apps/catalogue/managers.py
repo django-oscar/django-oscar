@@ -18,7 +18,16 @@ class ProductQuerySet(models.query.QuerySet):
 
     def browsable(self):
         """
-        Excludes non-canonical products.
+        Excludes non-canonical products and disabled products
+        """
+        return self.filter(parent=None, is_public=True)
+
+    def browsable_dashboard(self):
+        """
+        Products that should be browsable in the dashboard.
+
+        Excludes non-canonical products, but allows diabled products to edit
+        them.
         """
         return self.filter(parent=None)
 
