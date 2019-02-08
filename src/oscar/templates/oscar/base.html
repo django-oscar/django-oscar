@@ -26,6 +26,7 @@
             {# Default to using Google analytics #}
             {% include "partials/google_analytics.html" %}
         {% endblock %}
+
     </head>
 
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
@@ -41,6 +42,28 @@
 
         {# Local scripts #}
         {% block scripts %}
+            <script>
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = window.location.search.substring(1),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                    }
+                }
+            };
+
+            var param_val = getUrlParameter('test');
+
+            if (param_val==='var1') {
+                $(".product_pod form").attr('onsubmit', 'alert("We\'ve successfully added your product. Check your basket");');
+            }
+            </script>
         {% endblock %}
 
         {# Additional JS scripts #}
