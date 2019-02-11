@@ -226,18 +226,6 @@ class StockRequired(object):
         return Unavailable()
 
 
-class Enabled(object):
-    """
-    Availability policy mixin for use with the ``Structured`` base strategy.
-    This mixin ensures that a product can only be bought if it is made public.
-    """
-
-    def availability_policy(self, product, stockrecord):
-        if not product.is_enabled and not getattr(self.user, 'is_staff', False):
-            return Unavailable()
-        return super().availability_policy(product, stockrecord)
-
-
 class NoTax(object):
     """
     Pricing policy mixin for use with the ``Structured`` base strategy.
@@ -354,7 +342,7 @@ class DeferredTax(object):
 # charge tax!
 
 
-class Default(Enabled, UseFirstStockRecord, StockRequired, NoTax, Structured):
+class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
     """
     Default stock/price strategy that uses the first found stockrecord for a
     product, ensures that stock is available (unless the product class
@@ -362,7 +350,7 @@ class Default(Enabled, UseFirstStockRecord, StockRequired, NoTax, Structured):
     """
 
 
-class UK(Enabled, UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
+class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
     """
     Sample strategy for the UK that:
 
@@ -379,7 +367,7 @@ class UK(Enabled, UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
     rate = D('0.20')
 
 
-class US(Enabled, UseFirstStockRecord, StockRequired, DeferredTax, Structured):
+class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     """
     Sample strategy for the US.
 

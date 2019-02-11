@@ -42,8 +42,8 @@ class ProductDetailView(DetailView):
             return redirect
 
         # Do allow staff members so they can test layout etc.
-        if not product.is_enabled and not request.user.is_staff:
-            raise Http404(_("Product is disabled"))
+        if not product.is_public and not request.user.is_staff:
+            raise Http404(_("Product is not public"))
 
         response = super().get(request, **kwargs)
         self.send_signal(request, response, product)

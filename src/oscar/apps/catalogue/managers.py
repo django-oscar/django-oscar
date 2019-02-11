@@ -20,7 +20,7 @@ class ProductQuerySet(models.query.QuerySet):
         """
         Excludes non-canonical products and disabled products
         """
-        return self.filter(parent=None, is_enabled=True)
+        return self.filter(parent=None, is_public=True)
 
     def browsable_dashboard(self):
         """
