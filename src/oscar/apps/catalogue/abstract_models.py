@@ -263,7 +263,8 @@ class AbstractProduct(models.Model):
         _("Product structure"), max_length=10, choices=STRUCTURE_CHOICES,
         default=STANDALONE)
 
-    is_public = models.BooleanField(_('Is public'),
+    is_public = models.BooleanField(
+        _('Is public'),
         default=True,
         help_text=_("Show this product in search results and catalogue listings."))
 
