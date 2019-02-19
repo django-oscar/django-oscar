@@ -222,6 +222,8 @@ The following are community-written extensions:
   that makes it possible to use `Wells Fargo Retail Services`_ as an order
   payment method.
 
+* django-oscar-saferpay_ - Integration with the saferpay payment gateway
+
 Let us know if you're writing a new one!
 
 .. _django-oscar-unicredit: https://bitbucket.org/marsim/django-oscar-unicredit/
@@ -244,6 +246,7 @@ Let us know if you're writing a new one!
 .. _`CyberSource Secure Acceptance Silent Order Post`: https://www.cybersource.com/products/payment_security/secure_acceptance_silent_order_post/
 .. _django-oscar-wfrs: https://github.com/thelabnyc/django-oscar-wfrs
 .. _`Wells Fargo Retail Services`: https://retailservices.wellsfargo.com/
+.. _django-oscar-saferpay: https://github.com/taywa/django-oscar-saferpay
 
 Videos
 ------
