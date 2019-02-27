@@ -8,6 +8,7 @@
     "bootstrap": "^3.4.1",
     "bootstrap-datetime-picker": "^2.4.4",
     "eslint": "^4.19.1",
+    "extend": ">=3.0.2",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "~1.0.1",
     "gulp-concat": "^2.6.1",
