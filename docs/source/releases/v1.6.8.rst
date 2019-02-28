@@ -1,0 +1,8 @@
+=========================
+Oscar 1.6.8 release notes
+=========================
+
+:release: 2018-02-28
+
+This is Oscar 1.6.8, a security release that updates to Bootstrap to 3.4.1
+and extend 3.0.2 to fix CVE-2019-8331 and CVE-2018-16492 vulnerabilities.
