@@ -5,13 +5,12 @@ from django.core import mail
 from django.db.models import Max
 from django.template import loader
 
-from oscar.apps.customer.notifications import services
 from oscar.core.loading import get_class, get_model
 
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 Selector = get_class('partner.strategy', 'Selector')
 
 logger = logging.getLogger('oscar.alerts')
@@ -99,7 +98,7 @@ def send_product_alerts(product):   # noqa C901 too complex
             num_notifications += 1
             subj_tpl = loader.get_template('oscar/customer/alerts/message_subject.html')
             message_tpl = loader.get_template('oscar/customer/alerts/message.html')
-            services.notify_user(
+            Dispatcher().notify_user(
                 alert.user,
                 subj_tpl.render(ctx).strip(),
                 body=message_tpl.render(ctx).strip()
