@@ -6,12 +6,14 @@ from django.test import TestCase
 from django.urls import reverse
 from django_webtest import WebTest
 
-from oscar.apps.customer.alerts.utils import (
-    send_alert_confirmation, send_product_alerts)
+from oscar.apps.customer.alerts.utils import send_product_alerts
 from oscar.apps.customer.forms import ProductAlertForm
 from oscar.apps.customer.models import ProductAlert
+from oscar.core.loading import get_class
 from oscar.test.factories import (
     ProductAlertFactory, UserFactory, create_product, create_stockrecord)
+
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 
 class TestProductAlert(WebTest):
@@ -241,7 +243,7 @@ class TestAlertMessageSending(TestCase):
             status=ProductAlert.UNCONFIRMED,
             product=self.product
         )
-        send_alert_confirmation(alert)
+        Dispatcher().send_product_alert_confirmation_email_for_user(alert)
         self.assertEqual(mock_dispatch.call_count, 1)
         self.assertEqual(mock_dispatch.call_args[0][0], 'test@example.com')
 

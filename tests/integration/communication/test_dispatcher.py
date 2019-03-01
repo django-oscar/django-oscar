@@ -1,13 +1,17 @@
 from django.core import mail
 from django.test import TestCase
 
-from oscar.apps.customer.models import CommunicationEventType, Email
-from oscar.apps.customer.utils import Dispatcher, get_password_reset_url
-from oscar.apps.order.models import CommunicationEvent
 from oscar.core.compat import get_user_model
-from oscar.test.factories import SiteFactory, create_order
+from oscar.core.loading import get_class, get_model
+from oscar.apps.customer.utils import get_password_reset_url
+from oscar.test.factories import create_order, SiteFactory
 
 User = get_user_model()
+
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
+CommunicationEvent = get_model('order', 'CommunicationEvent')
+Email = get_model('communication', 'Email')
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 
 class TestDispatcher(TestCase):

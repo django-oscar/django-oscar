@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from oscar.apps.customer.models import Notification
-from oscar.apps.customer.notifications import services
+from oscar.apps.communication.models import Notification
+from oscar.apps.communication.utils import Dispatcher
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class
 from oscar.test.factories import UserFactory
@@ -44,7 +44,7 @@ class NotificationServiceTestCase(TestCase):
         subj = "Hello you!"
         body = "This is the notification body."
 
-        services.notify_user(user, subj, body=body)
+        Dispatcher().notify_user(user, subj, body=body)
         user_notification = Notification.objects.get(recipient=user)
         self.assertEqual(user_notification.subject, subj)
         self.assertEqual(user_notification.body, body)
@@ -54,7 +54,7 @@ class NotificationServiceTestCase(TestCase):
         subj = "Hello everyone!"
         body = "This is the notification body."
 
-        services.notify_users(User.objects.all(), subj, body=body)
+        Dispatcher().notify_users(User.objects.all(), subj, body=body)
         for user in users:
             user_notification = Notification.objects.get(recipient=user)
             self.assertEqual(user_notification.subject, subj)

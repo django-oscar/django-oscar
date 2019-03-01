@@ -1,6 +1,6 @@
 from oscar.core.loading import get_model
 
-Notification = get_model('customer', 'Notification')
+Notification = get_model('communication', 'Notification')
 
 
 def notifications(request):

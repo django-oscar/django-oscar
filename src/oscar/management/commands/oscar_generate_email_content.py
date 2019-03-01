@@ -3,8 +3,8 @@ from django.core.management.base import BaseCommand, CommandError
 from oscar.core.loading import get_class, get_model
 
 Order = get_model('order', 'Order')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 
 class Command(BaseCommand):

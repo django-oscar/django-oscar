@@ -3,7 +3,7 @@ import logging
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext_lazy as _
 
-from oscar.apps.customer.alerts import utils
+from oscar.apps.communication.alerts import utils
 
 logger = logging.getLogger(__name__)
 

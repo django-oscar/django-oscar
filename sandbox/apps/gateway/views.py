@@ -9,6 +9,9 @@ from django.views import generic
 
 from apps.gateway import forms
 from oscar.apps.customer.forms import generate_username
+from oscar.core.loading import get_class
+
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 logger = logging.getLogger('gateway')
 

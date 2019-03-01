@@ -11,12 +11,12 @@ from oscar.core.utils import redirect_to_referrer
 from oscar.views.generic import BulkEditMixin
 
 PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
-Notification = get_model('customer', 'Notification')
+Notification = get_model('communication', 'Notification')
 
 
 class NotificationListView(PageTitleMixin, generic.ListView):
     model = Notification
-    template_name = 'oscar/customer/notifications/list.html'
+    template_name = 'oscar/communication/notifications/list.html'
     context_object_name = 'notifications'
     paginate_by = settings.OSCAR_NOTIFICATIONS_PER_PAGE
     page_title = _("Notifications")
@@ -48,7 +48,7 @@ class ArchiveView(NotificationListView):
 
 class DetailView(PageTitleMixin, generic.DetailView):
     model = Notification
-    template_name = 'oscar/customer/notifications/detail.html'
+    template_name = 'oscar/communication/notifications/detail.html'
     context_object_name = 'notification'
     active_tab = 'notifications'
 
@@ -81,7 +81,7 @@ class UpdateView(BulkEditMixin, generic.RedirectView):
 
     def get_success_response(self):
         return redirect_to_referrer(
-            self.request, 'customer:notifications-inbox')
+            self.request, 'communication:notifications-inbox')
 
     def archive(self, request, notifications):
         for notification in notifications:
