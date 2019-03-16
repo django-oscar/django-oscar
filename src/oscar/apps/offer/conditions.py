@@ -92,13 +92,9 @@ class CountCondition(Condition):
         if to_consume == 0:
             return
 
-        for __, line in self.get_applicable_lines(offer, basket,
-                                                  most_expensive_first=True):
-            quantity_to_consume = min(
-                line.quantity_without_offer_discount(offer), to_consume
-            )
-            line.consume(quantity_to_consume, offer=offer)
-            to_consume -= quantity_to_consume
+        for __, line in self.get_applicable_lines(offer, basket, most_expensive_first=True):
+            num_consumed = line.consume(to_consume, offer=offer)
+            to_consume -= num_consumed
             if to_consume == 0:
                 break
 

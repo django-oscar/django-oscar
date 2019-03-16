@@ -36,7 +36,7 @@ class RestrictionsForm(forms.ModelForm):
         fields = ('start_datetime', 'end_datetime',
                   'max_basket_applications', 'max_user_applications',
                   'max_global_applications', 'max_discount',
-                  'priority', 'exclusive')
+                  'priority', 'exclusive', 'combinations')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -45,7 +45,34 @@ class RestrictionsForm(forms.ModelForm):
         if start and end and end < start:
             raise forms.ValidationError(_(
                 "The end date must be after the start date"))
+        exclusive = cleaned_data['exclusive']
+        combinations = cleaned_data['combinations']
+        if exclusive and combinations:
+            raise forms.ValidationError(_('Exclusive offers cannot be combined'))
         return cleaned_data
+
+    def save(self, *args, **kwargs):
+        """Store the offer combinations.
+
+        Also, and make sure the combinations are stored on the combine-able
+        offers as well.
+        """
+        instance = super().save(*args, **kwargs)
+        if instance.id:
+            instance.combinations.clear()
+            for offer in self.cleaned_data['combinations']:
+                if offer != instance:
+                    instance.combinations.add(offer)
+
+            combined_offers = instance.combined_offers
+            for offer in combined_offers:
+                if offer == instance:
+                    continue
+                for otheroffer in combined_offers:
+                    if offer == otheroffer:
+                        continue
+                    offer.combinations.add(otheroffer)
+        return instance
 
 
 class ConditionForm(forms.ModelForm):

@@ -32,6 +32,10 @@ What's new in Oscar 3.0?
   Projects should pay close attention to the data migration provided in
   ``catalogue/migrations/0019_option_required.py`` for this change.
 
+- Added support for restricted combinations of offers. When creating an offer in the dashboard,
+  administrators can now define a restricted set of other offers that offer can be used in combination with.
+  This changes introduces a new ``combinations`` field on the ``Offer`` model which requires a database migration.
+
 
 Backwards incompatible changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
