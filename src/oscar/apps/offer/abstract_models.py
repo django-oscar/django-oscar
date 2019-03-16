@@ -120,6 +120,11 @@ class AbstractConditionalOffer(models.Model):
         help_text=_("Exclusive offers cannot be combined on the same items"),
         default=True
     )
+    combinations = models.ManyToManyField(
+        'offer.ConditionalOffer',
+        help_text=_('Select offers this offer can be combined with on the same items'),
+        related_name='in_combination',
+        null=True, blank=True)
 
     # We track a status variable so it's easier to load offers that are
     # 'available' in some sense.
@@ -443,6 +448,14 @@ class AbstractConditionalOffer(models.Model):
         queryset = self.condition.range.all_products()
         return queryset.filter(is_discountable=True).exclude(
             structure=Product.CHILD)
+
+    @cached_property
+    def combined_offers(self):
+        combinations = set([self])
+        for offer in itertools.chain(
+                self.combinations.all(), self.in_combination.all()):
+            combinations.add(offer)
+        return combinations
 
 
 class AbstractBenefit(BaseOfferMixin, models.Model):

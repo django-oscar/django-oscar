@@ -137,5 +137,36 @@ class TestLineOfferConsumer:
         basket = filled_basket
         Applicator().apply(basket)
         assert len(basket.offer_applications.offer_discounts) == 1
-
         assert [x.consumer.consumed() for x in basket.all_lines()] == [1, 0]
+
+    def test_consumed_with_combined_offer(self, filled_basket):
+        offer1 = ConditionalOfferFactory(name='offer1')
+        offer2 = ConditionalOfferFactory(name='offer2')
+        offer3 = ConditionalOfferFactory(name='offer3')
+        offer4 = ConditionalOfferFactory(name='offer4')
+        offer1.exclusive = True
+        offer2.exclusive = False
+        offer3.exclusive = False
+        offer4.exclusive = False
+        offer2.combinations.add(offer3)
+        assert offer3 in offer2.combined_offers
+        assert offer2 in offer3.combined_offers
+
+        for line in filled_basket.all_lines():
+            assert line.consumer.consumed(offer1) == 0
+            assert line.consumer.consumed(offer2) == 0
+            assert line.consumer.consumed(offer3) == 0
+
+        line1 = filled_basket.all_lines()[0]
+        line2 = filled_basket.all_lines()[1]
+
+        line1.consumer.consume(line1.quantity, offer2)
+        assert line1.is_available_for_offer_discount(offer1) is False
+        assert line1.is_available_for_offer_discount(offer2) is False
+        assert line1.is_available_for_offer_discount(offer3) is True
+        assert line1.is_available_for_offer_discount(offer4) is False
+
+        line2.consumer.consume(line2.quantity, offer3)
+        assert line2.is_available_for_offer_discount(offer1) is False
+        assert line2.is_available_for_offer_discount(offer4) is False
+        assert line2.is_available_for_offer_discount(offer2) is True
