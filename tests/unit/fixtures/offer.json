@@ -39,7 +39,7 @@
         "benefit": 2,
         "priority": 0,
         "start_datetime": "2018-08-20T00:00:00Z",
-        "end_datetime": "2019-03-06T16:45:00Z",
+        "end_datetime": null,
         "max_global_applications": null,
         "max_user_applications": null,
         "max_basket_applications": null,
