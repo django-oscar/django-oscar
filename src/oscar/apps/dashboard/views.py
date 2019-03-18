@@ -138,6 +138,7 @@ class IndexView(TemplateView):
         baskets = Basket.objects.filter(status=Basket.OPEN)
         customers = User.objects.filter(orders__isnull=False).distinct()
         lines = Line.objects.filter()
+        products = Product.objects.all()
 
         user = self.request.user
         if not user.is_staff:
@@ -153,6 +154,7 @@ class IndexView(TemplateView):
                 orders__lines__partner_id__in=partners_ids
             ).distinct()
             lines = lines.filter(partner_id__in=partners_ids)
+            products = products.filter(stockrecords__partner_id__in=partners_ids)
 
         orders_last_day = orders.filter(date_placed__gt=datetime_24hrs_ago)
 
@@ -181,7 +183,7 @@ class IndexView(TemplateView):
                 date_created__gt=datetime_24hrs_ago
             ).count(),
 
-            'total_products': Product.objects.count(),
+            'total_products': products.count(),
             'total_open_stock_alerts': open_alerts.count(),
             'total_closed_stock_alerts': closed_alerts.count(),
 
