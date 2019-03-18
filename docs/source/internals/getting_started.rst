@@ -87,25 +87,62 @@ context processors.
         },
     ]
 
-Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``,
-``django.contrib.flatpages``, and ``widget_tweaks`` and append
-Oscar's core apps. Also set ``SITE_ID``:
+Next, modify ``INSTALLED_APPS`` to be a list, and add ``django.contrib.sites``,
+``django.contrib.flatpages``, Oscar's core apps, and third-party apps that Oscar
+depends on. Also set ``SITE_ID``:
 
 .. code-block:: django
 
-    from oscar import get_core_apps
-
     INSTALLED_APPS = [
+        'django.contrib.admin',
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
-        'django.contrib.sites',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+
+        'django.contrib.sites',
         'django.contrib.flatpages',
-        ...
+
+        'oscar',
+        'oscar.apps.analytics',
+        'oscar.apps.checkout',
+        'oscar.apps.address',
+        'oscar.apps.shipping',
+        'oscar.apps.catalogue',
+        'oscar.apps.catalogue.reviews',
+        'oscar.apps.partner',
+        'oscar.apps.basket',
+        'oscar.apps.payment',
+        'oscar.apps.offer',
+        'oscar.apps.order',
+        'oscar.apps.customer',
+        'oscar.apps.promotions',
+        'oscar.apps.search',
+        'oscar.apps.voucher',
+        'oscar.apps.wishlists',
+        'oscar.apps.dashboard',
+        'oscar.apps.dashboard.reports',
+        'oscar.apps.dashboard.users',
+        'oscar.apps.dashboard.orders',
+        'oscar.apps.dashboard.promotions',
+        'oscar.apps.dashboard.catalogue',
+        'oscar.apps.dashboard.offers',
+        'oscar.apps.dashboard.partners',
+        'oscar.apps.dashboard.pages',
+        'oscar.apps.dashboard.ranges',
+        'oscar.apps.dashboard.reviews',
+        'oscar.apps.dashboard.vouchers',
+        'oscar.apps.dashboard.communications',
+        'oscar.apps.dashboard.shipping',
+
+        # 3rd-party apps that oscar depends on
         'widget_tweaks',
-    ] + get_core_apps()
+        'haystack',
+        'treebeard',
+        'sorl.thumbnail',
+        'django_tables2',
+    ]
 
     SITE_ID = 1
 
@@ -119,7 +156,7 @@ More info about installing ``flatpages`` is in the `Django docs`_.
 
     Oscar's default templates use django-widget-tweaks_ but it's
     optional really.  You may decide to use your own templates that
-    don't use either.  Hence why they are not in the 'core apps'.
+    don't use either.
 
 .. _django-widget-tweaks: https://github.com/kmike/django-widget-tweaks
 
@@ -170,10 +207,10 @@ you will also need to include Django's i18n URLs:
 
 .. code-block:: django
 
+    from django.apps import apps
     from django.conf.urls import include, url  # < Django-2.0
     # from django.urls import include, path  # > Django-2.0
     from django.contrib import admin
-    from oscar.app import application
 
     urlpatterns = [
         url(r'^i18n/', include('django.conf.urls.i18n')),
@@ -185,8 +222,8 @@ you will also need to include Django's i18n URLs:
         url(r'^admin/', admin.site.urls),
         # path('admin/', admin.site.urls),  # > Django-2.0
 
-        url(r'', application.urls),
-        # path('', application.urls),  # > Django-2.0
+        url(r'^', include(apps.get_app_config('oscar').urls[0])),
+        # path('', include(apps.get_app_config('oscar').urls[0])),  # > Django-2.0
     ]
 
 

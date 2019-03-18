@@ -8,29 +8,38 @@ How to disable an app's URLs
 Suppose you don't want to use Oscar's dashboard but use your own.  The way to do
 this is to modify the URLs config to exclude the URLs from the app in question.
 
-You need to use your own root 'application' instance which gives you control
-over the URLs structure.  So your root ``urls.py`` should have::
+You need to use your own root app config, which gives you control over the URLs
+structure.  So your root ``urls.py`` should have::
 
     # urls.py
-    from myproject.app import application
+    from django.apps import apps
 
     urlpatterns = [
         ...
-        url(r'', application.urls),
+        url(r'^', include(apps.get_app_config('myproject').urls[0])),
     ]
 
-where ``application`` is a subclass of ``oscar.app.Shop`` which overrides the
-link to the dashboard app::
+where ``myproject`` is a Django/Oscar app with an app config class that is a
+subclass of ``oscar.config.Shop`` which excludes the URL configuration for
+the dashboard app::
 
-    # myproject/app.py
-    from oscar.app import Shop
-    from oscar.core.application import Application
+    # myproject/config.py
+    from oscar.config import Shop
+    from oscar.core.application import OscarConfig
 
     class MyShop(Shop):
 
-        # Override the core dashboard_app instance to use a blank application
-        # instance.  This means no dashboard URLs are included.
-        dashboard_app = Application()
+        # Override the get_urls method to remove the URL configuration for the
+        # dashboard app
+        def get_urls(self):
+            urls = super().get_urls()
+            for urlpattern in urls[:]:
+                if hasattr(urlpattern, 'app_name') and (urlpattern.app_name == 'dashboard'):
+                    urls.remove(urlpattern)
+            return self.post_process_urls(urls)
+
+    # myproject/__init__.py
+    default_app_config = 'myproject.config.MyShop'
 
 The only remaining task is to ensure your templates don't reference any
 dashboard URLs.
@@ -38,8 +47,8 @@ dashboard URLs.
 How to disable Oscar feature
 ============================
 
-You can add feature name to the setting ``OSCAR_HIDDEN_FEATURES`` and its application
-URLs would be excluded from the URLconf. Template code, wrapped with the
+You can add feature name to the setting ``OSCAR_HIDDEN_FEATURES`` and its app
+config URLs would be excluded from the URLconf. Template code, wrapped with the
 ``{% iffeature %}{% endiffeature %}`` block template tag, will not be rendered::
 
     {% iffeature "reviews" %}
@@ -47,12 +56,12 @@ URLs would be excluded from the URLconf. Template code, wrapped with the
     {% endiffeature %}
 
 Currently supported "reviews" and "wishlists" features. You can make your custom feature
-hidable by setting ``hidable_feature_name`` property of the ``Application`` class::
+hidable by setting ``hidable_feature_name`` property of the ``OscarConfig`` class::
 
-    # myproject/apps/lottery/app.py
-    from oscar.core.application import Application
+    # myproject/apps/lottery/apps.py
+    from oscar.core.application import OscarConfig
 
-    class LotterApplication(Application):
+    class LotterConfig(OscarConfig):
         hidable_feature_name = 'lottery'
 
 

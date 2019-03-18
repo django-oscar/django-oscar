@@ -37,10 +37,10 @@ Oscar need to be as customisable as possible. Hence almost all classes
 :doc:`dynamically loaded </topics/class_loading_explained>`,
 which results in a maintainable approach to customising behaviour.
 
-URLs and permissions for apps are handled by Application instances
-------------------------------------------------------------------
+URLs and permissions for apps are handled by app config instances
+-----------------------------------------------------------------
 
-The :class:`oscar.core.application.Application` class handles mapping URLs
+The :class:`oscar.core.application.OscarConfig` class handles mapping URLs
 to views and permissions at an per-app level. This makes Oscar's apps more
 modular, and makes it easy to customise this mapping as they can be overridden
 just like any other class in Oscar.
