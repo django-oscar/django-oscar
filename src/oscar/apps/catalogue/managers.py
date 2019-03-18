@@ -8,19 +8,22 @@ from oscar.core.decorators import deprecated
 
 
 class AttributeFilter(dict):
+    """
+    Utility class used to implement the filter_by_attributes functionality.
+
+    handles lookups, options and multivalue properties, check the tests for
+    all features.
+    """
+
     def __init__(self, filter_kwargs):
         super(AttributeFilter, self).__init__()
 
-        num_fields = 0
         for key, value in filter_kwargs.items():
-            num_fields += 1
             if LOOKUP_SEP in key:
                 field_name, lookup = key.split(LOOKUP_SEP, 1)
                 self[field_name] = (lookup, value)
             else:
                 self[key] = (None, value)
-
-        self.num_fields = num_fields
 
     def field_names(self):
         return self.keys()
@@ -67,6 +70,14 @@ class AttributeFilter(dict):
 class ProductQuerySet(models.query.QuerySet):
 
     def filter_by_attributes(self, **filter_kwargs):
+        """
+        Allows querying by attribute as if the attributes where fields on the
+        product::
+
+        >>> first_large_shirt = Product.objects.filter_by_attributes(size="Large").first()
+        >>> first_large_shirt.attr.size
+        <AttributeOption: Large>
+        """
         attribute_filter = AttributeFilter(filter_kwargs)
 
         ProductAttribute = self.model.attributes.rel.model

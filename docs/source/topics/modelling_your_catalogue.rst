@@ -104,6 +104,12 @@ mutually exclusive::
 This will let you assign multiple values (``size`` in the example above) to the
 attribute.
 
+You can also query for attributes using a special method on the manager::
+
+    > first_large_shirt = Product.objects.filter_by_attributes(size="Large").first()
+    > first_large_shirt.attr.size
+    <AttributeOption: Large>
+
 All attribute types apart from ``entity`` can be edited in the product
 dashboard. The latter is too dependent on your use case and you will need to
 decide yourself how you want to set and display it.
