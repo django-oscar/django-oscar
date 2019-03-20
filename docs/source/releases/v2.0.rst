@@ -39,6 +39,9 @@ What's new in Oscar 2.0?
 - Added database index definitions for commonly queried fields in a range of models. See `#2875`_.
   This will require projects that have forked Oscar apps to generate corresponding migrations.
 
+- Added a ``filter_by_attributes`` method on the ``ProductQuerySet``,
+  to allow database-level filtering of products by attribute.
+
 .. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875
 
 Removal of deprecated features
