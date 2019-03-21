@@ -1,6 +1,9 @@
 FROM python:3.5
 ENV PYTHONUNBUFFERED 1
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+
 COPY ./requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt raven==5.32.0
 
