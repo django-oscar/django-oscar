@@ -661,8 +661,6 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
             if not price:
                 # Avoid zero price products
                 continue
-            if line.quantity_without_offer_discount(offer) == 0:
-                continue
             line_tuples.append((price, line))
 
         # We sort lines to be cheapest first to ensure consistent applications

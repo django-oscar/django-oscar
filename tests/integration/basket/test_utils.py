@@ -1,5 +1,7 @@
 
 import pytest
+
+from oscar.apps.offer.applicator import Applicator
 from oscar.test.factories import (
     BasketFactory, ConditionalOfferFactory, ProductFactory)
 
@@ -14,8 +16,43 @@ def filled_basket():
     return basket
 
 
+@pytest.fixture
+def single_offer():
+    return ConditionalOfferFactory(
+        condition__range__includes_all_products=True,
+        condition__value=1,
+        benefit__range__includes_all_products=True,
+        benefit__max_affected_items=1,
+        name='offer1',
+        exclusive=False,
+    )
+
+
+@pytest.fixture
+def multi_offers():
+    offer1 = ConditionalOfferFactory(
+        condition__range__includes_all_products=True,
+        benefit__range__includes_all_products=True,
+        name='offer1',
+        exclusive=False,
+    )
+    offer2 = ConditionalOfferFactory(
+        condition__range__includes_all_products=True,
+        benefit__range__includes_all_products=True,
+        name='offer2',
+        exclusive=False
+    )
+    offer3 = ConditionalOfferFactory(
+        condition__range__includes_all_products=True,
+        benefit__range__includes_all_products=True,
+        name='offer3',
+        exclusive=False
+    )
+    return offer1, offer2, offer3
+
+
 @pytest.mark.django_db
-class TestLineOfferConsumer(object):
+class TestLineOfferConsumer:
 
     def test_consumed_no_offer(self, filled_basket):
         for line in filled_basket.all_lines():
@@ -73,18 +110,32 @@ class TestLineOfferConsumer(object):
             assert line.consumer.consumed(offer1) == 0
             assert line.consumer.consumed(offer2) == 0
 
-        line1 = filled_basket.all_lines()[0]
-        line2 = filled_basket.all_lines()[1]
+        line1, line2 = list(filled_basket.all_lines())
 
         line1.consumer.consume(1, offer1)
-        assert line1.is_available_for_offer_discount(offer2) is True
-
-        line1.consumer.consume(99, offer1)
+        # offer1 is exclusive so that blocks other offers
         assert line1.is_available_for_offer_discount(offer2) is False
 
+        line1.consumer.consume(99, offer1)
+        # ran out of room for offer1
+        assert line1.is_available_for_offer_discount(offer1) is False
+        # offer2 was never an option
+        assert line1.is_available_for_offer_discount(offer2) is False
+
+        # exclusivity is per line so line2 is available for offer2
         line2.consumer.consume(1, offer2)
-        assert line2.is_available_for_offer_discount(offer1) is True
+        # nope: exclusive and non-exclusive don't mix
+        assert line2.is_available_for_offer_discount(offer1) is False
 
         line2.consumer.consume(99, offer2)
+        # ran out of room for offer2
         assert line2.is_available_for_offer_discount(offer1) is False
+        # but still room for offer3!
         assert line2.is_available_for_offer_discount(offer3) is True
+
+    def test_consumed_by_application(self, filled_basket, single_offer):
+        basket = filled_basket
+        Applicator().apply(basket)
+        assert len(basket.offer_applications.offer_discounts) == 1
+
+        assert [x.consumer.consumed() for x in basket.all_lines()] == [1, 0]
