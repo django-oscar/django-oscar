@@ -29,6 +29,11 @@ Support for Python 2.7 and Python 3.4 has been dropped.
 What's new in Oscar 2.0?
 ------------------------
 
+- Added an ``is_public`` field to the ``Product`` model that is used to exclude products from the
+  ``browsable`` queryset. A ``browsable_dashboard`` queryset is provided for use in the dashboard, which includes non-public products.
+
+  This is a model change that requires database migration.
+
 - Added an ``order.OrderStatusChange`` model that is used to log order status changes
   applied by ``Order.set_status()``. This is a new model which will require database migrations to be applied.
 
