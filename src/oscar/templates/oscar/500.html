@@ -1,15 +1,20 @@
-{% extends "error.html" %}
-{% load i18n %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Server error!</title>
 
-{% block title %}
-    {% trans 'Server error!' %} | {{ block.super }}
-{% endblock %}
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="robots" content="NOARCHIVE,NOCACHE" />
+    </head>
 
-{% block error_heading %}
-    {% trans "Server error!" %}
-{% endblock %}
+    <body>
+        <h1>Server error!</h1>
+        <p>We're sorry but something went terribly wrong and we've been unable to generate the page you requested.</p>
+        <p>This incident has been logged and will be addressed by an engineer as soon as possible.</p>
+        <p>
+            <a onclick="javascript:history.go(-1);">Return to previous page</a><br>
+            <a href="{{ homepage_url }}">Go to homepage</a>
+        </p>
 
-{% block error_message %}
-    <p>{% trans "We're sorry but something went terribly wrong and we've been unable to generate the page you requested." %}</p>
-    <p>{% trans "This incident has been logged and will be addressed by an engineer as soon as possible." %}</p>
-{% endblock %}
+    </body>
+</html>

@@ -170,6 +170,10 @@ Minor changes
 
 - Bootstrap datetime picker JS/CSS assets removed from base layout, see :issue:`2584`.
 
+- Oscar's 500 error template no longer inherits other templates and
+  does not use any template template tags and
+  styling to avoid potential errors caused by the template itself (see :issue:`2971`).
+
 .. _incompatible_in_2.0:
 
 Backwards incompatible changes in Oscar 2.0
