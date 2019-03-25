@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.db.models import Sum
+from django.forms.utils import ErrorDict
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_model
@@ -19,15 +20,31 @@ class BasketLineForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.strategy = strategy
 
-        max_allowed_quantity = None
-        num_available = getattr(self.instance.purchase_info.availability, 'num_available', None)
-        basket_max_allowed_quantity = self.instance.basket.max_allowed_quantity()[0]
-        if all([num_available, basket_max_allowed_quantity]):
-            max_allowed_quantity = min(num_available, basket_max_allowed_quantity)
-        else:
-            max_allowed_quantity = num_available or basket_max_allowed_quantity
-        if max_allowed_quantity:
-            self.fields['quantity'].widget.attrs['max'] = max_allowed_quantity
+        # Evaluate max allowed quantity check only if line still exists, in
+        # order to avoid check run against missing instance -
+        # https://github.com/django-oscar/django-oscar/issues/2873.
+        if self.instance.id:
+            max_allowed_quantity = None
+            num_available = getattr(self.instance.purchase_info.availability, 'num_available', None)
+            basket_max_allowed_quantity = self.instance.basket.max_allowed_quantity()[0]
+            if all([num_available, basket_max_allowed_quantity]):
+                max_allowed_quantity = min(num_available, basket_max_allowed_quantity)
+            else:
+                max_allowed_quantity = num_available or basket_max_allowed_quantity
+            if max_allowed_quantity:
+                self.fields['quantity'].widget.attrs['max'] = max_allowed_quantity
+
+    def full_clean(self):
+        if not self.instance.id:
+            self.cleaned_data = {}
+            self._errors = ErrorDict()
+            return
+        return super().full_clean()
+
+    def has_changed(self):
+        if not self.instance.id:
+            return False
+        return super().has_changed()
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
