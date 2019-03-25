@@ -37,6 +37,7 @@ class ProductReportHTMLFormatter(ReportHTMLFormatter):
 class ProductReportGenerator(ReportGenerator):
     code = 'product_analytics'
     description = _('Product analytics')
+    date_range_field_name = 'product__date_created'
 
     formatters = {
         'CSV_formatter': ProductReportCSVFormatter,
@@ -89,6 +90,7 @@ class UserReportHTMLFormatter(ReportHTMLFormatter):
 class UserReportGenerator(ReportGenerator):
     code = 'user_analytics'
     description = _('User analytics')
+    date_range_field_name = 'user__date_joined'
 
     formatters = {
         'CSV_formatter': UserReportCSVFormatter,
