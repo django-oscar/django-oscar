@@ -46,6 +46,24 @@ class TestProductDetailView(WebTestCase):
         response = self.app.get(child_url)
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
 
+    def test_is_public_on(self):
+        product = create_product(upc="kleine-bats", is_public=True)
+
+        kwargs = {'product_slug': product.slug, 'pk': product.id}
+        url = reverse('catalogue:detail', kwargs=kwargs)
+        response = self.app.get(url)
+
+        self.assertTrue(response.status_code, 200)
+
+    def test_is_public_off(self):
+        product = create_product(upc="kleine-bats", is_public=False)
+
+        kwargs = {'product_slug': product.slug, 'pk': product.id}
+        url = reverse('catalogue:detail', kwargs=kwargs)
+        response = self.app.get(url, expect_errors=True)
+
+        self.assertTrue(response.status_code, 404)
+
 
 class TestProductListView(WebTestCase):
 
@@ -72,6 +90,18 @@ class TestProductListView(WebTestCase):
         page = self.app.get(reverse('catalogue:index'))
 
         self.assertContains(page, "Page 1 of 2")
+
+    def test_is_public_on(self):
+        product = create_product(upc="grote-bats", is_public=True)
+        page = self.app.get(reverse('catalogue:index'))
+        products_on_page = list(page.context['products'].all())
+        self.assertEqual(products_on_page, [product])
+
+    def test_is_public_off(self):
+        create_product(upc="kleine-bats", is_public=False)
+        page = self.app.get(reverse('catalogue:index'))
+        products_on_page = list(page.context['products'].all())
+        self.assertEqual(products_on_page, [])
 
 
 class TestProductCategoryView(WebTestCase):
