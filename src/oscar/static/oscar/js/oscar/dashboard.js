@@ -225,7 +225,7 @@ var oscar = (function(o, $) {
                     $(this).button('loading');
             });
         },
-        initProductImages: function(el) {
+        initProductImages: function() {
             // convert last 'extra' form into a multi-upload
             // (assumes `extra=1` in django formset)
             var $productImages = $('#product_images');
@@ -263,13 +263,13 @@ var oscar = (function(o, $) {
             });
             $extraImg.children('div').first().append('<div class="spent-inputs"></div>');
 
-            var group = $('ol.upload-image').sortable({
+            $('ol.upload-image').sortable({
                 vertical: false,
                 group: 'serialization',
                 handle: '.btn-handle',
                 onDrop: function ($item, container, _super) {
                     var $sortFields = $("input[name$=-display_order]");
-                    $sortFields.each(function(i, v){
+                    $sortFields.each(function(i){
                         $(this).val(i);
                     });
                     _super($item, container);
@@ -418,76 +418,76 @@ var oscar = (function(o, $) {
                 // image without uploading it. Upload only occures when
                 // submitting the form.
                 if (window.FileReader) {
-                    function onFileChange(evt) {
-                        var $input = $(evt.target);
-                        if ($input.attr('multiple')) {
+                    $('input[type="file"]').change(this.onFileChange);
+                }
+            },
+            onFileChange: function(evt) {
+                var $input = $(evt.target);
+                if ($input.attr('multiple')) {
 
-                            var $parentTab = $input.parents('.tab-pane').first();
-                            var $extraImg = $input.parents('.upload-image').children('li').last();
-                            var $totalForms = $parentTab.find("input[name$=TOTAL_FORMS]");
-                            var numExisting = parseInt($totalForms.val(), 10);
+                    var $parentTab = $input.parents('.tab-pane').first();
+                    var $extraImg = $input.parents('.upload-image').children('li').last();
+                    var $totalForms = $parentTab.find("input[name$=TOTAL_FORMS]");
+                    var numExisting = parseInt($totalForms.val(), 10);
 
-                            for (var i=0; i<evt.target.files.length; i++) {
-                                var $newImg = o.dashboard._extraProductImg.clone();
-                                var index = numExisting + i;
+                    for (var i=0; i<evt.target.files.length; i++) {
+                        var $newImg = o.dashboard._extraProductImg.clone();
+                        var index = numExisting + i;
 
-                                // update attrs on cloned el
-                                $newImg.find("[id^='id_images-'],"+
-                                             "[for^='id_images-'],"+
-                                             "[id^='upload_button_id_images-'],"+
-                                             "img[alt='thumbnail']").each(function(){
-                                    var $el = $(this);
-                                    ["id", "name", "for", "onload", "onerror"].forEach(function(attr){
-                                        var val = $el.attr(attr);
-                                        if (val) {
-                                            var parts = val.split('-');
-                                            parts[1] = index;
-                                            $el.attr(attr, parts.join('-'));
-                                        }
-                                    });
-                                });
-                                $newImg.find('#id_images-'+index+'-display_order').val(index);
-                                $newImg.insertBefore($extraImg);
+                        // update attrs on cloned el
+                        $newImg.find("[id^='id_images-'],"+
+                                     "[for^='id_images-'],"+
+                                     "[id^='upload_button_id_images-'],"+
+                                     "img[alt='thumbnail']").each(function(){
+                            var $el = $(this);
+                            ["id", "name", "for", "onload", "onerror"].forEach(function(attr){
+                                var val = $el.attr(attr);
+                                if (val) {
+                                    var parts = val.split('-');
+                                    parts[1] = index;
+                                    $el.attr(attr, parts.join('-'));
+                                }
+                            });
+                        });
+                        $newImg.find('#id_images-'+index+'-display_order').val(index);
+                        $newImg.insertBefore($extraImg);
 
-                                var $newFile = $newImg.find('input[type="file"]');
-                                $newFile.change(onFileChange);
-                                $newFile.get(0).files[0] = evt.target.files[i];
-                                // the script-attached files are not submitted by browser
-                                // so we rely on backend receiving files from EXTRAn fields
-                                $newFile.trigger('change');
-                            }
-
-                            if (evt.target.files.length) {
-                                $totalForms.val(parseInt($totalForms.val(), 10) + evt.target.files.length);
-
-                                var $extraFile = $extraImg.find('div.input-field > input[type="file"]').last();
-                                var $newExtraFile = $extraFile.clone();
-                                ["id", "name"].forEach(function(attr){
-                                    var parts = $extraFile.attr(attr).split('-');
-                                    var index = parseInt(parts[1][5]); // EXTRAn
-                                    parts[1] = 'EXTRA' + (index + 1);
-                                    $newExtraFile.attr(attr, parts.join('-'));
-                                });
-                                $newExtraFile.change(onFileChange);
-                                $newExtraFile.insertAfter($extraFile);
-
-                                var $spentDiv = $extraImg.find('.spent-inputs').first();
-                                $extraFile.appendTo($spentDiv);
-                            }
-
-                        } else {
-                            var reader = new FileReader();
-                            var imgId = evt.target.id + "-image";
-                            reader.onload = (function() {
-                                return function(e) {
-                                    var imgDiv = $("#" + imgId);
-                                    imgDiv.children('img').attr('src', e.target.result);
-                                };
-                            })();
-                            reader.readAsDataURL(evt.target.files[0]);
-                        }
+                        var $newFile = $newImg.find('input[type="file"]');
+                        $newFile.change(this.onFileChange);
+                        $newFile.get(0).files[0] = evt.target.files[i];
+                        // the script-attached files are not submitted by browser
+                        // so we rely on backend receiving files from EXTRAn fields
+                        $newFile.trigger('change');
                     }
-                    $('input[type="file"]').change(onFileChange);
+
+                    if (evt.target.files.length) {
+                        $totalForms.val(parseInt($totalForms.val(), 10) + evt.target.files.length);
+
+                        var $extraFile = $extraImg.find('div.input-field > input[type="file"]').last();
+                        var $newExtraFile = $extraFile.clone();
+                        ["id", "name"].forEach(function(attr){
+                            var parts = $extraFile.attr(attr).split('-');
+                            var index = parseInt(parts[1][5]); // EXTRAn
+                            parts[1] = 'EXTRA' + (index + 1);
+                            $newExtraFile.attr(attr, parts.join('-'));
+                        });
+                        $newExtraFile.change(this.onFileChange);
+                        $newExtraFile.insertAfter($extraFile);
+
+                        var $spentDiv = $extraImg.find('.spent-inputs').first();
+                        $extraFile.appendTo($spentDiv);
+                    }
+
+                } else {
+                    var reader = new FileReader();
+                    var imgId = evt.target.id + "-image";
+                    reader.onload = (function() {
+                        return function(e) {
+                            var imgDiv = $("#" + imgId);
+                            imgDiv.children('img').attr('src', e.target.result);
+                        };
+                    })();
+                    reader.readAsDataURL(evt.target.files[0]);
                 }
             }
         },
