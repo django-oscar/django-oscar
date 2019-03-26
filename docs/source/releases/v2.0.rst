@@ -168,6 +168,8 @@ Minor changes
 
 - Fixed display of styled HTML emails in account email detail views, wrapping them in an iframe to avoid leakage of styles into the page.
 
+- Bootstrap datetime picker JS/CSS assets removed from base layout, see :issue:`2584`.
+
 .. _incompatible_in_2.0:
 
 Backwards incompatible changes in Oscar 2.0
