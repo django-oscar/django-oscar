@@ -247,7 +247,7 @@ class TestProductImages(ProductWebTest):
         product_form = page.form
         product_form['images-0-original'] = Upload('image1.png', self.generate_test_image('image1.png'), 'image/png')
         product_form['images-1-original'] = Upload('image2.png', self.generate_test_image('image2.png'), 'image/png')
-        response = product_form.submit(name='action', value='continue').follow()
+        product_form.submit(name='action', value='continue').follow()
         self.product = Product.objects.get(pk=self.product.id)
         self.assertEqual(self.product.images.count(), 2)
         page = self.get(self.url)
@@ -273,9 +273,7 @@ class TestProductImages(ProductWebTest):
         product_form['images-0-display_order'] = '5'
         product_form['images-1-display_order'] = '3'
         product_form['images-2-display_order'] = '4'
-
-        response = product_form.submit()
-
+        product_form.submit()
         self.product = Product.objects.get(pk=self.product.id)
         display_orders = list(self.product.images.values_list('display_order', flat=True))
         image_ids = list(self.product.images.values_list('id', flat=True))

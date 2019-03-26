@@ -138,7 +138,6 @@ class ProductImageFormSet(BaseProductImageFormSet):
         super().__init__(*args, **kwargs)
 
 
-
 BaseProductRecommendationFormSet = inlineformset_factory(
     Product, ProductRecommendation, form=ProductRecommendationForm,
     extra=5, fk_name="primary")
