@@ -316,15 +316,6 @@ class ProductImageForm(forms.ModelForm):
         kwargs['initial'] = initial
         super(ProductImageForm, self).__init__(data, *args, **kwargs)
 
-    def save(self, *args, **kwargs):
-        # We infer the display order of the image based on the order of the
-        # image fields within the formset.
-        kwargs['commit'] = False
-        obj = super().save(*args, **kwargs)
-        obj.display_order = self.get_display_order()
-        obj.save()
-        return obj
-
     def clean_display_order(self):
         display_order = self.cleaned_data.get('display_order', None)
         if not display_order:
