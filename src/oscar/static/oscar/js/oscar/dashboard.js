@@ -2,6 +2,52 @@
 
 var oscar = (function(o, $) {
 
+    function onFileChange(evt) {
+        var reader = new FileReader();
+        var imgId = evt.target.id + "-image";
+        reader.onload = (function() {
+            return function(e) {
+                var imgDiv = $("#" + imgId);
+                imgDiv.children('img').attr('src', e.target.result);
+            };
+        })();
+        reader.readAsDataURL(evt.target.files[0]);
+
+        var $input = $(evt.target);
+        var $parentTab = $input.parents('.tab-pane').first();
+        var imageContainer = $input.parents('.sortable-handle').first();
+        imageContainer.find('.btn-reorder').removeAttr('disabled').removeClass('disabled');
+        var $extraImg = $input.parents('.upload-image').children('li').last();
+        var $totalForms = $parentTab.find("input[name$=images-TOTAL_FORMS]");
+        var numExisting = parseInt($totalForms.val());
+
+        var $newImg = o.dashboard._extraProductImg.clone();
+        var productId = $('#images-0-product').val();
+        $newImg.insertAfter($extraImg);
+        // update attrs on cloned el
+        $newImg.find("[id^='id_images-'],"+
+                     "[for^='id_images-'],"+
+                     "[id^='upload_button_id_images-'],"+
+                     "img[alt='thumbnail']").each(function(){
+            var $el = $(this);
+            ["id", "name", "for", "onload", "onerror"].forEach(function(attr){
+                var val = $el.attr(attr);
+                if (val) {
+                    var parts = val.split('-');
+                    parts[1] = numExisting;
+                    $el.attr(attr, parts.join('-'));
+                }
+            });
+        });
+        $newImg.find('#id_images-'+numExisting+'-display_order').val(numExisting);
+        $newImg.find('#id_images-'+numExisting+'-product').val(productId);
+
+        var $newFile = $newImg.find('input[type="file"]');
+        $newFile.change(onFileChange);
+        numExisting += 1;
+        $totalForms.val(numExisting);
+    }
+
     o.getCsrfToken = function() {
         // Extract CSRF token from cookies
         var cookies = document.cookie.split(';');
@@ -232,36 +278,7 @@ var oscar = (function(o, $) {
             var $extraImg = $productImages.find('.upload-image li').last();
             o.dashboard._extraProductImg = $extraImg.clone();
 
-            $extraImg.find('input[type=file]').attr('multiple', 'multiple');
-
-            $extraImg.children('input,label').remove();
-            $extraImg.find('img[alt="thumbnail"]').remove();
-
-            var $totalForms = $productImages.find("input[name$=TOTAL_FORMS]");
-            $totalForms.val(parseInt($totalForms.val(), 10) - 1);
-
-            // update attrs on last el (don't conflict with future clones)
-            $extraImg.find("div[id^='id_images-'],button[id^=upload_button_id_images-]").each(function(){
-                var $el = $(this);
-                var elAttr = $el.attr('id');
-                if (elAttr) {
-                    var parts = elAttr.split('-');
-                    parts[1] = 'EXTRA';
-                    $el.attr('id', parts.join('-'));
-                }
-            });
-            $extraImg.find("input[id^='id_images-']").each(function(){
-                var $el = $(this);
-                ["id", "name"].forEach(function(attr){
-                    var elAttr = $el.attr(attr);
-                    if (elAttr) {
-                        var parts = elAttr.split('-');
-                        parts[1] = 'EXTRA0';
-                        $el.attr(attr, parts.join('-'));
-                    }
-                });
-            });
-            $extraImg.children('div').first().append('<div class="spent-inputs"></div>');
+            $productImages.find('a:disabled').parents('sortable-handle').sortable('disable');
 
             $('ol.upload-image').sortable({
                 vertical: false,
@@ -412,84 +429,15 @@ var oscar = (function(o, $) {
             }
         },
         filereader: {
-            init: function() {
+            init: function () {
                 // Add local file loader to update image files on change in
                 // dashboard. This will provide a preview to the selected
                 // image without uploading it. Upload only occures when
                 // submitting the form.
                 if (window.FileReader) {
-                    $('input[type="file"]').change(this.onFileChange);
+                    $('input[type="file"]').change(onFileChange);
                 }
             },
-            onFileChange: function(evt) {
-                var $input = $(evt.target);
-                if ($input.attr('multiple')) {
-
-                    var $parentTab = $input.parents('.tab-pane').first();
-                    var $extraImg = $input.parents('.upload-image').children('li').last();
-                    var $totalForms = $parentTab.find("input[name$=TOTAL_FORMS]");
-                    var numExisting = parseInt($totalForms.val(), 10);
-
-                    for (var i=0; i<evt.target.files.length; i++) {
-                        var $newImg = o.dashboard._extraProductImg.clone();
-                        var index = numExisting + i;
-
-                        // update attrs on cloned el
-                        $newImg.find("[id^='id_images-'],"+
-                                     "[for^='id_images-'],"+
-                                     "[id^='upload_button_id_images-'],"+
-                                     "img[alt='thumbnail']").each(function(){
-                            var $el = $(this);
-                            ["id", "name", "for", "onload", "onerror"].forEach(function(attr){
-                                var val = $el.attr(attr);
-                                if (val) {
-                                    var parts = val.split('-');
-                                    parts[1] = index;
-                                    $el.attr(attr, parts.join('-'));
-                                }
-                            });
-                        });
-                        $newImg.find('#id_images-'+index+'-display_order').val(index);
-                        $newImg.insertBefore($extraImg);
-
-                        var $newFile = $newImg.find('input[type="file"]');
-                        $newFile.change(this.onFileChange);
-                        $newFile.get(0).files[0] = evt.target.files[i];
-                        // the script-attached files are not submitted by browser
-                        // so we rely on backend receiving files from EXTRAn fields
-                        $newFile.trigger('change');
-                    }
-
-                    if (evt.target.files.length) {
-                        $totalForms.val(parseInt($totalForms.val(), 10) + evt.target.files.length);
-
-                        var $extraFile = $extraImg.find('div.input-field > input[type="file"]').last();
-                        var $newExtraFile = $extraFile.clone();
-                        ["id", "name"].forEach(function(attr){
-                            var parts = $extraFile.attr(attr).split('-');
-                            var index = parseInt(parts[1][5]); // EXTRAn
-                            parts[1] = 'EXTRA' + (index + 1);
-                            $newExtraFile.attr(attr, parts.join('-'));
-                        });
-                        $newExtraFile.change(this.onFileChange);
-                        $newExtraFile.insertAfter($extraFile);
-
-                        var $spentDiv = $extraImg.find('.spent-inputs').first();
-                        $extraFile.appendTo($spentDiv);
-                    }
-
-                } else {
-                    var reader = new FileReader();
-                    var imgId = evt.target.id + "-image";
-                    reader.onload = (function() {
-                        return function(e) {
-                            var imgDiv = $("#" + imgId);
-                            imgDiv.children('img').attr('src', e.target.result);
-                        };
-                    })();
-                    reader.readAsDataURL(evt.target.files[0]);
-                }
-            }
         },
         product_lists: {
             init: function() {
