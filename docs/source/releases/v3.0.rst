@@ -21,6 +21,17 @@ Compatibility
 What's new in Oscar 3.0?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+- Support has been added to the ``catalogue.Option`` model to define the
+  type of option. This is used by the ``AddToBasketForm`` to determine the appropriate form field to display for that
+  option in the add-to-cart form. Currently supported types are: text, integer, float, boolean, and date.
+
+  The ``type`` field on the ``Option`` model (previously used to denote whether the option is required)
+  has been repurposed to store the type of the option, and a new ``required`` field
+  has been added to denote whether the option is required. Projects that have forked the catalogue app will
+  need to generate custom migrations for these model field changes.
+  Projects should pay close attention to the data migration provided in
+  ``catalogue/migrations/0019_option_required.py`` for this change.
+
 
 Backwards incompatible changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

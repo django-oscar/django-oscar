@@ -9,10 +9,32 @@ from oscar.forms import widgets
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
+Option = get_model('catalogue', 'option')
 Product = get_model('catalogue', 'product')
 
 
+def _option_text_field(option):
+    return forms.CharField(label=option.name, required=option.required)
+
+
+def _option_integer_field(option):
+    return forms.IntegerField(label=option.name, required=option.required)
+
+
+def _option_boolean_field(option):
+    return forms.BooleanField(label=option.name, required=option.required)
+
+
+def _option_float_field(option):
+    return forms.FloatField(label=option.name, required=option.required)
+
+
+def _option_date_field(option):
+    return forms.DateField(label=option.name, required=option.required, widget=forms.widgets.DateInput)
+
+
 class BasketLineForm(forms.ModelForm):
+
     save_for_later = forms.BooleanField(
         initial=False, required=False, label=_('Save for Later'))
 
@@ -120,6 +142,15 @@ class BasketVoucherForm(forms.Form):
 
 
 class AddToBasketForm(forms.Form):
+
+    OPTION_FIELD_FACTORIES = {
+        Option.TEXT: _option_text_field,
+        Option.INTEGER: _option_integer_field,
+        Option.BOOLEAN: _option_boolean_field,
+        Option.FLOAT: _option_float_field,
+        Option.DATE: _option_date_field,
+    }
+
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
     def __init__(self, basket, product, *args, **kwargs):
@@ -182,8 +213,8 @@ class AddToBasketForm(forms.Form):
         This is designed to be overridden so that specific widgets can be used
         for certain types of options.
         """
-        self.fields[option.code] = forms.CharField(
-            label=option.name, required=option.is_required)
+        option_field = self.OPTION_FIELD_FACTORIES.get(option.type, Option.TEXT)(option)
+        self.fields[option.code] = option_field
 
     # Cleaning
 
