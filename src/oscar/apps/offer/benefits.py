@@ -54,7 +54,7 @@ class PercentageDiscountBenefit(Benefit):
         verbose_name_plural = _("Percentage discount benefits")
 
     def apply(self, basket, condition, offer, discount_percent=None,
-              max_total_discount=None):
+              max_total_discount=None, **kwargs):
         if discount_percent is None:
             discount_percent = self.value
 
@@ -118,7 +118,7 @@ class AbsoluteDiscountBenefit(Benefit):
         verbose_name_plural = _("Absolute discount benefits")
 
     def apply(self, basket, condition, offer, discount_amount=None,
-              max_total_discount=None):
+              max_total_discount=None, **kwargs):
         if discount_amount is None:
             discount_amount = self.value
 
@@ -197,7 +197,7 @@ class FixedPriceBenefit(Benefit):
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
 
-    def apply(self, basket, condition, offer):  # noqa (too complex (10))
+    def apply(self, basket, condition, offer, **kwargs):  # noqa (too complex (10))
         if isinstance(condition, ValueCondition):
             return ZERO_DISCOUNT
 
@@ -264,7 +264,7 @@ class MultibuyDiscountBenefit(Benefit):
         verbose_name = _("Multibuy discount benefit")
         verbose_name_plural = _("Multibuy discount benefits")
 
-    def apply(self, basket, condition, offer):
+    def apply(self, basket, condition, offer, **kwargs):
         line_tuples = self.get_applicable_lines(offer, basket)
         if not line_tuples:
             return ZERO_DISCOUNT
@@ -286,7 +286,7 @@ class MultibuyDiscountBenefit(Benefit):
 
 class ShippingBenefit(Benefit):
 
-    def apply(self, basket, condition, offer):
+    def apply(self, basket, condition, offer, **kwargs):
         condition.consume_items(offer, basket, affected_lines=())
         return SHIPPING_DISCOUNT
 
