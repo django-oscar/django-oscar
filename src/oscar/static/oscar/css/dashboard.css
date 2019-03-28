@@ -6466,10 +6466,6 @@ body.dashboard-login h1 {
   background: #ccc;
   margin-bottom: 10px;
 }
-.upload-image li > div + label,
-.upload-image li > div + label + input {
-  display: none;
-}
 .upload-image div {
   background: #fff;
   position: relative;
