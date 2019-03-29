@@ -40,15 +40,19 @@
                                     {% if product %}
                                         {% with image=product.primary_image %}
                                             {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                                <a href="{{ product.get_absolute_url }}">
+                                                {% if product.is_public %}
+                                                    <a href="{{ product.get_absolute_url }}">
+                                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                                    </a>
+                                                {% else %}
                                                     <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
-                                                </a>
+                                                {% endif %}
                                             {% endthumbnail %}
                                         {% endwith %}
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if product %}
+                                    {% if product and product.is_public %}
                                         <a href="{{ line.product.get_absolute_url }}">{{ line.get_title }}</a>
                                     {% else %}
                                         <em>{{ line.get_title }} ({% trans 'Not available anymore' %})</em>
