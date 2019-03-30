@@ -311,16 +311,12 @@ class ProductImageForm(forms.ModelForm):
 
     def __init__(self, data=None, *args, **kwargs):
         self.prefix = kwargs.get('prefix', None)
-        initial = {'display_order': self.get_display_order()}
-        initial.update(kwargs.get('initial', {}))
-        kwargs['initial'] = initial
+        instance = kwargs.get('instance', None)
+        if not instance:
+            initial = {'display_order': self.get_display_order()}
+            initial.update(kwargs.get('initial', {}))
+            kwargs['initial'] = initial
         super(ProductImageForm, self).__init__(data, *args, **kwargs)
-
-    def clean_display_order(self):
-        display_order = self.cleaned_data.get('display_order', None)
-        if not display_order:
-            return self.get_display_order()
-        return display_order
 
     def get_display_order(self):
         return int(self.prefix.split('-').pop())
