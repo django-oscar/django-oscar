@@ -19,33 +19,38 @@ var oscar = (function(o, $) {
         imageContainer.find('.btn-reorder').removeAttr('disabled').removeClass('disabled');
         var $extraImg = $input.parents('.upload-image').children('li').last();
         var $totalForms = $parentTab.find("input[name$=images-TOTAL_FORMS]");
+        var $maxForms = $parentTab.find("input[name$=images-MAX_NUM_FORMS]");
         var numExisting = parseInt($totalForms.val());
+        var numMax = parseInt($maxForms.val());
 
-        var $newImg = o.dashboard._extraProductImg.clone();
-        var productId = $('#images-0-product').val();
-        $newImg.insertAfter($extraImg);
-        // update attrs on cloned el
-        $newImg.find("[id^='id_images-'],"+
-                     "[for^='id_images-'],"+
-                     "[id^='upload_button_id_images-'],"+
-                     "img[alt='thumbnail']").each(function(){
-            var $el = $(this);
-            ["id", "name", "for", "onload", "onerror"].forEach(function(attr){
-                var val = $el.attr(attr);
-                if (val) {
-                    var parts = val.split('-');
-                    parts[1] = numExisting;
-                    $el.attr(attr, parts.join('-'));
-                }
+        // Do not create extra image form if number of maximum allowed forms has reached.
+        if (numExisting < numMax) {
+            var $newImg = o.dashboard._extraProductImg.clone();
+            var productId = $('#images-0-product').val();
+            $newImg.insertAfter($extraImg);
+            // update attrs on cloned el
+            $newImg.find("[id^='id_images-']," +
+                "[for^='id_images-']," +
+                "[id^='upload_button_id_images-']," +
+                "img[alt='thumbnail']").each(function () {
+                var $el = $(this);
+                ["id", "name", "for", "onload", "onerror"].forEach(function (attr) {
+                    var val = $el.attr(attr);
+                    if (val) {
+                        var parts = val.split('-');
+                        parts[1] = numExisting;
+                        $el.attr(attr, parts.join('-'));
+                    }
+                });
             });
-        });
-        $newImg.find('#id_images-'+numExisting+'-display_order').val(numExisting);
-        $newImg.find('#id_images-'+numExisting+'-product').val(productId);
+            $newImg.find('#id_images-' + numExisting + '-display_order').val(numExisting);
+            $newImg.find('#id_images-' + numExisting + '-product').val(productId);
 
-        var $newFile = $newImg.find('input[type="file"]');
-        $newFile.change(onFileChange);
-        numExisting += 1;
-        $totalForms.val(numExisting);
+            var $newFile = $newImg.find('input[type="file"]');
+            $newFile.change(onFileChange);
+            numExisting += 1;
+            $totalForms.val(numExisting);
+        }
     }
 
     o.getCsrfToken = function() {
