@@ -47,6 +47,9 @@ What's new in Oscar 2.0?
 - Added a ``filter_by_attributes`` method on the ``ProductQuerySet``,
   to allow database-level filtering of products by attribute.
 
+- Added support for re-ordering product images in the dashboard, and for
+  adding an arbitrary number of additional images into the formset.
+
 .. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875
 
 Removal of deprecated features
