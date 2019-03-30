@@ -172,6 +172,9 @@
                                                 {% include "dashboard/partials/product_images.html" with form=image_form %}
                                             {% endfor %}
                                         </ol>
+                                        <p class="help-block">
+                                            {% trans 'Drag images to re-order them. Space for additional images will appear when images are added.' %}
+                                        </p>
                                     </div>
                                 {% endblock product_images_content %}
                             </div>
