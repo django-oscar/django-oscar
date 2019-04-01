@@ -19,7 +19,11 @@
                     <tr>
                         <td>
                             {% with product=alert.product %}
-                                <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+                                {% if product.is_public %}
+                                    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+                                {% else %}
+                                    {{ product.get_title }}
+                                {% endif %}
                             {% endwith %}
                         </td>
                         <td>{{ alert.status }}</td>
