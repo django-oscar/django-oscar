@@ -31,17 +31,8 @@ class VoucherForm(forms.Form):
         label=_('Which products get a discount?'),
         queryset=Range.objects.all(),
     )
-    type_choices = (
-        (Benefit.PERCENTAGE, _('Percentage off of products in range')),
-        (Benefit.FIXED, _('Fixed amount off of products in range')),
-        (Benefit.SHIPPING_PERCENTAGE,
-         _("Discount is a percentage off of the shipping cost")),
-        (Benefit.SHIPPING_ABSOLUTE,
-         _("Discount is a fixed amount of the shipping cost")),
-        (Benefit.SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-    )
     benefit_type = forms.ChoiceField(
-        choices=type_choices,
+        choices=Benefit.TYPE_CHOICES,
         label=_('Discount type'),
     )
     benefit_value = forms.DecimalField(
@@ -122,17 +113,8 @@ class VoucherSetForm(forms.ModelForm):
         label=_('Which products get a discount?'),
         queryset=Range.objects.all(),
     )
-    type_choices = (
-        (Benefit.PERCENTAGE, _('Percentage off of products in range')),
-        (Benefit.FIXED, _('Fixed amount off of products in range')),
-        (Benefit.SHIPPING_PERCENTAGE,
-         _("Discount is a percentage off of the shipping cost")),
-        (Benefit.SHIPPING_ABSOLUTE,
-         _("Discount is a fixed amount of the shipping cost")),
-        (Benefit.SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-    )
     benefit_type = forms.ChoiceField(
-        choices=type_choices,
+        choices=Benefit.TYPE_CHOICES,
         label=_('Discount type'),
     )
     benefit_value = forms.DecimalField(
