@@ -840,15 +840,15 @@ class AbstractLine(models.Model):
     @property
     def line_price_excl_tax_incl_discounts(self):
         if self._discount_excl_tax and self.line_price_excl_tax is not None:
-            return self.line_price_excl_tax - self._discount_excl_tax
+            return max(0, self.line_price_excl_tax - self._discount_excl_tax)
         if self._discount_incl_tax and self.line_price_incl_tax is not None:
             # This is a tricky situation.  We know the discount as calculated
             # against tax inclusive prices but we need to guess how much of the
             # discount applies to tax-exclusive prices.  We do this by
             # assuming a linear tax and scaling down the original discount.
-            return self.line_price_excl_tax - round_half_up(
+            return max(0, self.line_price_excl_tax - round_half_up(
                 self._tax_ratio * self._discount_incl_tax
-            )
+            ))
         return self.line_price_excl_tax
 
     @property
@@ -857,9 +857,9 @@ class AbstractLine(models.Model):
         # calculated against the tax-exclusive prices, then the line price
         # including tax
         if self.line_price_incl_tax is not None and self._discount_incl_tax:
-            return self.line_price_incl_tax - self._discount_incl_tax
+            return max(0, self.line_price_incl_tax - self._discount_incl_tax)
         elif self.line_price_excl_tax is not None and self._discount_excl_tax:
-            return round_half_up((self.line_price_excl_tax - self._discount_excl_tax) / self._tax_ratio)
+            return max(0, round_half_up((self.line_price_excl_tax - self._discount_excl_tax) / self._tax_ratio))
 
         return self.line_price_incl_tax
 
