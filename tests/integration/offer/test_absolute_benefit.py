@@ -347,3 +347,40 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
         )
         with self.assertRaises(ValidationError):
             benefit.clean()
+
+    def test_non_negative_basket_lines_values(self):
+        # absolute benefit is larger than the line price
+        rng = models.Range.objects.create(
+            name="", includes_all_products=True)
+        benefit1 = models.Benefit.objects.create(
+            type=models.Benefit.FIXED, range=rng, value=D('100')
+        )
+        benefit2 = models.Benefit.objects.create(
+            type=models.Benefit.FIXED, range=rng, value=D('100')
+        )
+        condition = models.ValueCondition.objects.create(
+            range=rng,
+            type=models.Condition.VALUE,
+            value=D('10'))
+        models.ConditionalOffer.objects.create(
+            name='offer1',
+            benefit=benefit1,
+            condition=condition,
+            exclusive=False
+        )
+        models.ConditionalOffer.objects.create(
+            name='offer2',
+            benefit=benefit2,
+            condition=condition,
+            exclusive=False
+        )
+
+        basket = factories.create_basket(empty=True)
+        add_products(basket, [(D('20'), 1)])
+
+        Applicator().apply(basket)
+        assert len(basket.offer_applications) == 2
+        line = basket.all_lines().first()
+        assert line.line_price_excl_tax_incl_discounts == D(0)
+        assert line.line_price_incl_tax_incl_discounts == D(0)
+        assert basket.total_incl_tax == 0
