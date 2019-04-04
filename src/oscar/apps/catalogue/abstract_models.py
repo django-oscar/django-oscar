@@ -954,28 +954,6 @@ class AbstractProductAttributeValue(models.Model):
     entity_object_id = models.PositiveIntegerField(
         null=True, blank=True, editable=False)
 
-    def _get_value(self):
-        value = getattr(self, 'value_%s' % self.attribute.type)
-        if hasattr(value, 'all'):
-            value = value.all()
-        return value
-
-    def _set_value(self, new_value):
-        attr_name = 'value_%s' % self.attribute.type
-
-        if self.attribute.is_option and isinstance(new_value, str):
-            # Need to look up instance of AttributeOption
-            new_value = self.attribute.option_group.options.get(
-                option=new_value)
-        elif self.attribute.is_multi_option:
-            getattr(self, attr_name).set(new_value)
-            return
-
-        setattr(self, attr_name, new_value)
-        return
-
-    value = property(_get_value, _set_value)
-
     class Meta:
         abstract = True
         app_label = 'catalogue'
@@ -992,6 +970,28 @@ class AbstractProductAttributeValue(models.Model):
         used e.g in product summaries.
         """
         return "%s: %s" % (self.attribute.name, self.value_as_text)
+
+    @property
+    def related_field_name(self):
+        """
+        :return: The name of the correspondent value field.
+        """
+        return 'value_%s' % self.attribute.type
+
+    @property
+    def related_field(self):
+        """
+        :return: The correspondent value field.
+        """
+        return self._meta.get_field(self.related_field_name)
+
+    def _get_value(self):
+        return self.related_field.value_from_object(self)
+
+    def _set_value(self, value):
+        self.related_field.save_form_data(self, value)
+
+    value = property(_get_value, _set_value)
 
     @property
     def value_as_text(self):
