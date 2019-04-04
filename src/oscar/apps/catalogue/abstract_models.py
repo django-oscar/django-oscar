@@ -602,8 +602,9 @@ class AbstractProduct(models.Model):
             # We return a dict with fields that mirror the key properties of
             # the ProductImage class so this missing image can be used
             # interchangeably in templates.  Strategy pattern ftw!
+            missing_image = self.get_missing_image()
             return {
-                'original': self.get_missing_image(),
+                'original': missing_image.name,
                 'caption': '',
                 'is_missing': True}
 
