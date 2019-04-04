@@ -1,5 +1,5 @@
 {% load i18n %}
-{% load sorl_thumbnail %}
+{% load image_tags %}
 {% load currency_filters %}
 {% load purchase_info_tags %}
 {% load widget_tweaks %}
@@ -47,11 +47,10 @@
                             <div class="col-sm-2">
                                 {{ form.id }}
                                 {% with image=product.primary_image %}
-                                    {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                        <a href="{{ product.get_absolute_url }}">
-                                            <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
-                                        </a>
-                                    {% endthumbnail %}
+                                    {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
+                                    <a href="{{ product.get_absolute_url }}">
+                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
+                                    </a>
                                 {% endwith %}
                             </div>
                             <div class="col-sm-4">
@@ -191,11 +190,10 @@
                             <div class="col-sm-2">
                                 {{ form.id }}
                                 {% with image=form.instance.product.primary_image %}
-                                    {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                        <a href="{{ form.instance.product.get_absolute_url }}">
-                                            <img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
-                                        </a>
-                                    {% endthumbnail %}
+                                    {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
+                                    <a href="{{ form.instance.product.get_absolute_url }}">
+                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
+                                    </a>
                                 {% endwith %}
                             </div>
                             <div class="col-sm-6">

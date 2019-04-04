@@ -1,13 +1,14 @@
-{% load sorl_thumbnail %}
+{% load image_tags %}
 {% load staticfiles %}
 
 <div class="row">
     <div class="col-sm-2">
         <div class="image_container">
             {% with image=product.primary_image %}
-                {% thumbnail image.original "x155" upscale=False as thumb %}
-                    <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
-                {% endthumbnail %}
+                {% oscar_thumbnail image.original "x155" upscale=False as thumb %}
+                <a href="{{ product.get_absolute_url }}">
+                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail">
+                </a>
             {% endwith %}
         </div>
     </div>
