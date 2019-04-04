@@ -131,8 +131,10 @@ class ProductListView(SingleTableView):
 
     def apply_search(self, queryset):
         """
-        Filter the queryset and set the description according to the search
-        parameters given
+        Search through the filtered queryset.
+
+        We must make sure that we don't return search results that the user is not allowed
+        to see (see filter_queryset).
         """
         self.form = self.form_class(self.request.GET)
 
@@ -143,16 +145,23 @@ class ProductListView(SingleTableView):
 
         if data.get('upc'):
             # Filter the queryset by upc
-            # If there's an exact match, return it, otherwise return results
-            # that contain the UPC
+            # For usability reasons, we first look at exact matches and only return
+            # them if there are any. Otherwise we return all results
+            # that contain the UPC.
+
+            # Look up all matches (child products, products not allowed to access) ...
             matches_upc = Product.objects.filter(upc=data['upc'])
+
+            # ... and use that to pick all standalone or parent products that the user is
+            # allowed to access.
             qs_match = queryset.filter(
-                Q(id__in=matches_upc.values('id'))
-                | Q(id__in=matches_upc.values('parent_id')))
+                Q(id__in=matches_upc.values('id')) | Q(id__in=matches_upc.values('parent_id')))
 
             if qs_match.exists():
+                # If there's a direct UPC match, return just that.
                 queryset = qs_match
             else:
+                # No direct UPC match. Let's try the same with an icontains search.
                 matches_upc = Product.objects.filter(upc__icontains=data['upc'])
                 queryset = queryset.filter(
                     Q(id__in=matches_upc.values('id')) | Q(id__in=matches_upc.values('parent_id')))
