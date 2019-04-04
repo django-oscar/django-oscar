@@ -304,6 +304,7 @@ INSTALLED_APPS = [
     'haystack',
     'treebeard',
     'sorl.thumbnail',
+    'easy_thumbnails',
     'django_tables2',
 
     # Django apps that the sandbox depends on
