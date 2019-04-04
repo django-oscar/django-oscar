@@ -150,7 +150,7 @@ class ProductListView(SingleTableView):
             # that contain the UPC.
 
             # Look up all matches (child products, products not allowed to access) ...
-            matches_upc = Product.objects.filter(upc=data['upc'])
+            matches_upc = Product.objects.filter(upc__iexact=data['upc'])
 
             # ... and use that to pick all standalone or parent products that the user is
             # allowed to access.
