@@ -1,8 +1,16 @@
+import re
+
 from django import template
 from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile
+from django.utils.encoding import smart_str
+from django.utils.html import escape
+from django.utils.six import text_type
+
+from oscar.core.thumbnails import get_thumbnailer
 
 register = template.Library()
+kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 
 
 def do_dynamic_image_url(parser, token):
@@ -68,4 +76,51 @@ class DynamicImageNode(template.Node):
             return host + path
 
 
+class ThumbnailNode(template.Node):
+    no_resolve = {'True': True, 'False': False, 'None': None}
+
+    def __init__(self, parser, token):
+        args = token.split_contents()
+        # The first argument is the source file.
+        self.source_var = parser.compile_filter(args[1])
+        # The second argument is the size/geometry.
+        self.size_var = parser.compile_filter(args[2])
+
+        is_context_variable = args[-2] == 'as'
+        if is_context_variable:
+            self.context_name = args[-1]
+            args = args[3:-2]
+        else:
+            self.context_name = None
+            args = args[3:]
+
+        self.options = []
+        for arg in args:
+            m = kw_pat.match(arg)
+            key = smart_str(m.group('key'))
+            expr = parser.compile_filter(m.group('value'))
+            self.options.append((key, expr))
+
+    def render(self, context):
+        source = self.source_var.resolve(context)
+        options = {'size': self.size_var.resolve(context)}
+        for key, expr in self.options:
+            value = self.no_resolve.get(text_type(expr), expr.resolve(context))
+            options[key] = value
+
+        thumbnailer = get_thumbnailer()
+        thumbnail = thumbnailer.generate_thumbnail(source, **options)
+
+        if self.context_name is None:
+            return escape(thumbnail.url)
+        else:
+            context[self.context_name] = thumbnail
+            return ''
+
+
+def oscar_thumbnail(parser, token):
+    return ThumbnailNode(parser, token)
+
+
 register.tag('image', do_dynamic_image_url)
+register.tag('oscar_thumbnail', oscar_thumbnail)
