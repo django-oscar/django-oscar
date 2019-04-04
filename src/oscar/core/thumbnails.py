@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.utils.module_loading import import_string
 
@@ -11,6 +12,11 @@ class AbstractThumbnailer(object):
 
 
 class SorlThumbnail(AbstractThumbnailer):
+
+    def __init__(self):
+        if not apps.is_installed('sorl.thumbnail'):
+            raise ValueError('"sorl.thumbnail" is not listed in "INSTALLED_APPS".')
+
     def generate_thumbnail(self, source, **opts):
         from sorl.thumbnail import get_thumbnail
         # Sorl can accept only: "width x height", "width", "x height".
@@ -32,6 +38,11 @@ class SorlThumbnail(AbstractThumbnailer):
 
 
 class EasyThumbnails(AbstractThumbnailer):
+
+    def __init__(self):
+        if not apps.is_installed('easy_thumbnails'):
+            raise ValueError('"easy_thumbnails" is not listed in "INSTALLED_APPS".')
+
     def generate_thumbnail(self, source, **opts):
         from easy_thumbnails.files import get_thumbnailer
         width, height = opts['size'].split('x')
