@@ -1,3 +1,4 @@
+import os
 from os.path import exists, join
 import sys
 import tempfile
@@ -126,3 +127,12 @@ class TestForkApp(TestCase):
         assert hasattr(config_module, 'OrderConfig')
         config_app_name = config_module.OrderConfig.name
         assert not config_app_name.startswith('.')
+
+    def test_local_folder(self):
+        tmpdir = tempfile.mkdtemp()
+        os.chdir(tmpdir)
+        customisation.fork_app('basket', '.', 'basket')
+        sys.path.append(tmpdir)
+        config_module = __import__('basket.apps', fromlist=['BasketConfig'])
+        assert hasattr(config_module, 'BasketConfig')
+        assert config_module.BasketConfig.name == 'basket'
