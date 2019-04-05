@@ -109,7 +109,7 @@ class ProductReviewFactory(factory.DjangoModelFactory):
 
 class ProductImageFactory(factory.DjangoModelFactory):
     product = factory.SubFactory(ProductFactory, stockrecords=[])
-    original = factory.django.ImageField()
+    original = factory.django.ImageField(width=100, height=200, filename='test_image.jpg')
 
     class Meta:
         model = get_model('catalogue', 'ProductImage')
