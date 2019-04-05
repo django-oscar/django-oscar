@@ -18,7 +18,7 @@ core functionality.
 URL patterns and views
 ----------------------
 
-Oscar's app organise their URLs and associated views using a "Application"
+Oscar's apps organise their URLs and associated views using a "OscarConfig"
 class instance.  This works in a similar way to Django's admin app, and allows
 Oscar projects to subclass and customised URLs and views.
 

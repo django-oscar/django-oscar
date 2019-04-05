@@ -5707,8 +5707,7 @@ textarea {
 .well-stacked .well:first-child {
   border-top-width: 1px;
 }
-.create-page .well,
-.promotions .well-info {
+.create-page .well {
   background-color: #fff;
 }
 .alert-message.block-message.file_upload p {

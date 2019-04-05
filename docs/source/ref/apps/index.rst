@@ -18,7 +18,6 @@ Oscar is split up in multiple, mostly independent apps.
    order
    partner
    payment
-   promotions
    search
    shipping
    voucher

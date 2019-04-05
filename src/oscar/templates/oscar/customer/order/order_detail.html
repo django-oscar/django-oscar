@@ -34,9 +34,15 @@
                     <tr>
                         <td>
                             {% if product %}
+
+                                {% if product.is_public %}
                                 <p>
                                     <a href="{{ product.get_absolute_url }}">{{ line.description }}</a>
                                 </p>
+                                {% else %}
+                                <p>{{ line.description }}</p>
+                                {% endif %}
+
                                 {% iffeature "reviews" %}
                                     {% if product|is_review_permitted:user %}
                                         <a class="btn btn-default" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans 'Write a review' %}</a>
@@ -53,7 +59,7 @@
                         <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                         <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                         <td width="90">
-                            {% if product %}
+                            {% if product and product.is_public %}
                                 <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order_number=order.number line_id=line.id %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="reorder" />

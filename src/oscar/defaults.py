@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = ''
-OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
+OSCAR_HOMEPAGE = reverse_lazy('catalogue:index')
 
 # Dynamic class loading
 OSCAR_DYNAMIC_CLASS_LOADER = 'oscar.core.loading.default_class_loader'
@@ -27,7 +27,6 @@ OSCAR_DEFAULT_CURRENCY = 'GBP'
 
 # Paths
 OSCAR_IMAGE_FOLDER = 'images/products/%Y/%m/'
-OSCAR_PROMOTION_FOLDER = 'images/promotions/'
 OSCAR_DELETE_IMAGE_FILES = True
 
 # Copy this image from oscar/static/img to your MEDIA_ROOT folder.
@@ -53,11 +52,6 @@ OSCAR_DASHBOARD_ITEMS_PER_PAGE = 20
 
 # Checkout
 OSCAR_ALLOW_ANON_CHECKOUT = False
-
-# Promotions
-OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
-                             ('right', 'Right-hand sidebar'),
-                             ('left', 'Left-hand sidebar'))
 
 # Reviews
 OSCAR_ALLOW_ANON_REVIEWS = True
@@ -194,14 +188,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'icon-folder-close',
         'children': [
             {
-                'label': _('Content blocks'),
-                'url_name': 'dashboard:promotion-list',
-            },
-            {
-                'label': _('Content blocks by page'),
-                'url_name': 'dashboard:promotion-list-by-page',
-            },
-            {
                 'label': _('Pages'),
                 'url_name': 'dashboard:page-list',
             },
@@ -257,6 +243,4 @@ OSCAR_SEARCH_FACETS = {
     ]),
 }
 
-
-OSCAR_PROMOTIONS_ENABLED = True
 OSCAR_PRODUCT_SEARCH_HANDLER = None

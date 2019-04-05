@@ -4,6 +4,7 @@ from django.apps import apps
 from django.conf import settings
 from django.conf.urls import url
 from django.urls import reverse_lazy
+from django.views.generic.base import RedirectView
 
 from oscar.core.application import OscarConfig
 from oscar.core.loading import get_class
@@ -19,7 +20,6 @@ class Shop(OscarConfig):
         self.customer_app = apps.get_app_config('customer')
         self.basket_app = apps.get_app_config('basket')
         self.checkout_app = apps.get_app_config('checkout')
-        self.promotions_app = apps.get_app_config('promotions')
         self.search_app = apps.get_app_config('search')
         self.dashboard_app = apps.get_app_config('dashboard')
         self.offer_app = apps.get_app_config('offer')
@@ -33,6 +33,7 @@ class Shop(OscarConfig):
         from oscar.views.decorators import login_forbidden
 
         urls = [
+            url(r'^$', RedirectView.as_view(url=reverse_lazy('catalogue:index')), name='home'),
             url(r'^catalogue/', self.catalogue_app.urls),
             url(r'^basket/', self.basket_app.urls),
             url(r'^checkout/', self.checkout_app.urls),
@@ -67,7 +68,4 @@ class Shop(OscarConfig):
                 login_forbidden(auth_views.PasswordResetCompleteView.as_view()),
                 name='password-reset-complete'),
         ]
-
-        if settings.OSCAR_PROMOTIONS_ENABLED:
-            urls.append(url(r'', self.promotions_app.urls))
         return urls

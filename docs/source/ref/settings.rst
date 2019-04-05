@@ -26,7 +26,7 @@ The tagline that is displayed next to the shop name and in the browser title.
 ``OSCAR_HOMEPAGE``
 ------------------
 
-Default: ``reverse_lazy('promotions:home')``
+Default: ``reverse_lazy('catalogue:index')``
 
 URL of home page of your site. This value is used for `Home` link in
 navigation and redirection page after logout. Useful if you use a different app
@@ -129,18 +129,6 @@ Oscar tries to guess the correct handler based on your Haystack settings.
 Default::
 
     None
-
-``OSCAR_PROMOTION_POSITIONS``
------------------------------
-
-Default::
-
-    OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
-                                 ('right', 'Right-hand sidebar'),
-                                 ('left', 'Left-hand sidebar'))
-
-The choice of display locations available when editing a promotion. Only
-useful when using a new set of templates.
 
 .. _OSCAR_DASHBOARD_NAVIGATION:
 
@@ -345,7 +333,7 @@ The time to live for the basket cookie in seconds.
 Default: ``10000``
 
 The maximum number of products that can be added to a basket at once. Set to 
-``None`` to disable the basket treshold limitation.
+``None`` to disable the basket threshold limitation.
 
 
 ``OSCAR_BASKET_COOKIE_OPEN``
@@ -410,14 +398,6 @@ Default: ``True``
 If enabled, a ``post_delete`` hook will attempt to delete any image files and
 created thumbnails when a model with an ``ImageField`` is deleted. This is
 usually desired, but might not be what you want when using a remote storage.
-
-
-``OSCAR_PROMOTION_FOLDER``
---------------------------
-
-Default: ``images/promotions/``
-
-The folder within ``MEDIA_ROOT`` used for uploaded promotion images.
 
 .. _missing-image-label:
 

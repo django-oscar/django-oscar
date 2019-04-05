@@ -29,6 +29,11 @@ Support for Python 2.7 and Python 3.4 has been dropped.
 What's new in Oscar 2.0?
 ------------------------
 
+- Added an ``is_public`` field to the ``Product`` model that is used to exclude products from the
+  ``browsable`` queryset. A ``browsable_dashboard`` queryset is provided for use in the dashboard, which includes non-public products.
+
+  This is a model change that requires database migration.
+
 - Added an ``order.OrderStatusChange`` model that is used to log order status changes
   applied by ``Order.set_status()``. This is a new model which will require database migrations to be applied.
 
@@ -38,6 +43,9 @@ What's new in Oscar 2.0?
 
 - Added database index definitions for commonly queried fields in a range of models. See `#2875`_.
   This will require projects that have forked Oscar apps to generate corresponding migrations.
+
+- Added a ``filter_by_attributes`` method on the ``ProductQuerySet``,
+  to allow database-level filtering of products by attribute.
 
 .. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875
 
@@ -108,7 +116,6 @@ Removal of deprecated features
 
                                                                         ``ProductAttributesFormSet``
 
-  ``dashboard.promotions.forms``    ``dashboard.promotions.formsets``   ``OrderedProductFormSet``
   ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
   ================================  ==================================  ================
 
@@ -161,6 +168,12 @@ Minor changes
 
 - Fixed display of styled HTML emails in account email detail views, wrapping them in an iframe to avoid leakage of styles into the page.
 
+- Bootstrap datetime picker JS/CSS assets removed from base layout, see :issue:`2584`.
+
+- Oscar's 500 error template no longer inherits other templates and
+  does not use any template template tags and
+  styling to avoid potential errors caused by the template itself (see :issue:`2971`).
+
 .. _incompatible_in_2.0:
 
 Backwards incompatible changes in Oscar 2.0
@@ -212,6 +225,11 @@ Backwards incompatible changes in Oscar 2.0
   new app, from which, together with the ``target_path``, the full Python path
   to the app will be derived. If a ``new_app_subpackage`` is omitted, then the
   subpackage of the app being forked will be used instead.
+
+- Promotions application completely removed from the Oscar core and dashboard
+  and will be available as external application - `django_oscar_promotions`_.
+
+.. _`django_oscar_promotions`: https://github.com/django-oscar/django-oscar-promotions
 
 Migrating forked apps
 ~~~~~~~~~~~~~~~~~~~~~

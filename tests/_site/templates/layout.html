@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% load currency_filters %}
-{% load promotion_tags %}
+
 {% load category_tags %}
 {% load i18n %}
 
@@ -57,12 +57,6 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-
-                <div id="promotions">
-                    {% for promotion in promotions_page %}
-                    {% render_promotion promotion %}
-                    {% endfor %}
-                </div>
 
                 {% block content %}{% endblock %}
             </div>

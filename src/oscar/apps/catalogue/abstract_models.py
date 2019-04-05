@@ -263,6 +263,11 @@ class AbstractProduct(models.Model):
         _("Product structure"), max_length=10, choices=STRUCTURE_CHOICES,
         default=STANDALONE)
 
+    is_public = models.BooleanField(
+        _('Is public'),
+        default=True,
+        help_text=_("Show this product in search results and catalogue listings."))
+
     upc = NullCharField(
         _("UPC"), max_length=64, blank=True, null=True, unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
@@ -920,12 +925,12 @@ class AbstractProductAttributeValue(models.Model):
         verbose_name=_("Product"))
 
     value_text = models.TextField(_('Text'), blank=True, null=True)
-    value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
-    value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
-    value_float = models.FloatField(_('Float'), blank=True, null=True)
+    value_integer = models.IntegerField(_('Integer'), blank=True, null=True, db_index=True)
+    value_boolean = models.NullBooleanField(_('Boolean'), blank=True, db_index=True)
+    value_float = models.FloatField(_('Float'), blank=True, null=True, db_index=True)
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
-    value_date = models.DateField(_('Date'), blank=True, null=True)
-    value_datetime = models.DateTimeField(_('DateTime'), blank=True, null=True)
+    value_date = models.DateField(_('Date'), blank=True, null=True, db_index=True)
+    value_datetime = models.DateTimeField(_('DateTime'), blank=True, null=True, db_index=True)
     value_multi_option = models.ManyToManyField(
         'catalogue.AttributeOption', blank=True,
         related_name='multi_valued_attribute_values',

@@ -67,7 +67,13 @@
         </tr>
         {% for line in order.lines.all %}
             <tr>
-                <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+                <td>
+                    {% if product.is_public %}
+                        <a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a>
+                    {% else %}
+                        {{ line.description }}
+                    {% endif %}
+                </td>
                 <td>{{ line.shipping_status|default:"-" }}</td>
                 <td>{{ line.est_dispatch_date|default:"-" }}</td>
                 <td>{{ line.quantity }}</td>

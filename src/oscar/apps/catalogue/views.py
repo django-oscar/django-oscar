@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core.paginator import InvalidPage
-from django.http import HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.http import urlquote
 from django.utils.translation import gettext_lazy as _
@@ -41,9 +41,16 @@ class ProductDetailView(DetailView):
         if redirect is not None:
             return redirect
 
+        # Do allow staff members so they can test layout etc.
+        if not self.is_viewable(product, request):
+            raise Http404()
+
         response = super().get(request, **kwargs)
         self.send_signal(request, response, product)
         return response
+
+    def is_viewable(self, product, request):
+        return product.is_public or request.user.is_staff
 
     def get_object(self, queryset=None):
         # Check if self.object is already set to prevent unnecessary DB calls

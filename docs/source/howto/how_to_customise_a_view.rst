@@ -13,13 +13,13 @@ your project.  It builds upon the steps described in
 Example
 -------
 
-Create a new homepage view class in ``myproject.promotions.views`` - you can
+Create a new homepage view class in ``myproject.offer.views`` - you can
 subclass Oscar's view if you like::
 
-    from oscar.apps.promotions.views import HomeView as CoreHomeView
+    from oscar.apps.offer.views import OfferListView as CoreOfferListView
 
-    class HomeView(CoreHomeView):
-        template_name = 'promotions/new-homeview.html'
+    class OfferListView(CoreOfferListView):
+        template_name = 'offer/new_list.html'
 
 In this example, we set a new template location but it's possible to customise
 the view in any imaginable way.
@@ -27,13 +27,6 @@ As long as the view has the same name as the view you're replacing, and is in
 an app with the same name, it will get picked up automatically by Oscar.
 
 If you want to change the template, create the alternative template
-``new-homeview.html``.  This could either be
+``new_list.html``.  This could either be
 in a project-level ``templates`` folder that is added to your ``TEMPLATE_DIRS``
-settings, or a app-level ``templates`` folder within your 'promotions' app.  For
-now, put something simple in there, such as::
-
-    <html>
-        <body>
-            <p>You have successfully overridden the homepage template.</p>
-        </body>
-    </html>
+settings, or a app-level ``templates`` folder within your 'offer' app.

@@ -46,28 +46,13 @@ a root module under which all your forked apps will live::
 Now you call the helper management command which creates some basic files for
 you. It is explained in detail in :doc:`fork_app`. Run it like this::
 
-    $ ./manage.py oscar_fork_app order yourappsfolder/
+    $ ./manage.py oscar_fork_app order yourappsfolder
     Creating package yourappsfolder/order
     Creating admin.py
     Creating app config
     Creating models.py
     Creating migrations folder
     Replace the entry 'oscar.apps.order.apps.OrderConfig' with 'yourappsfolder.order.apps.OrderConfig' in INSTALLED_APPS
-
-.. note::
-
-   For forking app in project root directory, call ``oscar_fork_app`` with ``.`` (dot) instead of ``yourproject/`` path.
-
-   Example:
-
-   Calling ``./manage.py oscar_fork_app order yourproject/`` ``order`` app will be placed in ``project_root/yourproject/`` directory.
-   Calling ``./manage.py oscar_fork_app order .`` ``order`` app will be placed in ``project_root/`` directory.
-
-``oscar_fork_app`` has an optional third argument, which allows specifying
-the sub-package name of the new app. For example, calling
-``./manage.py oscar_fork_app order yourproject/ yoursubpackage.order`` places
-the ``order`` app in the
-``project_root/yourproject/yoursubpackage/order`` directory.
 
 Replace Oscar's app with your own in ``INSTALLED_APPS``
 =======================================================

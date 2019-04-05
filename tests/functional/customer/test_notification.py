@@ -16,6 +16,8 @@ class TestAUserWithUnreadNotifications(WebTestCase):
 
     def test_can_see_them_in_page_header(self):
         homepage = self.app.get('/', user=self.user)
+        if homepage.status_code == 302:
+            homepage = homepage.follow()
         self.assertEqual(1, homepage.context['num_unread_notifications'])
 
     def test_notification_list_view_shows_user_notifications(self):
