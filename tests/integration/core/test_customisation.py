@@ -93,7 +93,7 @@ def test_dashboard_app_config(tmpdir, monkeypatch):
     assert hasattr(config_module, 'DashboardConfig')
 
 
-class TestThirdParty(TestCase):
+class TestForkApp(TestCase):
 
     def setUp(self):
         self.original_paths = sys.path[:]
@@ -102,7 +102,7 @@ class TestThirdParty(TestCase):
     def tearDown(self):
         sys.path = self.original_paths
 
-    def test_fork(self):
+    def test_fork_third_party(self):
         tmpdir = tempfile.mkdtemp()
         installed_apps = list(settings.INSTALLED_APPS)
         installed_apps.append('thirdparty_package.apps.myapp')
@@ -117,3 +117,12 @@ class TestThirdParty(TestCase):
             assert hasattr(config_module, 'MyAppConfig')
             assert config_module.MyAppConfig.name.endswith('.custom_myapp')
             assert config_module.MyAppConfig.label == 'myapp'
+
+    def test_absolute_target_path(self):
+        tmpdir = tempfile.mkdtemp()
+        customisation.fork_app('order', tmpdir, 'order')
+        sys.path.append(tmpdir)
+        config_module = __import__('order.apps', fromlist=['OrderConfig'])
+        assert hasattr(config_module, 'OrderConfig')
+        config_app_name = config_module.OrderConfig.name
+        assert not config_app_name.startswith('.')
