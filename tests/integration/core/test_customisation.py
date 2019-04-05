@@ -1,7 +1,11 @@
 from os.path import exists, join
+import sys
+import tempfile
 
 import pytest
-from django.test import TestCase
+
+from django.conf import settings
+from django.test import TestCase, override_settings
 
 from oscar.core import customisation
 
@@ -87,3 +91,29 @@ def test_dashboard_app_config(tmpdir, monkeypatch):
     )
 
     assert hasattr(config_module, 'DashboardConfig')
+
+
+class TestThirdParty(TestCase):
+
+    def setUp(self):
+        self.original_paths = sys.path[:]
+        sys.path.append('./tests/_site/')
+
+    def tearDown(self):
+        sys.path = self.original_paths
+
+    def test_fork(self):
+        tmpdir = tempfile.mkdtemp()
+        installed_apps = list(settings.INSTALLED_APPS)
+        installed_apps.append('thirdparty_package.apps.myapp')
+        with override_settings(INSTALLED_APPS=installed_apps):
+            customisation.fork_app('myapp', tmpdir, 'custom_myapp')
+            forked_app_dir = join(tmpdir, 'custom_myapp')
+            assert exists(forked_app_dir)
+            assert exists(join(forked_app_dir, 'apps.py'))
+            sys.path.append(tmpdir)
+
+            config_module = __import__('custom_myapp.apps', fromlist=['CustomMyAppConfig'])
+            assert hasattr(config_module, 'MyAppConfig')
+            assert config_module.MyAppConfig.name.endswith('.custom_myapp')
+            assert config_module.MyAppConfig.label == 'myapp'
