@@ -9,7 +9,7 @@ Fork the repo and run::
     $ mkvirtualenv oscar  # needs virtualenvwrapper
     $ make install
 
-If using Ubuntu, the ``python-dev`` package is required for some packages to
+If using Ubuntu, the ``python3-dev`` package is required for some packages to
 compile.
 
 The :doc:`sandbox </internals/sandbox>` site can be used to examine changes
@@ -23,7 +23,7 @@ JPEG Support
 On Ubuntu, you need to install a few libraries to get JPEG support with
 Pillow::
 
-    $ sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
+    $ sudo apt-get install python3-dev libjpeg-dev libfreetype6-dev zlib1g-dev
 
 If you already installed PIL (you did if you ran ``make install`` previously),
 reinstall it::
