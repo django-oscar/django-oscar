@@ -51,7 +51,12 @@ play around with Oscar.
     While installing Oscar is straightforward, some of Oscar's dependencies
     don't support Windows and are tricky to be properly installed, and therefore
     you might encounter some errors that prevent a successful installation.
-    
+
+In order to compile uWSGI, which is a dependency of the sandbox, you will
+first need to install the Python development headers with:::
+
+    $ sudo apt-get install python3-dev
+
 Install Oscar and its dependencies within a virtualenv:
 
 .. code-block:: bash
