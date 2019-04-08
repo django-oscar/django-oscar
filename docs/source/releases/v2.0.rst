@@ -173,6 +173,8 @@ Minor changes
 - Oscar's 500 error template no longer inherits other templates and
   does not use any template template tags and
   styling to avoid potential errors caused by the template itself (see :issue:`2971`).
+  
+- Line discounts are now capped to a minimum of zero - i.e., negative discounts will not be reported.
 
 .. _incompatible_in_2.0:
 
