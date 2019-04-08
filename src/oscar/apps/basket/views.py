@@ -152,7 +152,7 @@ class BasketView(ModelFormSetView):
 
         for form in formset:
             if (hasattr(form, 'cleaned_data')
-                    and form.cleaned_data['save_for_later']):
+                    and getattr(form.cleaned_data, 'save_for_later', False)):
                 line = form.instance
                 if self.request.user.is_authenticated:
                     self.move_line_to_saved_basket(line)

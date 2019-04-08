@@ -200,3 +200,81 @@ class SavedBasketTests(WebTestCase):
         # we can't add more than stock level into basket
         self.assertEqual(Basket.open.get(id=basket.id).lines.get(product=product).quantity, 1)
         self.assertRedirects(response, reverse('basket:summary'))
+
+
+class BasketFormSetTests(WebTestCase):
+    csrf_checks = False
+
+    def test_formset_with_removed_line(self):
+        products = [create_product() for i in range(3)]
+        basket = factories.create_basket(empty=True)
+        basket.owner = self.user
+        basket.save()
+
+        add_product(basket, product=products[0])
+        add_product(basket, product=products[1])
+        add_product(basket, product=products[2])
+        response = self.get(reverse('basket:summary'))
+        formset = response.context['formset']
+        self.assertEqual(len(formset.forms), 3)
+
+        basket.lines.filter(product=products[0]).delete()
+
+        management_form = formset.management_form
+        data = {
+            formset.add_prefix('INITIAL_FORMS'): management_form.initial['INITIAL_FORMS'],
+            formset.add_prefix('MAX_NUM_FORMS'): management_form.initial['MAX_NUM_FORMS'],
+            formset.add_prefix('TOTAL_FORMS'): management_form.initial['TOTAL_FORMS'],
+            'form-0-quantity': 1,
+            'form-0-id': formset.forms[0].instance.id,
+            'form-1-quantity': 2,
+            'form-1-id': formset.forms[1].instance.id,
+            'form-2-quantity': 2,
+            'form-2-id': formset.forms[2].instance.id,
+        }
+        response = self.post(reverse('basket:summary'), params=data)
+        self.assertEqual(response.status_code, 302)
+        formset = response.follow().context['formset']
+        self.assertEqual(len(formset.forms), 2)
+        self.assertEqual(len(formset.forms_with_instances), 2)
+        self.assertEqual(basket.lines.all()[0].quantity, 2)
+        self.assertEqual(basket.lines.all()[1].quantity, 2)
+
+    def test_invalid_formset_with_removed_line(self):
+        products = [create_product() for i in range(3)]
+        basket = factories.create_basket(empty=True)
+        basket.owner = self.user
+        basket.save()
+
+        add_product(basket, product=products[0])
+        add_product(basket, product=products[1])
+        add_product(basket, product=products[2])
+        response = self.get(reverse('basket:summary'))
+        formset = response.context['formset']
+        self.assertEqual(len(formset.forms), 3)
+
+        basket.lines.filter(product=products[0]).delete()
+
+        stockrecord = products[1].stockrecords.first()
+        stockrecord.num_in_stock = 0
+        stockrecord.save()
+
+        management_form = formset.management_form
+        data = {
+            formset.add_prefix('INITIAL_FORMS'): management_form.initial['INITIAL_FORMS'],
+            formset.add_prefix('MAX_NUM_FORMS'): management_form.initial['MAX_NUM_FORMS'],
+            formset.add_prefix('TOTAL_FORMS'): management_form.initial['TOTAL_FORMS'],
+            'form-0-quantity': 1,
+            'form-0-id': formset.forms[0].instance.id,
+            'form-1-quantity': 2,
+            'form-1-id': formset.forms[1].instance.id,
+            'form-2-quantity': 2,
+            'form-2-id': formset.forms[2].instance.id,
+        }
+        response = self.post(reverse('basket:summary'), params=data)
+        self.assertEqual(response.status_code, 200)
+        formset = response.context['formset']
+        self.assertEqual(len(formset.forms), 3)
+        self.assertEqual(len(formset.forms_with_instances), 2)
+        self.assertEqual(basket.lines.all()[0].quantity, 1)
+        self.assertEqual(basket.lines.all()[1].quantity, 1)
