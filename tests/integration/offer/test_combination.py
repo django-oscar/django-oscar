@@ -34,8 +34,8 @@ class TestACountConditionWithPercentageDiscount(TestCase):
         self.assertTrue(self.offer.is_condition_satisfied(basket))
         discount = self.offer.apply_benefit(basket)
         self.assertTrue(discount.discount > 0)
-        self.assertEqual(3, basket.num_items_with_discount)
-        self.assertEqual(0, basket.num_items_without_discount)
+        self.assertEqual(1, basket.num_items_with_discount)
+        self.assertEqual(2, basket.num_items_without_discount)
         self.assertFalse(self.offer.is_condition_satisfied(basket))
 
     def test_consumes_correct_number_of_products_for_4_product_basket(self):
@@ -45,21 +45,22 @@ class TestACountConditionWithPercentageDiscount(TestCase):
         self.assertTrue(self.offer.is_condition_satisfied(basket))
         discount = self.offer.apply_benefit(basket)
         self.assertTrue(discount.discount > 0)
-        self.assertEqual(3, basket.num_items_with_discount)
-        self.assertEqual(1, basket.num_items_without_discount)
-        self.assertFalse(self.offer.is_condition_satisfied(basket))
+        self.assertEqual(1, basket.num_items_with_discount)
+        self.assertEqual(3, basket.num_items_without_discount)
+        self.assertTrue(self.offer.is_condition_satisfied(basket))
 
     def test_consumes_correct_number_of_products_for_6_product_basket(self):
         basket = factories.create_basket(empty=True)
         add_products(basket, [(D('1'), 3), (D('1'), 3)])
-
+        self.assertTrue(self.offer.is_condition_satisfied(basket))
         # First application
         discount = self.offer.apply_benefit(basket)
         self.assertTrue(discount.discount > 0)
-        self.assertEqual(3, basket.num_items_with_discount)
-        self.assertEqual(3, basket.num_items_without_discount)
+        self.assertEqual(1, basket.num_items_with_discount)
+        self.assertEqual(5, basket.num_items_without_discount)
 
-        # Second application
+        # Second application (no additional discounts)
         discount = self.offer.apply_benefit(basket)
-        self.assertTrue(discount.discount > 0)
-        self.assertEqual(6, basket.num_items_with_discount)
+        self.assertFalse(discount.discount > 0)
+        self.assertEqual(1, basket.num_items_with_discount)
+        self.assertEqual(5, basket.num_items_without_discount)

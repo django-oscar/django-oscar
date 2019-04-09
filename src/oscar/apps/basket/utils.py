@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from oscar.core.loading import get_class
 
 Applicator = get_class('offer.applicator', 'Applicator')
+ConditionalOffer = get_class('offer.models', 'ConditionalOffer')
 
 
 class BasketMessageGenerator(object):
@@ -95,7 +96,7 @@ class LineOfferConsumer(object):
         self.__affected_quantity += min(available, quantity)
 
     # public
-    def consume(self, quantity, offer=None):
+    def consume(self, quantity: int, offer=None):
         """
         mark a basket line as consumed by an offer
 
@@ -131,7 +132,11 @@ class LineOfferConsumer(object):
             return self.__affected_quantity
         return int(self.__consumptions[offer.pk])
 
-    def available(self, offer=None):
+    @property
+    def consumers(self):
+        return [x for x in self.__offers.values() if self.consumed(x)]
+
+    def available(self, offer=None) -> int:
         """
         check how many items are available for offer
 
@@ -140,14 +145,23 @@ class LineOfferConsumer(object):
         :return: the number of items available for offer
         :rtype: int
         """
-        if offer:
-            exclusive = any([x.exclusive for x in self.__offers.values()])
-            exclusive |= bool(offer.exclusive)
-        else:
-            exclusive = True
+        max_affected_items = self.__line.quantity
 
-        if exclusive:
-            offer = None
+        if offer and isinstance(offer, ConditionalOffer):
 
-        consumed = self.consumed(offer)
-        return int(self.__line.quantity - consumed)
+            applied = [x for x in self.consumers if x != offer]
+
+            # find any *other* exclusive offers
+            if any([x.exclusive for x in applied]):
+                return 0
+
+            # exclusive offers cannot be applied if any other
+            # offers are active already
+            if offer.exclusive and len(applied):
+                return 0
+
+            # respect max_affected_items
+            if offer.benefit.max_affected_items:
+                max_affected_items = offer.benefit.max_affected_items
+
+        return max_affected_items - self.consumed(offer)
