@@ -12,7 +12,7 @@ Site = get_model('sites', 'Site')
 register = template.Library()
 
 
-@register.inclusion_tag('customer/history/recently_viewed_products.html',
+@register.inclusion_tag('oscar/customer/history/recently_viewed_products.html',
                         takes_context=True)
 def recently_viewed_products(context, current_product=None):
     """

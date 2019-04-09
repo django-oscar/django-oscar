@@ -22,7 +22,7 @@ PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 
 class WishListListView(PageTitleMixin, ListView):
     context_object_name = active_tab = "wishlists"
-    template_name = 'customer/wishlists/wishlists_list.html'
+    template_name = 'oscar/customer/wishlists/wishlists_list.html'
     page_title = _('Wish Lists')
 
     def get_queryset(self):
@@ -37,7 +37,7 @@ class WishListDetailView(PageTitleMixin, FormView):
     It is implemented as FormView because it's easier to adapt a FormView to
     display a product then adapt a DetailView to handle form validation.
     """
-    template_name = 'customer/wishlists/wishlists_detail.html'
+    template_name = 'oscar/customer/wishlists/wishlists_detail.html'
     active_tab = "wishlists"
     form_class = LineFormset
 
@@ -86,7 +86,7 @@ class WishListCreateView(PageTitleMixin, CreateView):
     the wishlist.
     """
     model = WishList
-    template_name = 'customer/wishlists/wishlists_form.html'
+    template_name = 'oscar/customer/wishlists/wishlists_form.html'
     active_tab = "wishlists"
     page_title = _('Create a new wish list')
     form_class = WishListForm
@@ -150,7 +150,7 @@ class WishListCreateWithProductView(View):
 
 class WishListUpdateView(PageTitleMixin, UpdateView):
     model = WishList
-    template_name = 'customer/wishlists/wishlists_form.html'
+    template_name = 'oscar/customer/wishlists/wishlists_form.html'
     active_tab = "wishlists"
     form_class = WishListForm
     context_object_name = 'wishlist'
@@ -176,7 +176,7 @@ class WishListUpdateView(PageTitleMixin, UpdateView):
 
 class WishListDeleteView(PageTitleMixin, DeleteView):
     model = WishList
-    template_name = 'customer/wishlists/wishlists_delete.html'
+    template_name = 'oscar/customer/wishlists/wishlists_delete.html'
     active_tab = "wishlists"
 
     def get_page_title(self):
@@ -262,7 +262,7 @@ class LineMixin(object):
 
 
 class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
-    template_name = 'customer/wishlists/wishlists_delete_product.html'
+    template_name = 'oscar/customer/wishlists/wishlists_delete_product.html'
     active_tab = "wishlists"
 
     def get_page_title(self):

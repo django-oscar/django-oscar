@@ -18,7 +18,7 @@ Product = get_model('catalogue', 'product')
 
 
 class CreateProductReview(CreateView):
-    template_name = "catalogue/reviews/review_form.html"
+    template_name = "oscar/catalogue/reviews/review_form.html"
     model = ProductReview
     product_model = Product
     form_class = ProductReviewForm
@@ -66,7 +66,7 @@ class CreateProductReview(CreateView):
 
 
 class ProductReviewDetail(DetailView):
-    template_name = "catalogue/reviews/review_detail.html"
+    template_name = "oscar/catalogue/reviews/review_detail.html"
     context_object_name = 'review'
     model = ProductReview
 
@@ -107,7 +107,7 @@ class ProductReviewList(ListView):
     """
     Browse reviews for a product
     """
-    template_name = 'catalogue/reviews/review_list.html'
+    template_name = 'oscar/catalogue/reviews/review_list.html'
     context_object_name = "reviews"
     model = ProductReview
     product_model = Product

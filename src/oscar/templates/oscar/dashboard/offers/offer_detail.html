@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load currency_filters %}
 {% load i18n %}
 
@@ -120,7 +120,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% include 'dashboard/partials/pagination.html' %}
+        {% include 'oscar/dashboard/partials/pagination.html' %}
     {% endif %}
 
 {% endblock dashboard_content %}

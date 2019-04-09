@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 
 {% block title %}
@@ -69,7 +69,7 @@
                                 {% endif %}
 
                                 {% for field in form %}
-                                    {% include 'dashboard/partials/form_field.html' with field=field %}
+                                    {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
                                 {% endfor %}
                             </div>
                         </div>

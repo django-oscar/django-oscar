@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load currency_filters %}
 {% load i18n %}
 {% load django_tables2 %}
@@ -29,7 +29,7 @@
     </div>
     <div class="well">
         <form method="get" action="{% url 'dashboard:order-stats' %}" class="form-inline">
-            {% include "dashboard/partials/form_fields_inline.html" with form=form %}
+            {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans "Filter result" %}</button>
             <a href="{% url 'dashboard:order-stats' %}" class="btn btn-default">{% trans "Reset" %}</a>
         </form>

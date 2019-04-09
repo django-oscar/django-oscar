@@ -36,7 +36,7 @@ class TestAttributeOptionGroupCreateView(PopUpObjectCreateMixin, WebTestCase):
     form = AttributeOptionGroupForm
     page_title = gettext("Add a new Attribute Option Group")
     url_name = 'dashboard:catalogue-attribute-option-group-create'
-    template_name = 'dashboard/catalogue/attribute_option_group_form.html'
+    template_name = 'oscar/dashboard/catalogue/attribute_option_group_form.html'
     success_message = gettext("Attribute Option Group created successfully")
     success_url_name = 'dashboard:catalogue-attribute-option-group-list'
     create_check_attr = 'name'
@@ -74,7 +74,7 @@ class TestAttributeOptionGroupUpdateView(PopUpObjectUpdateMixin, WebTestCase):
     form = AttributeOptionGroupForm
     page_title = None
     url_name = 'dashboard:catalogue-attribute-option-group-update'
-    template_name = 'dashboard/catalogue/attribute_option_group_form.html'
+    template_name = 'oscar/dashboard/catalogue/attribute_option_group_form.html'
     success_message = gettext("Attribute Option Group updated successfully")
     success_url_name = 'dashboard:catalogue-attribute-option-group-list'
     create_check_attr = 'name'
@@ -122,7 +122,7 @@ class TestAttributeOptionGroupDeleteView(PopUpObjectDeleteMixin, WebTestCase):
     model = AttributeOptionGroup
     page_title = None
     url_name = 'dashboard:catalogue-attribute-option-group-delete'
-    template_name = 'dashboard/catalogue/attribute_option_group_delete.html'
+    template_name = 'oscar/dashboard/catalogue/attribute_option_group_delete.html'
     success_message = gettext("Attribute Option Group deleted successfully")
     success_url_name = 'dashboard:catalogue-attribute-option-group-list'
     delete_dissalowed_possible = True

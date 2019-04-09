@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'oscar/layout.html' %}
 {% load i18n %}
 
 {% block headertext %}
@@ -19,7 +19,7 @@
     <form method="post">
         <p>{% trans "Let us know your email address and we'll create a dashboard user for you and email you the details." %}</p>
         {% csrf_token %}
-        {% include 'partials/form_fields.html' with form=form %}
+        {% include 'oscar/partials/form_fields.html' with form=form %}
         <button type="submit" class="btn btn-large btn-primary" data-loading-text="{% trans 'Sending...' %}">{% trans "Send email" %}</button>
     </form>
 {% endblock %}

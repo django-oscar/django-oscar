@@ -27,13 +27,13 @@ RangeForm, RangeProductForm = get_classes('dashboard.ranges.forms',
 class RangeListView(ListView):
     model = Range
     context_object_name = 'ranges'
-    template_name = 'dashboard/ranges/range_list.html'
+    template_name = 'oscar/dashboard/ranges/range_list.html'
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
 
 class RangeCreateView(CreateView):
     model = Range
-    template_name = 'dashboard/ranges/range_form.html'
+    template_name = 'oscar/dashboard/ranges/range_form.html'
     form_class = RangeForm
 
     def get_success_url(self):
@@ -42,7 +42,7 @@ class RangeCreateView(CreateView):
                            kwargs={'pk': self.object.id})
         else:
             msg = render_to_string(
-                'dashboard/ranges/messages/range_saved.html',
+                'oscar/dashboard/ranges/messages/range_saved.html',
                 {'range': self.object})
             messages.success(self.request, msg, extra_tags='safe noicon')
             return reverse('dashboard:range-list')
@@ -55,7 +55,7 @@ class RangeCreateView(CreateView):
 
 class RangeUpdateView(UpdateView):
     model = Range
-    template_name = 'dashboard/ranges/range_form.html'
+    template_name = 'oscar/dashboard/ranges/range_form.html'
     form_class = RangeForm
 
     def get_object(self):
@@ -70,7 +70,7 @@ class RangeUpdateView(UpdateView):
                            kwargs={'pk': self.object.id})
         else:
             msg = render_to_string(
-                'dashboard/ranges/messages/range_saved.html',
+                'oscar/dashboard/ranges/messages/range_saved.html',
                 {'range': self.object})
             messages.success(self.request, msg, extra_tags='safe noicon')
             return reverse('dashboard:range-list')
@@ -84,7 +84,7 @@ class RangeUpdateView(UpdateView):
 
 class RangeDeleteView(DeleteView):
     model = Range
-    template_name = 'dashboard/ranges/range_delete.html'
+    template_name = 'oscar/dashboard/ranges/range_delete.html'
     context_object_name = 'range'
 
     def get_success_url(self):
@@ -94,7 +94,7 @@ class RangeDeleteView(DeleteView):
 
 class RangeProductListView(BulkEditMixin, ListView):
     model = Product
-    template_name = 'dashboard/ranges/range_product_list.html'
+    template_name = 'oscar/dashboard/ranges/range_product_list.html'
     context_object_name = 'products'
     actions = ('remove_selected_products', 'add_products')
     form_class = RangeProductForm
@@ -181,7 +181,7 @@ class RangeProductListView(BulkEditMixin, ListView):
             messages.error(request, upload.error_message)
         else:
             msg = render_to_string(
-                'dashboard/ranges/messages/range_products_saved.html',
+                'oscar/dashboard/ranges/messages/range_products_saved.html',
                 {'range': range,
                  'upload': upload})
             messages.success(request, msg, extra_tags='safe noicon block')

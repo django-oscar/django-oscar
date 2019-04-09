@@ -24,7 +24,7 @@ User = get_user_model()
 
 
 class IndexView(BulkEditMixin, FormMixin, SingleTableView):
-    template_name = 'dashboard/users/index.html'
+    template_name = 'oscar/dashboard/users/index.html'
     table_pagination = True
     model = User
     actions = ('make_active', 'make_inactive', )
@@ -118,7 +118,7 @@ class IndexView(BulkEditMixin, FormMixin, SingleTableView):
 
 
 class UserDetailView(DetailView):
-    template_name = 'dashboard/users/detail.html'
+    template_name = 'oscar/dashboard/users/detail.html'
     model = User
     context_object_name = 'customer'
 
@@ -154,7 +154,7 @@ class ProductAlertListView(ListView):
     model = ProductAlert
     form_class = ProductAlertSearchForm
     context_object_name = 'alerts'
-    template_name = 'dashboard/users/alerts/list.html'
+    template_name = 'oscar/dashboard/users/alerts/list.html'
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     base_description = _('All Alerts')
     description = ''
@@ -209,7 +209,7 @@ class ProductAlertListView(ListView):
 
 
 class ProductAlertUpdateView(UpdateView):
-    template_name = 'dashboard/users/alerts/update.html'
+    template_name = 'oscar/dashboard/users/alerts/update.html'
     model = ProductAlert
     form_class = ProductAlertUpdateForm
     context_object_name = 'alert'
@@ -221,7 +221,7 @@ class ProductAlertUpdateView(UpdateView):
 
 class ProductAlertDeleteView(DeleteView):
     model = ProductAlert
-    template_name = 'dashboard/users/alerts/delete.html'
+    template_name = 'oscar/dashboard/users/alerts/delete.html'
     context_object_name = 'alert'
 
     def get_success_url(self):

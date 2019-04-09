@@ -62,7 +62,7 @@ class AccountSummaryView(generic.RedirectView):
 
 class AccountRegistrationView(RegisterUserMixin, generic.FormView):
     form_class = EmailUserCreationForm
-    template_name = 'customer/registration.html'
+    template_name = 'oscar/customer/registration.html'
     redirect_field_name = 'next'
 
     def get(self, request, *args, **kwargs):
@@ -99,7 +99,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
     This is actually a slightly odd double form view that allows a customer to
     either login or register.
     """
-    template_name = 'customer/login_registration.html'
+    template_name = 'oscar/customer/login_registration.html'
     login_prefix, registration_prefix = 'login', 'registration'
     login_form_class = EmailAuthenticationForm
     registration_form_class = EmailUserCreationForm
@@ -252,7 +252,7 @@ class LogoutView(generic.RedirectView):
 
 
 class ProfileView(PageTitleMixin, generic.TemplateView):
-    template_name = 'customer/profile/profile.html'
+    template_name = 'oscar/customer/profile/profile.html'
     page_title = _('Profile')
     active_tab = 'profile'
 
@@ -303,7 +303,7 @@ class ProfileView(PageTitleMixin, generic.TemplateView):
 
 class ProfileUpdateView(PageTitleMixin, generic.FormView):
     form_class = ProfileForm
-    template_name = 'customer/profile/profile_form.html'
+    template_name = 'oscar/customer/profile/profile_form.html'
     communication_type_code = 'EMAIL_CHANGED'
     page_title = _('Edit Profile')
     active_tab = 'profile'
@@ -349,7 +349,7 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
 
 class ProfileDeleteView(PageTitleMixin, generic.FormView):
     form_class = ConfirmPasswordForm
-    template_name = 'customer/profile/profile_delete.html'
+    template_name = 'oscar/customer/profile/profile_delete.html'
     page_title = _('Delete profile')
     active_tab = 'profile'
     success_url = settings.OSCAR_HOMEPAGE
@@ -369,7 +369,7 @@ class ProfileDeleteView(PageTitleMixin, generic.FormView):
 
 class ChangePasswordView(PageTitleMixin, generic.FormView):
     form_class = PasswordChangeForm
-    template_name = 'customer/profile/change_password_form.html'
+    template_name = 'oscar/customer/profile/change_password_form.html'
     communication_type_code = 'PASSWORD_CHANGED'
     page_title = _('Change Password')
     active_tab = 'profile'
@@ -403,7 +403,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
 
 class EmailHistoryView(PageTitleMixin, generic.ListView):
     context_object_name = "emails"
-    template_name = 'customer/email/email_list.html'
+    template_name = 'oscar/customer/email/email_list.html'
     paginate_by = settings.OSCAR_EMAILS_PER_PAGE
     page_title = _('Email History')
     active_tab = 'emails'
@@ -414,7 +414,7 @@ class EmailHistoryView(PageTitleMixin, generic.ListView):
 
 class EmailDetailView(PageTitleMixin, generic.DetailView):
     """Customer email"""
-    template_name = "customer/email/email_detail.html"
+    template_name = "oscar/customer/email/email_detail.html"
     context_object_name = 'email'
     active_tab = 'emails'
 
@@ -436,7 +436,7 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
     Customer order history
     """
     context_object_name = "orders"
-    template_name = 'customer/order/order_list.html'
+    template_name = 'oscar/customer/order/order_list.html'
     paginate_by = settings.OSCAR_ORDERS_PER_PAGE
     model = Order
     form_class = OrderSearchForm
@@ -485,7 +485,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
     active_tab = 'orders'
 
     def get_template_names(self):
-        return ["customer/order/order_detail.html"]
+        return ["oscar/customer/order/order_detail.html"]
 
     def get_page_title(self):
         """
@@ -597,7 +597,7 @@ class OrderLineView(PostActionMixin, generic.DetailView):
 
 class AnonymousOrderDetailView(generic.DetailView):
     model = Order
-    template_name = "customer/anon_order.html"
+    template_name = "oscar/customer/anon_order.html"
 
     def get_object(self, queryset=None):
         # Check URL hash matches that for order to prevent spoof attacks
@@ -615,7 +615,7 @@ class AnonymousOrderDetailView(generic.DetailView):
 class AddressListView(PageTitleMixin, generic.ListView):
     """Customer address book"""
     context_object_name = "addresses"
-    template_name = 'customer/address/address_list.html'
+    template_name = 'oscar/customer/address/address_list.html'
     paginate_by = settings.OSCAR_ADDRESSES_PER_PAGE
     active_tab = 'addresses'
     page_title = _('Address Book')
@@ -628,7 +628,7 @@ class AddressListView(PageTitleMixin, generic.ListView):
 class AddressCreateView(PageTitleMixin, generic.CreateView):
     form_class = UserAddressForm
     model = UserAddress
-    template_name = 'customer/address/address_form.html'
+    template_name = 'oscar/customer/address/address_form.html'
     active_tab = 'addresses'
     page_title = _('Add a new address')
     success_url = reverse_lazy('customer:address-list')
@@ -652,7 +652,7 @@ class AddressCreateView(PageTitleMixin, generic.CreateView):
 class AddressUpdateView(PageTitleMixin, generic.UpdateView):
     form_class = UserAddressForm
     model = UserAddress
-    template_name = 'customer/address/address_form.html'
+    template_name = 'oscar/customer/address/address_form.html'
     active_tab = 'addresses'
     page_title = _('Edit address')
     success_url = reverse_lazy('customer:address-list')
@@ -678,7 +678,7 @@ class AddressUpdateView(PageTitleMixin, generic.UpdateView):
 
 class AddressDeleteView(PageTitleMixin, generic.DeleteView):
     model = UserAddress
-    template_name = "customer/address/address_delete.html"
+    template_name = "oscar/customer/address/address_delete.html"
     page_title = _('Delete address?')
     active_tab = 'addresses'
     context_object_name = 'address'

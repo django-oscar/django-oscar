@@ -1,4 +1,4 @@
-{% extends "checkout/layout.html" %}
+{% extends "oscar/checkout/layout.html" %}
 {% load currency_filters %}
 {% load image_tags %}
 {% load i18n %}
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block checkout_nav %}
-    {% include 'checkout/nav.html' %}
+    {% include 'oscar/checkout/nav.html' %}
 {% endblock %}
 
 {% block content %}
@@ -151,7 +151,7 @@
                 <div class="sub-header">
                     <h2>{% trans 'Totals' %}</h2>
                 </div>
-                {% include 'basket/partials/basket_totals.html' %}
+                {% include 'oscar/basket/partials/basket_totals.html' %}
             </div>
         </div>
 

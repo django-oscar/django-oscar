@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "oscar/layout.html" %}
 {% load i18n %}
 
 {% block title %}
@@ -33,7 +33,7 @@
 
 {% block content %}
     <section>
-        {% include 'catalogue/reviews/review_product.html' %}
-        {% include 'catalogue/partials/review.html' %}
+        {% include 'oscar/catalogue/reviews/review_product.html' %}
+        {% include 'oscar/catalogue/partials/review.html' %}
     </section>
 {% endblock %}

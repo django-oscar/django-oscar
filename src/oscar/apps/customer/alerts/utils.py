@@ -97,8 +97,8 @@ def send_product_alerts(product):   # noqa C901 too complex
         if alert.user:
             # Send a site notification
             num_notifications += 1
-            subj_tpl = loader.get_template('customer/alerts/message_subject.html')
-            message_tpl = loader.get_template('customer/alerts/message.html')
+            subj_tpl = loader.get_template('oscar/customer/alerts/message_subject.html')
+            message_tpl = loader.get_template('oscar/customer/alerts/message.html')
             services.notify_user(
                 alert.user,
                 subj_tpl.render(ctx).strip(),

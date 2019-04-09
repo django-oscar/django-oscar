@@ -9,11 +9,11 @@
     {% basket_form request product as basket_form %}
     <form id="add_to_basket_form" action="{% url 'basket:add' pk=product.pk  %}" method="post" class="add-to-basket">
         {% csrf_token %}
-        {% include "partials/form_fields.html" with form=basket_form %}
+        {% include "oscar/partials/form_fields.html" with form=basket_form %}
         <button type="submit" class="btn btn-lg btn-primary btn-add-to-basket" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
     </form>
     {% iffeature "wishlists" %}
-        {% include "catalogue/partials/add_to_wishlist.html" %}
+        {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
     {% endiffeature %}
 {% else %}
     {% if has_active_alert %}
@@ -22,11 +22,11 @@
         <form id="alert_form" method="post" action="{% url 'customer:alert-create' pk=product.id %}" class="add-to-basket">
             {% csrf_token %}
             <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
-            {% include "partials/form_fields.html" with form=alert_form %}
+            {% include "oscar/partials/form_fields.html" with form=alert_form %}
             <button type="submit" class="btn btn-lg btn-info btn-add-to-basket" data-loading-text="{% trans 'Submitting...' %}">{% trans "Notify me" %}</button>
         </form>
     {% endif %}
     {% iffeature "wishlists" %}
-        {% include "catalogue/partials/add_to_wishlist.html" %}
+        {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
     {% endiffeature %}
 {% endif %}

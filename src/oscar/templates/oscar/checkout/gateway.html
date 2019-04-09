@@ -1,4 +1,4 @@
-{% extends "checkout/layout.html" %}
+{% extends "oscar/checkout/layout.html" %}
 
 {% load i18n %}
 {% load widget_tweaks %}
@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block checkout_nav %}
-    {% include 'checkout/nav.html' with step=0 %}
+    {% include 'oscar/checkout/nav.html' with step=0 %}
 {% endblock %}
 
 {% block checkout_title %}{% trans "Who are you?" %}{% endblock %}
@@ -19,7 +19,7 @@
         {% csrf_token %}
         {{ form.non_field_errors }}
 
-        {% include "partials/form_field.html" with field=form.username %}
+        {% include "oscar/partials/form_field.html" with field=form.username %}
 
         <div class="form-group">
             <div class="controls">

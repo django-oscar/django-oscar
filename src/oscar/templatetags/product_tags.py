@@ -18,10 +18,10 @@ def render_product(context, product):
         # database...
         return ''
 
-    names = ['catalogue/partials/product/upc-%s.html' % product.upc,
-             'catalogue/partials/product/class-%s.html'
+    names = ['oscar/catalogue/partials/product/upc-%s.html' % product.upc,
+             'oscar/catalogue/partials/product/class-%s.html'
              % product.get_product_class().slug,
-             'catalogue/partials/product.html']
+             'oscar/catalogue/partials/product.html']
     template_ = select_template(names)
     context = context.flatten()
 

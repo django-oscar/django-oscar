@@ -1,4 +1,4 @@
-{% extends "customer/baseaccountpage.html" %}
+{% extends "oscar/customer/baseaccountpage.html" %}
 {% load i18n %}
 
 {% block breadcrumbs %}
@@ -28,7 +28,7 @@
         {% if not wishlist %}
             <p>{% trans "What should your new wish list be called?" %}</p>
         {% endif %}
-        {% include "partials/form_fields.html" %}
+        {% include "oscar/partials/form_fields.html" %}
         {% if product %}
             <p>
                 {% blocktrans with title=product.get_title %}

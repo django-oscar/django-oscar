@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "oscar/layout.html" %}
 
 
 {% load i18n %}
@@ -48,13 +48,13 @@
     {% if products %}
         <section>
             <div>
-                {% include "partials/pagination.html" %}
+                {% include "oscar/partials/pagination.html" %}
                 <ol class="row">
                     {% for product in products %}
                     <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
                     {% endfor %}
                 </ol>
-                {% include "partials/pagination.html" %}
+                {% include "oscar/partials/pagination.html" %}
             </div>
         </section>
     {% else %}

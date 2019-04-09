@@ -1,4 +1,4 @@
-{% extends "customer/baseaccountpage.html" %}
+{% extends "oscar/customer/baseaccountpage.html" %}
 {% load i18n %}
 {% load currency_filters %}
 {% load staticfiles %}
@@ -34,7 +34,7 @@
         <div class="well">
             <h2>{% trans "Filter" %}</h2>
             <form method="get" class="form-horizontal">
-                {% include "partials/form_fields.html" with form=form style='horizontal' %}
+                {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-8">
                         <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans 'Filter results' %}</button>
@@ -63,7 +63,7 @@
                 </tr>
             {% endfor %}
         </table>
-        {% include "partials/pagination.html" %}
+        {% include "oscar/partials/pagination.html" %}
     {% else %}
         {% if form.is_bound %}
             <p>{% trans "No orders match your search." %}</p>

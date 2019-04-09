@@ -110,11 +110,11 @@ class ProductDetailView(DetailView):
             return [self.template_name]
 
         return [
-            '%s/detail-for-upc-%s.html' % (
+            'oscar/%s/detail-for-upc-%s.html' % (
                 self.template_folder, self.object.upc),
-            '%s/detail-for-class-%s.html' % (
+            'oscar/%s/detail-for-class-%s.html' % (
                 self.template_folder, self.object.get_product_class().slug),
-            '%s/detail.html' % self.template_folder]
+            'oscar/%s/detail.html' % self.template_folder]
 
 
 class CatalogueView(TemplateView):
@@ -122,7 +122,7 @@ class CatalogueView(TemplateView):
     Browse all products in the catalogue
     """
     context_object_name = "products"
-    template_name = 'catalogue/browse.html'
+    template_name = 'oscar/catalogue/browse.html'
 
     def get(self, request, *args, **kwargs):
         try:
@@ -151,7 +151,7 @@ class ProductCategoryView(TemplateView):
     Browse products in a given category
     """
     context_object_name = "products"
-    template_name = 'catalogue/category.html'
+    template_name = 'oscar/catalogue/category.html'
     enforce_paths = True
 
     def get(self, request, *args, **kwargs):

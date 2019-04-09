@@ -31,7 +31,7 @@ OrderDiscountCSVFormatter = get_class(
 class OfferListView(ListView):
     model = ConditionalOffer
     context_object_name = 'offers'
-    template_name = 'dashboard/offers/offer_list.html'
+    template_name = 'oscar/dashboard/offers/offer_list.html'
     form_class = OfferSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
@@ -255,7 +255,7 @@ class OfferWizardStepView(FormView):
 class OfferMetaDataView(OfferWizardStepView):
     step_name = 'metadata'
     form_class = MetaDataForm
-    template_name = 'dashboard/offers/metadata_form.html'
+    template_name = 'oscar/dashboard/offers/metadata_form.html'
     url_name = 'dashboard:offer-metadata'
     success_url_name = 'dashboard:offer-benefit'
 
@@ -269,7 +269,7 @@ class OfferMetaDataView(OfferWizardStepView):
 class OfferBenefitView(OfferWizardStepView):
     step_name = 'benefit'
     form_class = BenefitForm
-    template_name = 'dashboard/offers/benefit_form.html'
+    template_name = 'oscar/dashboard/offers/benefit_form.html'
     url_name = 'dashboard:offer-benefit'
     success_url_name = 'dashboard:offer-condition'
     previous_view = OfferMetaDataView
@@ -285,7 +285,7 @@ class OfferBenefitView(OfferWizardStepView):
 class OfferConditionView(OfferWizardStepView):
     step_name = 'condition'
     form_class = ConditionForm
-    template_name = 'dashboard/offers/condition_form.html'
+    template_name = 'oscar/dashboard/offers/condition_form.html'
     url_name = 'dashboard:offer-condition'
     success_url_name = 'dashboard:offer-restrictions'
     previous_view = OfferBenefitView
@@ -297,7 +297,7 @@ class OfferConditionView(OfferWizardStepView):
 class OfferRestrictionsView(OfferWizardStepView):
     step_name = 'restrictions'
     form_class = RestrictionsForm
-    template_name = 'dashboard/offers/restrictions_form.html'
+    template_name = 'oscar/dashboard/offers/restrictions_form.html'
     previous_view = OfferConditionView
     url_name = 'dashboard:offer-restrictions'
 
@@ -314,7 +314,7 @@ class OfferRestrictionsView(OfferWizardStepView):
 
 class OfferDeleteView(DeleteView):
     model = ConditionalOffer
-    template_name = 'dashboard/offers/offer_delete.html'
+    template_name = 'oscar/dashboard/offers/offer_delete.html'
     context_object_name = 'offer'
 
     def get_success_url(self):
@@ -326,7 +326,7 @@ class OfferDetailView(ListView):
     # Slightly odd, but we treat the offer detail view as a list view so the
     # order discounts can be browsed.
     model = OrderDiscount
-    template_name = 'dashboard/offers/offer_detail.html'
+    template_name = 'oscar/dashboard/offers/offer_detail.html'
     context_object_name = 'order_discounts'
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 

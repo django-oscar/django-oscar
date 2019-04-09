@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load sorting_tags %}
 {% load i18n %}
 
@@ -65,8 +65,8 @@
     {% else %}
         <p>{% trans "No users linked." %}</p>
     {% endif %}
-    {% include "dashboard/partials/pagination.html" %}
+    {% include "oscar/dashboard/partials/pagination.html" %}
 
     <h1>{% trans "Update details" %}</h1>
-    {% include 'dashboard/partials/form.html' %}
+    {% include 'oscar/dashboard/partials/form.html' %}
 {% endblock dashboard_content %}

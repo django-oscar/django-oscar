@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
@@ -70,7 +70,7 @@
 </div>
 <div class="well">
     <form method="get" class="form-inline">
-		{% include 'partials/form_fields_inline.html' with form=form %}
+		{% include 'oscar/partials/form_fields_inline.html' with form=form %}
 		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
 		<a href="{% url 'dashboard:voucher-list' %}" class="btn">{% trans "Reset" %}</a>
     </form>
@@ -124,6 +124,6 @@
     <tr><td>{% trans "No vouchers found." %}</td></tr>
     {% endif %}
 </table>
-{% include "partials/pagination.html" %}
+{% include "oscar/partials/pagination.html" %}
 {% endblock dashboard_content %}
 

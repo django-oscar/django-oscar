@@ -197,10 +197,10 @@ class AbstractCommunicationEventType(models.Model):
     objects = CommunicationTypeManager()
 
     # File templates
-    email_subject_template_file = 'customer/emails/commtype_%s_subject.txt'
-    email_body_template_file = 'customer/emails/commtype_%s_body.txt'
-    email_body_html_template_file = 'customer/emails/commtype_%s_body.html'
-    sms_template_file = 'customer/sms/commtype_%s_body.txt'
+    email_subject_template_file = 'oscar/customer/emails/commtype_%s_subject.txt'
+    email_body_template_file = 'oscar/customer/emails/commtype_%s_body.txt'
+    email_body_html_template_file = 'oscar/customer/emails/commtype_%s_body.html'
+    sms_template_file = 'oscar/customer/sms/commtype_%s_body.txt'
 
     class Meta:
         abstract = True

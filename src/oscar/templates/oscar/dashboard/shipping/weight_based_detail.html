@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 {% load currency_filters %}
 
@@ -89,7 +89,7 @@
         <h2>{% trans "Add a new weight band" %}</h2>
         <form method="post">
             {% csrf_token %}
-            {% include "dashboard/partials/form_fields.html" with form=form %}
+            {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Adding...' %}">{% trans 'Add weight band' %}</button>
         </form>
     </div>

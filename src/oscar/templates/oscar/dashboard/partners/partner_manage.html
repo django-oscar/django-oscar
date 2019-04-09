@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load sorting_tags %}
 {% load i18n %}
 
@@ -28,7 +28,7 @@
             <div class="table-header">
                 <h2>{{ title }}</h2>
             </div>
-            {% include "dashboard/partials/form.html" with form=form class="well" %}
+            {% include "oscar/dashboard/partials/form.html" with form=form class="well" %}
         </div>
     </div>
     <div class="row">

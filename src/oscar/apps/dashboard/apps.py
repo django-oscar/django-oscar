@@ -52,7 +52,7 @@ class DashboardConfig(OscarDashboardConfig):
             url(r'^shipping/', include(self.shipping_app.urls[0])),
 
             url(r'^login/$',
-                auth_views.LoginView.as_view(template_name='dashboard/login.html',
+                auth_views.LoginView.as_view(template_name='oscar/dashboard/login.html',
                                              authentication_form=AuthenticationForm),
                 name='login'),
             url(r'^logout/$', auth_views.LogoutView.as_view(next_page='/'), name='logout'),

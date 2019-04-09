@@ -67,7 +67,7 @@ def permissions_required(permissions, login_url=None):
     return user_passes_test(_check_permissions, login_url=login_url)
 
 
-def login_forbidden(view_func, template_name='login_forbidden.html',
+def login_forbidden(view_func, template_name='oscar/login_forbidden.html',
                     status=403):
     """
     Only allow anonymous users to access this view.

@@ -130,7 +130,7 @@
                     <div id="voucher_form_container" style="display:none">
                         <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
                             {% csrf_token %}
-                            {% include "partials/form_fields.html" with form=voucher_form %}
+                            {% include "oscar/partials/form_fields.html" with form=voucher_form %}
                             <button type="submit" class="btn btn-info" data-loading-text="{% trans 'Adding...' %}">{% trans "Add voucher" %}</button>
                             {% trans "or" %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
                         </form>
@@ -144,7 +144,7 @@
                 <div class="sub-header">
                     <h2>{% trans "Totals" %}</h2>
                 </div>
-                {% include 'basket/partials/basket_totals.html' with editable=1 %}
+                {% include 'oscar/basket/partials/basket_totals.html' with editable=1 %}
             </div>
         {% endblock baskettotals %}
     </div>

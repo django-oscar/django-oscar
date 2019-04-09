@@ -1,4 +1,4 @@
-{% extends "checkout/checkout.html" %}
+{% extends "oscar/checkout/checkout.html" %}
 {% load i18n %}
 
 {% block title %}
@@ -11,7 +11,7 @@
 {% block payment_details %}{% endblock %}
 
 {% block checkout_nav %}
-    {% include 'checkout/nav.html' with step=1 %}
+    {% include 'oscar/checkout/nav.html' with step=1 %}
 {% endblock %}
 
 {% block checkout_title %}{% trans "Edit address" %}{% endblock %}
@@ -20,7 +20,7 @@
     <div class="well">
         <form id="update_user_address" method="post" class="form form-horizontal">
             {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form style='horizontal' %}
+            {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8">
                     <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
