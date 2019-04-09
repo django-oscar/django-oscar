@@ -243,6 +243,10 @@ Backwards incompatible changes in Oscar 2.0
 - Promotions application completely removed from the Oscar core and dashboard
   and will be available as external application - `django_oscar_promotions`_.
 
+- `OSCAR_MAIN_TEMPLATE_DIR` setting was removed, existing templates were
+  updated within the full path. See :issue:`1378`, :issue:`2250`. Please
+  update your templates accordingly.
+
 .. _`django_oscar_promotions`: https://github.com/django-oscar/django-oscar-promotions
 
 Migrating forked apps

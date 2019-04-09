@@ -62,35 +62,6 @@ This basically means you can have a ``base.html`` in your local templates folder
 that extends Oscar's ``base.html`` but only customises the blocks that it needs
 to.
 
-Oscar provides a helper variable to make this easy.  First, set up your
-template configuration as so::
-
-    import os
-    from oscar import OSCAR_MAIN_TEMPLATE_DIR
-    location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
-
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [
-                location('templates'), # templates directory of the project
-                OSCAR_MAIN_TEMPLATE_DIR,
-            ],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    ...
-                    'oscar.core.context_processors.metadata',
-                ],
-            },
-        },
-    ]
-
-The ``OSCAR_MAIN_TEMPLATE_DIR`` points to the directory above Oscar's normal
-templates directory.  This means that ``path/to/oscar/template.html`` can also
-be reached via ``templates/path/to/oscar/template.html``.
-
 Hence to customise ``base.html``, you can have an implementation like::
 
     # base.html
