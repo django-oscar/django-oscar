@@ -46,23 +46,23 @@ install_requires = [
 ]
 
 docs_requires = [
-    'Sphinx==1.7.2',
-    'sphinxcontrib-napoleon==0.6.1',
-    'sphinx_rtd_theme==0.3.0',
-    'sphinx-issues==0.4.0',
+    'Sphinx==2.0.1',
+    'sphinxcontrib-napoleon==0.7',
+    'sphinx_rtd_theme==0.4.3',
+    'sphinx-issues==1.2.0',
 ]
 
 test_requires = [
     'WebTest>=2.0,<2.1',
     'coverage>=4.5,<4.6',
-    'django-webtest==1.9.2',
+    'django-webtest==1.9.4',
     'py>=1.4.31',
     'psycopg2>=2.7,<2.8',
-    'pytest>=4.0,<4.1',
-    'pytest-cov==2.6.0',
-    'pytest-django==3.4.4',
-    'pytest-xdist>=1.25,<1.26',
-    'tox>=3.0,<3.1',
+    'pytest>=4.0,<4.5',
+    'pytest-cov==2.6.1',
+    'pytest-django==3.4.8',
+    'pytest-xdist>=1.25,<1.28',
+    'tox>=3.0,<3.9',
 ]
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
