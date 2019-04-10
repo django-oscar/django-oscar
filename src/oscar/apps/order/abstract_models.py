@@ -20,6 +20,7 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
+from oscar.models.mixins import SiteMixin
 
 from . import exceptions
 
@@ -27,17 +28,12 @@ from . import exceptions
 logger = logging.getLogger('oscar.order')
 
 
-class AbstractOrder(models.Model):
+class AbstractOrder(SiteMixin, models.Model):
     """
     The main order model
     """
     number = models.CharField(
         _("Order number"), max_length=128, db_index=True, unique=True)
-
-    # We track the site that each order is placed within
-    site = models.ForeignKey(
-        'sites.Site', verbose_name=_("Site"), null=True,
-        on_delete=models.SET_NULL)
 
     basket = models.ForeignKey(
         'basket.Basket', verbose_name=_("Basket"),
