@@ -7,9 +7,36 @@ from django.test import TestCase, override_settings
 
 from oscar.apps.catalogue.abstract_models import MissingProductImage
 from oscar.test import factories
+from oscar.test.utils import EASY_THUMBNAIL_BASEDIR, ThumbnailMixin
 
 
-class TestProductImages(TestCase):
+class TestProductImages(ThumbnailMixin, TestCase):
+
+    def _test_product_images_and_thumbnails_deleted_when_product_deleted(self):
+        product = factories.create_product()
+        images_qty = 3
+        self.create_product_images(qty=images_qty, product=product)
+
+        assert product.images.count() == images_qty
+        thumbnails_full_paths = self.create_thumbnails()
+
+        product.delete()
+
+        self._test_images_folder_is_empty()
+        self._test_thumbnails_not_exist(thumbnails_full_paths)
+
+    @override_settings(
+        OSCAR_THUMBNAILER='oscar.core.thumbnails.SorlThumbnail',
+    )
+    def test_thumbnails_deleted_sorl_thumbnail(self):
+        self._test_product_images_and_thumbnails_deleted_when_product_deleted()
+
+    @override_settings(
+        THUMBNAIL_BASEDIR=EASY_THUMBNAIL_BASEDIR,
+        OSCAR_THUMBNAILER='oscar.core.thumbnails.EasyThumbnails',
+    )
+    def test_thumbnails_deleted_easy_thumbnails(self):
+        self._test_product_images_and_thumbnails_deleted_when_product_deleted()
 
     def test_images_are_in_consecutive_order(self):
         product = factories.create_product()
