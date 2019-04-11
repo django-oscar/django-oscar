@@ -19,7 +19,7 @@ from oscar.apps.voucher.models import Voucher
 from oscar.core.loading import get_class
 from oscar.test import factories
 from oscar.test.basket import add_product
-from tests.utils import run_concurrently
+from oscar.test.utils import run_concurrently
 
 Range = get_class('offer.models', 'Range')
 Benefit = get_class('offer.models', 'Benefit')
