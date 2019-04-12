@@ -26,6 +26,8 @@ matrix:
       env: TOXENV=lint
     - python: 3.5
       env: TOXENV=sandbox
+    - python: 3.6
+      env: TOXENV=docs
   allow_failures:
     - env: TOXENV=py36-djangomaster
 
