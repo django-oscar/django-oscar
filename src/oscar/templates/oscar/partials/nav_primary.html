@@ -4,9 +4,9 @@
 
 <div class="navbar primary navbar-static-top navbar-inverse">
     <div class="container-fluid">
-        <div class="navbar-header pull-right">
+        <div class="navbar-header float-right">
             {# This is used in mobile view #}
-            <a class="btn btn-default navbar-toggle collapsed" data-toggle="collapse" data-target=".primary-collapse">
+            <a class="btn btn-secondary navbar-toggle collapsed" data-toggle="collapse" data-target=".primary-collapse">
                 <span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -15,8 +15,8 @@
             </a>
         </div>
 
-        <a class="btn btn-default navbar-btn btn-cart navbar-right visible-xs-inline-block" href="{% url 'basket:summary' %}">
-            <i class="icon-shopping-cart"></i>
+        <a class="btn btn-secondary nav-item btn-cart ml-auto visible-xs-inline-block" href="{% url 'basket:summary' %}">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
             {% trans "Basket" %}
             {% if not request.basket.is_empty %}
                 {% if request.basket.is_tax_known %}

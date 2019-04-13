@@ -112,7 +112,7 @@ var oscar = (function(o, $) {
             // Adds error icon if there are errors in the product update form
             $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
                 var productErrorListener = $(this).find('[class*="error"]:not(:empty)').closest('.tab-pane').attr('id');
-                $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
+                $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="fa fa-info-circle float-right" aria-hidden="true"></i>');
             });
 
             o.dashboard.filereader.init();

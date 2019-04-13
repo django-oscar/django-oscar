@@ -12,7 +12,7 @@
 {% endif %}
 
 {% if upsell_messages %}
-    <div class="well">
+    <div class="card card-body">
         <h3>{% trans "You could be missing out on offers!" %}</h3>
         {% for upsell in upsell_messages %}
             {% blocktrans with message=upsell.message url=upsell.offer.get_absolute_url offer_name=upsell.offer.name %}
@@ -49,7 +49,7 @@
                                 {% with image=product.primary_image %}
                                     {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
+                                        <img class="card card-body" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
                                     </a>
                                 {% endwith %}
                             </div>
@@ -59,10 +59,10 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="checkout-quantity">
-                                    <div class="input-group  {% if form.errors %}error{% endif %}">
+                                    <div class="input-group {% if form.errors %}error{% endif %}">
                                         {% render_field form.quantity class+="form-control" %}
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
+                                        <button class="btn btn-secondary" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
                                     </span>
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@
                     <div class="sub-header">
                         <h2>{% trans "Voucher/promo code" %}</h2>
                     </div>
-                    <p id="voucher_form_link"><a href="#voucher" class="btn btn-default btn-full">{% trans "I have a voucher code..." %}</a></p>
+                    <p id="voucher_form_link"><a href="#voucher" class="btn btn-secondary btn-full">{% trans "I have a voucher code..." %}</a></p>
 
                     <div id="voucher_form_container" style="display:none">
                         <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
@@ -171,7 +171,7 @@
 
 {% block savedbasket %}
     {% if user.is_authenticated and saved_formset %}
-        <div class="well">
+        <div class="card card-body">
             <div class="sub-header">
                 <h2>{% trans "Items to buy later" %}</h2>
             </div>
@@ -190,10 +190,18 @@
                             <div class="col-sm-2">
                                 {{ form.id }}
                                 {% with image=form.instance.product.primary_image %}
+<<<<<<< HEAD
                                     {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                     <a href="{{ form.instance.product.get_absolute_url }}">
                                         <img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
                                     </a>
+=======
+                                    {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                        <a href="{{ form.instance.product.get_absolute_url }}">
+                                            <img class="card card-body" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
+                                        </a>
+                                    {% endthumbnail %}
+>>>>>>> e981d88a4... Adapt templates to use Bootstrap 4
                                 {% endwith %}
                             </div>
                             <div class="col-sm-6">
@@ -216,7 +224,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-2">
-                                <a href="#" data-id="{{ forloop.counter0 }}" class="btn pull-right btn-block" data-behaviours="move">{% trans "Move to basket" %}</a>
+                                <a href="#" data-id="{{ forloop.counter0 }}" class="btn float-right btn-block" data-behaviours="move">{% trans "Move to basket" %}</a>
                             </div>
                         </div>
                     </div>

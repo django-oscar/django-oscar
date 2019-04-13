@@ -31,7 +31,7 @@
                 </form>
             {% endif %}
             {% endblock %}
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                 {% block nav_account_navbar_authenticated %}
                     <li>
@@ -40,7 +40,7 @@
                             <a href="{% url 'customer:notifications-inbox' %}">
                                 <i class="icon-user"></i>
                                 {% trans "Account" %}
-                                <span class="label label-warning">{{ num_unread_notifications }}</span>
+                                <span class="badge badge-warning">{{ num_unread_notifications }}</span>
                             </a>
                         {% else %}
                             <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>

@@ -17,28 +17,26 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-    </li>
-    {% with category=product.categories.all.0 %}
-        {% for c in category.get_ancestors_and_self %}
-        <li>
-            <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-        </li>
-        {% endfor %}
-        <li class="active">{{ product.get_title }}</li>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ homepage_url }}">{% trans "Home" %}</a></li>
+            {% with category=product.categories.all.0 %}
+                {% for c in category.get_ancestors_and_self %}
+                    <li class="breadcrumb-item"><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+                {% endfor %}
+                <li class="breadcrumb-item active" aria-current="page">{{ product.get_title }}</li>
 
-        {% get_back_button as backbutton %}
-        {% if backbutton %}
-            <li class="pull-right">
-                <a href="{{ backbutton.url }}">
-                    <i class="icon-arrow-left"></i> {{ backbutton.title }}
-                </a>
-            </li>
-        {% endif %}
-    {% endwith %}
-</ul>
+                {% get_back_button as backbutton %}
+                    {% if backbutton %}
+                        <li class="float-right">
+                            <a href="{{ backbutton.url }}">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i> {{ backbutton.title }}
+                            </a>
+                        </li>
+                    {% endif %}
+            {% endwith %}
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block header %}
@@ -63,7 +61,9 @@
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
             {% if user.is_staff %}
-                <a class="pull-right hidden-xs" href="{% url 'dashboard:catalogue-product' pk=product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+                <a class="float-right hidden-xs" href="{% url 'dashboard:catalogue-product' pk=product.id %}">
+                    <small><i class="fa fa-pencil-square-o" aria-hidden="true"></i> {% trans "Edit this product" %}</small>
+                </a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
 

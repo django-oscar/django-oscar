@@ -13,24 +13,23 @@
 {% block header%}
     <div class="page-header action">
         {% if user.is_staff %}
-            <a class="pull-right hidden-xs" href="{% url 'dashboard:catalogue-category-update' pk=category.id %}"><small><i class="icon-edit"></i> {% trans "Edit this category" %}</small></a>
+            <a class="float-right hidden-xs" href="{% url 'dashboard:catalogue-category-update' pk=category.id %}">
+              <small><i class="fa fa-pencil-square-o" aria-hidden="true"></i> {% trans "Edit this category" %}</small></a>
         {% endif %}
         <h1>{% block headertext %}{{ category.name }}{% endblock %}</h1>
     </div>
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        </li>
-        {% for category in category.get_ancestors %}
-            <li>
-                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-            </li>
-        {% endfor %}
-        <li class="active">{{ category.name }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ homepage_url }}">{% trans "Home" %}</a></li>
+            {% for category in category.get_ancestors %}
+                <li class="breadcrumb-item"><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+        </ol>
+    </nav>
 {% endblock breadcrumbs %}
 
 {% block content %}

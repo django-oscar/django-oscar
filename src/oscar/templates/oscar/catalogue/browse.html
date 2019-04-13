@@ -12,12 +12,12 @@
 {% block headertext %}{{ summary }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        </li>
-        <li class="active">{{ summary }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ homepage_url }}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ summary }}</li>
+        </ol>
+    </nav>
 {% endblock breadcrumbs %}
 
 {% block column_left %}
@@ -80,7 +80,7 @@
                 {% endblocktrans %}
             {% endif %}
             {% if form %}
-                <div class="pull-right">
+                <div class="float-right">
                     {% include "oscar/partials/form_field.html" with field=form.sort_by %}
                 </div>
             {% endif %}

@@ -8,15 +8,13 @@
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "Product Type" %}</a>
-        </li>
-        <li class="active">{{ title }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "Product Type" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ title }}{% endblock %}
@@ -33,12 +31,18 @@
                         <div class="table-header">
                             <h3>{% trans "Sections" %}</h3>
                         </div>
-                        <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
-
+                        <ul class="nav flex-column bs-docs-sidenav" id="product_update_tabs">
                             {% block tabs %}
-                                <li class="active"><a href="#product_class_details" data-toggle="tab">{% trans 'Product Class details' %}</a></li>
-                                <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
-
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#product_class_details" data-toggle="tab">
+                                        {% trans 'Product Class details' %}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#product_attributes" data-toggle="tab">
+                                        {% trans 'Product attributes' %}
+                                    </a>
+                                </li>
                             {% endblock tabs %}
                         </ul>
                     </div>

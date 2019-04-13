@@ -149,7 +149,7 @@
                                 {% for address in customer.addresses.all %}
 
                                     <div class="col-md-3">
-                                        <div class="well well-info">
+                                        <div class="card card-body well-info">
                                             {% for field in address.active_address_fields %}
                                                 {{ field }}<br/>
                                             {% endfor %}
