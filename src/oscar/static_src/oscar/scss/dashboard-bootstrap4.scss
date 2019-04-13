@@ -1,5 +1,17 @@
 // Bootstrap (all dependencies)
 @import "bootstrap4/bootstrap";
 
+// Components: Icons / Fonts
+@import "font-awesome/font-awesome";
+
 // Core variables and mixins separate from frontend variables and mixins
 @import "dashboard/variables";
+@import "dashboard/mixins";
+@import "dashboard/alerts";
+@import "dashboard/base";  // TODO
+@import "dashboard/buttons";
+@import "dashboard/catalogue";
+@import "dashboard/navbar";
+@import "dashboard/forms";
+@import "dashboard/tables";  // TODO
+@import "dashboard/index";

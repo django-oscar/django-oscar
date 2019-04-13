@@ -4,5 +4,14 @@
 // Oscar variables
 @import "page/mixins"; // Kept separate for bootstrap updates
 
+
+// Components: Icons / Fonts
+@import "font-awesome/font-awesome"; // Replaced sprites with font-awesome
+
 // Oscar: Unique
-@import "page/layout.scss";
+@import "page/alerts";
+@import "page/layout";
+@import "page/type";
+@import "page/header";
+@import "page/product_lists";
+@import "page/product_page";
