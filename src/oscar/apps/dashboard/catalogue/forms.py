@@ -316,7 +316,7 @@ class ProductImageForm(forms.ModelForm):
             initial = {'display_order': self.get_display_order()}
             initial.update(kwargs.get('initial', {}))
             kwargs['initial'] = initial
-        super(ProductImageForm, self).__init__(data, *args, **kwargs)
+        super().__init__(data, *args, **kwargs)
 
     def get_display_order(self):
         return int(self.prefix.split('-').pop())

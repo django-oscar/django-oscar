@@ -225,7 +225,7 @@ class TestProductClass(ProductWebTest):
 class TestProductImages(ProductWebTest):
 
     def setUp(self):
-        super(TestProductImages, self).setUp()
+        super().setUp()
         self.product = factories.ProductFactory()
         self.url = reverse('dashboard:catalogue-product',
                            kwargs={'pk': self.product.id})
