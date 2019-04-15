@@ -1,8 +1,6 @@
 // OSCAR HEADER
 // -----------
 
-$image-container-height: 70px;
-
 .header {
     position:relative;
     z-index:2;
@@ -58,6 +56,7 @@ $image-container-height: 70px;
         }
     }
     .image_container {
+        $image-container-height: 70px;
         min-height: $image-container-height;
         img {
             max-height: $image-container-height;
