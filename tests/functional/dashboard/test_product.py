@@ -10,6 +10,7 @@ from django.utils import timezone
 from oscar.test import factories
 from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 from oscar.apps.catalogue.models import Product, ProductAttribute
 from oscar.test.factories import (
     CategoryFactory, ProductFactory, ProductAttributeFactory,
@@ -19,6 +20,7 @@ from six import BytesIO
 from webtest import Upload
 
 User = get_user_model()
+ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class ProductWebTest(WebTestCase):
@@ -277,5 +279,5 @@ class TestProductImages(ProductWebTest):
         self.product = Product.objects.get(pk=self.product.id)
         display_orders = list(self.product.images.values_list('display_order', flat=True))
         image_ids = list(self.product.images.values_list('id', flat=True))
-        self.assertEqual(display_orders, [3, 4, 5])
+        self.assertEqual(display_orders, [0, 1, 2])
         self.assertEqual(image_ids, [2, 1, 3])
