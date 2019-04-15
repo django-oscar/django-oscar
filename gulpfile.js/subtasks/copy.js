@@ -14,7 +14,7 @@ module.exports = function(done) {
         .pipe(gulp.dest("src/oscar/static/oscar/less/bootstrap3"));
 
     gulp.src("node_modules/bootstrap/dist/js/bootstrap.min.js")
-        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap3"));
+        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
 
     gulp.src("node_modules/bootstrap/fonts/*")
         .pipe(gulp.dest("src/oscar/static/oscar/fonts/"));
