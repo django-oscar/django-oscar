@@ -3,11 +3,11 @@
 
 {% if product.rating != None %}
     <p class="star-rating {{ product.rating|as_stars }}">
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
 
         <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
                 {% blocktrans count product.num_approved_reviews as num_reviews %}
