@@ -9,13 +9,12 @@
         {{ request.basket.total_excl_tax|currency:request.basket.currency }}
     {% endif %}
 
-    <span class="btn-group">
-        <a class="btn btn-default" href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="btn btn-default" href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
         </button>
-        <ul class="dropdown-menu pull-right">
-            <li>{% include "oscar/basket/partials/basket_quick.html" %}</li>
-        </ul>
-    </span>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% include "basket/partials/basket_quick.html" %}
+        </div>
+    </div>
 </div>

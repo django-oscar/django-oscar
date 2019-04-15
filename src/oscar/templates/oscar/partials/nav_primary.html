@@ -2,9 +2,9 @@
 {% load category_tags %}
 {% load i18n %}
 
-<div class="navbar primary navbar-static-top navbar-inverse">
+<div class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <div class="navbar-header float-right">
+        <div class="navbar-header float-right d-block d-sm-none">
             {# This is used in mobile view #}
             <a class="btn btn-secondary navbar-toggle collapsed" data-toggle="collapse" data-target=".primary-collapse">
                 <span>
@@ -15,7 +15,7 @@
             </a>
         </div>
 
-        <a class="btn btn-secondary nav-item btn-cart ml-auto visible-xs-inline-block" href="{% url 'basket:summary' %}">
+        <a class="btn btn-secondary nav-item btn-cart ml-auto d-inline d-sm-none" href="{% url 'basket:summary' %}">
             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
             {% trans "Basket" %}
             {% if not request.basket.is_empty %}
@@ -32,38 +32,32 @@
         </a>
 
 
-        <div class="navbar-collapse primary-collapse collapse">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
             {% block nav_dropdown %}
-                <ul id="browse" class="nav navbar-nav">
-                    <li class="dropdown active {% if expand_dropdown %}open{% endif %}">
-                        <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
+                <li class="nav-item dropdown show">
+                        <a href="#" class="nav-link dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
                             {% trans "Browse store" %}
                             <b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu" data-navigation="dropdown-menu">
+                        <div class="dropdown-menu">
                             {% category_tree depth=2 as tree_categories %}
-                            <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
+                            <a class="dropdown-item" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a>
                             {% if tree_categories %}
-                                <li class="divider"></li>
+                                <div class="dropdown-divider"></div>
                                 {% for tree_category in tree_categories %}
                                     {% if tree_category.has_children %}
-                                        <li class="dropdown-submenu">
-                                            <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                                            <ul class="dropdown-menu">
-                                            {% else %}
-                                                <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
-                                            {% endif %}
-
-                                            {% for close in tree_category.num_to_close %}
-                                                </ul></li>
-                                            {% endfor %}
+                                        <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                                    {% endif %}
                                 {% endfor %}
                             {% endif %}
-                            <li class="divider"></li>
+                            <div class="dropdown-divider"></div>
                             {% block nav_dropdown_extra_items %}
-                                <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
+                                <a class="dropdown-item" href="{% url 'offer:list' %}">{% trans "Offers" %}</a>
                             {% endblock %}
-                        </ul>
+                        </div>
                     </li>
                     {% block nav_extra %}
                     {% endblock %}
