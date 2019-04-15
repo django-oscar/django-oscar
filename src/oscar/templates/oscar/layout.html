@@ -10,8 +10,7 @@
     {% if use_less %}
         <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/styles.less" %}" />
     {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles-bootstrap4.css" %}" />
-        {# <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" /> #}
+        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
     {% endif %}
 {% endblock %}
 
@@ -71,7 +70,6 @@
     {{ block.super }}
     <!-- Twitter Bootstrap -->
     <script src="{% static "oscar/js/bootstrap4/bootstrap.bundle.min.js" %}"></script>
-    {# <script src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script> #}
     <!-- Oscar -->
     <script src="{% static "oscar/js/oscar/ui.js" %}"></script>
 {% endblock %}
