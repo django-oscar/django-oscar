@@ -142,7 +142,7 @@ class LineOfferConsumer(object):
 
     @property
     def consumers(self):
-        return [x for x in self.__offers.values() if self.consumed(x)]
+        return [x for x in self._offers.values() if self.consumed(x)]
 
     def available(self, offer=None) -> int:
         """
@@ -153,7 +153,7 @@ class LineOfferConsumer(object):
         :return: the number of items available for offer
         :rtype: int
         """
-        max_affected_items = self.__line.quantity
+        max_affected_items = self._line.quantity
 
         if offer and isinstance(offer, ConditionalOffer):
 
@@ -168,6 +168,12 @@ class LineOfferConsumer(object):
             if offer.exclusive and len(applied):
                 return 0
 
+            # check for applied offers allowing restricted combinations
+            for x in applied:
+                check = offer.combinations.count() or x.combinations.count()
+                if check and offer not in x.combined_offers:
+                    return 0
+            
             # respect max_affected_items
             if offer.benefit.max_affected_items:
                 max_affected_items = offer.benefit.max_affected_items
