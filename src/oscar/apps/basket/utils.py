@@ -173,7 +173,7 @@ class LineOfferConsumer(object):
                 check = offer.combinations.count() or x.combinations.count()
                 if check and offer not in x.combined_offers:
                     return 0
-            
+
             # respect max_affected_items
             if offer.benefit.max_affected_items:
                 max_affected_items = offer.benefit.max_affected_items
