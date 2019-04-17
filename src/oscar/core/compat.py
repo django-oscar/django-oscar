@@ -3,6 +3,7 @@ import csv
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.http import urlsafe_base64_encode as django_urlsafe_base64_encode
 
 from oscar.core.loading import get_model
 
@@ -162,3 +163,12 @@ class UnicodeCSVWriter:
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
+
+
+def urlsafe_base64_encode(value):
+    # In Django 2.2 function returns string, but not bytestring, so it is necessary
+    # to decode value only for the previous Django versions.
+    encoded_value = django_urlsafe_base64_encode(value)
+    if isinstance(encoded_value, bytes):
+        encoded_value = encoded_value.decode()
+    return encoded_value
