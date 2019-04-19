@@ -51,9 +51,8 @@ def cautious_slugify(value):
     # back to a unicode string (which is what slugify expects)
     value = value.encode('ascii', 'backslashreplace').decode('ascii')
 
-    # Pass to slugify to perform final conversion (whitespace stripping, applying
-    # mark_safe); this will also strip out the backslashes from the 'backslashreplace'
-    # conversion
+    # Pass to slugify to perform final conversion (whitespace stripping); this will
+    # also strip out the backslashes from the 'backslashreplace' conversion
     return django_slugify(value)
 
 
