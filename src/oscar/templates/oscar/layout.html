@@ -7,11 +7,8 @@
         files in your project, then set OSCAR_USE_LESS = True in your
         settings file. This will enable the on-the-fly less compiler.
     {% endcomment %}
-    {% if use_less %}
-        <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/styles.less" %}" />
-    {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
-    {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
 {% endblock %}
 
 {% block layout %}
@@ -21,7 +18,7 @@
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
     <header class="header container-fluid">
         <div class="page_inner">
-            <div class="row">
+            <div class="row justify-content-between">
                 {% include "oscar/partials/brand.html" %}
                 {# Mini-basket wrapped in a block so some templates can now display it #}
                 {% block mini_basket %}{% include "oscar/partials/mini_basket.html" %}{% endblock %}
