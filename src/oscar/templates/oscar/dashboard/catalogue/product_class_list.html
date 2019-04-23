@@ -13,7 +13,7 @@
 {% block header %}
     <div class="page-header">
         <a href="{% url 'dashboard:catalogue-class-create' %}" class="btn btn-primary btn-lg float-right">
-            <i class="fa fa-plus" aria-hidden="true"></i> {% trans "Create new product type" %}</a>
+            <i class="fas fa-plus-circle"></i> {% trans "Create new product type" %}</a>
         <h1>{% trans "Product types" %}</h1>
     </div>
 {% endblock header %}
@@ -21,7 +21,7 @@
 {% block dashboard_content %}
     {% if classes %}
         <table class="table table-striped table-bordered table-hover">
-            <caption><i class="fa fa-sitemap fa-lg" aria-hidden="true"></i> {% trans 'Product Types' %}</caption>
+            <caption><i class="fas fa-sitemap"></i> {% trans 'Product Types' %}</caption>
             <thead>
                 <tr>
                     <th>{% trans "Name" %}</th>

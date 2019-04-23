@@ -16,7 +16,7 @@
         </div>
 
         <a class="btn btn-secondary nav-item btn-cart ml-auto d-inline d-sm-none" href="{% url 'basket:summary' %}">
-            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            <i class="fas fa-shopping-cart"></i>
             {% trans "Basket" %}
             {% if not request.basket.is_empty %}
                 {% if request.basket.is_tax_known %}

@@ -14,7 +14,7 @@
     <div class="page-header action">
         {% if user.is_staff %}
             <a class="float-right hidden-xs" href="{% url 'dashboard:catalogue-category-update' pk=category.id %}">
-              <small><i class="fa fa-pencil-square-o" aria-hidden="true"></i> {% trans "Edit this category" %}</small></a>
+              <small><i class="fas fa-pencil-alt"></i> {% trans "Edit this category" %}</small></a>
         {% endif %}
         <h1>{% block headertext %}{{ category.name }}{% endblock %}</h1>
     </div>

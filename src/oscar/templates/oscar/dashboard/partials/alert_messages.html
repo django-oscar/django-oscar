@@ -16,13 +16,13 @@ Use message tags to control these alerts.  Available tags include:
                 {% if 'noicon' not in message.tags %}
                     {# Include an icon by default #}
                     {% if 'success' in message.tags %}
-                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                        <i class="fas fa-check-circle"></i>
                     {% elif 'info' in message.tags %}
-                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        <i class="fas fa-info-circle"></i>
                     {% elif 'warning' in message.tags %}
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        <i class="fas fa-exclamation-triangle"></i>
                     {% elif 'danger' in message.tags or 'error' in message.tags %}
-                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                        <i class="fas fa-exclamation-circle"></i>
                     {% endif %}
                 {% endif %}
 

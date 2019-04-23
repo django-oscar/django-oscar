@@ -30,7 +30,7 @@
                     {% if backbutton %}
                         <li class="float-right">
                             <a href="{{ backbutton.url }}">
-                                <i class="fa fa-arrow-left" aria-hidden="true"></i> {{ backbutton.title }}
+                                <i class="fas fa-arrow-left"></i> {{ backbutton.title }}
                             </a>
                         </li>
                     {% endif %}
@@ -62,7 +62,7 @@
             {% endcomment %}
             {% if user.is_staff %}
                 <a class="float-right hidden-xs" href="{% url 'dashboard:catalogue-product' pk=product.id %}">
-                    <small><i class="fa fa-pencil-square-o" aria-hidden="true"></i> {% trans "Edit this product" %}</small>
+                    <small><i class="fas fa-pencil-alt"></i> {% trans "Edit this product" %}</small>
                 </a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
