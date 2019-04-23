@@ -300,25 +300,26 @@ class ProductImageForm(forms.ModelForm):
 
     class Meta:
         model = ProductImage
-        fields = ['product', 'original', 'caption']
+        fields = ['product', 'original', 'caption', 'display_order']
         # use ImageInput widget to create HTML displaying the
         # actual uploaded image and providing the upload dialog
         # when clicking on the actual image.
         widgets = {
             'original': ImageInput(),
+            'display_order': forms.HiddenInput(),
         }
 
-    def save(self, *args, **kwargs):
-        # We infer the display order of the image based on the order of the
-        # image fields within the formset.
-        kwargs['commit'] = False
-        obj = super().save(*args, **kwargs)
-        obj.display_order = self.get_display_order()
-        obj.save()
-        return obj
+    def __init__(self, data=None, *args, **kwargs):
+        self.prefix = kwargs.get('prefix', None)
+        instance = kwargs.get('instance', None)
+        if not instance:
+            initial = {'display_order': self.get_display_order()}
+            initial.update(kwargs.get('initial', {}))
+            kwargs['initial'] = initial
+        super().__init__(data, *args, **kwargs)
 
     def get_display_order(self):
-        return self.prefix.split('-').pop()
+        return int(self.prefix.split('-').pop())
 
 
 class ProductRecommendationForm(forms.ModelForm):

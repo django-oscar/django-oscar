@@ -1,16 +1,26 @@
 import datetime
+import os
+import shutil
+from PIL import Image
 
+from django.conf import settings
 from django.urls import reverse
+from django.utils import timezone
 
 from oscar.test import factories
 from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 from oscar.apps.catalogue.models import Product, ProductAttribute
 from oscar.test.factories import (
     CategoryFactory, ProductFactory, ProductAttributeFactory,
     ProductClassFactory)
 
+from six import BytesIO
+from webtest import Upload
+
 User = get_user_model()
+ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class ProductWebTest(WebTestCase):
@@ -212,3 +222,62 @@ class TestProductClass(ProductWebTest):
         self.assertFalse(self.product.attr.boolean)
         self.assertEqual(self.product.attr.richtext, 'article')
         self.assertEqual(self.product.attr.date, datetime.date(2016, 10, 10))
+
+
+class TestProductImages(ProductWebTest):
+
+    def setUp(self):
+        super().setUp()
+        self.product = factories.ProductFactory()
+        self.url = reverse('dashboard:catalogue-product',
+                           kwargs={'pk': self.product.id})
+        self.image_folder = timezone.now().strftime(settings.OSCAR_IMAGE_FOLDER)
+
+    def tearDown(self):
+        root_image_folder = self.image_folder.split(os.sep)[0]
+        shutil.rmtree(root_image_folder, ignore_errors=True)
+
+    def generate_test_image(self, name):
+        tempfile = BytesIO()
+        image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
+        image.save(tempfile, "PNG")
+        tempfile.seek(0)
+        return tempfile.read()
+
+    def test_product_images_upload(self):
+        page = self.get(self.url)
+        product_form = page.form
+        product_form['images-0-original'] = Upload('image1.png', self.generate_test_image('image1.png'), 'image/png')
+        product_form['images-1-original'] = Upload('image2.png', self.generate_test_image('image2.png'), 'image/png')
+        product_form.submit(name='action', value='continue').follow()
+        self.product = Product.objects.get(pk=self.product.id)
+        self.assertEqual(self.product.images.count(), 2)
+        page = self.get(self.url)
+        product_form = page.form
+        product_form['images-2-original'] = Upload('image3.png', self.generate_test_image('image3.png'), 'image/png')
+        product_form.submit()
+        self.product = Product.objects.get(pk=self.product.id)
+        self.assertEqual(self.product.images.count(), 3)
+        images = self.product.images.all()
+        self.assertEqual(images[0].original.name, os.path.join(self.image_folder, 'image1.png'))
+        self.assertEqual(images[0].display_order, 0)
+        self.assertEqual(images[1].original.name, os.path.join(self.image_folder, 'image2.png'))
+        self.assertEqual(images[1].display_order, 1)
+        self.assertEqual(images[2].original.name, os.path.join(self.image_folder, 'image3.png'))
+        self.assertEqual(images[2].display_order, 2)
+
+    def test_product_images_reordering(self):
+        self.images = factories.ProductImageFactory.create_batch(3, product=self.product)
+        image_ids = list(self.product.images.values_list('id', flat=True))
+        self.assertEqual(image_ids, [3, 2, 1])
+        page = self.get(self.url)
+        product_form = page.form
+        product_form['images-0-display_order'] = '5'
+        product_form['images-1-display_order'] = '3'
+        product_form['images-2-display_order'] = '4'
+        product_form.submit()
+        self.product = Product.objects.get(pk=self.product.id)
+        display_orders = list(self.product.images.values_list('display_order', flat=True))
+        image_ids = list(self.product.images.values_list('id', flat=True))
+        self.assertEqual(display_orders, [0, 1, 2])
+        self.assertEqual(image_ids, [2, 1, 3])

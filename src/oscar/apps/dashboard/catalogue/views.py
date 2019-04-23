@@ -378,6 +378,10 @@ class ProductCreateUpdateView(generic.UpdateView):
         for formset in formsets.values():
             formset.save()
 
+        for idx, image in enumerate(self.object.images.all()):
+            image.display_order = idx
+            image.save()
+
         return HttpResponseRedirect(self.get_success_url())
 
     def handle_adding_child(self, parent):

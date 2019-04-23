@@ -2,6 +2,57 @@
 
 var oscar = (function(o, $) {
 
+    function onFileChange(evt) {
+        var reader = new FileReader();
+        var imgId = evt.target.id + "-image";
+        reader.onload = (function() {
+            return function(e) {
+                var imgDiv = $("#" + imgId);
+                imgDiv.children('img').attr('src', e.target.result);
+            };
+        })();
+        reader.readAsDataURL(evt.target.files[0]);
+
+        var $input = $(evt.target);
+        var $parentTab = $input.parents('.tab-pane').first();
+        var imageContainer = $input.parents('.sortable-handle').first();
+        imageContainer.find('.btn-reorder').removeAttr('disabled').removeClass('disabled');
+        var $extraImg = $input.parents('.upload-image').children('li').last();
+        var $totalForms = $parentTab.find("input[name$=images-TOTAL_FORMS]");
+        var $maxForms = $parentTab.find("input[name$=images-MAX_NUM_FORMS]");
+        var numExisting = parseInt($totalForms.val());
+        var numMax = parseInt($maxForms.val());
+
+        // Do not create extra image form if number of maximum allowed forms has reached.
+        if (numExisting < numMax) {
+            var $newImg = o.dashboard._extraProductImg.clone();
+            var productId = $('#images-0-product').val();
+            $newImg.insertAfter($extraImg);
+            // update attrs on cloned el
+            $newImg.find("[id^='id_images-']," +
+                "[for^='id_images-']," +
+                "[id^='upload_button_id_images-']," +
+                "img[alt='thumbnail']").each(function () {
+                var $el = $(this);
+                ["id", "name", "for", "onload", "onerror"].forEach(function (attr) {
+                    var val = $el.attr(attr);
+                    if (val) {
+                        var parts = val.split('-');
+                        parts[1] = numExisting;
+                        $el.attr(attr, parts.join('-'));
+                    }
+                });
+            });
+            $newImg.find('#id_images-' + numExisting + '-display_order').val(numExisting);
+            $newImg.find('#id_images-' + numExisting + '-product').val(productId);
+
+            var $newFile = $newImg.find('input[type="file"]');
+            $newFile.change(onFileChange);
+            numExisting += 1;
+            $totalForms.val(numExisting);
+        }
+    }
+
     o.getCsrfToken = function() {
         // Extract CSRF token from cookies
         var cookies = document.cookie.split(';');
@@ -82,6 +133,7 @@ var oscar = (function(o, $) {
             o.dashboard.initMasks(el);
             o.dashboard.initWYSIWYG(el);
             o.dashboard.initSelects(el);
+            o.dashboard.initProductImages(el);
         },
         initMasks: function(el) {
             $(el).find(':input').inputmask();
@@ -224,6 +276,28 @@ var oscar = (function(o, $) {
                     $(this).button('loading');
             });
         },
+        initProductImages: function() {
+            // convert last 'extra' form into a multi-upload
+            // (assumes `extra=1` in django formset)
+            var $productImages = $('#product_images');
+            var $extraImg = $productImages.find('.upload-image li').last();
+            o.dashboard._extraProductImg = $extraImg.clone();
+
+            $productImages.find('a:disabled').parents('sortable-handle').sortable('disable');
+
+            $('ol.upload-image').sortable({
+                vertical: false,
+                group: 'serialization',
+                handle: '.btn-handle',
+                onDrop: function ($item, container, _super) {
+                    var $sortFields = $("input[name$=-display_order]");
+                    $sortFields.each(function(i){
+                        $(this).val(i);
+                    });
+                    _super($item, container);
+                }
+            });
+        },
         offers: {
             init: function() {
                 oscar.dashboard.offers.adjustBenefitForm();
@@ -360,25 +434,15 @@ var oscar = (function(o, $) {
             }
         },
         filereader: {
-            init: function() {
+            init: function () {
                 // Add local file loader to update image files on change in
                 // dashboard. This will provide a preview to the selected
                 // image without uploading it. Upload only occures when
                 // submitting the form.
                 if (window.FileReader) {
-                    $('input[type="file"]').change(function(evt) {
-                        var reader = new FileReader();
-                        var imgId = evt.target.id + "-image";
-                        reader.onload = (function() {
-                            return function(e) {
-                                var imgDiv = $("#"+imgId);
-                                imgDiv.children('img').attr('src', e.target.result);
-                            };
-                        })();
-                        reader.readAsDataURL(evt.target.files[0]);
-                    });
+                    $('input[type="file"]').change(onFileChange);
                 }
-            }
+            },
         },
         product_lists: {
             init: function() {
