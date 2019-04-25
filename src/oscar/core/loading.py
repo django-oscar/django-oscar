@@ -238,11 +238,11 @@ def get_model(app_label, model_name):
     oscar_moved_model = MOVED_MODELS.get(app_label, None)
     if oscar_moved_model:
         if model_name.lower() in oscar_moved_model[1]:
-            orinial_app_label = app_label
+            original_app_label = app_label
             app_label = oscar_moved_model[0]
             warnings.warn(
                 'Model %s has recently moved from %s to the application %s, '
-                'please update your imports.' % (model_name, orinial_app_label, app_label),
+                'please update your imports.' % (model_name, original_app_label, app_label),
                 DeprecationWarning, stacklevel=2)
     try:
         return apps.get_model(app_label, model_name)
