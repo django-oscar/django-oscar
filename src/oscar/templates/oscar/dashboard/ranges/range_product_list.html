@@ -8,18 +8,20 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:range-update' pk=range.id %}">'{{ range.name }}'</a>
-        </li>
-        <li class="active">{% trans "Products" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:range-update' pk=range.id %}">'{{ range.name }}'</a>
+            </li>
+            <li class="breadcrumb-item active">
+                {% trans "Products" %}
+            </li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -109,7 +111,7 @@
                                 <td>
                                     <a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
                                     {% if range.is_reorderable %}
-                                        <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Re-order" context "Change the sequence order" %}</a>
+                                        <a href="#" class="btn btn-info btn-handle"><i class="fas fa-arrows-alt"></i> {% trans "Re-order" context "Change the sequence order" %}</a>
                                     {% endif %}
                                 </td>
                             </tr>

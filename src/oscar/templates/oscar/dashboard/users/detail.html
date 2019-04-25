@@ -7,15 +7,13 @@
 {% block title %}{{ customer.email }} | {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a>
-        </li>
-        <li class="active">{{ customer.email }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a></li>
+            <li class="breadcrumb-item active">{{ customer.email }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ customer.email }}{% endblock %}

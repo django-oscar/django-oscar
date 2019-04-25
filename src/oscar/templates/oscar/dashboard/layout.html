@@ -31,18 +31,16 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-accounts">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <i class="fas fa-bars"></i>
                 </button>
                 <span class="navbar-brand">{{ shop_name }}</span>
             </div>
             <div class="collapse navbar-collapse nav-accounts">
                 <div class="nav navbar-nav navbar-right">
                     <span class="nav-item">{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span>
-                    <a class="nav-link" href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a>
-                    <a class="nav-link" href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
-                    <a class="nav-link" href="{% url 'dashboard:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a>
+                    <a class="nav-link" href="{{ homepage_url }}"><i class="fas fa-home"></i> {% trans "Return to site" %}</a>
+                    <a class="nav-link" href="{% url 'customer:summary' %}"><i class="fas fa-user"></i> {% trans "Account" %}</a>
+                    <a class="nav-link" href="{% url 'dashboard:logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans "Log out" %}</a>
                 </div>
             </div>
         </div><!-- /navbar-inner -->
@@ -56,9 +54,7 @@
             <div class="container-fluid dashboard">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <i class="fas fa-bars"></i>
                     </button>
                 </div>
 

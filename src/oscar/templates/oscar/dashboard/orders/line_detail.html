@@ -8,18 +8,16 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:order-detail' number=line.order.number %}">#{{ line.order.number }}</a>
-        </li>
-        <li class="active">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:order-detail' number=line.order.number %}">
+                #{{ line.order.number }}
+            </a></li>
+            <li class="breadcrumb-item active">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}

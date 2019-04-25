@@ -9,15 +9,13 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
-        </li>
-        <li class="active">#{{ order.number }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a></li>
+            <li class="breadcrumb-item active">#{{ order.number }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -27,7 +25,7 @@
 {% block dashboard_content %}
     {% block customer_information %}
     <table class="table  table-bordered table-hover">
-        <caption><i class="icon-group icon-large"></i>{% trans "Customer Information" %}</caption>
+        <caption><i class="fas fa-user"></i> {% trans "Customer Information" %}</caption>
         {% if order.guest_email %}
             <tr>
                 <th>{% trans "Name" %}</th>
@@ -56,7 +54,7 @@
 
     {% block order_information %}
     <table class="table table-striped table-bordered table-hover">
-        <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order information" %}</caption>
+        <caption><i class="fas fa-shopping-cart"></i> {% trans "Order information" %}</caption>
         <tr>
             <th>{% trans "Order Total" %}</th>
             <th>{% trans "Date of purchase" %}</th>
@@ -317,7 +315,7 @@
                     {% csrf_token %}
                     {% block order_actions %}
                         <div class="well">
-                            <h3><i class="icon-warning-sign"></i> {% trans "Change order status" %}:</h3>
+                            <h3><i class="fas fa-exclamation-circle"></i> {% trans "Change order status" %}:</h3>
                             {% if order_status_form.has_choices %}
                                 {% include "oscar/dashboard/partials/form_fields.html" with form=order_status_form %}
                                 <input type="hidden" value="change_order_status" name="order_action" />

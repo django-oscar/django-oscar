@@ -6,18 +6,16 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a>
-        </li>
-        <li class="active">{% trans "Edit shipping address" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a>
+            </li>
+            <li class="breadcrumb-item active">{% trans "Edit shipping address" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -26,7 +24,7 @@
 
 {% block content %}
 
-    <form method="post" class="well form-horizontal">
+    <form method="post" class="card card-body form-horizontal">
         {% csrf_token %}
         {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
         <div class="form-actions">

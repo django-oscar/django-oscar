@@ -8,19 +8,19 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
-        </li>
-        {% if range %}
-            <li class="active">'{{ range.name }}'</li>
-        {% else %}
-            <li class="active">{{ title }}</li>
-        {% endif %}
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
+            </li>
+            {% if range %}
+                <li class="breadcrumb-item active">'{{ range.name }}'</li>
+            {% else %}
+                <li class="breadcrumb-item active">{{ title }}</li>
+            {% endif %}
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
