@@ -11,11 +11,11 @@ form,
 .table,
 .page-header,
 .sub-header {
-    margin:0 0 $line-height-base;
+    margin:0 0 $base-margin-bottom;
 }
 ul,
 ol {
-    margin-bottom:$line-height-base;
+    margin-bottom:$base-margin-bottom;
 }
 .page-header,
 .sub-header,
@@ -41,7 +41,7 @@ h5, .h5 { font-size: $font-size-base; line-height: $line-height-base; }
 
 // Page / sub headers consistant
 .sub-header {
-    padding-bottom: ($line-height-base / 2) - 1;
+    padding-bottom: ($base-margin-bottom / 2) - 1;
     border-bottom: 1px solid $gray-200;
 }
 .page-header {

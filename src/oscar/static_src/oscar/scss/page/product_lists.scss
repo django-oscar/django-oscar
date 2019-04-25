@@ -22,7 +22,7 @@ ul {
     height:370px;
     overflow:hidden;
     text-align:center;
-    margin: $card-deck-margin 0;
+    margin: $base-margin-bottom 0;
     position:relative;
     p, h3, h2, form {
         margin-bottom:0;
@@ -43,7 +43,7 @@ ul {
     .image_container,
     .availability,
     .price_color {
-        margin-bottom: $card-deck-margin / 2;
+        margin-bottom: $base-margin-bottom;
     }
     .product_price {
         position:absolute;
