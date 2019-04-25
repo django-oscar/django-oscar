@@ -123,4 +123,8 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
         color:#fff;
         }
     }
+    .navbar-text {
+        margin-left: $navbar-padding-x;
+        margin-right: $navbar-padding-x;
+    }
 }

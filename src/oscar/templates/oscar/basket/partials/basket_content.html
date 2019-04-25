@@ -61,9 +61,9 @@
                                 <div class="checkout-quantity">
                                     <div class="input-group {% if form.errors %}error{% endif %}">
                                         {% render_field form.quantity class+="form-control" %}
-                                    <span class="input-group-btn">
+                                    <div class="input-group-append">
                                         <button class="btn btn-secondary" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
-                                    </span>
+                                    </div>
                                     </div>
                                 </div>
                                     <div>
@@ -153,7 +153,7 @@
     {% block formactions %}
         <div class="form-group clearfix">
             <div class="row">
-                <div class="col-sm-4 col-sm-offset-8">
+                <div class="col-sm-4 offset-sm-8">
                     <a href="{% url 'checkout:index' %}" class="btn btn-lg btn-primary btn-block">{% trans "Proceed to checkout" %}</a>
                 </div>
             </div>

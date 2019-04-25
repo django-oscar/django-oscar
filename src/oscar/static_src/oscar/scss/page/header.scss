@@ -22,8 +22,11 @@
 }
 
 @include media-breakpoint-up(md) {
-    #language_selector select {
-        width:100px;
+    #language_selector {
+        margin: 0;
+        select {
+            width: 100px;
+        }
     }
 }
 
