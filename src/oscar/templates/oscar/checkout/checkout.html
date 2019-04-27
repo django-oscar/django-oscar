@@ -27,7 +27,7 @@
                     <h2>{% trans "Shipping" %}</h2>
                 </div>
                 {% if shipping_address %}
-                    <div class="well well-info">
+                    <div class="card card-body bg-info">
                         {% block shipping_address_actions %}
                             <a href="{% url 'checkout:shipping-address' %}" class="pull-right">
                                 {% trans "Change" %}
@@ -58,7 +58,7 @@
                 {% endif %}
 
                 {% if shipping_method %}
-                    <div class="well well-info">
+                    <div class="card card-body bg-light card card-body bg-light-info">
                         {% block shipping_method_actions %}
                             <a href="{% url 'checkout:shipping-method' %}" class="pull-right">
                                 {% trans "Change" %}
@@ -82,7 +82,7 @@
                 <div class="sub-header">
                     <h2>{% trans "Payment" %}</h2>
                 </div>
-                <div class="well well-success">
+                <div class="card card-body bg-light card card-body bg-light-success">
                     <a href="{% url 'checkout:payment-details' %}" class="pull-right">
                         {% trans "Change" %}
                     </a>

@@ -34,7 +34,7 @@
                 <div class="sub-header">
                     <h2>{% trans "Shipping" %}</h2>
                 </div>
-                <div class="well well-info">
+                <div class="card card-body bg-info">
                     <h3>{% trans "Address" %}</h3>
                     {% if order.shipping_address %}
                         <address>
@@ -62,7 +62,7 @@
                     {% endif %}
                 </div>
 
-                <div class="well well-info">
+                <div class="card card-body bg-info">
                     <h3>{% trans "Shipping method" %}</h3>
                     <p>{{ order.shipping_method }}</p>
                 </div>
@@ -74,7 +74,7 @@
                 <div class="sub-header">
                     <h2>{% trans "Payment" %}</h2>
                 </div>
-                <div class="well well-success">
+                <div class="card card-body bg-success">
                     <h3>{% trans "Payment" %}</h3>
                     {% for source in order.sources.all %}
                         <p>

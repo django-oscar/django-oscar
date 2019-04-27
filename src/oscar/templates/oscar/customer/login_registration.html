@@ -20,7 +20,7 @@
 
     <div class="row">
         <div class="col-sm-6 login_form">
-            <form id="login_form" action="{{ request.get_full_path }}" method="post" class="well" >
+            <form id="login_form" action="{{ request.get_full_path }}" method="post" class="card card-body bg-light" >
                 <h2>{% trans 'Log In' %}</h2>
                 {% csrf_token %}
                 {% include "oscar/partials/form_fields.html" with form=login_form %}
@@ -29,7 +29,7 @@
             </form>
         </div>
         <div class="col-sm-6 register_form">
-            <form id="register_form" action="{{ request.get_full_path }}" method="post" class="well">
+            <form id="register_form" action="{{ request.get_full_path }}" method="post" class="card card-body bg-light">
                 <h2>{% trans 'Register' %}</h2>
                 {% csrf_token %}
                 {% include "oscar/partials/form_fields.html" with form=registration_form %}

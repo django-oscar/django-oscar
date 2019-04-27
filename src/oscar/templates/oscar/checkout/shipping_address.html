@@ -26,7 +26,7 @@
                     {% for address in addresses %}
                         {% block select_address_form %}
                             <div class="col-sm-6">
-                                <div class="well">
+                                <div class="card card-body bg-light">
                                     <address>
                                         {% block select_address_fields %}
                                             {% for field in address.active_address_fields %}
@@ -68,7 +68,7 @@
     {% endif %}
 
     {% block new_address_form %}
-        <div class="well">
+        <div class="card card-body bg-light">
             <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
                 {% csrf_token %}
                 {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}

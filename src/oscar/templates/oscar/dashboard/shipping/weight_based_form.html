@@ -39,7 +39,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <form method="post" class="form-stacked well wysiwyg">
+    <form method="post" class="form-stacked card card-body bg-light wysiwyg">
         {% csrf_token %}
         {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
         {% block form_actions %}

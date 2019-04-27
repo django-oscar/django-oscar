@@ -23,7 +23,7 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-    <div class="well">
+    <div class="card card-body bg-light">
         <form method="get" class="form-inline">
             {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>

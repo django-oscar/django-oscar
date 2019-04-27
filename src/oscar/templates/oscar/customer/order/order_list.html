@@ -31,7 +31,7 @@
 {% block tabcontent %}
 
     {% if orders or form.is_bound %}
-        <div class="well">
+        <div class="card card-body bg-light">
             <h2>{% trans "Filter" %}</h2>
             <form method="get" class="form-horizontal">
                 {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}

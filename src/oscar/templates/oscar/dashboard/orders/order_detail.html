@@ -252,7 +252,7 @@
                         flow.  The default contents shows a range of widgets - more than is sensible really.
                     {% endcomment %}
                     {% block line_actions %}
-                        <div class="well">
+                        <div class="card card-body bg-light">
                             <h3>{% trans "With selected lines" %}:</h3>
 
                             <div class="form-group">
@@ -314,7 +314,7 @@
                 <form method="post" id="order_status_form">
                     {% csrf_token %}
                     {% block order_actions %}
-                        <div class="well">
+                        <div class="card card-body bg-light">
                             <h3><i class="fas fa-exclamation-circle"></i> {% trans "Change order status" %}:</h3>
                             {% if order_status_form.has_choices %}
                                 {% include "oscar/dashboard/partials/form_fields.html" with form=order_status_form %}

@@ -1,7 +1,7 @@
 {% load i18n %}
 
 {% if status %}
-    <div class="well well-danger">
+    <div class="card card-body bg-danger">
         {% if status == "new" or status == "processing" %}
             <button class="btn btn-primary" type="submit" name="action" value="generate_packing_slips" data-loading-text="{% trans 'Submitting...' %}">{% trans "Print Packaging Slips" %}</button>
         {% endif %}

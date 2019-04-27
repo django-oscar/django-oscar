@@ -29,7 +29,7 @@
     <div class="table-header">
         <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
     </div>
-    <div class="well">
+    <div class="card card-body bg-light">
         <form method="get" class="form-inline" id="search_form">
             {% for field in form %}
                 {% if "order" in field.id_for_label %}
@@ -154,7 +154,7 @@
             </table>
             {% endblock order_list %}
             {% block order_actions %}
-                <div class="well">
+                <div class="card card-body bg-light">
                     <h3><i class="fas fa-exclamation-circle"></i> {% trans "Change order status" %}:</h3>
                     {% if order_statuses %}
                         <div class="form-group">
