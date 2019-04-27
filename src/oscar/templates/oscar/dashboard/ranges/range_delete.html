@@ -9,16 +9,16 @@
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:range-update' pk=range.pk %}">'{{ range.name }}'</a>
         </li>
-        <li class="active">{% trans "Delete?" %}</li>
+        <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
     </ul>
 {% endblock %}
 

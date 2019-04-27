@@ -10,13 +10,13 @@
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>
         </li>
-        <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
+        <li class="breadcrumb-item active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
     </ul>
 {% endblock %}
 

@@ -10,13 +10,13 @@
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
-        <li>
+        <li class="breadcrumb-item">
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             {% trans "Search" %}
         </li>
-        <li class="active">"{{ query }}"</li>
+        <li class="breadcrumb-item active">"{{ query }}"</li>
     </ul>
 {% endblock %}
 

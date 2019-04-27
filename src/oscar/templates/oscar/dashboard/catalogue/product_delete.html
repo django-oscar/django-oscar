@@ -10,16 +10,16 @@
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.get_title }}</a>
         </li>
-        <li class="active">{{ title }}</li>
+        <li class="breadcrumb-item active">{{ title }}</li>
     </ul>
 {% endblock %}
 

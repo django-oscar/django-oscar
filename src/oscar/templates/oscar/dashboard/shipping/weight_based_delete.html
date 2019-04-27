@@ -7,16 +7,16 @@
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
         </li>
-        <li>
+        <li class="breadcrumb-item">
             {{ method.name }}
         </li>
-        <li class="active">{% trans "Delete?" %}</li>
+        <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
     </ul>
 {% endblock %}
 
