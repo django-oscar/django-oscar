@@ -32,22 +32,22 @@
                     <li class="nav-item">
                         {% if num_unread_notifications > 0 %}
                             {# If user has new notifications - we change account link to go to inbox #}
-                            <a href="{% url 'customer:notifications-inbox' %}">
-                                <i class="icon-user"></i>
+                            <a href="{% url 'customer:notifications-inbox' %}" class="nav-link">
+                                <i class="far fa-user"></i>
                                 {% trans "Account" %}
                                 <span class="badge badge-warning">{{ num_unread_notifications }}</span>
                             </a>
                         {% else %}
-                            <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                            <a href="{% url 'customer:summary' %}"><i class="far fa-user"></i> {% trans "Account" %}</a>
                         {% endif %}
                     </li>
                     {% if user.is_staff or perms.partner.dashboard_access %}
-                        <li class="nav-item"><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                        <li class="nav-item"><a href="{% url 'dashboard:index' %}" class="nav-link"><i class="fas fa-list-ul"></i> {% trans "Dashboard" %}</a></li>
                     {% endif %}
-                    <li class="nav-item"><a id="logout_link" href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                    <li class="nav-item"><a id="logout_link" href="{% url 'customer:logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i> {% trans "Logout" %}</a></li>
                 {% endblock %}
                 {% else %}
-                    <li class="nav-item"><a id="login_link" href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "Login or register" %}</a></li>
+                    <li class="nav-item"><a id="login_link" href="{% url 'customer:login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i> {% trans "Login or register" %}</a></li>
                 {% endif %}
             </ul>
         </div>

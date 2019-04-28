@@ -20,7 +20,7 @@
 
         <li class="nav-item step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
             {% if step == 3 or step == 4 %}
-                <a href="{% url 'checkout:shipping-method' %}">
+                <a href="{% url 'checkout:shipping-method' %}" class="nav-link">
                     <span class="visible-inline-sm icon-chevron-right"></span>
                     <span>
                         {% trans "2. Shipping method" %}
@@ -35,7 +35,7 @@
 
         <li class="nav-item step3 {% if step == 3 %}active{% else %}{% if step == 4 %}previous{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
             {% if step == 4 %}
-                <a href="{% url 'checkout:payment-details' %}">
+                <a href="{% url 'checkout:payment-details' %}" class="nav-link">
                     <span class="visible-inline-sm icon-chevron-right"></span>
                     <span>
                         {% trans "3. Payment" %}
