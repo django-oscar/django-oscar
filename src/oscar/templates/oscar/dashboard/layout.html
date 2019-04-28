@@ -27,68 +27,66 @@
 
 {% block layout %}
     {% block navbar %}
-    <nav class="navbar navbar-static-top navbar-inverse navbar-accounts">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-accounts">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <span class="navbar-brand">{{ shop_name }}</span>
-            </div>
-            <div class="collapse navbar-collapse nav-accounts">
-                <div class="nav navbar-nav navbar-right">
-                    <span class="nav-item">{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span>
-                    <a class="nav-link" href="{{ homepage_url }}"><i class="fas fa-home"></i> {% trans "Return to site" %}</a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">{{ shop_name }}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto"></ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">
+                            {% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ homepage_url }}"><i class="fas fa-home"></i> {% trans "Return to site" %}</a>
+                  </li>
+                  <li class="nav-item">
                     <a class="nav-link" href="{% url 'customer:summary' %}"><i class="fas fa-user"></i> {% trans "Account" %}</a>
+                  </li>
+                  <li class="nav-item">
                     <a class="nav-link" href="{% url 'dashboard:logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans "Log out" %}</a>
-                </div>
-            </div>
-        </div><!-- /navbar-inner -->
-    </nav><!-- /navbar -->
+                  </li>
+                </ul>
+          </div>
+        </nav>
     {% endblock navbar %}
 
     {% block dashboard_nav %}
         {% dashboard_navigation user as nav_items %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <nav class="navbar navbar-static-top navbar-inverse navbar-primary">
-            <div class="container-fluid dashboard">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-
-                <div class="collapse navbar-collapse nav-primary">
-                    <ul class="nav navbar-nav dashboard">
-                        {% for item in nav_items %}
-                        <li class="dropdown">
-                            {% if item.is_heading %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }} <b class="caret"></b>
-                            </a>
-                            {% else %}
-                            <a href="{{ item.url }}">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    {% for item in nav_items %}
+                        <li class="nav-item {% if item.has_children %}dropdown{% endif %}">
+                            <a class="nav-link {% if item.has_children %}dropdown-toggle{% endif %}"
+                               href="{% if item.is_heading %}#{% else %}{{ item.url }}{% endif %}"
+                               {% if item.has_children %}id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
+                            >
                                 {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
                                 {{ item.label }}
                             </a>
-                            {% endif %}
+
                             {% if item.has_children %}
-                            <ul class="dropdown-menu">
-                                {% for subitem in item.children %}
-                                <li>
-                                    <a href="{{ subitem.url }}">
-                                    {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
-                                    {{ subitem.label }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    {% for subitem in item.children %}
+                                        <a class="dropdown-item" href="{{ subitem.url }}">
+                                            {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
+                                            {{ subitem.label }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
                             {% endif %}
                         </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                    {% endfor %}
+                </ul>
             </div>
         </nav>
     {% endblock %}
