@@ -38,7 +38,7 @@
                                 <span class="badge badge-warning">{{ num_unread_notifications }}</span>
                             </a>
                         {% else %}
-                            <a href="{% url 'customer:summary' %}"><i class="far fa-user"></i> {% trans "Account" %}</a>
+                            <a href="{% url 'customer:summary' %}" class="nav-link"><i class="far fa-user"></i> {% trans "Account" %}</a>
                         {% endif %}
                     </li>
                     {% if user.is_staff or perms.partner.dashboard_access %}
