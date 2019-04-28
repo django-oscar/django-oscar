@@ -24,7 +24,7 @@
 {% block headertext %}{{ page_title }}{% endblock %}
 
 {% block column_left %}
-    <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills flex-column">
         {% block standard_tabs %}
             {% include 'oscar/customer/partials/standard_tabs.html' %}
         {% endblock %}

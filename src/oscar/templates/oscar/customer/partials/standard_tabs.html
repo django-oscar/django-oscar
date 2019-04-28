@@ -1,26 +1,26 @@
 {% load i18n %}
 {% load display_tags %}
 
-<li{% if active_tab == 'profile' %} class="active"{% endif %}>
-    <a href="{% url 'customer:profile-view' %}">{% trans "Profile" %}</a>
+<li class="nav-item">
+    <a href="{% url 'customer:profile-view' %}" class="nav-link{% if active_tab == 'profile' %} active{% endif %}">{% trans "Profile" %}</a>
 </li>
-<li{% if active_tab == 'orders' %} class="active"{% endif %}>
-    <a href="{% url 'customer:order-list' %}">{% trans "Order History" %}</a>
+<li class="nav-item">
+    <a href="{% url 'customer:order-list' %}" class="nav-link{% if active_tab == 'orders' %} active{% endif %}">{% trans "Order History" %}</a>
 </li>
-<li{% if active_tab == 'addresses' %} class="active"{% endif %}>
-    <a href="{% url 'customer:address-list' %}">{% trans "Address Book" %}</a>
+<li class="nav-item">
+    <a href="{% url 'customer:address-list' %}" class="nav-link{% if active_tab == 'addresses' %} active{% endif %}">{% trans "Address Book" %}</a>
 </li>
-<li{% if active_tab == 'emails' %} class="active"{% endif %}>
-    <a href="{% url 'customer:email-list' %}">{% trans "Email History" %}</a>
+<li class="nav-item">
+    <a href="{% url 'customer:email-list' %}" class="nav-link{% if active_tab == 'emails' %} active{% endif %}">{% trans "Email History" %}</a>
 </li>
-<li{% if active_tab == 'alerts' %} class="active"{% endif %}>
-    <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
+<li class="nav-item">
+    <a href="{% url 'customer:alerts-list' %}" class="nav-link{% if active_tab == 'alerts' %} active{% endif %}">{% trans "Product Alerts" %}</a>
 </li>
-<li{% if active_tab == 'notifications' %} class="active"{% endif %}>
-    <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
+<li class="nav-item">
+    <a href="{% url 'customer:notifications-inbox' %}" class="nav-link{% if active_tab == 'notifications' %} active{% endif %}">{% trans "Notifications" %}</a>
 </li>
 {% iffeature 'wishlists' %}
-    <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>
-        <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>
+    <li class="nav-item">
+        <a href="{% url 'customer:wishlists-list' %}" class="nav-link{% if active_tab == 'wishlists' %} active{% endif %}">{% trans "Wish Lists" %}</a>
     </li>
 {% endiffeature %}
