@@ -3,7 +3,7 @@
     {{ rendered_widget }}
     {% block links %}
         {% spaceless %}
-        <div class="hidden">
+        <div class="d-none">
             <a class="related-widget-wrapper-link change-related" id="change_id_{{ name }}"
                 data-href-template="{{ change_related_template_url }}?{{ url_params }}"
                 title="{% blocktrans %}Change selected {{ model }}{% endblocktrans %}">
