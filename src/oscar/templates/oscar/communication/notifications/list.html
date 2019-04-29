@@ -4,8 +4,12 @@
 {% block tabcontent %}
 
     <ul class="nav nav-tabs">
-        <li class="nav-link{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">{% trans 'Inbox' %}</a></li>
-        <li class="nav-link{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">{% trans 'Archive' context 'noun' %}</a></li>
+        <li class="nav-item">
+            <a href="{% url 'customer:notifications-inbox' %}" class="nav-link{% if list_type == 'inbox' %} active{% endif %}">{% trans 'Inbox' %}</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'customer:notifications-archive' %}" class="nav-link{% if list_type == 'archive' %} active{% endif %}">{% trans 'Archive' context 'noun' %}</a>
+        </li>
     </ul>
 
     {% if notifications %}
