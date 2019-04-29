@@ -77,7 +77,7 @@
                                         </div>
                                         {% for field_errors in form.errors.values %}
                                             {% for error in field_errors %}
-                                                <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                                <span class="error-block"><i class="fas fa-exclamation"></i> {{ error }}</span>
                                             {% endfor %}
 
                                         {% endfor %}
@@ -190,18 +190,10 @@
                             <div class="col-sm-2">
                                 {{ form.id }}
                                 {% with image=form.instance.product.primary_image %}
-<<<<<<< HEAD
                                     {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                     <a href="{{ form.instance.product.get_absolute_url }}">
-                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
+                                        <img class="card card-body" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
                                     </a>
-=======
-                                    {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                        <a href="{{ form.instance.product.get_absolute_url }}">
-                                            <img class="card card-body" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
-                                        </a>
-                                    {% endthumbnail %}
->>>>>>> e981d88a4... Adapt templates to use Bootstrap 4
                                 {% endwith %}
                             </div>
                             <div class="col-sm-6">

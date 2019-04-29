@@ -39,7 +39,7 @@
                                         <input type="hidden" name="action" value="ship_to" />
                                         <input type="hidden" name="address_id" value="{{ address.id }}" />
                                         {% if address.is_default_for_shipping %}
-                                            <button type="submit" class="btn btn-success btn-large ship-address" data-loading-text="{% trans 'Saving...' %}"><i class="icon-ok"></i> {% trans "Ship to your default shipping address" %}</button>
+                                            <button type="submit" class="btn btn-success btn-large ship-address" data-loading-text="{% trans 'Saving...' %}"><i class="fas fa-check-circle"></i> {% trans "Ship to your default shipping address" %}</button>
                                         {% else %}
                                             <button type="submit" class="btn btn-primary btn-large ship-address" data-loading-text="{% trans 'Saving...' %}">{% trans "Ship to this address" %}</button>
                                         {% endif %}

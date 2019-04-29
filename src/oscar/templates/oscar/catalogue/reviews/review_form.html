@@ -7,7 +7,7 @@
             <fieldset>
                 <legend>{% trans "Leave a product review" %}</legend>
                 {% csrf_token %}
-                
+
                 {% include 'oscar/partials/form_field.html' with field=form.title %}
 
                 <div class="reviewrating form-group {% if form.score.errors %}error{% endif %}">
@@ -17,15 +17,15 @@
                     <div class="controls">
                         {{ form.score }}
                         <div class="star-rating {% if form.score.value == '1' %}One{% elif form.score.value == '2' %}Two{% elif form.score.value == '3' %}Three{% elif form.score.value == '4' %}Four{% elif form.score.value == '5' %}Five{% endif %}">
-                            <i class="icon-star"></i>
-                            <i class="icon-star"></i>
-                            <i class="icon-star"></i>
-                            <i class="icon-star"></i>
-                            <i class="icon-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
                         </div>
 
                         {% for error in form.score.errors %}
-                            <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                            <span class="error-block"><i class="fas fa-exclamation"></i> {{ error }}</span>
                         {% endfor %}
                     </div>
 
