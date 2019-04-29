@@ -6,18 +6,14 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
-        </li>
-        <li class="breadcrumb-item">
-            {{ method.name }}
-        </li>
-        <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a></li>
+            <li class="breadcrumb-item">{{ method.name }}</li>
+            <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}

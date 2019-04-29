@@ -9,18 +9,14 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:voucher-stats' pk=voucher.pk %}">{{ voucher }}</a>
-        </li>
-        <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-stats' pk=voucher.pk %}">{{ voucher }}</a></li>
+            <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}

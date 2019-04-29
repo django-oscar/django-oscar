@@ -21,15 +21,13 @@
 
 {% block breadcrumbs %}
     {% if not is_popup %}
-        <ul class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="{% url 'dashboard:catalogue-option-list' %}">{% trans "Options" %}</a>
-            </li>
-            <li class="breadcrumb-item active">{% trans "Delete Option?" %}</li>
-        </ul>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:catalogue-option-list' %}">{% trans "Options" %}</a></li>
+                <li class="breadcrumb-item active">{% trans "Delete Option?" %}</li>
+            </ol>
+        </nav>
     {% endif %}
 {% endblock %}
 

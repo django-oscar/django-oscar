@@ -8,18 +8,14 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{{ partner.name }}</a>
-        </li>
-        <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{{ partner.name }}</a></li>
+            <li class="breadcrumb-item active">{% trans "Delete?" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}

@@ -9,15 +9,13 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>
-        </li>
-        <li class="breadcrumb-item active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a></li>
+            <li class="breadcrumb-item active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
