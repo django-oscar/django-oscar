@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <a href="#" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</a>
+                            <a href="#" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</a>
                             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                         </div>
                     </form>
@@ -96,14 +96,14 @@
             {% block order_list %}
             <table class="table table-striped table-bordered table-hover">
                 <caption>
-                    <h3 class="pull-left"><i class="fas fa-shopping-cart"></i>
+                    <h3 class="float-left"><i class="fas fa-shopping-cart"></i>
                         {% if search_filters %}
                         {% trans "Order Search Results" %}
                         {% else %}
                         {% trans "All Orders" %}
                         {% endif %}
                     </h3>
-                    <div class="pull-right">
+                    <div class="float-right">
                         <div class="form-inline">
                             <label>{% trans "Download selected orders as a CSV" %}</label>
                             <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders" data-loading-text="{% trans 'Submitting...' %}">{% trans "Download" %}</button>

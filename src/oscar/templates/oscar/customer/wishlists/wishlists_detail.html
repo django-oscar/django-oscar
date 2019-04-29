@@ -70,12 +70,12 @@
                                 <td>
                                     <div class="btn-group">
                                         {% if product %}
-                                            <a class="btn btn-default" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
-                                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <a class="btn btn-secondary" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
+                                            <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
                                         {% else %}
-                                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <a class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" href="#">
                                                 {% trans 'Actions' %}
                                                 <span class="caret"></span>
                                             </a>

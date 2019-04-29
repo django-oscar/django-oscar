@@ -158,7 +158,7 @@
         <section>
             <div id="reviews" class="sub-header">
                 {% if product.num_approved_reviews > 3 %}
-                    <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
+                    <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn float-right">{% trans "See all reviews" %}</a>
                 {% endif %}
                 <h2>{% trans "Customer Reviews" %}</h2>
             </div>

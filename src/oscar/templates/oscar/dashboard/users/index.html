@@ -32,7 +32,7 @@
         <form method="get" class="form-inline">
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" name="search" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
-            <a href="{% url 'dashboard:users-index' %}" class="btn btn-default">{% trans "Reset" %}</a>
+            <a href="{% url 'dashboard:users-index' %}" class="btn btn-secondary">{% trans "Reset" %}</a>
         </form>
     </div>
 

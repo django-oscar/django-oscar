@@ -29,7 +29,7 @@
                 {% if shipping_address %}
                     <div class="card card-body bg-info">
                         {% block shipping_address_actions %}
-                            <a href="{% url 'checkout:shipping-address' %}" class="pull-right">
+                            <a href="{% url 'checkout:shipping-address' %}" class="float-right">
                                 {% trans "Change" %}
                             </a>
                         {% endblock %}
@@ -60,7 +60,7 @@
                 {% if shipping_method %}
                     <div class="card card-body bg-light card card-body bg-light-info">
                         {% block shipping_method_actions %}
-                            <a href="{% url 'checkout:shipping-method' %}" class="pull-right">
+                            <a href="{% url 'checkout:shipping-method' %}" class="float-right">
                                 {% trans "Change" %}
                             </a>
                         {% endblock %}
@@ -83,7 +83,7 @@
                     <h2>{% trans "Payment" %}</h2>
                 </div>
                 <div class="card card-body bg-light card card-body bg-light-success">
-                    <a href="{% url 'checkout:payment-details' %}" class="pull-right">
+                    <a href="{% url 'checkout:payment-details' %}" class="float-right">
                         {% trans "Change" %}
                     </a>
                     <h3>{% trans "Payment" %}</h3>
@@ -96,7 +96,7 @@
     {% block order_contents %}
         <div class="sub-header">
             {% block order_contents_actions %}
-                <a href="{% url 'basket:summary' %}" class="pull-right">
+                <a href="{% url 'basket:summary' %}" class="float-right">
                     {% trans "Edit order contents" %}
                 </a>
             {% endblock %}

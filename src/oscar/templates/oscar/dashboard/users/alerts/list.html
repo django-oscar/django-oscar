@@ -30,7 +30,7 @@
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% trans "or" %}
-            <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-default">{% trans "reset" %}</a>
+            <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-secondary">{% trans "reset" %}</a>
         </form>
     </div>
 

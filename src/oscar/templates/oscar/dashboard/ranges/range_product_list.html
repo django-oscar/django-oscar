@@ -84,10 +84,10 @@
                     {% csrf_token %}
                     <table class="table table-striped table-bordered table-hover">
                         <caption>
-                            <h3 class="pull-left">{% trans "Products in range" %}</h3>
-                            <div class="pull-right">
+                            <h3 class="float-left">{% trans "Products in range" %}</h3>
+                            <div class="float-right">
                                 <input type="hidden" name="action" value="remove_selected_products" />
-                                <button type="submit" class="btn btn-default" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove selected products" %}</button>
+                                <button type="submit" class="btn btn-secondary" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove selected products" %}</button>
                             </div>
                         </caption>
                         <thead>

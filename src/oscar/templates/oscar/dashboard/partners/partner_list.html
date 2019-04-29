@@ -28,7 +28,7 @@
             {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% if is_filtered %}
-                <a class="btn btn-default" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
+                <a class="btn btn-secondary" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
             {% endif %}
         </form>
     </div>

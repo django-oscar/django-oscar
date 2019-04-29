@@ -8,7 +8,7 @@
 {% block header%}
     <div class="page-header action">
         {% if user.is_staff %}
-            <a class="pull-right hidden-xs" href="{% url 'dashboard:page-update' pk=flatpage.id %}"><small><i class="icon-edit"></i> {% trans "Edit this page" %}</small></a>
+            <a class="float-right hidden-xs" href="{% url 'dashboard:page-update' pk=flatpage.id %}"><small><i class="icon-edit"></i> {% trans "Edit this page" %}</small></a>
         {% endif %}
         <h1>{{ flatpage.title }}</h1>
     </div>

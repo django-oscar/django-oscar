@@ -479,7 +479,7 @@
                                     {% for field in order.shipping_address.active_address_fields %}
                                         {{ field }}<br/>
                                     {% endfor %}
-                                    <a class="btn btn-default" href="{% url 'dashboard:order-shipping-address' order.number %}">
+                                    <a class="btn btn-secondary" href="{% url 'dashboard:order-shipping-address' order.number %}">
                                         {% trans "Update" %}
                                     </a>
                                 </td>
@@ -652,7 +652,7 @@
                                         <td>
                                             {% if note.is_editable %}
                                                 &nbsp;<a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
-                                                <form method="post" class="pull-left flat">
+                                                <form method="post" class="float-left flat">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_action" value="delete_note" />
                                                     <input type="hidden" name="note_id" value="{{ note.id }}" />
