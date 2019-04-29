@@ -36,7 +36,7 @@
                     {% if field.is_hidden %}
                         {% render_field field class+='form-control' %}
                     {% else %}
-                        <span class="form-group{% if field.errors %} has-error{% endif %}">
+                        <div class="form-group mr-2{% if field.errors %} has-error{% endif %}">
                             {{ field.label_tag }}
                             {% render_field field class+='form-control' %}
                             {% for error in field.errors %}
@@ -44,11 +44,11 @@
                                     <li>{{ error }}</li>
                                 </ul>
                             {% endfor %}
-                        </span>
+                        </div>
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            <input type="submit" value="{% trans "Search" %}" class="btn btn-primary" />
+            <input type="submit" value="{% trans "Search" %}" class="btn btn-primary mr-2" />
             <a data-toggle="modal" data-target="#SearchModal" href="#">{% trans "Advanced Search" %}</a>
         </form>
 
@@ -159,16 +159,19 @@
                     {% if order_statuses %}
                         <div class="form-group">
                             <div class="controls">
-
-                            <select name="new_status">
-                                <option value=""> -- {% trans "choose new status" %} -- </option>
-                                {% for status in order_statuses %}
-                                    <option>{{ status }}</option>
-                                {% endfor %}
-                            </select>
+                                <select name="new_status">
+                                    <option value=""> -- {% trans "choose new status" %} -- </option>
+                                    {% for status in order_statuses %}
+                                        <option>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
-                        <button type="submit" name="action" value="change_order_statuses" class="btn btn-primary" data-loading-text="{% trans 'Changing...' %}">{% trans "Change status" %}</button>
+                        <div class="flex-nowrap">
+                            <button type="submit" name="action" value="change_order_statuses" class="btn btn-primary" data-loading-text="{% trans 'Changing...' %}">
+                                {% trans "Change status" %}
+                            </button>
+                        </div>
                     {% else %}
                         {% trans "This order can't have its status changed." %}
                     {% endif %}

@@ -31,17 +31,17 @@
     <div class="card card-body">
         <form method="get" class="form-inline">
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
-            <button type="submit" name="search" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+            <button type="submit" name="search" class="btn btn-primary mr-2" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             <a href="{% url 'dashboard:users-index' %}" class="btn btn-secondary">{% trans "Reset" %}</a>
         </form>
     </div>
 
     {% block users_list %}
         {% if users.data %}
-          <form id="user_list_form" method="post" class="form-inline">
-            {% csrf_token %}
-            {% render_table users %}
-          </form>
+            <form id="user_list_form" method="post" class="form-inline">
+                {% csrf_token %}
+                {% render_table users %}
+            </form>
         {% else %}
             <table class="table table-striped table-bordered table-hover">
                 <caption>{{ queryset_description }}</caption>

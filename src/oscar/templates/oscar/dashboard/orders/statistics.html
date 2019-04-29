@@ -28,7 +28,7 @@
     <div class="card card-body bg-light">
         <form method="get" action="{% url 'dashboard:order-stats' %}" class="form-inline">
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
-            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans "Filter result" %}</button>
+            <button type="submit" class="btn btn-primary mr-2" data-loading-text="{% trans 'Filtering...' %}">{% trans "Filter result" %}</button>
             <a href="{% url 'dashboard:order-stats' %}" class="btn btn-secondary">{% trans "Reset" %}</a>
         </form>
     </div>
