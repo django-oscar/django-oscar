@@ -19,10 +19,13 @@ module.exports = function(done) {
     gulp.src("node_modules/bootstrap/fonts/*")
         .pipe(gulp.dest("src/oscar/static/oscar/fonts/"));
 
-    gulp.src([
-        "node_modules/bootstrap-datetime-picker/js/*.min.js",
-        "node_modules/bootstrap-datetime-picker/css/*.min.css"
-    ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker"));
+        gulp.src([
+            "node_modules/tempusdominus-bootstrap-4/build/js/*.min.js",
+            "node_modules/tempusdominus-bootstrap-4/build/css/*.min.css"
+        ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
+
+        gulp.src("node_modules/moment/min/moment-with-locales.min.js")
+            .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
     gulp.src("node_modules/bootstrap-datetime-picker/js/locales/*")
         .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker/locales"));

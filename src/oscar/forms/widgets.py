@@ -131,6 +131,7 @@ class DateTimeWidgetMixin(object):
         attrs = super().build_attrs(base_attrs, extra_attrs)
         attrs['data-inputmask'] = "'alias': 'datetime', 'inputFormat': '{mask}'".format(
             mask=datetime_format_to_js_input_mask(self.get_format()))
+        attrs['data-target'] = '#%s' % attrs['id']
         return attrs
 
 
@@ -147,7 +148,7 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
             'data-oscarWidget': 'time',
             'data-timeFormat': datetime_format_to_js_time_format(self.get_format()),
         }
-        ctx['icon_classes'] = 'icon-time glyphicon-time'
+        ctx['icon_classes'] = 'far fa-clock glyphicon-time'
         return ctx
 
 
@@ -164,7 +165,7 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
             'data-oscarWidget': 'date',
             'data-dateFormat': datetime_format_to_js_date_format(self.get_format()),
         }
-        ctx['icon_classes'] = 'icon-calendar glyphicon-calendar'
+        ctx['icon_classes'] = 'far fa-calendar-alt glyphicon-calendar'
         return ctx
 
 
@@ -195,7 +196,7 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
             'data-oscarWidget': 'datetime',
             'data-datetimeFormat': datetime_format_to_js_datetime_format(self.get_format()),
         }
-        ctx['icon_classes'] = 'icon-calendar glyphicon-calendar'
+        ctx['icon_classes'] = 'far fa-calendar-alt glyphicon-calendar'
         return ctx
 
 
