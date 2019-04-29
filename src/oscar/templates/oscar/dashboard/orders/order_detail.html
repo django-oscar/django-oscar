@@ -167,7 +167,7 @@
                                         <td class="text-right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                                         <td class="text-right">{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                                         <td>
-                                            <a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}" class="btn btn-info">{% trans "View" %}</a>
+                                            <a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}" class="btn btn-secondary">{% trans "View" %}</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -275,10 +275,11 @@
                         <div class="card card-body bg-light">
                             <h3>{% trans "With selected lines" %}:</h3>
 
-                            <div class="form-group">
-                                <div class="">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="line_action" value="change_line_statuses" /> {% trans "Change line status to" %}
+                            <div class="form-group mb-2">
+                                <div class="form-group">
+                                    <input id="line_status_check" class="form-check-input" type="radio" name="line_action" value="change_line_statuses" />
+                                    <label for="line_status_check" class="form-check-label">
+                                        {% trans "Change line status to" %}
                                     </label>
                                     <label class="radio-inline">
                                         <select name="new_status">
@@ -290,43 +291,41 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="line_action" value="create_shipping_event" /> {% trans "Create shipping event" %}
-                                    </label>
-                                    <label class="radio-inline">
-                                        <select name="shipping_event_type">
-                                            <option value=""> -- {% trans "choose event type" %} -- </option>
-                                            {% for event_type in shipping_event_types %}
-                                                <option value="{{ event_type.code }}">{{ event_type.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </label>
-                                    <label class="radio-inline">
-                                        {% trans "with reference" %} <input type="text" name="reference" value="" />
-                                    </label>
-                                </div>
+                            <div class="form-group mb-2">
+                                <input id="shipping_event_check" class="form-check-input" type="radio" name="line_action" value="create_shipping_event" />
+                                <label for="shipping_event_check" class="form-check-label">
+                                     {% trans "Create shipping event" %}
+                                </label>
+                                <label class="radio-inline">
+                                    <select name="shipping_event_type">
+                                        <option value=""> -- {% trans "choose event type" %} -- </option>
+                                        {% for event_type in shipping_event_types %}
+                                            <option value="{{ event_type.code }}">{{ event_type.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </label>
+                                <label for="reference_input" class="radio-inline">{% trans "with reference" %}</label>
+                                <input id="reference_input" type="text" name="reference" value="" />
                             </div>
-                            <div class="form-group">
-                                <div class="">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="line_action" value="create_payment_event" /> {% trans "Create payment event" %}
-                                    </label>
-                                    <label class="radio-inline">
-                                        <select name="payment_event_type">
-                                            <option value=""> -- {% trans "choose event type" %} -- </option>
-                                            {% for event_type in payment_event_types %}
-                                                <option value="{{ event_type.code }}">{{ event_type.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </label>
-                                    <label class="radio-inline">
-                                        {% trans "with amount" %} <input type="text" name="amount" value="" />
-                                    </label>
-                                </div>
+                            <div class="form-group mb-2">
+                                <input id="payment_event_check" class="form-check-input" type="radio" name="line_action" value="create_payment_event" />
+                                <label for="payment_event_check" class="form-check-label">
+                                     {% trans "Create payment event" %}
+                                </label>
+                                <label class="radio-inline">
+                                    <select name="payment_event_type">
+                                        <option value=""> -- {% trans "choose event type" %} -- </option>
+                                        {% for event_type in payment_event_types %}
+                                            <option value="{{ event_type.code }}">{{ event_type.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </label>
+                                <label for="amount_input" class="radio-inline">{% trans "with amount" %}</label>
+                                <input id="amount_input" type="text" name="amount" value="" />
                             </div>
-                            <input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
+                            <div class="flex-nowrap">
+                                <button type="submit" class="btn btn-primary">{% trans "Go!" %}</button>
+                            </div>
                         </div>
                     {% endblock line_actions %}
                 </form>
@@ -335,11 +334,13 @@
                     {% csrf_token %}
                     {% block order_actions %}
                         <div class="card card-body bg-light">
-                            <h3><i class="fas fa-exclamation-circle"></i> {% trans "Change order status" %}:</h3>
+                            <h3><i class="fas fa-exclamation-triangle"></i> {% trans "Change order status" %}:</h3>
                             {% if order_status_form.has_choices %}
                                 {% include "oscar/dashboard/partials/form_fields.html" with form=order_status_form %}
                                 <input type="hidden" value="change_order_status" name="order_action" />
-                                <input type="submit" value="{% trans "Change status" %}" class="btn btn-primary" />
+                                <div class="flex-nowrap">
+                                    <button type="submit" class="btn btn-primary">{% trans "Change status" %}</button>
+                                </div>
                             {% else %}
                                 {% trans "This order can't have its status changed." %}
                             {% endif %}
