@@ -24,7 +24,7 @@
 
 {% block dashboard_content %}
     {% block customer_information %}
-    <table class="table  table-bordered table-hover">
+    <table class="table table-bordered table-hover">
         <caption><i class="fas fa-user"></i> {% trans "Customer Information" %}</caption>
         {% if order.guest_email %}
             <tr>
@@ -79,18 +79,38 @@
 
     <div class="tabbable dashboard">
 
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs"  role="tablist">
             {% block nav_tabs %}
-                <li class="{% if active_tab == 'lines' %}active{% endif %}"><a href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
-                <li class="{% if active_tab == 'shipping' %}active{% endif %}"><a href="#shipping" data-toggle="tab">{% trans "Shipping" %}</a></li>
-                <li class="{% if active_tab == 'payment' %}active{% endif %}"><a href="#payment" data-toggle="tab">{% trans "Payment" %}</a></li>
-                <li class="{% if active_tab == 'discounts' %}active{% endif %}"><a href="#discounts" data-toggle="tab">{% trans "Discounts" %}</a></li>
-                <li class="{% if active_tab == 'notes' %}active{% endif %}"><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'lines' %}active{% endif %}" href="#lines" data-toggle="tab">
+                        {% trans "Order contents" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'shipping' %}active{% endif %}" href="#shipping" data-toggle="tab">
+                        {% trans "Shipping" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'payment' %}active{% endif %}" href="#payment" data-toggle="tab">
+                        {% trans "Payment" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'discounts' %}active{% endif %}" href="#discounts" data-toggle="tab">
+                        {% trans "Discounts" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'notes' %}active{% endif %}" href="#notes" data-toggle="tab">
+                        {% trans "Notes" %}
+                    </a>
+                </li>
             {% endblock nav_tabs %}
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane {% if active_tab == 'lines' %}active{% endif %}" id="lines">
+            <div class="tab-pane fade {% if active_tab == 'lines' %}show active{% endif %}" id="lines" role="tabpanel">
                 <div class="table-header">
                     <h3>{% trans "Items ordered" %}</h3>
                 </div>
@@ -450,7 +470,7 @@
                 {% endblock %}
             </div>
 
-            <div class="tab-pane {% if active_tab == 'shipping' %}active{% endif %}" id="shipping">
+            <div class="tab-pane fade {% if active_tab == 'shipping' %}show active{% endif %}" id="shipping" role="tabpanel">
                 {% block tab_shipping %}
                     <div class="table-header">
                         <h3>{% trans "Shipping" %}</h3>
@@ -497,7 +517,7 @@
                 {% endblock %}
             </div>
 
-            <div class="tab-pane {% if active_tab == 'payment' %}active{% endif %}" id="payment">
+            <div class="tab-pane fade {% if active_tab == 'payment' %}show active{% endif %}" id="payment" role="tabpanel">
                 {% block tab_payment %}
 
                     {% if order.billing_address %}
@@ -578,7 +598,7 @@
                 {% endblock %}
             </div>
 
-            <div class="tab-pane {% if active_tab == 'discounts' %}active{% endif %}" id="discounts">
+            <div class="tab-pane fade {% if active_tab == 'discounts' %}show active{% endif %}" id="discounts" role="tabpanel">
                 {% block tab_discounts %}
 
                     {% with discounts=order.discounts.all %}
@@ -628,7 +648,7 @@
                 {% endblock %}
             </div>
 
-            <div class="tab-pane {% if active_tab == 'notes' %}active{% endif %}" id="notes">
+            <div class="tab-pane fade {% if active_tab == 'notes' %}show active{% endif %}" id="notes" role="tabpanel">
                 {% block tab_notes %}
                     <div class="table-header">
                         <h3>{% trans "Notes" %}</h3>

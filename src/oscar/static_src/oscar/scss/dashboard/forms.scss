@@ -112,27 +112,27 @@ textarea.plain {
 	font-family: monospace;
 }
 
-.card.card-body,
-.tabbable.dashboard .tab-content {
-  .form-actions {
-    margin-bottom: 0;
-    position: relative;
-    bottom: -19px;
-    left: -19px;
-    width: 100%;
-    padding: 19px;
-    border-top-color: #ccc;
-  }
-}
+//.card.card-body,
+//.tabbable.dashboard .tab-content {
+//  .form-actions {
+//    margin-bottom: 0;
+//    position: relative;
+//    bottom: -19px;
+//    left: -19px;
+//    width: 100%;
+//    padding: 19px;
+//    border-top-color: #ccc;
+//  }
+//}
 
-.tabbable.dashboard .tab-content {
-  .form-actions {
-    bottom: -50px;
-    left: -29px;
-    padding-left: 29px;
-    padding-right: 29px;
-  }
-}
+//.tabbable.dashboard .tab-content {
+//  .form-actions {
+//    bottom: -50px;
+//    left: -29px;
+//    padding-left: 29px;
+//    padding-right: 29px;
+//  }
+//}
 
 .wysihtml5-sandbox {
     border: 1px solid #ccc!important;
