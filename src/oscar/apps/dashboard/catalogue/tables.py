@@ -40,7 +40,7 @@ class ProductTable(DashboardTable):
         template_name='oscar/dashboard/catalogue/product_row_actions.html',
         orderable=False)
 
-    icon = "sitemap"
+    icon = 'fas fa-sitemap'
 
     class Meta(DashboardTable.Meta):
         model = Product

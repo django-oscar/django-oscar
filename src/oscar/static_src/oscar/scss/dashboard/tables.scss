@@ -1,33 +1,22 @@
 //// TABLE CHANGES
 //// -----------
-//.table-bordered,
-//.table-bordered th,
-//.table-bordered td  {
-//  border-color:#bbb;
-//}
-//
-//.table {
-//  background-color: $white;
-//}
-//
-//.table thead tr th.asc i:before {
-//  content: "\f077";
-//}
-//
-//.table thead tr th.desc i:before {
-//  content: "\f078";
-//}
-//
-//.table-striped tbody tr:nth-child(odd) td,
-//.table-striped tbody tr:nth-child(odd) th {
-//  background-color: #efefef;
-//}
-//
-//.table-hover tbody tr:hover td,
-//.table-hover tbody tr:hover th {
-//  background-color: #FFF49F;
-//}
-//
+
+.table-container {
+  width: 100%;
+}
+
+.table thead tr th.asc span:before {
+  font-family: $font-family-icons;
+  font-weight: 900;
+  content: "\f077";
+}
+
+.table thead tr th.desc span:before {
+  font-family: $font-family-icons;
+  font-weight: 900;
+  content: "\f078";
+}
+
 caption,
 .table-header {
   @include clearfix();
