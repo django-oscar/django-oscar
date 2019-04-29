@@ -35,8 +35,8 @@
             <h2>{% trans "Filter" %}</h2>
             <form method="get" class="form-horizontal">
                 {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
-                <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-8">
+                <div class="form-group row">
+                    <div class="offset-sm-4 col-sm-8">
                         <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans 'Filter results' %}</button>
                         <a href="{% url 'customer:order-list' %}" class="btn btn-secondary">{% trans 'Reset' %}</a>
                     </div>
