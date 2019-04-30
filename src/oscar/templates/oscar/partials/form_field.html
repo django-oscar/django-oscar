@@ -11,7 +11,7 @@
     {% annotate_form_field field %}
 
     {% block control_group %}
-        <div class="form-group row {% if field.errors %}has-error{% endif %}">
+        <div class="form-group{% if style == "horizontal" %} row{% endif %}{% if field.errors %} has-error{% endif %}">
 
             {% block label %}
                 {% if not nolabel and field.widget_type != 'CheckboxInput' %}
