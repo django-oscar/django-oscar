@@ -50,6 +50,15 @@ What's new in Oscar 2.0?
 - Added support for re-ordering product images in the dashboard, and for
   adding an arbitrary number of additional images into the formset.
 
+- Added an ``OSCAR_THUMBNAILER`` setting which is used to indicate thumbnailer class
+  used to generate thumbnail. This defaults to ``'oscar.core.thumbnails.SorlThumbnail'``.
+  
+- Added ``oscar_thumbnail`` template tag (to ``image_tags``) to generate thumbnails in templates.
+  Sorl's ``thumbnail`` template tag replaced by ``oscar_thumbnail`` in all related templates.
+  
+- ``sorl-thumbnail`` removed from ``install_requires``. Desirable thumbnailer (``sorl-thumbnail`` or ``easy-thumbnails``) now
+  must be installed manually or with ``pip install django-oscar[sorl-thumbnail]`` or ``pip install django-oscar[easy-thumbnails]``.
+
 .. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875
 
 Removal of deprecated features
