@@ -31,28 +31,21 @@
                                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{% url 'customer:address-delete' pk=address.id %}">
-                                            {% trans 'Delete' %}
-                                        </a>
-                                    </li>
-
+                                <div class="dropdown-menu">
+                                    <a href="{% url 'customer:address-delete' pk=address.id %}" class="dropdown-item">
+                                        {% trans 'Delete' %}
+                                    </a>
                                     {% if address.country.is_shipping_country and not address.is_default_for_shipping %}
-                                        <li>
-                                            <a href="{% url 'customer:address-change-status' pk=address.id action='default_for_shipping' %}">
-                                                {% trans 'Set as default shipping address' %}
-                                            </a>
-                                        </li>
+                                        <a href="{% url 'customer:address-change-status' pk=address.id action='default_for_shipping' %}" class="dropdown-item">
+                                            {% trans 'Set as default shipping address' %}
+                                        </a>
                                     {% endif %}
                                     {% if not address.is_default_for_billing %}
-                                        <li>
-                                            <a href="{% url 'customer:address-change-status' pk=address.id action='default_for_billing' %}">
-                                                {% trans 'Set as default billing address' %}
-                                            </a>
-                                        </li>
+                                        <a href="{% url 'customer:address-change-status' pk=address.id action='default_for_billing' %}" class="dropdown-item">
+                                            {% trans 'Set as default billing address' %}
+                                        </a>
                                     {% endif %}
-                                </ul>
+                                </div>
                             </div>
                         </td>
                     </tr>

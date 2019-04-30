@@ -20,18 +20,14 @@
                                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{% url 'customer:wishlists-update' key=wishlist.key %}">
-                                            {% trans 'Wish list settings' %}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'customer:wishlists-delete' key=wishlist.key %}">
-                                            {% trans 'Delete' %}
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div class="dropdown-menu">
+                                    <a href="{% url 'customer:wishlists-update' key=wishlist.key %}" class="dropdown-item">
+                                        {% trans 'Wish list settings' %}
+                                    </a>
+                                    <a href="{% url 'customer:wishlists-delete' key=wishlist.key %}" class="dropdown-item">
+                                        {% trans 'Delete' %}
+                                    </a>
+                                </div>
                             </div>
                         </td>
                     </tr>
