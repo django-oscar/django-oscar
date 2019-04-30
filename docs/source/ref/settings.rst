@@ -126,9 +126,7 @@ The default is::
 The search handler to be used in the product list views. If ``None``,
 Oscar tries to guess the correct handler based on your Haystack settings.
 
-Default::
-
-    None
+Default::  ``None``
 
 .. _OSCAR_DASHBOARD_NAVIGATION:
 
@@ -416,6 +414,17 @@ Default: ``/tmp``
 
 The folder is used to temporarily hold uploaded files until they are processed.
 Such files should always be deleted afterwards.
+
+``OSCAR_THUMBNAILER``
+---------------------
+
+Default: ``'oscar.core.thumbnails.SorlThumbnail'``
+
+Thumbnailer class that will be used to generate thumbnails. Available options:
+``SorlThumbnail`` and ``EasyThumbnails``. To use them ``sorl-thumbnail`` or
+``easy-thumbnails`` must be installed manually or with ``pip install django-oscar[sorl-thumbnail]`` or
+``pip install django-oscar[easy-thumbnails]``. Custom thumbnailer class (based on
+``oscar.core.thumbnails.AbstractThumbnailer``) can be used as well.
 
 Slug settings
 =============
