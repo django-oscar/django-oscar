@@ -46,7 +46,7 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
         margin-right:auto;
     }
     .price_color {
-        //.h4();
+        @extend .h4;
         color:$success;
         font-weight:bold;
     }

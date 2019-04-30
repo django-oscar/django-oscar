@@ -28,11 +28,11 @@ ul {
         margin-bottom:0;
     }
     h3 {
-        //.h5();
+        @extend .h5;
         margin-bottom:0;
     }
     .price_color {
-        //.h4();
+        @extend .h4;
         color:$success;
     }
     .availability,

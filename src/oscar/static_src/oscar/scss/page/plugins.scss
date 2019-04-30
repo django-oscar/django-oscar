@@ -4,7 +4,7 @@
 
 // Carousel overrides, idicators in the center bottom
 .carousel {
-  margin-bottom: @line-height-computed * 2;
+  margin-bottom: $base-margin-bottom * 2;
 }
 .carousel-indicators {
   top: auto;
@@ -57,23 +57,23 @@
     margin: 0;
     width: auto;
     display: block;
-    .clearfix();
+    @include clearfix;
     li {
       width: 17%;
       height: auto;
       display: block;
       float: left;
-      margin: @line-height-computed/4;
+      margin: $base-margin-bottom/4;
       text-indent: 0;
       background-color: #fff;
-      .opacity(50);
+      opacity: .50;
     }
     .active {
-      .opacity(100);
+      opacity: .100;
     }
   }
   .thumbnail {
-    .transition(none);
+    @include transition(none);
     position: relative;
   }
 }
