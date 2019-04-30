@@ -125,6 +125,53 @@ Argument             Description
 ``name``             The variable name to assign the charge to
 ===================  =====================================================
 
+Image tags
+----------
+
+Load these tags using ``{% load image_tags %}``.
+
+``oscar_thumbnail``
+~~~~~~~~~~~~~~~~~~~
+
+Returns the thumbnail url for a source file.
+
+.. code-block:: html+django
+
+    <img src="{% oscar_thumbnail image.original '440x400' upscale=False %}" />
+
+or places thumbnail object in the context, providing access to the properties of the
+thumbnail such as the height and width.
+
+.. code-block:: html+django
+
+    {% oscar_thumbnail image.original "70x70" upscale=False as thumb %}
+    <img src="{{ thumb.url }}" height="{{ thumb.height }}" width="{{ thumb.width }}">
+
+Usage:
+
+.. code-block:: html+django
+
+    {% oscar_thumbnail [source] [size] [options] %}
+
+or
+
+.. code-block:: html+django
+
+    {% oscar_thumbnail [source] [size] [options] as [variable] %}
+
+The arguments are:
+
+===================  =====================================================
+Argument             Description
+===================  =====================================================
+``source``           Can be an ImageField, FileField, a file name (assuming default_storage), a url.
+``size``             Specified as "WIDTHxHEIGHT", "WIDTHx" or "xHEIGHT". Width and height are in pixels.
+                     E.g. "70x120", "50x", "x155".
+``options``          Space separated list of options which are used when processing the image to a thumbnail.
+                     E.g. option ``upscale=False``.
+===================  =====================================================
+
+
 Datetime filters
 -------------
 
