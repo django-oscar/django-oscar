@@ -1,14 +1,10 @@
-import hashlib
-import random
-
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
-from django.template import TemplateDoesNotExist, engines
+from django.template import engines
+from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import get_template
-from django.urls import reverse
-from django.utils import six, timezone
-from django.utils.encoding import python_2_unicode_compatible
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.communication.managers import CommunicationTypeManager
@@ -16,7 +12,6 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import AutoSlugField
 
 
-@python_2_unicode_compatible
 class AbstractEmail(models.Model):
     """
     This is a record of an email sent to a customer.
@@ -49,7 +44,6 @@ class AbstractEmail(models.Model):
                 'email': self.email, 'subject': self.subject}
 
 
-@python_2_unicode_compatible
 class AbstractCommunicationEventType(models.Model):
     """
     A 'type' of communication.  Like an order confirmation email.
@@ -175,7 +169,6 @@ class AbstractCommunicationEventType(models.Model):
         return self.category == self.USER_RELATED
 
 
-@python_2_unicode_compatible
 class AbstractNotification(models.Model):
     recipient = models.ForeignKey(
         AUTH_USER_MODEL,
