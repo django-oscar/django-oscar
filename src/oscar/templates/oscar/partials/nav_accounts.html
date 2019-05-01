@@ -45,7 +45,7 @@
                         <li class="nav-item"><a href="{% url 'dashboard:index' %}" class="nav-link"><i class="fas fa-list-ul"></i> {% trans "Dashboard" %}</a></li>
                     {% endif %}
                     <li class="nav-item"><a id="logout_link" href="{% url 'customer:logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i> {% trans "Logout" %}</a></li>
-                {% endblock %}
+                {% endblock %}
                 {% else %}
                     <li class="nav-item"><a id="login_link" href="{% url 'customer:login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i> {% trans "Login or register" %}</a></li>
                 {% endif %}
