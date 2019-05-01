@@ -4,7 +4,7 @@ var oscar = (function(o, $) {
     // Replicate Django's flash messages so they can be used by AJAX callbacks.
     o.messages = {
         addMessage: function(tag, msg) {
-            var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+            var msgHTML = '<div class="alert alert-dismissible fade show alert-' + tag + '">' +
                 '<a href="#" class="close" data-dismiss="alert">&times;</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
