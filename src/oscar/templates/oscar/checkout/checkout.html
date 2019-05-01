@@ -27,13 +27,14 @@
                     <h2>{% trans "Shipping" %}</h2>
                 </div>
                 {% if shipping_address %}
-                    <div class="card card-body bg-info">
-                        {% block shipping_address_actions %}
+                    <div class="card card-body bg-light">
+                        <h3>
+                          {% trans "Address" %}
+                          {% block shipping_address_actions %}
                             <a href="{% url 'checkout:shipping-address' %}" class="float-right">
                                 {% trans "Change" %}
                             </a>
-                        {% endblock %}
-                        <h3>{% trans "Address" %}</h3>
+                        {% endblock %}</h3>
                         <address>
                             {% for field in shipping_address.active_address_fields %}
                                 {{ field }}<br/>
@@ -59,12 +60,14 @@
 
                 {% if shipping_method %}
                     <div class="card card-body bg-light card card-body bg-light-info">
-                        {% block shipping_method_actions %}
+                        <h3>
+                          {% trans "Shipping method" %}
+                          {% block shipping_method_actions %}
                             <a href="{% url 'checkout:shipping-method' %}" class="float-right">
                                 {% trans "Change" %}
                             </a>
-                        {% endblock %}
-                        <h3>{% trans "Shipping method" %}</h3>
+                          {% endblock %}
+                        </h3>
                         <p>{{ shipping_method.name }}
                             {% if shipping_method.description %}
                                 - {{ shipping_method.description|safe }}
@@ -83,10 +86,12 @@
                     <h2>{% trans "Payment" %}</h2>
                 </div>
                 <div class="card card-body bg-light card card-body bg-light-success">
-                    <a href="{% url 'checkout:payment-details' %}" class="float-right">
+                    <h3>
+                      {% trans "Payment" %}
+                      <a href="{% url 'checkout:payment-details' %}" class="float-right">
                         {% trans "Change" %}
-                    </a>
-                    <h3>{% trans "Payment" %}</h3>
+                      </a>
+                    </h3>
                     <p>{% trans "Payment details to go here" %}</p>
                 </div>
             </div>
