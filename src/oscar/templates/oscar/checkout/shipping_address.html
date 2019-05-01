@@ -50,7 +50,7 @@
                                                 <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn-remove-address">{% trans "Delete" %}</a></li>
+                                                <a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn-remove-address nav-link">{% trans "Delete" %}</a>
                                             </ul>
                                         </div>
                                     </form>
@@ -73,7 +73,7 @@
                 {% csrf_token %}
                 {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
                 <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-8">
+                    <div class="offset-sm-4 col-sm-8">
                         <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
                         {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
                     </div>

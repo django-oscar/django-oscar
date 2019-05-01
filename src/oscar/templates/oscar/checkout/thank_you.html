@@ -34,7 +34,7 @@
                 <div class="sub-header">
                     <h2>{% trans "Shipping" %}</h2>
                 </div>
-                <div class="card card-body bg-info">
+                <div class="card card-body bg-light">
                     <h3>{% trans "Address" %}</h3>
                     {% if order.shipping_address %}
                         <address>
@@ -62,7 +62,7 @@
                     {% endif %}
                 </div>
 
-                <div class="card card-body bg-info">
+                <div class="card card-body bg-light">
                     <h3>{% trans "Shipping method" %}</h3>
                     <p>{{ order.shipping_method }}</p>
                 </div>
@@ -74,7 +74,7 @@
                 <div class="sub-header">
                     <h2>{% trans "Payment" %}</h2>
                 </div>
-                <div class="card card-body bg-success">
+                <div class="card card-body bg-light">
                     <h3>{% trans "Payment" %}</h3>
                     {% for source in order.sources.all %}
                         <p>
@@ -192,7 +192,7 @@
                 <div class="col-sm-4">
                     <p><a onclick="window.print()" href="#" class="btn btn-primary btn-block btn-lg">{% trans "Print this page" %}</a></p>
                 </div>
-                <div class="col-sm-4 col-sm-offset-4">
+                <div class="col-sm-4 offset-sm-4">
                     <p><a href="{{ homepage_url }}" class="btn btn-primary btn-block btn-lg">{% trans "Continue shopping" %}</a></p>
                 </div>
             </div>
