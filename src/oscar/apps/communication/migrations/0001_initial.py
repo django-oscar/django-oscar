@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('catalogue', '0013_auto_20170821_1548'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('customer', '0005_auto_20181115_1953'),
     ]
 
     state_operations = [
@@ -35,7 +36,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Communication event type',
                 'verbose_name_plural': 'Communication event types',
-                'db_table': 'communication_communicationeventtype',
+                'db_table': 'customer_communicationeventtype',
                 'abstract': False,
             },
         ),
@@ -53,7 +54,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Email',
                 'verbose_name_plural': 'Emails',
-                'db_table': 'communication_email',
+                'db_table': 'customer_email',
                 'abstract': False,
             },
         ),
@@ -73,7 +74,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Notification',
                 'verbose_name_plural': 'Notifications',
-                'db_table': 'communication_notification',
+                'db_table': 'customer_notification',
                 'ordering': ('-date_sent',),
                 'abstract': False,
             },
