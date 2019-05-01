@@ -11,7 +11,7 @@ Use message tags to control these alerts.  Available tags include:
 <div id="messages">
 {% if messages %}
     {% for message in messages %}
-    <div class="alert {% for tag in message.tags|split %}alert-{% if tag == 'error' %}danger{% else %}{{ tag }}{% endif %} {% endfor %} fade show">
+    <div class="alert alert-dismissible {% for tag in message.tags|split %}alert-{% if tag == 'error' %}danger{% else %}{{ tag }}{% endif %} {% endfor %} fade show">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             <div class="alertinner {% if 'noicon' not in message.tags %}wicon{% endif %}">
                 {% if 'noicon' not in message.tags %}
