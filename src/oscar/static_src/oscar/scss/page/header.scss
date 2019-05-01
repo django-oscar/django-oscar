@@ -42,6 +42,7 @@
         padding-bottom:0;
         max-width:none;
         z-index: 9999;
+        left: -330px !important;basket-mini-item
 
         li {
             display:block;
@@ -51,6 +52,7 @@
 
 // Basket Mini Item
 .basket-mini-item {
+    margin-bottom: 0;
     li {
         border-top:1px solid $gray-300;
         padding:10px 15px;
