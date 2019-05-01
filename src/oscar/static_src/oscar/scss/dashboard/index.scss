@@ -11,7 +11,7 @@
       top: 0;
       h1 {
         font-size: 18px;
-        color: #242424;
+        color: $gray-900;
         font-weight: bold;
         text-transform: uppercase;
       }
@@ -31,7 +31,7 @@
         list-style:none;
         height: $graph-segments-height;
         float: right;
-        color: #868686;
+        color: $gray-500;
     }
 
     .bar-chart, .bar-chart dt, .bar-chart dd{
@@ -61,7 +61,7 @@
         bottom: -2em;
         right: 0;
         font-style: inherit;
-        color: #868686;
+        color: $gray-500;
     }
 
     .bar-chart span{
@@ -90,30 +90,30 @@
 
     .bar-chart span {
         height: 50%;
-        //#gradient > .vertical(#0e91bf, #0b759b);
+        @include gradient-y($cyan, $blue);
     }
 }
 
 .order-graph-details {
   label {
     cursor: default;
-    background-color: #F8F8F8;
-    border: 1px solid #ccc;
+    background-color: $gray-100;
+    border: 1px solid $gray-400;
     @include clearfix();
     display:block;
     margin-bottom: 15px;
     padding: 12px;
-    color: #878787;
+    color: $gray-500;
     font-size: 12px;
     span {
       display: inline-block;
       font-weight: bold;
       width: 30%;
       font-size: 16px;
-      color: #242424;
+      color: $gray-900;
     }
     i {
-      color: #0D84AE;
+      color: $cyan;
       margin-right: 5px;
       font-size: 18px;
     }
@@ -122,13 +122,13 @@
 
 .order-summary {
   @include horiz_col();
-    background: #efefef;
+    background: $gray-200;
     li {
       width: 20%;
       text-align: center;
     }
     div {
-      border-left: 1px solid #dcdcdc;
+      border-left: 1px solid $gray-300;
       padding: 20px 10px;
       min-height: 85px;
     }

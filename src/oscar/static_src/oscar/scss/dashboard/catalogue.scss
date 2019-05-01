@@ -21,7 +21,7 @@
     text-align: center;
     > div {
       padding: 4px;
-      background: #ccc;
+      background: $gray-400;
       margin-bottom: 10px;
       + label,
       + label + input {
@@ -31,7 +31,7 @@
   }
 
   div {
-    background: #fff;
+    background: $white;
     position: relative;
     width: 200px;
     height: 200px;

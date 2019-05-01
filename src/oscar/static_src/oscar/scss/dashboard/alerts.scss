@@ -1,6 +1,8 @@
 /* additional styles for alert content. Used by both public side and dashboard */
 
 .alert {
+  @include border-radius(0);
+
   margin-top: 20px;
   .close {
     z-index: 5;
@@ -24,4 +26,8 @@
       }
     }
   }
+}
+
+.alert-message.block-message.file_upload p {
+  margin-right: 10px;
 }

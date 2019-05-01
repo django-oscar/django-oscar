@@ -5,6 +5,10 @@
   width: 100%;
 }
 
+.table {
+  background-color: $white;
+}
+
 .table thead tr th.asc span:before {
   font-family: $font-family-icons;
   font-weight: 900;
@@ -20,7 +24,8 @@
 caption,
 .table-header {
   @include clearfix();
-  h2,h3 {
+
+  h2, h3 {
     font-weight: bold;
     font-size: 14px;
     line-height: normal;
@@ -29,27 +34,31 @@ caption,
       padding-right: 10px;
     }
   }
+
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 0;
-  border: 1px solid #ccc;
+  border: 1px solid $gray-400;
   border-bottom: none;
-  //#gradient > .vertical(#F8F8F8, #e5e5e5);
-  color: #242424;
+  color: $gray-900;
   padding: 6px 10px;
-  @include border-radius(3px 3px 0 0);
   text-align: left;
-  // line-height: 28px;
+  @include border-radius(3px 3px 0 0);
+  @include gradient-y($gray-100, $gray-200);
+
   .btn-toolbar {
     margin-top:0;
     margin-bottom:0;
   }
+
   > i {
     padding-right: 10px;
   }
 }
 
-
+.table-bordered {
+  @include border-radius(0);
+}
 
 caption {
   caption-side: top;

@@ -1,6 +1,6 @@
 
 body {
-  background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
+  background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 $white;
 }
 
 // TYPES CHANGES
@@ -59,7 +59,7 @@ label, input, button, select, textarea {
 }
 
 .content-block {
-  border: 1px solid #ccc;
+  border: 1px solid $gray-400;
   margin-bottom: 20px;
   padding: 15px;
   background: $white;
@@ -73,7 +73,7 @@ label, input, button, select, textarea {
   .tab-content {
     display: block;
     width: auto;
-    border: 1px #E1E1E1 solid;
+    border: 1px solid $gray-200;
     border-top-width: 0;
     padding: 30px;
   }
@@ -84,63 +84,8 @@ label, input, button, select, textarea {
 // -----
 .card.card-body {
   margin-bottom: 1rem;
-}
-
-
-// WELLS
-// -----
-.well,
-.alert,
-.table-bordered {
-  @include border-radius(0);
-}
-
-//.well {
-//  .clearfix();
-//  box-shadow: none;
-//  background-color: #efefef;
-//  border-color: #bbb;
-//}
-//
-//.well-success {
-//  background-color: @state-success-bg;
-//  border-color: @state-success-border;
-//}
-//
-//.well-danger {
-//  background-color: @state-danger-bg;
-//  border-color: @state-danger-border;
-//}
-//
-//.well-info {
-//  background-color: @state-info-bg;
-//  border-color: @state-info-border;
-//}
-//
-//.well-blank {
-//  background-color: @white;
-//  border-color: rgba(0,0,0,.1);
-//}
-//
-//.well-stacked {
-//  .well {
-//    margin-bottom:0;
-//    border-top-width:0;
-//    &:first-child {
-//      border-top-width:1px;
-//    }
-//  }
-//}
-
-.create-page .well {
-    background-color: $white;
-}
-
-
-// ALERTS
-// -----
-.alert-message.block-message.file_upload p {
-  margin-right:10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 
@@ -165,7 +110,7 @@ div[data-spy="affix"].affix {
 
 .bs-docs-sidenav {
   padding: 0;
-  background-color: #fff;
+  background-color: $white;
   -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
      -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
           box-shadow: 0 1px 4px rgba(0,0,0,.065);
@@ -175,36 +120,36 @@ div[data-spy="affix"].affix {
   display: block;
   margin: 0;
   padding: 8px 14px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid $gray-200;
   border-top-width: 0;
   color: $link-color;
   &:hover {
-   background: #f1faff;
+   background: $gray-200;
   }
   i.fas, i.far {
-    color: #ea0001;
+    color: $red;
     font-size: 16px;
   }
 }
 .bs-docs-sidenav > li > span {
-  color: #333;
+  color: $gray-800;
 }
 .bs-docs-sidenav > .active > a,
 .bs-docs-sidenav > .active > span {
   font-weight: bold;
   position: relative;
   color: $link-color;
-  background: #f1faff;
+  background: $gray-200;
   z-index: 2;
   padding: 9px 15px;
   text-shadow: 0 1px 0 rgba(0,0,0,.15);
   &:hover {
-    background: #f1faff;
+    background: $gray-200;
     color: $link-color;
   }
   &:after {
     border-bottom: 10px solid transparent;
-    border-left: 10px solid #f1faff;
+    border-left: 10px solid $gray-200;
     border-top: 10px solid transparent;
     content: "";
     display: inline-block;
@@ -214,13 +159,36 @@ div[data-spy="affix"].affix {
   }
   &:before {
     border-bottom: 11px solid transparent;
-    border-left: 11px solid #ccc;
+    border-left: 11px solid $gray-400;
     border-top: 11px solid transparent;
     content: "";
     display: inline-block;
     position: absolute;
     right: -10px;
     top: 8px;
+  }
+}
+
+
+// Select2
+// -------
+// Needed to make Select2 fields look similar to Bootstrap 4 fields
+.select2-container {
+  .select2-selection--single {
+    height: $select2-height !important;
+    outline: none;
+  }
+}
+
+.select2-container--default .select2-selection--single {
+  border: 1px solid $gray-400 !important;
+
+  .select2-selection__rendered {
+    line-height: $select2-height !important;
+  }
+
+  .select2-selection__arrow {
+    height: $select2-height !important;
   }
 }
 
@@ -250,12 +218,4 @@ div[data-spy="affix"].affix {
     width: 100%;
     margin-bottom: $line-height-base;
   }
-  .navbar-primary .nav > li > a {
-    border: 0;
-    @include border-radius(4px);
-  }
-  .navbar-primary .nav > li > a:hover {
-    background: #222;
-  }
 }
-
