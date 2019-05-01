@@ -133,7 +133,7 @@ class TestAnAnonymousUser(WebTest):
         alert = ProductAlertFactory(
             user=None, email='john@smith.com', status=ProductAlert.UNCONFIRMED)
         self.app.get(
-            reverse('communication:alerts-cancel-by-key', kwargs={'key': alert.key}))
+            reverse('customer:alerts-cancel-by-key', kwargs={'key': alert.key}))
         alert.refresh_from_db()
         self.assertTrue(alert.is_cancelled)
 
