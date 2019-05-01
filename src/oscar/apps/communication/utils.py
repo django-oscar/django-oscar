@@ -1,16 +1,13 @@
 import logging
 import six
-import warnings
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.db.models import Max
 from django.template import loader
-from django.template.exceptions import TemplateDoesNotExist
 
 from oscar.core.loading import get_class, get_model
-from oscar.utils.deprecation import RemovedInOscar21Warning
 
 
 CommunicationEvent = get_model('order', 'CommunicationEvent')
@@ -237,8 +234,8 @@ class Dispatcher(object):
         self.dispatch_order_messages(order, messages, event_code, attachments=attachments)
 
     def notify_user_about_product_alert(self, user, context):
-        subj_tpl = loader.get_template('communication/alerts/message_subject.html')
-        message_tpl = loader.get_template('communication/alerts/message.html')
+        subj_tpl = loader.get_template('customer/alerts/message_subject.html')
+        message_tpl = loader.get_template('customer/alerts/message.html')
         self.notify_user(
             user,
             subj_tpl.render(context).strip(),
@@ -292,36 +289,7 @@ class Dispatcher(object):
                 num_notifications += 1
                 self.notify_user_about_product_alert(alert.user, extra_context)
 
-            # For backwards compatibility, we check if the old (non-communication-event)
-            # templates exist, and use them if they do.
-            # This will be removed in Oscar 2.0
-            try:
-                subject_tpl = loader.get_template('customer/alerts/emails/'
-                                                  'alert_subject.txt')
-                body_tpl = loader.get_template('customer/alerts/emails/'
-                                               'alert_body.txt')
-
-                warnings.warn(
-                    "Product alert notifications now use the CommunicationEvent. "
-                    "Move '{}' to '{}', and '{}' to '{}'".format(
-                        'customer/alerts/emails/alert_subject.txt',
-                        'communication/emails/commtype_product_alert_subject.txt',
-                        'customer/alerts/emails/alert_body.txt',
-                        'communication/emails/commtype_product_alert_body.txt',
-                    ),
-                    category=RemovedInOscar21Warning, stacklevel=2
-                )
-
-                context = self.get_base_context()
-                context.update(extra_context)
-                messages = {
-                    'subject': subject_tpl.render(context).strip(),
-                    'body': body_tpl.render(context),
-                    'html': '',
-                    'sms': '',
-                }
-            except TemplateDoesNotExist:
-                messages = self.get_messages(self.PRODUCT_ALERT_EVENT_CODE, extra_context)
+            messages = self.get_messages(self.PRODUCT_ALERT_EVENT_CODE, extra_context)
 
             if messages and messages['body']:
                 if alert.user:
@@ -347,30 +315,5 @@ class Dispatcher(object):
         """
         if extra_context is None:
             extra_context = {'alert': alert}
-        try:
-            subject_tpl = loader.get_template('customer/alerts/emails/'
-                                              'confirmation_subject.txt')
-            body_tpl = loader.get_template('customer/alerts/emails/'
-                                           'confirmation_body.txt')
-            warnings.warn(
-                "Product alert notifications now use the CommunicationEvent. "
-                "Move '{}' to '{}', and '{}' to '{}'".format(
-                    'customer/alerts/emails/confirmation_subject.txt',
-                    'communication/emails/commtype_product_alert_confirmation_subject.txt',
-                    'customer/alerts/emails/confirmation_body.txt',
-                    'communication/emails/commtype_product_alert_confirmation_body.txt',
-                ),
-                category=RemovedInOscar21Warning, stacklevel=2
-            )
-
-            context = self.get_base_context()
-            context.update(extra_context)
-            messages = {
-                'subject': subject_tpl.render(context).strip(),
-                'body': body_tpl.render(context),
-                'html': '',
-                'sms': '',
-            }
-        except TemplateDoesNotExist:
-            messages = self.get_messages(self.PRODUCT_ALERT_CONFIRMATION_EVENT_CODE, extra_context)
+        messages = self.get_messages(self.PRODUCT_ALERT_CONFIRMATION_EVENT_CODE, extra_context)
         self.dispatch_direct_messages(alert.email, messages)
