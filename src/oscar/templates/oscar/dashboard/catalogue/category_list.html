@@ -31,7 +31,7 @@
 
 {% block dashboard_content %}
     <div class="alert alert-info">
-        <p>{% trans "You are editing:" %}
+        <div>{% trans "You are editing:" %}
             <strong><a href="{% url 'dashboard:catalogue-category-list' %}">{% trans "Home" %}</a></strong>
             {% if ancestors %}
                 &gt;
@@ -39,7 +39,7 @@
                     <strong><a href="{% url 'dashboard:catalogue-category-detail-list' pk=ancestor.pk %}">{{ ancestor.name }}</a></strong>{% if not forloop.last %} > {% endif %}
                 {% endfor %}
             {% endif %}
-        </p>
+        </div>
     </div>
 
     {% render_table categories %}

@@ -17,7 +17,7 @@
       margin-left: 0.5em;
     }
 
-    [class*="icon-"] {
+    [class*="fa-"] {
       position: absolute;
       top: 0.3em;
       right: 100%;
@@ -30,6 +30,12 @@
         margin: 0;
       }
     }
+  }
+}
+
+.alert-dismissible {
+  .close {
+    padding: 0.5rem 0.75rem;
   }
 }
 
