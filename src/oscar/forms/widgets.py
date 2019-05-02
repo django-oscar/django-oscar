@@ -65,9 +65,9 @@ def datetime_format_to_js_time_format(format):
         pass
     converted = format
     replacements = {
-        '%H': 'hh',
-        '%I': 'HH',
-        '%M': 'ii',
+        '%H': 'HH',
+        '%I': 'hh',
+        '%M': 'mm',
         '%S': 'ss',
     }
     for search, replace in replacements.items():
@@ -78,17 +78,17 @@ def datetime_format_to_js_time_format(format):
 def datetime_format_to_js_datetime_format(format):
     """
     Convert a Python datetime format to a time format suitable for use with
-    the datetime picker we use, http://www.malot.fr/bootstrap-datetimepicker/.
+    the datetime picker we use, http://momentjs.com/docs/#/displaying/format/.
     """
     converted = format
     replacements = {
-        '%Y': 'yyyy',
-        '%y': 'yy',
-        '%m': 'mm',
-        '%d': 'dd',
-        '%H': 'hh',
-        '%I': 'HH',
-        '%M': 'ii',
+        '%Y': 'YYYY',
+        '%y': 'YY',
+        '%m': 'MM',
+        '%d': 'DD',
+        '%H': 'HH',
+        '%I': 'hh',
+        '%M': 'mm',
         '%S': 'ss',
     }
     for search, replace in replacements.items():
