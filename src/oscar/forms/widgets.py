@@ -131,7 +131,6 @@ class DateTimeWidgetMixin(object):
         attrs = super().build_attrs(base_attrs, extra_attrs)
         attrs['data-inputmask'] = "'alias': 'datetime', 'inputFormat': '{mask}'".format(
             mask=datetime_format_to_js_input_mask(self.get_format()))
-        attrs['data-target'] = '#%s' % attrs['id']
         return attrs
 
 

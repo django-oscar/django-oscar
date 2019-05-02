@@ -1,7 +1,7 @@
 <div class="form-inline">
-    <div class="input-group date" {% for name, value in div_attrs.items %}{{ name }}="{{ value|stringformat:'s' }}"{% endfor %} data-target-input="nearest">
+    <div class="input-group date" id="wrapper_for_{{ widget.attrs.id }}" {% for name, value in div_attrs.items %}{{ name }}="{{ value|stringformat:'s' }}"{% endfor %} data-target-input="nearest">
         {% include "django/forms/widgets/input.html" %}
-        <div class="input-group-append" data-toggle="datetimepicker" data-target="#{{ widget.attrs.id }}">
+        <div class="input-group-append" data-toggle="datetimepicker" data-target="#wrapper_for_{{ widget.attrs.id }}">
             <div class="input-group-text">
                 <i class="{{ icon_classes }}"></i>
             </div>
