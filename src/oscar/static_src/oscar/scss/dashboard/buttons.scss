@@ -25,6 +25,7 @@ td .btn-toolbar {
   > label {
     width: 140px;
   }
+
   .controls {
     margin-left: 160px;
   }
@@ -40,13 +41,14 @@ td .btn-toolbar {
 
 .controls {
   ul {
-    margin-left:0;
-    list-style:none;
+    margin-left: 0;
+    list-style: none;
   }
 }
 
 .fixed-actions {
   margin-bottom: 180px;
+
   .fixed-actions-group {
     margin: 0;
     z-index: 1010;
@@ -57,6 +59,7 @@ td .btn-toolbar {
     padding: 20px;
     background: $gray-900;
   }
+
   .form-group {
     margin: 0;
   }

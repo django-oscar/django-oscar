@@ -13,16 +13,19 @@
   margin: 0;
   z-index: 1;
   position: relative;
+
   li {
     display: block;
     width: 200px;
     margin: 0 1% 2%;
     float: left;
     text-align: center;
+
     > div {
       padding: 4px;
       background: $gray-400;
       margin-bottom: 10px;
+
       + label,
       + label + input {
         display: none;

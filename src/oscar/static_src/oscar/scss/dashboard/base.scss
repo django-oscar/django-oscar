@@ -12,11 +12,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 30px;
+  font-size: 30px;
 }
 
 h2 {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 h3 {
@@ -24,7 +24,7 @@ h3 {
 }
 
 h3.app-ico:before {
-    display: none;
+  display: none;
 }
 
 body {
@@ -35,7 +35,6 @@ label, input, button, select, textarea {
   font-size: 12px;
 }
 
-
 .breadcrumb {
   margin-top: 20px;
 }
@@ -45,8 +44,6 @@ label, input, button, select, textarea {
   margin: 20px 0 0 0;
   border-bottom: 0;
 }
-
-
 
 .no-float {
   float: none;
@@ -67,9 +64,11 @@ label, input, button, select, textarea {
 
 .tabbable.dashboard {
   margin-bottom: $line-height-base;
+
   .navbar, .nav-tabs {
     margin-bottom: 0;
   }
+
   .tab-content {
     display: block;
     width: auto;
@@ -93,7 +92,7 @@ label, input, button, select, textarea {
 // -----
 .modal {
   > form {
-    margin-bottom:0;
+    margin-bottom: 0;
   }
 }
 
@@ -111,10 +110,11 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav {
   padding: 0;
   background-color: $white;
-  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
 }
+
 .bs-docs-sidenav > li > a,
 .bs-docs-sidenav > li > span {
   display: block;
@@ -123,17 +123,21 @@ div[data-spy="affix"].affix {
   border: 1px solid $gray-200;
   border-top-width: 0;
   color: $link-color;
+
   &:hover {
-   background: $gray-200;
+    background: $gray-200;
   }
+
   i.fas, i.far {
     color: $red;
     font-size: 16px;
   }
 }
+
 .bs-docs-sidenav > li > span {
   color: $gray-800;
 }
+
 .bs-docs-sidenav > .active > a,
 .bs-docs-sidenav > .active > span {
   font-weight: bold;
@@ -142,11 +146,13 @@ div[data-spy="affix"].affix {
   background: $gray-200;
   z-index: 2;
   padding: 9px 15px;
-  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
+
   &:hover {
     background: $gray-200;
     color: $link-color;
   }
+
   &:after {
     border-bottom: 10px solid transparent;
     border-left: 10px solid $gray-200;
@@ -157,6 +163,7 @@ div[data-spy="affix"].affix {
     right: -9px;
     top: 9px;
   }
+
   &:before {
     border-bottom: 11px solid transparent;
     border-left: 11px solid $gray-400;
@@ -210,6 +217,7 @@ div[data-spy="affix"].affix {
     line-height: $line-height-base;
   }
 }
+
 @media (max-width: 979px) {
   .affix {
     position: static;

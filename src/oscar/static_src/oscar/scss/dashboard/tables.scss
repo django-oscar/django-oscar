@@ -29,7 +29,8 @@ caption,
     font-weight: bold;
     font-size: 14px;
     line-height: normal;
-    margin:0;
+    margin: 0;
+
     > i {
       padding-right: 10px;
     }
@@ -47,8 +48,8 @@ caption,
   @include gradient-y($gray-100, $gray-200);
 
   .btn-toolbar {
-    margin-top:0;
-    margin-bottom:0;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   > i {
