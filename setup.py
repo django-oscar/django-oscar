@@ -27,8 +27,6 @@ install_requires = [
     'django-haystack>=2.5.0,<3.0.0',
     # Treebeard is used for categories
     'django-treebeard>=4.3.0',
-    # Sorl is used as the default thumbnailer
-    'sorl-thumbnail>=12.4.1,<12.5',
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
     # For manipulating search URLs
@@ -52,6 +50,9 @@ docs_requires = [
     'sphinx-issues==1.2.0',
 ]
 
+sorl_thumbnail_version = 'sorl-thumbnail>=12.4.1,<12.5'
+easy_thumbnails_version = 'easy-thumbnails==2.5'
+
 test_requires = [
     'WebTest>=2.0,<2.1',
     'coverage>=4.5,<4.6',
@@ -63,6 +64,8 @@ test_requires = [
     'pytest-django==3.4.8',
     'pytest-xdist>=1.25,<1.28',
     'tox>=3.0,<3.9',
+    sorl_thumbnail_version,
+    easy_thumbnails_version,
 ]
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
@@ -87,6 +90,8 @@ setup(
     extras_require={
         'docs': docs_requires,
         'test': test_requires,
+        'sorl-thumbnail': [sorl_thumbnail_version],
+        'easy-thumbnails': [easy_thumbnails_version],
     },
     classifiers=[
         'Development Status :: 5 - Production/Stable',

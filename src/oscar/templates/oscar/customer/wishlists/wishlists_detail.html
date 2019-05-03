@@ -1,5 +1,5 @@
 {% extends "customer/baseaccountpage.html" %}
-{% load sorl_thumbnail %}
+{% load image_tags %}
 {% load i18n %}
 {% load widget_tweaks %}
 
@@ -39,15 +39,14 @@
                                 <td>
                                     {% if product %}
                                         {% with image=product.primary_image %}
-                                            {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                                {% if product.is_public %}
-                                                    <a href="{{ product.get_absolute_url }}">
-                                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
-                                                    </a>
-                                                {% else %}
+                                            {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
+                                            {% if product.is_public %}
+                                                <a href="{{ product.get_absolute_url }}">
                                                     <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
-                                                {% endif %}
-                                            {% endthumbnail %}
+                                                </a>
+                                            {% else %}
+                                                <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                            {% endif %}
                                         {% endwith %}
                                     {% endif %}
                                 </td>

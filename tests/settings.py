@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'haystack',
     'treebeard',
     'sorl.thumbnail',
+    'easy_thumbnails',
     'django_tables2',
 
     # Contains models we need for testing
@@ -144,6 +145,9 @@ PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 ROOT_URLCONF = 'tests._site.urls'
 LOGIN_REDIRECT_URL = '/accounts/'
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+PUBLIC_ROOT = location('public')
+MEDIA_ROOT = os.path.join(PUBLIC_ROOT, 'media')
 DEBUG = False
 SITE_ID = 1
 USE_TZ = 1

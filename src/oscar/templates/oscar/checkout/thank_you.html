@@ -1,6 +1,6 @@
 {% extends "checkout/layout.html" %}
 {% load currency_filters %}
-{% load sorl_thumbnail %}
+{% load image_tags %}
 {% load i18n %}
 {% load staticfiles %}
 
@@ -128,9 +128,10 @@
                     <div class="col-sm-2">
                         <div class="image_container">
                             {% with image=line.product.primary_image %}
-                                {% thumbnail image.original "200x200" upscale=False as thumb %}
-                                <a href="{{ line.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-                                {% endthumbnail %}
+                                {% oscar_thumbnail image.original "200x200" upscale=False as thumb %}
+                                <a href="{{ line.product.get_absolute_url }}">
+                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}">
+                                </a>
                             {% endwith %}
                         </div>
                     </div>
