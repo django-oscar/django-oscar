@@ -70,6 +70,29 @@ class TestMultiOptionAttributes(TestCase):
         self.assertEqual(attr_val.value_as_text, ", ".join(o.option for o in self.options))
 
 
+class TestOptionAttributes(TestCase):
+
+    def setUp(self):
+        self.option_group = factories.AttributeOptionGroupFactory()
+        self.attr = factories.ProductAttributeFactory(
+            type='option',
+            name='Size',
+            code='size',
+            option_group=self.option_group,
+        )
+
+        # Add some options to the group
+        self.options = factories.AttributeOptionFactory.create_batch(
+            3, group=self.option_group)
+
+    def test_option_value_as_text(self):
+        product = factories.ProductFactory()
+        option_2 = self.options[1]
+        self.attr.save_value(product, option_2)
+        attr_val = product.attribute_values.get(attribute=self.attr)
+        assert attr_val.value_as_text == str(option_2)
+
+
 class TestDatetimeAttributes(TestCase):
 
     def setUp(self):
