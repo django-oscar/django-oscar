@@ -38,7 +38,7 @@ class OrderReportCSVFormatter(ReportCSVFormatter):
 
 
 class OrderReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/order_report.html'
+    filename_template = 'oscar/dashboard/reports/partials/order_report.html'
 
 
 class OrderReportGenerator(ReportGenerator):

@@ -47,7 +47,7 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
 
 
 class OpenBasketReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/open_basket_report.html'
+    filename_template = 'oscar/dashboard/reports/partials/open_basket_report.html'
 
 
 class OpenBasketReportGenerator(ReportGenerator):
@@ -101,8 +101,7 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
 
 
 class SubmittedBasketReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/' \
-        'submitted_basket_report.html'
+    filename_template = 'oscar/dashboard/reports/partials/submitted_basket_report.html'
 
 
 class SubmittedBasketReportGenerator(ReportGenerator):

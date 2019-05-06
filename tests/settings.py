@@ -1,6 +1,5 @@
 import os
 
-import oscar
 from oscar.defaults import *  # noqa
 
 # Path helper
@@ -84,7 +83,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             location('_site/templates'),
-            oscar.OSCAR_MAIN_TEMPLATE_DIR,
         ],
         'OPTIONS': {
             'loaders': [

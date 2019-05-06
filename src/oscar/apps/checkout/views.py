@@ -39,7 +39,7 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
     First page of the checkout.  We prompt user to either sign in, or
     to proceed as a guest (where we still collect their email address).
     """
-    template_name = 'checkout/gateway.html'
+    template_name = 'oscar/checkout/gateway.html'
     form_class = GatewayForm
     success_url = reverse_lazy('checkout:shipping-address')
     pre_conditions = [
@@ -120,7 +120,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     saved in the session and later saved as ShippingAddress model when the
     order is successfully submitted.
     """
-    template_name = 'checkout/shipping_address.html'
+    template_name = 'oscar/checkout/shipping_address.html'
     form_class = ShippingAddressForm
     success_url = reverse_lazy('checkout:shipping-method')
     pre_conditions = ['check_basket_is_not_empty',
@@ -189,7 +189,7 @@ class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
     """
     Update a user address
     """
-    template_name = 'checkout/user_address_form.html'
+    template_name = 'oscar/checkout/user_address_form.html'
     form_class = UserAddressForm
     success_url = reverse_lazy('checkout:shipping-address')
 
@@ -210,7 +210,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
     """
     Delete an address from a user's address book.
     """
-    template_name = 'checkout/user_address_delete.html'
+    template_name = 'oscar/checkout/user_address_delete.html'
     success_url = reverse_lazy('checkout:shipping-address')
 
     def get_queryset(self):
@@ -238,7 +238,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
     automatically selected.  Otherwise, a page is rendered where
     the user can choose the appropriate one.
     """
-    template_name = 'checkout/shipping_methods.html'
+    template_name = 'oscar/checkout/shipping_methods.html'
     form_class = ShippingMethodForm
     pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
@@ -394,8 +394,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     All projects will need to subclass and customise this class as no payment
     is taken by default.
     """
-    template_name = 'checkout/payment_details.html'
-    template_name_preview = 'checkout/preview.html'
+    template_name = 'oscar/checkout/payment_details.html'
+    template_name_preview = 'oscar/checkout/preview.html'
 
     # These conditions are extended at runtime depending on whether we are in
     # 'preview' mode or not.
@@ -650,7 +650,7 @@ class ThankYouView(generic.DetailView):
     """
     Displays the 'thank you' page which summarises the order just submitted.
     """
-    template_name = 'checkout/thank_you.html'
+    template_name = 'oscar/checkout/thank_you.html'
     context_object_name = 'order'
 
     def get_object(self):

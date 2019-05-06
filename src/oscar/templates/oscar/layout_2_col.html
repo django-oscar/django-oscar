@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "oscar/layout.html" %}
 
 {% comment %}
 Keep the same header and footer as the standard layout template but override the 
@@ -21,7 +21,7 @@ main content area to split it into a sidebar and a content block
                 </div>
                 {% endblock %}
 
-                {% include "partials/alert_messages.html" %}
+                {% include "oscar/partials/alert_messages.html" %}
 
                 {% block content %}{% endblock %}
             </div>

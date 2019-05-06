@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 
 {% block body_class %}{{ block.super }} users{% endblock %}
@@ -29,11 +29,11 @@
         <div class="pull-right">
             <form method="post" class="form-inline">
                 {% csrf_token %}
-                {% include 'dashboard/partials/form_fields_inline.html' %}
+                {% include 'oscar/dashboard/partials/form_fields_inline.html' %}
                 <button type='submit' class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                 <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-default">{% trans "cancel" %}</a>
             </form>
         </div>
     </div>
-    {% include 'dashboard/users/alerts/partials/alert.html' %}
+    {% include 'oscar/dashboard/users/alerts/partials/alert.html' %}
 {% endblock dashboard_content %}

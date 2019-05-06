@@ -16,7 +16,7 @@ Notification = get_model('customer', 'Notification')
 
 class NotificationListView(PageTitleMixin, generic.ListView):
     model = Notification
-    template_name = 'customer/notifications/list.html'
+    template_name = 'oscar/customer/notifications/list.html'
     context_object_name = 'notifications'
     paginate_by = settings.OSCAR_NOTIFICATIONS_PER_PAGE
     page_title = _("Notifications")
@@ -48,7 +48,7 @@ class ArchiveView(NotificationListView):
 
 class DetailView(PageTitleMixin, generic.DetailView):
     model = Notification
-    template_name = 'customer/notifications/detail.html'
+    template_name = 'oscar/customer/notifications/detail.html'
     context_object_name = 'notification'
     active_tab = 'notifications'
 

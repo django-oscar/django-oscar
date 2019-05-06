@@ -70,7 +70,7 @@ class OrderStatsView(FormView):
     Dashboard view for order statistics.
     Supports the permission-based dashboard.
     """
-    template_name = 'dashboard/orders/statistics.html'
+    template_name = 'oscar/dashboard/orders/statistics.html'
     form_class = OrderStatsForm
 
     def get(self, request, *args, **kwargs):
@@ -113,7 +113,7 @@ class OrderListView(BulkEditMixin, ListView):
     """
     model = Order
     context_object_name = 'orders'
-    template_name = 'dashboard/orders/order_list.html'
+    template_name = 'oscar/dashboard/orders/order_list.html'
     form_class = OrderSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     actions = ('download_selected_orders', 'change_order_statuses')
@@ -435,7 +435,7 @@ class OrderDetailView(DetailView):
     """
     model = Order
     context_object_name = 'order'
-    template_name = 'dashboard/orders/order_detail.html'
+    template_name = 'oscar/dashboard/orders/order_detail.html'
 
     # These strings are method names that are allowed to be called from a
     # submitted form.
@@ -737,7 +737,7 @@ class LineDetailView(DetailView):
     """
     model = Line
     context_object_name = 'line'
-    template_name = 'dashboard/orders/line_detail.html'
+    template_name = 'oscar/dashboard/orders/line_detail.html'
 
     def get_object(self, queryset=None):
         order = get_order_for_user_or_404(self.request.user,
@@ -794,7 +794,7 @@ class ShippingAddressUpdateView(UpdateView):
     """
     model = ShippingAddress
     context_object_name = 'address'
-    template_name = 'dashboard/orders/shippingaddress_form.html'
+    template_name = 'oscar/dashboard/orders/shippingaddress_form.html'
     form_class = ShippingAddressForm
 
     def get_object(self, queryset=None):

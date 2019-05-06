@@ -34,9 +34,9 @@ class IndexView(TemplateView):
 
     def get_template_names(self):
         if self.request.user.is_staff:
-            return ['dashboard/index.html', ]
+            return ['oscar/dashboard/index.html', ]
         else:
-            return ['dashboard/index_nonstaff.html', 'dashboard/index.html']
+            return ['oscar/dashboard/index_nonstaff.html', 'oscar/dashboard/index.html']
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -246,7 +246,7 @@ class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
         })
         return TemplateResponse(
             self.request,
-            'dashboard/widgets/popup_response.html',
+            'oscar/dashboard/widgets/popup_response.html',
             {'popup_response_data': popup_response_data, }
         )
 
@@ -270,7 +270,7 @@ class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
         })
         return TemplateResponse(
             self.request,
-            'dashboard/widgets/popup_response.html',
+            'oscar/dashboard/widgets/popup_response.html',
             {'popup_response_data': popup_response_data, }
         )
 
@@ -303,7 +303,7 @@ class PopUpWindowDeleteMixin(PopUpWindowMixin):
             })
             return TemplateResponse(
                 request,
-                'dashboard/widgets/popup_response.html',
+                'oscar/dashboard/widgets/popup_response.html',
                 {'popup_response_data': popup_response_data, }
             )
         else:

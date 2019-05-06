@@ -25,7 +25,7 @@ Partner = get_model('partner', 'Partner')
 class PartnerListView(generic.ListView):
     model = Partner
     context_object_name = 'partners'
-    template_name = 'dashboard/partners/partner_list.html'
+    template_name = 'oscar/dashboard/partners/partner_list.html'
     form_class = PartnerSearchForm
 
     def get_queryset(self):
@@ -60,7 +60,7 @@ class PartnerListView(generic.ListView):
 
 class PartnerCreateView(generic.CreateView):
     model = Partner
-    template_name = 'dashboard/partners/partner_form.html'
+    template_name = 'oscar/dashboard/partners/partner_form.html'
     form_class = PartnerCreateForm
     success_url = reverse_lazy('dashboard:partner-list')
 
@@ -81,7 +81,7 @@ class PartnerManageView(generic.UpdateView):
     This multi-purpose view renders out a form to edit the partner's details,
     the associated address and a list of all associated users.
     """
-    template_name = 'dashboard/partners/partner_manage.html'
+    template_name = 'oscar/dashboard/partners/partner_manage.html'
     form_class = PartnerAddressForm
     success_url = reverse_lazy('dashboard:partner-list')
 
@@ -113,7 +113,7 @@ class PartnerManageView(generic.UpdateView):
 
 class PartnerDeleteView(generic.DeleteView):
     model = Partner
-    template_name = 'dashboard/partners/partner_delete.html'
+    template_name = 'oscar/dashboard/partners/partner_delete.html'
 
     def get_success_url(self):
         messages.success(self.request,
@@ -129,7 +129,7 @@ class PartnerDeleteView(generic.DeleteView):
 
 class PartnerUserCreateView(generic.CreateView):
     model = User
-    template_name = 'dashboard/partners/partner_user_form.html'
+    template_name = 'oscar/dashboard/partners/partner_user_form.html'
     form_class = NewUserForm
 
     def dispatch(self, request, *args, **kwargs):
@@ -157,7 +157,7 @@ class PartnerUserCreateView(generic.CreateView):
 
 
 class PartnerUserSelectView(generic.ListView):
-    template_name = 'dashboard/partners/partner_user_select.html'
+    template_name = 'oscar/dashboard/partners/partner_user_select.html'
     form_class = UserEmailForm
     context_object_name = 'users'
 
@@ -253,7 +253,7 @@ class PartnerUserUnlinkView(generic.View):
         partner = get_object_or_404(Partner, pk=partner_pk)
         if self.unlink_user(user, partner):
             msg = render_to_string(
-                'dashboard/partners/messages/user_unlinked.html',
+                'oscar/dashboard/partners/messages/user_unlinked.html',
                 {'user_name': name,
                  'partner_name': partner.name,
                  'user_pk': user_pk,
@@ -273,7 +273,7 @@ class PartnerUserUnlinkView(generic.View):
 
 
 class PartnerUserUpdateView(generic.UpdateView):
-    template_name = 'dashboard/partners/partner_user_form.html'
+    template_name = 'oscar/dashboard/partners/partner_user_form.html'
     form_class = ExistingUserForm
 
     def get_object(self, queryset=None):

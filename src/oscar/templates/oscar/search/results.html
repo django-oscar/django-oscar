@@ -1,4 +1,4 @@
-{% extends "layout_2_col.html" %}
+{% extends "oscar/layout_2_col.html" %}
 
 {% load currency_filters %}
 {% load product_tags %}
@@ -26,7 +26,7 @@
         <dl>
             {% for field, data in facet_data.items %}
                 {% if data.results %}
-                    {% include 'search/partials/facet.html' with name=data.name items=data.results %}
+                    {% include 'oscar/search/partials/facet.html' with name=data.name items=data.results %}
                 {% endif %}
             {% endfor %}
         </dl>
@@ -60,7 +60,7 @@
                 {% endblocktrans %}
             {% endif %}
             <div class="pull-right">
-                {% include "partials/form_field.html" with field=search_form.sort_by %}
+                {% include "oscar/partials/form_field.html" with field=search_form.sort_by %}
             </div>
         {% else %}
             <p>
@@ -83,7 +83,7 @@
                         <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product result.object %}</li>
                     {% endfor %}
                 </ol>
-                {% include "partials/pagination.html" with page_obj=page %}
+                {% include "oscar/partials/pagination.html" with page_obj=page %}
             </div>
         </section>
     {% endif %}

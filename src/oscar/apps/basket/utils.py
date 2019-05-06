@@ -11,9 +11,9 @@ ConditionalOffer = get_class('offer.models', 'ConditionalOffer')
 
 class BasketMessageGenerator(object):
 
-    new_total_template_name = 'basket/messages/new_total.html'
-    offer_lost_template_name = 'basket/messages/offer_lost.html'
-    offer_gained_template_name = 'basket/messages/offer_gained.html'
+    new_total_template_name = 'oscar/basket/messages/new_total.html'
+    offer_lost_template_name = 'oscar/basket/messages/offer_lost.html'
+    offer_gained_template_name = 'oscar/basket/messages/offer_gained.html'
 
     def get_new_total_messages(self, basket, include_buttons=True):
         new_total_messages = []

@@ -18,7 +18,7 @@ class FacetedSearchView(views.FacetedSearchView):
     """
 
     # Haystack uses a different class attribute to CBVs
-    template = "search/results.html"
+    template = "oscar/search/results.html"
     search_signal = user_search
 
     def __call__(self, request):

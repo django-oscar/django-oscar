@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "oscar/base.html" %}
 {% load staticfiles %}
 
 {% block styles %}
@@ -16,19 +16,19 @@
 
 {% block layout %}
     {# Top-horizontal bar with account, notifictions, dashboard links #}
-    {% include "partials/nav_accounts.html" %}
+    {% include "oscar/partials/nav_accounts.html" %}
 
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
     <header class="header container-fluid">
         <div class="page_inner">
             <div class="row">
-                {% include "partials/brand.html" %}
+                {% include "oscar/partials/brand.html" %}
                 {# Mini-basket wrapped in a block so some templates can now display it #}
-                {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
+                {% block mini_basket %}{% include "oscar/partials/mini_basket.html" %}{% endblock %}
             </div>
         </div>
         {% block navigation %}
-            {% include "partials/nav_primary.html" %}
+            {% include "oscar/partials/nav_primary.html" %}
         {% endblock %}
     </header>
 
@@ -42,7 +42,7 @@
                         <h1>{% block headertext %}{% endblock %}</h1>
                     </div>
                 {% endblock %}
-                {% include "partials/alert_messages.html" %}
+                {% include "oscar/partials/alert_messages.html" %}
                 {% block subnavigation %}{% endblock %}
                 <div class="content">
                     {% block subheader %}{% endblock subheader %}
@@ -54,7 +54,7 @@
         </div>
     {% endblock %}
 
-    {% include "partials/footer.html" %}
+    {% include "oscar/partials/footer.html" %}
 {% endblock %}
 
 {% block cdn_scripts %}
@@ -75,7 +75,7 @@
 {% endblock %}
 
 {% block extrascripts %}
-    {% include "partials/extrascripts.html" %}
+    {% include "oscar/partials/extrascripts.html" %}
     {{ block.super }}
 {% endblock %}
 

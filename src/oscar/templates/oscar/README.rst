@@ -56,11 +56,11 @@ form_fields_inline.html :
 
 Partials form_fields::
 
-    'include "partials/form_fields.html" with form=form'
+    'include "oscar/partials/form_fields.html" with form=form'
 
 Partials form_fields_inline::
 
-    'include "partials/form_fields_inline.html" with form=form'
+    'include "oscar/partials/form_fields_inline.html" with form=form'
 
 Conventions
 -----------

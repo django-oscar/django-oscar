@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load sorting_tags %}
 {% load i18n %}
 
@@ -29,7 +29,7 @@
     {% block users_form %}
         <div class="well">
             <form method="get" class="form-inline">
-                {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+                {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                 {% if form.is_bound %}
                     <a class="btn btn-default" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
@@ -78,7 +78,7 @@
                     </tbody>
                 </table>
             {% endwith %}
-            {% include "dashboard/partials/pagination.html" %}
+            {% include "oscar/dashboard/partials/pagination.html" %}
         {% else %}
             {% trans "No users found." %}
         {% endif %}

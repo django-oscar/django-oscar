@@ -14,14 +14,14 @@ Dispatcher = get_class('customer.utils', 'Dispatcher')
 
 class ListView(generic.ListView):
     model = CommunicationEventType
-    template_name = 'dashboard/comms/list.html'
+    template_name = 'oscar/dashboard/comms/list.html'
     context_object_name = 'commtypes'
 
 
 class UpdateView(generic.UpdateView):
     model = CommunicationEventType
     form_class = CommunicationEventTypeForm
-    template_name = 'dashboard/comms/detail.html'
+    template_name = 'oscar/dashboard/comms/detail.html'
     context_object_name = 'commtype'
     success_url = '.'
     slug_field = 'code'

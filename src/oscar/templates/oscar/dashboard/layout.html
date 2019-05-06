@@ -1,4 +1,4 @@
-{% extends "dashboard/base.html" %}
+{% extends "oscar/dashboard/base.html" %}
 
 {% load category_tags %}
 {% load dashboard_tags %}
@@ -105,7 +105,7 @@
         {% endblock %}
 
         <div class="content">
-            {% include 'dashboard/partials/alert_messages.html' %}
+            {% include 'oscar/dashboard/partials/alert_messages.html' %}
             {% block header %}
             <div class="page-header action">
                 <h1>{% block headertext %}{% endblock %}</h1>

@@ -1,4 +1,4 @@
-{% extends "customer/baseaccountpage.html" %}
+{% extends "oscar/customer/baseaccountpage.html" %}
 {% load i18n %}
 
 {% block tabcontent %}
@@ -38,7 +38,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% include "partials/pagination.html" %}
+        {% include "oscar/partials/pagination.html" %}
     {% else %}
         <p>
             {% trans "You don't have any wish lists yet." %}

@@ -16,7 +16,7 @@ ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 
 class ProductAlertListView(PageTitleMixin, generic.ListView):
     model = ProductAlert
-    template_name = 'customer/alerts/alert_list.html'
+    template_name = 'oscar/customer/alerts/alert_list.html'
     context_object_name = 'alerts'
     page_title = _('Product Alerts')
     active_tab = 'alerts'
@@ -35,7 +35,7 @@ class ProductAlertCreateView(generic.CreateView):
     """
     model = ProductAlert
     form_class = ProductAlertForm
-    template_name = 'customer/alerts/form.html'
+    template_name = 'oscar/customer/alerts/form.html'
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

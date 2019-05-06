@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 {% load staticfiles %}
 {% load sorting_tags %}
@@ -32,7 +32,7 @@
         </div>
         <div class="well">
             <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
-                {% include "dashboard/partials/form_fields_inline.html" with form=productclass_form %}
+                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=productclass_form %}
                 <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}"><i class="icon-plus"></i> {% trans "New Product" %}</button>
             </form>
         </div>
@@ -54,7 +54,7 @@
                     {% endif %}
                 {% endfor %}
 
-                {% include "dashboard/partials/form_fields_inline.html" with form=form %}
+                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             </form>
         </div>

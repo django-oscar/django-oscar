@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "oscar/layout.html" %}
 
 {% load history_tags %}
 {% load i18n %}
@@ -33,18 +33,18 @@
 {% block content %}
 
     <section>        
-        {% include 'catalogue/reviews/review_product.html' %}
+        {% include 'oscar/catalogue/reviews/review_product.html' %}
 
         {% if reviews %}
             <form method="get" class="form-inline">
-                {% include "partials/form_fields_inline.html" with form=form %}
+                {% include "oscar/partials/form_fields_inline.html" with form=form %}
                 <input type="submit" class="btn btn-default" value="{% trans "Go" %}" />
             </form>
 
             {% for review in reviews %}
-                {% include 'catalogue/partials/review.html' %}
+                {% include 'oscar/catalogue/partials/review.html' %}
             {% endfor %}
-            {% include 'partials/pagination.html' %}
+            {% include 'oscar/partials/pagination.html' %}
 
         {% else %}
             <p>{% trans "This product does not have any reviews yet." %}</p>
