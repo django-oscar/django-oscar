@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 
 {% load currency_filters %}
 {% load sorting_tags %}
@@ -27,7 +27,7 @@
 {% block dashboard_content %}
     <div class="well">
         <form method="get" class="form-inline">
-            {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+            {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
         </form>
     </div>
@@ -105,6 +105,6 @@
                 <tr><td>{% trans "No offers found." %}</td></tr>
             {% endif %}
         </table>
-        {% include "dashboard/partials/pagination.html" %}
+        {% include "oscar/dashboard/partials/pagination.html" %}
     </form>
 {% endblock dashboard_content %}

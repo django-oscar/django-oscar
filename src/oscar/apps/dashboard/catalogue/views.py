@@ -86,7 +86,7 @@ class ProductListView(SingleTableView):
     Supports the permission-based dashboard.
     """
 
-    template_name = 'dashboard/catalogue/product_list.html'
+    template_name = 'oscar/dashboard/catalogue/product_list.html'
     form_class = ProductSearchForm
     productclass_form_class = ProductClassSelectForm
     table_class = ProductTable
@@ -211,7 +211,7 @@ class ProductCreateUpdateView(generic.UpdateView):
     Supports the permission-based dashboard.
     """
 
-    template_name = 'dashboard/catalogue/product_update.html'
+    template_name = 'oscar/dashboard/catalogue/product_update.html'
     model = Product
     context_object_name = 'product'
 
@@ -424,7 +424,7 @@ class ProductCreateUpdateView(generic.UpdateView):
           to a new product creation page
         """
         msg = render_to_string(
-            'dashboard/catalogue/messages/product_saved.html',
+            'oscar/dashboard/catalogue/messages/product_saved.html',
             {
                 'product': self.object,
                 'creating': self.creating,
@@ -455,7 +455,7 @@ class ProductDeleteView(generic.DeleteView):
     last child product.
     Supports the permission-based dashboard.
     """
-    template_name = 'dashboard/catalogue/product_delete.html'
+    template_name = 'oscar/dashboard/catalogue/product_delete.html'
     model = Product
     context_object_name = 'product'
 
@@ -526,7 +526,7 @@ class ProductDeleteView(generic.DeleteView):
 
 
 class StockAlertListView(generic.ListView):
-    template_name = 'dashboard/catalogue/stockalert_list.html'
+    template_name = 'oscar/dashboard/catalogue/stockalert_list.html'
     model = StockAlert
     context_object_name = 'alerts'
     paginate_by = settings.OSCAR_STOCK_ALERTS_PER_PAGE
@@ -551,7 +551,7 @@ class StockAlertListView(generic.ListView):
 
 
 class CategoryListView(SingleTableView):
-    template_name = 'dashboard/catalogue/category_list.html'
+    template_name = 'oscar/dashboard/catalogue/category_list.html'
     table_class = CategoryTable
     context_table_name = 'categories'
 
@@ -565,7 +565,7 @@ class CategoryListView(SingleTableView):
 
 
 class CategoryDetailListView(SingleTableMixin, generic.DetailView):
-    template_name = 'dashboard/catalogue/category_list.html'
+    template_name = 'oscar/dashboard/catalogue/category_list.html'
     model = Category
     context_object_name = 'category'
     table_class = CategoryTable
@@ -593,7 +593,7 @@ class CategoryListMixin(object):
 
 
 class CategoryCreateView(CategoryListMixin, generic.CreateView):
-    template_name = 'dashboard/catalogue/category_form.html'
+    template_name = 'oscar/dashboard/catalogue/category_form.html'
     model = Category
     form_class = CategoryForm
 
@@ -615,7 +615,7 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
 
 
 class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
-    template_name = 'dashboard/catalogue/category_form.html'
+    template_name = 'oscar/dashboard/catalogue/category_form.html'
     model = Category
     form_class = CategoryForm
 
@@ -630,7 +630,7 @@ class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
 
 
 class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
-    template_name = 'dashboard/catalogue/category_delete.html'
+    template_name = 'oscar/dashboard/catalogue/category_delete.html'
     model = Category
 
     def get_context_data(self, *args, **kwargs):
@@ -656,7 +656,7 @@ class ProductLookupView(ObjectLookupView):
 
 class ProductClassCreateUpdateView(generic.UpdateView):
 
-    template_name = 'dashboard/catalogue/product_class_form.html'
+    template_name = 'oscar/dashboard/catalogue/product_class_form.html'
     model = ProductClass
     form_class = ProductClassForm
     product_attributes_formset = ProductAttributesFormSet
@@ -749,7 +749,7 @@ class ProductClassUpdateView(ProductClassCreateUpdateView):
 
 
 class ProductClassListView(generic.ListView):
-    template_name = 'dashboard/catalogue/product_class_list.html'
+    template_name = 'oscar/dashboard/catalogue/product_class_list.html'
     context_object_name = 'classes'
     model = ProductClass
 
@@ -760,7 +760,7 @@ class ProductClassListView(generic.ListView):
 
 
 class ProductClassDeleteView(generic.DeleteView):
-    template_name = 'dashboard/catalogue/product_class_delete.html'
+    template_name = 'oscar/dashboard/catalogue/product_class_delete.html'
     model = ProductClass
     form_class = ProductClassForm
 
@@ -784,7 +784,7 @@ class ProductClassDeleteView(generic.DeleteView):
 
 class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
 
-    template_name = 'dashboard/catalogue/attribute_option_group_form.html'
+    template_name = 'oscar/dashboard/catalogue/attribute_option_group_form.html'
     model = AttributeOptionGroup
     form_class = AttributeOptionGroupForm
     attribute_option_formset = AttributeOptionFormSet
@@ -882,7 +882,7 @@ class AttributeOptionGroupUpdateView(PopUpWindowUpdateMixin, AttributeOptionGrou
 
 class AttributeOptionGroupListView(SingleTableView):
 
-    template_name = 'dashboard/catalogue/attribute_option_group_list.html'
+    template_name = 'oscar/dashboard/catalogue/attribute_option_group_list.html'
     model = AttributeOptionGroup
     table_class = AttributeOptionGroupTable
     context_table_name = 'attribute_option_groups'
@@ -895,7 +895,7 @@ class AttributeOptionGroupListView(SingleTableView):
 
 class AttributeOptionGroupDeleteView(PopUpWindowDeleteMixin, generic.DeleteView):
 
-    template_name = 'dashboard/catalogue/attribute_option_group_delete.html'
+    template_name = 'oscar/dashboard/catalogue/attribute_option_group_delete.html'
     model = AttributeOptionGroup
     form_class = AttributeOptionGroupForm
 
@@ -935,7 +935,7 @@ class AttributeOptionGroupDeleteView(PopUpWindowDeleteMixin, generic.DeleteView)
 
 class OptionListView(SingleTableView):
 
-    template_name = 'dashboard/catalogue/option_list.html'
+    template_name = 'oscar/dashboard/catalogue/option_list.html'
     model = Option
     table_class = OptionTable
     context_table_name = 'options'
@@ -943,7 +943,7 @@ class OptionListView(SingleTableView):
 
 class OptionCreateUpdateView(generic.UpdateView):
 
-    template_name = 'dashboard/catalogue/option_form.html'
+    template_name = 'oscar/dashboard/catalogue/option_form.html'
     model = Option
     form_class = OptionForm
 
@@ -1000,7 +1000,7 @@ class OptionUpdateView(PopUpWindowUpdateMixin, OptionCreateUpdateView):
 
 class OptionDeleteView(PopUpWindowDeleteMixin, generic.DeleteView):
 
-    template_name = 'dashboard/catalogue/option_delete.html'
+    template_name = 'oscar/dashboard/catalogue/option_delete.html'
     model = Option
 
     def get_context_data(self, **kwargs):

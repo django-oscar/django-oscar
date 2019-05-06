@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 
 {% block title %}
@@ -73,7 +73,7 @@
                                     {% endif %}
 
                                     {% for field in form %}
-                                        {% include 'dashboard/partials/form_field.html' with field=field %}
+                                        {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
                                     {% endfor %}
                                 </div>
                             </div>
@@ -106,15 +106,15 @@
                                                     {% for hidden_field in attribute_form.hidden_fields %}
                                                      {{ hidden_field }}
                                                     {% endfor %}
-                                                    <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.name nolabel=True %}</td>
-                                                    <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.code nolabel=True %}</td>
+                                                    <td>{% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.name nolabel=True %}</td>
+                                                    <td>{% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.code nolabel=True %}</td>
                                                     <td>
-                                                        {% include 'dashboard/partials/form_field.html' with field=attribute_form.type nolabel=True %}
+                                                        {% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.type nolabel=True %}
 
-                                                        {% include 'dashboard/partials/form_field.html' with field=attribute_form.option_group nolabel=True %}
+                                                        {% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.option_group nolabel=True %}
                                                     </td>
-                                                    <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.required nolabel=True %}</td>
-                                                    <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.DELETE nolabel=True %}</td>
+                                                    <td>{% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.required nolabel=True %}</td>
+                                                    <td>{% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.DELETE nolabel=True %}</td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>

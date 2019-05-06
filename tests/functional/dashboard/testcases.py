@@ -74,7 +74,7 @@ class PopUpWindowMixin:
         response = self.response
 
         self.assertEqual(response.status_code, http_client.OK)
-        self.assertTemplateUsed(response, 'dashboard/widgets/popup_response.html')
+        self.assertTemplateUsed(response, 'oscar/dashboard/widgets/popup_response.html')
         self.assertInContext(response, 'popup_response_data')
         self.popup_response_data = json.loads(response.context['popup_response_data'])
 

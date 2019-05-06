@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load sorting_tags %}
 {% load i18n %}
 
@@ -25,7 +25,7 @@
 {% block dashboard_content %}
     <div class="well">
         <form method="get" class="form-inline">
-            {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+            {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% if is_filtered %}
                 <a class="btn btn-default" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
@@ -103,6 +103,6 @@
                 <tr><td>{% trans "No partners found." %}</td></tr>
             {% endif %}
         </table>
-        {% include "dashboard/partials/pagination.html" %}
+        {% include "oscar/dashboard/partials/pagination.html" %}
     </form>
 {% endblock dashboard_content %}

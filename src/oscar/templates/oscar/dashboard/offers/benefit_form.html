@@ -1,10 +1,10 @@
-{% extends 'dashboard/offers/step_form.html' %}
+{% extends 'oscar/dashboard/offers/step_form.html' %}
 
 
 {% load i18n %}
 
 {% block progress %}
-    {% include 'dashboard/offers/progress.html' with step=2 %}
+    {% include 'oscar/dashboard/offers/progress.html' with step=2 %}
 {% endblock %}
 
 {% block form_fields %}
@@ -13,20 +13,20 @@
     {% if form.fields.custom_benefit.choices %}
         <h4>{% trans "Build a new incentive" %}</h4>
     {% endif %}
-    {% include "dashboard/partials/form_field.html" with field=form.range %}
+    {% include "oscar/dashboard/partials/form_field.html" with field=form.range %}
     <p>
         {% url 'dashboard:range-list' as range_list_url %}
         {% blocktrans %}
         Ranges can be created and edited from within the <a href="{{ range_list_url }}" target="_blank">range dashboard</a>.
         {% endblocktrans %}
     </p>
-    {% include "dashboard/partials/form_field.html" with field=form.type %}
-    {% include "dashboard/partials/form_field.html" with field=form.value %}
-    {% include "dashboard/partials/form_field.html" with field=form.max_affected_items %}
+    {% include "oscar/dashboard/partials/form_field.html" with field=form.type %}
+    {% include "oscar/dashboard/partials/form_field.html" with field=form.value %}
+    {% include "oscar/dashboard/partials/form_field.html" with field=form.max_affected_items %}
 
     {% if form.fields.custom_benefit.choices %}
         <h4>{% trans "...or choose a pre-defined one" %}</h4>
-        {% include "dashboard/partials/form_field.html" with field=form.custom_benefit %}
+        {% include "oscar/dashboard/partials/form_field.html" with field=form.custom_benefit %}
     {% endif %}
 {% endblock %}
 

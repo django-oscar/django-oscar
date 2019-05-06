@@ -30,7 +30,7 @@ class VoucherReportCSVFormatter(ReportCSVFormatter):
 
 
 class VoucherReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/voucher_report.html'
+    filename_template = 'oscar/dashboard/reports/partials/voucher_report.html'
 
 
 class VoucherReportGenerator(ReportGenerator):

@@ -38,7 +38,7 @@ class BasketView(ModelFormSetView):
         'extra': 0,
         'can_delete': True
     }
-    template_name = 'basket/basket.html'
+    template_name = 'oscar/basket/basket.html'
 
     def get_formset_kwargs(self):
         kwargs = super().get_formset_kwargs()
@@ -158,7 +158,7 @@ class BasketView(ModelFormSetView):
                     self.move_line_to_saved_basket(line)
 
                     msg = render_to_string(
-                        'basket/messages/line_saved.html',
+                        'oscar/basket/messages/line_saved.html',
                         {'line': line})
                     flash_messages.info(msg)
 
@@ -211,7 +211,7 @@ class BasketView(ModelFormSetView):
 
     def json_response(self, ctx, flash_messages):
         basket_html = render_to_string(
-            'basket/partials/basket_content.html',
+            'oscar/basket/partials/basket_content.html',
             context=ctx, request=self.request)
 
         return JsonResponse({
@@ -292,7 +292,7 @@ class BasketAddView(FormView):
 
     def get_success_message(self, form):
         return render_to_string(
-            'basket/messages/addition.html',
+            'oscar/basket/messages/addition.html',
             {'product': form.product,
              'quantity': form.cleaned_data['quantity']})
 
@@ -452,7 +452,7 @@ class SavedView(ModelFormSetView):
             if form.cleaned_data.get('move_to_basket', False):
                 is_move = True
                 msg = render_to_string(
-                    'basket/messages/line_restored.html',
+                    'oscar/basket/messages/line_restored.html',
                     {'line': form.instance})
                 messages.info(self.request, msg, extra_tags='safe noicon')
                 real_basket = self.request.basket

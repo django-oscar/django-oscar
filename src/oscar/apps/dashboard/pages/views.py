@@ -21,7 +21,7 @@ class PageListView(ListView):
     """
     View for listing all existing flatpages.
     """
-    template_name = 'dashboard/pages/index.html'
+    template_name = 'oscar/dashboard/pages/index.html'
     model = FlatPage
     form_class = PageSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
@@ -65,7 +65,7 @@ class PageListView(ListView):
 
 class PageCreateUpdateMixin(object):
 
-    template_name = 'dashboard/pages/update.html'
+    template_name = 'oscar/dashboard/pages/update.html'
     model = FlatPage
     form_class = PageUpdateForm
     context_object_name = 'page'
@@ -128,7 +128,7 @@ class PageUpdateView(PageCreateUpdateMixin, generic.UpdateView):
 
 
 class PageDeleteView(generic.DeleteView):
-    template_name = 'dashboard/pages/delete.html'
+    template_name = 'oscar/dashboard/pages/delete.html'
     model = FlatPage
 
     def get_success_url(self):

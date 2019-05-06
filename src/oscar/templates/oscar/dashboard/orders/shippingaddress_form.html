@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 
 {% block title %}
@@ -28,7 +28,7 @@
 
     <form method="post" class="well form-horizontal">
         {% csrf_token %}
-        {% include "dashboard/partials/form_fields.html" with form=form %}
+        {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Updating...' %}">{% trans "Update address" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "cancel" %}</a>

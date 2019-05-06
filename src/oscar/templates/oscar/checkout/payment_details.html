@@ -1,4 +1,4 @@
-{% extends "checkout/checkout.html" %}
+{% extends "oscar/checkout/checkout.html" %}
 {% load i18n %}
 
 {% block title %}
@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block checkout_nav %}
-    {% include 'checkout/nav.html' with step=3 %}
+    {% include 'oscar/checkout/nav.html' with step=3 %}
 {% endblock %}
 
 {% block checkout_title %}{% trans "Enter payment details" %}{% endblock %}

@@ -19,3 +19,7 @@ urlpatterns += i18n_patterns(
 )
 
 urlpatterns += staticfiles_urlpatterns()
+
+handler403 = 'oscar.views.handler403'
+handler404 = 'oscar.views.handler404'
+handler500 = 'oscar.views.handler500'

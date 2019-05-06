@@ -33,7 +33,7 @@ class TestOptionCreateView(PopUpObjectCreateMixin, WebTestCase):
     form = OptionForm
     page_title = gettext("Add a new Option")
     url_name = 'dashboard:catalogue-option-create'
-    template_name = 'dashboard/catalogue/option_form.html'
+    template_name = 'oscar/dashboard/catalogue/option_form.html'
     success_message = gettext("Option created successfully")
     success_url_name = 'dashboard:catalogue-option-list'
     create_check_attr = 'name'
@@ -52,7 +52,7 @@ class TestOptionUpdateView(PopUpObjectUpdateMixin, WebTestCase):
     form = OptionForm
     page_title = None
     url_name = 'dashboard:catalogue-option-update'
-    template_name = 'dashboard/catalogue/option_form.html'
+    template_name = 'oscar/dashboard/catalogue/option_form.html'
     success_message = gettext("Option updated successfully")
     success_url_name = 'dashboard:catalogue-option-list'
     create_check_attr = 'name'
@@ -76,7 +76,7 @@ class TestOptionDeleteView(PopUpObjectDeleteMixin, WebTestCase):
     model = Option
     page_title = None
     url_name = 'dashboard:catalogue-option-delete'
-    template_name = 'dashboard/catalogue/option_delete.html'
+    template_name = 'oscar/dashboard/catalogue/option_delete.html'
     success_message = gettext("Option deleted successfully")
     success_url_name = 'dashboard:catalogue-option-list'
     delete_dissalowed_possible = True

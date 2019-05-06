@@ -54,37 +54,14 @@ First, edit your settings file ``frobshop.frobshop.settings.py`` to import all o
     from oscar.defaults import *
 
 
-Now modify your ``TEMPLATES`` to include the main Oscar template directory and add the extra
-context processors.
+Now add Oscar's context processors to the template settings, listed below:
 
 .. code-block:: django
 
-    from oscar import OSCAR_MAIN_TEMPLATE_DIR
-
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [
-                os.path.join(BASE_DIR, 'templates'),
-                OSCAR_MAIN_TEMPLATE_DIR
-            ],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.template.context_processors.i18n',
-                    'django.contrib.messages.context_processors.messages',
-
-                    'oscar.apps.search.context_processors.search_form',
-                    'oscar.apps.checkout.context_processors.checkout',
-                    'oscar.apps.customer.notifications.context_processors.notifications',
-                    'oscar.core.context_processors.metadata',
-                ],
-            },
-        },
-    ]
+    'oscar.apps.search.context_processors.search_form',
+    'oscar.apps.checkout.context_processors.checkout',
+    'oscar.apps.customer.notifications.context_processors.notifications',
+    'oscar.core.context_processors.metadata',
 
 Next, modify ``INSTALLED_APPS`` to be a list, and add ``django.contrib.sites``,
 ``django.contrib.flatpages``, Oscar's core apps, and third-party apps that Oscar

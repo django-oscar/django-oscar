@@ -31,7 +31,7 @@ class ProductReportCSVFormatter(ReportCSVFormatter):
 
 
 class ProductReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/product_report.html'
+    filename_template = 'oscar/dashboard/reports/partials/product_report.html'
 
 
 class ProductReportGenerator(ReportGenerator):
@@ -83,7 +83,7 @@ class UserReportCSVFormatter(ReportCSVFormatter):
 
 
 class UserReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/user_report.html'
+    filename_template = 'oscar/dashboard/reports/partials/user_report.html'
 
 
 class UserReportGenerator(ReportGenerator):

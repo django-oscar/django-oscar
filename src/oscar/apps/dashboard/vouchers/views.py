@@ -29,7 +29,7 @@ OrderDiscount = get_model('order', 'OrderDiscount')
 class VoucherListView(generic.ListView):
     model = Voucher
     context_object_name = 'vouchers'
-    template_name = 'dashboard/vouchers/voucher_list.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_list.html'
     form_class = VoucherSearchForm
     description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
@@ -85,7 +85,7 @@ class VoucherListView(generic.ListView):
 
 class VoucherCreateView(generic.FormView):
     model = Voucher
-    template_name = 'dashboard/vouchers/voucher_form.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_form.html'
     form_class = VoucherForm
 
     def get_context_data(self, **kwargs):
@@ -136,7 +136,7 @@ class VoucherCreateView(generic.FormView):
 
 class VoucherStatsView(generic.DetailView):
     model = Voucher
-    template_name = 'dashboard/vouchers/voucher_detail.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_detail.html'
     context_object_name = 'voucher'
 
     def get_context_data(self, **kwargs):
@@ -148,7 +148,7 @@ class VoucherStatsView(generic.DetailView):
 
 
 class VoucherUpdateView(generic.FormView):
-    template_name = 'dashboard/vouchers/voucher_form.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_form.html'
     model = Voucher
     form_class = VoucherForm
 
@@ -216,7 +216,7 @@ class VoucherUpdateView(generic.FormView):
 
 class VoucherDeleteView(generic.DeleteView):
     model = Voucher
-    template_name = 'dashboard/vouchers/voucher_delete.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_delete.html'
     context_object_name = 'voucher'
 
     def get_success_url(self):
@@ -226,7 +226,7 @@ class VoucherDeleteView(generic.DeleteView):
 
 class VoucherSetCreateView(generic.CreateView):
     model = VoucherSet
-    template_name = 'dashboard/vouchers/voucher_set_form.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_set_form.html'
     form_class = VoucherSetForm
 
     def get_context_data(self, **kwargs):
@@ -276,7 +276,7 @@ class VoucherSetCreateView(generic.CreateView):
 
 
 class VoucherSetUpdateView(generic.UpdateView):
-    template_name = 'dashboard/vouchers/voucher_set_form.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_set_form.html'
     model = VoucherSet
     form_class = VoucherSetForm
 
@@ -356,7 +356,7 @@ class VoucherSetDetailView(generic.ListView):
 
     model = Voucher
     context_object_name = 'vouchers'
-    template_name = 'dashboard/vouchers/voucher_set_detail.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_set_detail.html'
     form_class = VoucherSetSearchForm
     description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
     paginate_by = 50
@@ -414,7 +414,7 @@ class VoucherSetDetailView(generic.ListView):
 class VoucherSetListView(generic.ListView):
     model = VoucherSet
     context_object_name = 'vouchers'
-    template_name = 'dashboard/vouchers/voucher_set_list.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_set_list.html'
     description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
@@ -433,7 +433,7 @@ class VoucherSetListView(generic.ListView):
 
 
 class VoucherSetDownloadView(generic.DetailView):
-    template_name = 'dashboard/vouchers/voucher_set_form.html'
+    template_name = 'oscar/dashboard/vouchers/voucher_set_form.html'
     model = VoucherSet
     form_class = VoucherSetForm
 

@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 
 {% load currency_filters %}
 
@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-md-3">
             {% block progress %}
-                {% include 'dashboard/offers/progress.html' %}
+                {% include 'oscar/dashboard/offers/progress.html' %}
             {% endblock %}
         </div>
         <div class="{% if session_offer %}col-md-6{% else %}col-md-9{% endif %}">
@@ -60,7 +60,7 @@
                     {% csrf_token %}
                     <p>{% trans "Fields marked with * are mandatory." %}</p>
                     {% block form_fields %}
-                        {% include "dashboard/partials/form_fields.html" with form=form %}
+                        {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
                     {% endblock %}
                     {% block form_extradata %}{% endblock %}
                 </div>
@@ -87,7 +87,7 @@
         {% if session_offer %}
         <div class="col-md-3">
             {% block summary %}
-                {% include 'dashboard/offers/summary.html' %}
+                {% include 'oscar/dashboard/offers/summary.html' %}
             {% endblock %}
         </div>
         {% endif %}

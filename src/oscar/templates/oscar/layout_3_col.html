@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "oscar/layout.html" %}
 
 {% block content_wrapper %}
     <div class="container-fluid page">
@@ -18,7 +18,7 @@
                         <h1>{% block headertext %}{% endblock %}</h1>
                     </div>
                     {% endblock %}
-                    {% include "partials/alert_messages.html" %}
+                    {% include "oscar/partials/alert_messages.html" %}
 
                     {% block content %}{% endblock %}
                 </div>

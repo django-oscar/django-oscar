@@ -15,5 +15,5 @@ class DashboardTable(Table):
         return self.caption
 
     class Meta:
-        template = 'dashboard/table.html'
+        template = 'oscar/dashboard/table.html'
         attrs = {'class': 'table table-striped table-bordered'}

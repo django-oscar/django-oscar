@@ -30,7 +30,7 @@ class OfferReportCSVFormatter(ReportCSVFormatter):
 
 
 class OfferReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/offer_report.html'
+    filename_template = 'oscar/dashboard/reports/partials/offer_report.html'
 
 
 class OfferReportGenerator(ReportGenerator):

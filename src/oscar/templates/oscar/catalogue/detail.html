@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "oscar/layout.html" %}
 
 {% load history_tags %}
 {% load currency_filters %}
@@ -53,7 +53,7 @@
 
         {% block product_gallery %}
         <div class="col-sm-6">
-            {% include "catalogue/partials/gallery.html" %}
+            {% include "oscar/catalogue/partials/gallery.html" %}
         </div>
         {% endblock %}
 
@@ -69,18 +69,18 @@
             <h1>{{ product.get_title }}</h1>
 
             {% block product_stock_record %}
-                {% include "catalogue/partials/stock_record.html" with verbose=1 %}
+                {% include "oscar/catalogue/partials/stock_record.html" with verbose=1 %}
             {% endblock %}
 
             {% iffeature "reviews" %}
-                {% include "catalogue/reviews/partials/review_stars.html" %}
+                {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
             {% endiffeature %}
 
             <hr/>
 
             {% if not product.is_parent %}
                 {% block product_basket_form %}
-                    {% include "catalogue/partials/add_to_basket_form.html" %}
+                    {% include "oscar/catalogue/partials/add_to_basket_form.html" %}
                 {% endblock %}
             {% else %}
                 {% block variants %}
@@ -179,7 +179,7 @@
                 <ol class="list-unstyled review-list">
                     {% for review in product.reviews.approved.all|slice:":3" %}
                         <li>
-                        {% include 'catalogue/partials/review.html' %}
+                        {% include 'oscar/catalogue/partials/review.html' %}
                         </li>
                     {% endfor %}
                 </ol>

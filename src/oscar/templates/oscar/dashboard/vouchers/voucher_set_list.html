@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'oscar/dashboard/layout.html' %}
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
@@ -74,5 +74,5 @@
     <tr><td>{% trans "No vouchers found." %}</td></tr>
     {% endif %}
 </table>
-{% include "partials/pagination.html" %}
+{% include "oscar/partials/pagination.html" %}
 {% endblock dashboard_content %}

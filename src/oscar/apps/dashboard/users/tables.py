@@ -9,7 +9,7 @@ DashboardTable = get_class('dashboard.tables', 'DashboardTable')
 
 class UserTable(DashboardTable):
     check = TemplateColumn(
-        template_name='dashboard/users/user_row_checkbox.html',
+        template_name='oscar/dashboard/users/user_row_checkbox.html',
         verbose_name=' ', orderable=False)
     email = LinkColumn('dashboard:user-detail', args=[A('id')],
                        accessor='email')
@@ -20,10 +20,10 @@ class UserTable(DashboardTable):
     date_registered = Column(accessor='date_joined')
     num_orders = Column(accessor='orders.count', orderable=False, verbose_name=_('Number of Orders'))
     actions = TemplateColumn(
-        template_name='dashboard/users/user_row_actions.html',
+        template_name='oscar/dashboard/users/user_row_actions.html',
         verbose_name=' ')
 
     icon = "group"
 
     class Meta(DashboardTable.Meta):
-        template = 'dashboard/users/table.html'
+        template = 'oscar/dashboard/users/table.html'

@@ -1,5 +1,3 @@
-import os
-
 # Use 'dev', 'beta', or 'final' as the 4th element to indicate release type.
 VERSION = (2, 0, 0, 'dev')
 
@@ -19,13 +17,6 @@ def get_version():
             version = '%s %s' % (version, VERSION[4])
     return version
 
-
-# Cheeky setting that allows each template to be accessible by two paths.
-# Eg: the template 'oscar/templates/oscar/base.html' can be accessed via both
-# 'base.html' and 'oscar/base.html'.  This allows Oscar's templates to be
-# extended by templates with the same filename
-OSCAR_MAIN_TEMPLATE_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'templates/oscar')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

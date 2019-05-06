@@ -12,7 +12,7 @@ Range = get_model('offer', 'Range')
 class OfferListView(ListView):
     model = ConditionalOffer
     context_object_name = 'offers'
-    template_name = 'offer/list.html'
+    template_name = 'oscar/offer/list.html'
 
     def get_queryset(self):
         return ConditionalOffer.active.filter(
@@ -21,7 +21,7 @@ class OfferListView(ListView):
 
 class OfferDetailView(ListView):
     context_object_name = 'products'
-    template_name = 'offer/detail.html'
+    template_name = 'oscar/offer/detail.html'
     paginate_by = settings.OSCAR_OFFERS_PER_PAGE
 
     def get(self, request, *args, **kwargs):
@@ -44,7 +44,7 @@ class OfferDetailView(ListView):
 
 
 class RangeDetailView(ListView):
-    template_name = 'offer/range.html'
+    template_name = 'oscar/offer/range.html'
     context_object_name = 'products'
 
     def dispatch(self, request, *args, **kwargs):
