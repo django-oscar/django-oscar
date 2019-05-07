@@ -19,8 +19,8 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 2.0 is compatible with Django 1.11, Django 2.0, Django 2.1 and Django 2.2
-as well as Python 3.5 and 3.6.
+Oscar 2.0 is compatible with Django 1.11, Django 2.1 and Django 2.2
+as well as Python 3.5, 3.6 and 3.7.
 
 Support for Python 2.7 and Python 3.4 has been dropped.
 
@@ -52,10 +52,10 @@ What's new in Oscar 2.0?
 
 - Added an ``OSCAR_THUMBNAILER`` setting which is used to indicate thumbnailer class
   used to generate thumbnail. This defaults to ``'oscar.core.thumbnails.SorlThumbnail'``.
-  
+
 - Added ``oscar_thumbnail`` template tag (to ``image_tags``) to generate thumbnails in templates.
   Sorl's ``thumbnail`` template tag replaced by ``oscar_thumbnail`` in all related templates.
-  
+
 - ``sorl-thumbnail`` removed from ``install_requires``. Desirable thumbnailer (``sorl-thumbnail`` or ``easy-thumbnails``) now
   must be installed manually or with ``pip install django-oscar[sorl-thumbnail]`` or ``pip install django-oscar[easy-thumbnails]``.
 
@@ -185,7 +185,7 @@ Minor changes
 - Oscar's 500 error template no longer inherits other templates and
   does not use any template template tags and
   styling to avoid potential errors caused by the template itself (see :issue:`2971`).
-  
+
 - Line discounts are now capped to a minimum of zero - i.e., negative discounts will not be reported.
 
 .. _incompatible_in_2.0:
