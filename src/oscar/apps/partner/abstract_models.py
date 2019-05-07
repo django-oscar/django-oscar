@@ -109,24 +109,12 @@ class AbstractStockRecord(models.Model):
     price_currency = models.CharField(
         _("Currency"), max_length=12, default=get_default_currency)
 
-    # This is the base price for calculations - tax should be applied by the
-    # appropriate method.  We don't store tax here as its calculation is highly
-    # domain-specific.  It is NULLable because some items don't have a fixed
-    # price but require a runtime calculation (possible from an external
-    # service). Current field name `price_excl_tax` is deprecated and will be
-    # renamed into `price` in Oscar 2.1.
-    price_excl_tax = models.DecimalField(
-        _("Price (excl. tax)"), decimal_places=2, max_digits=12,
-        blank=True, null=True)
-
-    # Deprecated - will be removed in Oscar 2.1
-    price_retail = models.DecimalField(
-        _("Price (retail)"), decimal_places=2, max_digits=12,
-        blank=True, null=True)
-
-    # Deprecated - will be removed in Oscar 2.1
-    cost_price = models.DecimalField(
-        _("Cost Price"), decimal_places=2, max_digits=12,
+    # This is the base price for calculations - whether this is inclusive or exclusive of
+    # tax depends on your implementation, as this is highly domain-specific.
+    # It is nullable because some items don't have a fixed
+    # price but require a runtime calculation (possibly from an external service).
+    price = models.DecimalField(
+        _("Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
     #: Number of items in stock

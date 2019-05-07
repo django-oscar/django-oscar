@@ -49,7 +49,7 @@ Benefit = get_model('offer', 'Benefit')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
 
-def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
+def create_stockrecord(product=None, price=None, partner_sku=None,
                        num_in_stock=None, partner_name=None,
                        currency=settings.OSCAR_DEFAULT_CURRENCY,
                        partner_users=None):
@@ -59,21 +59,21 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
     if partner_users:
         for user in partner_users:
             partner.users.add(user)
-    if price_excl_tax is None:
-        price_excl_tax = D('9.99')
+    if price is None:
+        price = D('9.99')
     if partner_sku is None:
         partner_sku = 'sku_%d_%d' % (product.id, random.randint(0, 10000))
     return product.stockrecords.create(
         partner=partner, partner_sku=partner_sku,
         price_currency=currency,
-        price_excl_tax=price_excl_tax, num_in_stock=num_in_stock)
+        price=price, num_in_stock=num_in_stock)
 
 
 def create_purchase_info(record):
     return PurchaseInfo(
         price=FixedPrice(
             record.price_currency,
-            record.price_excl_tax,
+            record.price,
             D('0.00')  # Default to no tax
         ),
         availability=StockRequired(
@@ -109,7 +109,7 @@ def create_product(upc=None, title="Dùｍϻϒ title",
         price, partner_sku, partner_name, num_in_stock, partner_users]
     if any([field is not None for field in stockrecord_fields]):
         create_stockrecord(
-            product, price_excl_tax=price, num_in_stock=num_in_stock,
+            product, price=price, num_in_stock=num_in_stock,
             partner_users=partner_users, partner_sku=partner_sku,
             partner_name=partner_name)
     return product
@@ -157,8 +157,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
         basket = Basket.objects.create()
         basket.strategy = Default()
         product = create_product()
-        create_stockrecord(
-            product, num_in_stock=10, price_excl_tax=D('10.00'))
+        create_stockrecord(product, num_in_stock=10, price=D('10.00'))
         basket.add_product(product)
     if not basket.id:
         basket.save()

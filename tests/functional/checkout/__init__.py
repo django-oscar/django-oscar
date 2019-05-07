@@ -17,14 +17,14 @@ class CheckoutMixin(object):
             requires_shipping=False, track_stock=False)
         product = factories.ProductFactory(product_class=product_class)
         factories.StockRecordFactory(
-            num_in_stock=None, price_excl_tax=D('12.00'), product=product)
+            num_in_stock=None, price=D('12.00'), product=product)
         return product
 
     def add_product_to_basket(self, product=None):
         if product is None:
             product = factories.ProductFactory()
             factories.StockRecordFactory(
-                num_in_stock=10, price_excl_tax=D('12.00'), product=product)
+                num_in_stock=10, price=D('12.00'), product=product)
         detail_page = self.get(product.get_absolute_url())
         form = detail_page.forms['add_to_basket_form']
         form.submit()

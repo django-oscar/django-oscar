@@ -7,7 +7,7 @@ StockRecord = get_model('partner', 'StockRecord')
 
 
 class StockRecordAdmin(admin.ModelAdmin):
-    list_display = ('product', 'partner', 'partner_sku', 'price_excl_tax', 'num_in_stock')
+    list_display = ('product', 'partner', 'partner_sku', 'price', 'num_in_stock')
     list_filter = ('partner',)
 
 

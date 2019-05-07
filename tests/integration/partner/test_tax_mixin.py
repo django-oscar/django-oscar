@@ -12,7 +12,7 @@ class TestNoTaxMixin(TestCase):
         self.mixin = strategy.NoTax()
         self.product = mock.Mock()
         self.stockrecord = mock.Mock()
-        self.stockrecord.price_excl_tax = D('12.00')
+        self.stockrecord.price = D('12.00')
 
     def test_returns_no_prices_without_stockrecord(self):
         policy = self.mixin.pricing_policy(
@@ -37,7 +37,7 @@ class TestFixedRateTaxMixin(TestCase):
         self.mixin.rate = D('0.10')
         self.product = mock.Mock()
         self.stockrecord = mock.Mock()
-        self.stockrecord.price_excl_tax = D('12.00')
+        self.stockrecord.price = D('12.00')
 
     def test_returns_no_prices_without_stockrecord(self):
         policy = self.mixin.pricing_policy(
@@ -47,7 +47,7 @@ class TestFixedRateTaxMixin(TestCase):
     def test_returns_correct_tax(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        expected_tax = self.stockrecord.price_excl_tax * self.mixin.get_rate(
+        expected_tax = self.stockrecord.price * self.mixin.get_rate(
             self.product, self.stockrecord)
         self.assertEqual(expected_tax, policy.tax)
 

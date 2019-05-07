@@ -101,8 +101,7 @@ class CatalogueImporter(object):
 
         return item
 
-    def _create_stockrecord(self, item, partner_name, partner_sku,
-                            price_excl_tax, num_in_stock, stats):
+    def _create_stockrecord(self, item, partner_name, partner_sku, price, num_in_stock, stats):
         # Create partner and stock record
         partner, _ = Partner.objects.get_or_create(
             name=partner_name)
@@ -114,7 +113,7 @@ class CatalogueImporter(object):
         stock.product = item
         stock.partner = partner
         stock.partner_sku = partner_sku
-        stock.price_excl_tax = D(price_excl_tax)
+        stock.price = D(price)
         stock.num_in_stock = num_in_stock
         stock.save()
 

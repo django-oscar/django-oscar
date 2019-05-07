@@ -64,7 +64,7 @@ class AnonAddToBasketViewTests(WebTestCase):
         basket = Basket.objects.get(id=basket_id)
         line = basket.lines.get(product=self.product)
         stockrecord = self.product.stockrecords.all()[0]
-        self.assertEqual(stockrecord.price_excl_tax, line.price_excl_tax)
+        self.assertEqual(stockrecord.price, line.price_excl_tax)
 
 
 class BasketSummaryViewTests(WebTestCase):

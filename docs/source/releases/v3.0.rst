@@ -25,6 +25,9 @@ What's new in Oscar 3.0?
 Backwards incompatible changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+- The ``StockRecord.price_excl_tax`` field has been renamed to ``StockRecord.price``.
+  Projects that have forked the ``partner`` app will need to generate their own migration
+  to rename this field.
 
 Bug fixes
 ~~~~~~~~~
@@ -32,6 +35,19 @@ Bug fixes
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Several deprecated model fields have been removed in Oscar 3.0:
+
+   - ``order.Line.est_dispatch_date``
+   - ``order.Line.unit_cost_price``
+   - ``order.Line.unit_retail_price``
+   - ``partner.StockRecord.cost_price``
+   - ``partner.StockRecord.price_retail``
+
+  Oscar ships with migrations that remove these fields. If you want to continue using them,
+  please make sure you add the fields back to your forked app before migrating. Projects
+  that have forked the ``order`` and ``partner`` apps will need to generate their own
+  migrations to remove these fields.
 
 
 Minor changes

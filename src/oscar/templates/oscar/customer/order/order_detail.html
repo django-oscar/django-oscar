@@ -21,7 +21,6 @@
         <thead>
             <tr>
                 <th>{% trans 'Product' %}</th>
-                <th>{% trans 'Dispatch date' %}</th>
                 <th>{% trans 'Qty' %}</th>
                 <th>{% trans 'Line price excl. tax' %}</th>
                 <th>{% trans 'Line price incl. tax' %}</th>
@@ -54,7 +53,6 @@
                                 </p>
                             {% endif %}
                         </td>
-                        <td>{{ line.est_dispatch_date|default:"-" }}</td>
                         <td>{{ line.quantity }}</td>
                         <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                         <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
