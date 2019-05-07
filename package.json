@@ -14,7 +14,7 @@
     "gulp-less": "^4.0.1",
     "gulp-sourcemaps": "^2.6.2",
     "inputmask": "^4.0.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "jquery-mousewheel": "^3.1.13",
     "jquery-sortable": "^0.9.13",
     "less": "^3.8.1",
