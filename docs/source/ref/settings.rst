@@ -292,6 +292,14 @@ A URL which is passed into the templates for communication events.  It is not
 used in Oscar's default templates but could be used to include static assets
 (e.g. images) in a HTML email template.
 
+``OSCAR_SAVE_SENT_EMAILS_TO_DB``
+--------------------------------
+
+Default: ``True``
+
+Indicates if sent emails will be saved to database (as instances of
+``oscar.apps.communication.models.Email`` model).
+
 Offer settings
 ==============
 

@@ -15,6 +15,8 @@ Welcome to Oscar 2.1.
 Compatibility
 ~~~~~~~~~~~~~
 
+Oscar 2.1 is compatible with Django 1.11, Django 2.1 and Django 2.2
+as well as Python 3.5, 3.6 and 3.7.
 
 .. _new_in_2.1:
 
@@ -30,6 +32,39 @@ What's new in Oscar 2.1?
   ``ProductAttributeValue`` models was changed to use a callable, so that
   Django doesn't generate migrations if a project modifies the ``OSCAR_IMAGE_FOLDER``
   to specify a custom directory structure for uploaded images.
+
+- Added ``communication`` app.
+
+- Models ``CommunicationEventType``, ``Email`` and ``Notification`` moved from
+  ``customer`` app to ``communication`` app.
+
+  This is a change that requires database migration.
+
+- ``Dispatcher`` moved from ``customer.utils`` to ``communication.utils``.
+  Now ``Dispatcher`` is responsible for sending notifications as well as emails.
+
+- ``CustomerDispatcher`` util created in ``customer`` app -  to send customer
+  related emails.
+
+- ``OrderDispatcher`` util created in ``order`` app -  to send order related
+  emails.
+
+- Added ability to chose if sent email should be saved to DB (through
+  ``OSCAR_SAVE_SENT_EMAILS_TO_DB``, ``True`` by default).
+
+- Event codes (for each separate email) now kept in related "Dispatcher".
+
+- Added ability to send emails with attachments.
+
+- All emails' templates (``commtype_*``) moved from ``customer/emails``
+  to ``communication/emails``.
+
+- Templates from ``customer/email/*.html`` and ``customer/notification/*.html``
+  moved to ``communication/email/*.html`` and ``communication/notification/*.html``.
+
+- Models ``CommunicationEventType``, ``Email`` and ``Notification`` added to
+  ``MOVED_MODELS`` to show warning when they will be imported from ``customer`` app.
+  E.g. ``Email = get_model('customer', 'Email')``.
 
 Bug fixes
 ~~~~~~~~~
@@ -64,4 +99,4 @@ Dependency changes
 .. _deprecated_features_in_2.1:
 
 Deprecated features
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
