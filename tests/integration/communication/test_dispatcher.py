@@ -12,12 +12,14 @@ CommunicationEventType = get_model('communication', 'CommunicationEventType')
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('communication', 'Email')
 Dispatcher = get_class('communication.utils', 'Dispatcher')
+OrderDispatcher = get_class('order.utils', 'OrderDispatcher')
+CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 
 
 class TestDispatcher(TestCase):
 
     def _dispatch_order_messages(self, order_number, order, email=None):
-        event_code = Dispatcher.ORDER_PLACED_EVENT_CODE
+        event_code = OrderDispatcher.ORDER_PLACED_EVENT_CODE
         et = CommunicationEventType.objects.create(
             code=event_code,
             name="Order Placed",
@@ -42,14 +44,13 @@ class TestDispatcher(TestCase):
         message = mail.outbox[0]
         self.assertIn(order_number, message.body)
 
-        # test sending messages to emails without account and text body
+        # Test sending messages to emails without account and text body
         messages['body'] = ''
         dispatcher.dispatch_direct_messages(email, messages)
         self.assertEqual(len(mail.outbox), 2)
 
     def _dispatch_user_messages(self, user, event_code, ctx, subject):
-        msgs = CommunicationEventType.objects.get_and_render(
-            code=event_code, context=ctx)
+        msgs = CommunicationEventType.objects.get_and_render(code=event_code, context=ctx)
         Dispatcher().dispatch_user_messages(user, msgs)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)
@@ -60,8 +61,7 @@ class TestDispatcher(TestCase):
 
     def test_dispatch_order_messages(self):
         email = 'testuser@example.com'
-        user = User.objects.create_user(
-            'testuser', email, 'somesimplepassword')
+        user = User.objects.create_user('testuser', email, 'somesimplepassword')
         order = create_order(number='12345', user=user)
         self.assertFalse(order.is_anonymous)
         self._dispatch_order_messages(order_number='12345', order=order, email=email)
@@ -73,7 +73,7 @@ class TestDispatcher(TestCase):
 
     def test_dispatch_email_changed_user_message(self):
         user = User.objects.create_user('testuser', 'testuser@example.com', 'somesimplepassword')
-        event_code = Dispatcher.EMAIL_CHANGED_EVENT_CODE
+        event_code = CustomerDispatcher.EMAIL_CHANGED_EVENT_CODE
         CommunicationEventType.objects.create(
             code=event_code,
             name='Email Changed',
@@ -91,7 +91,7 @@ class TestDispatcher(TestCase):
 
     def test_dispatch_registration_email_message(self):
         user = User.objects.create_user('testuser', 'testuser@example.com', 'somesimplepassword')
-        event_code = Dispatcher.REGISTRATION_EVENT_CODE
+        event_code = CustomerDispatcher.REGISTRATION_EVENT_CODE
         CommunicationEventType.objects.create(
             code=event_code,
             name='Registration',

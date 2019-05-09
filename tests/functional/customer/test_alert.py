@@ -13,7 +13,7 @@ from oscar.core.loading import get_class
 from oscar.test.factories import (
     ProductAlertFactory, UserFactory, create_product, create_stockrecord)
 
-Dispatcher = get_class('communication.utils', 'Dispatcher')
+CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 
 
 class TestProductAlert(WebTest):
@@ -243,7 +243,7 @@ class TestAlertMessageSending(TestCase):
             status=ProductAlert.UNCONFIRMED,
             product=self.product
         )
-        Dispatcher().send_product_alert_confirmation_email_for_user(alert)
+        CustomerDispatcher().send_product_alert_confirmation_email_for_user(alert)
         self.assertEqual(mock_dispatch.call_count, 1)
         self.assertEqual(mock_dispatch.call_args[0][0], 'test@example.com')
 
