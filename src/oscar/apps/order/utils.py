@@ -6,13 +6,14 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.order.signals import order_placed
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 
 from . import exceptions
 
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 OrderDiscount = get_model('order', 'OrderDiscount')
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 
 class OrderNumberGenerator(object):
@@ -260,3 +261,20 @@ class OrderCreator(object):
         Updates the models that care about this voucher.
         """
         voucher.record_usage(order, user)
+
+
+class OrderDispatcher:
+    """
+    Dispatcher to send concrete order related emails.
+    """
+
+    # Event codes
+    ORDER_PLACED_EVENT_CODE = 'ORDER_PLACED'
+
+    def __init__(self, logger=None, mail_connection=None):
+        self.dispatcher = Dispatcher(logger=logger, mail_connection=mail_connection)
+
+    def send_order_placed_email_for_user(self, order, extra_context, attachments=None):
+        event_code = self.ORDER_PLACED_EVENT_CODE
+        messages = self.dispatcher.get_messages(event_code, extra_context)
+        self.dispatcher.dispatch_order_messages(order, messages, event_code, attachments=attachments)
