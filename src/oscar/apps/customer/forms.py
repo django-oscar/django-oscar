@@ -17,7 +17,7 @@ from oscar.core.compat import existing_user_fields, get_user_model
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.forms import widgets
 
-Dispatcher = get_class('communication.utils', 'Dispatcher')
+CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 CommunicationEventType = get_model('communication', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
@@ -70,7 +70,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
             'site': site,
             'reset_url': self.get_reset_url(site, request, user, use_https),
         }
-        Dispatcher().send_password_reset_email_for_user(user, extra_context)
+        CustomerDispatcher().send_password_reset_email_for_user(user, extra_context)
 
 
 class EmailAuthenticationForm(AuthenticationForm):

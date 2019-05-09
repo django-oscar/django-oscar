@@ -9,7 +9,7 @@ from oscar.apps.checkout.signals import post_checkout
 from oscar.core.loading import get_class, get_model
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
-Dispatcher = get_class('communication.utils', 'Dispatcher')
+OrderDispatcher = get_class('order.utils', 'OrderDispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
 BillingAddress = get_model('order', 'BillingAddress')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -267,7 +267,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def send_order_placed_email(self, order):
         extra_context = self.get_message_context(order)
-        dispatcher = Dispatcher(logger=logger)
+        dispatcher = OrderDispatcher(logger=logger)
         dispatcher.send_order_placed_email_for_user(order, extra_context)
 
     def get_message_context(self, order):

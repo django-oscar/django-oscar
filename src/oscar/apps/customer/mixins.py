@@ -11,7 +11,7 @@ from oscar.core.loading import get_class, get_model
 
 User = get_user_model()
 CommunicationEventType = get_model('communication', 'CommunicationEventType')
-Dispatcher = get_class('communication.utils', 'Dispatcher')
+CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 
 logger = logging.getLogger('oscar.customer')
 
@@ -84,4 +84,4 @@ class RegisterUserMixin(object):
 
     def send_registration_email(self, user):
         extra_context = {'user': user}
-        Dispatcher().send_registration_email_for_user(user, extra_context)
+        CustomerDispatcher().send_registration_email_for_user(user, extra_context)

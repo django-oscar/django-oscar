@@ -124,8 +124,8 @@ class CustomerDispatcher:
         self.dispatcher.dispatch_direct_messages(alert.email, messages)
 
     def notify_user_about_product_alert(self, user, context):
-        subj_tpl = loader.get_template('customer/alerts/message_subject.html')
-        message_tpl = loader.get_template('customer/alerts/message.html')
+        subj_tpl = loader.get_template('oscar/customer/alerts/message_subject.html')
+        message_tpl = loader.get_template('oscar/customer/alerts/message.html')
         self.dispatcher.notify_user(
             user,
             subj_tpl.render(context).strip(),

@@ -122,11 +122,11 @@ def send_product_alerts(product):   # noqa C901 too complex
     if messages_to_send or user_messages_to_send:
         connection = mail.get_connection()
         connection.open()
-        disp = Dispatcher(mail_connection=connection)
+        dispatcher = Dispatcher(mail_connection=connection)
         for message in messages_to_send:
-            disp.dispatch_direct_messages(*message)
+            dispatcher.dispatch_direct_messages(*message)
         for message in user_messages_to_send:
-            disp.dispatch_user_messages(*message)
+            dispatcher.dispatch_user_messages(*message)
         connection.close()
 
     logger.info("Sent %d notifications and %d messages", num_notifications,
