@@ -31,44 +31,44 @@ class TestDispatcher(TestCase):
             'lines': order.lines.all()
         })
 
-        self.assertIn(order_number, messages['body'])
-        self.assertIn(order_number, messages['html'])
+        assert order_number in messages['body']
+        assert order_number in messages['html']
 
         dispatcher = Dispatcher()
         dispatcher.dispatch_order_messages(order, messages, event_code)
 
-        self.assertEqual(CommunicationEvent.objects.filter(order=order, event_type=et).count(), 1)
+        assert CommunicationEvent.objects.filter(order=order, event_type=et).count() == 1
 
-        self.assertEqual(len(mail.outbox), 1)
+        assert len(mail.outbox) == 1
 
         message = mail.outbox[0]
-        self.assertIn(order_number, message.body)
+        assert order_number in message.body
 
         # Test sending messages to emails without account and text body
         messages['body'] = ''
         dispatcher.dispatch_direct_messages(email, messages)
-        self.assertEqual(len(mail.outbox), 2)
+        assert len(mail.outbox) == 2
 
     def _dispatch_user_messages(self, user, event_code, ctx, subject):
         msgs = CommunicationEventType.objects.get_and_render(code=event_code, context=ctx)
         Dispatcher().dispatch_user_messages(user, msgs)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, subject)
-        self.assertEqual(Email.objects.count(), 1)
+        assert len(mail.outbox) == 1
+        assert mail.outbox[0].subject == subject
+        assert Email.objects.count() == 1
         email = Email.objects.last()
-        self.assertEqual(email.user.id, user.id)
-        self.assertEqual(email.email, 'testuser@example.com')
+        assert email.user.id == user.id
+        assert email.email == 'testuser@example.com'
 
     def test_dispatch_order_messages(self):
         email = 'testuser@example.com'
         user = User.objects.create_user('testuser', email, 'somesimplepassword')
         order = create_order(number='12345', user=user)
-        self.assertFalse(order.is_anonymous)
+        assert not order.is_anonymous
         self._dispatch_order_messages(order_number='12345', order=order, email=email)
 
     def test_dispatch_anonymous_order_messages(self):
         order = create_order(number='12346', guest_email='testguest@example.com')
-        self.assertTrue(order.is_anonymous)
+        assert order.is_anonymous
         self._dispatch_order_messages(order_number='12346', order=order, email='testguest@example.com', )
 
     def test_dispatch_email_changed_user_message(self):
@@ -109,4 +109,4 @@ class TestDispatcher(TestCase):
             'body': 'This is a test.',
             'html': '',
         })
-        self.assertEqual(len(mail.outbox), 1)
+        assert len(mail.outbox) == 1

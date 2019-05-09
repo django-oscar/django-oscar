@@ -19,10 +19,10 @@ class TestANewNotification(TestCase):
             subject="Hello")
 
     def test_is_in_a_users_inbox(self):
-        self.assertEqual(Notification.INBOX, self.notification.location)
+        assert Notification.INBOX == self.notification.location
 
     def test_is_not_read(self):
-        self.assertFalse(self.notification.is_read)
+        assert not self.notification.is_read
 
 
 class TestANotification(TestCase):
@@ -34,7 +34,7 @@ class TestANotification(TestCase):
 
     def test_can_be_archived(self):
         self.notification.archive()
-        self.assertEqual(Notification.ARCHIVE, self.notification.location)
+        assert Notification.ARCHIVE == self.notification.location
 
 
 class NotificationServiceTestCase(TestCase):
@@ -46,8 +46,8 @@ class NotificationServiceTestCase(TestCase):
 
         Dispatcher().notify_user(user, subj, body=body)
         user_notification = Notification.objects.get(recipient=user)
-        self.assertEqual(user_notification.subject, subj)
-        self.assertEqual(user_notification.body, body)
+        assert user_notification.subject == subj
+        assert user_notification.body == body
 
     def test_notify_a_set_of_users(self):
         users = UserFactory.create_batch(3)
@@ -57,5 +57,5 @@ class NotificationServiceTestCase(TestCase):
         Dispatcher().notify_users(User.objects.all(), subj, body=body)
         for user in users:
             user_notification = Notification.objects.get(recipient=user)
-            self.assertEqual(user_notification.subject, subj)
-            self.assertEqual(user_notification.body, body)
+            assert user_notification.subject == subj
+            assert user_notification.body == body

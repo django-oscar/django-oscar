@@ -28,10 +28,10 @@ class TestProductAlert(WebTest):
         form.submit()
 
         alerts = ProductAlert.objects.filter(user=self.user)
-        self.assertEqual(1, len(alerts))
+        assert len(alerts) == 1
         alert = alerts[0]
-        self.assertEqual(ProductAlert.ACTIVE, alert.status)
-        self.assertEqual(alert.product, self.product)
+        assert ProductAlert.ACTIVE == alert.status
+        assert alert.product == self.product
 
     def test_cannot_create_multiple_alerts_for_one_product(self):
         ProductAlertFactory(user=self.user, product=self.product,
@@ -39,10 +39,8 @@ class TestProductAlert(WebTest):
         # Alert form should not allow creation of additional alerts.
         form = ProductAlertForm(user=self.user, product=self.product, data={})
 
-        self.assertFalse(form.is_valid())
-        self.assertIn(
-            "You already have an active alert for this product",
-            form.errors['__all__'][0])
+        assert not form.is_valid()
+        assert "You already have an active alert for this product" in form.errors['__all__'][0]
 
 
 class TestAUserWithAnActiveStockAlert(WebTest):
@@ -58,32 +56,32 @@ class TestAUserWithAnActiveStockAlert(WebTest):
 
     def test_can_cancel_it(self):
         alerts = ProductAlert.objects.filter(user=self.user)
-        self.assertEqual(1, len(alerts))
+        assert len(alerts) == 1
         alert = alerts[0]
-        self.assertFalse(alert.is_cancelled)
+        assert not alert.is_cancelled
         self.app.get(
             reverse('customer:alerts-cancel-by-pk', kwargs={'pk': alert.pk}),
             user=self.user)
 
         alerts = ProductAlert.objects.filter(user=self.user)
-        self.assertEqual(1, len(alerts))
+        assert len(alerts) == 1
         alert = alerts[0]
-        self.assertTrue(alert.is_cancelled)
+        assert alert.is_cancelled
 
     def test_gets_notified_when_it_is_back_in_stock(self):
         self.stockrecord.num_in_stock = 10
         self.stockrecord.save()
-        self.assertEqual(1, self.user.notifications.all().count())
+        assert self.user.notifications.all().count() == 1
 
     def test_gets_emailed_when_it_is_back_in_stock(self):
         self.stockrecord.num_in_stock = 10
         self.stockrecord.save()
-        self.assertEqual(1, len(mail.outbox))
+        assert len(mail.outbox) == 1
 
     def test_does_not_get_emailed_when_it_is_saved_but_still_zero_stock(self):
         self.stockrecord.num_in_stock = 0
         self.stockrecord.save()
-        self.assertEqual(0, len(mail.outbox))
+        assert len(mail.outbox) == 0
 
     @mock.patch('oscar.apps.communication.utils.Dispatcher.notify_user')
     def test_site_notification_sent(self, mock_notify):
@@ -124,10 +122,10 @@ class TestAnAnonymousUser(WebTest):
         form.submit()
 
         alerts = ProductAlert.objects.filter(email='john@smith.com')
-        self.assertEqual(1, len(alerts))
+        assert len(alerts) == 1
         alert = alerts[0]
-        self.assertEqual(ProductAlert.UNCONFIRMED, alert.status)
-        self.assertEqual(alert.product, product)
+        assert ProductAlert.UNCONFIRMED == alert.status
+        assert alert.product == product
 
     def test_can_cancel_unconfirmed_stock_alert(self):
         alert = ProductAlertFactory(
@@ -135,7 +133,7 @@ class TestAnAnonymousUser(WebTest):
         self.app.get(
             reverse('customer:alerts-cancel-by-key', kwargs={'key': alert.key}))
         alert.refresh_from_db()
-        self.assertTrue(alert.is_cancelled)
+        assert alert.is_cancelled
 
     def test_cannot_create_multiple_alerts_for_one_product(self):
         product = create_product(num_in_stock=0)
@@ -148,10 +146,8 @@ class TestAnAnonymousUser(WebTest):
         form = ProductAlertForm(user=AnonymousUser(), product=product,
                                 data={'email': 'john@smith.com'})
 
-        self.assertFalse(form.is_valid())
-        self.assertIn(
-            "There is already an active stock alert for john@smith.com",
-            form.errors['__all__'][0])
+        assert not form.is_valid()
+        assert "There is already an active stock alert for john@smith.com" in form.errors['__all__'][0]
 
     def test_cannot_create_multiple_unconfirmed_alerts(self):
         # Create an unconfirmed alert
@@ -165,10 +161,9 @@ class TestAnAnonymousUser(WebTest):
             data={'email': 'john@smith.com'},
         )
 
-        self.assertFalse(form.is_valid())
-        self.assertIn(
-            "john@smith.com has been sent a confirmation email for another "
-            "product alert on this site.", form.errors['__all__'][0])
+        assert not form.is_valid()
+        message = "john@smith.com has been sent a confirmation email for another product alert on this site."
+        assert message in form.errors['__all__'][0]
 
 
 class TestHurryMode(TestCase):
@@ -184,10 +179,8 @@ class TestHurryMode(TestCase):
 
         send_product_alerts(self.product)
 
-        self.assertEqual(1, len(mail.outbox))
-        self.assertNotIn(
-            'Beware that the amount of items in stock is limited',
-            mail.outbox[0].body)
+        assert len(mail.outbox) == 1
+        assert 'Beware that the amount of items in stock is limited' not in mail.outbox[0].body
 
     def test_hurry_mode_set_when_stock_low(self):
         # Two alerts, 1 item in stock. Hurry mode should be set.
@@ -197,10 +190,8 @@ class TestHurryMode(TestCase):
 
         send_product_alerts(self.product)
 
-        self.assertEqual(2, len(mail.outbox))
-        self.assertIn(
-            'Beware that the amount of items in stock is limited',
-            mail.outbox[0].body)
+        assert len(mail.outbox) == 2
+        assert 'Beware that the amount of items in stock is limited' in mail.outbox[0].body
 
     def test_hurry_mode_not_set_multiple_stockrecords(self):
         # Two stockrecords, 5 items in stock for one. No need to hurry.
@@ -210,9 +201,7 @@ class TestHurryMode(TestCase):
 
         send_product_alerts(self.product)
 
-        self.assertNotIn(
-            'Beware that the amount of items in stock is limited',
-            mail.outbox[0].body)
+        assert 'Beware that the amount of items in stock is limited' not in mail.outbox[0].body
 
     def test_hurry_mode_set_multiple_stockrecords(self):
         # Two stockrecords, low stock on both. Hurry mode should be set.
@@ -223,9 +212,7 @@ class TestHurryMode(TestCase):
 
         send_product_alerts(self.product)
 
-        self.assertIn(
-            'Beware that the amount of items in stock is limited',
-            mail.outbox[0].body)
+        assert 'Beware that the amount of items in stock is limited' in mail.outbox[0].body
 
 
 class TestAlertMessageSending(TestCase):
@@ -244,17 +231,17 @@ class TestAlertMessageSending(TestCase):
             product=self.product
         )
         CustomerDispatcher().send_product_alert_confirmation_email_for_user(alert)
-        self.assertEqual(mock_dispatch.call_count, 1)
-        self.assertEqual(mock_dispatch.call_args[0][0], 'test@example.com')
+        assert mock_dispatch.call_count == 1
+        assert mock_dispatch.call_args[0][0] == 'test@example.com'
 
     @mock.patch('oscar.apps.communication.utils.Dispatcher.dispatch_user_messages')
     def test_alert_uses_dispatcher(self, mock_dispatch):
         ProductAlert.objects.create(user=self.user, product=self.product)
         send_product_alerts(self.product)
-        self.assertEqual(mock_dispatch.call_count, 1)
-        self.assertEqual(mock_dispatch.call_args[0][0], self.user)
+        assert mock_dispatch.call_count == 1
+        assert mock_dispatch.call_args[0][0] == self.user
 
     def test_alert_creates_email_obj(self):
         ProductAlert.objects.create(user=self.user, product=self.product)
         send_product_alerts(self.product)
-        self.assertEqual(self.user.emails.count(), 1)
+        assert self.user.emails.count() == 1

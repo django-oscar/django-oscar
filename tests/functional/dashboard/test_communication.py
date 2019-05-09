@@ -26,7 +26,7 @@ class TestAnAdmin(WebTestCase):
         form['email_body_template'] = 'Hello {{ user.username }}'
         form['email_body_html_template'] = 'Hello {{ user.username }}'
         preview = form.submit('show_preview')
-        self.assertTrue('Hello 1234' in preview.content.decode('utf8'))
+        assert 'Hello 1234' in preview.content.decode('utf8')
 
     def test_can_send_a_preview_email(self):
         list_page = self.app.get(
@@ -39,4 +39,4 @@ class TestAnAdmin(WebTestCase):
         form['preview_email'] = 'testing@example.com'
         form.submit('send_preview')
 
-        self.assertEqual(len(mail.outbox), 1)
+        assert len(mail.outbox) == 1

@@ -15,13 +15,13 @@ class CommunicationTypeTest(TestCase):
         et = CommunicationEventType()
         messages = et.get_messages()
         for key in self.keys:
-            self.assertEqual('', messages[key])
+            assert messages[key] == ''
 
     def test_field_template_render(self):
         et = CommunicationEventType(email_subject_template='Hello {{ name }}')
         ctx = {'name': 'world'}
         messages = et.get_messages(ctx)
-        self.assertEqual('Hello world', messages['subject'])
+        assert 'Hello world' == messages['subject']
 
     def test_new_line_in_subject_is_removed(self):
         subjects = [
@@ -33,4 +33,4 @@ class CommunicationTypeTest(TestCase):
         for original, modified in subjects:
             et = CommunicationEventType(email_subject_template=original)
             messages = et.get_messages()
-            self.assertEqual(modified, messages['subject'])
+            assert modified == messages['subject']
