@@ -6,15 +6,16 @@
 # ariadi <me@ariadi.net>, 2017
 # Gus Hill <lkybstrd@gmail.com>, 2016
 # ariadi <me@ariadi.net>, 2017
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# Trenggana Natadirja <garenk02@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2018-09-01 00:35+0000\n"
+"Last-Translator: Trenggana Natadirja <garenk02@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/codeinthehole/django-oscar/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr "Nama Depan"
 #: templates/oscar/dashboard/partners/partner_user_list.html:45
 #: templates/oscar/dashboard/partners/partner_user_select.html:51
 msgid "Last name"
-msgstr "Nama Akhir"
+msgstr "Nama Belakang"
 
 #: apps/address/abstract_models.py:228
 msgid "First line of address"
@@ -212,11 +213,11 @@ msgstr "Alamat tagihan bawaan"
 
 #: apps/address/abstract_models.py:533
 msgid "Number of Orders as Shipping Address"
-msgstr ""
+msgstr "Jumlah Pesanan sebagai Alamat Pengiriman"
 
 #: apps/address/abstract_models.py:537
 msgid "Number of Orders as Billing Address"
-msgstr ""
+msgstr "Jumlah Pesanan sebagai Alamat Penagihan"
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -502,7 +503,7 @@ msgstr "Terbuka - sedang aktif"
 
 #: apps/basket/abstract_models.py:45
 msgid "Merged - superceded by another basket"
-msgstr ""
+msgstr "Digabung - digantikan dengan keranjang lain"
 
 #: apps/basket/abstract_models.py:46
 msgid "Saved - for items to be purchased later"
@@ -867,7 +868,7 @@ msgstr "Masukkan kode voucher"
 #: apps/basket/views.py:403
 #, python-format
 msgid "No voucher found with id '%s'"
-msgstr ""
+msgstr "Voucher '%s' tidak ditemukan"
 
 #: apps/basket/views.py:409
 #, python-format
@@ -1096,7 +1097,7 @@ msgstr "Produk turunan tidak dapat memiliki opsi"
 
 #: apps/catalogue/abstract_models.py:454
 msgid "A parent product can't have stockrecords."
-msgstr ""
+msgstr "Produk induk tidak perlu memiliki data stok."
 
 #: apps/catalogue/abstract_models.py:482
 msgid "The specified parent product is a child product."
@@ -1171,11 +1172,11 @@ msgstr "Tanggal"
 
 #: apps/catalogue/abstract_models.py:742
 msgid "Datetime"
-msgstr ""
+msgstr "Tanggal waktu"
 
 #: apps/catalogue/abstract_models.py:744
 msgid "Multi Option"
-msgstr ""
+msgstr "Multi Opsi"
 
 #: apps/catalogue/abstract_models.py:745
 msgid "Entity"
@@ -1203,7 +1204,7 @@ msgstr "Kelompok Opsi"
 
 #: apps/catalogue/abstract_models.py:760
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
-msgstr ""
+msgstr "Pilih grup opsi jika menggunakan \"Opsi\" atau \"Multi Opsi\""
 
 #: apps/catalogue/abstract_models.py:761
 #: templates/oscar/dashboard/catalogue/product_class_form.html:100
@@ -1222,7 +1223,7 @@ msgstr "Atribut produk"
 
 #: apps/catalogue/abstract_models.py:850
 msgid "Must be str or unicode"
-msgstr ""
+msgstr "Harus str atau unicode"
 
 #: apps/catalogue/abstract_models.py:857
 msgid "Must be a float"
@@ -1238,7 +1239,7 @@ msgstr "Harus berbentuk tanggal atau waktu"
 
 #: apps/catalogue/abstract_models.py:871
 msgid "Must be a datetime"
-msgstr ""
+msgstr "Harus tanggal waktu"
 
 #: apps/catalogue/abstract_models.py:875
 msgid "Must be a boolean"
@@ -1250,20 +1251,20 @@ msgstr "Harus sebuah model instance"
 
 #: apps/catalogue/abstract_models.py:886
 msgid "Must be a list or AttributeOption queryset"
-msgstr ""
+msgstr "Harus berupa list atau queryset AttributeOption"
 
 #: apps/catalogue/abstract_models.py:897
 msgid "Must be an AttributeOption model object instance"
-msgstr ""
+msgstr "Harus berupa instance objek model AttributeOption"
 
 #: apps/catalogue/abstract_models.py:899
 msgid "AttributeOption has not been saved yet"
-msgstr ""
+msgstr "AttributeOption belum disimpan"
 
 #: apps/catalogue/abstract_models.py:905
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
-msgstr ""
+msgstr "%(enum)s bukan pilihan yang valid untuk %(attr)s"
 
 #: apps/catalogue/abstract_models.py:910
 msgid "Must be a file field"
@@ -1283,11 +1284,11 @@ msgstr "Richtext"
 
 #: apps/catalogue/abstract_models.py:939
 msgid "DateTime"
-msgstr ""
+msgstr "Tanggal Waktu"
 
 #: apps/catalogue/abstract_models.py:943
 msgid "Value multi option"
-msgstr ""
+msgstr "Nilai opsi multi"
 
 #: apps/catalogue/abstract_models.py:949
 msgid "Value option"
@@ -1651,7 +1652,7 @@ msgstr "Pengguna"
 
 #: apps/customer/abstract_models.py:123
 msgid "Email Address"
-msgstr ""
+msgstr "Alamat Email"
 
 #: apps/customer/abstract_models.py:124
 #: templates/oscar/customer/email/email_detail.html:19
@@ -1691,7 +1692,7 @@ msgstr "Email kepada %(user)s dengan subyek '%(subject)s'"
 #: apps/customer/abstract_models.py:140
 #, python-format
 msgid "Anonymous email to %(email)s with subject '%(subject)s'"
-msgstr ""
+msgstr "Email tidak dikenal kepada %(email)s dengan judul '%(subject)s'"
 
 #: apps/customer/abstract_models.py:162
 msgid "Code used for looking up this event programmatically"
@@ -1963,7 +1964,7 @@ msgid ""
 "%s has been sent a confirmation email for another product alert on this "
 "site. Please confirm or cancel that request before signing up for more "
 "alerts."
-msgstr ""
+msgstr "%s telah mengirim konfirmasi email untuk peringatan produk lain di situs ini. Harap konfirmasikan atau batalkan permintaan sebelum mendaftar untuk lebih banyak pemberitahuan."
 
 #: apps/customer/forms.py:427
 msgid "You already have an active alert for this product"
@@ -1973,13 +1974,13 @@ msgstr "Anda telah memiliki pemberitahuan yang aktif untuk produk ini"
 #, python-format
 msgid "%(count)d notification archived"
 msgid_plural "%(count)d notifications archived"
-msgstr[0] ""
+msgstr[0] "%(count)d notifikasi diarsipkan"
 
 #: apps/customer/notifications/views.py:100
 #, python-format
 msgid "%(count)d notification deleted"
 msgid_plural "%(count)d notifications deleted"
-msgstr[0] ""
+msgstr[0] "%(count)d notifikasi dihapus"
 
 #: apps/customer/views.py:178
 msgid "Welcome back"
@@ -2172,7 +2173,7 @@ msgstr "'%(title)s' telah dihapus dari daftar keinginan anda '%(name)s'"
 #: apps/customer/wishlists/views.py:317
 #, python-format
 msgid "Wish list '%(name)s' already containing '%(title)s'"
-msgstr ""
+msgstr "Daftar keinginan '%(name)s' sudah memiliki '%(title)s'"
 
 #: apps/customer/wishlists/views.py:325
 #, python-format
@@ -2264,13 +2265,13 @@ msgstr[0] "%s kategori"
 
 #: apps/dashboard/catalogue/tables.py:82
 msgid "Option summary"
-msgstr ""
+msgstr "Ringkasan pilihan"
 
 #: apps/dashboard/catalogue/tables.py:91
 #, python-format
 msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
-msgstr[0] ""
+msgstr[0] "%s Grup Opsi Atribut"
 
 #: apps/dashboard/catalogue/views.py:99
 msgid "Product search results"
@@ -2392,35 +2393,35 @@ msgstr "Tipe produk berhasil dihapus"
 
 #: apps/dashboard/catalogue/views.py:842
 msgid "Add a new Attribute Option Group"
-msgstr ""
+msgstr "Tambah Grup Opsi Atribut baru"
 
 #: apps/dashboard/catalogue/views.py:846
 msgid "Attribute Option Group created successfully"
-msgstr ""
+msgstr "Grup Opsi Atribut berhasil dibuat"
 
 #: apps/dashboard/catalogue/views.py:860
 #, python-format
 msgid "Update Attribute Option Group '%s'"
-msgstr ""
+msgstr "Perbarui Grup Opsi Atribut '%s'"
 
 #: apps/dashboard/catalogue/views.py:864
 msgid "Attribute Option Group updated successfully"
-msgstr ""
+msgstr "Grup Opsi Atribut berhasil diperbarui"
 
 #: apps/dashboard/catalogue/views.py:891
 #, python-format
 msgid "Delete Attribute Option Group '%s'"
-msgstr ""
+msgstr "Hapus Grup Opsi Atribut '%s'"
 
 #: apps/dashboard/catalogue/views.py:898
 #, python-format
 msgid ""
 "%i product attributes are still assigned to this attribute option group"
-msgstr ""
+msgstr "%i atribut produk masih bagian dari grup opsi atribut ini"
 
 #: apps/dashboard/catalogue/views.py:918
 msgid "Attribute Option Group deleted successfully"
-msgstr ""
+msgstr "Grup Opsi Atribut berhasil dihapus"
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
@@ -3001,7 +3002,7 @@ msgstr "Contoh: '/about/contact/'."
 msgid ""
 "This value must contain only letters, numbers, dots, underscores, dashes, "
 "slashes or tildes."
-msgstr ""
+msgstr "Nilai ini hanya boleh berisi huruf, angka, titik, garis bawah, tanda hubung, garis miring atau tilde."
 
 #: apps/dashboard/pages/views.py:37
 msgid "All pages"
@@ -3239,7 +3240,7 @@ msgstr "Tidak ada produk yang ditemukan dengan SKU atau UPC yang cocok %s"
 #: apps/dashboard/ranges/views.py:213
 #, python-format
 msgid "There are more than one product with SKU %s"
-msgstr ""
+msgstr "Sudah ada lebih dari satu produk dengan SKU %s"
 
 #: apps/dashboard/reports/config.py:8
 msgid "Reports dashboard"
@@ -3338,7 +3339,7 @@ msgstr "Dashboard pengiriman"
 #, python-format
 msgid "%d Row"
 msgid_plural "%d Rows"
-msgstr[0] ""
+msgstr[0] "%d Baris"
 
 #: apps/dashboard/users/config.py:8
 msgid "Users dashboard"
@@ -3454,7 +3455,7 @@ msgstr "Nilai diskon"
 
 #: apps/dashboard/vouchers/forms.py:52 apps/offer/abstract_models.py:122
 msgid "Exclusive offers cannot be combined on the same items"
-msgstr ""
+msgstr "Penawaran ekslusif tidak bisa dikombinasikan pada produk yang sama"
 
 #: apps/dashboard/vouchers/forms.py:66
 #, python-format
@@ -3476,7 +3477,7 @@ msgstr "Aktif?"
 
 #: apps/dashboard/vouchers/forms.py:99
 msgid "In Voucherset?"
-msgstr ""
+msgstr "Pada Voucherset?"
 
 #: apps/dashboard/vouchers/views.py:34 apps/dashboard/vouchers/views.py:360
 #: apps/dashboard/vouchers/views.py:419
@@ -3528,11 +3529,11 @@ msgstr "kartu diskon dihapus"
 
 #: apps/dashboard/vouchers/views.py:234
 msgid "Create voucher set"
-msgstr ""
+msgstr "Buat voucher set"
 
 #: apps/dashboard/vouchers/views.py:274
 msgid "Voucher set created"
-msgstr ""
+msgstr "Voucher set dibuat"
 
 #: apps/dashboard/vouchers/views.py:430
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:16
@@ -3540,7 +3541,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:17
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:22
 msgid "Voucher sets"
-msgstr ""
+msgstr "Voucher set"
 
 #: apps/offer/abstract_models.py:91
 msgid "This is displayed within the customer's basket"
@@ -3571,7 +3572,7 @@ msgstr "Sesi penawaran - penawaran sementara, tersedia untuk pengguna dalam dura
 
 #: apps/offer/abstract_models.py:121
 msgid "Exclusive offer"
-msgstr ""
+msgstr "Penawaran ekslusif"
 
 #: apps/offer/abstract_models.py:135 apps/offer/abstract_models.py:710
 #: templates/oscar/dashboard/offers/offer_detail.html:76
@@ -3597,13 +3598,13 @@ msgstr "Prioritas penawaran tertinggi diterapkan terlebih dahulu"
 msgid ""
 "Offers are active from the start date. Leave this empty if the offer has no "
 "start date."
-msgstr ""
+msgstr "Penawaran aktif dari tanggal mulai. Kosongkan ini jika penawaran tidak memiliki tanggal mulai."
 
 #: apps/offer/abstract_models.py:158
 msgid ""
 "Offers are active until the end date. Leave this empty if the offer has no "
 "expiry date."
-msgstr ""
+msgstr "Penawaran aktif sampai tanggal akhir. Kosongkan ini jika penawaran tidak memiliki tanggal kadaluwarsa."
 
 #: apps/offer/abstract_models.py:166
 msgid "Max global applications"
@@ -3772,7 +3773,7 @@ msgstr "Manfaat presentase memerlukan berbagai produk"
 
 #: apps/offer/abstract_models.py:560 apps/offer/abstract_models.py:585
 msgid "Percentage discount benefits require a value"
-msgstr ""
+msgstr "Manfaat diskon persentase memerlukan nilai"
 
 #: apps/offer/abstract_models.py:562 apps/offer/abstract_models.py:587
 msgid "Percentage discount cannot be greater than 100"
@@ -3829,7 +3830,7 @@ msgstr "Publik?"
 
 #: apps/offer/abstract_models.py:792
 msgid "Public ranges have a customer-facing page"
-msgstr ""
+msgstr "Rentang umum memiliki halaman yang berhadapan dengan pelanggan"
 
 #: apps/offer/abstract_models.py:795
 msgid "Includes all products?"
@@ -4012,7 +4013,7 @@ msgstr "Perhitungan kondisi"
 #, python-format
 msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
-msgstr[0] ""
+msgstr[0] "Beli %(delta)d produk lagi dari %(range)s"
 
 #: apps/offer/conditions.py:113
 #, python-format
@@ -4716,7 +4717,7 @@ msgstr "Tekan"
 
 #: apps/promotions/models.py:33
 msgid "Linked Promotion"
-msgstr ""
+msgstr "Link Promo"
 
 #: apps/promotions/models.py:34
 msgid "Linked Promotions"
@@ -5032,7 +5033,7 @@ msgstr "Gratis pengiriman"
 
 #: apps/shipping/methods.py:70
 msgid "No shipping required"
-msgstr ""
+msgstr "Pengiriman tidak diperlukan"
 
 #: apps/shipping/methods.py:79
 msgid "Fixed price shipping"
@@ -5045,19 +5046,19 @@ msgstr "Kamu wajib menetapkan beberapa metode pengiriman"
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
 msgid "Number of vouchers"
-msgstr ""
+msgstr "Jumlah voucher"
 
 #: apps/voucher/abstract_models.py:37
 msgid "Length of Code"
-msgstr ""
+msgstr "Panjang Kode"
 
 #: apps/voucher/abstract_models.py:52
 msgid "VoucherSet"
-msgstr ""
+msgstr "VoucherSet"
 
 #: apps/voucher/abstract_models.py:53
 msgid "VoucherSets"
-msgstr ""
+msgstr "VoucherSet"
 
 #: apps/voucher/abstract_models.py:126
 msgid ""
@@ -5244,7 +5245,7 @@ msgstr "Peringatan stok diminta"
 
 #: defaults.py:179
 msgid "Voucher Sets"
-msgstr ""
+msgstr "Voucher Set"
 
 #: defaults.py:186
 msgid "Content"
@@ -5756,7 +5757,7 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
+msgstr[0] "\n                    <strong>%(num_results)s</strong> hasil - menampilkan <strong>%(start)s</strong> ke <strong>%(end)s</strong>.\n                "
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5783,7 +5784,7 @@ msgstr "Tidak ada produk ditemukan"
 
 #: templates/oscar/catalogue/category.html:16
 msgid "Edit this category"
-msgstr ""
+msgstr "Ubah kategori"
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -5960,7 +5961,7 @@ msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
+msgstr[0] "\n            <strong>%(num_up_votes)s</strong> dari %(num_votes)s pelanggan menyatakan ini bermanfaat\n            "
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -6448,7 +6449,7 @@ msgstr "\n<a href=\"%(url)s\">%(title)s</a> dis-tok kembali\n"
 msgid ""
 "\n"
 "%(title)s is back in stock\n"
-msgstr ""
+msgstr "\n%(title)s sudah tersedia\n"
 
 #: templates/oscar/customer/anon_order.html:8
 #: templates/oscar/dashboard/orders/order_detail.html:24
@@ -6527,7 +6528,7 @@ msgstr "%(name)s tim"
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "<strong>%(email)s</strong>."
-msgstr ""
+msgstr "Anda menerima email ini karena alamat email Anda telah diubah menjadi <strong>%(email)s</strong>."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
@@ -6565,7 +6566,7 @@ msgstr "Halo,"
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "        will be processed shortly."
-msgstr ""
+msgstr "Dengan senang hati kami konfirmasi bahwa pesanan %(order_number)s telah kami terima dan\n        akan segera diproses."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:17
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6638,7 +6639,7 @@ msgstr "Konfirmasi dari pesanan %(number)s"
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
-msgstr ""
+msgstr "Anda menerima e-mail ini karena kata sandi Anda telah diubah %(name)s."
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
@@ -6694,14 +6695,14 @@ msgid ""
 "            We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "            http://%(site)s%(path)s\n"
 "        "
-msgstr ""
+msgstr "\n            Kami senang menginformasikan kepada anda bahwa produk '%(title)s' sudah tersedia:\n            http://%(site)s%(path)s\n        "
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:22
 msgid ""
 "\n"
 "                Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 "            "
-msgstr ""
+msgstr "\n                Harap diingat bahwa jumlah barang dalam persediaan terbatas. Bersegeralah atau mungkin orang lain yang dapat terlebih lebih dulu.\n            "
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:29
 msgid ""
@@ -6709,7 +6710,7 @@ msgid ""
 "            With this email we have disabled your alert automatically and you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
-msgstr ""
+msgstr "\n            Bersama email ini kami telah menonaktifkan pemberitahuan otomatis dan anda tidak akan\n            menerima email lagi terkait produk ini.\n        "
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:2
 #, python-format
@@ -6717,7 +6718,7 @@ msgid ""
 "\n"
 "We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr ""
+msgstr "\nDengan senang hati kami beritahukan bahwa produk '%(title)s' sudah tersedia:\nhttp://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:5
 msgid ""
@@ -6751,7 +6752,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
-msgstr ""
+msgstr "Halo,\n\nSeseorang (sepertinya anda) telah meminta email pemberitahuan jika\n'%(title)s' sudah tersedia. Silahkan klik tautan berikut\nuntuk mengkonfirmasi:\nhttp://%(domain)s%(confirm_path)s\n\nAnda dapat membatalkan pemberitahuan ini kapan saja dengan mengklik tautan berikut ini:\nhttp://%(domain)s%(cancel_path)s\n\nTerima kasih atas ketertarikan anda,\n\nSalam,\nTim %(site)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"
@@ -6760,7 +6761,7 @@ msgstr "Konfirmasi diperlukan mengenai peringatan stok"
 #: templates/oscar/customer/emails/commtype_product_alert_subject.txt:1
 #, python-format
 msgid "%(title)s is back in stock"
-msgstr ""
+msgstr "%(title)s sudah tersedia"
 
 #: templates/oscar/customer/emails/commtype_registration_body.html:1
 #: templates/oscar/customer/emails/commtype_registration_body.txt:1
@@ -7059,34 +7060,34 @@ msgstr "Anda belum mempunyai daftar keinginan apapun."
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:5
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:5
 msgid "Create Attribute Option Group"
-msgstr ""
+msgstr "Buat Grup Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:14
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:21
 msgid "Attribute Option Group"
-msgstr ""
+msgstr "Grup Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:31
 msgid "Delete Attribute Option Group?"
-msgstr ""
+msgstr "Hapus Grup Opsi Atribut?"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
 msgid ""
 "Please make sure all Product Attributes are assigned to another Attribute "
 "Option Group before deletion."
-msgstr ""
+msgstr "Pastikan semua Atribut Produk sudah dialihkan ke Grup Opsi Atribut lain sebelum dihapus."
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
 msgid "Delete Attribute Option Group"
-msgstr ""
+msgstr "Hapus Grup Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
 msgid ""
 "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
-msgstr ""
+msgstr "Yakin ingin menghapus Grup Opsi Atribut - <strong>%(name)s</strong> ?"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
 #: templates/oscar/dashboard/catalogue/product_class_form.html:34
@@ -7097,28 +7098,28 @@ msgstr "Bagian"
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:55
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:70
 msgid "Attribute Option Group details"
-msgstr ""
+msgstr "Detil Grup Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:56
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:102
 msgid "Attribute Options"
-msgstr ""
+msgstr "Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:6
 msgid "Attribute Option Groups"
-msgstr ""
+msgstr "Grup Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:20
 msgid "Create new Attribute Option Group"
-msgstr ""
+msgstr "Buat Grup Opsi Atribut baru"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:34
 msgid "No Attribute Option Groups found."
-msgstr ""
+msgstr "Tidak ditemukan Grup Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_row_actions.html:11
 msgid "Edit Attribute Option Group"
-msgstr ""
+msgstr "Ubah Grup Opsi Atribut"
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:14
 #: templates/oscar/dashboard/catalogue/category_delete.html:19
@@ -7614,11 +7615,11 @@ msgstr "Keluar"
 msgid ""
 "Please enter a correct username and password. Note that both fields may be "
 "case-sensitive."
-msgstr ""
+msgstr "Masukkan nama pengguna dan kata sandi yang benar. Catatan: keduanya adalah case-sensitive"
 
 #: templates/oscar/dashboard/login.html:41
 msgid "Login"
-msgstr ""
+msgstr "Masuk"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
@@ -8471,7 +8472,7 @@ msgid_plural ""
 "\n"
 "                <strong>%(n)s</strong> products added\n"
 "            "
-msgstr[0] ""
+msgstr[0] "\n                <strong>%(n)s</strong> produk ditambahkan\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8483,7 +8484,7 @@ msgid_plural ""
 "\n"
 "                There were <strong>%(n)s</strong> duplicate products in the file\n"
 "            "
-msgstr[0] ""
+msgstr[0] "\n                Terdapat <strong>%(n)s</strong> produk yang sama pada berkas\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8495,7 +8496,7 @@ msgid_plural ""
 "\n"
 "                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
 "            "
-msgstr[0] ""
+msgstr[0] "\n                Terdapat <strong>%(n)s</strong> produk pada berkas yang tidak ada di katalog\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -8691,7 +8692,7 @@ msgstr "Ulasan #%(review.id)s"
 #: templates/oscar/dashboard/reviews/review_update.html:24
 #, python-format
 msgid "Review #%(review_id)s"
-msgstr ""
+msgstr "Ulasan #%(review_id)s"
 
 #: templates/oscar/dashboard/reviews/review_update.html:31
 msgid "Review information"
@@ -9034,59 +9035,59 @@ msgstr "Tidak ada kupon ditemukan"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:25
 msgid "Update voucher set"
-msgstr ""
+msgstr "Perbarui voucher set"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:26
 msgid "Download CSV"
-msgstr ""
+msgstr "Unduh CSV"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:28
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:37
 msgid "Voucher set"
-msgstr ""
+msgstr "Voucher set"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:46
 msgid "Start"
-msgstr ""
+msgstr "Awal"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:50
 msgid "End"
-msgstr ""
+msgstr "Akhir"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:62
 msgid "Created"
-msgstr ""
+msgstr "Dibuat"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
 msgid "Create new voucher set"
-msgstr ""
+msgstr "Buat set voucher"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
 msgid "Num"
-msgstr ""
+msgstr "Nomor"
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
-msgstr ""
+msgstr "Tutup popup..."
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:8
 #, python-format
 msgid "Change selected %(model)s"
-msgstr ""
+msgstr "Ubah %(model)s yang dipilih"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:13
 #, python-format
 msgid "Add another %(model)s"
-msgstr ""
+msgstr "Tambah %(model)s"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:14
 msgid "Add"
-msgstr ""
+msgstr "Tambah"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:18
 #, python-format
 msgid "Delete selected %(model)s"
-msgstr ""
+msgstr "Hapus %(model)s yang dipilih"
 
 #: templates/oscar/error.html:9
 msgid "Sorry!"
@@ -9274,7 +9275,7 @@ msgid_plural ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
+msgstr[0] "\n                    Ditemukan <strong>%(num_results)s</strong> hasil.\n                "
 
 #: templates/oscar/search/results.html:68
 msgid "Found <strong>0</strong> results."

@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-05-12 07:10+0000\n"
+"PO-Revision-Date: 2018-05-31 07:11+0000\n"
 "Last-Translator: Zeev Shilor <zshilor@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/codeinthehole/django-oscar/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -217,11 +217,11 @@ msgstr "כתובת חיוב ברירת מחדל?"
 
 #: apps/address/abstract_models.py:533
 msgid "Number of Orders as Shipping Address"
-msgstr ""
+msgstr "מספר ההזמנות על פי כתובות משלוח"
 
 #: apps/address/abstract_models.py:537
 msgid "Number of Orders as Billing Address"
-msgstr ""
+msgstr "מספר ההזמנות על פי כתובות לחיוב"
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -1540,7 +1540,7 @@ msgstr "אני לקוח/ה חדש המעונין לבצע קנייה ללא רי
 
 #: apps/checkout/forms.py:57
 msgid "I am a new customer and want to create an account before checking out"
-msgstr "אני לקוח/ה חדש וברצוני ליצור חשבון לפני סיום הקניה"
+msgstr "אני לקוח/ה חדש/ה וברצוני ליצור חשבון לפני סיום הקניה"
 
 #: apps/checkout/forms.py:59
 msgid "I am a returning customer, and my password is"
@@ -3400,7 +3400,7 @@ msgstr "סטטוס המשתמש השתנה"
 
 #: apps/dashboard/users/views.py:148
 msgid "A password reset email has been sent"
-msgstr "מייל איפוס ססמא נשלח "
+msgstr "מייל איפוס סיסמה נשלח "
 
 #: apps/dashboard/users/views.py:160
 msgid "All Alerts"
@@ -5807,7 +5807,7 @@ msgstr[3] "\n                    <strong>%(num_results)s</strong> תוצאות.\
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
-msgstr "<strong>0</strong> תוצאות."
+msgstr "<strong>0</strong> תוצאות. "
 
 #: templates/oscar/catalogue/browse.html:106
 #: templates/oscar/dashboard/catalogue/product_list.html:86
@@ -6123,7 +6123,7 @@ msgstr "מי את/ה?"
 
 #: templates/oscar/checkout/gateway.html:39
 msgid "Get a password reminder"
-msgstr "קבלו תזכורות לססמאתכם. "
+msgstr "קבלו תזכורות לסיסמתכם. "
 
 #: templates/oscar/checkout/gateway.html:59
 #: templates/oscar/checkout/shipping_address.html:77
@@ -6163,7 +6163,7 @@ msgstr "פרטי תשלום"
 
 #: templates/oscar/checkout/payment_details.html:12
 msgid "Enter payment details"
-msgstr "הכנס פרטי תשלום"
+msgstr "הזנת פרטי תשלום"
 
 #: templates/oscar/checkout/payment_details.html:21
 msgid ""
@@ -6575,7 +6575,7 @@ msgstr "קובלת הודעה זו כיון שכתובת הדוא\"ל שלך ש�
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately and "
 "correct your email address:"
-msgstr "אם לא שינית את הססמא שלך, אנא אפס/י את ההסמא מייד ותקנ/י את כתובת הדואר האלקטרוני שלך:"
+msgstr "אם אינך מי ששינה את הסיסמה שלך, אנא אפס/י את ההסמא מייד ותקנ/י את כתובת הדואר האלקטרוני שלך:"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
@@ -6679,13 +6679,13 @@ msgstr "אישור הזמנה מס' %(number)s"
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
-msgstr "קיבלת הודעת דוא\"ך זו מכיוון שססמתך שונתה ב %(name)s."
+msgstr "קיבלת הודעת דוא\"ל זו מכיוון שסיסמתך שונתה ב %(name)s."
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately:"
-msgstr "אם לא שינית את הססמא שלכם, אנא אפסו את הססמא מיד:"
+msgstr "אם לא שינית את הסיסמה שלך, יש לאפס אותה מיד:"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:11
@@ -6697,12 +6697,12 @@ msgstr "אחרת, אנא התעלמו מדואר אלקטרוני זה"
 msgid ""
 "\n"
 "You're receiving this email because your password has been changed at %(name)s.\n"
-msgstr "\nקיבלת מייל זה מכיוון שססמתך שונתה ב- %(name)s.\n"
+msgstr "\nקיבלת מייל זה מכיוון שסיסמתך שונתה ב- %(name)s.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
 msgid "Your password changed at %(site_name)s."
-msgstr "ססמתך שונה ב -%(site_name)s."
+msgstr "סיסמתך שונה ב -%(site_name)s."
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:7
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
@@ -6710,17 +6710,17 @@ msgstr "ססמתך שונה ב -%(site_name)s."
 msgid ""
 "You're receiving this e-mail because you requested a password reset for your"
 " user account at %(name)s."
-msgstr "קיבלת מייל זה מכיוון שביקשת לאפס ססמא בחשבון %(name)s."
+msgstr "קיבלת מייל זה מכיוון שביקשת לאפס סיסמה בחשבון %(name)s."
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:7
 msgid "Please go to the following page and choose a new password:"
-msgstr "אנא כנס/י לדף הבא ובחר/י ססמא חדשה:"
+msgstr "אנא הכנס/י לדף הבא ובחר/י סיסמה חדשה:"
 
 #: templates/oscar/customer/emails/commtype_password_reset_subject.txt:1
 #, python-format
 msgid "Resetting your password at %(site_name)s."
-msgstr "מאפס את ססמתך ב-%(site_name)s."
+msgstr "מאפס את סיסמתך ב-%(site_name)s."
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:7
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:1
@@ -6998,7 +6998,7 @@ msgstr "ערוך פרופיל"
 
 #: templates/oscar/customer/profile/profile_delete.html:5
 msgid "Please confirm your password to delete your profile."
-msgstr "אנא אשר את ססמתך כדי למחוק את הפרופיל שלך"
+msgstr "אנא אשר את סיסמתך כדי לבטל את הפרופיל שלך"
 
 #: templates/oscar/customer/profile/profile_delete.html:10
 msgid "Warning"
@@ -7579,7 +7579,7 @@ msgstr "סך הכל שורות"
 #: templates/oscar/dashboard/index.html:99
 #: templates/oscar/dashboard/orders/statistics.html:49
 msgid "Total revenue"
-msgstr "סך הכל רווח"
+msgstr "סך הכל פדיון"
 
 #: templates/oscar/dashboard/index.html:76
 msgid "Average order costs"
@@ -8980,7 +8980,7 @@ msgstr "ביקורות כתובות"
 
 #: templates/oscar/dashboard/users/detail.html:91
 msgid "Send password reset email"
-msgstr "שלח איפוס ססמא לדואר האלקטרוני"
+msgstr "שלח איפוס סיסמה לדואר האלקטרוני"
 
 #: templates/oscar/dashboard/users/detail.html:119
 msgid "Order Number"
@@ -9228,7 +9228,7 @@ msgstr "הושלם"
 
 #: templates/oscar/registration/password_reset_complete.html:21
 msgid "Your password has been set.  You may go ahead and log in now."
-msgstr "ססמאתכם שונתה. כעת אתם יכולים להתחבר לאתר. "
+msgstr "סיסמתכם שונתה. ניתן כעת להתחבר לאתר. "
 
 #: templates/oscar/registration/password_reset_complete.html:22
 msgid "Log in"
@@ -9238,13 +9238,13 @@ msgstr "התחברו"
 #: templates/oscar/registration/password_reset_confirm.html:14
 #: templates/oscar/registration/password_reset_confirm.html:18
 msgid "Enter a new password"
-msgstr "אנא הקלידו ססמא חדשה"
+msgstr "הקלדת הסיסמה החדשה"
 
 #: templates/oscar/registration/password_reset_confirm.html:22
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr "אנא הכניסו את הססמא החדשה פעמיים כדי שנוכל לאמת שהכנסתם אותה בצורה הנכונה. "
+msgstr "יש להזין את הסיסמה החדשה פעמיים כדי שנוכל לאמת שהקלדת אותה בצורה הנכונה. "
 
 #: templates/oscar/registration/password_reset_confirm.html:27
 msgid "Change my password"
@@ -9258,11 +9258,11 @@ msgstr "איתחול סיסמה נכשל"
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr "הקישור לדף איפוס הססמא אינו תקין, כנראה משום שהשתמשתם בו כבר בעבר. אנא בקשו דף איפוס ססמא חדש."
+msgstr "הקישור לדף איפוס הסיסמה אינו תקין, כנראה משום שהשתמשתם בו כבר בעבר. אנא בקשו איפוס סיסמה מחדש."
 
 #: templates/oscar/registration/password_reset_done.html:4
 msgid "Password reset email sent"
-msgstr "הססמא אופסה, אימייל נשלח. "
+msgstr "הסיסמה אופסה, אימייל נשלח. "
 
 #: templates/oscar/registration/password_reset_done.html:14
 #: templates/oscar/registration/password_reset_done.html:18
@@ -9274,7 +9274,7 @@ msgid ""
 "\n"
 "        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr "\nשלחנו לכם דואר אלקטרוני עם הוראות כיצד לאפס את הססמא שלכם. הוא יגיע אליכם בזמן הקרוב."
+msgstr "\nשלחנו לכם הודעת דוא\"ל עם הוראות כיצד לאפס את הסיסמה שלכם. תקבלו אותה עוד מעט."
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""

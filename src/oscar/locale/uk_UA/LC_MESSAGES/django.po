@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# iraqez <vladimir.gumenyuk@gmail.com>, 2016
+# Vladimir Gumenyuk <vladimir.gumenyuk@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"

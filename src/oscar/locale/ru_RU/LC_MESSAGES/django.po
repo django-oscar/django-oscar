@@ -5,7 +5,7 @@
 # Translators:
 # Alexander Gritsenko <forsashka@gmail.com>, 2013
 # alien <dejavy@inbox.ru>, 2014
-# Eugene MechanisM <eugene@mechanism.pro>, 2013
+# Eugene <eugene.mechanism@gmail.com>, 2013
 # Georgy <g.kutsurua@gmail.com>, 2013
 # Lex Berezhny <lex@damoti.com>, 2013
 # Max Brajsky <kzerot@gmail.com>, 2016

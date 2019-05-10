@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Priyank Soni <priyanksonigeca7@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2019-03-02 15:53+0000\n"
+"Last-Translator: Priyank Soni <priyanksonigeca7@gmail.com>\n"
 "Language-Team: Hindi (India) (http://www.transifex.com/codeinthehole/django-oscar/language/hi_IN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,23 +20,23 @@ msgstr ""
 
 #: apps/address/abstract_models.py:28
 msgid "Mr"
-msgstr ""
+msgstr "श्री"
 
 #: apps/address/abstract_models.py:29
 msgid "Miss"
-msgstr ""
+msgstr "कुमारी"
 
 #: apps/address/abstract_models.py:30
 msgid "Mrs"
-msgstr ""
+msgstr "श्रीमती"
 
 #: apps/address/abstract_models.py:31
 msgid "Ms"
-msgstr ""
+msgstr "सुश्री"
 
 #: apps/address/abstract_models.py:32
 msgid "Dr"
-msgstr ""
+msgstr "डॉ"
 
 #: apps/address/abstract_models.py:221
 msgctxt "Treatment Pronouns for the customer"
@@ -285,7 +286,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:44
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "उत्पाद"
 
 #: apps/analytics/abstract_models.py:24 apps/analytics/reports.py:20
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
