@@ -114,17 +114,17 @@ class AbstractStockRecord(models.Model):
     # domain-specific.  It is NULLable because some items don't have a fixed
     # price but require a runtime calculation (possible from an external
     # service). Current field name `price_excl_tax` is deprecated and will be
-    # renamed into `price` in Oscar 2.0.
+    # renamed into `price` in Oscar 2.1.
     price_excl_tax = models.DecimalField(
         _("Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Deprecated - will be removed in Oscar 2.0
+    # Deprecated - will be removed in Oscar 2.1
     price_retail = models.DecimalField(
         _("Price (retail)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Deprecated - will be removed in Oscar 2.0
+    # Deprecated - will be removed in Oscar 2.1
     cost_price = models.DecimalField(
         _("Cost Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)

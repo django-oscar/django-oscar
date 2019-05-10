@@ -4,15 +4,14 @@ Oscar 2.0 release notes
 
 :release: tbd
 
-Welcome to Oscar 2.0
-
-
-Table of contents:
+Welcome to Oscar 2.0. This is a significant release which includes a number of
+new features and backwards incompatible changes. In particular the way Oscar
+configures apps has been refactored and projects that have forked apps will
+need to follow the section on `Migrating forked apps`_.
 
 .. contents::
     :local:
     :depth: 1
-
 
 .. _compatibility_of_2.0:
 
@@ -29,59 +28,67 @@ Support for Python 2.7 and Python 3.4 has been dropped.
 What's new in Oscar 2.0?
 ------------------------
 
-- Added an ``is_public`` field to the ``Product`` model that is used to exclude products from the
-  ``browsable`` queryset. A ``browsable_dashboard`` queryset is provided for use in the dashboard, which includes non-public products.
+- Added an ``is_public`` field to the ``Product`` model that is used to exclude
+  products from the ``browsable`` queryset. A ``browsable_dashboard`` queryset
+  is provided for use in the dashboard, which includes non-public products. This
+  is a model change, so you will need to run the supplied migrations.
 
-  This is a model change that requires database migration.
+- Added an ``order.OrderStatusChange`` model that is used to log order status
+  changes applied by ``Order.set_status()``. This is a new model, so you will
+  need to run the supplied migrations.
 
-- Added an ``order.OrderStatusChange`` model that is used to log order status changes
-  applied by ``Order.set_status()``. This is a new model which will require database migrations to be applied.
+- Added an ``OSCAR_OFFERS_INCL_TAX`` setting which can be used to configure
+  whether offer discounts are applied on the tax-inclusive amount. This
+  defaults to ``False``, to preserve the original behaviour of discount
+  application.
 
-- Added an ``OSCAR_OFFERS_INCL_TAX`` setting which can be used to configure whether
-  offer discounts are applied on the tax-inclusive amount. This defaults to ``False``,
-  to preserve the original behaviour of discount application.
+- Added database index definitions for commonly queried fields in a range of
+  models. See `#2875`_.  This will require projects that have forked Oscar apps
+  to generate corresponding migrations.
 
-- Added database index definitions for commonly queried fields in a range of models. See `#2875`_.
-  This will require projects that have forked Oscar apps to generate corresponding migrations.
+- Added a ``filter_by_attributes`` method on the ``ProductQuerySet``, to allow
+  database-level filtering of products by attribute.
 
-- Added a ``filter_by_attributes`` method on the ``ProductQuerySet``,
-  to allow database-level filtering of products by attribute.
+- Added support for re-ordering product images in the dashboard, and for adding
+  an arbitrary number of additional images into the formset.
 
-- Added support for re-ordering product images in the dashboard, and for
-  adding an arbitrary number of additional images into the formset.
+- Added an ``OSCAR_THUMBNAILER`` setting can be used to customise thumbnail
+  generation. Support is included for Sorl and Easy Thumbnails. The default is
+  ``'oscar.core.thumbnails.SorlThumbnail'``.
 
-- Added an ``OSCAR_THUMBNAILER`` setting which is used to indicate thumbnailer class
-  used to generate thumbnail. This defaults to ``'oscar.core.thumbnails.SorlThumbnail'``.
+- Added ``oscar_thumbnail`` template tag (to ``image_tags``) to generate
+  thumbnails in templates.  All uses of Sorl's ``thumbnail`` template tag in
+  the shipped templates have been replaced with ``oscar_thumbnail``.
 
-- Added ``oscar_thumbnail`` template tag (to ``image_tags``) to generate thumbnails in templates.
-  Sorl's ``thumbnail`` template tag replaced by ``oscar_thumbnail`` in all related templates.
+- ``sorl-thumbnail`` has been dropped as a dependency. Use
+  ``pip install django-oscar[sorl-thumbnail]`` or
+  ``pip install django-oscar[easy-thumbnails]`` to explicitly install the
+  dependencies for either of the two supported thumbnailers.
 
-- ``sorl-thumbnail`` removed from ``install_requires``. Desirable thumbnailer (``sorl-thumbnail`` or ``easy-thumbnails``) now
-  must be installed manually or with ``pip install django-oscar[sorl-thumbnail]`` or ``pip install django-oscar[easy-thumbnails]``.
+- Added the ability to manage ``catalogue.Option`` objects from the dashboard.
 
 .. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Support for deprecated product alert email templates was removed The templates
-  for these emails have been replaced as follows:
+- Product alert emails are now sent as Communication Events and the deprecated
+  product alert email templates have been removed. The templates for these
+  emails have been replaced as follows:
 
-    - ``customer/alerts/emails/confirmation_subject.txt`` is replaced by
+    - ``customer/alerts/emails/confirmation_subject.txt`` to
       ``customer/emails/commtype_product_alert_confirmation_subject.txt``
-    - ``customer/alerts/emails/confirmation_body.txt`` is replaced by
+    - ``customer/alerts/emails/confirmation_body.txt`` to
       ``customer/emails/commtype_product_alert_confirmation_body.txt``
-    - ``customer/alerts/emails/alert_subject.txt`` is replaced by
+    - ``customer/alerts/emails/alert_subject.txt`` to
       ``customer/emails/commtype_product_alert_subject.txt``
-    - ``customer/alerts/emails/alert_body.txt`` is replaced by
+    - ``customer/alerts/emails/alert_body.txt`` to
       ``customer/emails/commtype_product_alert_body.txt``
 
-  Product alert emails are now sent as Communication Events.
+- Support for category URLs without a primary key has been removed.
 
-- Support for category URLs without a primary key was removed.
-
-  Enforcement of unique slugs for categories was also removed, as enforcing
-  this was inefficient and not threadsafe. Since a primary key is now required
+  Enforcement of unique slugs for categories has also been removed, as enforcing
+  this was inefficient and not thread safe. Since a primary key is now required
   for category URLs, there is no need for slugs to be unique.
 
 - ``customer.forms.SetPasswordForm`` and ``customer.forms.PasswordChangeForm``
@@ -95,10 +102,9 @@ Removal of deprecated features
   ``num_orders_as_shipping_address`` and ``num_orders_as_billing_address``
   instead.
 
-- Backward-compatible dynamic loading of formset classes that have moved in Oscar was
-  removed. Projects must update their ``get_class`` calls to use the new paths.
-
-  The paths that have changed are as follows:
+- Support has been removed for the dynamic loading of formset classes that were
+  moved in previous releases. Projects must update their ``get_class`` calls to
+  use the new paths. The paths that have changed are as follows:
 
   ================================  ==================================  ================
   Old path                          New path                            Affected classes
@@ -131,72 +137,76 @@ Removal of deprecated features
   ``wishlists.forms``               ``wishlists.formsets``              ``LineFormset``
   ================================  ==================================  ================
 
-- Added the ability to manage ``catalogue.Option`` objects from the dashboard.
-
 Minor changes
 ~~~~~~~~~~~~~
-- Dropped ``action=""`` and ``action="."`` attributes, following the lead of Django
-  and as per the HTML5 specification.
+- Dropped ``action=""`` and ``action="."`` attributes, following the lead of
+  Django and as per the HTML5 specification.
 
 - Replaced use of Django's procedural auth views with the corresponding
   class-based views.
 
-- ``OrderPlacementMixin.get_message_context()`` is now passed a ``code`` argument
-  specifying the communication event type code for a message being sent.
+- ``OrderPlacementMixin.get_message_context()`` is now passed a ``code``
+  argument specifying the communication event type code for the message being
+  sent.
 
 - We've dropped the dependency on Unidecode due to license incompatibilities,
-  ``oscar.core.utils.default_slugifier`` now uses ``oscar.core.utils.cautious_slugify``
-  to handle unicode characters in slugs when ``OSCAR_SLUG_ALLOW_UNICODE`` is ``False``.
+  ``oscar.core.utils.default_slugifier`` now uses
+  ``oscar.core.utils.cautious_slugify`` to handle unicode characters in slugs
+  when ``OSCAR_SLUG_ALLOW_UNICODE`` is ``False``.
 
-- ``OSCAR_SLUG_FUNCTION`` previously accepted a function as its value. It now
-  only accepts a dotted path to a function as its value. Such functions must
-  also now take a ``allow_unicode`` kwarg.
-
-- Fixed input validation for ``dashboard.offers.forms.BenefitForm`` when a ``range``
-  was specified but other fields were empty.
+- Fixed input validation for ``dashboard.offers.forms.BenefitForm`` when a
+  ``range`` was specified but other fields were empty.
 
 - Fixed calculation of weight-based shipping charges in cases where the basket
   weight is an exact multiple of a weight band's upper limit.
 
-- The ``sort_by`` field on ``catalogue.reviews.SortReviewsForm`` was made optional
-  and the logic in ``ProductReviewList`` adjusted so that the form fields
-  don't have to be rendered manually because of form errors.
+- The ``sort_by`` field on ``catalogue.reviews.SortReviewsForm`` was made
+  optional and the logic in ``ProductReviewList`` adjusted so that the form
+  fields don't have to be rendered manually because of form errors.
 
-- Added a ``datetime_filters`` tag library that provides a ``timedelta`` template
-  filter for rendering time deltas in human readable format.
+- Added a ``datetime_filters`` tag library that provides a ``timedelta``
+  template filter for rendering time deltas in human readable format.
 
-- ``OSCAR_OFFER_ROUNDING_FUNCTION`` previously accepted a function as its value. It now
-  only accepts a dotted path to a function as its value
+- ``OSCAR_OFFER_ROUNDING_FUNCTION`` previously accepted a function as its
+  value. It now only accepts a dotted path to a function as its value
 
 - Fixed the logic of ``offers.Range.all_products()`` to make it consistent with
-  ``Range.contains_product()`` in excluding products specified in ``excluded_product_ids``.
+  ``Range.contains_product()`` in excluding products specified in
+  ``excluded_product_ids``.
 
 - Added a ``COMPARISON_FIELDS`` constant to ``catalogue.Category`` to restrict
-  which fields are fetched from the database when performing category comparison queries.
+  which fields are fetched from the database when performing category
+  comparison queries.
 
-- Significantly improved the database efficiency of the ``category_tree`` template tag.
+- Significantly improved the database efficiency of the ``category_tree``
+  template tag.
 
-- Order confirmation emails now include an order status link for authenticated users, as well as guest users, and order status is displayed consistently in both logged-in and anonymous order detail views.
+- Order confirmation emails now include an order status link for authenticated
+  users, as well as guest users, and order status is displayed consistently in
+  both logged-in and anonymous order detail views.
 
-- Fixed display of styled HTML emails in account email detail views, wrapping them in an iframe to avoid leakage of styles into the page.
+- Fixed display of styled HTML emails in account email detail views, wrapping
+  them in an iframe to avoid leakage of styles into the page.
 
-- Bootstrap datetime picker JS/CSS assets removed from base layout, see :issue:`2584`.
+- Bootstrap datetime picker JS/CSS assets removed from base layout, see
+  :issue:`2584`.
 
-- Oscar's 500 error template no longer inherits other templates and
-  does not use any template template tags and
-  styling to avoid potential errors caused by the template itself (see :issue:`2971`).
+- Oscar's 500 error template no longer inherits other templates and does not
+  use any template template tags and styling to avoid potential errors caused
+  by the template itself (see :issue:`2971`).
 
-- Line discounts are now capped to a minimum of zero - i.e., negative discounts will not be reported.
+- Line discounts are now capped to a minimum of zero - i.e., negative discounts
+  will not be reported.
 
 .. _incompatible_in_2.0:
 
 Backwards incompatible changes in Oscar 2.0
 -------------------------------------------
 
-- Redirection to the parent detail view for child products is disabled by default.
-  Child products now have their own detail view, which allows displaying their price
-  and images independently from the parent product. To revert to the previous behaviour
-  of redirecting to the parent product, set
+- Redirection to the parent detail view for child products is disabled by
+  default.  Child products now have their own detail view, which allows
+  displaying their price and images independently from the parent product. To
+  revert to the previous behaviour of redirecting to the parent product, set
   ``oscar.apps.catalogue.views.ProductDetailView.enforce_parent`` to ``False``.
 
 - Renamed the modules containing the Django app config classes for Oscar apps
@@ -223,12 +233,12 @@ Backwards incompatible changes in Oscar 2.0
 - Changed the values returned by the Oscar app config ``urls`` property. It now
   returns a tuple containing the list of URL patterns, the app namespace (which
   could previously be None, but not any more), and the instance namespace
-  (which would previously be overiden by the app namespace, if left blank, but
+  (which would previously be overridden by the app namespace, if left blank, but
   must now be explicitly set). To include URLs with an instance namespace, use
   the form ``app_config.urls``, and to include URLs without an instance
   namespace, use the form ``django.conf.urls.include(app_config.urls[0])``.
 
-- Removed :meth:``oscar.get_core_apps``. Overridding apps is now done by
+- Removed ``oscar.get_core_apps``. Overriding apps is now done by
   replacing the Oscar app entry in the ``INSTALLED_APPS`` setting with that of
   the forked app.
 
@@ -237,83 +247,85 @@ Backwards incompatible changes in Oscar 2.0
   ``target_path`` is the directory into which the new app shall be copied.
   ``new_app_subpackage`` is the optional dotted path to the subpackage of the
   new app, from which, together with the ``target_path``, the full Python path
-  to the app will be derived. If a ``new_app_subpackage`` is omitted, then the
+  to the app will be derived. If ``new_app_subpackage`` is omitted, then the
   subpackage of the app being forked will be used instead.
 
-- Promotions application completely removed from the Oscar core and dashboard
-  and will be available as external application - `django_oscar_promotions`_.
+- Removed the ``promotions`` app. The app is now available in a separate package
+  - `django_oscar_promotions`_.
 
-- `OSCAR_MAIN_TEMPLATE_DIR` setting was removed, existing templates were
-  updated within the full path. See :issue:`1378`, :issue:`2250`. Please
-  update your templates accordingly.
+- ``OSCAR_MAIN_TEMPLATE_DIR`` setting has been removed and existing templates
+  updated with the full path. See :issue:`1378`, :issue:`2250`. Please update
+  your templates accordingly.
+
+- ``OSCAR_SLUG_FUNCTION`` previously accepted a function as its value. It now
+  only accepts a dotted path to a function as its value. Such functions must
+  also now take a ``allow_unicode`` kwarg.
 
 .. _`django_oscar_promotions`: https://github.com/django-oscar/django-oscar-promotions
+
+.. _migrating_forked_apps:
 
 Migrating forked apps
 ~~~~~~~~~~~~~~~~~~~~~
 
-- For each forked app:
-  - Rename the module that contains the Django app config class, from
-    ``config.py`` to ``apps.py``.
-  - Change the ``default_app_config`` variable in the ``__.init__.py`` module to
-    point to the new Django app config class.
-  - Change the Django app config class's inheritance base class to the one in
-    the parent app's ``apps`` module (it should be a
-    ``oscar.core.application.OscarConfig`` or
-    ``oscar.core.application.OscarDashboardConfig`` subclass).
-  - Move the Oscar app configs from the ``oscar.core.application.Application``
-    or ``oscar.core.application.DashboardApplication`` subclass in its
-    ``app.py`` module, to the corresponding
-    ``oscar.core.application.OscarConfig`` or
-    ``oscar.core.application.OscarDashboardConfig`` subclass in the ``apps.py``
-    module.
-    - These include the following overridden attributes:
-      - Rename ``name`` to ``namespace``
-      - ``login_url``
-      - ``hidable_feature_name``
-      - ``permissions_map``
-      - ``default_permissions``
-    - These include the following overridden methods:
-      - :meth:``get_urls``
-      - :meth:``post_process_urls``
-      - :meth:``get_permissions``
-      - :meth:``get_url_decorator``
-      - :meth:``urls``
-  - For URLconfs that include Oscar app URLs (e.g. in the ``dashboard`` app):
-    - Obtain the app's Django/Oscar app config instance from the Django app
-      registry, instead of from the app's previous config module's (``app.py``)
-      ``application`` variable.
-    - If the to-be-included URLs have an instance namespace, use the form
-      ``app_config.urls``, which passes in the list of URL patterns, the app
-      namespace, and the instance namespace.
-    - If the to-be-included URLs do not have an instance namespace, use the
-      form ``include(app_config.urls[0])``, which only passes in the list of
-      URL patterns.
+In release 2.0 the way apps are configured has been substantially refactored to
+merge Oscar's ``Application`` class with Django's ``AppConfig`` class. For
+each app that you have forked, you will need to:
 
-- For the main app's URLconf:
-  - Obtain the ``oscar`` app's Django/Oscar app config instance from the Django
-    app registry, instead of from the previous config module's (``config.py``)
-    ``application`` variable.
-  - Include the ``oscar`` app's URLs using the form
-    ``include(app_config.urls[0])``, to only pass in the list of URL patterns,
-    and not an app or instance namespace.
+- Rename the ``config.py`` module to ``apps.py``.
+
+- Change the ``default_app_config`` variable in ``__.init__.py`` to point
+  to ``apps`` instead of ``config``.
+
+- Update your ``AppConfig`` subclass in the ``apps.py`` module to either
+  inherit from the parent app's ``AppConfig`` or use either
+  ``oscar.core.application.OscarConfig`` or
+  ``oscar.core.application.OscarDashboardConfig``.
+
+- Move any changes you've made to the Oscar ``Application`` subclass in the ``app.py``
+  module, to the ``AppConfig`` subclass in the ``apps.py`` module.
+
+- Rename the ``name`` attribute to ``namespace``.
+
+- In your project URLconf and in `get_urls` methods replace the ``application``
+  import by finding the app in the Django app registry.
+
+.. code-block:: python
+
+    from django.apps import apps
+    application = apps.get_app_config('your_app_name')
+
+- If the urls you're including don't define an instance namespace then use
+  ``include(application.urls[0])``, which only passes in the list of URL
+  patterns.
 
 Dependency changes
 ------------------
 
-- Upgraded TinyMCE to version 4.8.3.
+- Dropped ``mock`` as a dependency in favour of ``unittests.mock``.
 
-- Upgraded jQuery inputmask to version 4.0.2.
+- Upgraded ``bootstrap`` to version 3.4.1.
+
+- Upgraded ``jquery`` to 3.4.1.
+
+- Dropped ``jquery.inputmask`` in favour of ``inputmask`` and upgraded to 4.0.2.
+
+- Upgraded ``less`` to 3.8.1.
+
+- Upgraded ``tinymce`` to version 4.8.3.
 
 .. _deprecated_features_in_2.0:
 
 Deprecated features
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 - ``offer.Range.contains()`` is deprecated. Use ``contains_product()`` instead.
 
-- ``catalogue.managers.ProductManager`` is deprecated.
-  Use ``catalogue.managers.ProductQuerySet.as_manager()`` instead.
+- ``catalogue.managers.ProductManager`` is deprecated.  Use
+  ``catalogue.managers.ProductQuerySet.as_manager()`` instead.
 
-- ``catalogue.managers.BrowsableProductManager`` is deprecated.
-  Use ``Product.objects.browsable()`` instead.
+- ``catalogue.managers.BrowsableProductManager`` is deprecated.  Use
+  ``Product.objects.browsable()`` instead.
+
+- ``catalogue.Product.browseable`` is deprecated. Use
+  ``Product.objects.browseable()`` instead.
