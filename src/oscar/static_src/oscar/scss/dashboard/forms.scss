@@ -88,6 +88,10 @@ form.flat {
 }
 
 form {
+  label {
+    margin-bottom: 0;
+  }
+
   .form-control {
     font-size: 12px;
   }
