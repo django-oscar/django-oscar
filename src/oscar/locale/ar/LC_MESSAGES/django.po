@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Abdallah Nassif <abdoosh00@gmail.com>, 2019
 # ahalasa <ahalasa@gmail.com>, 2014
 # ahalasa <ahalasa@gmail.com>, 2014
 # Bashar Al-Abdulhadi, 2013-2014
@@ -23,8 +24,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2019-01-26 13:39+0000\n"
+"Last-Translator: Abdallah Nassif <abdoosh00@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/codeinthehole/django-oscar/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -222,11 +223,11 @@ msgstr "عنوان المحاسبة الإفتراضي؟"
 
 #: apps/address/abstract_models.py:533
 msgid "Number of Orders as Shipping Address"
-msgstr ""
+msgstr "عدد الطلبات كعنوان شحن"
 
 #: apps/address/abstract_models.py:537
 msgid "Number of Orders as Billing Address"
-msgstr ""
+msgstr "عدد الطلبات كعنوان فاتورة"
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -768,7 +769,7 @@ msgstr "لا يمكن اضافة هذا المنتج إلى السلة لان ع
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
+msgstr "لقد قمنا بدمج سلة من جلسة سابقة. ربما تغيرت محتوياته."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -849,7 +850,7 @@ msgstr "القسيمة الشرائية  '%(code)s' انتهت صلاحيتها"
 #: apps/basket/views.py:323
 #, python-format
 msgid "The '%(code)s' voucher is not active"
-msgstr ""
+msgstr "القسيمة الشرائية %(code)s غير مفعلة"
 
 #: apps/basket/views.py:352
 msgid "Your basket does not qualify for a voucher discount"
@@ -877,7 +878,7 @@ msgstr "الرجاء إدخال رقم القسيمة الشرائية"
 #: apps/basket/views.py:403
 #, python-format
 msgid "No voucher found with id '%s'"
-msgstr ""
+msgstr "لم يتم العثور على قسيمة بالرقم %s"
 
 #: apps/basket/views.py:409
 #, python-format
@@ -1181,11 +1182,11 @@ msgstr "التاريخ"
 
 #: apps/catalogue/abstract_models.py:742
 msgid "Datetime"
-msgstr ""
+msgstr "تاريخ و وقت"
 
 #: apps/catalogue/abstract_models.py:744
 msgid "Multi Option"
-msgstr ""
+msgstr "خيارات متعددة"
 
 #: apps/catalogue/abstract_models.py:745
 msgid "Entity"
@@ -1213,7 +1214,7 @@ msgstr "مجموعة الخيارات"
 
 #: apps/catalogue/abstract_models.py:760
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
-msgstr ""
+msgstr "تحديد مجموعة الخيارات في حالة استخدام \"الخيارات\" أو \"الخيارات المتعددة\""
 
 #: apps/catalogue/abstract_models.py:761
 #: templates/oscar/dashboard/catalogue/product_class_form.html:100
@@ -1248,7 +1249,7 @@ msgstr "يجب أن يكون تاريخ أو الوقت والتاريخ"
 
 #: apps/catalogue/abstract_models.py:871
 msgid "Must be a datetime"
-msgstr ""
+msgstr "يجب أن يكون تاريخ و وقت"
 
 #: apps/catalogue/abstract_models.py:875
 msgid "Must be a boolean"
@@ -1293,7 +1294,7 @@ msgstr "Richtext"
 
 #: apps/catalogue/abstract_models.py:939
 msgid "DateTime"
-msgstr ""
+msgstr "تاريخ و وقت"
 
 #: apps/catalogue/abstract_models.py:943
 msgid "Value multi option"
@@ -1661,7 +1662,7 @@ msgstr "الأعضاء"
 
 #: apps/customer/abstract_models.py:123
 msgid "Email Address"
-msgstr ""
+msgstr "البريد الإلكتروني"
 
 #: apps/customer/abstract_models.py:124
 #: templates/oscar/customer/email/email_detail.html:19
@@ -1701,7 +1702,7 @@ msgstr "Email to %(user)s with subject '%(subject)s'"
 #: apps/customer/abstract_models.py:140
 #, python-format
 msgid "Anonymous email to %(email)s with subject '%(subject)s'"
-msgstr ""
+msgstr "بريد الإلكتروني مجهول إلى %(email)s مع الموضوع %(subject)s"
 
 #: apps/customer/abstract_models.py:162
 msgid "Code used for looking up this event programmatically"
@@ -1973,7 +1974,7 @@ msgid ""
 "%s has been sent a confirmation email for another product alert on this "
 "site. Please confirm or cancel that request before signing up for more "
 "alerts."
-msgstr ""
+msgstr "%sتم إرسال رسالة تأكيد بالبريد الإلكتروني لتنبيه منتج آخر على هذا الموقع. يرجى تأكيد أو إلغاء هذا الطلب قبل الاشتراك للحصول على المزيد من التنبيهات. "
 
 #: apps/customer/forms.py:427
 msgid "You already have an active alert for this product"
@@ -2192,7 +2193,7 @@ msgstr "تم إزالة '%(title)s' من قائمة الإمنيات '%(name)s'"
 #: apps/customer/wishlists/views.py:317
 #, python-format
 msgid "Wish list '%(name)s' already containing '%(title)s'"
-msgstr ""
+msgstr "قائمة الأمنيات %(name)s تحتوي على %(title)s مسبقاً"
 
 #: apps/customer/wishlists/views.py:325
 #, python-format
@@ -2289,7 +2290,7 @@ msgstr[5] "%s أقسام"
 
 #: apps/dashboard/catalogue/tables.py:82
 msgid "Option summary"
-msgstr ""
+msgstr "ملخص الخيارات"
 
 #: apps/dashboard/catalogue/tables.py:91
 #, python-format
@@ -2414,7 +2415,7 @@ msgstr "غير قادر على حذف '%s'"
 #: apps/dashboard/catalogue/views.py:762
 #, python-format
 msgid "%i products are still assigned to this type"
-msgstr ""
+msgstr "%iلا تزال مخصصة لهذا النوع من المنتجات "
 
 #: apps/dashboard/catalogue/views.py:767
 msgid "Product type deleted successfully"
@@ -2772,17 +2773,17 @@ msgstr "حالة الطلبية الجديدة"
 #: apps/dashboard/orders/views.py:236
 #, python-brace-format
 msgid "Order number starts with \"{order_number}\""
-msgstr ""
+msgstr "يبدأ رقم الطلب بـ \"{order_number}\""
 
 #: apps/dashboard/orders/views.py:243
 #, python-brace-format
 msgid "Customer name matches \"{customer_name}\""
-msgstr ""
+msgstr "إسم العميل يطابق \"{customer_name}\""
 
 #: apps/dashboard/orders/views.py:250
 #, python-brace-format
 msgid "Product name matches \"{product_name}\""
-msgstr ""
+msgstr "إسم المنتج يطابق \"{product_name}\""
 
 #. Translators: "UPC" means "universal product code" and it is
 #. used to uniquely identify a product in an online store.
@@ -4708,7 +4709,7 @@ msgstr "Please enter a valid credit card number."
 #: apps/payment/forms.py:57
 #, python-format
 msgid "%s cards are not accepted."
-msgstr ""
+msgstr "%sبطاقات غير مقبولة. "
 
 #: apps/payment/forms.py:79
 msgid "Enter a valid month."
@@ -4930,7 +4931,7 @@ msgstr "Ordered Product Lists"
 #: apps/promotions/models.py:356
 msgctxt "Tabbed block title"
 msgid "Title"
-msgstr ""
+msgstr "عنوان"
 
 #: apps/promotions/models.py:362
 msgid "Tabbed Blocks"
@@ -4965,7 +4966,7 @@ msgstr ""
 
 #: apps/search/forms.py:58
 msgid "Customer rating"
-msgstr ""
+msgstr "تقييمات العملاء"
 
 #: apps/search/forms.py:59
 msgid "Newest"
@@ -4973,11 +4974,11 @@ msgstr "الأحدث"
 
 #: apps/search/forms.py:60
 msgid "Price high to low"
-msgstr ""
+msgstr "السعر الأعلى إلى الأدنى"
 
 #: apps/search/forms.py:61
 msgid "Price low to high"
-msgstr ""
+msgstr "السعر من الأدنى إلى الأعلى"
 
 #: apps/search/forms.py:62
 msgid "Title A to Z"
@@ -5480,7 +5481,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
+msgstr "\nمجموع سلة المنتجات حالياً  <strong>%(total)s</strong>"
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5544,7 +5545,7 @@ msgstr "مجموع"
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:33
 #: templates/oscar/dashboard/reviews/review_list.html:50
 msgid "Updating..."
-msgstr ""
+msgstr "جاري التحديث..."
 
 #: templates/oscar/basket/partials/basket_content.html:66
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:69
@@ -5585,7 +5586,7 @@ msgstr "لدي قسيمة شرائية..."
 #: templates/oscar/dashboard/promotions/form.html:83
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:93
 msgid "Adding..."
-msgstr ""
+msgstr "جاري الإضافة..."
 
 #: templates/oscar/basket/partials/basket_content.html:135
 msgid "Add voucher"
@@ -5832,7 +5833,7 @@ msgstr[5] ""
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
-msgstr ""
+msgstr "لا يوجد أي نتائج"
 
 #: templates/oscar/catalogue/browse.html:106
 #: templates/oscar/dashboard/catalogue/product_list.html:86
@@ -5843,7 +5844,7 @@ msgstr "لا يوجد منتجات."
 
 #: templates/oscar/catalogue/category.html:16
 msgid "Edit this category"
-msgstr ""
+msgstr "تعديل القسم"
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -5851,7 +5852,7 @@ msgstr "Edit this product"
 
 #: templates/oscar/catalogue/detail.html:93
 msgid "Product Description"
-msgstr "Product Description"
+msgstr "تفاصيل المنتج"
 
 #: templates/oscar/catalogue/detail.html:101
 msgid "Product Information"
@@ -5882,7 +5883,7 @@ msgstr "See all reviews"
 
 #: templates/oscar/catalogue/detail.html:153
 msgid "Customer Reviews"
-msgstr "Customer Reviews"
+msgstr "مراجعات العملاء"
 
 #: templates/oscar/catalogue/detail.html:160
 #, python-format
@@ -5890,7 +5891,7 @@ msgid ""
 "This product does not have any reviews yet -\n"
 "                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
+msgstr "لا يوجد تقييمات لهذا المنتج بعد.\n<a href=\"%(add_review_url)s#addreview\">كن الأول بكتابة تقييم.</a>"
 
 #: templates/oscar/catalogue/detail.html:164
 msgid "This product does not have any reviews yet"
@@ -5966,7 +5967,7 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/form.html:65
 #: templates/oscar/dashboard/ranges/range_product_list.html:88
 msgid "Removing..."
-msgstr ""
+msgstr "يتم الإزالة..."
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:46
 msgid "Please login to add products to a wish list."
@@ -6033,7 +6034,7 @@ msgstr ""
 
 #: templates/oscar/catalogue/partials/stock_record.html:9
 msgid "Free"
-msgstr ""
+msgstr "مجاني"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:13
 #, python-format
@@ -6090,7 +6091,7 @@ msgstr "Leave a product review"
 #: templates/oscar/dashboard/vouchers/voucher_form.html:45
 #: templates/oscar/partials/form.html:11
 msgid "Saving..."
-msgstr ""
+msgstr "يتم الحفظ..."
 
 #: templates/oscar/catalogue/reviews/review_form.html:47
 msgid "Save review"
@@ -6157,7 +6158,7 @@ msgstr "الحصول على تذكير كلمة المرور"
 #: templates/oscar/checkout/gateway.html:59
 #: templates/oscar/checkout/shipping_address.html:77
 msgid "Continuing..."
-msgstr ""
+msgstr "جاري ألإستمرار..."
 
 #: templates/oscar/checkout/gateway.html:59
 #: templates/oscar/checkout/payment_details.html:29
@@ -6180,11 +6181,11 @@ msgstr "3. الدفع"
 
 #: templates/oscar/checkout/nav.html:53
 msgid "4. Preview"
-msgstr ""
+msgstr "4. عرض مسبق"
 
 #: templates/oscar/checkout/nav.html:59
 msgid "5. Confirmation"
-msgstr ""
+msgstr "5. التأكيد"
 
 #: templates/oscar/checkout/payment_details.html:5
 msgid "Payment details"
@@ -6192,7 +6193,7 @@ msgstr "Payment details"
 
 #: templates/oscar/checkout/payment_details.html:12
 msgid "Enter payment details"
-msgstr ""
+msgstr "أدخل تفاصيل الدفع"
 
 #: templates/oscar/checkout/payment_details.html:21
 msgid ""
@@ -6206,7 +6207,7 @@ msgstr "Order preview"
 
 #: templates/oscar/checkout/preview.html:13
 msgid "Preview order"
-msgstr ""
+msgstr "عرض مسبق للطلب"
 
 #: templates/oscar/checkout/preview.html:35
 msgid "Place order"
@@ -6222,7 +6223,7 @@ msgstr ""
 
 #: templates/oscar/checkout/shipping_address.html:42
 msgid "Ship to your default shipping address"
-msgstr ""
+msgstr "شحن إلى عنوان الشحن المعتاد الخاص بك"
 
 #: templates/oscar/checkout/shipping_address.html:44
 msgid "Ship to this address"
@@ -6378,7 +6379,7 @@ msgstr "يمكنك تتبع حالة طلبك"
 
 #: templates/oscar/checkout/thank_you.html:305
 msgid "View order status"
-msgstr ""
+msgstr "عرض حالة الطلب"
 
 #: templates/oscar/checkout/thank_you.html:314
 msgid "Print this page"
@@ -6438,7 +6439,7 @@ msgstr "دفتر العناوين"
 #: templates/oscar/dashboard/users/alerts/delete.html:37
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:48
 msgid "Deleting..."
-msgstr ""
+msgstr "جاري الحذف..."
 
 #: templates/oscar/customer/address/address_list.html:17
 msgid "Default shipping address"
@@ -6483,11 +6484,11 @@ msgstr "تعديل"
 
 #: templates/oscar/customer/address/address_list.html:44
 msgid "Set as default shipping address"
-msgstr ""
+msgstr "تعيين كعنوان الشحن المعتاد"
 
 #: templates/oscar/customer/address/address_list.html:51
 msgid "Set as default billing address"
-msgstr ""
+msgstr "تعيين كعنوان فوترة المعتاد"
 
 #: templates/oscar/customer/address/address_list.html:64
 msgid "There are no addresses in your address book."
@@ -6597,7 +6598,7 @@ msgstr "فريق %(name)s"
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "<strong>%(email)s</strong>."
-msgstr ""
+msgstr "لقد تلقيت هذا البريد الإلكتروني لأنه تم تغيير عنوان بريدك الإلكتروني <strong>%(email)s</strong>"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
@@ -6635,7 +6636,7 @@ msgstr "مرحبا,"
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "        will be processed shortly."
-msgstr ""
+msgstr "يسعدنا تأكيد استلام طلبك %(order_number)s \nوسيتم معالجته بعد قليل."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:17
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6708,7 +6709,7 @@ msgstr "تأكيد الطلب رقم %(number)s"
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
-msgstr ""
+msgstr "لقد تم إرسال لك هذه الرسالة لأن كلمة المرور الخاصة بك قد تم تغييرها من %(name)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
@@ -6851,7 +6852,7 @@ msgstr "الدخول أو التسجيل"
 #: templates/oscar/customer/login_registration.html:24
 #: templates/oscar/customer/login_registration.html:28
 msgid "Log In"
-msgstr "Log In"
+msgstr "تسجيل الدخول"
 
 #: templates/oscar/customer/login_registration.html:27
 msgid "I've forgotten my password"
@@ -6859,7 +6860,7 @@ msgstr "I've forgotten my password"
 
 #: templates/oscar/customer/login_registration.html:28
 msgid "Logging in..."
-msgstr ""
+msgstr "جاري الإدخال..."
 
 #: templates/oscar/customer/login_registration.html:33
 #: templates/oscar/customer/login_registration.html:36
@@ -6916,7 +6917,7 @@ msgstr "العناصر المحددة:"
 
 #: templates/oscar/customer/notifications/list.html:53
 msgid "Archiving..."
-msgstr ""
+msgstr "جاري الأرشفة..."
 
 #: templates/oscar/customer/notifications/list.html:61
 msgid "There are no notifications to display."
@@ -6934,7 +6935,7 @@ msgstr "Dispatch date"
 #: templates/oscar/customer/order/order_detail.html:54
 #: templates/oscar/customer/order/order_detail.html:139
 msgid "Re-ordering..."
-msgstr ""
+msgstr "جاري إعادة الطلب..."
 
 #: templates/oscar/customer/order/order_detail.html:54
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
@@ -6986,7 +6987,7 @@ msgstr ""
 #: templates/oscar/customer/order/order_list.html:27
 #: templates/oscar/dashboard/orders/statistics.html:33
 msgid "Filtering..."
-msgstr ""
+msgstr "جاري تصفية النتائج..."
 
 #: templates/oscar/customer/order/order_list.html:27
 msgid "Filter results"
@@ -7393,7 +7394,7 @@ msgstr "بحث المنتجات"
 #: templates/oscar/dashboard/users/index.html:34
 #: templates/oscar/dashboard/vouchers/voucher_list.html:40
 msgid "Searching..."
-msgstr ""
+msgstr "جاري البحث..."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:44
 #, python-format
@@ -7550,7 +7551,7 @@ msgstr "or send a preview to:"
 #: templates/oscar/dashboard/users/detail.html:91
 #: templates/oscar/registration/password_reset_form.html:24
 msgid "Sending..."
-msgstr ""
+msgstr "جاري الإرسال..."
 
 #: templates/oscar/dashboard/comms/detail.html:83
 msgid "Send preview email"
@@ -7626,7 +7627,7 @@ msgstr "الطلبات - كل الوقت"
 #: templates/oscar/dashboard/index.html:103
 #: templates/oscar/dashboard/index.html:121
 msgid "Total <em>open</em> baskets"
-msgstr ""
+msgstr "سلة المنتجات <em>المفتوحة</em>"
 
 #: templates/oscar/dashboard/index.html:113
 msgid "Total customers"
@@ -7684,11 +7685,11 @@ msgstr "خروج"
 msgid ""
 "Please enter a correct username and password. Note that both fields may be "
 "case-sensitive."
-msgstr ""
+msgstr "يرجى إدخال اسم مستخدم وكلمة مرور صحيحين. لاحظ أن كلا الحقلين قد يكونان حساسين لحالة الأحرف."
 
 #: templates/oscar/dashboard/login.html:41
 msgid "Login"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
@@ -7743,7 +7744,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
-msgstr ""
+msgstr "جاري إعادة الضبط..."
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstate offer"
@@ -7751,7 +7752,7 @@ msgstr "إرجاع العرض"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:30
 msgid "Suspending..."
-msgstr ""
+msgstr "جاري التعليق..."
 
 #: templates/oscar/dashboard/offers/offer_detail.html:30
 msgid "Suspend offer"
@@ -9015,7 +9016,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/users/detail.html:91
 msgid "Send password reset email"
-msgstr ""
+msgstr "إرسال رسالة إعادة تعيين كلمة المرور"
 
 #: templates/oscar/dashboard/users/detail.html:119
 msgid "Order Number"
@@ -9152,7 +9153,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
-msgstr ""
+msgstr "جاري إغلاق النافذة..."
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:8
 #, python-format
@@ -9309,7 +9310,7 @@ msgid ""
 "\n"
 "        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
+msgstr "\nتم مراسلتك بتعلميات لضبط كلمة المرور الخاصة بك على عنوان بريدك الإلكتروني , ستتسلمه قريبا . "
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""

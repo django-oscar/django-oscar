@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# sky cover <1986789267@qq.com>, 2018
+# 红军 王 <chd_felix@126.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2018-09-24 13:41+0000\n"
+"Last-Translator: 红军 王 <chd_felix@126.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/codeinthehole/django-oscar/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,19 +21,19 @@ msgstr ""
 
 #: apps/address/abstract_models.py:28
 msgid "Mr"
-msgstr ""
+msgstr "先生"
 
 #: apps/address/abstract_models.py:29
 msgid "Miss"
-msgstr ""
+msgstr "女士"
 
 #: apps/address/abstract_models.py:30
 msgid "Mrs"
-msgstr ""
+msgstr "夫人"
 
 #: apps/address/abstract_models.py:31
 msgid "Ms"
-msgstr ""
+msgstr "女士"
 
 #: apps/address/abstract_models.py:32
 msgid "Dr"
@@ -40,25 +42,25 @@ msgstr ""
 #: apps/address/abstract_models.py:221
 msgctxt "Treatment Pronouns for the customer"
 msgid "Title"
-msgstr ""
+msgstr "标题"
 
 #: apps/address/abstract_models.py:223 apps/customer/abstract_models.py:62
 #: templates/oscar/dashboard/partners/partner_manage.html:42
 #: templates/oscar/dashboard/partners/partner_user_list.html:44
 #: templates/oscar/dashboard/partners/partner_user_select.html:50
 msgid "First name"
-msgstr ""
+msgstr "名字"
 
 #: apps/address/abstract_models.py:224 apps/customer/abstract_models.py:64
 #: templates/oscar/dashboard/partners/partner_manage.html:43
 #: templates/oscar/dashboard/partners/partner_user_list.html:45
 #: templates/oscar/dashboard/partners/partner_user_select.html:51
 msgid "Last name"
-msgstr ""
+msgstr "姓氏"
 
 #: apps/address/abstract_models.py:228
 msgid "First line of address"
-msgstr ""
+msgstr "第一地址"
 
 #: apps/address/abstract_models.py:230
 msgid "Second line of address"
@@ -70,19 +72,19 @@ msgstr ""
 
 #: apps/address/abstract_models.py:233
 msgid "City"
-msgstr ""
+msgstr "城市"
 
 #: apps/address/abstract_models.py:234
 msgid "State/County"
-msgstr ""
+msgstr "政府/国家"
 
 #: apps/address/abstract_models.py:236
 msgid "Post/Zip-code"
-msgstr ""
+msgstr "邮编"
 
 #: apps/address/abstract_models.py:240 apps/address/abstract_models.py:435
 msgid "Country"
-msgstr ""
+msgstr "国家"
 
 #: apps/address/abstract_models.py:245
 msgid "Search text - used only for searching addresses"
@@ -96,14 +98,14 @@ msgstr ""
 #: templates/oscar/customer/order/order_detail.html:154
 #: templates/oscar/dashboard/orders/order_detail.html:446
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #: apps/address/abstract_models.py:256
 #: templates/oscar/dashboard/partners/partner_list.html:46
 #: templates/oscar/dashboard/users/detail.html:106
 #: templates/oscar/dashboard/users/detail.html:147
 msgid "Addresses"
-msgstr ""
+msgstr "地址"
 
 #: apps/address/abstract_models.py:282
 #, python-format
@@ -137,7 +139,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:426 apps/catalogue/abstract_models.py:1195
 msgid "Display order"
-msgstr ""
+msgstr "显示顺序"
 
 #: apps/address/abstract_models.py:427
 msgid "Higher the number, higher the country in the list."
@@ -153,7 +155,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:479 forms/mixins.py:27
 msgid "Phone number"
-msgstr ""
+msgstr "电话号码"
 
 #: apps/address/abstract_models.py:480
 msgid "In case we need to call you about your order"
@@ -164,7 +166,7 @@ msgstr ""
 #: templates/oscar/checkout/thank_you.html:58
 #: templates/oscar/dashboard/orders/order_detail.html:461
 msgid "Instructions"
-msgstr ""
+msgstr "指导说明"
 
 #: apps/address/abstract_models.py:483
 msgid "Tell us anything we should know when delivering your order."
@@ -177,7 +179,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:122
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "邮寄地址"
 
 #: apps/address/abstract_models.py:491
 msgid "Shipping addresses"
@@ -195,15 +197,15 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:45
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #: apps/address/abstract_models.py:523
 msgid "Default shipping address?"
-msgstr ""
+msgstr "默认邮寄地址"
 
 #: apps/address/abstract_models.py:527
 msgid "Default billing address?"
-msgstr ""
+msgstr "默认住址"
 
 #: apps/address/abstract_models.py:533
 msgid "Number of Orders as Shipping Address"
@@ -225,11 +227,11 @@ msgstr ""
 #: apps/payment/abstract_models.py:44 apps/promotions/models.py:27
 #: apps/promotions/models.py:357
 msgid "Date Created"
-msgstr ""
+msgstr "创建日期"
 
 #: apps/address/abstract_models.py:571
 msgid "User address"
-msgstr ""
+msgstr "用户地址"
 
 #: apps/address/abstract_models.py:572
 msgid "User addresses"
@@ -237,7 +239,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:585
 msgid "This address is already in your address book"
-msgstr ""
+msgstr "地址已存在"
 
 #: apps/address/abstract_models.py:599
 #: templates/oscar/checkout/thank_you.html:99
@@ -285,7 +287,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:44
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #: apps/analytics/abstract_models.py:24 apps/analytics/reports.py:20
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
@@ -299,7 +301,7 @@ msgstr ""
 #: apps/analytics/abstract_models.py:28 apps/analytics/reports.py:22
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr ""
+msgstr "购买"
 
 #: apps/analytics/abstract_models.py:31
 #: apps/catalogue/reviews/abstract_models.py:32
@@ -476,7 +478,7 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
 #: templates/oscar/dashboard/users/detail.html:76
 msgid "Total spent"
-msgstr ""
+msgstr "总额"
 
 #: apps/analytics/reports.py:69
 #: templates/oscar/dashboard/reports/partials/user_report.html:17
@@ -538,7 +540,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:86
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:37
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #: apps/basket/abstract_models.py:57 apps/dashboard/vouchers/views.py:80
 #: apps/voucher/abstract_models.py:169 defaults.py:175
@@ -668,14 +670,14 @@ msgstr ""
 msgid ""
 "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
-msgstr ""
+msgstr "您将商品添加到购物车后，%(product)s的价格已经从%(old_price)s增长到%(new_price)s"
 
 #: apps/basket/abstract_models.py:909
 #, python-format
 msgid ""
 "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
-msgstr ""
+msgstr "您将商品添加到购物车后，%(product)s的价格已经从%(old_price)s下降到%(new_price)s"
 
 #: apps/basket/abstract_models.py:923 apps/order/abstract_models.py:766
 #: apps/order/abstract_models.py:801 apps/order/abstract_models.py:916
@@ -710,7 +712,7 @@ msgstr ""
 
 #: apps/basket/forms.py:64
 msgid "Move to Basket"
-msgstr ""
+msgstr "添加到购物车"
 
 #: apps/basket/forms.py:96 apps/catalogue/abstract_models.py:712
 #: apps/catalogue/abstract_models.py:1111 apps/customer/abstract_models.py:154
@@ -757,7 +759,7 @@ msgstr ""
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
-msgstr ""
+msgstr "用户ID"
 
 #: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:52
 #: apps/catalogue/reviews/forms.py:12 apps/customer/abstract_models.py:132
@@ -774,7 +776,7 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
 #: templates/oscar/dashboard/users/detail.html:36
 msgid "Email"
-msgstr ""
+msgstr "邮箱"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:79
 msgid "Basket status"
@@ -819,12 +821,12 @@ msgstr ""
 
 #: apps/basket/views.py:165
 msgid "You can't save an item for later if you're not logged in!"
-msgstr ""
+msgstr "请登录后再保存"
 
 #: apps/basket/views.py:228
 msgid ""
 "Your basket couldn't be updated. Please correct any validation errors below."
-msgstr ""
+msgstr "购物车不能更新，请更正错误信息"
 
 #: apps/basket/views.py:316
 #, python-format
@@ -889,7 +891,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:73 apps/catalogue/abstract_models.py:554
 msgid "Product class"
-msgstr ""
+msgstr "产品类别"
 
 #: apps/catalogue/abstract_models.py:74
 msgid "Product classes"
@@ -904,13 +906,13 @@ msgstr ""
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:54
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #: apps/catalogue/abstract_models.py:94 apps/catalogue/abstract_models.py:747
 #: apps/dashboard/catalogue/tables.py:21 apps/promotions/models.py:180
 #: apps/promotions/models.py:189 apps/promotions/models.py:190
 msgid "Image"
-msgstr ""
+msgstr "图像"
 
 #: apps/catalogue/abstract_models.py:216 apps/catalogue/abstract_models.py:238
 #: apps/customer/abstract_models.py:179
@@ -949,7 +951,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:272
 msgid "Child product"
-msgstr ""
+msgstr "子产品"
 
 #: apps/catalogue/abstract_models.py:275
 msgid "Product structure"
@@ -989,11 +991,11 @@ msgstr ""
 #: apps/dashboard/catalogue/tables.py:25
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:12
 msgid "Product type"
-msgstr ""
+msgstr "产品类型"
 
 #: apps/catalogue/abstract_models.py:311
 msgid "Choose what type of product this is"
-msgstr ""
+msgstr "选择产品类型"
 
 #: apps/catalogue/abstract_models.py:315
 #: templates/oscar/dashboard/catalogue/product_update.html:76
@@ -1022,11 +1024,11 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:328
 #: templates/oscar/dashboard/catalogue/product_update.html:297
 msgid "Recommended products"
-msgstr ""
+msgstr "产品推荐"
 
 #: apps/catalogue/abstract_models.py:329
 msgid "These are products that are recommended to accompany the main product."
-msgstr ""
+msgstr "配套产品推荐"
 
 #: apps/catalogue/abstract_models.py:334 defaults.py:225
 msgid "Rating"
@@ -1034,7 +1036,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:340 apps/partner/abstract_models.py:152
 msgid "Date updated"
-msgstr ""
+msgstr "更新日期"
 
 #: apps/catalogue/abstract_models.py:352
 msgid "Is discountable?"
@@ -1059,7 +1061,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:421
 msgid "Your product must have a title."
-msgstr ""
+msgstr "必须包含产品标题"
 
 #: apps/catalogue/abstract_models.py:423
 msgid "Your product must have a product class."
@@ -1139,19 +1141,19 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:737 apps/catalogue/abstract_models.py:934
 msgid "Integer"
-msgstr ""
+msgstr "整数"
 
 #: apps/catalogue/abstract_models.py:738
 msgid "True / False"
-msgstr ""
+msgstr "真/假"
 
 #: apps/catalogue/abstract_models.py:739 apps/catalogue/abstract_models.py:936
 msgid "Float"
-msgstr ""
+msgstr "浮点数/小数"
 
 #: apps/catalogue/abstract_models.py:740
 msgid "Rich Text"
-msgstr ""
+msgstr "富文本"
 
 #: apps/catalogue/abstract_models.py:741 apps/catalogue/abstract_models.py:938
 #: apps/order/abstract_models.py:405
@@ -1162,7 +1164,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:529
 #: templates/oscar/dashboard/orders/order_detail.html:609
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #: apps/catalogue/abstract_models.py:742
 msgid "Datetime"
@@ -1178,7 +1180,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:746
 msgid "File"
-msgstr ""
+msgstr "文件"
 
 #: apps/catalogue/abstract_models.py:751 apps/offer/abstract_models.py:118
 #: apps/offer/abstract_models.py:481 apps/offer/abstract_models.py:699
@@ -1190,7 +1192,7 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/page_detail.html:37
 #: templates/oscar/dashboard/promotions/promotion_list.html:42
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #: apps/catalogue/abstract_models.py:759
 msgid "Option Group"
@@ -1221,15 +1223,15 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:857
 msgid "Must be a float"
-msgstr ""
+msgstr "必须为浮点数/小数"
 
 #: apps/catalogue/abstract_models.py:863
 msgid "Must be an integer"
-msgstr ""
+msgstr "必须为整数"
 
 #: apps/catalogue/abstract_models.py:867
 msgid "Must be a date or datetime"
-msgstr ""
+msgstr "必须为日期或时间"
 
 #: apps/catalogue/abstract_models.py:871
 msgid "Must be a datetime"
@@ -1237,7 +1239,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:875
 msgid "Must be a boolean"
-msgstr ""
+msgstr "必须为布尔值"
 
 #: apps/catalogue/abstract_models.py:879
 msgid "Must be a model instance"
@@ -1274,11 +1276,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:937
 msgid "Richtext"
-msgstr ""
+msgstr "富文本"
 
 #: apps/catalogue/abstract_models.py:939
 msgid "DateTime"
-msgstr ""
+msgstr "日期"
 
 #: apps/catalogue/abstract_models.py:943
 msgid "Value multi option"
@@ -1330,7 +1332,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1191
 msgid "Caption"
-msgstr ""
+msgstr "标题"
 
 #: apps/catalogue/abstract_models.py:1196
 msgid ""
@@ -1344,7 +1346,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1207
 msgid "Product images"
-msgstr ""
+msgstr "产品图像"
 
 #: apps/catalogue/config.py:8 apps/dashboard/catalogue/config.py:8
 #: defaults.py:101
@@ -1390,7 +1392,7 @@ msgstr ""
 #: models/fields/__init__.py:33 templates/oscar/dashboard/pages/index.html:51
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:43
 msgid "URL"
-msgstr ""
+msgstr "链接地址"
 
 #: apps/catalogue/reviews/abstract_models.py:57
 msgid "Requires moderation"
@@ -1478,7 +1480,7 @@ msgstr ""
 
 #: apps/catalogue/reviews/forms.py:57 apps/search/forms.py:83
 msgid "Sort by"
-msgstr ""
+msgstr "排序方式"
 
 #: apps/catalogue/reviews/views.py:33
 msgid "You have already reviewed this product!"
@@ -1512,7 +1514,7 @@ msgstr ""
 
 #: apps/catalogue/views.py:135 templates/oscar/partials/nav_primary.html:45
 msgid "All products"
-msgstr ""
+msgstr "所有产品"
 
 #: apps/checkout/config.py:8
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -1522,27 +1524,27 @@ msgstr ""
 
 #: apps/checkout/forms.py:53
 msgid "My email address is"
-msgstr ""
+msgstr "我的邮箱地址为"
 
 #: apps/checkout/forms.py:56
 msgid "I am a new customer and want to checkout as a guest"
-msgstr ""
+msgstr "我是新用户，直接结账付款"
 
 #: apps/checkout/forms.py:57
 msgid "I am a new customer and want to create an account before checking out"
-msgstr ""
+msgstr "我是新用户，注册后付款"
 
 #: apps/checkout/forms.py:59
 msgid "I am a returning customer, and my password is"
-msgstr ""
+msgstr "我是老用户，我的密码是"
 
 #: apps/checkout/forms.py:73 apps/customer/forms.py:162
 msgid "A user with that email address already exists"
-msgstr ""
+msgstr "该邮箱已经别注册"
 
 #: apps/checkout/session.py:113
 msgid "You need to add some items to your basket to checkout"
-msgstr ""
+msgstr "请添加产品到购物车后结账"
 
 #: apps/checkout/session.py:131
 #, python-format
@@ -1557,37 +1559,37 @@ msgstr ""
 
 #: apps/checkout/session.py:173 apps/checkout/views.py:274
 msgid "Please choose a shipping address"
-msgstr ""
+msgstr "设置邮寄地址"
 
 #: apps/checkout/session.py:182
 msgid ""
 "Your previously chosen shipping address is no longer valid.  Please choose "
 "another one"
-msgstr ""
+msgstr "默认邮寄地址不合法，请重新设置邮寄地址"
 
 #: apps/checkout/session.py:192
 msgid "Please choose a shipping method"
-msgstr ""
+msgstr "选择配送方式"
 
 #: apps/checkout/session.py:204
 msgid ""
 "Your previously chosen shipping method is no longer valid.  Please choose "
 "another one"
-msgstr ""
+msgstr "默认配送方式不合法，请重新设置"
 
 #: apps/checkout/views.py:91
 msgid ""
 "Create your account and then you will be redirected back to the checkout "
 "process"
-msgstr ""
+msgstr "创建账户后再结账"
 
 #: apps/checkout/views.py:214
 msgid "Address saved"
-msgstr ""
+msgstr "地址保存成功"
 
 #: apps/checkout/views.py:229
 msgid "Address deleted"
-msgstr ""
+msgstr "地址已删除"
 
 #: apps/checkout/views.py:283
 msgid ""
@@ -1884,7 +1886,7 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/order_report.html:9
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:62
 msgid "Order number"
-msgstr ""
+msgstr "订单编号"
 
 #: apps/customer/forms.py:204
 msgid "At least one field is required."
@@ -1893,7 +1895,7 @@ msgstr ""
 #: apps/customer/forms.py:213 apps/dashboard/orders/forms.py:31
 #: apps/dashboard/orders/forms.py:54
 msgid "All orders"
-msgstr ""
+msgstr "所有订单"
 
 #: apps/customer/forms.py:223
 #, python-format
@@ -1945,7 +1947,7 @@ msgstr ""
 
 #: apps/customer/forms.py:373
 msgid "Enter your email"
-msgstr ""
+msgstr "输入你的邮箱"
 
 #: apps/customer/forms.py:407
 #, python-format
@@ -1978,7 +1980,7 @@ msgstr[0] ""
 
 #: apps/customer/views.py:178
 msgid "Welcome back"
-msgstr ""
+msgstr "欢迎再来"
 
 #: apps/customer/views.py:226
 msgid "Thanks for registering!"
@@ -2007,11 +2009,11 @@ msgstr ""
 
 #: apps/customer/views.py:375
 msgid "Change Password"
-msgstr ""
+msgstr "密码变更"
 
 #: apps/customer/views.py:387
 msgid "Password updated"
-msgstr ""
+msgstr "密码已更改"
 
 #: apps/customer/views.py:409
 #: templates/oscar/customer/partials/standard_tabs.html:14
@@ -2064,7 +2066,7 @@ msgstr ""
 #: apps/customer/views.py:634 apps/customer/views.py:644
 #: templates/oscar/customer/address/address_list.html:67
 msgid "Add a new address"
-msgstr ""
+msgstr "添加新地址"
 
 #: apps/customer/views.py:649
 #, python-format
@@ -2076,7 +2078,7 @@ msgstr ""
 #: templates/oscar/checkout/user_address_form.html:5
 #: templates/oscar/checkout/user_address_form.html:17
 msgid "Edit address"
-msgstr ""
+msgstr "编辑地址"
 
 #: apps/customer/views.py:676
 #, python-format
@@ -2087,7 +2089,7 @@ msgstr ""
 #: templates/oscar/checkout/user_address_delete.html:5
 #: templates/oscar/checkout/user_address_delete.html:17
 msgid "Delete address?"
-msgstr ""
+msgstr "删除地址？"
 
 #: apps/customer/views.py:693
 #, python-format
@@ -2105,7 +2107,7 @@ msgstr ""
 #: templates/oscar/customer/wishlists/wishlists_detail.html:15
 #: templates/oscar/customer/wishlists/wishlists_form.html:13
 msgid "Wish Lists"
-msgstr ""
+msgstr "心愿单"
 
 #: apps/customer/wishlists/views.py:78
 msgid "Quantities updated."
@@ -2114,7 +2116,7 @@ msgstr ""
 #: apps/customer/wishlists/views.py:92
 #: templates/oscar/customer/wishlists/wishlists_list.html:49
 msgid "Create a new wish list"
-msgstr ""
+msgstr "创建新的心愿单"
 
 #: apps/customer/wishlists/views.py:102
 msgid "The requested product no longer exists"
@@ -2127,7 +2129,7 @@ msgstr ""
 
 #: apps/customer/wishlists/views.py:125
 msgid "Your wishlist has been created"
-msgstr ""
+msgstr "心愿单已创建"
 
 #: apps/customer/wishlists/views.py:147
 #, python-format
@@ -2142,7 +2144,7 @@ msgstr ""
 #: apps/customer/wishlists/views.py:184
 #, python-format
 msgid "Delete %s"
-msgstr ""
+msgstr "删除%s"
 
 #: apps/customer/wishlists/views.py:192
 #, python-format

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Alessandro De Noia <alessandro.denoia@gmail.com>, 2015
 # Dave Plug <coding.davide@gmail.com>, 2018
@@ -11,6 +11,7 @@
 # joppa_mediaon <gecarrara@gmail.com>, 2013
 # joppa_mediaon <gecarrara@gmail.com>, 2013
 # joppa_mediaon <gecarrara@gmail.com>, 2013
+# Luciano Castelnuovo <l.castelnuovo@gmail.com>, 2018
 # Marco Badan <marco.badan@gmail.com>, 2013-2017
 # marcominutoli <info@marcominutoli.it>, 2013
 # marcominutoli <info@marcominutoli.it>, 2013
@@ -18,14 +19,15 @@
 # Michael van Tellingen <michaelvantellingen@gmail.com>, 2016
 # Nicola Marangon <nicolamarangon@gmail.com>, 2013,2016
 # Nicola Marangon <nicolamarangon@gmail.com>, 2013
+# Samir Shah <solaris.smoke@gmail.com>, 2018
 # Simone Cittadini <>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-29 23:17+0000\n"
-"Last-Translator: Dave Plug <coding.davide@gmail.com>\n"
+"PO-Revision-Date: 2018-09-28 11:34+0000\n"
+"Last-Translator: Luciano Castelnuovo <l.castelnuovo@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/codeinthehole/django-oscar/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -223,11 +225,11 @@ msgstr "Indirizzo di fatturazione preferito?"
 
 #: apps/address/abstract_models.py:533
 msgid "Number of Orders as Shipping Address"
-msgstr ""
+msgstr "Numero di Ordini per Indirizzo di Consegna"
 
 #: apps/address/abstract_models.py:537
 msgid "Number of Orders as Billing Address"
-msgstr ""
+msgstr "Numero di Ordini per Indirizzo di Fatturazione"
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -878,7 +880,7 @@ msgstr "Inserisci il codice voucher"
 #: apps/basket/views.py:403
 #, python-format
 msgid "No voucher found with id '%s'"
-msgstr ""
+msgstr "Nessun voucher trovato con id '%s'"
 
 #: apps/basket/views.py:409
 #, python-format
@@ -1214,7 +1216,7 @@ msgstr "Gruppo di opzioni"
 
 #: apps/catalogue/abstract_models.py:760
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
-msgstr ""
+msgstr "Selezionare un gruppo opzioni quando si usa il tipo  \"Option\" o \"Multi Option\""
 
 #: apps/catalogue/abstract_models.py:761
 #: templates/oscar/dashboard/catalogue/product_class_form.html:100
@@ -1261,7 +1263,7 @@ msgstr "Deve essere un'istanza di model"
 
 #: apps/catalogue/abstract_models.py:886
 msgid "Must be a list or AttributeOption queryset"
-msgstr ""
+msgstr "il queryset deve essere di tipo lista o  AttributeOprion"
 
 #: apps/catalogue/abstract_models.py:897
 msgid "Must be an AttributeOption model object instance"
@@ -1298,7 +1300,7 @@ msgstr "Data e orario"
 
 #: apps/catalogue/abstract_models.py:943
 msgid "Value multi option"
-msgstr ""
+msgstr "Valore multi option"
 
 #: apps/catalogue/abstract_models.py:949
 msgid "Value option"
@@ -1974,7 +1976,7 @@ msgid ""
 "%s has been sent a confirmation email for another product alert on this "
 "site. Please confirm or cancel that request before signing up for more "
 "alerts."
-msgstr ""
+msgstr "%s è stata inviata una mail di conferma per un altro prodotto di questo sito. Si prega di confermare o eliminare la richiesta prima di sottoscrivere altre notifiche"
 
 #: apps/customer/forms.py:427
 msgid "You already have an active alert for this product"
@@ -2185,7 +2187,7 @@ msgstr "'%(title)s' è stato rimosso dalla tua lista desideri '%(name)s'"
 #: apps/customer/wishlists/views.py:317
 #, python-format
 msgid "Wish list '%(name)s' already containing '%(title)s'"
-msgstr ""
+msgstr "La Wish List '%(name)s' contiene già '%(title)s' "
 
 #: apps/customer/wishlists/views.py:325
 #, python-format
@@ -2278,14 +2280,14 @@ msgstr[1] "%s Categorie"
 
 #: apps/dashboard/catalogue/tables.py:82
 msgid "Option summary"
-msgstr ""
+msgstr "Riepilogo Opzioni"
 
 #: apps/dashboard/catalogue/tables.py:91
 #, python-format
 msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "'1%s' Attributo Gruppo Opzioni"
+msgstr[1] "%s Attributo Gruppo Opzioni"
 
 #: apps/dashboard/catalogue/views.py:99
 msgid "Product search results"
@@ -2407,35 +2409,35 @@ msgstr "La tipologia di prodotto è stata eliminata con successo"
 
 #: apps/dashboard/catalogue/views.py:842
 msgid "Add a new Attribute Option Group"
-msgstr ""
+msgstr "Aggiungere un nuovo Attributo Gruppo Opzioni"
 
 #: apps/dashboard/catalogue/views.py:846
 msgid "Attribute Option Group created successfully"
-msgstr ""
+msgstr "Attributo Gruppo Opzioni creato correttamente"
 
 #: apps/dashboard/catalogue/views.py:860
 #, python-format
 msgid "Update Attribute Option Group '%s'"
-msgstr ""
+msgstr "Aggiornare Attributo Gruppo Opzioni %s"
 
 #: apps/dashboard/catalogue/views.py:864
 msgid "Attribute Option Group updated successfully"
-msgstr ""
+msgstr "Gruppo Opzioni Attributo aggiornato correttamente"
 
 #: apps/dashboard/catalogue/views.py:891
 #, python-format
 msgid "Delete Attribute Option Group '%s'"
-msgstr ""
+msgstr "Cancellare Gruppo Opzioni Attributo  '%s'"
 
 #: apps/dashboard/catalogue/views.py:898
 #, python-format
 msgid ""
 "%i product attributes are still assigned to this attribute option group"
-msgstr ""
+msgstr "1%i attributi prodotto ancora assegnati a questo Gruppo Opzioni Attributo "
 
 #: apps/dashboard/catalogue/views.py:918
 msgid "Attribute Option Group deleted successfully"
-msgstr ""
+msgstr "Gruppo Opzioni Attributo  cancellato correttamente"
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
@@ -3016,7 +3018,7 @@ msgstr "Esempio: '/about/contact/'."
 msgid ""
 "This value must contain only letters, numbers, dots, underscores, dashes, "
 "slashes or tildes."
-msgstr ""
+msgstr "Il valore deve contenere solo lettere, numeri, punto, trattino basso, trattino, barra o tilde"
 
 #: apps/dashboard/pages/views.py:37
 msgid "All pages"
@@ -3256,7 +3258,7 @@ msgstr "Non sono stati trovati prodotti con codice a barre (SKU) o codice prodot
 #: apps/dashboard/ranges/views.py:213
 #, python-format
 msgid "There are more than one product with SKU %s"
-msgstr ""
+msgstr "Esiste più di un prodotto per SKU %s"
 
 #: apps/dashboard/reports/config.py:8
 msgid "Reports dashboard"
@@ -3472,7 +3474,7 @@ msgstr "Valore dello sconto"
 
 #: apps/dashboard/vouchers/forms.py:52 apps/offer/abstract_models.py:122
 msgid "Exclusive offers cannot be combined on the same items"
-msgstr ""
+msgstr "Offerte esclusive non possono essere combinate per lo stesso prodotto"
 
 #: apps/dashboard/vouchers/forms.py:66
 #, python-format
@@ -3494,7 +3496,7 @@ msgstr "È attivo?"
 
 #: apps/dashboard/vouchers/forms.py:99
 msgid "In Voucherset?"
-msgstr ""
+msgstr "Nel gruppo Voucher"
 
 #: apps/dashboard/vouchers/views.py:34 apps/dashboard/vouchers/views.py:360
 #: apps/dashboard/vouchers/views.py:419
@@ -3546,11 +3548,11 @@ msgstr "Voucher cancellato"
 
 #: apps/dashboard/vouchers/views.py:234
 msgid "Create voucher set"
-msgstr ""
+msgstr "Creare gruppo Voucher"
 
 #: apps/dashboard/vouchers/views.py:274
 msgid "Voucher set created"
-msgstr ""
+msgstr "gruppo Voucher creato"
 
 #: apps/dashboard/vouchers/views.py:430
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:16
@@ -3558,7 +3560,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:17
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:22
 msgid "Voucher sets"
-msgstr ""
+msgstr "Gruppi Voucher"
 
 #: apps/offer/abstract_models.py:91
 msgid "This is displayed within the customer's basket"
@@ -3589,7 +3591,7 @@ msgstr "Offerta sessione - offerta temporanea, disponibile per un utente per la 
 
 #: apps/offer/abstract_models.py:121
 msgid "Exclusive offer"
-msgstr ""
+msgstr "Offerta Esclusiva"
 
 #: apps/offer/abstract_models.py:135 apps/offer/abstract_models.py:710
 #: templates/oscar/dashboard/offers/offer_detail.html:76
@@ -3615,13 +3617,13 @@ msgstr "Le offerte con priorità più alta vengono applicate per prime"
 msgid ""
 "Offers are active from the start date. Leave this empty if the offer has no "
 "start date."
-msgstr ""
+msgstr "Le offerte sono attive dalla data di inizio. Lasciare vuoto se l' offerta non ha data di inizio."
 
 #: apps/offer/abstract_models.py:158
 msgid ""
 "Offers are active until the end date. Leave this empty if the offer has no "
 "expiry date."
-msgstr ""
+msgstr "Le offerte sono attive fino alla data di fine. Lasciare vuoto se l' offerta non ha data di scadenza."
 
 #: apps/offer/abstract_models.py:166
 msgid "Max global applications"
@@ -3790,7 +3792,7 @@ msgstr "I benefici calcolati in percentuale richiedono una gamma di prodotti"
 
 #: apps/offer/abstract_models.py:560 apps/offer/abstract_models.py:585
 msgid "Percentage discount benefits require a value"
-msgstr ""
+msgstr "Lo sconto percentuale richiede un valore"
 
 #: apps/offer/abstract_models.py:562 apps/offer/abstract_models.py:587
 msgid "Percentage discount cannot be greater than 100"
@@ -5064,19 +5066,19 @@ msgstr "E' necessario definire dei metodi di spedizione"
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
 msgid "Number of vouchers"
-msgstr ""
+msgstr "Numero di vouchers"
 
 #: apps/voucher/abstract_models.py:37
 msgid "Length of Code"
-msgstr ""
+msgstr "Lunghezza del codice"
 
 #: apps/voucher/abstract_models.py:52
 msgid "VoucherSet"
-msgstr ""
+msgstr "Gruppo Voucher"
 
 #: apps/voucher/abstract_models.py:53
 msgid "VoucherSets"
-msgstr ""
+msgstr "Gruppi Voucher"
 
 #: apps/voucher/abstract_models.py:126
 msgid ""
@@ -5263,7 +5265,7 @@ msgstr "Richieste di notifica per prodotto nuovamente disponibile"
 
 #: defaults.py:179
 msgid "Voucher Sets"
-msgstr ""
+msgstr "Gruppi Voucher"
 
 #: defaults.py:186
 msgid "Content"
@@ -5804,7 +5806,7 @@ msgstr "Nessun prodotto trovato."
 
 #: templates/oscar/catalogue/category.html:16
 msgid "Edit this category"
-msgstr ""
+msgstr "Modificare questa categoria"
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -6471,7 +6473,7 @@ msgstr "\n<a href=\"%(url)s\">%(title)s</a> è di nuovo disponibile\n"
 msgid ""
 "\n"
 "%(title)s is back in stock\n"
-msgstr ""
+msgstr "\n%(title)sè di nuovo disponibile\n"
 
 #: templates/oscar/customer/anon_order.html:8
 #: templates/oscar/dashboard/orders/order_detail.html:24
@@ -6550,7 +6552,7 @@ msgstr "Il team di %(name)s"
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "<strong>%(email)s</strong>."
-msgstr ""
+msgstr "Ricevete questa email perchè il vostro indirizzo email è stato cambiato in <strong>%(email)s</strong> "
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
@@ -6588,7 +6590,7 @@ msgstr "Ciao,"
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "        will be processed shortly."
-msgstr ""
+msgstr "Siamo felici di confermare che il vostro ordine %(order_number)s è stato ricevuto e sarà presto elaborato "
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:17
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6661,7 +6663,7 @@ msgstr "Conferma dell'ordine %(number)s"
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
-msgstr ""
+msgstr "Ricevete questa email perchè la vostra password è stata cambiata in %(name)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
@@ -6717,14 +6719,14 @@ msgid ""
 "            We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "            http://%(site)s%(path)s\n"
 "        "
-msgstr ""
+msgstr "\nSiamo felici di informarvi che il nostro prodotto '%(title)s' è di nuovo disponibile \n            http://%(site)s%(path)s"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:22
 msgid ""
 "\n"
 "                Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 "            "
-msgstr ""
+msgstr "\nAttenzione, il numero di prodotti a magazzino è limitato.\nAffrettatevi o qualcuno potrebbe arrivare prima."
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.html:29
 msgid ""
@@ -6732,7 +6734,7 @@ msgid ""
 "            With this email we have disabled your alert automatically and you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
-msgstr ""
+msgstr "\nCon questa email abbiamo disabilitato gli avvisi automatici e non riceverai ulteriori allerte riguardo a questo prodotto."
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:2
 #, python-format
@@ -6740,7 +6742,7 @@ msgid ""
 "\n"
 "We are happy to inform you that our product '%(title)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr ""
+msgstr "\nSiamo felici di informarvi che il nostro prodotto '%(title)s' è di nuovo disponibile:\nhttp://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:5
 msgid ""
@@ -6774,7 +6776,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
-msgstr ""
+msgstr "Salve, \n\nQualcuno (speriamo sia tu) ha richiesto un' allerta quando '%(title)s' tornerà disponibile. Clicca sul seguente link per confermare:\nhttp://%(domain)s%(confirm_path)s\n\nPuoi cancellare questo avviso in ogni momento cliccando il seguente link:\nhttp://%(domain)s%(cancel_path)s\n\nGrazie per l' interessamento.\nIl %(site)sTeam\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"
@@ -6783,7 +6785,7 @@ msgstr "Richiesta conferma per la notifica per prodotto nuovamente disponibile"
 #: templates/oscar/customer/emails/commtype_product_alert_subject.txt:1
 #, python-format
 msgid "%(title)s is back in stock"
-msgstr ""
+msgstr "%(title)s è di nuovo disponibile"
 
 #: templates/oscar/customer/emails/commtype_registration_body.html:1
 #: templates/oscar/customer/emails/commtype_registration_body.txt:1
@@ -7082,34 +7084,34 @@ msgstr "Non hai ancora nessuna lista desideri."
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:5
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:5
 msgid "Create Attribute Option Group"
-msgstr ""
+msgstr "Creare Gruppo Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:29
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:14
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:21
 msgid "Attribute Option Group"
-msgstr ""
+msgstr "Gruppo Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:31
 msgid "Delete Attribute Option Group?"
-msgstr ""
+msgstr "Cancellare Gruppo Opzioni Attributo?"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
 msgid ""
 "Please make sure all Product Attributes are assigned to another Attribute "
 "Option Group before deletion."
-msgstr ""
+msgstr "Si prega di controllare che tutti gli Attributi Prodotto siano assegnati a un altro Gruppo Opzioni Attributo prima di cancellare"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
 msgid "Delete Attribute Option Group"
-msgstr ""
+msgstr "Cancellare Gruppo Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
 msgid ""
 "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
-msgstr ""
+msgstr "Cancellare Gruppo Opzioni Attributo<strong>%(name)s</strong>- sei sicuro?"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
 #: templates/oscar/dashboard/catalogue/product_class_form.html:34
@@ -7120,28 +7122,28 @@ msgstr "Sezioni"
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:55
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:70
 msgid "Attribute Option Group details"
-msgstr ""
+msgstr "dettagli Gruppo Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:56
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:102
 msgid "Attribute Options"
-msgstr ""
+msgstr "Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:6
 msgid "Attribute Option Groups"
-msgstr ""
+msgstr "Gruppo Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:20
 msgid "Create new Attribute Option Group"
-msgstr ""
+msgstr "Creare nuovo Gruppo Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_list.html:34
 msgid "No Attribute Option Groups found."
-msgstr ""
+msgstr "Nessun Gruppo Opzioni Attributo trovato"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_row_actions.html:11
 msgid "Edit Attribute Option Group"
-msgstr ""
+msgstr "Modificare Gruppo Opzioni Attributo"
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:14
 #: templates/oscar/dashboard/catalogue/category_delete.html:19
@@ -7637,11 +7639,11 @@ msgstr "Esci"
 msgid ""
 "Please enter a correct username and password. Note that both fields may be "
 "case-sensitive."
-msgstr ""
+msgstr "Si prega di inserire user e password correttamente. Entrambi i campi potrebbero tener conto delle maiuscole e delle minuscole."
 
 #: templates/oscar/dashboard/login.html:41
 msgid "Login"
-msgstr ""
+msgstr "Accedi"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
@@ -8717,7 +8719,7 @@ msgstr "Recensione #%(review.id)s"
 #: templates/oscar/dashboard/reviews/review_update.html:24
 #, python-format
 msgid "Review #%(review_id)s"
-msgstr ""
+msgstr "Revisione #%(review_id)s"
 
 #: templates/oscar/dashboard/reviews/review_update.html:31
 msgid "Review information"
@@ -9060,16 +9062,16 @@ msgstr "Nessun voucher trovato."
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:25
 msgid "Update voucher set"
-msgstr ""
+msgstr "Aggiorna gruppo voucher"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:26
 msgid "Download CSV"
-msgstr ""
+msgstr "Download CSV"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:28
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:37
 msgid "Voucher set"
-msgstr ""
+msgstr "Gruppo Voucher"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:46
 msgid "Start"
@@ -9085,20 +9087,20 @@ msgstr "Creato"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
 msgid "Create new voucher set"
-msgstr ""
+msgstr "Creare nuovo gruppo Voucher"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
 msgid "Num"
-msgstr ""
+msgstr "Num"
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
-msgstr ""
+msgstr "Stiamo chiudendo il Popup..."
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:8
 #, python-format
 msgid "Change selected %(model)s"
-msgstr ""
+msgstr "Cambia %(model)sselezionato"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:13
 #, python-format
@@ -9300,8 +9302,8 @@ msgid_plural ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\nTrovati <strong>%(num_results)s</strong> risultati"
+msgstr[1] "\nTrovati <strong>%(num_results)s</strong> risultati"
 
 #: templates/oscar/search/results.html:68
 msgid "Found <strong>0</strong> results."

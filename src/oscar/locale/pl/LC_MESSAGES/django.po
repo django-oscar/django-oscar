@@ -8,14 +8,15 @@
 # bgryszko <bartosz.gryszko@gmail.com>, 2014
 # Dawid Lorenz <adlorenz@gmail.com>, 2013-2014
 # Tomas <harco123@gmail.com>, 2014
-# Janusz Harkot <jh@blueice.pl>, 2013-2015
-# Janusz Harkot <jh@blueice.pl>, 2013
+# Janusz Harkot <jh@trilab.pl>, 2013-2015
+# Janusz Harkot <jh@trilab.pl>, 2013
 # kojottt <jurkiewicz.krzysztof@gmail.com>, 2014
 # kojottt <jurkiewicz.krzysztof@gmail.com>, 2014
 # lukaszkoziara <koziara.lukasz@gmail.com>, 2014
 # lukaszkoziara <koziara.lukasz@gmail.com>, 2014
 # Maciej Janiszewski <pisarzk@gmail.com>, 2016
 # Miłosz Miśkiewicz, 2017
+# Paweł Markowski <pm4public@gmail.com>, 2019
 # Tomas <harco123@gmail.com>, 2014
 # Tomasz Wysocki <tomwys@gmail.com>, 2013
 # Tomasz Wysocki <tomwys@gmail.com>, 2013
@@ -25,8 +26,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2019-04-09 21:13+0000\n"
+"Last-Translator: Paweł Markowski <pm4public@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/codeinthehole/django-oscar/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -224,11 +225,11 @@ msgstr "Domyślny adres do rachunku?"
 
 #: apps/address/abstract_models.py:533
 msgid "Number of Orders as Shipping Address"
-msgstr ""
+msgstr "Liczba zamówień powiązanych z adresem wysyłki"
 
 #: apps/address/abstract_models.py:537
 msgid "Number of Orders as Billing Address"
-msgstr ""
+msgstr "Liczba zamówień powiązanych z adresem rozliczeniowym"
 
 #: apps/address/abstract_models.py:541
 msgid "Address Hash"
@@ -879,7 +880,7 @@ msgstr "Wprowadź kod wouchera"
 #: apps/basket/views.py:403
 #, python-format
 msgid "No voucher found with id '%s'"
-msgstr ""
+msgstr "Nie znaleziono kuponu rabatowego o identyfikatorze '%s'"
 
 #: apps/basket/views.py:409
 #, python-format
@@ -1663,7 +1664,7 @@ msgstr "Użytkownicy"
 
 #: apps/customer/abstract_models.py:123
 msgid "Email Address"
-msgstr ""
+msgstr "Adres e-mail"
 
 #: apps/customer/abstract_models.py:124
 #: templates/oscar/customer/email/email_detail.html:19
@@ -6312,7 +6313,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr "\n                                Akokacja kwoty %(amount)s typu %(type)s\n                            "
+msgstr "\n                                Alokacja kwoty %(amount)s typu %(type)s\n                            "
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
