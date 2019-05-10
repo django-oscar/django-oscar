@@ -21,12 +21,9 @@
     }
 }
 
-@include media-breakpoint-up(md) {
-    #language_selector {
-        margin: 0;
-        select {
-            width: 100px;
-        }
+.navbar.accounts {
+    .navbar-toggler {
+        outline: none;
     }
 }
 
@@ -40,7 +37,7 @@
         padding-bottom:0;
         max-width:none;
         z-index: 9999;
-        left: -330px !important;basket-mini-item
+        left: -330px !important;
 
         li {
             display:block;
