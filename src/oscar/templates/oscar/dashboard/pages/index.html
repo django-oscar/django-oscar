@@ -68,7 +68,7 @@
                                             {% trans "Actions" %}
                                             <span class="caret"></span>
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="{{ page.get_absolute_url }}">{% trans "View" %}</a>
                                             <a class="dropdown-item" id="edit_page_{{ page.id }}" href="{% url 'dashboard:page-update' pk=page.id %}">{% trans "Edit" %}</a>
                                             <a class="dropdown-item" id="delete_page_{{ page.id }}" href="{% url 'dashboard:page-delete' pk=page.id %}">{% trans "Delete" %}</a>

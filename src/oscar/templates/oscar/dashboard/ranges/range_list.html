@@ -64,7 +64,7 @@
                                         {% trans "Actions" %}
                                         <span class="caret"></span>
                                     </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                         {% if range.is_editable %}
                                             <a class="dropdown-item" href="{% url 'dashboard:range-update' pk=range.id %}">
                                                 {% trans "Edit" %}

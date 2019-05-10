@@ -104,7 +104,7 @@
                                                 {% trans "Actions" %}
                                                 <span class="caret"></span>
                                             </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                                 {% if review.title and review.product %}
                                                     <a class="dropdown-item" href="{% url 'catalogue:reviews-detail' product_slug=review.product.slug product_pk=review.product.id pk=review.id %}">
                                                         {% trans "View on site" %}
