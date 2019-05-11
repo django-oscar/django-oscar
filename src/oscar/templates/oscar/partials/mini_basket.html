@@ -1,7 +1,7 @@
 {% load currency_filters %}
 {% load i18n %}
 
-<div class="basket-mini col-sm-5 hidden-xs-up text-right">
+<div class="basket-mini col-sm-5 text-right d-none d-sm-block">
     <strong>{% trans "Basket total:" %}</strong>
     {% if request.basket.is_tax_known %}
         {{ request.basket.total_incl_tax|currency:request.basket.currency }}
