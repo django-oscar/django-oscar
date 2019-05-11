@@ -61,11 +61,9 @@ class BasketLineForm(forms.ModelForm):
         # add second time, just updating number of items.
         qty_delta = qty - self.instance.quantity
         is_allowed, reason = self.instance.basket.is_quantity_allowed(qty_delta)
-
         if self.instance.basket.strategy.request and self.instance.basket.strategy.request.is_ajax:
             if self.instance.basket.strategy.request.POST.get('form-0-DELETE'):
                 return
-
         if not is_allowed:
             raise forms.ValidationError(reason)
 
@@ -73,11 +71,9 @@ class BasketLineForm(forms.ModelForm):
         policy = self.instance.purchase_info.availability
         is_available, reason = policy.is_purchase_permitted(
             quantity=qty)
-
         if self.instance.basket.strategy.request and self.instance.basket.strategy.request.is_ajax:
             if self.instance.basket.strategy.request.POST.get('form-0-DELETE'):
                 return
-
         if not is_available:
             raise forms.ValidationError(reason)
 
