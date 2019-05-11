@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import warnings
 from collections import OrderedDict
 from decimal import Decimal as D
 
@@ -20,6 +21,7 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
+from oscar.utils.deprecation import RemovedInOscar21Warning
 
 from . import exceptions
 
@@ -321,12 +323,12 @@ class AbstractOrder(models.Model):
         This must explicitly be enabled by setting OSCAR_DEPRECATED_ORDER_VERIFY_KEY,
         which must not be equal to SECRET_KEY - i.e., the project must
         have changed its SECRET_KEY since this change was applied.
-
-        TODO: deprecate this method in Oscar 2.0, and remove it in Oscar 2.1.
         """
         old_verification_key = getattr(settings, 'OSCAR_DEPRECATED_ORDER_VERIFY_KEY', None)
         if old_verification_key is None:
             return False
+
+        warnings.warn('Use of OSCAR_DEPRECATED_ORDER_VERIFY_KEY is deprecated', RemovedInOscar21Warning, stacklevel=2)
 
         if old_verification_key == settings.SECRET_KEY:
             raise ImproperlyConfigured(
@@ -551,10 +553,10 @@ class AbstractLine(models.Model):
 
     # Price information (these fields are actually redundant as the information
     # can be calculated from the LinePrice models
-    # Deprecated - will be removed in Oscar 2.0
+    # Deprecated - will be removed in Oscar 2.1
     line_price_incl_tax = models.DecimalField(
         _("Price (inc. tax)"), decimal_places=2, max_digits=12)
-    # Deprecated - will be removed in Oscar 2.0
+    # Deprecated - will be removed in Oscar 2.1
     line_price_excl_tax = models.DecimalField(
         _("Price (excl. tax)"), decimal_places=2, max_digits=12)
 
@@ -566,7 +568,7 @@ class AbstractLine(models.Model):
         _("Price before discounts (excl. tax)"),
         decimal_places=2, max_digits=12)
 
-    # Deprecated - will be removed in Oscar 2.0
+    # Deprecated - will be removed in Oscar 2.1
     unit_cost_price = models.DecimalField(
         _("Unit Cost Price"), decimal_places=2, max_digits=12, blank=True,
         null=True)
@@ -577,7 +579,7 @@ class AbstractLine(models.Model):
     unit_price_excl_tax = models.DecimalField(
         _("Unit Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
-    # Deprecated - will be removed in Oscar 2.0
+    # Deprecated - will be removed in Oscar 2.1
     unit_retail_price = models.DecimalField(
         _("Unit Retail Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
@@ -586,7 +588,7 @@ class AbstractLine(models.Model):
     # own business processes.
     status = models.CharField(_("Status"), max_length=255, blank=True)
 
-    # Deprecated - will be removed in Oscar 2.0
+    # Deprecated - will be removed in Oscar 2.1
     est_dispatch_date = models.DateField(
         _("Estimated Dispatch Date"), blank=True, null=True)
 

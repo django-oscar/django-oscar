@@ -11,14 +11,14 @@
 # Maik Hoepfel <m@maikhoepfel.de>, 2013
 # Maik Hoepfel <m@maikhoepfel.de>, 2013
 # Marc Wienhold <marc.wienhold@gmail.com>, 2015
-# topotropic <nicole@publicidentity.net>, 2013
+# 3b88561c85fc32e4cc7b8e83215a03d9, 2013
 # Sebastian Vetter <sebastian.vetter@tangentsnowball.com.au>, 2012
 # Sören Schlömer <sos@anotherone.de>, 2013
 # Sören Schlömer <sos@anotherone.de>, 2013
 # Stefano Probst <stefano.probst@htl-klu.at>, 2014
 # Tim Kleinschmidt <tim.kleinschmidt@gmail.com>, 2014-2015
 # Tobias <te@englert.it>, 2016-2017
-# topotropic <nicole@publicidentity.net>, 2013
+# 3b88561c85fc32e4cc7b8e83215a03d9, 2013
 # welworx <wpm@liemberger.cc>, 2014
 # welworx <wpm@liemberger.cc>, 2014
 msgid ""

@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Serdar Emirci <serdar@emirci.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2019-01-19 07:06+0000\n"
+"Last-Translator: Serdar Emirci <serdar@emirci.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/codeinthehole/django-oscar/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,11 +20,11 @@ msgstr ""
 
 #: apps/address/abstract_models.py:28
 msgid "Mr"
-msgstr ""
+msgstr "Sayın"
 
 #: apps/address/abstract_models.py:29
 msgid "Miss"
-msgstr ""
+msgstr "Bayan"
 
 #: apps/address/abstract_models.py:30
 msgid "Mrs"
@@ -40,37 +41,37 @@ msgstr ""
 #: apps/address/abstract_models.py:221
 msgctxt "Treatment Pronouns for the customer"
 msgid "Title"
-msgstr ""
+msgstr "Başlık"
 
 #: apps/address/abstract_models.py:223 apps/customer/abstract_models.py:62
 #: templates/oscar/dashboard/partners/partner_manage.html:42
 #: templates/oscar/dashboard/partners/partner_user_list.html:44
 #: templates/oscar/dashboard/partners/partner_user_select.html:50
 msgid "First name"
-msgstr ""
+msgstr "Ad"
 
 #: apps/address/abstract_models.py:224 apps/customer/abstract_models.py:64
 #: templates/oscar/dashboard/partners/partner_manage.html:43
 #: templates/oscar/dashboard/partners/partner_user_list.html:45
 #: templates/oscar/dashboard/partners/partner_user_select.html:51
 msgid "Last name"
-msgstr ""
+msgstr "Soyad"
 
 #: apps/address/abstract_models.py:228
 msgid "First line of address"
-msgstr ""
+msgstr "Adres"
 
 #: apps/address/abstract_models.py:230
 msgid "Second line of address"
-msgstr ""
+msgstr "Adres İkinci Satır"
 
 #: apps/address/abstract_models.py:232
 msgid "Third line of address"
-msgstr ""
+msgstr "Adres Ucuncu Satir"
 
 #: apps/address/abstract_models.py:233
 msgid "City"
-msgstr ""
+msgstr "Şehir"
 
 #: apps/address/abstract_models.py:234
 msgid "State/County"
@@ -82,7 +83,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:240 apps/address/abstract_models.py:435
 msgid "Country"
-msgstr ""
+msgstr "Ulke"
 
 #: apps/address/abstract_models.py:245
 msgid "Search text - used only for searching addresses"
@@ -96,14 +97,14 @@ msgstr ""
 #: templates/oscar/customer/order/order_detail.html:154
 #: templates/oscar/dashboard/orders/order_detail.html:446
 msgid "Address"
-msgstr ""
+msgstr "Adres"
 
 #: apps/address/abstract_models.py:256
 #: templates/oscar/dashboard/partners/partner_list.html:46
 #: templates/oscar/dashboard/users/detail.html:106
 #: templates/oscar/dashboard/users/detail.html:147
 msgid "Addresses"
-msgstr ""
+msgstr "Adresler"
 
 #: apps/address/abstract_models.py:282
 #, python-format
@@ -129,7 +130,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:420
 msgid "Country name"
-msgstr ""
+msgstr "Ulke adı"
 
 #: apps/address/abstract_models.py:423
 msgid "Official name"
@@ -153,7 +154,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:479 forms/mixins.py:27
 msgid "Phone number"
-msgstr ""
+msgstr "Telefon Numarası"
 
 #: apps/address/abstract_models.py:480
 msgid "In case we need to call you about your order"
@@ -195,7 +196,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:45
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #: apps/address/abstract_models.py:523
 msgid "Default shipping address?"

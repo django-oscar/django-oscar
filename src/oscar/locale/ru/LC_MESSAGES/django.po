@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Александр Никифоров <alexnikifforov@gmail.com>, 2016
+# stilet <goodleon@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-11 10:44+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2018-08-19 16:39+0000\n"
+"Last-Translator: stilet <goodleon@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/codeinthehole/django-oscar/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -779,7 +780,7 @@ msgstr "Электронная почта"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:79
 msgid "Basket status"
-msgstr ""
+msgstr "Статус корзины"
 
 #: apps/basket/reports.py:22 apps/basket/reports.py:80
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:10
@@ -807,7 +808,7 @@ msgstr "Время с момента создания"
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
-msgstr ""
+msgstr "Открыть корзину"
 
 #: apps/basket/reports.py:83
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:13
@@ -886,15 +887,15 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:67 apps/catalogue/abstract_models.py:1126
 msgid "Options"
-msgstr ""
+msgstr "Опции"
 
 #: apps/catalogue/abstract_models.py:73 apps/catalogue/abstract_models.py:554
 msgid "Product class"
-msgstr ""
+msgstr "Класс товара"
 
 #: apps/catalogue/abstract_models.py:74
 msgid "Product classes"
-msgstr ""
+msgstr "Классы товара"
 
 #: apps/catalogue/abstract_models.py:93 apps/catalogue/abstract_models.py:301
 #: apps/offer/abstract_models.py:94 apps/promotions/models.py:223
@@ -905,20 +906,20 @@ msgstr ""
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:54
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #: apps/catalogue/abstract_models.py:94 apps/catalogue/abstract_models.py:747
 #: apps/dashboard/catalogue/tables.py:21 apps/promotions/models.py:180
 #: apps/promotions/models.py:189 apps/promotions/models.py:190
 msgid "Image"
-msgstr ""
+msgstr "Изображение"
 
 #: apps/catalogue/abstract_models.py:216 apps/catalogue/abstract_models.py:238
 #: apps/customer/abstract_models.py:179
 #: templates/oscar/dashboard/catalogue/product_update.html:123
 #: templates/oscar/dashboard/comms/list.html:33
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #: apps/catalogue/abstract_models.py:217 apps/catalogue/abstract_models.py:344
 #: apps/catalogue/abstract_models.py:574 defaults.py:113
@@ -930,15 +931,15 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/category_list.html:24
 #: templates/oscar/dashboard/catalogue/product_update.html:73
 msgid "Categories"
-msgstr ""
+msgstr "Категории"
 
 #: apps/catalogue/abstract_models.py:245
 msgid "Product category"
-msgstr ""
+msgstr "Категория товара"
 
 #: apps/catalogue/abstract_models.py:246
 msgid "Product categories"
-msgstr ""
+msgstr "Категории товара"
 
 #: apps/catalogue/abstract_models.py:270
 msgid "Stand-alone product"
@@ -950,11 +951,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:272
 msgid "Child product"
-msgstr ""
+msgstr "Подчиненный товар"
 
 #: apps/catalogue/abstract_models.py:275
 msgid "Product structure"
-msgstr ""
+msgstr "Структура товара"
 
 #: apps/catalogue/abstract_models.py:279 apps/dashboard/catalogue/forms.py:50
 #: apps/dashboard/orders/forms.py:71 apps/order/abstract_models.py:474
