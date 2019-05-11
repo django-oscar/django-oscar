@@ -2,64 +2,58 @@
 {% load category_tags %}
 {% load i18n %}
 
-<div class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <div class="navbar-header float-right d-block d-sm-none">
-            {# This is used in mobile view #}
-            <a class="btn btn-secondary navbar-toggle collapsed" data-toggle="collapse" data-target=".primary-collapse">
-                <i class="fas fa-bars"></i>
-            </a>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <a class="btn btn-secondary nav-item btn-cart ml-auto d-inline d-sm-none" href="{% url 'basket:summary' %}">
-            <i class="fas fa-shopping-cart"></i>
-            {% trans "Basket" %}
-            {% if not request.basket.is_empty %}
-                {% if request.basket.is_tax_known %}
-                    {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
-                        Total: {{ total }}
-                    {% endblocktrans %}
-                {% else %}
-                    {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
-                        Total: {{ total }}
-                    {% endblocktrans %}
-                {% endif %}
+    <a class="btn btn-secondary float-right btn-cart ml-auto d-inline d-sm-none" href="{% url 'basket:summary' %}">
+        <i class="fas fa-shopping-cart"></i>
+        {% trans "Basket" %}
+        {% if not request.basket.is_empty %}
+            {% if request.basket.is_tax_known %}
+                {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
+                    Total: {{ total }}
+                {% endblocktrans %}
+            {% else %}
+                {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
+                    Total: {{ total }}
+                {% endblocktrans %}
             {% endif %}
-        </a>
+        {% endif %}
+    </a>
 
-
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-            {% block nav_dropdown %}
-                <li class="nav-item dropdown show">
-                        <a href="#" class="nav-link dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
-                            {% trans "Browse store" %}
-                            <b class="caret"></b>
-                        </a>
-                        <div class="dropdown-menu">
-                            {% category_tree depth=2 as tree_categories %}
-                            <a class="dropdown-item" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a>
-                            {% if tree_categories %}
-                                <div class="dropdown-divider"></div>
-                                {% for tree_category in tree_categories %}
-                                    {% if tree_category.has_children %}
-                                        <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                                    {% else %}
-                                        <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                                    {% endif %}
-                                {% endfor %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% trans "Browse store" %}
+                    <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% category_tree depth=2 as tree_categories %}
+                    <a class="dropdown-item" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a>
+                    {% if tree_categories %}
+                        <div class="dropdown-divider"></div>
+                        {% for tree_category in tree_categories %}
+                            {% if tree_category.has_children %}
+                                <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                            {% else %}
+                                <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
                             {% endif %}
-                            <div class="dropdown-divider"></div>
-                            {% block nav_dropdown_extra_items %}
-                                <a class="dropdown-item" href="{% url 'offer:list' %}">{% trans "Offers" %}</a>
-                            {% endblock %}
-                        </div>
-                    </li>
-                    {% block nav_extra %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    {% block nav_dropdown_extra_items %}
+                        <a class="dropdown-item" href="{% url 'offer:list' %}">{% trans "Offers" %}</a>
                     {% endblock %}
-                </ul>
-            {% endblock %}
-            {% include "oscar/partials/search.html" %}
-        </div><!-- /navbar-collapse -->
+                </div>
+            </li>
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
     </div>
-</div><!-- /navbar -->
+</nav>
