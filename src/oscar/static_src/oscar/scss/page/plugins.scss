@@ -1,11 +1,12 @@
 // OSCAR PLUGINS STYLES
-// -----------
+// --------------------
 
 
 // Carousel overrides, idicators in the center bottom
 .carousel {
   margin-bottom: $base-margin-bottom * 2;
 }
+
 .carousel-indicators {
   top: auto;
   right: auto;
@@ -13,26 +14,29 @@
   left: 0;
   width: 100%;
   text-align: center;
+
   li {
     display: inline-block;
     *display: inline;
     *text-indent: 0;
     zoom: 1;
     float: none;
-    background-color: #ccc;
-    background-color: rgba(0,0,0,.5);
+    background-color: $gray-400;
+    background-color: rgba(0, 0, 0, .5);
     cursor: pointer;
     text-align: center;
 
   }
+
   .active {
-    background-color: #000;
+    background-color: $black;
   }
 }
+
 // Center the carousel image
-.carousel-inner > .item > img, 
+.carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
-	margin: 0 auto;
+  margin: 0 auto;
 }
 
 // Multiple image gallery carousel over-rides
@@ -43,14 +47,17 @@
     vertical-align: middle;
     text-align: center;
   }
+
   .carousel-inner > .item > img {
     display: inline-block;
     vertical-align: middle;
     max-height: 400px;
   }
+
   .carousel-control {
     background-image: none;
   }
+
   .carousel-indicators {
     position: static;
     bottom: 0;
@@ -58,6 +65,7 @@
     width: auto;
     display: block;
     @include clearfix;
+
     li {
       width: 17%;
       height: auto;
@@ -65,13 +73,15 @@
       float: left;
       margin: $base-margin-bottom/4;
       text-indent: 0;
-      background-color: #fff;
+      background-color: $white;
       opacity: .50;
     }
+
     .active {
       opacity: .100;
     }
   }
+
   .thumbnail {
     @include transition(none);
     position: relative;

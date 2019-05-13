@@ -9,9 +9,11 @@ form.flat {
   .control-label {
     text-align: left;
   }
+
   .control-group {
     margin-bottom: $line-height-base / 2;
   }
+
   input[type=text],
   input[type=number],
   input[type=email],
@@ -20,6 +22,7 @@ form.flat {
   select {
     font-size: 12px;
   }
+
   textarea {
     max-height: 200px;
   }
@@ -29,9 +32,11 @@ form.flat {
   select {
     min-width: 200px;
   }
+
   .select2-container.form-control {
     display: inline-block;
   }
+
   .form-group .form-inline {
     display: inline-block;
   }
@@ -39,16 +44,20 @@ form.flat {
 
 .form-inline {
   margin-bottom: 0;
+
   .form-text:first-child, .error-block:first-child {
     display: none;
   }
+
   label {
     margin-right: 5px;
   }
+
   .control-group {
     margin-right: 10px;
   }
-  .product-select{
+
+  .product-select {
     width: 270px;
   }
 }
@@ -61,9 +70,10 @@ form.flat {
     input[type=email],
     input[type=url],
     textarea {
-      width:95%;
+      width: 95%;
     }
   }
+
   .form-stacked {
     .form-inline {
       input[type=text],
@@ -71,12 +81,13 @@ form.flat {
       input[type=email],
       input[type=url],
       textarea {
-        width:auto;
+        width: auto;
       }
     }
   }
+
   label {
-    font-weight:bold;
+    font-weight: bold;
   }
 }
 
@@ -138,6 +149,7 @@ textarea {
   margin: 0 0 0 20px;
   padding: 0 0 10px 0;
   color: $red;
+
   li {
     padding: 0 0 5px 0;
     list-style: none;
@@ -148,11 +160,13 @@ textarea {
   .form-text, .error-block {
     display: inline-block;
     margin: 0 20px 0 10px;
+
     li {
       list-style: none;
       color: $red;
     }
   }
+
   input[type=number],
   input[type=email],
   input[type=url],

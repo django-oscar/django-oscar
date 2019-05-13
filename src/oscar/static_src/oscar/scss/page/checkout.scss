@@ -1,149 +1,168 @@
 // OSCAR CHECKOUT UNIQUE STYLES
-// -----------
+// ----------------------------
 
-//Set max width of all quantity fields
+// Set max width of all quantity fields
 input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
-    max-width: 55px;
+  max-width: 55px;
 }
 
 .checkout-quantity .input-group {
   max-width: 160px;
+
   input[type="number"][id*="quantity"] {
     max-width: 65px;
   }
+
   .input-group-btn {
-      min-width: 95px;
+    min-width: 95px;
   }
 }
 
 // Quantity on the basket
 .checkout-quantity {
-    input {
-        margin-bottom:0;
-    }
+  input {
+    margin-bottom: 0;
+  }
 }
 
 // Basket items like table headers
 .basket-title {
-    clear:both;
-    border-bottom:1px solid $gray-200;
-    padding:0 10px;
-    h4 {
-        margin:0;
-    }
+  clear: both;
+  border-bottom: 1px solid $gray-200;
+  padding: 0 10px;
+
+  h4 {
+    margin: 0;
+  }
 }
 
 // Basket items
 .basket-items {
-    border-bottom:1px solid $gray-400;
-    padding:10px;
-    margin-bottom:20px;
-    &:nth-child(even) {
-        background: $gray-200;
-    }
-    img {
-        margin-left:auto;
-        margin-right:auto;
-    }
-    .price_color {
-        @extend .h4;
-        font-size: 1rem;
-        color:$success;
-        font-weight:bold;
+  border-bottom: 1px solid $gray-400;
+  padding: 10px;
+  margin-bottom: 20px;
 
-        .price-title {
-            color: $black;
-            font-weight: normal;
-        }
+  &:nth-child(even) {
+    background: $gray-200;
+  }
+
+  img {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .price_color {
+    @extend .h4;
+    font-size: 1rem;
+    color: $success;
+    font-weight: bold;
+
+    .price-title {
+      color: $black;
+      font-weight: normal;
     }
-    .basket-line-actions {
-        font-size: 0.75rem;
-    }
+  }
+
+  .basket-line-actions {
+    font-size: 0.75rem;
+  }
 }
 
 // Descriptions next to shipping prices - basket totals table
 #basket_totals {
-    th small {
-        font-weight: normal;
-    }
+  th small {
+    font-weight: normal;
+  }
 }
 
 // Table background for totals
 .total {
-    background-color: $mark-bg !important;
+  background-color: $mark-bg !important;
 }
 
 
 // Choosing a shipping address
 .choose-block {
-    .card {
-        position:relative;
-        min-height:285px;
-        form {
-        margin-bottom:0;
-        }
+  .card {
+    position: relative;
+    min-height: 285px;
+
+    form {
+      margin-bottom: 0;
     }
-    address {
-        margin-bottom:0;
-        span:first-child {
-        display:block;
-        font-weight:bold;
-        margin-bottom: $base-margin-bottom;
-        }
+  }
+
+  address {
+    margin-bottom: 0;
+
+    span:first-child {
+      display: block;
+      font-weight: bold;
+      margin-bottom: $base-margin-bottom;
     }
-    .btn-primary,
-    .btn-success {
-        position:absolute;
-        bottom: $grid-gutter-width;
-        left: $grid-gutter-width;
-    }
-    .address-controls {
-        position:absolute;
-        top: $grid-gutter-width;
-        right: $grid-gutter-width;
-    }
+  }
+
+  .btn-primary,
+  .btn-success {
+    position: absolute;
+    bottom: $grid-gutter-width;
+    left: $grid-gutter-width;
+  }
+
+  .address-controls {
+    position: absolute;
+    top: $grid-gutter-width;
+    right: $grid-gutter-width;
+  }
 }
 
 // Checkout shipping address form
 #new_shipping_address, #update_user_address {
-    #id_title {
-        width: auto;
-    }
-    #id_line1, #id_line2, #id_line3 {
-        max-width: 300px;
-    }
-    #id_postcode {
-        max-width: 100px;
-    }
-    #id_notes {
-        max-width: 600px;
-        height: 100px;
-    }
+  #id_title {
+    width: auto;
+  }
+
+  #id_line1, #id_line2, #id_line3 {
+    max-width: 300px;
+  }
+
+  #id_postcode {
+    max-width: 100px;
+  }
+
+  #id_notes {
+    max-width: 600px;
+    height: 100px;
+  }
 }
 
 // Checkout navigation - uses navbar
 .nav-checkout {
-    text-align:center;
-    &.navbar .nav {
-        margin:0;
+  text-align: center;
+
+  &.navbar .nav {
+    margin: 0;
+  }
+
+  .active {
+    .navbar-text {
+      color: $white;
     }
-    .active {
-        .navbar-text {
-        color:#fff;
-        }
-    }
-    .nav-item {
-        margin-left: $navbar-padding-x;
-        margin-right: $navbar-padding-x;
-    }
+  }
+
+  .nav-item {
+    margin-left: $navbar-padding-x;
+    margin-right: $navbar-padding-x;
+  }
 }
 
 .shipping-payment {
-    .card {
-        margin-bottom: $base-margin-bottom;
-        h3 a {
-            font-size: $font-size-base;
-            font-weight: $font-weight-normal;
-        }
+  .card {
+    margin-bottom: $base-margin-bottom;
+
+    h3 a {
+      font-size: $font-size-base;
+      font-weight: $font-weight-normal;
     }
+  }
 }

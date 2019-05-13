@@ -1,6 +1,6 @@
 // OSC MIXINS
 // --------------------------------------------------
-@mixin horiz_col(){
+@mixin horiz_col() {
   padding: 0;
   margin: 0;
   @include clearfix();
@@ -9,6 +9,7 @@
   }
   li {
     float: left;
+
     li {
       float: none;
     }
