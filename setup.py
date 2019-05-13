@@ -41,6 +41,7 @@ install_requires = [
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
+    'sorl-thumbnail>=12.4.1,<12.5',
 ]
 
 docs_requires = [
@@ -50,7 +51,6 @@ docs_requires = [
     'sphinx-issues==1.2.0',
 ]
 
-sorl_thumbnail_version = 'sorl-thumbnail>=12.4.1,<12.5'
 easy_thumbnails_version = 'easy-thumbnails==2.5'
 
 test_requires = [
@@ -64,7 +64,6 @@ test_requires = [
     'pytest-django==3.4.8',
     'pytest-xdist>=1.25,<1.28',
     'tox>=3.0,<3.9',
-    sorl_thumbnail_version,
     easy_thumbnails_version,
 ]
 
@@ -90,7 +89,6 @@ setup(
     extras_require={
         'docs': docs_requires,
         'test': test_requires,
-        'sorl-thumbnail': [sorl_thumbnail_version],
         'easy-thumbnails': [easy_thumbnails_version],
     },
     classifiers=[

@@ -60,11 +60,6 @@ What's new in Oscar 2.0?
   thumbnails in templates.  All uses of Sorl's ``thumbnail`` template tag in
   the shipped templates have been replaced with ``oscar_thumbnail``.
 
-- ``sorl-thumbnail`` has been dropped as a dependency. Use
-  ``pip install django-oscar[sorl-thumbnail]`` or
-  ``pip install django-oscar[easy-thumbnails]`` to explicitly install the
-  dependencies for either of the two supported thumbnailers.
-
 - Added the ability to manage ``catalogue.Option`` objects from the dashboard.
 
 .. _`#2875`: https://github.com/django-oscar/django-oscar/pull/2875

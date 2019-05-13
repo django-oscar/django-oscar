@@ -330,7 +330,7 @@ The time to live for the basket cookie in seconds.
 
 Default: ``10000``
 
-The maximum number of products that can be added to a basket at once. Set to 
+The maximum number of products that can be added to a basket at once. Set to
 ``None`` to disable the basket threshold limitation.
 
 
@@ -421,10 +421,10 @@ Such files should always be deleted afterwards.
 Default: ``'oscar.core.thumbnails.SorlThumbnail'``
 
 Thumbnailer class that will be used to generate thumbnails. Available options:
-``SorlThumbnail`` and ``EasyThumbnails``. To use them ``sorl-thumbnail`` or
-``easy-thumbnails`` must be installed manually or with ``pip install django-oscar[sorl-thumbnail]`` or
-``pip install django-oscar[easy-thumbnails]``. Custom thumbnailer class (based on
-``oscar.core.thumbnails.AbstractThumbnailer``) can be used as well.
+``SorlThumbnail`` (default) and ``EasyThumbnails``. To use them Easy Thumbnails,
+``easy-thumbnails`` must be installed manually or with
+``pip install django-oscar[easy-thumbnails]``. A custom thumbnailer class
+(based on ``oscar.core.thumbnails.AbstractThumbnailer``) can be used as well.
 
 Slug settings
 =============
