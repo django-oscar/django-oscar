@@ -13,7 +13,7 @@
                 {% for image in all_images %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
-                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="mx-auto d-block" />
+                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="mx-auto d-block mw-100" />
                     </div>
                 {% endfor %}
                 </div>

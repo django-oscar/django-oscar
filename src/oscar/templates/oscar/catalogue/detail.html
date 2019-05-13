@@ -57,11 +57,11 @@
         {% block product_main %}
         <div class="col-sm-6 product_main">
             {% comment %}
-            This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that
-            pops out when clicked.  A bit like the Django-Debug-Toolbar button
+                This is a bit clunky here.  Better to have some kind of JS-driven dashboard menu that
+                pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
             {% if user.is_staff %}
-                <a class="float-right hidden-xs" href="{% url 'dashboard:catalogue-product' pk=product.id %}">
+                <a class="float-right d-none d-sm-block" href="{% url 'dashboard:catalogue-product' pk=product.id %}">
                     <small><i class="fas fa-pencil-alt"></i> {% trans "Edit this product" %}</small>
                 </a>
             {% endif %}
