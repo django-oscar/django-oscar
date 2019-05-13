@@ -9,19 +9,23 @@
 
             <div class="btn-group btn-wishlist">
                 <a class="btn btn-lg dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Add to wish list" %} <span class="caret"></span></a>
-                <ul class="dropdown-menu float-right">
+                <ul class="dropdown-menu dropdown-menu-right">
                     {% for wishlist in wishlists %}
                         {% if wishlist not in product_wishlists %}
                             <li>
-                                    <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
-                                        {% blocktrans with name=wishlist.name %}
-                                            Add to '{{ name }}' wish list
-                                        {% endblocktrans %}
-                                    </a>
+                                <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}" class="dropdown-item">
+                                    {% blocktrans with name=wishlist.name %}
+                                        Add to '{{ name }}' wish list
+                                    {% endblocktrans %}
+                                </a>
                             </li>
                         {% endif %}
                     {% endfor %}
-                    <li><a href="{% url 'customer:wishlists-create-with-product' product_pk=product.pk %}">{% trans 'Create a new wishlist' %}</a></li>
+                    <li>
+                        <a href="{% url 'customer:wishlists-create-with-product' product_pk=product.pk %}" class="dropdown-item">
+                            {% trans 'Create a new wishlist' %}
+                        </a>
+                    </li>
                 </ul>
             </div>
         {% else %}

@@ -80,16 +80,20 @@
                                                 <span class="caret"></span>
                                             </a>
                                         {% endif %}
-                                        <ul class="dropdown-menu">
-                                            <li><a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}">
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}" class="dropdown-item">
                                                     {% trans 'Remove' %}
-                                            </a></li>
+                                                </a>
+                                            </li>
                                             {% for other_wishlist in other_wishlists %}
-                                                <li><a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}">
+                                                <li>
+                                                    <a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}" class="dropdown-item">
                                                         {% blocktrans with name=other_wishlist.name %}
                                                             Move to '{{ name }}' wish list
                                                         {% endblocktrans %}
-                                                </a></li>
+                                                    </a>
+                                                </li>
                                             {% endfor %}
                                         </ul>
                                     </div>
