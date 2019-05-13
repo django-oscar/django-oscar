@@ -26,7 +26,7 @@
     "tinymce": "^5.1.5"
   },
   "scripts": {
-    "build": "gulp copy && gulp less",
+    "build": "gulp copy && gulp scss",
     "watch": "gulp watch",
     "eslint": "./node_modules/.bin/eslint src/oscar/static_src/oscar/js/oscar/"
   },

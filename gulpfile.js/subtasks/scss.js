@@ -4,10 +4,10 @@ var gulp = require('gulp'),
     pump = require('pump'),
     scss_task = function(cb) {
         pump([
-            gulp.src('src/oscar/static/oscar/scss/*.scss'),
+            gulp.src('src/oscar/static_src/oscar/scss/*.scss'),
             sourcemaps.init(),
             sass({includePaths: [
-                    'src/oscar/static/scss/',
+                    'src/oscar/static_src/oscar/scss/',
                     ],
                     outputStyle: null,
                 }),
