@@ -47,8 +47,17 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
     }
     .price_color {
         @extend .h4;
+        font-size: 1rem;
         color:$success;
         font-weight:bold;
+
+        .price-title {
+            color: $black;
+            font-weight: normal;
+        }
+    }
+    .basket-line-actions {
+        font-size: 0.75rem;
     }
 }
 
@@ -61,7 +70,7 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
 
 // Table background for totals
 .total {
-    background-color:#FDF5D9!important;
+    background-color: $mark-bg !important;
 }
 
 
