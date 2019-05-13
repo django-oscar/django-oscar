@@ -37,7 +37,6 @@
         padding-bottom:0;
         max-width:none;
         z-index: 9999;
-        left: -330px !important;
 
         li {
             display:block;
@@ -70,7 +69,7 @@
         font-weight:inherit;
         white-space:normal;
         &.btn {
-            color:#fff;
+            color: $white;
         }
     }
     .form-actions {
