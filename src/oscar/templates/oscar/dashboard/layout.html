@@ -121,6 +121,14 @@
 
 {% endblock %}
 
+{% block cdn_scripts %}
+  {{ block.super }}
+  {% if use_less and debug %}
+    {# Load the on-the-fly less compiler. Never do this in production. #}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
+  {% endif %}
+{% endblock %}
+
 {# Local scripts #}
 {% block scripts %}
     <!-- Twitter Bootstrap -->
