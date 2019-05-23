@@ -18,7 +18,6 @@ from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.forms import widgets
 
 CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
-CommunicationEventType = get_model('communication', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 

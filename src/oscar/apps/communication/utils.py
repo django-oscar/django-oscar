@@ -1,5 +1,4 @@
 import logging
-import six
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -8,7 +7,6 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from oscar.core.loading import get_model
 
 
-CommunicationEvent = get_model('order', 'CommunicationEvent')
 CommunicationEventType = get_model('communication', 'CommunicationEventType')
 Email = get_model('communication', 'Email')
 Notification = get_model('communication', 'Notification')
@@ -32,25 +30,6 @@ class Dispatcher(object):
         """
         if messages['subject'] and (messages['body'] or messages['html']):
             return self.send_email_messages(recipient_email, messages, attachments=attachments)
-
-    def dispatch_order_messages(self, order, messages, event_code, attachments=None, **kwargs):
-        """
-        Dispatch order-related messages to the customer.
-        """
-        self.logger.info(
-            "Order #%s - sending %s messages", order.number, event_code)
-        if order.is_anonymous:
-            email = kwargs.get('email_address', order.guest_email)
-            dispatched_messages = self.dispatch_anonymous_messages(email, messages, attachments)
-        else:
-            dispatched_messages = self.dispatch_user_messages(order.user, messages, attachments)
-
-        try:
-            event_type = CommunicationEventType.objects.get(code=event_code)
-        except CommunicationEventType.DoesNotExist:
-            event_type = None
-
-        self.create_communication_event(order, event_type, dispatched_messages)
 
     def dispatch_anonymous_messages(self, email, messages, attachments=None):
         dispatched_messages = {}
@@ -84,24 +63,18 @@ class Dispatcher(object):
 
     # Internal
 
-    def create_communication_event(self, order, event_type, dispatched_messages):
+    def create_email(self, user, messages, email):
         """
-        Create order communications event for audit
+        Create ``Email`` instance in database for logging purposes.
         """
-        if dispatched_messages and event_type is not None:
-            CommunicationEvent._default_manager.create(order=order, event_type=event_type)
-
-    def create_customer_email(self, user, messages, email):
-        """
-        Create Email instance in database for logging purposes.
-        """
-        # Is user is signed in, record the event for audit
         if email and user.is_authenticated:
-            return Email._default_manager.create(user=user,
-                                                 email=user.email,
-                                                 subject=email.subject,
-                                                 body_text=email.body,
-                                                 body_html=messages['html'])
+            return Email._default_manager.create(
+                user=user,
+                email=user.email,
+                subject=email.subject,
+                body_text=email.body,
+                body_html=messages['html'],
+            )
 
     def send_user_email_messages(self, user, messages, attachments=None):
         """
@@ -110,12 +83,12 @@ class Dispatcher(object):
         if not user.email:
             self.logger.warning("Unable to send email messages as user #%d has"
                                 " no email address", user.id)
-            return None, None
+            return None
 
         email = self.send_email_messages(user.email, messages, attachments=attachments)
 
         if getattr(settings, 'OSCAR_SAVE_SENT_EMAILS_TO_DB', True):
-            self.create_customer_email(user, messages, email)
+            self.create_email(user, messages, email)
 
         return email
 
@@ -162,24 +135,32 @@ class Dispatcher(object):
         raise NotImplementedError
 
     def prepare_attachments(self, attachments):
+        """
+        Two types of attachments can be attached to emails:
+
+            * "Content" attachment is one of:
+                * instance of ``MIMEBase`` (from ``email.mime.base``);
+                * list ``[filename, content, mimetype]``;
+
+            * "File" attachment is a path to file from an instance of
+              ``FileField`` based fields.
+
+        "Content" and "file" attachments attached to emails differently.
+        """
         content_attachments = []
         file_attachments = []
         if attachments is not None:
             for attachment in attachments:
-                if isinstance(attachment, six.string_types):
-                    # Here `attachment` is path to file from instance of `FileField` based fields
+                if isinstance(attachment, str):
                     file_attachments.append(attachment)
                 else:
-                    # Here attachment is one of:
-                    #   * instance of `MIMEBase` (from `email.mime.base`)
-                    #   * list `[filename, content, mimetype]`
                     content_attachments.append(attachment)
 
         return content_attachments, file_attachments
 
     def get_base_context(self):
         """
-        Return context that common for all emails
+        Return context that is common to all emails
         """
         return {'site': Site.objects.get_current()}
 
