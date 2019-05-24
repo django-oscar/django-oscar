@@ -493,7 +493,7 @@ class AbstractProduct(models.Model):
         It's possible to have options product class-wide, and per product.
         """
         pclass_options = self.get_product_class().options.all()
-        return set(pclass_options) or set(self.product_options.all())
+        return pclass_options | self.product_options.all()
 
     @cached_property
     def has_options(self):
