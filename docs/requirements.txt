@@ -1,2 +1,2 @@
--e .[docs,tests]
+-e .[docs]
 -r ../requirements.txt
