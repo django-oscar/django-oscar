@@ -186,10 +186,6 @@ class AbstractNotification(models.Model):
     subject = models.CharField(max_length=255)
     body = models.TextField()
 
-    # Some projects may want to categorise their notifications.  You may want
-    # to use this field to show a different icons next to the notification.
-    category = models.CharField(max_length=255, blank=True)
-
     INBOX, ARCHIVE = 'Inbox', 'Archive'
     choices = (
         (INBOX, _('Inbox')),

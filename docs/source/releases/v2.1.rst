@@ -100,3 +100,7 @@ Dependency changes
 
 Deprecated features
 ~~~~~~~~~~~~~~~~~~~
+
+- Field ``category`` removed from ``Notification`` model.
+
+  This is a change that requires database migration.
