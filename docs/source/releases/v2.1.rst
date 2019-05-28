@@ -104,3 +104,7 @@ Deprecated features
 - Field ``category`` removed from ``Notification`` model.
 
   This is a change that requires database migration.
+
+- Added ``absolutize_url`` template tag - to get absolute URLs in templates based on
+  provided path and domain. The schema for absolute url can be set through
+  ``OSCAR_URL_SCHEMA`` setting, ``http`` by default.

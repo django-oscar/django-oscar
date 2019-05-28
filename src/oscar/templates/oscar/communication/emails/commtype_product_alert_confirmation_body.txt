@@ -1,12 +1,16 @@
-{% load i18n %}{% blocktrans with title=alert.product.get_title|safe domain=site.domain confirm_path=alert.get_confirm_url cancel_path=alert.get_cancel_url %}Hello,
+{% load i18n %}
+{% load url_tags %}
+{% absolutize_url site.domain alert.get_confirm_url as confirm_url %}
+{% absolutize_url site.domain alert.get_cancel_url as cancel_url %}
+{% blocktrans with title=alert.product.get_title|safe confirm_url=confirm_url cancel_url=cancel_url %}
+Hello,
 
 Somebody (hopefully you) has requested an email alert when
 '{{ title }}' is back in stock.  Please click the following link
-to confirm:
-http://{{ domain }}{{ confirm_path }}
+to confirm: {{ confirm_url }}
 
 You can cancel this alert at any time by clicking the following link:
-http://{{ domain }}{{ cancel_path }}
+{{ cancel_url }}
 
 Thanks for your interest,
 The {{ site }} Team

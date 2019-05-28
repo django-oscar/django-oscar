@@ -28,7 +28,7 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
     def test_send_password_reset_email_for_user(self):
         extra_context = {
             'user': self.user,
-            'reset_url': 'github.com/django-oscar/django-oscar',
+            'reset_url': '/django-oscar/django-oscar',
         }
         self.dispatcher.send_password_reset_email_for_user(self.user, extra_context)
 
@@ -36,12 +36,12 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
         expected_subject = 'Resetting your password at {}.'.format(Site.objects.get_current())
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         self.assertIn('Please go to the following page and choose a new password:', mail.outbox[0].body)
-        self.assertIn('github.com/django-oscar/django-oscar', mail.outbox[0].body)
+        self.assertIn('http://example.com/django-oscar/django-oscar', mail.outbox[0].body)
 
     def test_send_password_changed_email_for_user(self):
         extra_context = {
             'user': self.user,
-            'reset_url': 'github.com/django-oscar/django-oscar',
+            'reset_url': '/django-oscar/django-oscar',
         }
         self.dispatcher.send_password_changed_email_for_user(self.user, extra_context)
 
@@ -49,12 +49,12 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
         expected_subject = 'Your password changed at {}.'.format(Site.objects.get_current())
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         self.assertIn('your password has been changed', mail.outbox[0].body)
-        self.assertIn('github.com/django-oscar/django-oscar', mail.outbox[0].body)
+        self.assertIn('http://example.com/django-oscar/django-oscar', mail.outbox[0].body)
 
     def test_send_email_changed_email_for_user(self):
         extra_context = {
             'user': self.user,
-            'reset_url': 'github.com/django-oscar/django-oscar',
+            'reset_url': '/django-oscar/django-oscar',
             'new_email': 'some_new@mail.com',
         }
         self.dispatcher.send_email_changed_email_for_user(self.user, extra_context)
@@ -63,7 +63,7 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
         expected_subject = 'Your email address has changed at {}.'.format(Site.objects.get_current())
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         self.assertIn('your email address has been changed', mail.outbox[0].body)
-        self.assertIn('github.com/django-oscar/django-oscar', mail.outbox[0].body)
+        self.assertIn('http://example.com/django-oscar/django-oscar', mail.outbox[0].body)
         self.assertIn('some_new@mail.com', mail.outbox[0].body)
 
     def test_send_product_alert_email_for_user(self):

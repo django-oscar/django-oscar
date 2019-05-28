@@ -538,3 +538,11 @@ Default: ``False``
 A flag to control whether Oscar's CSV writer should prepend a byte order mark
 (BOM) to CSV files that are encoded in UTF-8. Useful for compatibility with some
 CSV readers, Microsoft Excel in particular.
+
+
+``OSCAR_URL_SCHEMA``
+--------------------
+
+Default: ``http``
+
+The schema that will be used to build absolute url in ``absolutize_url`` template tag.

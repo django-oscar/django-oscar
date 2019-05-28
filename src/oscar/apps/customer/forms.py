@@ -51,23 +51,13 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         active_users = User._default_manager.filter(
             email__iexact=email, is_active=True)
         for user in active_users:
-            self.send_password_reset_email(site, request, user, use_https)
+            self.send_password_reset_email(site, user)
 
-    def get_reset_url(self, site, request, user, use_https):
-        # the request argument isn't used currently, but implementors might
-        # need it to determine the correct subdomain
-        reset_url = "%s://%s%s" % (
-            'https' if use_https else 'http',
-            site.domain,
-            get_password_reset_url(user))
-
-        return reset_url
-
-    def send_password_reset_email(self, site, request, user, use_https):
+    def send_password_reset_email(self, site, user):
         extra_context = {
             'user': user,
             'site': site,
-            'reset_url': self.get_reset_url(site, request, user, use_https),
+            'reset_url': get_password_reset_url(user),
         }
         CustomerDispatcher().send_password_reset_email_for_user(user, extra_context)
 
