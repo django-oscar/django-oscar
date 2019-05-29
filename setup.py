@@ -52,6 +52,7 @@ docs_requires = [
     'sphinx_rtd_theme==0.4.3',
     'sphinx-issues==1.2.0',
     sorl_thumbnail_version,
+    easy_thumbnails_version,
 ]
 
 test_requires = [
