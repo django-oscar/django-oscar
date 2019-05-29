@@ -46,6 +46,9 @@ What's new in Oscar 2.1?
 - ``CustomerDispatcher`` util created in ``customer`` app -  to send customer
   related emails.
 
+- ``AlertsDispatcher`` util created in ``customer.alerts`` module -  to send
+  order product alerts related emails and notifications.
+
 - ``OrderDispatcher`` util created in ``order`` app -  to send order related
   emails.
 

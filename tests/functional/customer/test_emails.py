@@ -9,9 +9,10 @@ from oscar.test.utils import EmailsMixin
 
 
 CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
+AlertsDispatcher = get_class('customer.alerts.utils', 'AlertsDispatcher')
 
 
-class TestConcreteEmailsSending(EmailsMixin, TestCase):
+class TestCustomerConcreteEmailsSending(EmailsMixin, TestCase):
 
     def setUp(self):
         super().setUp()
@@ -65,6 +66,13 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
         self.assertIn('your email address has been changed', mail.outbox[0].body)
         self.assertIn('http://example.com/django-oscar/django-oscar', mail.outbox[0].body)
         self.assertIn('some_new@mail.com', mail.outbox[0].body)
+
+
+class TestAlertsConcreteEmailsSending(EmailsMixin, TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.dispatcher = AlertsDispatcher()
 
     def test_send_product_alert_email_for_user(self):
         product = create_product(num_in_stock=5)

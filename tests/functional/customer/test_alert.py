@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.urls import reverse
 from django_webtest import WebTest
 
-from oscar.apps.customer.alerts.utils import send_product_alerts
 from oscar.apps.customer.forms import ProductAlertForm
 from oscar.apps.customer.models import ProductAlert
 from oscar.core.loading import get_class
@@ -14,6 +13,7 @@ from oscar.test.factories import (
     ProductAlertFactory, UserFactory, create_product, create_stockrecord)
 
 CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
+AlertsDispatcher = get_class('customer.alerts.utils', 'AlertsDispatcher')
 
 
 class TestProductAlert(WebTest):
@@ -171,13 +171,14 @@ class TestHurryMode(TestCase):
     def setUp(self):
         self.user = UserFactory()
         self.product = create_product()
+        self.dispatcher = AlertsDispatcher()
 
     def test_hurry_mode_not_set_when_stock_high(self):
         # One alert, 5 items in stock. No need to hurry.
         create_stockrecord(self.product, num_in_stock=5)
         ProductAlert.objects.create(user=self.user, product=self.product)
 
-        send_product_alerts(self.product)
+        self.dispatcher.send_product_alert_email_for_user(self.product)
 
         assert len(mail.outbox) == 1
         assert 'Beware that the amount of items in stock is limited' not in mail.outbox[0].body
@@ -188,7 +189,7 @@ class TestHurryMode(TestCase):
         ProductAlert.objects.create(user=self.user, product=self.product)
         ProductAlert.objects.create(user=UserFactory(), product=self.product)
 
-        send_product_alerts(self.product)
+        self.dispatcher.send_product_alert_email_for_user(self.product)
 
         assert len(mail.outbox) == 2
         assert 'Beware that the amount of items in stock is limited' in mail.outbox[0].body
@@ -199,7 +200,7 @@ class TestHurryMode(TestCase):
         create_stockrecord(self.product, num_in_stock=5)
         ProductAlert.objects.create(user=self.user, product=self.product)
 
-        send_product_alerts(self.product)
+        self.dispatcher.send_product_alert_email_for_user(self.product)
 
         assert 'Beware that the amount of items in stock is limited' not in mail.outbox[0].body
 
@@ -210,7 +211,7 @@ class TestHurryMode(TestCase):
         ProductAlert.objects.create(user=self.user, product=self.product)
         ProductAlert.objects.create(user=UserFactory(), product=self.product)
 
-        send_product_alerts(self.product)
+        self.dispatcher.send_product_alert_email_for_user(self.product)
 
         assert 'Beware that the amount of items in stock is limited' in mail.outbox[0].body
 
@@ -221,6 +222,7 @@ class TestAlertMessageSending(TestCase):
         self.user = UserFactory()
         self.product = create_product()
         create_stockrecord(self.product, num_in_stock=1)
+        self.dispatcher = AlertsDispatcher()
 
     @mock.patch('oscar.apps.communication.utils.Dispatcher.dispatch_direct_messages')
     def test_alert_confirmation_uses_dispatcher(self, mock_dispatch):
@@ -230,18 +232,18 @@ class TestAlertMessageSending(TestCase):
             status=ProductAlert.UNCONFIRMED,
             product=self.product
         )
-        CustomerDispatcher().send_product_alert_confirmation_email_for_user(alert)
+        AlertsDispatcher().send_product_alert_confirmation_email_for_user(alert)
         assert mock_dispatch.call_count == 1
         assert mock_dispatch.call_args[0][0] == 'test@example.com'
 
     @mock.patch('oscar.apps.communication.utils.Dispatcher.dispatch_user_messages')
     def test_alert_uses_dispatcher(self, mock_dispatch):
         ProductAlert.objects.create(user=self.user, product=self.product)
-        send_product_alerts(self.product)
+        self.dispatcher.send_product_alert_email_for_user(self.product)
         assert mock_dispatch.call_count == 1
         assert mock_dispatch.call_args[0][0] == self.user
 
     def test_alert_creates_email_obj(self):
         ProductAlert.objects.create(user=self.user, product=self.product)
-        send_product_alerts(self.product)
+        self.dispatcher.send_product_alert_email_for_user(self.product)
         assert self.user.emails.count() == 1
