@@ -10,8 +10,8 @@ from oscar.test.utils import EASY_THUMBNAIL_BASEDIR, get_thumbnail_full_path
 
 
 class OscarThumbnailMixin:
-    # Next values will be different `sorl-thumbnail` and `easy-thumbnails`.
-    crop_value = size_string_mapping = None
+    # Next value will be different for `sorl-thumbnail` and `easy-thumbnails`.
+    crop_value = None
 
     def setUp(self):
         self.product_image = ProductImageFactory()
