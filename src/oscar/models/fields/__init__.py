@@ -82,7 +82,7 @@ class UppercaseCharField(CharField):
     # Django 2.0 updates the signature of from_db_value.
     # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
     if django.VERSION < (2,):
-        def from_db_value(self, value, expression, connection, context):  # noqa
+        def from_db_value(self, value, expression, connection, context):
             """
             Converts a value as returned by the database to a Python object. It is
             the reverse of get_prep_value(). - New in Django 1.8
@@ -99,7 +99,6 @@ class UppercaseCharField(CharField):
             if value:
                 value = self.to_python(value)
             return value
-
 
     def to_python(self, value):
         val = super().to_python(value)
@@ -132,7 +131,7 @@ class NullCharField(CharField):
     # Django 2.0 updates the signature of from_db_value.
     # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
     if django.VERSION < (2,):
-        def from_db_value(self, value, expression, connection, context):  # noqa
+        def from_db_value(self, value, expression, connection, context):
             """
             Converts a value as returned by the database to a Python object. It is
             the reverse of get_prep_value(). - New in Django 1.8
@@ -147,7 +146,6 @@ class NullCharField(CharField):
             """
             value = self.to_python(value)
             return value if value is not None else ''
-
 
     def get_prep_value(self, value):
         prepped = super().get_prep_value(value)
