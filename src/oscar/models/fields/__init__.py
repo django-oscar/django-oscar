@@ -1,4 +1,3 @@
-import django
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
 from django.utils.translation import gettext_lazy as _
@@ -74,21 +73,14 @@ class UppercaseCharField(CharField):
     Defined with the with_metaclass helper so that to_python is called
     https://docs.djangoproject.com/en/1.6/howto/custom-model-fields/#the-subfieldbase-metaclass  # NOQA
     """
+
     def contribute_to_class(self, cls, name, **kwargs):
         super().contribute_to_class(
             cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    if django.VERSION < (2,):
-        def from_db_value(self, value, expression, connection, context):
-            if value:
-                value = self.to_python(value)
-            return value
-    else:
-        def from_db_value(self, value, expression, connection):
-            if value:
-                value = self.to_python(value)
-            return value
+    def from_db_value(self, value, *args, **kwargs):
+        return self.to_python(value)
 
     def to_python(self, value):
         val = super().to_python(value)
@@ -118,14 +110,10 @@ class NullCharField(CharField):
         super().contribute_to_class(cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    if django.VERSION < (2,):
-        def from_db_value(self, value, expression, connection, context):
-            value = self.to_python(value)
-            return value if value is not None else ''
-    else:
-        def from_db_value(self, value, expression, connection):
-            value = self.to_python(value)
-            return value if value is not None else ''
+    def from_db_value(self, value, *args, **kwargs):
+        value = self.to_python(value)
+        # If the value was stored as null, return empty string instead
+        return value if value is not None else ''
 
     def get_prep_value(self, value):
         prepped = super().get_prep_value(value)
