@@ -1,4 +1,3 @@
-import django
 from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 
@@ -7,18 +6,9 @@ from oscar.models.fields import NullCharField
 
 class NullCharFieldTest(TestCase):
 
-    if django.VERSION < (2,):
-        def test_from_db_value_converts_null_to_string(self):
-            field = NullCharField()
-            self.assertEqual('', field.from_db_value(None, expression=None, connection=None, context=None))
-    else:
-        def test_from_db_value_converts_null_to_string(self):
-            field = NullCharField()
-            self.assertEqual('', field.from_db_value(None, expression=None, connection=None))
-
     def test_from_db_value_converts_null_to_string(self):
         field = NullCharField()
-        self.assertEqual('', field.from_db_value(None, expression=None, connection=None))
+        self.assertEqual('', field.from_db_value(None, expression=None, connection=None, context=None))
 
     def test_get_prep_value_converts_empty_string_to_null(self):
         field = NullCharField()
