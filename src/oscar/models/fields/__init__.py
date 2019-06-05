@@ -139,7 +139,7 @@ class NullCharField(CharField):
             value = self.to_python(value)
             return value if value is not None else ''
     else:
-        def from_db_value(self, value, expression, connection):
+        def from_db_value(self, value, expression, connection, *args, **kwargs):
             """
             Converts a value as returned by the database to a Python object. It is
             the reverse of get_prep_value(). - New in Django 1.8
