@@ -79,23 +79,13 @@ class UppercaseCharField(CharField):
             cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    # Django 2.0 updates the signature of from_db_value.
-    # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
     if django.VERSION < (2,):
         def from_db_value(self, value, expression, connection, context):
-            """
-            Converts a value as returned by the database to a Python object. It is
-            the reverse of get_prep_value(). - New in Django 1.8
-            """
             if value:
                 value = self.to_python(value)
             return value
     else:
         def from_db_value(self, value, expression, connection):
-            """
-            Converts a value as returned by the database to a Python object. It is
-            the reverse of get_prep_value(). - New in Django 1.8
-            """
             if value:
                 value = self.to_python(value)
             return value
@@ -128,22 +118,12 @@ class NullCharField(CharField):
         super().contribute_to_class(cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    # Django 2.0 updates the signature of from_db_value.
-    # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
     if django.VERSION < (2,):
         def from_db_value(self, value, expression, connection, context):
-            """
-            Converts a value as returned by the database to a Python object. It is
-            the reverse of get_prep_value(). - New in Django 1.8
-            """
             value = self.to_python(value)
             return value if value is not None else ''
     else:
-        def from_db_value(self, value, expression, connection, *args, **kwargs):
-            """
-            Converts a value as returned by the database to a Python object. It is
-            the reverse of get_prep_value(). - New in Django 1.8
-            """
+        def from_db_value(self, value, expression, connection):
             value = self.to_python(value)
             return value if value is not None else ''
 
