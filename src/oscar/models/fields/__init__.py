@@ -78,7 +78,6 @@ class UppercaseCharField(CharField):
             cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    # I fix it!
     # Django 2.0 updates the signature of from_db_value.
     # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
     if django.VERSION < (2,):
@@ -100,9 +99,6 @@ class UppercaseCharField(CharField):
                 value = self.to_python(value)
             return value
 
-    # Previous code
-    # def from_db_value(self, value, expression, connection, context):
-    #     return self.to_python(value)
 
     def to_python(self, value):
         val = super().to_python(value)
@@ -132,7 +128,6 @@ class NullCharField(CharField):
         super().contribute_to_class(cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    # I fix it!
     # Django 2.0 updates the signature of from_db_value.
     # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
     if django.VERSION < (2,):
@@ -152,11 +147,6 @@ class NullCharField(CharField):
             value = self.to_python(value)
             return value if value is not None else ''
 
-    # Previous code
-    # def from_db_value(self, value, expression, connection, context):
-    #     value = self.to_python(value)
-    #     # If the value was stored as null, return empty string instead
-    #     return value if value is not None else ''
 
     def get_prep_value(self, value):
         prepped = super().get_prep_value(value)
