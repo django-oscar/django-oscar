@@ -18,7 +18,7 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
-from treebeard.mp_tree import MP_Node
+from treebeard.mp_tree import MP_Node, MP_NodeManager, MP_NodeQuerySet
 
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
@@ -78,6 +78,16 @@ class AbstractProductClass(models.Model):
         return self.attributes.exists()
 
 
+class CategoryQuerySet(MP_NodeQuerySet):
+    def public(self):
+        return self.filter(is_public=True)
+
+
+class CategoryObjectManager(models.Manager):
+    def get_queryset(self):
+        return CategoryQuerySet(self.model).order_by('path')
+
+
 class AbstractCategory(MP_Node):
     """
     A product category. Merely used for navigational purposes; has no
@@ -96,8 +106,15 @@ class AbstractCategory(MP_Node):
                               null=True, max_length=255)
     slug = SlugField(_('Slug'), max_length=255, db_index=True)
 
+    is_public = models.BooleanField(
+        _('Is public'),
+        default=True,
+        help_text=_("Show this category in search results and catalogue listings."))
+
     _slug_separator = '/'
     _full_name_separator = ' > '
+
+    objects = CategoryObjectManager()
 
     def __str__(self):
         return self.full_name

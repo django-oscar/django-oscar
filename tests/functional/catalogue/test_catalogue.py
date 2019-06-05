@@ -122,3 +122,13 @@ class TestProductCategoryView(WebTestCase):
         response = self.app.get(wrong_url)
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
         self.assertTrue(self.category.get_absolute_url() in response.location)
+
+    def test_is_public_off(self):
+        category = Category.add_root(name="Foobars", is_public=False)
+        response = self.app.get(category.get_absolute_url(), expect_errors=True)
+        self.assertEqual(http_client.NOT_FOUND, response.status_code)
+
+    def test_is_public_on(self):
+        category = Category.add_root(name="Barfoos", is_public=True)
+        response = self.app.get(category.get_absolute_url())
+        self.assertEqual(http_client.OK, response.status_code)
