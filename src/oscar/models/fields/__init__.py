@@ -73,14 +73,36 @@ class UppercaseCharField(CharField):
     Defined with the with_metaclass helper so that to_python is called
     https://docs.djangoproject.com/en/1.6/howto/custom-model-fields/#the-subfieldbase-metaclass  # NOQA
     """
-
     def contribute_to_class(self, cls, name, **kwargs):
         super().contribute_to_class(
             cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    def from_db_value(self, value, expression, connection, context):
-        return self.to_python(value)
+    # I fix it!
+    # Django 2.0 updates the signature of from_db_value.
+    # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
+    if django.VERSION < (2,):
+        def from_db_value(self, value, expression, connection, context):  # noqa
+            """
+            Converts a value as returned by the database to a Python object. It is
+            the reverse of get_prep_value(). - New in Django 1.8
+            """
+            if value:
+                value = self.to_python(value)
+            return value
+    else:
+        def from_db_value(self, value, expression, connection):
+            """
+            Converts a value as returned by the database to a Python object. It is
+            the reverse of get_prep_value(). - New in Django 1.8
+            """
+            if value:
+                value = self.to_python(value)
+            return value
+
+    # Previous code
+    # def from_db_value(self, value, expression, connection, context):
+    #     return self.to_python(value)
 
     def to_python(self, value):
         val = super().to_python(value)
@@ -110,10 +132,31 @@ class NullCharField(CharField):
         super().contribute_to_class(cls, name, **kwargs)
         setattr(cls, self.name, Creator(self))
 
-    def from_db_value(self, value, expression, connection, context):
-        value = self.to_python(value)
-        # If the value was stored as null, return empty string instead
-        return value if value is not None else ''
+    # I fix it!
+    # Django 2.0 updates the signature of from_db_value.
+    # https://docs.djangoproject.com/en/2.0/releases/2.0/#context-argument-of-field-from-db-value-and-expression-convert-value
+    if django.VERSION < (2,):
+        def from_db_value(self, value, expression, connection, context):  # noqa
+            """
+            Converts a value as returned by the database to a Python object. It is
+            the reverse of get_prep_value(). - New in Django 1.8
+            """
+            value = self.to_python(value)
+            return value if value is not None else ''
+    else:
+        def from_db_value(self, value, expression, connection):
+            """
+            Converts a value as returned by the database to a Python object. It is
+            the reverse of get_prep_value(). - New in Django 1.8
+            """
+            value = self.to_python(value)
+            return value if value is not None else ''
+
+    # Previous code
+    # def from_db_value(self, value, expression, connection, context):
+    #     value = self.to_python(value)
+    #     # If the value was stored as null, return empty string instead
+    #     return value if value is not None else ''
 
     def get_prep_value(self, value):
         prepped = super().get_prep_value(value)
