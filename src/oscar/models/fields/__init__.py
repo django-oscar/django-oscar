@@ -1,3 +1,4 @@
+import django
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
 from django.utils.translation import gettext_lazy as _
