@@ -8,7 +8,7 @@ class NullCharFieldTest(TestCase):
 
     def test_from_db_value_converts_null_to_string(self):
         field = NullCharField()
-        self.assertEqual('', field.from_db_value(None, expression=None, connection=None))
+        self.assertEqual('', field.from_db_value(None, expression=None, connection=None, context=None))
 
     def test_get_prep_value_converts_empty_string_to_null(self):
         field = NullCharField()
