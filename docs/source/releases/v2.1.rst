@@ -31,6 +31,16 @@ What's new in Oscar 2.1?
   Django doesn't generate migrations if a project modifies the ``OSCAR_IMAGE_FOLDER``
   to specify a custom directory structure for uploaded images.
 
+- ``catalogue.Category`` now has an ``is_public`` boolean field that serves a
+  similar purpose to ``catalogue.Product.is_public`` - i.e., hides them from
+  public views. The ``Category`` model also now has a custom manager
+  that provides a ``browsable()`` queryset method that excludes non-public
+  categories. This changes requires a database migration.
+
+  Category hierarchy implies that the children of any non-public category are
+  also non-public. This is enforced through an ``ancestors_are_public`` field
+  on the ``Category`` model.
+
 Communications app
 ------------------
 
@@ -125,6 +135,8 @@ Minor changes
   in Django's form, but it was possible to send a password reset email to
   unintended recipients because of unicode character collision.
 
+- ``catalogue.Product.is_public`` is now an indexed field. This change requires
+  a database migration.
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~

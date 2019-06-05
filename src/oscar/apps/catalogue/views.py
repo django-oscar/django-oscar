@@ -158,6 +158,11 @@ class ProductCategoryView(TemplateView):
     def get(self, request, *args, **kwargs):
         # Fetch the category; return 404 or redirect as needed
         self.category = self.get_category()
+
+        # Allow staff members so they can test layout etc.
+        if not self.is_viewable(self.category, request):
+            raise Http404()
+
         potential_redirect = self.redirect_if_necessary(
             request.path, self.category)
         if potential_redirect is not None:
@@ -171,6 +176,9 @@ class ProductCategoryView(TemplateView):
             return redirect(self.category.get_absolute_url())
 
         return super().get(request, *args, **kwargs)
+
+    def is_viewable(self, category, request):
+        return category.is_public or request.user.is_staff
 
     def get_category(self):
         return get_object_or_404(Category, pk=self.kwargs['pk'])

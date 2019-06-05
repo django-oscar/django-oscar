@@ -11,7 +11,9 @@ from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Count, Sum
+from django.db.models import Count, Exists, OuterRef, Sum
+from django.db.models.fields import Field
+from django.db.models.lookups import StartsWith
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
@@ -21,7 +23,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
@@ -29,9 +31,42 @@ from oscar.models.fields.slugfield import SlugField
 from oscar.utils.models import get_image_upload_path
 
 BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManager')
-ProductQuerySet = get_class('catalogue.managers', 'ProductQuerySet')
+CategoryQuerySet, ProductQuerySet = get_classes(
+    'catalogue.managers', ['CategoryQuerySet', 'ProductQuerySet'])
 ProductAttributesContainer = get_class(
     'catalogue.product_attributes', 'ProductAttributesContainer')
+
+
+class ReverseStartsWith(StartsWith):
+    """
+    Adds a new lookup method to the django query language, that allows the
+    following syntax::
+
+        henk__rstartswith="koe"
+
+    The regular version of startswith::
+
+        henk__startswith="koe"
+
+     Would be about the same as the python statement::
+
+        henk.startswith("koe")
+
+    ReverseStartsWith will flip the right and left hand side of the expression,
+    effectively making this the same query as::
+
+    "koe".startswith(henk)
+    """
+    def process_rhs(self, compiler, connection):
+        return super().process_lhs(compiler, connection)
+
+    def process_lhs(self, compiler, connection, lhs=None):
+        if lhs is not None:
+            raise Exception("Flipped process_lhs does not accept lhs argument")
+        return super().process_rhs(compiler, connection)
+
+
+Field.register_lookup(ReverseStartsWith, "rstartswith")
 
 
 class AbstractProductClass(models.Model):
@@ -97,8 +132,22 @@ class AbstractCategory(MP_Node):
                               null=True, max_length=255)
     slug = SlugField(_('Slug'), max_length=255, db_index=True)
 
+    is_public = models.BooleanField(
+        _('Is public'),
+        default=True,
+        db_index=True,
+        help_text=_("Show this category in search results and catalogue listings."))
+
+    ancestors_are_public = models.BooleanField(
+        _('Ancestor categories are public'),
+        default=True,
+        db_index=True,
+        help_text=_("The ancestors of this category are public"))
+
     _slug_separator = '/'
     _full_name_separator = ' > '
+
+    objects = CategoryQuerySet.as_manager()
 
     def __str__(self):
         return self.full_name
@@ -158,8 +207,33 @@ class AbstractCategory(MP_Node):
         """
         if not self.slug:
             self.slug = self.generate_slug()
-
         super().save(*args, **kwargs)
+
+    def set_ancestors_are_public(self):
+        # Update ancestors_are_public for the sub tree.
+        # note: This doesn't trigger a new save for each instance, rather
+        # just a SQL update.
+        included_in_non_public_subtree = self.__class__.objects.filter(
+            is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
+        )
+        self.get_descendants_and_self().update(
+            ancestors_are_public=Exists(
+                included_in_non_public_subtree.values("id"), negated=True))
+
+        # Correctly populate ancestors_are_public
+        self.refresh_from_db()
+
+    @classmethod
+    def fix_tree(cls, destructive=False):
+        super().fix_tree(destructive)
+        for node in cls.get_root_nodes():
+            # ancestors_are_public *must* be True for root nodes, or all trees
+            # will become non-public
+            if not node.ancestors_are_public:
+                node.ancestors_are_public = True
+                node.save()
+            else:
+                node.set_ancestors_are_public()
 
     def get_ancestors_and_self(self):
         """
@@ -268,6 +342,7 @@ class AbstractProduct(models.Model):
     is_public = models.BooleanField(
         _('Is public'),
         default=True,
+        db_index=True,
         help_text=_("Show this product in search results and catalogue listings."))
 
     upc = NullCharField(

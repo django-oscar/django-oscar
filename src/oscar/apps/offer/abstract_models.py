@@ -7,8 +7,6 @@ from django.conf import settings
 from django.core import exceptions
 from django.db import models
 from django.db.models import Exists, OuterRef
-from django.db.models.fields import Field
-from django.db.models.lookups import StartsWith
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
@@ -27,41 +25,6 @@ ActiveOfferManager, RangeManager, BrowsableRangeManager \
     = get_classes('offer.managers', ['ActiveOfferManager', 'RangeManager', 'BrowsableRangeManager'])
 ZERO_DISCOUNT = get_class('offer.results', 'ZERO_DISCOUNT')
 load_proxy, unit_price = get_classes('offer.utils', ['load_proxy', 'unit_price'])
-
-
-class ReverseStartsWith(StartsWith):
-    """
-    Adds a new lookup method to the django query language, that allows the
-    following syntax::
-
-        henk_rstartswith="koe"
-
-    The regular version of startswith::
-
-        henk_startswith="koe"
-
-     Would be about the same as the python statement::
-
-        henk.startswith("koe")
-
-    ReverseStartsWith will flip the right and left hand side of the expression,
-    effectively making this the same query as::
-
-    "koe".startswith(henk)
-
-    This is used by the range query below, where we need to flip select children
-    based on that their depth starts with the depth string of the parent.
-    """
-    def process_rhs(self, compiler, connection):
-        return super().process_lhs(compiler, connection)
-
-    def process_lhs(self, compiler, connection, lhs=None):
-        if lhs is not None:
-            raise Exception("Flipped process_lhs does not accept lhs argument")
-        return super().process_rhs(compiler, connection)
-
-
-Field.register_lookup(ReverseStartsWith, "rstartswith")
 
 
 class BaseOfferMixin(models.Model):

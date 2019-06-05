@@ -3,6 +3,7 @@ from collections import defaultdict
 from django.db import models
 from django.db.models import Exists, OuterRef
 from django.db.models.constants import LOOKUP_SEP
+from treebeard.mp_tree import MP_NodeQuerySet
 
 from oscar.core.decorators import deprecated
 from oscar.core.loading import get_model
@@ -144,3 +145,12 @@ class BrowsableProductManager(ProductManager):
     @deprecated
     def get_queryset(self):
         return super().get_queryset().browsable()
+
+
+class CategoryQuerySet(MP_NodeQuerySet):
+
+    def browsable(self):
+        """
+        Excludes non-public categories
+        """
+        return self.filter(is_public=True, ancestors_are_public=True)
