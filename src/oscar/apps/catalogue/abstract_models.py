@@ -18,7 +18,7 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
-from treebeard.mp_tree import MP_Node, MP_NodeManager, MP_NodeQuerySet
+from treebeard.mp_tree import MP_Node, MP_NodeQuerySet
 
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
