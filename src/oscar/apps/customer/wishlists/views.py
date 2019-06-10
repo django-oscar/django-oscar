@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from django.core.exceptions import (
-    MultipleObjectsReturned, ObjectDoesNotExist, PermissionDenied)
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -252,12 +251,24 @@ class LineMixin(object):
     """
 
     def fetch_line(self, user, wishlist_key, line_pk=None, product_pk=None):
-        self.wishlist = WishList._default_manager.get(
-            owner=user, key=wishlist_key)
         if line_pk is not None:
-            self.line = self.wishlist.lines.get(pk=line_pk)
+            self.line = get_object_or_404(
+                Line,
+                pk=line_pk,
+                wishlist__owner=user,
+                wishlist__key=wishlist_key,
+            )
         else:
-            self.line = self.wishlist.lines.get(product_id=product_pk)
+            try:
+                self.line = get_object_or_404(
+                    Line,
+                    product_id=product_pk,
+                    wishlist__owner=user,
+                    wishlist__key=wishlist_key,
+                )
+            except Line.MultipleObjectsReturned:
+                raise Http404
+        self.wishlist = self.line.wishlist
         self.product = self.line.product
 
 
@@ -270,8 +281,11 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
 
     def get_object(self, queryset=None):
         self.fetch_line(
-            self.request.user, self.kwargs['key'],
-            self.kwargs.get('line_pk'), self.kwargs.get('product_pk'))
+            self.request.user,
+            self.kwargs['key'],
+            self.kwargs.get('line_pk'),
+            self.kwargs.get('product_pk')
+        )
         return self.line
 
     def get_context_data(self, **kwargs):
@@ -300,13 +314,8 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
 class WishListMoveProductToAnotherWishList(LineMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        try:
-            self.fetch_line(request.user, kwargs['key'],
-                            line_pk=kwargs['line_pk'])
-        except (ObjectDoesNotExist, MultipleObjectsReturned):
-            raise Http404
-        return super().dispatch(
-            request, *args, **kwargs)
+        self.fetch_line(request.user, kwargs['key'], line_pk=kwargs['line_pk'])
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         to_wishlist = get_object_or_404(
