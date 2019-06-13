@@ -61,3 +61,30 @@ class TestMoveProductToAnotherWishList(WishListTestMixin, WebTestCase):
         self.get(url)
         self.assertEqual(self.wishlist1.lines.filter(product=self.product).count(), 0)
         self.assertEqual(self.wishlist2.lines.filter(product=self.product).count(), 1)
+        # Test WishList doesnt contain line and return 404
+        self.assertEqual(self.get(url, expect_errors=True).status_code, 404)
+
+
+class TestWishListRemoveProduct(WishListTestMixin, WebTestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.wishlist = WishListFactory(owner=self.user)
+        self.wishlist.add(self.product)
+        self.line = self.wishlist.lines.get(product=self.product)
+
+    def test_remove_wishlist_line(self):
+        delete_wishlist_line_url = reverse_lazy(
+            'customer:wishlists-remove-product', kwargs={'key': self.wishlist.key, 'line_pk': self.line.pk}
+        )
+        self.get(delete_wishlist_line_url).forms[0].submit()
+        # Test WishList doesnt contain line and return 404
+        self.assertEqual(self.get(delete_wishlist_line_url, expect_errors=True).status_code, 404)
+
+    def test_remove_wishlist_product(self):
+        delete_wishlist_product_url = reverse_lazy(
+            'customer:wishlists-remove-product', kwargs={'key': self.wishlist.key, 'product_pk': self.line.product.id}
+        )
+        self.get(delete_wishlist_product_url).forms[0].submit()
+        # Test WishList doesnt contain line and return 404
+        self.assertEqual(self.get(delete_wishlist_product_url, expect_errors=True).status_code, 404)
