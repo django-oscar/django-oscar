@@ -2,7 +2,7 @@
 Oscar 2.0 release notes
 =======================
 
-:release: tbd
+:release: 2019-04-04
 
 Welcome to Oscar 2.0. This is a significant release which includes a number of
 new features and backwards incompatible changes. In particular the way Oscar
