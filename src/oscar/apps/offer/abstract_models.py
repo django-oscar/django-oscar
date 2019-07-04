@@ -31,7 +31,7 @@ load_proxy, unit_price = get_classes('offer.utils', ['load_proxy', 'unit_price']
 
 class ReverseStartsWith(StartsWith):
     """
-    Adds a new lookup method to the django query language, that allows the 
+    Adds a new lookup method to the django query language, that allows the
     folowing syntax::
 
         henk_rstartswith="koe"
@@ -41,7 +41,7 @@ class ReverseStartsWith(StartsWith):
         henk_startswith="koe"
 
      Would be about the same as the python statement::
-    
+
         henk.startswith("koe")
 
     ReverseStartsWith will flip the right and left hand side of the expression,
@@ -60,7 +60,9 @@ class ReverseStartsWith(StartsWith):
             raise Exception("Flipped process_lhs does not accept lhs argument")
         return super(ReverseStartsWith, self).process_rhs(compiler, connection)
 
+
 Field.register_lookup(ReverseStartsWith, "rstartswith")
+
 
 class BaseOfferMixin(models.Model):
     class Meta:
