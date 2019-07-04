@@ -580,7 +580,7 @@ class AbstractProduct(models.Model):
         return MissingProductImage()
 
     def get_all_images(self):
-        if self.is_child and not self.images.exists() and self.parent is not None:
+        if self.is_child and not self.images.exists() and self.parent_id is not None:
             return self.parent.images.all()
         return self.images.all()
 

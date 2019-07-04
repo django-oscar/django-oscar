@@ -996,7 +996,7 @@ class AbstractRange(models.Model):
         """
         Test whether products for the range can be re-ordered.
         """
-        return not(self.included_categories.exists() or self.classes.exists())
+        return not (self.included_categories.exists() or self.classes.exists())
 
 
 class AbstractRangeProduct(models.Model):
