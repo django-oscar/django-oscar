@@ -933,13 +933,6 @@ class AbstractRange(models.Model):
         return self.all_products().count()
 
     def all_products(self):
-        if self.proxy:
-            return self.proxy.all_products()
-
-        return self.product_queryset
-
-    @cached_property
-    def product_queryset(self):
         """
         Return a queryset containing all the products in the range
 
@@ -947,6 +940,14 @@ class AbstractRange(models.Model):
         included classes and categories, minus the products in
         excluded_products.
         """
+        if self.proxy:
+            return self.proxy.all_products()
+
+        return self.product_queryset
+
+    @cached_property
+    def product_queryset(self):
+        "cached queryset of all the products in the Range"
         Product = self.included_products.model
 
         if self.includes_all_products:
