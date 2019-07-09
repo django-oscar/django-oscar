@@ -50,7 +50,6 @@ class BasketLineForm(forms.ModelForm):
         qty = self.cleaned_data['quantity']
         if qty > 0:
             self.check_max_allowed_quantity(qty)
-            self.check_permission(qty)
         return qty
 
     def check_max_allowed_quantity(self, qty):
@@ -62,13 +61,6 @@ class BasketLineForm(forms.ModelForm):
         qty_delta = qty - self.instance.quantity
         is_allowed, reason = self.instance.basket.is_quantity_allowed(qty_delta)
         if not is_allowed:
-            raise forms.ValidationError(reason)
-
-    def check_permission(self, qty):
-        policy = self.instance.purchase_info.availability
-        is_available, reason = policy.is_purchase_permitted(
-            quantity=qty)
-        if not is_available:
             raise forms.ValidationError(reason)
 
     class Meta:
