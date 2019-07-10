@@ -48,12 +48,11 @@ class TestBasketLineForm(TestCase):
         form = self.build_form()
         self.assertTrue(form.is_valid())
 
-    def test_enforces_availability_policy_for_invalid_quantities(self):
+    def test_doesnt_enforce_availability_policy_for_invalid_quantities(self):
         self.mock_availability_return_value(False, "Some reason")
         form = self.build_form()
-        self.assertFalse(form.is_valid())
-        self.assertEqual(
-            form.errors['quantity'], ['Some reason'])
+        self.assertTrue(form.is_valid())
+        self.assertFalse(form.errors)
 
     def test_skips_availability_policy_for_zero_quantities(self):
         self.mock_availability_return_value(True)

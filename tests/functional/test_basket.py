@@ -272,9 +272,10 @@ class BasketFormSetTests(WebTestCase):
             'form-2-id': formset.forms[2].instance.id,
         }
         response = self.post(reverse('basket:summary'), params=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        response = self.get(response.url)
         formset = response.context['formset']
-        self.assertEqual(len(formset.forms), 3)
+        self.assertEqual(len(formset.forms), 2)
         self.assertEqual(len(formset.forms_with_instances), 2)
-        self.assertEqual(basket.lines.all()[0].quantity, 1)
-        self.assertEqual(basket.lines.all()[1].quantity, 1)
+        self.assertEqual(basket.lines.all()[0].quantity, 2)
+        self.assertEqual(basket.lines.all()[1].quantity, 2)
