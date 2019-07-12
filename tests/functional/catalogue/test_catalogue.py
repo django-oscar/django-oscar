@@ -69,14 +69,14 @@ class TestProductListView(WebTestCase):
 
     def test_shows_add_to_basket_button_for_available_product(self):
         product = create_product(num_in_stock=1)
-        page = self.app.get(reverse('catalogue:index'))
+        page = self.app.get(settings.OSCAR_HOMEPAGE)
         self.assertContains(page, product.title)
         self.assertContains(page, gettext("Add to basket"))
 
     def test_shows_not_available_for_out_of_stock_product(self):
         product = create_product(num_in_stock=0)
 
-        page = self.app.get(reverse('catalogue:index'))
+        page = self.app.get(settings.OSCAR_HOMEPAGE)
 
         self.assertContains(page, product.title)
         self.assertContains(page, "Unavailable")
@@ -87,19 +87,19 @@ class TestProductListView(WebTestCase):
         for idx in range(0, int(1.5 * per_page)):
             create_product(title=title % idx)
 
-        page = self.app.get(reverse('catalogue:index'))
+        page = self.app.get(settings.OSCAR_HOMEPAGE)
 
         self.assertContains(page, "Page 1 of 2")
 
     def test_is_public_on(self):
         product = create_product(upc="grote-bats", is_public=True)
-        page = self.app.get(reverse('catalogue:index'))
+        page = self.app.get(settings.OSCAR_HOMEPAGE)
         products_on_page = list(page.context['products'].all())
         self.assertEqual(products_on_page, [product])
 
     def test_is_public_off(self):
         create_product(upc="kleine-bats", is_public=False)
-        page = self.app.get(reverse('catalogue:index'))
+        page = self.app.get(settings.OSCAR_HOMEPAGE)
         products_on_page = list(page.context['products'].all())
         self.assertEqual(products_on_page, [])
 

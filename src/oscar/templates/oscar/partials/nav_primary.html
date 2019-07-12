@@ -42,7 +42,7 @@
                         </a>
                         <ul class="dropdown-menu" data-navigation="dropdown-menu">
                             {% category_tree depth=2 as tree_categories %}
-                            <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
+                            <li><a tabindex="-1" href="{{ OSCAR_HOMEPAGE }}">{% trans "All products" %}</a></li>
                             {% if tree_categories %}
                                 <li class="divider"></li>
                                 {% for tree_category in tree_categories %}

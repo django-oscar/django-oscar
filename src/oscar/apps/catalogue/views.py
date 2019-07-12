@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import InvalidPage
-from django.http import Http404, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.http import urlquote
 from django.utils.translation import gettext_lazy as _
@@ -131,7 +132,7 @@ class CatalogueView(TemplateView):
         except InvalidPage:
             # Redirect to page one.
             messages.error(request, _('The given page number was invalid.'))
-            return redirect('catalogue:index')
+            return HttpResponseRedirect(settings.OSCAR_HOMEPAGE)
         return super().get(request, *args, **kwargs)
 
     def get_search_handler(self, *args, **kwargs):
