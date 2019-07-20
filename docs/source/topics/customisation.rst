@@ -5,7 +5,7 @@ Customising Oscar
 Many parts of Oscar can be adapted to your needs like any other Django
 application:
 
-* Many :doc:`settings</ref/settings>` control Oscar's behavior
+* Many :doc:`settings</ref/settings>` control Oscar's behaviour
 * The looks can be controlled by extending or overriding the
   :doc:`templates </howto/how_to_customise_templates>`
 
@@ -13,12 +13,12 @@ But as Oscar is built as a highly customisable and extendable framework, it
 doesn't stop there. The behaviour of all Oscar apps can heavily be altered
 by injecting your own code.
 
-To extend the behavior of an Oscar core app, it needs to be forked, which is
+To extend the behaviour of an Oscar core app, it needs to be forked, which is
 achieved with a simple management command. Afterwards, you should
 generally be able to override any class/model/view by just dropping it
 in the right place and giving it the same name.
 
-In some cases, customising is slightly more involved. The following how-tos
+In some cases, customising is slightly more involved. The following guides
 give plenty of examples for specific use cases:
 
 * :doc:`/howto/how_to_customise_models`

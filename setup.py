@@ -49,6 +49,7 @@ easy_thumbnails_version = 'easy-thumbnails==2.5'
 docs_requires = [
     'Sphinx==2.0.1',
     'sphinxcontrib-napoleon==0.7',
+    'sphinxcontrib-spelling==4.3.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-issues==1.2.0',
     sorl_thumbnail_version,

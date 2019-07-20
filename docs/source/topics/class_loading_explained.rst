@@ -4,15 +4,19 @@ Dynamic class loading explained
 
 Dynamic class loading is the foundation for making Oscar extensively
 customisable. It is hence worth understanding how it works, because most
-customisations depend on it.
+customisation depends on it.
 
 It is achieved by :meth:`oscar.core.loading.get_classes` and its
 single-class cousin :meth:`~oscar.core.loading.get_class`.  Wherever feasible,
-Oscar's codebase uses ``get_classes`` instead of a regular import statement::
+Oscar uses ``get_classes`` instead of a regular import statement:
+
+.. code-block:: python
 
     from oscar.apps.shipping.repository import Repository
 
-is replaced by::
+is replaced by:
+
+.. code-block:: python
 
     from oscar.core.loading import get_class
 
@@ -75,6 +79,8 @@ In some cases it may be necessary to customise the logic used by Oscar to
 dynamically load classes. You can do this by supplying your own class loader
 function to the ``OSCAR_DYNAMIC_CLASS_LOADER`` setting:
 
+.. code-block:: python
+
     OSCAR_DYNAMIC_CLASS_LOADER = 'myproject.custom_class_loader'
 
 Supply a dotted Python path to a callable that takes
@@ -85,7 +91,9 @@ Testing
 -------
 
 You can test whether your overriding worked by trying to get a class from your
-module::
+module:
+
+.. code-block:: python
 
     >>> from oscar.core.loading import get_class
     >>> get_class('shipping.repository', 'Repository')

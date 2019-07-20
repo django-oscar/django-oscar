@@ -190,7 +190,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def create_billing_address(self, user, billing_address=None,
                                shipping_address=None, **kwargs):
         """
-        Saves any relevant billing data (eg a billing address).
+        Saves any relevant billing data (e.g. a billing address).
         """
         if not billing_address:
             return None

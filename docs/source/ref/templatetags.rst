@@ -133,7 +133,7 @@ Load these tags using ``{% load image_tags %}``.
 ``oscar_thumbnail``
 ~~~~~~~~~~~~~~~~~~~
 
-Returns the thumbnail url for a source file.
+Returns the thumbnail URL for a source file.
 
 .. code-block:: html+django
 
@@ -164,8 +164,8 @@ The arguments are:
 ===================  =====================================================
 Argument             Description
 ===================  =====================================================
-``source``           Can be an ImageField, FileField, a file name (assuming default_storage), a url.
-``size``             Specified as "WIDTHxHEIGHT", "WIDTHx" or "xHEIGHT". Width and height are in pixels.
+``source``           Can be an ImageField, FileField, a file name (assuming default_storage), a URL.
+``size``             Specified as :samp:`{width}x{height}`, :samp:`{width}x` or :samp:`x{height}`. Width and height are in pixels.
                      E.g. "70x120", "50x", "x155".
 ``options``          Space separated list of options which are used when processing the image to a thumbnail.
                      E.g. option ``upscale=False``.

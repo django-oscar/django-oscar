@@ -37,7 +37,7 @@ def generate_username():
 
 class PasswordResetForm(auth_forms.PasswordResetForm):
     """
-    This form takes the same structure as its parent from django.contrib.auth
+    This form takes the same structure as its parent from :py:mod:`django.contrib.auth`
     """
     communication_type_code = "PASSWORD_RESET"
 
@@ -78,7 +78,7 @@ class EmailAuthenticationForm(AuthenticationForm):
     """
     Extends the standard django AuthenticationForm, to support 75 character
     usernames. 75 character usernames are needed to support the EmailOrUsername
-    auth backend.
+    authentication backend.
     """
     username = forms.EmailField(label=_('Email address'))
     redirect_url = forms.CharField(
@@ -98,7 +98,7 @@ class ConfirmPasswordForm(forms.Form):
     """
     Extends the standard django AuthenticationForm, to support 75 character
     usernames. 75 character usernames are needed to support the EmailOrUsername
-    auth backend.
+    authentication backend.
     """
     password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
@@ -266,9 +266,9 @@ class UserForm(forms.ModelForm):
 
     def clean_email(self):
         """
-        Make sure that the email address is aways unique as it is
+        Make sure that the email address is always unique as it is
         used instead of the username. This is necessary because the
-        unique-ness of email addresses is *not* enforced on the model
+        uniqueness of email addresses is *not* enforced on the model
         level in ``django.contrib.auth.models.User``.
         """
         email = normalise_email(self.cleaned_data['email'])

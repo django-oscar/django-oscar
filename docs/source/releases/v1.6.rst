@@ -1,3 +1,8 @@
+.. spelling::
+
+    jQuery
+    Mailgun
+
 =======================
 Oscar 1.6 release notes
 =======================
@@ -66,14 +71,14 @@ Minor changes
 
  - Fixed ``ExtendedURLValidator`` for locale-prefixed URLs for locales, different
    from current (see :issue:`1481`). Previously, validation did not pass when
-   if the current locale was "en-gb" and, the a visited URL was "/de/catalogue/"
+   if the current locale was ``en-gb`` and, the a visited URL was ``/de/catalogue/``
    and visa versa due to Django's default behaviour.
 
  - Product attribute value save is now handled by separate methods, to make it
      easier to override this behaviour.
 
  - Address hash generation is now separated from the summary in order to
-   preserve same behavior when summary property customized (see :issue:`1537`).
+   preserve same behaviour when summary property customised (see :issue:`1537`).
    They can use different field names, listed out in `base_fields` and
    `hash_fields` respectively. Also hash generation now became
    platform-independent and generates the same for Python 2 and 3.
@@ -135,13 +140,13 @@ Backwards incompatible changes in Oscar 1.6
    ``exclusive`` to denote that the offer involved can not be combined on the
    same item on the same basket line with another offer.
    This flag is used by ``oscar.apps.basket.utils.LineOfferConsumer``, a facade
-   that supercedes the old ``oscar.apps.basket.models.Line._affected_items`` counter,
-   and replaces it with a more finegrained approach. This makes it possible to apply
-   two distinct non-exclusive offers on the same basketline items, for example
+   that supersedes the old ``oscar.apps.basket.models.Line._affected_items`` counter,
+   and replaces it with a more fine-grained approach. This makes it possible to apply
+   two distinct non-exclusive offers on the same line items, for example
    multiple distinct vouchers.
-   A couple of methods on the basketline model have been extended with an
+   A couple of methods on the ``Line`` model have been extended with an
    optional ``offer`` argument, i.e. ``discount`` and ``consume``, so if you
-   are using a customized basketline model, you have to update your methods'
+   are using a customised ``Line`` model, you have to update your methods'
    signatures.
 
  - Invalid URL names supplied to the ``OSCAR_DASHBOARD_NAVIGATION`` setting
@@ -158,7 +163,7 @@ Backwards incompatible changes in Oscar 1.6
    select2. Instead of rendering a hidden input it now renders a normal
    ``select`` element.
 
- - The django-extra-views dependency was upgraded to version 0.11, and the
+ - The :py:mod:`django-extra-views` dependency was upgraded to version 0.11, and the
    basket views that rely on ``extra_views.ModelFormSetView`` updated to use the
    new factory_kwargs attribute.
 
@@ -175,19 +180,19 @@ Backwards incompatible changes in Oscar 1.6
 Dependency changes
 ------------------
 
-- Upgraded jQuery to version 3.3.1.
+- Upgraded ``jquery`` to version 3.3.1.
 
-- Upgraded Bootstrap to version 3.3.7.
+- Upgraded ``bootstrap`` to version 3.3.7.
 
-- Upgraded bootstrap-datetimepicker to v2.4.4.
+- Upgraded ``bootstrap-datetimepicker`` to v2.4.4.
 
-- Upgraded jQuery-mousewheel to v3.1.13.
+- Upgraded ``jquery-mousewheel`` to v3.1.13.
 
-- Upgraded inputmask to v3.2.7.
+- Upgraded ``inputmask`` to v3.2.7.
 
-- Upgraded jquery-sortable to v0.9.13.
+- Upgraded ``jquery-sortable`` to v0.9.13.
 
-- Upgraded select2 to v4.0.5.
+- Upgraded ``select2`` to v4.0.5.
 
 .. _deprecated_features_in_1.6:
 

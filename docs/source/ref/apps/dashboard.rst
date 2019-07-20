@@ -34,7 +34,7 @@ If a non-staff user with the ``partner.dashboard_access`` permission is in
   lines is associated with a matching partner. By default, user will get
   access to all lines of the order, even though supplies only one of them.
   If you need user to see only own lines or apply additional filtering - you
-  can customize
+  can customise
   :meth:`~oscar.apps.dashboard.order.views.OrderDetailView.get_order_lines`
   method.
 
