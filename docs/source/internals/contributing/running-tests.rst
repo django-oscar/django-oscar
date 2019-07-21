@@ -25,11 +25,10 @@ This will create a virtualenv in `venv`, install the test dependencies and run p
 Details
 ~~~~~~~
 
-First we create a virtualenv and install the required dependencies::
+First we create a virtualenv, install the required dependencies and activate it::
 
-    $ virtualenv venv
+    $ make venv
     $ source venv/bin/activate
-    $ pip install -e .[test]
 
 Then we invoke pytest using ::
 
