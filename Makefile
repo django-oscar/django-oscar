@@ -28,7 +28,7 @@ install-js: ## Install js requirements
 	npm install
 
 venv: ## Create a virtual env and install test and production requirements
-	virtualenv --python=$(shell which python3) $(VENV)
+	$(shell which python3) -m venv $(VENV)
 	$(VENV)/bin/pip install -e .[test]
 	$(VENV)/bin/pip install -r docs/requirements.txt
 
