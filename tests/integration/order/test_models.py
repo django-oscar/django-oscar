@@ -36,12 +36,20 @@ class OrderStatusPipelineTests(TestCase):
 
     def setUp(self):
         Order.pipeline = {'PENDING': ('SHIPPED', 'CANCELLED'),
-                          'SHIPPED': ('COMPLETE',)}
+                          'SHIPPED': ('COMPLETE',),
+                          'COMPLETE': (),
+                          'CANCELLED': ()}
         Order.cascade = {'SHIPPED': 'SHIPPED'}
 
     def tearDown(self):
         Order.pipeline = {}
         Order.cascade = {}
+
+    def test_all_statuses_class_method(self):
+        self.assertEqual(
+            ['CANCELLED', 'COMPLETE', 'PENDING', 'SHIPPED'],
+            sorted(Order.all_statuses()),
+        )
 
     def test_available_statuses_for_pending(self):
         self.order = create_order(status='PENDING')
@@ -216,15 +224,14 @@ class LineTests(TestCase):
 class LineStatusTests(TestCase):
 
     def setUp(self):
-        Line.pipeline = {'A': ('B', 'C'),
-                         'B': ('C',)}
+        Line.pipeline = {'A': ('B', 'C'), 'B': ('C',), 'C': ()}
         self.order = create_order()
         self.line = self.order.lines.all()[0]
         self.line.status = 'A'
         self.line.save()
 
     def test_all_statuses_class_method(self):
-        self.assertEqual(['A', 'B'], sorted(Line.all_statuses()))
+        self.assertEqual(['A', 'B', 'C'], sorted(Line.all_statuses()))
 
     def test_invalid_status_set_raises_exception(self):
         with self.assertRaises(InvalidLineStatus):

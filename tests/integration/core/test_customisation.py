@@ -117,7 +117,6 @@ class TestForkApp(TestCase):
             config_module = __import__('custom_myapp.apps', fromlist=['CustomMyAppConfig'])
             assert hasattr(config_module, 'MyAppConfig')
             assert config_module.MyAppConfig.name.endswith('.custom_myapp')
-            assert config_module.MyAppConfig.label == 'myapp'
 
     def test_absolute_target_path(self):
         tmpdir = tempfile.mkdtemp()
