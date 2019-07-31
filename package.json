@@ -3,7 +3,10 @@
   "version": "2.0.0",
   "description": "A domain-driven e-commerce framework for Django",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "lodash.merge": "^4.6.2"
+  },
   "devDependencies": {
     "bootstrap": "^3.4.1",
     "bootstrap-datetime-picker": "^2.4.4",
