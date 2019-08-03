@@ -55,7 +55,7 @@ play around with Oscar.
 In order to compile uWSGI, which is a dependency of the sandbox, you will
 first need to install the Python development headers with:::
 
-    $ sudo apt-get install python3-dev
+    $ sudo apt install python3-dev
 
 Install Oscar and its dependencies within a virtualenv:
 
@@ -79,7 +79,7 @@ If you do not have ``mkvirtualenv``, then replace that line with:
 
 .. code-block:: bash
 
-    $ virtualenv oscar
+    $ virtualenv --python=python3 oscar
     $ source ./oscar/bin/activate
     (oscar) $
 
