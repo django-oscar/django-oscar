@@ -1,4 +1,5 @@
 import logging
+import warnings
 from functools import lru_cache
 
 from django.apps import apps
@@ -6,6 +7,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch, resolve, reverse
 
 from oscar.core.application import OscarDashboardConfig
+from oscar.utils.deprecation import RemovedInOscar21Warning
 from oscar.views.decorators import check_permissions
 
 logger = logging.getLogger('oscar.dashboard')
@@ -97,15 +99,34 @@ def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
     if url_name is None:  # it's a heading
         return True
 
-    url = reverse(url_name, args=url_args, kwargs=url_kwargs)
+    try:
+        url = reverse(url_name, args=url_args, kwargs=url_kwargs)
+    except NoReverseMatch:
+        logger.exception('Invalid URL name {}'.format(url_name))
+        warnings.warn(
+            'Invalid URL names supplied to oscar.dashboard.nav.default_access_fn'
+            'will throw an exception in Oscar 2.1',
+            RemovedInOscar21Warning,
+            stacklevel=2
+        )
+        return False
+
     url_match = resolve(url)
     url_name = url_match.url_name
     try:
         app_config_instance = _dashboard_url_names_to_config()[url_name]
     except KeyError:
-        raise NoReverseMatch(
+        logger.error(
             "{} is not a valid dashboard URL".format(url_match.view_name)
         )
+        warnings.warn(
+            'Invalid URL names supplied to oscar.dashboard.nav.default_access_fn'
+            'will throw an exception in Oscar 2.1',
+            RemovedInOscar21Warning,
+            stacklevel=2
+        )
+        return False
+
     permissions = app_config_instance.get_permissions(url_name)
 
     return check_permissions(user, permissions)
