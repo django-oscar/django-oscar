@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 
 from oscar.apps.dashboard.menu import get_nodes
 from oscar.apps.dashboard.nav import default_access_fn
@@ -22,6 +23,10 @@ class DashboardAccessFunctionTestCase(TestCase):
 
     def test_default_access_fn_invalid_url_name(self):
         self.assertFalse(default_access_fn(self.staff_user, 'invalid_module:index'))
+
+    def test_default_access_non_dashboard_url_name(self):
+        assert reverse('search:search')
+        self.assertFalse(default_access_fn(self.staff_user, 'search:search'))
 
 
 class DashboardNavTestCase(TestCase):

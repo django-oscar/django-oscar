@@ -1,14 +1,13 @@
-import inspect
 import logging
-import sys
-from collections import OrderedDict
+import warnings
+from functools import lru_cache
 
 from django.apps import apps
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch, resolve, reverse
 
 from oscar.core.application import OscarDashboardConfig
-from oscar.core.exceptions import AppNotFoundError
+from oscar.utils.deprecation import RemovedInOscar21Warning
 from oscar.views.decorators import check_permissions
 
 logger = logging.getLogger('oscar.dashboard')
@@ -62,78 +61,72 @@ class Node(object):
         return len(self.children) > 0
 
 
-def default_access_fn(user, url_name, url_args=None, url_kwargs=None):  # noqa C901 too complex
+@lru_cache(maxsize=1)
+def _dashboard_url_names_to_config():
+    dashboard_configs = (
+        config
+        for config in apps.get_app_configs()
+        if isinstance(config, OscarDashboardConfig)
+    )
+    urls_to_config = {}
+    for config in dashboard_configs:
+        for url in config.urls[0]:
+            # includes() don't have a name attribute
+            # We skipped them because they come from other AppConfigs
+            name = getattr(url, 'name', None)
+            if not name:
+                continue
+
+            if name in urls_to_config:
+                if urls_to_config[name] != config:
+                    raise ImproperlyConfigured(
+                        "'{}' exists in both {} and {}!".format(
+                            name, config, urls_to_config[name]
+                        )
+                    )
+
+            urls_to_config[name] = config
+    return urls_to_config
+
+
+def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
     """
-    Given a url_name and a user, this function tries to assess whether the
+    Given a user and a url_name, this function assesses whether the
     user has the right to access the URL.
-    The application instance of the view is fetched via the Django app
-    registry.
     Once the permissions for the view are known, the access logic used
     by the dashboard decorator is evaluated
-
-    This function might seem costly, but a simple comparison with DTT
-    did not show any change in response time
     """
     if url_name is None:  # it's a heading
         return True
 
-    # get view module string.
     try:
         url = reverse(url_name, args=url_args, kwargs=url_kwargs)
     except NoReverseMatch:
-        # In Oscar 1.5 this exception was silently ignored which made debugging
-        # very difficult. Now it is being logged and in future the exception will
-        # be propagated.
         logger.exception('Invalid URL name {}'.format(url_name))
+        warnings.warn(
+            'Invalid URL names supplied to oscar.dashboard.nav.default_access_fn'
+            'will throw an exception in Oscar 2.1',
+            RemovedInOscar21Warning,
+            stacklevel=2
+        )
         return False
 
-    view_module = resolve(url).func.__module__
+    url_match = resolve(url)
+    url_name = url_match.url_name
+    try:
+        app_config_instance = _dashboard_url_names_to_config()[url_name]
+    except KeyError:
+        logger.error(
+            "{} is not a valid dashboard URL".format(url_match.view_name)
+        )
+        warnings.warn(
+            'Invalid URL names supplied to oscar.dashboard.nav.default_access_fn'
+            'will throw an exception in Oscar 2.1',
+            RemovedInOscar21Warning,
+            stacklevel=2
+        )
+        return False
 
-    # We can't assume that the view has the same parent module as the app
-    # config, as either the app config or view can be customised. So we first
-    # look it up in the app registry using "get_containing_app_config", and if
-    # it isn't found, then we walk up the package tree, looking for an
-    # OscarDashboardConfig class, from which we get an app label, and use that
-    # to look it up again in the app registry using "get_app_config".
-    app_config_instance = apps.get_containing_app_config(view_module)
-    if app_config_instance is None:
-        try:
-            app_config_class = get_app_config_class(view_module)
-        except AppNotFoundError:
-            raise ImproperlyConfigured(
-                "Please provide an OscarDashboardConfig subclass in the apps "
-                "module or set a custom access_fn")
-        if hasattr(app_config_class, 'label'):
-            app_label = app_config_class.label
-        else:
-            app_label = app_config_class.name.rpartition('.')[2]
-        try:
-            app_config_instance = apps.get_app_config(app_label)
-        except LookupError:
-            raise AppNotFoundError(
-                "Couldn't find an app with the label %s" % app_label)
-        if not isinstance(app_config_instance, OscarDashboardConfig):
-            raise AppNotFoundError(
-                "Couldn't find an Oscar Dashboard app with the label %s" % app_label)
+    permissions = app_config_instance.get_permissions(url_name)
 
-    # handle name-spaced view names
-    if ':' in url_name:
-        view_name = url_name.split(':')[1]
-    else:
-        view_name = url_name
-    permissions = app_config_instance.get_permissions(view_name)
     return check_permissions(user, permissions)
-
-
-def get_app_config_class(module_name):
-    apps_module_name = module_name.rpartition('.')[0] + '.apps'
-    if apps_module_name in sys.modules:
-        oscar_dashboard_config_classes = []
-        apps_module_classes = inspect.getmembers(sys.modules[apps_module_name], inspect.isclass)
-        for klass in OrderedDict(apps_module_classes).values():
-            if issubclass(klass, OscarDashboardConfig):
-                oscar_dashboard_config_classes.append(klass)
-        if oscar_dashboard_config_classes:
-            return oscar_dashboard_config_classes[-1]
-    raise AppNotFoundError(
-        "Couldn't find an app to import %s from" % module_name)
