@@ -26,14 +26,14 @@ class ProductOptionTests(TestCase):
         qs = Product.objects.browsable().base_queryset().filter(id=self.product.id)
         product = qs.first()
         self.assertTrue(product.has_options)
-        self.assertEquals(product.num_product_class_options, 1)
+        self.assertTrue(product.has_product_class_options)
 
     def test_queryset_per_product(self):
         self.product.product_options.add(self.option)
         qs = Product.objects.browsable().base_queryset().filter(id=self.product.id)
         product = qs.first()
         self.assertTrue(product.has_options)
-        self.assertEquals(product.num_product_options, 1)
+        self.assertTrue(product.has_product_options, 1)
 
     def test_queryset_both(self):
         "The options attribute on a product should return a queryset containing "
@@ -49,13 +49,13 @@ class ProductOptionTests(TestCase):
         )
         qs = Product.objects.browsable().base_queryset().filter(id=self.product.id)
         product = qs.first()
-        self.assertEquals(
-            product.num_product_class_options, 1,
-            "num_product_class_options should indicate the product_class option"
+        self.assertTrue(
+            product.has_product_class_options,
+            "has_product_class_options should indicate the product_class option"
         )
-        self.assertEquals(
-            product.num_product_options, 1,
-            "num_product_options should indicate the number of product options"
+        self.assertTrue(
+            product.has_product_options,
+            "has_product_options should indicate the number of product options"
         )
         self.product_class.options.add(factories.OptionFactory(code="henk"))
         self.assertEquals(

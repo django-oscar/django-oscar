@@ -1,10 +1,11 @@
 from collections import defaultdict
 
 from django.db import models
-from django.db.models import Count
+from django.db.models import OuterRef, Exists
 from django.db.models.constants import LOOKUP_SEP
 
 from oscar.core.decorators import deprecated
+from oscar.core.loading import get_model
 
 
 class AttributeFilter(dict):
@@ -92,10 +93,13 @@ class ProductQuerySet(models.query.QuerySet):
         Applies select_related and prefetch_related for commonly related
         models to save on queries
         """
+        Option = get_model('catalogue', 'Option')
+        product_class_options = Option.objects.filter(productclass=OuterRef('product_class'))
+        product_options = Option.objects.filter(product=OuterRef('pk'))
         return self.select_related('product_class')\
             .prefetch_related('children', 'product_options', 'product_class__options', 'stockrecords', 'images') \
-            .annotate(num_product_class_options=Count('product_class__options'),
-                      num_product_options=Count('product_options'))
+            .annotate(has_product_class_options=Exists(product_class_options),
+                      has_product_options=Exists(product_options))
 
     def browsable(self):
         """
