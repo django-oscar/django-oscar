@@ -22,21 +22,21 @@ class Selector(object):
 
     This can be called in three ways:
 
-    #) Passing a request and user.  This is for determining
+    #) Passing a request and user. This is for determining
        prices/availability for a normal user browsing the site.
 
-    #) Passing just the user.  This is for offline processes that don't
+    #) Passing just the user. This is for offline processes that don't
        have a request instance but do know which user to determine prices for.
 
-    #) Passing nothing.  This is for offline processes that don't
-       correspond to a specific user.  Eg, determining a price to store in
+    #) Passing nothing. This is for offline processes that don't
+       correspond to a specific user, e.g., determining a price to store in
        a search index.
 
     """
 
     def strategy(self, request=None, user=None, **kwargs):
         """
-        Return an instanticated strategy instance
+        Return an instantiated strategy instance
         """
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord but charging zero tax.

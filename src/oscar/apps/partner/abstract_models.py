@@ -14,12 +14,12 @@ from oscar.models.fields import AutoSlugField
 
 class AbstractPartner(models.Model):
     """
-    A fulfillment partner. An individual or company who can fulfil products.
+    A fulfilment partner. An individual or company who can fulfil products.
     E.g. for physical goods, somebody with a warehouse and means of delivery.
 
     Creating one or more instances of the Partner model is a required step in
     setting up an Oscar deployment. Many Oscar deployments will only have one
-    fulfillment partner.
+    fulfilment partner.
     """
     code = AutoSlugField(_("Code"), max_length=128, unique=True, db_index=True,
                          populate_from='name')
@@ -134,8 +134,9 @@ class AbstractStockRecord(models.Model):
         _("Number in stock"), blank=True, null=True)
 
     #: The amount of stock allocated to orders but not fed back to the master
-    #: stock system.  A typical stock update process will set the num_in_stock
-    #: variable to a new value and reset num_allocated to zero
+    #: stock system.  A typical stock update process will set the
+    #: :py:attr:`.num_in_stock` variable to a new value and reset
+    #: :py:attr:`.num_allocated` to zero.
     num_allocated = models.IntegerField(
         _("Number allocated"), blank=True, null=True)
 
@@ -166,11 +167,11 @@ class AbstractStockRecord(models.Model):
     @property
     def net_stock_level(self):
         """
-        The effective number in stock (eg available to buy).
+        The effective number in stock (e.g. available to buy).
 
-        This is correct property to show the customer, not the num_in_stock
-        field as that doesn't account for allocations.  This can be negative in
-        some unusual circumstances
+        This is correct property to show the customer, not the
+        :py:attr:`.num_in_stock` field as that doesn't account for allocations.
+        This can be negative in some unusual circumstances
         """
         if self.num_in_stock is None:
             return 0

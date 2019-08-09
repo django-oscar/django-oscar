@@ -2,7 +2,7 @@
 Setting up the development environment
 ======================================
 
-Fork the repo and run::
+Fork the repository and run::
 
     $ git clone git@github.com:<username>/django-oscar.git
     $ cd django-oscar
@@ -39,7 +39,7 @@ against::
 
     $ make sandbox
     $ sites/sandbox/manage.py schemamigration $YOURAPP --auto
-    
+
 Writing LESS/CSS
 ----------------
 
@@ -61,7 +61,7 @@ You can manually compile the CSS files by running::
     make css
 
 For this to work, you will need to ensure that the pre-processor binary
-``lessc`` is installed. Using npm, install LESS using::
+``lessc`` is installed. Using npm_, install LESS using::
 
     npm install less
 
@@ -70,10 +70,13 @@ For this to work, you will need to ensure that the pre-processor binary
     If you do submit a pull request that changes the LESS files.  Please also
     recompile the CSS files and include them in your pull request.
 
-Testing migrations against MySQL and Postgres
----------------------------------------------
 
-To test the migrations against MySQL and Postgres you will need to set
+.. _npm: https://www.npmjs.com/
+
+Testing migrations against MySQL and PostgreSQL
+-----------------------------------------------
+
+To test the migrations against MySQL and PostgreSQL you will need to set
 up an environment with both installed and do the following:
 
 1. Change to sandbox folder and activate your virtualenv
@@ -82,5 +85,5 @@ up an environment with both installed and do the following:
 
     ./test_migrations.sh
 
-    This will recreate the Oscar database in both MySQL and Postgres and rebuild
-    it using ``migrate``.
+This will recreate the Oscar database in both MySQL and PostgreSQL and rebuild
+it using ``migrate``.

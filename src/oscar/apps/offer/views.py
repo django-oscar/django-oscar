@@ -15,6 +15,11 @@ class OfferListView(ListView):
     template_name = 'oscar/offer/list.html'
 
     def get_queryset(self):
+        """
+        Return a queryset of active :py:class:`ConditionalOffer <oscar.apps.offer.abstract_models.AbstractConditionalOffer>`
+        instances with an :py:attr:`offer_type <oscar.apps.offer.abstract_models.AbstractConditionalOffer.offer_type>`
+        of :py:const:`ConditionalOffer.SITE <oscar.apps.offer.abstract_models.AbstractConditionalOffer.SITE>`.
+        """  # noqa
         return ConditionalOffer.active.filter(
             offer_type=ConditionalOffer.SITE)
 
@@ -40,6 +45,10 @@ class OfferDetailView(ListView):
         return ctx
 
     def get_queryset(self):
+        """
+        Return a queryset of all :py:class:`Product <oscar.apps.catalogue.abstract_models.AbstractProduct>`
+        instances related to the :py:class:`ConditionalOffer <oscar.apps.offer.abstract_models.AbstractConditionalOffer>`.
+        """  # noqa
         return self.offer.products()
 
 
@@ -54,6 +63,10 @@ class RangeDetailView(ListView):
             request, *args, **kwargs)
 
     def get_queryset(self):
+        """
+        Return a queryset of all :py:class:`Product <oscar.apps.catalogue.abstract_models.AbstractProduct>`
+        instances related to the :py:class:`Range <oscar.apps.offer.abstract_models.AbstractRange>`.
+        """  # noqa
         products = self.range.all_products()
         return products.order_by('rangeproduct__display_order')
 

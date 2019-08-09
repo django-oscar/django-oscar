@@ -36,7 +36,7 @@ URLs
 * URL names use dashes not underscores.
 
 * Update pages are sometimes the same as detail pages (i.e., when in the
-  dashboard).  In those cases, just use the detail convention, eg
+  dashboard).  In those cases, just use the detail convention, e.g.
   ``/dashboard/notifications/3/``.  If there is a distinction between the detail
   page and the update page, use ``/dashboard/notifications/3/update/``.
 

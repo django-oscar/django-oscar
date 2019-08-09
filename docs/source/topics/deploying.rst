@@ -1,11 +1,17 @@
+.. spelling::
+
+    Memcached
+    Redis
+    Sorl
+
 ===============
 Deploying Oscar
 ===============
 
 Oscar is a just a set of Django apps - it doesn't have any special deployment
-requirements. That means the excellent Django docs for `deployment`_
-should be your first stop. This page then only distills some of the experience
-gained from running Oscar projects.
+requirements. That means the excellent Django docs for `deployment`_ should be
+your first stop. This page adds some additional tips based on experience gained
+from running Oscar projects.
 
 Performance
 -----------
@@ -18,14 +24,14 @@ without a cache backend.
 If your memory constraints are tight and you can only run one Python worker,
 LocMemCache will usually outperform external cache backends due to the lower
 overhead. But once you can scale beyond one worker, it might make good sense to
-switch to something like memcached or redis.
+switch to something like Memcached or Redis.
 
 Blocking in views should be avoided if possible. That is especially true for
-external API calls and sending emails. Django's pluggable email backends allow
-for switching out the blocking SMTP backend to a custom non-blocking solution.
-Possible options are storing emails in a database or cache for later consumption
-or triggering an external worker, e.g. via `django-celery`_.
-`django_post-office`_ works nicely.
+external API calls and sending emails. Django's supports different email
+backends to allow for switching out the blocking SMTP backend to a custom
+non-blocking solution.  Possible options are storing emails in a database or
+cache for later consumption or triggering an external worker, e.g. via
+`django-celery`_. `django_post-office`_ works nicely.
 
 For backwards-compatibility reasons, Django doesn't enable database connection
 pooling by default. Performance is likely to improve when enabled.

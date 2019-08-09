@@ -317,7 +317,7 @@ class AbstractOrder(models.Model):
 
     def check_deprecated_verification_hash(self, hash_to_check):
         """
-        Backward compatible check for md5 hashes that were generated in
+        Backward compatible check for MD5 hashes that were generated in
         Oscar 1.5 and lower.
 
         This must explicitly be enabled by setting OSCAR_DEPRECATED_ORDER_VERIFY_KEY,
@@ -718,7 +718,7 @@ class AbstractLine(models.Model):
         """
         Test whether a shipping event with the given quantity is permitted
 
-        This method should normally be overriden to ensure that the
+        This method should normally be overridden to ensure that the
         prerequisite shipping events have been passed for this line.
         """
         # Note, this calculation is simplistic - normally, you will also need
@@ -1077,9 +1077,9 @@ class ShippingEventQuantity(models.Model):
 
 class AbstractShippingEventType(models.Model):
     """
-    A type of shipping/fulfillment event
+    A type of shipping/fulfilment event
 
-    Eg: 'Shipped', 'Cancelled', 'Returned'
+    E.g.: 'Shipped', 'Cancelled', 'Returned'
     """
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)

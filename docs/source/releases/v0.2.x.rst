@@ -13,7 +13,7 @@ Oscar 0.2.1 release notes
 
 :release: 09 July 2012
 
-Mainly small bug-fixes to templates and javascript.  
+Mainly small bug-fixes to templates and Javascript.
 
 
 =========================
@@ -28,7 +28,7 @@ package now.  New features include:
 * Dashboard for managing catalogue, offers, stock, vouchers and more.  This includes
   statistics pages to track performance.
 
-* Sample templates, CSS and JS to get a shop up and running in a minutes.  
+* Sample templates, CSS and JS to get a shop up and running in a minutes.
 
 * Updated documentation.
 

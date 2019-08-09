@@ -159,7 +159,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
             '-is_default_for_shipping')
 
     def post(self, request, *args, **kwargs):
-        # Check if a shipping address was selected directly (eg no form was
+        # Check if a shipping address was selected directly (e.g. no form was
         # filled in)
         if self.request.user.is_authenticated \
                 and 'address_id' in self.request.POST:
@@ -371,7 +371,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     being used. Chronologically, `payment-details` (preview=False) comes before
     `preview` (preview=True).
 
-    If sensitive details are required (eg a bankcard), then the payment details
+    If sensitive details are required (e.g. a bankcard), then the payment details
     view should submit to the preview URL and a custom implementation of
     `validate_payment_submission` should be provided.
 
@@ -524,7 +524,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
            basket being manipulated during the payment process).
          * Attempt to take payment for the order
            - If payment is successful, place the order
-           - If a redirect is required (eg PayPal, 3DSecure), redirect
+           - If a redirect is required (e.g. PayPal, 3D Secure), redirect
            - If payment is unsuccessful, show an appropriate error message
 
         :basket: The basket to submit.
@@ -548,7 +548,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been
         # created).  We also save it in the session for multi-stage
-        # checkouts (eg where we redirect to a 3rd party site and place
+        # checkouts (e.g. where we redirect to a 3rd party site and place
         # the order on a different request).
         order_number = self.generate_order_number(basket)
         self.checkout_session.set_order_number(order_number)
@@ -574,7 +574,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         try:
             self.handle_payment(order_number, order_total, **payment_kwargs)
         except RedirectRequired as e:
-            # Redirect required (eg PayPal, 3DS)
+            # Redirect required (e.g. PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
             return http.HttpResponseRedirect(e.url)
         except UnableToTakePayment as e:
@@ -589,7 +589,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             self.restore_frozen_basket()
 
             # We assume that the details submitted on the payment details view
-            # were invalid (eg expired bankcard).
+            # were invalid (e.g. expired bankcard).
             return self.render_payment_details(
                 self.request, error=msg, **payment_kwargs)
         except PaymentError as e:

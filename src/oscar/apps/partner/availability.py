@@ -10,7 +10,7 @@ class Base(object):
     code = ''
 
     #: A description of the availability of a product.  This is shown on the
-    #: product detail page.  Eg "In stock", "Out of stock" etc
+    #: product detail page, e.g., "In stock", "Out of stock" etc
     message = ''
 
     #: When this item should be dispatched
@@ -73,7 +73,7 @@ class StockRequired(Base):
     instantiated with a stock number (``num_available``).  It ensures that the
     product is only available to buy while there is stock available.
 
-    This is suitable for physical products where back orders (eg allowing
+    This is suitable for physical products where back orders (e.g. allowing
     purchases when there isn't stock available) are not permitted.
     """
     CODE_IN_STOCK = 'instock'
@@ -93,6 +93,9 @@ class StockRequired(Base):
 
     @property
     def code(self):
+        """
+        Code indicating availability status.
+        """
         if self.num_available > 0:
             return self.CODE_IN_STOCK
         return self.CODE_OUT_OF_STOCK
@@ -104,7 +107,10 @@ class StockRequired(Base):
         return _("Unavailable")
 
     @property
-    def message(self):
+    def message(self) -> str:
+        """
+        Full availability text, suitable for detail pages.
+        """
         if self.num_available > 0:
             return _("In stock (%d available)") % self.num_available
         return _("Unavailable")

@@ -4,6 +4,8 @@ language: python
 
 addons:
   postgresql: "9.6"
+  apt_packages:
+    - enchant
 
 matrix:
   fast_finish: true

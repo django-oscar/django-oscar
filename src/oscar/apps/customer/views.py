@@ -409,6 +409,10 @@ class EmailHistoryView(PageTitleMixin, generic.ListView):
     active_tab = 'emails'
 
     def get_queryset(self):
+        """
+        Return Queryset of :py:class:`Email <oscar.apps.customer.abstract_models.AbstractEmail>`
+        instances, that has been sent to the currently authenticated user.
+        """  # noqa
         return Email._default_manager.filter(user=self.request.user)
 
 
@@ -469,6 +473,10 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
+        """
+        Return Queryset of :py:class:`Order <oscar.apps.order.abstract_models.AbstractOrder>`
+        instances for the currently authenticated user.
+        """  # noqa
         qs = self.model._default_manager.filter(user=self.request.user)
         if self.form.is_bound and self.form.is_valid():
             qs = qs.filter(**self.form.get_filters())

@@ -1,3 +1,7 @@
+.. spelling::
+
+    Transifex
+
 ===========
 Translation
 ===========
@@ -7,7 +11,7 @@ just apply for a language and go ahead!
 The source strings in Transifex are updated after every commit on Oscar's
 master branch on GitHub. We only pull the translation strings back into Oscar's
 repository when preparing for a release. That means your most recent
-translations will always be on Transifex, not in the repo!
+translations will always be on Transifex, not in the repository!
 
 .. _Transifex: https://www.transifex.com/projects/p/django-oscar/
 

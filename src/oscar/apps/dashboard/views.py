@@ -28,8 +28,8 @@ class IndexView(TemplateView):
     An overview view which displays several reports about the shop.
 
     Supports the permission-based dashboard. It is recommended to add a
-    index_nonstaff.html template because Oscar's default template will
-    display potentially sensitive store information.
+    :file:`oscar/dashboard/index_nonstaff.html` template because Oscar's
+    default template will display potentially sensitive store information.
     """
 
     def get_template_names(self):
@@ -64,9 +64,9 @@ class IndexView(TemplateView):
         Get report of order revenue split up in hourly chunks. A report is
         generated for the last *hours* (default=24) from the current time.
         The report provides ``max_revenue`` of the hourly order revenue sum,
-        ``y-range`` as the labeling for the y-axis in a template and
+        ``y-range`` as the labelling for the y-axis in a template and
         ``order_total_hourly``, a list of properties for hourly chunks.
-        *segments* defines the number of labeling segments used for the y-axis
+        *segments* defines the number of labelling segments used for the y-axis
         when generating the y-axis labels (default=10).
         """
         # Get datetime for 24 hours ago

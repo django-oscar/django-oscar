@@ -6,16 +6,16 @@ Oscar ships with several offer benefits for building offers.  There are three
 types:
 
 * Basket discounts.  These lead to a discount off the price of items in your
-  basket.  
+  basket.
 
-* Shipping discounts.  
+* Shipping discounts.
 
 * Post-order actions.  These are benefits that don't affect your order total but
   trigger some action once the order is placed.  For instance, if your site
   supports loyalty points, you might create an offer that gives 200 points when
   a certain product is bought.
 
-Oscar also lets you create your own benefits for use in offers.  
+Oscar also lets you create your own benefits for use in offers.
 
 Custom benefits
 ---------------
@@ -66,9 +66,9 @@ A benefit class must be a proxy class and have the following methods::
             """
 
 As noted in the docstring, the ``apply`` method must return an instance of
-``oscar.apps.offer.models.ApplicationResult``.  There are three subtypes
+``oscar.apps.offer.models.ApplicationResult``.  There are three subclasses
 provided:
-    
+
     * ``oscar.apps.offer.models.BasketDiscount``. This takes an amount as it's
       constructor parameter.
 
@@ -89,7 +89,7 @@ Here's an example of a post-order action benefit::
 
         class Meta:
             proxy = True
-        
+
         name = description = "Changes customer's name"
 
         def apply(self, basket, condition, offer):

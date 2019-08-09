@@ -10,7 +10,7 @@ can contribute in many ways:
 * :doc:`Report bugs <bugs-and-features>` in our `ticket tracker`_.
 
 * :doc:`Submit pull requests <submitting-pull-requests>` for new and/or
-  fixed behavior.
+  fixed behaviour.
 
 * :doc:`Improve the documentation <writing-documentation>`.
 
@@ -28,7 +28,7 @@ Overview
 
 .. toctree::
    :maxdepth: 1
-   
+
    development-environment
    bugs-and-features
    coding-style

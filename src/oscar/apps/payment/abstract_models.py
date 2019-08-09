@@ -21,8 +21,8 @@ class AbstractTransaction(models.Model):
     events do.
 
     For example:
-    * A 'pre-auth' with a bankcard gateway
-    * A 'settle' with a credit provider (see django-oscar-accounts)
+    * A ``pre-auth`` with a bankcard gateway
+    * A ``settle`` with a credit provider (see :py:mod:`django-oscar-accounts`)
     """
     source = models.ForeignKey(
         'payment.Source',
@@ -58,9 +58,9 @@ class AbstractSource(models.Model):
     """
     A source of payment for an order.
 
-    This is normally a credit card which has been pre-authed for the order
+    This is normally a credit card which has been pre-authorised for the order
     amount, but some applications will allow orders to be paid for using
-    multiple sources such as cheque, credit accounts, gift cards.  Each payment
+    multiple sources such as cheque, credit accounts, gift cards. Each payment
     source will have its own entry.
 
     This source object tracks how much money has been authorised, debited and
@@ -226,7 +226,7 @@ class AbstractBankcard(models.Model):
 
         1.  The bankcard form will return an instance of this model that can be
             used with payment gateways.  In this scenario, the instance will
-            have additional attributes (start_date, issue_number, ccv) that
+            have additional attributes (start_date, issue_number, :abbr:`ccv (Card Code Verification)`) that
             payment gateways need but that we don't save.
 
         2.  To keep a record of a user's bankcards and allow them to be

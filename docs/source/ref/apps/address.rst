@@ -1,3 +1,7 @@
+.. spelling::
+
+    Solr
+
 =======
 Address
 =======

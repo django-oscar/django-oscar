@@ -61,7 +61,7 @@ class BaseOfferMixin(models.Model):
     @property
     def name(self):
         """
-        A plaintext description of the benefit/condition. Every proxy class
+        A text description of the benefit/condition. Every proxy class
         has to implement it.
 
         This is used in the dropdowns within the offer dashboard.
@@ -82,7 +82,7 @@ class BaseOfferMixin(models.Model):
 
 class AbstractConditionalOffer(models.Model):
     """
-    A conditional offer (eg buy 1, get 10% off)
+    A conditional offer (e.g. buy 1, get 10% off)
     """
     name = models.CharField(
         _("Name"), max_length=128, unique=True,
@@ -94,14 +94,14 @@ class AbstractConditionalOffer(models.Model):
                                                " browsing page"))
 
     # Offers come in a few different types:
-    # (a) Offers that are available to all customers on the site.  Eg a
+    # (a) Offers that are available to all customers on the site. e.g. a
     #     3-for-2 offer.
     # (b) Offers that are linked to a voucher, and only become available once
     #     that voucher has been applied to the basket
-    # (c) Offers that are linked to a user.  Eg, all students get 10% off.  The
+    # (c) Offers that are linked to a user.  e.g. all students get 10% off.  The
     #     code to apply this offer needs to be coded
     # (d) Session offers - these are temporarily available to a user after some
-    #     trigger event.  Eg, users coming from some affiliate site get 10%
+    #     trigger event.  e.g. users coming from some affiliate site get 10%
     #     off.
     SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
     TYPE_CHOICES = (

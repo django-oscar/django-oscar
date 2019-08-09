@@ -121,7 +121,7 @@ Arguments sent with this signal:
 
 .. attribute:: request
 
-    The reuqest instance
+    The request instance
 
 ``pre_payment``
 ---------------

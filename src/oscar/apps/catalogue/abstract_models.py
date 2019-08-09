@@ -46,7 +46,7 @@ class AbstractProductClass(models.Model):
     slug = AutoSlugField(_('Slug'), max_length=128, unique=True,
                          populate_from='name')
 
-    #: Some product type don't require shipping (eg digital products) - we use
+    #: Some product type don't require shipping (e.g. digital products) - we use
     #: this field to take some shortcuts in the checkout.
     requires_shipping = models.BooleanField(_("Requires shipping?"),
                                             default=True)
@@ -82,10 +82,10 @@ class AbstractCategory(MP_Node):
     A product category. Merely used for navigational purposes; has no
     effects on business logic.
 
-    Uses django-treebeard.
+    Uses :py:mod:`django-treebeard`.
     """
     #: Allow comparison of categories on a limited number of fields by ranges.
-    #: When the Category model is overwriten to provide CMS content, defining
+    #: When the Category model is overwritten to provide CMS content, defining
     #: this avoids fetching a lot of unneeded extra data from the database.
     COMPARISON_FIELDS = ('pk', 'path', 'depth')
 
@@ -107,9 +107,9 @@ class AbstractCategory(MP_Node):
         Returns a string representation of the category and it's ancestors,
         e.g. 'Books > Non-fiction > Essential programming'.
 
-        It's rarely used in Oscar's codebase, but used to be stored as a
-        CharField and is hence kept for backwards compatibility. It's also
-        sufficiently useful to keep around.
+        It's rarely used in Oscar, but used to be stored as a CharField and is
+        hence kept for backwards compatibility. It's also sufficiently useful
+        to keep around.
         """
         names = [category.name for category in self.get_ancestors_and_self()]
         return self._full_name_separator.join(names)
@@ -373,7 +373,7 @@ class AbstractProduct(models.Model):
 
     def get_absolute_url(self):
         """
-        Return a product's absolute url
+        Return a product's absolute URL
         """
         return reverse('catalogue:detail',
                        kwargs={'product_slug': self.slug, 'pk': self.id})
@@ -551,7 +551,7 @@ class AbstractProduct(models.Model):
 
     def get_is_discountable(self):
         """
-        At the moment, is_discountable can't be set individually for child
+        At the moment, :py:attr:`.is_discountable` can't be set individually for child
         products; they inherit it from their parent.
         """
         if self.is_child:
@@ -909,11 +909,11 @@ class AbstractProductAttribute(models.Model):
 
 class AbstractProductAttributeValue(models.Model):
     """
-    The "through" model for the m2m relationship between catalogue.Product and
-    catalogue.ProductAttribute.  This specifies the value of the attribute for
+    The "through" model for the m2m relationship between :py:class:`Product <.AbstractProduct>` and
+    :py:class:`ProductAttribute <.AbstractProductAttribute>`  This specifies the value of the attribute for
     a particular product
 
-    For example: number_of_pages = 295
+    For example: ``number_of_pages = 295``
     """
     attribute = models.ForeignKey(
         'catalogue.ProductAttribute',
@@ -1033,8 +1033,9 @@ class AbstractProductAttributeValue(models.Model):
     def value_as_html(self):
         """
         Returns a HTML representation of the attribute's value. To customise
-        e.g. image attribute values, declare a _image_as_html property and
-        return e.g. an <img> tag.  Defaults to the _as_text representation.
+        e.g. image attribute values, declare a ``_image_as_html`` property and
+        return e.g. an ``<img>`` tag.  Defaults to the ``_as_text``
+        representation.
         """
         property_name = '_%s_as_html' % self.attribute.type
         return getattr(self, property_name, self.value_as_text)
@@ -1134,11 +1135,11 @@ class MissingProductImage(object):
     """
     Mimics a Django file field by having a name property.
 
-    sorl-thumbnail requires all it's images to be in MEDIA_ROOT. This class
+    :py:mod:`sorl-thumbnail` requires all it's images to be in MEDIA_ROOT. This class
     tries symlinking the default "missing image" image in STATIC_ROOT
     into MEDIA_ROOT for convenience, as that is necessary every time an Oscar
     project is setup. This avoids the less helpful NotFound IOError that would
-    be raised when sorl-thumbnail tries to access it.
+    be raised when :py:mod:`sorl-thumbnail` tries to access it.
     """
 
     def __init__(self, name=None):

@@ -31,7 +31,7 @@ Features:
 * Large catalogue support - Oscar is used in production by sites with
   more than 20 million products.
 
-* Multiple fulfillment partners for the same product.
+* Multiple fulfilment partners for the same product.
 
 * A range of merchandising blocks for promoting products throughout your site.
 
@@ -54,7 +54,7 @@ Features:
 
 Oscar is a good choice if your domain has non-trivial business logic.  Oscar's
 flexibility means it's straightforward to implement business rules that would be
-difficult to apply in other frameworks.  
+difficult to apply in other frameworks.
 
 Example requirements that Oscar projects already handle:
 
@@ -70,11 +70,11 @@ Example requirements that Oscar projects already handle:
 
 * Digital products.
 
-* Dynamically priced products (eg where the price is provided by an external
+* Dynamically priced products (e.g. where the price is provided by an external
   service).
 
 Oscar is used in production in several applications to sell everything from beer
-mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
+mats to hotel beds.  The `source is on GitHub`_ - contributions are always welcome.
 
 .. _`source is on GitHub`: https://github.com/django-oscar/django-oscar
 
@@ -129,4 +129,4 @@ Learn about the ideas behind Oscar and how you can contribute.
    internals/design-decisions
    releases/index
    internals/contributing/index
-   
+
