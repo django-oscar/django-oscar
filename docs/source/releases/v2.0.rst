@@ -6,7 +6,7 @@
 Oscar 2.0 release notes
 =======================
 
-:release: 2019-04-04
+:release: 2019-07-04
 
 Welcome to Oscar 2.0. This is a significant release which includes a number of
 new features and backwards incompatible changes. In particular the way Oscar
