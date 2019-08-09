@@ -12,7 +12,7 @@ Whoosh==2.7.4
 django-environ==0.4.5
 django-redis==4.10.0
 pysolr==3.7.0
-redis==3.1.0
+redis==3.3.4
 requests==2.22.0
 uWSGI==2.0.17.1
 whitenoise==4.1.2
@@ -25,7 +25,7 @@ isort==4.3.21
 
 # Helpers
 pyprof2calltree==1.4.4
-ipdb==0.12
+ipdb==0.12.1
 ipython==7.6.1
 
 # Country data
