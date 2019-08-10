@@ -19,7 +19,7 @@
     "jquery-sortable": "^0.9.13",
     "less": "^3.8.1",
     "pump": "^3.0.0",
-    "require-dir": "^1.1.0",
+    "require-dir": "^1.2.0",
     "select2": "4.0.5",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tinymce": "^4.8.3"
