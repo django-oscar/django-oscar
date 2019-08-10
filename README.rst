@@ -66,7 +66,7 @@ Docs status:
 .. end-no-pypi
 
 .. _`Official homepage`: http://oscarcommerce.com
-.. _`Sandbox site`: http://latest.oscarcommerce.com
+.. _`Sandbox site`: https://latest.oscarcommerce.com
 .. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
 .. _`Documentation`: https://django-oscar.readthedocs.io/en/stable/
 .. _`readthedocs.org`: http://readthedocs.org
@@ -129,7 +129,7 @@ gateway page`_.
 The sandbox site can be set-up locally `in 5 commands`_.  Want to
 make changes?  Check out the `contributing guidelines`_.
 
-.. _`this gateway page`: http://latest.oscarcommerce.com/gateway/
+.. _`this gateway page`: https://latest.oscarcommerce.com/gateway/
 .. _`in 5 commands`: https://django-oscar.readthedocs.io/en/stable/internals/sandbox.html#running-the-sandbox-locally
 .. _`contributing guidelines`: https://django-oscar.readthedocs.io/en/stable/internals/contributing/index.html
 

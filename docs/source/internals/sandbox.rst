@@ -35,8 +35,7 @@ The sandbox is, in effect, the blank canvas upon which you can build your site.
 Browse the external sandbox site
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An instance of the sandbox site is built hourly from master branch and made
-available at http://latest.oscarcommerce.com
+An instance of the sandbox site is made available at https://latest.oscarcommerce.com
 
 .. warning::
 
