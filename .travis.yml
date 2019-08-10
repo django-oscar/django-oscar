@@ -40,6 +40,10 @@ matrix:
   allow_failures:
     - env: TOXENV=py36-djangomaster
 
+branches:
+  only:
+  - master
+  - /^releases.*$/
 
 env:
   global:
