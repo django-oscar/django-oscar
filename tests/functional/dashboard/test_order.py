@@ -279,7 +279,7 @@ class TestChangingOrderStatus(WebTestCase):
     def setUp(self):
         super().setUp()
 
-        Order.pipeline = {'A': ('B', 'C')}
+        Order.pipeline = {'A': ('B', 'C'), 'B': ('C', ), 'C': ()}
         self.order = create_order(status='A')
         url = reverse('dashboard:order-detail',
                       kwargs={'number': self.order.number})

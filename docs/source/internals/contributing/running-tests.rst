@@ -25,11 +25,10 @@ This will create a virtualenv in `venv`, install the test dependencies and run p
 Details
 ~~~~~~~
 
-First we create a virtualenv and install the required dependencies::
+First we create a virtualenv, install the required dependencies and activate it::
 
-    $ virtualenv venv
+    $ make venv
     $ source venv/bin/activate
-    $ pip install -e .[test]
 
 Then we invoke pytest using ::
 
@@ -56,17 +55,17 @@ You can also run tests which match an expression via::
 Testing against different setups
 --------------------------------
 
-To run all tests against multiple versions of Django and Python, use detox_::
+To run all tests against multiple versions of Django and Python, use tox_::
 
-    $ detox
+    $ tox
 
 You need to have all Python interpreters to test against installed on your
 system. All other requirements are downloaded automatically.
-detox_ is a wrapper around tox_, creating the environments and running the tests
-in parallel. This greatly speeds up the process.
+
+To speed up the process, you may want to use `tox parallel mode`_.
 
 .. _tox: https://tox.readthedocs.io/en/latest/
-.. _detox: https://pypi.python.org/pypi/detox
+.. _tox parallel mode: https://tox.readthedocs.io/en/latest/example/basic.html#parallel-mode
 
 Kinds of tests
 --------------
