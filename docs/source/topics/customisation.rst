@@ -75,6 +75,10 @@ with that for your own app.
     declared in the core applications. Otherwise, it could cause issues
     with Oscar's dynamic model loading.
 
+    If you want to customise one of the dashboard applications, for instance
+    ``yourappsfolder.dashboard.catalogue``, you also need to fork the core
+    dashboard application ``yourappsfolder.dashboard``.
+
     Example:
 
     .. code:: django
