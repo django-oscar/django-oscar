@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "bootstrap": "^3.4.1",
+    "bootstrap": "^4.1.2",
     "bootstrap-datetime-picker": "^2.4.4",
     "eslint": "^5.7.0",
     "extend": ">=3.0.2",
