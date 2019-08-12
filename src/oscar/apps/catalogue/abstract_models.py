@@ -176,7 +176,7 @@ class AbstractCategory(MP_Node):
         if you don't want to include the category itself. It's a separate
         function as it's commonly used in templates.
         """
-        return list(self.get_descendants()) + [self]
+        return self.get_tree(self)
 
     def get_url_cache_key(self):
         current_locale = get_language()
@@ -580,7 +580,7 @@ class AbstractProduct(models.Model):
         return MissingProductImage()
 
     def get_all_images(self):
-        if self.is_child and not self.images.exists():
+        if self.is_child and not self.images.exists() and self.parent_id is not None:
             return self.parent.images.all()
         return self.images.all()
 

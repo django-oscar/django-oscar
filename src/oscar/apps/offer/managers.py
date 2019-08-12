@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
+from .queryset import RangeQuerySet
 
 
 class ActiveOfferManager(models.Manager):
@@ -14,9 +15,12 @@ class ActiveOfferManager(models.Manager):
         ).filter(status=self.model.OPEN)
 
 
-class BrowsableRangeManager(models.Manager):
+RangeManager = models.Manager.from_queryset(RangeQuerySet, "RangeManager")
+
+
+class BrowsableRangeManager(RangeManager):
     """
-    For searching only ranges which have the "is_browsable" flag set to True.
+    For searching only ranges which have the "is_public" flag set to True.
     """
     def get_queryset(self):
         return super().get_queryset().filter(

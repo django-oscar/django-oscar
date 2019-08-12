@@ -209,11 +209,11 @@ class TestPartialRange(TestCase):
             product=product, category=included_category)
         self.range.included_categories.add(included_category)
 
-        self.range.invalidate_cached_ids()
+        self.range.invalidate_cached_queryset()
         self.assertFalse(self.range.is_reorderable)
 
         self.range.included_categories.remove(included_category)
-        self.range.invalidate_cached_ids()
+        self.range.invalidate_cached_queryset()
         self.assertTrue(self.range.is_reorderable)
 
 
