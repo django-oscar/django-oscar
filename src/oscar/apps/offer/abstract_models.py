@@ -32,7 +32,7 @@ load_proxy, unit_price = get_classes('offer.utils', ['load_proxy', 'unit_price']
 class ReverseStartsWith(StartsWith):
     """
     Adds a new lookup method to the django query language, that allows the
-    folowing syntax::
+    following syntax::
 
         henk_rstartswith="koe"
 
@@ -53,12 +53,12 @@ class ReverseStartsWith(StartsWith):
     based on that their depth starts with the depth string of the parent.
     """
     def process_rhs(self, compiler, connection):
-        return super(ReverseStartsWith, self).process_lhs(compiler, connection)
+        return super().process_lhs(compiler, connection)
 
     def process_lhs(self, compiler, connection, lhs=None):
         if lhs is not None:
             raise Exception("Flipped process_lhs does not accept lhs argument")
-        return super(ReverseStartsWith, self).process_rhs(compiler, connection)
+        return super().process_rhs(compiler, connection)
 
 
 Field.register_lookup(ReverseStartsWith, "rstartswith")
