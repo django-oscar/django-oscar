@@ -63,7 +63,6 @@ test_requires = [
     'py>=1.4.31',
     'psycopg2>=2.7,<2.8',
     'pytest>=4.0,<4.5',
-    'pytest-cov==2.6.1',
     'pytest-django==3.4.8',
     'pytest-xdist>=1.25,<1.28',
     'tox>=3.0,<3.9',
