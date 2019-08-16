@@ -1,5 +1,6 @@
 import datetime
 import os
+import posixpath
 import shutil
 from PIL import Image
 
@@ -181,6 +182,18 @@ class TestProductClass(ProductWebTest):
         self.product = factories.ProductFactory(product_class=self.pclass)
         self.url = reverse('dashboard:catalogue-product',
                            kwargs={'pk': self.product.id})
+        self.image_folder = datetime.datetime.now().strftime(settings.OSCAR_IMAGE_FOLDER)
+
+    def tearDown(self):
+        root_image_folder = self.image_folder.split(os.sep)[0]
+        shutil.rmtree(posixpath.join(settings.MEDIA_ROOT, root_image_folder), ignore_errors=True)
+
+    def generate_test_image(self, name):
+        tempfile = BytesIO()
+        image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
+        image.save(tempfile, "PNG")
+        tempfile.seek(0)
+        return tempfile.read()
 
     def test_product_update_attribute_values(self):
         page = self.get(self.url)
@@ -193,6 +206,8 @@ class TestProductClass(ProductWebTest):
         product_form['attr_boolean'] = 'yes'
         product_form['attr_richtext'] = 'longread'
         product_form['attr_date'] = '2016-10-12'
+        product_form['attr_file'] = Upload('file1.txt', b"test", 'text/plain')
+        product_form['attr_image'] = Upload('image1.png', self.generate_test_image('image1.png'), 'image/png')
         product_form.submit()
 
         # Reloading model instance to re-initiate ProductAttributeContainer
@@ -204,6 +219,8 @@ class TestProductClass(ProductWebTest):
         self.assertTrue(self.product.attr.boolean)
         self.assertEqual(self.product.attr.richtext, 'longread')
         self.assertEqual(self.product.attr.date, datetime.date(2016, 10, 12))
+        self.assertEqual(self.product.attr.file.name, posixpath.join(self.image_folder, 'file1.txt'))
+        self.assertEqual(self.product.attr.image.name, posixpath.join(self.image_folder, 'image1.png'))
 
         page = self.get(self.url)
         product_form = page.form
@@ -213,6 +230,8 @@ class TestProductClass(ProductWebTest):
         product_form['attr_boolean'] = ''
         product_form['attr_richtext'] = 'article'
         product_form['attr_date'] = '2016-10-10'
+        product_form['attr_file'] = Upload('file2.txt', b"test", 'text/plain')
+        product_form['attr_image'] = Upload('image2.png', self.generate_test_image('image2.png'), 'image/png')
         product_form.submit()
 
         self.product = Product.objects.get(pk=self.product.id)
@@ -222,6 +241,8 @@ class TestProductClass(ProductWebTest):
         self.assertFalse(self.product.attr.boolean)
         self.assertEqual(self.product.attr.richtext, 'article')
         self.assertEqual(self.product.attr.date, datetime.date(2016, 10, 10))
+        self.assertEqual(self.product.attr.file.name, posixpath.join(self.image_folder, 'file2.txt'))
+        self.assertEqual(self.product.attr.image.name, posixpath.join(self.image_folder, 'image2.png'))
 
 
 class TestProductImages(ProductWebTest):
