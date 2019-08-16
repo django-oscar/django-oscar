@@ -33,7 +33,7 @@ install_requires = [
     'purl>=0.7',
     # For phone number field
     'phonenumbers',
-    'django-phonenumber-field>=2.0,<2.1',
+    'django-phonenumber-field>=3.0.0,<4.0.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
