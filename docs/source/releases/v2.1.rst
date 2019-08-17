@@ -34,7 +34,7 @@ Removal of deprecated features
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
 
-
+- Upgraded ``django-phonenumber-field`` to use the latest in the 3.x series.
 
 .. _deprecated_features_in_2.1:
 
