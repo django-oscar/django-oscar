@@ -96,7 +96,7 @@ setup(
         'easy-thumbnails': [easy_thumbnails_version],
     },
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.11',
