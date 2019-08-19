@@ -16,5 +16,8 @@ coverage:
 
     changes: true
 
+fixes:
+  - "**/oscar/::src/oscar/"
+
 comment:
   layout: "header, diff, tree"

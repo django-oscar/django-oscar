@@ -1,3 +1,7 @@
+.. spelling::
+
+    Solr
+
 =======================
 Oscar 1.0 release notes
 =======================
@@ -61,8 +65,8 @@ has been altered to be:
     A regular product (like a book)
 
 *parent product*
-    A product that represents a set of *child* products (eg a T-shirt, where the set is
-    the various color and size permutations). These were previously referred to
+    A product that represents a set of *child* products (e.g. a T-shirt, where the set is
+    the various colour and size permutations). These were previously referred to
     as "group" products.
 
 *child product*
@@ -150,7 +154,7 @@ US demo site
 ~~~~~~~~~~~~
 
 To help developers building sites for the US, a new example Oscar site has been
-included in the repo. This customises core Oscar to treat all prices as
+included in the repository. This customises core Oscar to treat all prices as
 excluding tax and then calculate and apply taxes once the shipping address is
 known.
 
@@ -347,12 +351,12 @@ and shipping charge now need to be passed around separately:
 * The :class:`~oscar.apps.order.utils.OrderCreator` class now requires the
   ``shipping_charge`` to be passed to ``place_order``.
 
-* The signature of the :class:`~oscar.apps.checkout.calculators.OrderTotalCalculator` 
+* The signature of the :class:`~oscar.apps.checkout.calculators.OrderTotalCalculator`
   class has changed to accept ``shipping_charge`` rather than a
   ``shipping_method`` instance.
 
 * The signature of the
-  :func:`~oscar.apps.checkout.session.CheckoutSessionMixin.get_order_totals` 
+  :func:`~oscar.apps.checkout.session.CheckoutSessionMixin.get_order_totals`
   method has changed to accept the ``shipping_charge`` rather than a
   ``shipping_method`` instance.
 
@@ -379,7 +383,7 @@ available to everyone:
 
     class Repository(repository.Repository):
         methods = [Standard(), Express()]
-        
+
 or to override ``get_available_shipping_methods`` if the available shipping
 methods if only available conditionally:
 
@@ -388,7 +392,7 @@ methods if only available conditionally:
     from oscar.apps.shipping import repository
 
     class Repository(repository.Repository):
-        
+
         def get_available_shipping_methods(
                 self, basket, shipping_addr=None, **kwargs):
             methods = [Standard()]
@@ -424,10 +428,10 @@ If you have any plans to upgrade to Django 1.7, more changes beyond
 addressing migrations are necessary:
 
 * You should be aware that Django 1.7 now enforces uniqueness of app labels.
-  Oscar dashboard apps now ship with app configs that set their app label
+  Oscar dashboard apps now ship with an ``AppConfig`` that set their app label
   to ``{oldname}_dashboard``.
 
-* If you have forked any Oscar apps, you must add app configs to them, and
+* If you have forked any Oscar apps, you must add an ``AppConfig`` to them, and
   have them inherit from the Oscar one. See the appropriate section in
   :doc:`/topics/fork_app` for an example.
 
@@ -471,7 +475,7 @@ are no nulls in your ``basket_line`` table:
         else:
             line.delete()
 
-* The ``reload_page_response`` method of 
+* The ``reload_page_response`` method of
   :class:`~oscar.apps.dashboard.orders.views.OrderDetailView`
   has been renamed to ``reload_page``.
 
@@ -567,7 +571,7 @@ Misc
 * The ``Base`` shipping method class now lives in ``oscar.apps.shipping.methods``.
 
 * The ``find_by_code`` method of the shipping ``Repository`` class has been
-  removed as it is no longer used. 
+  removed as it is no longer used.
 
 * The parameters for
   :func:`oscar.apps.shipping.repository.Repository.get_shipping_methods`

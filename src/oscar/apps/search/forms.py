@@ -148,4 +148,7 @@ class BrowseCategoryForm(SearchForm):
     """
 
     def no_query_found(self):
+        """
+        Return Queryset of all the results.
+        """
         return self.searchqueryset

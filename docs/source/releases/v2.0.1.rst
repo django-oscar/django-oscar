@@ -1,0 +1,20 @@
+=======================
+Oscar 2.0.1 release notes
+=======================
+
+:release: 2019-08-09
+
+This is Oscar 2.0.1, a bugfix release.
+
+Bug fixes
+=========
+
+- Fixed ``oscar.dashboard.nav.default_access_fn`` to properly check permissions
+  configured on forked dashboard apps.
+- Refactored ``ProductQuerySet.base_queryset()`` to avoid making an expensive
+  database query when checking for product options. Queryset items are no
+  longer annotated with ``num_product_class_options`` and
+  ``num_product_options``(counts of the number of options associated with a
+  product and product class, respectively. Instead are annotated with
+  ``has_product_class_options`` and ``has_product_options``.
+- Fixed display of start and end dates in the dashboard offer list template.

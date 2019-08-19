@@ -1,3 +1,7 @@
+.. spelling::
+
+    jQuery
+
 =======================
 Oscar 0.5 release notes
 =======================
@@ -25,7 +29,7 @@ What's new in Oscar 0.5?
 Offers++
 ~~~~~~~~
 
-Most of the new features in 0.5 are around offers.  
+Most of the new features in 0.5 are around offers.
 
 * It is now possible to create custom ranges, conditions and benefits that can
   be used to create flexible offers.  These ranges are created as Python classes
@@ -34,11 +38,11 @@ Most of the new features in 0.5 are around offers.
 
 * Offer benefits can now apply to the shipping charge for an order.  Previously,
   all benefits were applied against the basket lines.  There are three shipping
-  benefits ready to use: 
+  benefits ready to use:
 
-    - Fixed discount off shipping (eg get £5 off your shipping costs)
-    - Percentage discount off shipping (eg get 25% off your shipping costs)
-    - Fixed price shipping (eg your shipping charge will be £5)
+    - Fixed discount off shipping (e.g., get £5 off your shipping costs)
+    - Percentage discount off shipping (e.g., get 25% off your shipping costs)
+    - Fixed price shipping (e.g., your shipping charge will be £5)
 
 * Offer benefits can now be deferred.  That is, they don't affect either the
   basket lines nor the shipping charge.  This is useful for creating benefits
@@ -47,8 +51,8 @@ Most of the new features in 0.5 are around offers.
 * Several new ways of restricting an offer's availability have been introduced:
 
     - An offer's lifetime can now be controlled to the second rather to the day
-      (ie the relevant model fields are datetimes rather than dates). This makes
-      it possibly to run offers for a small amount of time (eg for a single
+      (i.e., the relevant model fields used ``datetime`` rather than ``date``). This makes
+      it possibly to run offers for a small amount of time (e.g., for a single
       lunchtime).
 
     - An offer can be restricted to a max number of applications per
@@ -64,7 +68,7 @@ Most of the new features in 0.5 are around offers.
 
 .. figure:: screenshots/0.5/offer-restrictions.png
     :scale: 50%
-    
+
     The restrictions editing page for an offer within the dashboard.
 
 * Offers can now be suspended and reinstated.
@@ -81,7 +85,7 @@ throughout the dashboard.  This work is still ongoing, further improvements in
 how the dashboard pages are laid out will appear in 0.6.
 
 .. figure:: screenshots/0.5/dashboard-nav.png
-    
+
     The new dashboard navigation.
 
 Internationalisation
@@ -89,25 +93,25 @@ Internationalisation
 
 Oscar now uses Transifex_ to manage its translation files.  Since 0.4, a
 considerable number of new languages are now supported (although many have
-partial coverage).  
+partial coverage).
 
 .. _Transifex: https://www.transifex.com/projects/p/django-oscar/
 
 .. figure:: screenshots/0.5/transifex.png
     :scale: 80%
-    
+
     A snippet from the Oscar Transifex page.
 
 Oscar's default templates also now support a simple language picker.
 
 New settings have been introduced to control how slugs are generated.  By
-default, the unidecode package is used to gracefully handle non-ASCII chars in
+default, the `Unidecode <https://pypi.org/project/Unidecode/>`_ package is used to gracefully handle non-ASCII chars in
 slugs.
 
 Minor features
 ~~~~~~~~~~~~~~
 
-There are several noteworthy smaller improvements 
+There are several noteworthy smaller improvements
 
 * The basket page now updates using AJAX rather than page reloads.
 
@@ -162,7 +166,7 @@ projects):
 
 * A Vagrant_ manifest is provided for testing Oscar against different database
   vendors.
-* Oscar's javascript has been rewritten to be cleaner and more extensible.
+* Oscar's Javascript has been rewritten to be cleaner and more extensible.
 
 * Coverage data is now submitted to coveralls.io_
 
@@ -172,7 +176,7 @@ projects):
 .. _Vagrant: http://www.vagrantup.com/
 
 
-Upgrading 
+Upgrading
 =========
 
 This section describes changes in core Oscar that you need to be aware of if you
@@ -195,7 +199,7 @@ There are new migrations in the following apps to be aware of.
 
 .. note::
   Note, if you are using a customised version of the catalogue app, then you
-  should create a similar data migration to ``0010`` in your own project.  
+  should create a similar data migration to ``0010`` in your own project.
 
 * Offer:
 
@@ -210,7 +214,7 @@ There are new migrations in the following apps to be aware of.
     - ``0014``: Empty migration after branch merge
     - ``0015``: Add ``max_discount`` field to ``ConditionalOffer`` model
     - ``0016``: Add ``status`` field to ``ConditionalOffer`` model
-    - ``0017``: Change ``start_date`` and ``end_date`` to datetimes.
+    - ``0017``: Change ``start_date`` and ``end_date`` to use ``datetime``.
     - ``0018``: Rename ``start_date`` and ``end_date`` to ``start_datetime`` and
       ``end_datetime`` respectively.
     - ``0019``: Add ``proxy_class`` field to ``Benefit`` model and make
@@ -231,4 +235,4 @@ There are new migrations in the following apps to be aware of.
 
 .. note::
   Note, if you are using a customised version of the partner app, then you
-  should create a similar data migration to ``0005`` in your own project.  
+  should create a similar data migration to ``0005`` in your own project.

@@ -2,7 +2,7 @@
 Prices and availability
 =======================
 
-This page explains how prices and availability are determined in Oscar.  In
+This page explains how prices and availability are determined in Oscar. In
 short, it seems quite complicated at first as there are several parts to it, but what
 this buys is flexibility: buckets of it.
 
@@ -49,8 +49,8 @@ calculating prices and availability information.
    >>> info.price.currency
    'GBP'
 
-The product model captures the core data about the product (title, description,
-images) while a stockrecord represents fulfillment information for one
+The :py:class:`Product <oscar.apps.catalogue.abstract_models.AbstractProduct>` model captures the core data about the product (title, description,
+images) while the :py:class:`StockRecord <oscar.apps.partner.abstract_models.AbstractStockRecord>` model represents fulfilment information for one
 particular partner (number in stock, base price).  A product can have multiple
 stockrecords although only one is selected by the strategy to determine pricing and
 availability.
@@ -67,7 +67,7 @@ Oscar uses a 'strategy' object to determine product availability and pricing.  A
 new strategy instance is assigned to the request by the basket middleware.  A
 :class:`~oscar.apps.partner.strategy.Selector`
 class determines the appropriate strategy for the
-request.  By modifying the 
+request.  By modifying the
 :class:`~oscar.apps.partner.strategy.Selector`
 class, it's possible to return
 different strategies for different customers.
@@ -76,9 +76,9 @@ Given a product, the strategy class is responsible for:
 
 - Selecting a "pricing policy", an object detailing the prices of the product and whether tax is known.
 - Selecting an "availability policy", an object responsible for
-  availability logic (ie is the product available to buy) and customer
+  availability logic (i.e. is the product available to buy) and customer
   messaging.
-- Selecting the appropriate stockrecord to use for fulfillment.  If a product
+- Selecting the appropriate stockrecord to use for fulfilment.  If a product
   can be fulfilled by several fulfilment partners, then each will have their
   own stockrecord.
 
@@ -87,9 +87,9 @@ simple named tuple.  The strategy class provides ``fetch_for_product`` and
 ``fetch_for_parent`` methods which takes a product and returns a ``PurchaseInfo``
 instance:
 
-The strategy class is accessed in several places in Oscar's codebase.  In templates, a
-``purchase_info_for_product`` template tag is used to load the price and availability
-information into the template context:
+The strategy class is used in several places in Oscar, for example, the
+``purchase_info_for_product`` template tag which is used to load the price and
+availability information into the template context:
 
 .. code-block:: html+django
 
@@ -108,8 +108,8 @@ information into the template context:
    </p>
 
 Note that the ``currency`` template tag accepts a currency parameter from the
-pricing policy.  
-    
+pricing policy.
+
 Also, basket instances have a strategy instance assigned so they can calculate
 prices including taxes.  This is done automatically in the basket middleware.
 
@@ -131,14 +131,14 @@ examples of things you can do with a strategy class:
 - Charge different prices to different customers.  A strategy can return a
   different pricing policy depending on the user/session.
 
-- Use a chain of preferred partners for fulfillment.  A site could have many
-  stockrecords for the same product, each from a different fulfillment partner.
+- Use a chain of preferred partners for fulfilment.  A site could have many
+  stockrecords for the same product, each from a different fulfilment partner.
   The strategy class could select the partner with the best margin and stock
   available.  When stock runs out with that partner, the strategy could
   seamlessly switch to the next best partner.
 
 These are the kinds of problems that other e-commerce frameworks would struggle
-with.  
+with.
 
 API
 ~~~
@@ -205,7 +205,7 @@ There is a base class that defines the interface a pricing policy should have:
 There are also several policies that accommodate common scenarios:
 
 .. automodule:: oscar.apps.partner.prices
-   :members: Unavailable, FixedPrice 
+   :members: Unavailable, FixedPrice
    :noindex:
 
 .. _availability_policies:
@@ -224,7 +224,7 @@ The base class defines the interface:
    :members:
    :noindex:
 
-There are also several pre-defined availability policies:
+There are also several predefined availability policies:
 
 .. automodule:: oscar.apps.partner.availability
    :members: Unavailable, Available, StockRequired
@@ -258,7 +258,7 @@ The behaviour of this strategy is:
 - Always picks the first stockrecord (this is backwards compatible with
   Oscar<0.6 where a product could only have one stockrecord).
 - Charge no tax.
-- Only allow purchases where there is appropriate stock (eg no back-orders).
+- Only allow purchases where there is appropriate stock (e.g. no back-orders).
 
 How to use
 ----------
@@ -302,12 +302,12 @@ Here's an example ``strategy.py`` module which is used to charge VAT on prices.
         rate = D('0.20')
 
 
-    class UKStrategy(strategy.UseFirstStockRecord, IncludingVAT, 
+    class UKStrategy(strategy.UseFirstStockRecord, IncludingVAT,
                      strategy.StockRequired, strategy.Structured):
         """
-        Typical UK strategy for physical goods.  
+        Typical UK strategy for physical goods.
 
-        - There's only one warehouse/partner so we use the first and only stockrecord 
+        - There's only one warehouse/partner so we use the first and only stockrecord
         - Enforce stock level.  Don't allow purchases when we don't have stock.
         - Charge UK VAT on prices.  Assume everything is standard-rated.
         """
@@ -334,7 +334,7 @@ here.
             return USStrategy()
 
 
-    class USStrategy(strategy.UseFirstStockRecord, strategy.DeferredTax, 
+    class USStrategy(strategy.UseFirstStockRecord, strategy.DeferredTax,
                      strategy.StockRequired, strategy.Structured):
         """
         Typical US strategy for physical goods.  Note we use the ``DeferredTax``

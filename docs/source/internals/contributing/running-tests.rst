@@ -7,20 +7,22 @@ Testing requirements
 
 You'll need:
 
-- A running SQL server (PostgreSQL, or SQLite with `--sqlite` params)
+- A running SQL server (PostgreSQL, or SQLite with `--sqlite` parameters)
 - python3.5 or python3.6
 
 Running tests
 -------------
 
 Oscar uses pytest_ to run the tests.
-.. _pytest: http://pytest.org/latest/
 
 The fast way is::
 
     $ make test
 
-This will create a virtualenv in `venv`, install the test dependencies and run py.test.
+This will create a virtualenv in `venv`, install the test dependencies and run
+pytest_.
+
+.. _pytest: http://pytest.org/latest/
 
 Details
 ~~~~~~~
@@ -30,11 +32,11 @@ First we create a virtualenv, install the required dependencies and activate it:
     $ make venv
     $ source venv/bin/activate
 
-Then we invoke pytest using ::
+Then we run the test suite using::
 
     $ py.test
 
-You can run a subset of the tests by passing a path:
+You can run a subset of the tests by passing a path::
 
     $ py.test tests/integration/offer/test_availability.py
 

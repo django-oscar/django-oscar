@@ -1,3 +1,7 @@
+.. spelling::
+
+    Solr
+
 ============================
 How to setup Solr with Oscar
 ============================
@@ -19,7 +23,7 @@ is tested with Solr 4.7.2:
 
     $ wget http://archive.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz
     $ tar xzf solr-4.7.2.tgz
-    
+
 Integrating with Haystack
 =========================
 
@@ -37,7 +41,7 @@ integrates with Django. Your Haystack connection settings in your
         },
     }
 
-Build solr schema
+Build Solr schema
 =================
 
 Next, replace the example configuration with Oscar's.

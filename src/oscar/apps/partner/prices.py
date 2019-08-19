@@ -70,7 +70,10 @@ class FixedPrice(Base):
             "Can't calculate price.incl_tax as tax isn't known")
 
     @property
-    def is_tax_known(self):
+    def is_tax_known(self) -> bool:
+        """
+        Test whether the tax is known or not
+        """
         return self.tax is not None
 
 

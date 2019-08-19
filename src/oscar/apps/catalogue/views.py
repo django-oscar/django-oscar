@@ -99,9 +99,10 @@ class ProductDetailView(DetailView):
         Return a list of possible templates.
 
         If an overriding class sets a template name, we use that. Otherwise,
-        we try 2 options before defaulting to catalogue/detail.html:
-            1). detail-for-upc-<upc>.html
-            2). detail-for-class-<classname>.html
+        we try 2 options before defaulting to :file:`catalogue/detail.html`:
+
+            1. :file:`detail-for-upc-{upc}.html`
+            2. :file:`detail-for-class-{classname}.html`
 
         This allows alternative templates to be provided for a per-product
         and a per-item-class basis.

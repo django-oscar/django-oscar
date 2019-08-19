@@ -9,22 +9,21 @@ class Base(object):
     """
     Shipping method interface class
 
-    This is the superclass to the classes in methods.py, and a de-facto
-    superclass to the classes in models.py. This allows using all
-    shipping methods interchangeably (aka polymorphism).
+    This is the superclass to the classes in this module. This allows
+    using all shipping methods interchangeably (aka polymorphism).
 
     The interface is all properties.
     """
 
     #: Used to store this method in the session.  Each shipping method should
-    #  have a unique code.
+    #:  have a unique code.
     code = '__default__'
 
     #: The name of the shipping method, shown to the customer during checkout
     name = 'Default shipping'
 
     #: A more detailed description of the shipping method shown to the customer
-    #  during checkout.  Can contain HTML.
+    #:  during checkout.  Can contain HTML.
     description = ''
 
     #: Whether the charge includes a discount
@@ -64,7 +63,7 @@ class Free(Base):
 class NoShippingRequired(Free):
     """
     This is a special shipping method that indicates that no shipping is
-    actually required (eg for digital goods).
+    actually required (e.g. for digital goods).
     """
     code = 'no-shipping-required'
     name = _('No shipping required')
@@ -111,21 +110,37 @@ class OfferDiscount(Base):
 
     @property
     def code(self):
+        """
+        Returns the :py:attr:`code <oscar.apps.shipping.methods.Base.code>` of the wrapped shipping method.
+        """
         return self.method.code
 
     @property
     def name(self):
+        """
+        Returns the :py:attr:`name <oscar.apps.shipping.methods.Base.name>` of the wrapped shipping method.
+        """
         return self.method.name
 
     @property
     def discount_name(self):
+        """
+        Returns the :py:attr:`name <oscar.apps.offer.abstract_models.BaseOfferMixin.name>` of the applied Offer.
+        """
         return self.offer.name
 
     @property
     def description(self):
+        """
+        Returns the :py:attr:`description <.Base.description>` of the wrapped shipping method.
+        """
         return self.method.description
 
     def calculate_excl_discount(self, basket):
+        """
+        Returns the shipping charge for the given basket without
+        discount applied.
+        """
         return self.method.calculate(basket)
 
 

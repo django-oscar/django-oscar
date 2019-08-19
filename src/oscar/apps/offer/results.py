@@ -145,6 +145,9 @@ class BasketDiscount(ApplicationResult):
 
     @property
     def is_successful(self):
+        """
+        Returns ``True`` if the discount is greater than zero
+        """
         return self.discount > 0
 
     def __str__(self):
@@ -172,7 +175,7 @@ SHIPPING_DISCOUNT = ShippingDiscount()
 class PostOrderAction(ApplicationResult):
     """
     For when an offer condition is met but the benefit is deferred until after
-    the order has been placed.  Eg buy 2 books and get 100 loyalty points.
+    the order has been placed. E.g. buy 2 books and get 100 loyalty points.
     """
     is_final = is_successful = True
     affects = ApplicationResult.POST_ORDER

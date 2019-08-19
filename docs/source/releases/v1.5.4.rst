@@ -9,7 +9,7 @@ This is Oscar 1.5.4, a bugfix release.
 Bug fixes
 =========
 
-* Pinned the version of django-extra-views to <0.11, to avoid exceptions
+* Pinned the version of :py:mod:`django-extra-views` to <0.11, to avoid exceptions
   raised in newer versions of the package.
 
 Dependency changes

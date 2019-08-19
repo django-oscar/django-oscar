@@ -9,5 +9,5 @@ This is Oscar 1.6.3, a compatibility release adding support for Django 2.1.
 Minor changes
 ~~~~~~~~~~~~~
 
-- Replaced use of Django's procedural auth views with the corresponding
+- Replaced use of Django's procedural authentication views with the corresponding
   class-based views.

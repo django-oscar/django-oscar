@@ -1,3 +1,7 @@
+.. spelling::
+
+    pytest
+
 =======================
 Oscar 1.1 release notes
 =======================
@@ -29,19 +33,19 @@ removed.
 What's new in Oscar 1.1?
 ------------------------
 
-* The frontend and backend templates have been updated to use Bootstrap 3 
+* The frontend and backend templates have been updated to use Bootstrap 3
   instead of version 2 (`#1576`_). The frontend and backend templates are now
   also independent of each other.
 * Category slug, name and URL handling has been refactored to make it easier to
   translate categories, and to be able to edit slugs independent of names.
 * The icon and caption of `django-tables2` tables can be set directly on the `Table` object, if it
-  derives from :class:`~oscar.apps.dashboard.tables.DashboardTable`. The caption can be localized
+  derives from :class:`~oscar.apps.dashboard.tables.DashboardTable`. The caption can be localised
   in singular and plural. (`#1482`_)
 * Oscar now ships with basic ElasticSearch support.
   ``OSCAR_PRODUCT_SEARCH_HANDLER`` has been introduced to more easily set the search backend.
-* The offer models can now also be customised the same way as was already 
+* The offer models can now also be customised the same way as was already
   possible for the other apps.
-* The test suite is now run with the glorious py.test.
+* The test suite is now run with the glorious pytest.
 
 .. _`#1576`: https://github.com/django-oscar/django-oscar/pull/1576
 .. _`#1482`: https://github.com/django-oscar/django-oscar/pull/1482
@@ -66,13 +70,13 @@ Minor changes
 - Properly redirect users to the checkout page after a guest user created an
   account.
 
-- ``OSCAR_SEARCH_FACETS`` now accepts ordered dicts.
+- ``OSCAR_SEARCH_FACETS`` now accepts ``collections.OrderedDict``.
 
 - Oscar now supports varying the tax rate per product.
 
 - Product class options and attributes can now be edited in the dashboard.
 
-- All modelforms now specify the `fields` meta attribute instead of the `excludes` list.
+- All ``ModelForm`` subclasses now specify the `fields` meta attribute instead of the `excludes` list.
 
 .. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
 

@@ -20,7 +20,7 @@ Say you want to customise ``base.html``.  First you need a project-specific
 templates directory that comes first in the include path.  You can set this up
 as so::
 
-    
+
 
     import os
     location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
@@ -78,7 +78,7 @@ Overriding individual products partials
 Apart from overriding ``catalogue/partials/product.html`` to change the look
 for all products, you can also override it for individual product by placing
 templates in ``catalogue/detail-for-upc-%s.html`` or
-``catalogue/detail-for-class-%s.html`` to customize look on product detail
+``catalogue/detail-for-class-%s.html`` to customise look on product detail
 page and ``catalogue/partials/product/upc-%s.html`` or
 ``catalogue/partials/product/class-%s.html`` to tweak product rendering by
 ``{% render_product %}`` template tag , where ``%s`` is the product's UPC

@@ -2,7 +2,7 @@
 Oscar 0.7.1 release notes
 =========================
 
-This is Oscar 0.7.1, a nano-release to squash one gremlin in 0.7 that affects
+This is Oscar 0.7.1, a small release to squash one gremlin in 0.7 that affects
 `django-oscar-paypal`_.
 
 Bug fixes

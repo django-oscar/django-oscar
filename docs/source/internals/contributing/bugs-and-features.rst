@@ -26,7 +26,7 @@ Reporting security issues
 -------------------------
 
 Security is paramount for e-commerce software like Oscar.  Hence, we have
-adopted a policy which allows for responsible resporting and disclosure of
+adopted a policy which allows for responsible reporting and disclosure of
 security related issues.
 
 If you believe you have found something in Oscar (or one of its extensions)
@@ -48,7 +48,7 @@ particular:
 * **Do** write complete, reproducible, specific bug reports. You must
   include a clear, concise description of the problem, and a set of
   instructions for replicating it. Add as much debug information as you can:
-  code snippets, test cases, exception backtraces, screenshots, etc. A nice
+  code snippets, test cases, exception stack traces, screenshots, etc. A nice
   small test case is the best way to report a bug, as it gives us an easy
   way to confirm the bug quickly.
 
@@ -59,15 +59,15 @@ If your bug or feature request touches on anything visual in nature, there
 are a few additional guidelines to follow:
 
 * Include screenshots in your ticket which are the visual equivalent of a
-  minimal testcase. Show off the issue, not the crazy customizations
+  minimal test case. Show off the issue, not the crazy customisations
   you've made to your browser.
 
-* If you're offering a pull request which changes the look or behavior of
-  Oscar's UI, please attach before *and* after screenshots/screencasts.
-  
+* If you're offering a pull request which changes the look or behaviour of
+  Oscar's UI, please attach before *and* after screenshots.
+
 * Screenshots don't absolve you of other good reporting practices. Make sure
   to include URLs, code snippets, and step-by-step instructions on how to
-  reproduce the behavior visible in the screenshots.
+  reproduce the behaviour visible in the screenshots.
 
 Requesting features
 -------------------
@@ -85,7 +85,7 @@ part of that. Here are some tips on how to make a request most effectively:
   like to see it implemented. Include example code (non-functional is OK)
   if possible.
 
-* Explain *why* you'd like the feature, because sometimes it isn't obvious 
+* Explain *why* you'd like the feature, because sometimes it isn't obvious
   why the feature would be useful.
 
 As with most open-source projects, code talks. If you are willing to write the

@@ -10,16 +10,16 @@ Migrations
 
 Oscar provides migrations for its apps.  But since Oscar allows
 an app to be overridden and its models extended, handling migrations can be
-tricky when upgrading.  
+tricky when upgrading.
 
 Suppose a new version of Oscar changes the models of the 'shipping' app and
 includes the corresponding migrations.  There are two scenarios to be aware of:
 
-Migrating uncustomised apps
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Migrating apps
+~~~~~~~~~~~~~~
 
 Apps that you aren't customising will upgrade trivially as your project
-will pick up the new migrations from Oscar directly.  
+will pick up the new migrations from Oscar directly.
 
 For instance,  if you have ``oscar.apps.core.shipping`` in your
 ``INSTALLED_APPS`` then you can simply run::
@@ -34,7 +34,7 @@ Migrating customised apps (models unchanged)
 If you have customised an app, but have not touched the models nor migrations,
 you're best off copying the migrations from Oscar.  This approach has the
 advantage of pulling in any data migrations.
-Find the updated(!) Oscar in your virtualenv or clone the Oscar repo at the
+Find the updated(!) Oscar in your virtualenv or clone the Oscar repository at the
 correct version tag. Then find the migrations, copy them across, and migrate as
 usual.  You will have to adapt paths, but something akin to this will work::
 

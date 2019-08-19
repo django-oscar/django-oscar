@@ -1,0 +1,43 @@
+=======================
+Oscar 2.1 release notes (in development)
+=======================
+
+:release: tbd
+
+Welcome to Oscar 2.1.
+
+.. contents::
+    :local:
+    :depth: 1
+
+.. _compatibility_of_2.1:
+
+Compatibility
+~~~~~~~~~~~~~
+
+
+.. _new_in_2.1:
+
+What's new in Oscar 2.1?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The database performance of ``offer.Range.all_products()`` was substantially
+  improved. The internals of that method have changed and specifically
+  ``Range.invalidate_cached_ids()`` has been removed and replaced with
+  ``Range.invalidate_cached_queryset()``.
+
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Dependency changes
+~~~~~~~~~~~~~~~~~~
+
+- Upgraded ``django-phonenumber-field`` to use the latest in the 3.x series.
+- Upgraded ``select2`` to version 4.0.8.
+
+.. _deprecated_features_in_2.1:
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~
