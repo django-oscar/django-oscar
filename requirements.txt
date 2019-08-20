@@ -29,4 +29,4 @@ ipdb==0.12.2
 ipython==7.7.0
 
 # Country data
-pycountry==19.7.15
+pycountry==19.8.18
