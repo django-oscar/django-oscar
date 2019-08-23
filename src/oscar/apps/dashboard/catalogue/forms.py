@@ -50,7 +50,7 @@ class ProductClassSelectForm(forms.Form):
 
 
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
+    upc = forms.CharField(max_length=64, required=False, label=_('UPC'))
     title = forms.CharField(
         max_length=255, required=False, label=_('Product title'))
 
