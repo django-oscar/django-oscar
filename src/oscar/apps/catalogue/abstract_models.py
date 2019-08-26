@@ -503,7 +503,7 @@ class AbstractProduct(models.Model):
         has_product_options = getattr(self, 'has_product_options', None)
         if has_product_class_options is not None and has_product_options is not None:
             return has_product_class_options or has_product_options
-        return self.get_product_class().options.exists() or self.product_options.exists()
+        return self.options.exists()
 
     @property
     def is_shipping_required(self):
