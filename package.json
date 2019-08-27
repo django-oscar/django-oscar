@@ -17,7 +17,7 @@
     "jquery": "^3.4.1",
     "jquery-mousewheel": "^3.1.13",
     "jquery-sortable": "^0.9.13",
-    "less": "^3.9.0",
+    "less": "^3.10.3",
     "pump": "^3.0.0",
     "require-dir": "^1.2.0",
     "select2": "4.0.8",
