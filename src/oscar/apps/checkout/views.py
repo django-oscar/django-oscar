@@ -14,9 +14,7 @@ from oscar.core.loading import get_class, get_classes, get_model
 from . import signals
 
 ShippingAddressForm, ShippingMethodForm, GatewayForm \
-    = get_classes('checkout.forms', ['ShippingAddressForm',
-                                     'ShippingMethodForm',
-                                     'GatewayForm'])
+    = get_classes('checkout.forms', ['ShippingAddressForm', 'ShippingMethodForm', 'GatewayForm'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
 RedirectRequired, UnableToTakePayment, PaymentError \

@@ -3,8 +3,8 @@
 {% load url_tags %}
 
 {% block body %}
-    {% absolutize_url site.domain alert.get_confirm_url as confirm_url %}
-    {% absolutize_url site.domain alert.get_cancel_url as cancel_url %}
+    {% absolute_url site.domain alert.get_confirm_url as confirm_url %}
+    {% absolute_url site.domain alert.get_cancel_url as cancel_url %}
     {% blocktrans with title=alert.product.get_title|safe confirm_url=confirm_url cancel_url=cancel_url %}
         Hello,
         <p>

@@ -4,8 +4,7 @@ from django.db import models
 from django.template import engines
 from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import get_template
-from django.utils import six
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.communication.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
@@ -31,16 +30,15 @@ class AbstractEmail(models.Model):
     class Meta:
         abstract = True
         app_label = 'communication'
-        db_table = 'communication_email'
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
 
     def __str__(self):
         if self.user:
-            return _(u"Email to %(user)s with subject '%(subject)s'") % {
+            return _("Email to %(user)s with subject '%(subject)s'") % {
                 'user': self.user.get_username(), 'subject': self.subject}
         else:
-            return _(u"Anonymous email to %(email)s with subject '%(subject)s'") % {
+            return _("Email to %(email)s with subject '%(subject)s'") % {
                 'email': self.email, 'subject': self.subject}
 
 
@@ -54,7 +52,7 @@ class AbstractCommunicationEventType(models.Model):
     # it's a useful convention that's been enforced in previous Oscar versions
     code = AutoSlugField(
         _('Code'), max_length=128, unique=True, populate_from='name',
-        separator=six.u("_"), uppercase=True, editable=True,
+        separator='_', uppercase=True, editable=True,
         validators=[
             RegexValidator(
                 regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
@@ -64,9 +62,7 @@ class AbstractCommunicationEventType(models.Model):
         help_text=_("Code used for looking up this event programmatically"))
 
     #: Name is the friendly description of an event for use in the admin
-    name = models.CharField(
-        _('Name'), max_length=255,
-        help_text=_("This is just used for organisational purposes"))
+    name = models.CharField(_('Name'), max_length=255)
 
     # We allow communication types to be categorised
     # For backwards-compatibility, the choice values are quite verbose
@@ -112,7 +108,6 @@ class AbstractCommunicationEventType(models.Model):
     class Meta:
         abstract = True
         app_label = 'communication'
-        db_table = 'communication_communicationeventtype'
         verbose_name = _("Communication event type")
         verbose_name_plural = _("Communication event types")
 
@@ -172,7 +167,6 @@ class AbstractCommunicationEventType(models.Model):
 class AbstractNotification(models.Model):
     recipient = models.ForeignKey(
         AUTH_USER_MODEL,
-        db_index=True,
         on_delete=models.CASCADE,
         related_name='notifications')
 
@@ -199,7 +193,6 @@ class AbstractNotification(models.Model):
     class Meta:
         abstract = True
         app_label = 'communication'
-        db_table = 'communication_notification'
         ordering = ('-date_sent',)
         verbose_name = _('Notification')
         verbose_name_plural = _('Notifications')

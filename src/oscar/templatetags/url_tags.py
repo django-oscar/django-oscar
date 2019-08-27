@@ -6,9 +6,9 @@ register = template.Library()
 
 
 @register.simple_tag
-def absolutize_url(domain, path):
+def absolute_url(domain, path):
     return '{schema}://{domain}{path}'.format(
-        schema=getattr(settings, 'OSCAR_URL_SCHEMA', 'http'),
+        schema=settings.OSCAR_URL_SCHEMA,
         domain=domain,
         path=path
     )

@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(blank=True, editable=False, help_text='Code used for looking up this event programmatically', max_length=128, populate_from='name', separator='_', unique=True, validators=[django.core.validators.RegexValidator(message="Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit.", regex='^[a-zA-Z_][0-9a-zA-Z_]*$')], verbose_name='Code')),
-                ('name', models.CharField(help_text='This is just used for organisational purposes', max_length=255, verbose_name='Name')),
+                ('name', models.CharField(max_length=255, verbose_name='Name')),
                 ('category', models.CharField(choices=[('Order related', 'Order related'), ('User related', 'User related')], default='Order related', max_length=255, verbose_name='Category')),
                 ('email_subject_template', models.CharField(blank=True, max_length=255, null=True, verbose_name='Email Subject Template')),
                 ('email_body_template', models.TextField(blank=True, null=True, verbose_name='Email Body Template')),

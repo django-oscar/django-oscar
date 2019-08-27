@@ -68,7 +68,7 @@ class Dispatcher(object):
         Create ``Email`` instance in database for logging purposes.
         """
         if email and user.is_authenticated:
-            return Email._default_manager.create(
+            return Email.objects.create(
                 user=user,
                 email=user.email,
                 subject=email.subject,
@@ -87,7 +87,7 @@ class Dispatcher(object):
 
         email = self.send_email_messages(user.email, messages, attachments=attachments)
 
-        if getattr(settings, 'OSCAR_SAVE_SENT_EMAILS_TO_DB', True):
+        if settings.OSCAR_SAVE_SENT_EMAILS_TO_DB:
             self.create_email(user, messages, email)
 
         return email
@@ -96,8 +96,7 @@ class Dispatcher(object):
         """
         Send email to recipient, HTML attachment optional.
         """
-        if hasattr(settings, 'OSCAR_FROM_EMAIL'):
-            from_email = settings.OSCAR_FROM_EMAIL
+        from_email = from_email or settings.OSCAR_FROM_EMAIL
 
         content_attachments, file_attachments = self.prepare_attachments(attachments)
 

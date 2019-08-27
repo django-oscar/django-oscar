@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from oscar.apps.communication.models import Notification
-from oscar.apps.communication.utils import Dispatcher
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class
 from oscar.test.factories import UserFactory

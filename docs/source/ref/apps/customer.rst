@@ -39,16 +39,13 @@ The context for the alert email body contains a ``hurry`` variable that is set
 to ``True`` if the number of active alerts for a product is greater than the
 quantity of the product available in stock.
 
-Alerts are sent using ``AlertsDispatcher``.
-
 CustomerDispatcher
 ------------------
 
-``oscar.apps.customer.utils.CustomerDispatcher`` used to send concrete customer
-related emails (registration, password change confirmation etc.).
+``oscar.apps.customer.utils.CustomerDispatcher`` is used to send customer emails
+(e.g., registration, password reset, order confirmations).
 
 AlertsDispatcher
 ----------------
 
-``oscar.apps.customer.alerts.utils.AlertsDispatcher`` used to send concrete
-product alerts related emails.
+``oscar.apps.customer.alerts.utils.AlertsDispatcher`` is used to send product alerts.

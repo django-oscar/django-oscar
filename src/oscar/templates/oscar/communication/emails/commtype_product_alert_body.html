@@ -12,7 +12,7 @@
     </p>
 
     <p>
-        {% absolutize_url site.domain alert.product.get_absolute_url as url %}
+        {% absolute_url site.domain alert.product.get_absolute_url as url %}
         {% blocktrans with title=alert.product.get_title|safe url=url %}
             We are happy to inform you that our product '{{ title }}' is back in stock:
             {{ url }}

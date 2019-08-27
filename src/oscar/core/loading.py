@@ -12,6 +12,7 @@ from django.utils.module_loading import import_string
 
 from oscar.core.exceptions import (
     AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
+from oscar.utils.deprecation import RemovedInOscar22Warning
 
 
 # To preserve backwards compatibility of loading classes which moved
@@ -243,7 +244,7 @@ def get_model(app_label, model_name):
             warnings.warn(
                 'Model %s has recently moved from %s to the application %s, '
                 'please update your imports.' % (model_name, original_app_label, app_label),
-                DeprecationWarning, stacklevel=2)
+                RemovedInOscar22Warning, stacklevel=2)
     try:
         return apps.get_model(app_label, model_name)
     except AppRegistryNotReady:

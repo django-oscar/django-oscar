@@ -200,20 +200,20 @@ URL tags
 
 Load these tags using ``{% load url_tags %}``.
 
-``absolutize_url``
+``absolute_url``
 ~~~~~~~~~~~~~~~~~~
 
-Returns an absolute url based on provided path and domain:
+Returns an absolute URL for the provided domain and path.
 
 .. code-block:: html+django
 
-    <a href="{% absolutize_url site.domain reset_url %}" class="btn-primary">Reset password</a>
+    <a href="{% absolute_url site.domain reset_url %}" class="btn-primary">Reset password</a>
 
-Can be used with ``blocktrans`` template tag in the next way:
+This tag can be used with ``blocktrans`` as follows:
 
 .. code-block:: html+django
 
-    {% absolutize_url site.domain reset_url as absolute_reset_url %}
+    {% absolute_url site.domain reset_url as absolute_reset_url %}
     {% blocktrans with url=absolute_reset_url %}
         You can reset your password here - {{ url }}
     {% endblocktrans %}

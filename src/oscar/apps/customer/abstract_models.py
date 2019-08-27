@@ -127,7 +127,6 @@ class AbstractProductAlert(models.Model):
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         blank=True,
-        db_index=True,
         null=True,
         on_delete=models.CASCADE,
         related_name="alerts",

@@ -5,11 +5,11 @@ from django.test import TestCase
 
 class TestUrlTags(TestCase):
 
-    def test_absolutize_url_tag(self):
+    def test_absolute_url_tag(self):
         tmpl = template.Template(
             '{% load i18n %}'
             '{% load url_tags %}'
-            '{% absolutize_url site.domain path %}.'
+            '{% absolute_url site.domain path %}.'
         )
         out = tmpl.render(template.Context({
             'site': Site.objects.get_current(),
@@ -17,12 +17,12 @@ class TestUrlTags(TestCase):
         }))
         assert out == 'http://example.com/some/test/path.'
 
-    def test_absolutize_url_tag_with_blocktrans(self):
+    def test_absolute_url_tag_with_blocktrans(self):
         tmpl = template.Template(
             '{% load i18n %}'
             '{% load url_tags %}'
-            '{% absolutize_url site.domain path_1 as url_1 %}'
-            '{% absolutize_url site.domain path_2 as url_2 %}'
+            '{% absolute_url site.domain path_1 as url_1 %}'
+            '{% absolute_url site.domain path_2 as url_2 %}'
             '{% blocktrans with test_url_1=url_1 test_url_2=url_2 %}'
             '1st - {{ test_url_1 }}. 2nd - {{ test_url_2 }}.'
             '{% endblocktrans %}'

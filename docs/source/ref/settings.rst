@@ -297,8 +297,8 @@ used in Oscar's default templates but could be used to include static assets
 
 Default: ``True``
 
-Indicates if sent emails will be saved to database (as instances of
-``oscar.apps.communication.models.Email`` model).
+Indicates if sent emails will be saved to database as instances of
+``oscar.apps.communication.models.Email``.
 
 Offer settings
 ==============
@@ -545,4 +545,4 @@ CSV readers, Microsoft Excel in particular.
 
 Default: ``http``
 
-The schema that will be used to build absolute url in ``absolutize_url`` template tag.
+The schema that will be used to build absolute url in ``absolute_url`` template tag.

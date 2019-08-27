@@ -1,6 +1,6 @@
-=======================
+========================================
 Oscar 2.1 release notes (in development)
-=======================
+========================================
 
 :release: tbd
 
@@ -15,8 +15,6 @@ Welcome to Oscar 2.1.
 Compatibility
 ~~~~~~~~~~~~~
 
-Oscar 2.1 is compatible with Django 1.11, Django 2.1 and Django 2.2
-as well as Python 3.5, 3.6 and 3.7.
 
 .. _new_in_2.1:
 
@@ -43,13 +41,13 @@ What's new in Oscar 2.1?
 - ``Dispatcher`` moved from ``customer.utils`` to ``communication.utils``.
   Now ``Dispatcher`` is responsible for sending notifications as well as emails.
 
-- ``CustomerDispatcher`` util created in ``customer`` app -  to send customer
+- ``CustomerDispatcher`` util created in ``customer`` app - to send customer
   related emails.
 
-- ``AlertsDispatcher`` util created in ``customer.alerts`` module -  to send
+- ``AlertsDispatcher`` util created in ``customer.alerts`` module - to send
   order product alerts related emails and notifications.
 
-- ``OrderDispatcher`` util created in ``order`` app -  to send order related
+- ``OrderDispatcher`` util created in ``order`` app - to send order related
   emails.
 
 - Added ability to chose if sent email should be saved to DB (through
@@ -68,6 +66,23 @@ What's new in Oscar 2.1?
 - Models ``CommunicationEventType``, ``Email`` and ``Notification`` added to
   ``MOVED_MODELS`` to show warning when they will be imported from ``customer`` app.
   E.g. ``Email = get_model('customer', 'Email')``.
+
+- Added ``absolute_url`` template tag - to get absolute URLs in templates based on
+  provided path and domain. The schema for absolute url can be set through
+  ``OSCAR_URL_SCHEMA`` setting, ``http`` by default.
+
+Backwards incompatible changes in Oscar 2.1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Field ``category`` removed from ``Notification`` model.
+
+  This is a change that requires database migration.
+
+- ``send_confirmation_message`` method of ``checkout.mixins.OrderPlacementMixin``
+  replaced with ``send_order_placed_email`` method.
+
+- ``customer.notifications.context_processors.notifications`` replaced with
+  ``communication.notifications.context_processors.notifications``.
 
 Bug fixes
 ~~~~~~~~~
@@ -104,10 +119,28 @@ Dependency changes
 Deprecated features
 ~~~~~~~~~~~~~~~~~~~
 
-- Field ``category`` removed from ``Notification`` model.
+- ``customer.alerts.utils.send_alerts`` is deprecated.
+  Use ``send_alerts`` method of ``AlertsDispatcher`` instead.
 
-  This is a change that requires database migration.
+- ``customer.alerts.utils.send_alert_confirmation`` is deprecated.
+  Use ``send_product_alert_confirmation_email_for_user`` method of
+  ``AlertsDispatcher`` instead.
 
-- Added ``absolutize_url`` template tag - to get absolute URLs in templates based on
-  provided path and domain. The schema for absolute url can be set through
-  ``OSCAR_URL_SCHEMA`` setting, ``http`` by default.
+- ``customer.alerts.utils.send_product_alerts`` is deprecated.
+  Use ``send_product_alert_email_for_user`` method of ``AlertsDispatcher``
+  instead.
+
+- ``customer.notifications.services.notify_user`` is deprecated.
+  Use ``notify_user`` method of ``Dispatcher``.
+
+- ``customer.notifications.services.notify_users`` is deprecated.
+  Use ``notify_users`` method of ``Dispatcher``.
+
+- ``get_reset_url`` method of ``customer.forms.PasswordResetForm`` removed.
+  ``save`` method modified to use added ``send_password_reset_email`` method.
+
+- ``form_valid`` method of ``customer.views.ProfileUpdateView`` modified
+  to use added ``send_email_changed_email`` method.
+
+- ``form_valid`` method of ``customer.views.ChangePasswordView`` modified
+  to use added ``send_password_changed_email`` method.
