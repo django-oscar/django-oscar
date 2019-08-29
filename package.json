@@ -22,7 +22,7 @@
     "require-dir": "^1.2.0",
     "select2": "4.0.8",
     "select2-bootstrap-theme": "0.1.0-beta.10",
-    "tinymce": "^4.8.3"
+    "tinymce": "^5.0.14"
   },
   "scripts": {
     "build": "gulp",
