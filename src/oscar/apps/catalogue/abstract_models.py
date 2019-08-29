@@ -25,6 +25,7 @@ from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
+from oscar.utils.models import get_image_upload_path
 
 BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManager')
 ProductQuerySet = get_class('catalogue.managers', 'ProductQuerySet')
@@ -943,10 +944,10 @@ class AbstractProductAttributeValue(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Value option"))
     value_file = models.FileField(
-        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        upload_to=get_image_upload_path, max_length=255,
         blank=True, null=True)
     value_image = models.ImageField(
-        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        upload_to=get_image_upload_path, max_length=255,
         blank=True, null=True)
     value_entity = GenericForeignKey(
         'entity_content_type', 'entity_object_id')
@@ -1183,7 +1184,7 @@ class AbstractProductImage(models.Model):
         related_name='images',
         verbose_name=_("Product"))
     original = models.ImageField(
-        _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
+        _("Original"), upload_to=get_image_upload_path, max_length=255)
     caption = models.CharField(_("Caption"), max_length=200, blank=True)
 
     #: Use display_order to determine which is the "primary" image

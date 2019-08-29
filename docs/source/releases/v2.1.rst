@@ -26,6 +26,11 @@ What's new in Oscar 2.1?
   ``Range.invalidate_cached_ids()`` has been removed and replaced with
   ``Range.invalidate_cached_queryset()``.
 
+- The ``upload_to`` argument of image fields in Oscar's ``ProductImage`` and
+  ``ProductAttributeValue`` models was changed to use a callable, so that
+  Django doesn't generate migrations if a project modifies the ``OSCAR_IMAGE_FOLDER``
+  to specify a custom directory structure for uploaded images.
+
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
