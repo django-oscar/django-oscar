@@ -13,7 +13,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-less": "^4.0.1",
     "gulp-sourcemaps": "^2.6.5",
-    "inputmask": "^4.0.2",
+    "inputmask": "^4.0.8",
     "jquery": "^3.4.1",
     "jquery-mousewheel": "^3.1.13",
     "jquery-sortable": "^0.9.13",
