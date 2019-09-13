@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # preriasusi <coyotronics@gmail.com>, 2014
 # dewa <joonas.reinikka@gmail.com>, 2014
@@ -25,13 +25,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-06 06:17+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2019-09-06 03:20+0000\n"
+"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/codeinthehole/django-oscar/language/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/address/abstract_models.py:24
@@ -285,9 +285,9 @@ msgstr "Kumppanien osoitteet"
 #: apps/analytics/abstract_models.py:18 apps/analytics/abstract_models.py:83
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:626
 #: apps/catalogue/abstract_models.py:224 apps/catalogue/abstract_models.py:360
-#: apps/catalogue/abstract_models.py:927 apps/catalogue/abstract_models.py:1185
-#: apps/order/abstract_models.py:542 apps/partner/abstract_models.py:95
-#: apps/wishlists/abstract_models.py:115
+#: apps/catalogue/abstract_models.py:927
+#: apps/catalogue/abstract_models.py:1185 apps/order/abstract_models.py:542
+#: apps/partner/abstract_models.py:95 apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:23
@@ -427,7 +427,8 @@ msgstr "Tuotetilastot"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:20
 #: apps/catalogue/abstract_models.py:46 apps/catalogue/abstract_models.py:93
-#: apps/catalogue/abstract_models.py:707 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:707
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1108 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:161 apps/dashboard/catalogue/tables.py:79
 #: apps/dashboard/catalogue/tables.py:103 apps/dashboard/users/forms.py:44
@@ -568,9 +569,10 @@ msgid "Vouchers"
 msgstr "Kupongit"
 
 #: apps/basket/abstract_models.py:58 apps/basket/reports.py:83
-#: apps/catalogue/abstract_models.py:331 apps/catalogue/abstract_models.py:1195
-#: apps/customer/abstract_models.py:356 apps/order/abstract_models.py:956
-#: apps/partner/abstract_models.py:149 apps/wishlists/abstract_models.py:50
+#: apps/catalogue/abstract_models.py:331
+#: apps/catalogue/abstract_models.py:1195 apps/customer/abstract_models.py:356
+#: apps/order/abstract_models.py:956 apps/partner/abstract_models.py:149
+#: apps/wishlists/abstract_models.py:50
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/ranges/range_list.html:34
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
@@ -616,7 +618,9 @@ msgstr "%(status)s ostoskori(omistaja: %(owner)s, rivit: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:158
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
 msgstr "Teknisten rajoitteiden vuoksi emme kykene toimittamaan %(threshold)d kpl enempää tuotteita yhtä tilausta kohden."
 
 #: apps/basket/abstract_models.py:620
@@ -674,12 +678,16 @@ msgstr "Et voi muokata %s:n koria"
 
 #: apps/basket/abstract_models.py:910
 #, python-format
-msgid "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "Tuotteen '%(product)s' hinta on noussut koriin lisäämisen jälkeen (vanha hinta: %(old_price)s, uusi hinta: %(new_price)s)."
 
 #: apps/basket/abstract_models.py:915
 #, python-format
-msgid "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "Tuotteen '%(product)s' hinta on laskenut koriin lisäämisen jälkeen (vanha hinta: %(old_price)s, uusi hinta: %(new_price)s)."
 
 #: apps/basket/abstract_models.py:929 apps/order/abstract_models.py:838
@@ -744,21 +752,27 @@ msgstr "Ole hyvä ja valitse soveltuva tuote"
 
 #: apps/basket/forms.py:213
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order. Your basket currently has %(basket)d items."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
 msgstr "Teknisten rajoitteiden vuoksi emme kykene toimittamaan %(threshold)d kpl enempää tuotteita yhtä tilausta kohden. Ostoskorissasi on tällä hetkellä %(basket)d tuotetta."
 
 #: apps/basket/forms.py:235
-#, fuzzy
-#| msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
-msgid "This product cannot be added to the basket because a price could not be determined for it."
-msgstr "Tätä tuotetta ei voida lisätä koriin, koska sen valuutta ei ole sama kuin muiden korin tuotteiden"
+msgid ""
+"This product cannot be added to the basket because a price could not be "
+"determined for it."
+msgstr ""
 
 #: apps/basket/forms.py:242
-msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
+msgid ""
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
 msgstr "Tätä tuotetta ei voida lisätä koriin, koska sen valuutta ei ole sama kuin muiden korin tuotteiden"
 
 #: apps/basket/middleware.py:174
-msgid "We have merged a basket from a previous session. Its contents might have changed."
+msgid ""
+"We have merged a basket from a previous session. Its contents might have "
+"changed."
 msgstr "Palautimme ostoskorisi aiemmalta käynniltä. Ostoskorin sisältö on voinut muuttua."
 
 #: apps/basket/reports.py:19 apps/basket/reports.py:78
@@ -828,7 +842,8 @@ msgid "You can't save an item for later if you're not logged in!"
 msgstr "Et voi tallentaa tuotetta myöhempää käyttöä varten, jos et ole kirjautunut sisään!"
 
 #: apps/basket/views.py:234
-msgid "Your basket couldn't be updated. Please correct any validation errors below."
+msgid ""
+"Your basket couldn't be updated. Please correct any validation errors below."
 msgstr "Ostoskorin päivitys ei onnistunut. Korjaa alla mainitut virheet."
 
 #: apps/basket/views.py:322
@@ -963,10 +978,8 @@ msgid "Product structure"
 msgstr "Tuoterakenne"
 
 #: apps/catalogue/abstract_models.py:268
-#, fuzzy
-#| msgid "Is public?"
 msgid "Is public"
-msgstr "Onko julkinen?"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:270
 msgid "Show this product in search results and catalogue listings."
@@ -982,11 +995,16 @@ msgid "UPC"
 msgstr "UPC"
 
 #: apps/catalogue/abstract_models.py:274
-msgid "Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book."
+msgid ""
+"Universal Product Code (UPC) is an identifier for a product which is not "
+"specific to a particular  supplier. Eg an ISBN for a book."
 msgstr "Universal Product Code (UPC) on tuotetunniste, joka ei ole sidottu mihinkään tiettyyn toimittajaan,  kuten esim. ISBN kirjoille."
 
 #: apps/catalogue/abstract_models.py:285
-msgid "Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product)."
+msgid ""
+"Only choose a parent product if you're creating a child product.  For "
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
 msgstr "Valitse emotuote vain, jos olet luomassa alituotetta; esimerkiksi jos tämä on t-paita kokoa 4. Jätä tyhjäksi, jos on vain yksi versio tästä tuotteesta."
 
 #: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:541
@@ -1015,7 +1033,9 @@ msgid "Attributes"
 msgstr "Määreet"
 
 #: apps/catalogue/abstract_models.py:310
-msgid "A product attribute is something that this product may have, such as a size, as specified by its class"
+msgid ""
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
 msgstr "Tuotteen määrite on jotain, mitä tuotteella voi luokkansa perusteella olla, kuten esimerkisi koko."
 
 #: apps/catalogue/abstract_models.py:314
@@ -1023,7 +1043,10 @@ msgid "Product options"
 msgstr "Tuotevaihtoehdot"
 
 #: apps/catalogue/abstract_models.py:315
-msgid "Options are values that can be associated with a item when it is added to a customer's basket.  This could be something like a personalised message to be printed on a T-shirt."
+msgid ""
+"Options are values that can be associated with a item when it is added to a "
+"customer's basket.  This could be something like a personalised message to "
+"be printed on a T-shirt."
 msgstr "Vaihtoehdot ovat määreitä, jotka voidaan liittää tuotteeseen ostoskoriin lisäämisen yhteydessä, kuten esimerkiksi t-paitaan painettu yksilöllinen viesti"
 
 #: apps/catalogue/abstract_models.py:322
@@ -1119,7 +1142,9 @@ msgid "Ranking"
 msgstr "Sijoitus"
 
 #: apps/catalogue/abstract_models.py:683
-msgid "Determines order of the products. A product with a higher value will appear before one with a lower ranking."
+msgid ""
+"Determines order of the products. A product with a higher value will appear "
+"before one with a lower ranking."
 msgstr "Määrää tuotteiden järjestyksen. Tuote, jonka arvo on korkeampi, näytetään ennen tuottetta, jonka arvo on pienempi."
 
 #: apps/catalogue/abstract_models.py:691
@@ -1131,7 +1156,9 @@ msgid "Product recomendations"
 msgstr "Tuotesuositukset"
 
 #: apps/catalogue/abstract_models.py:714 apps/customer/abstract_models.py:155
-msgid "Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit."
+msgid ""
+"Code can only contain the letters a-z, A-Z, digits, and underscores, and "
+"can't start with a digit."
 msgstr "Koodi voi sisältää vain kirjaimia a-z, A-Z, numeroita ja alaviivoja eikä voi alkaa numerolla."
 
 #: apps/catalogue/abstract_models.py:733 apps/catalogue/abstract_models.py:929
@@ -1216,10 +1243,8 @@ msgid "Product attributes"
 msgstr "Tuotemääreet"
 
 #: apps/catalogue/abstract_models.py:847
-#, fuzzy
-#| msgid "Must be a float"
 msgid "Must be str"
-msgstr "Täytyy olla liukuluku"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:854
 msgid "Must be a float"
@@ -1335,7 +1360,9 @@ msgid "Caption"
 msgstr "Seloste"
 
 #: apps/catalogue/abstract_models.py:1193
-msgid "An image with a display order of zero will be the primary image for a product"
+msgid ""
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr "Kuva, jonka näyttöjärjestys on nolla, on tuotteen pääkuva"
 
 #: apps/catalogue/abstract_models.py:1203
@@ -1545,7 +1572,9 @@ msgstr "Sinulla on oltava tuotteita ostoskorissa ennen kassalle siirtymistä"
 
 #: apps/checkout/session.py:131
 #, python-format
-msgid "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your basket to continue"
+msgid ""
+"'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
+"basket to continue"
 msgstr "'%(title)s' ei ole enää ostettavissa (%(reason)s). Muokkaa koria jatkaaksesi"
 
 #: apps/checkout/session.py:149
@@ -1557,7 +1586,9 @@ msgid "Please choose a shipping address"
 msgstr "Valitse toimitusosoite"
 
 #: apps/checkout/session.py:182
-msgid "Your previously chosen shipping address is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping address is no longer valid.  Please choose "
+"another one"
 msgstr "Aiemmin valittu toimitusosoite ei ole enää kevollinen. Valitse uusi."
 
 #: apps/checkout/session.py:192
@@ -1565,11 +1596,15 @@ msgid "Please choose a shipping method"
 msgstr "Valitse toimitustapa"
 
 #: apps/checkout/session.py:204
-msgid "Your previously chosen shipping method is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping method is no longer valid.  Please choose "
+"another one"
 msgstr "Aiemmin valittu toimitustapa ei ole enää kelvollinen. Valitse uusi."
 
 #: apps/checkout/views.py:82
-msgid "Create your account and then you will be redirected back to the checkout process"
+msgid ""
+"Create your account and then you will be redirected back to the checkout "
+"process"
 msgstr "Luo itsellesi tili, minkä jälkeen voit jatkaa tilausta."
 
 #: apps/checkout/views.py:205
@@ -1581,7 +1616,8 @@ msgid "Address deleted"
 msgstr "Osoite poistettu"
 
 #: apps/checkout/views.py:275
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "Toimitus ei ole saatavana valitsemaasi osoitteeseen – valitse toinen."
 
 #: apps/checkout/views.py:318
@@ -1589,7 +1625,9 @@ msgid "Your submitted shipping method is not permitted"
 msgstr "Valitsemasi toimitustapa ei ole sallittu"
 
 #: apps/checkout/views.py:568
-msgid "A problem occurred while processing payment for this order - no payment has been taken.  Please contact customer services if this problem persists"
+msgid ""
+"A problem occurred while processing payment for this order - no payment has "
+"been taken.  Please contact customer services if this problem persists"
 msgstr "Onglema maksuprosessissa tälle tuotteelle – maksua ei ole veloitettu. Ota yhteyttä asiakaspalveluun, jos tämä ongelma jatkuu."
 
 #: apps/checkout/views.py:672
@@ -1617,7 +1655,9 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #: apps/customer/abstract_models.py:68
-msgid "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
 msgstr "Määrää, onko käyttäjätili aktiivinen. Poista tämä valinta tilin tuhoamisen sijaan."
 
 #: apps/customer/abstract_models.py:70
@@ -1735,11 +1775,13 @@ msgstr "Saapuneet"
 msgid "Archive"
 msgstr "Arkisto"
 
-#: apps/customer/abstract_models.py:299 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:299
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "Ilmoitus"
 
-#: apps/customer/abstract_models.py:300 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:300
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "Ilmoitukset"
@@ -1881,7 +1923,9 @@ msgstr "Kaikki tilaukset"
 
 #: apps/customer/forms.py:213
 #, python-format
-msgid "Orders placed between %(date_from)s and %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed between %(date_from)s and %(date_to)s and order number "
+"containing %(order_number)s"
 msgstr "Tilaukset väliltä %(date_from)s - %(date_to)s ja tilausnumero sisältää %(order_number)s"
 
 #: apps/customer/forms.py:217 apps/dashboard/orders/forms.py:42
@@ -1891,7 +1935,9 @@ msgstr "Tilaukset aikavälillä %(date_from)s - %(date_to)s"
 
 #: apps/customer/forms.py:221
 #, python-format
-msgid "Orders placed since %(date_from)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed since %(date_from)s and order number containing "
+"%(order_number)s"
 msgstr "Päivän %(date_from)s jälkeiset tilauksen, joiden tilausnumero sisätää %(order_number)s"
 
 #: apps/customer/forms.py:224
@@ -1901,7 +1947,8 @@ msgstr "%(date_from)s jälkeen jätetyt tilaukset"
 
 #: apps/customer/forms.py:227
 #, python-format
-msgid "Orders placed until %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed until %(date_to)s and order number containing %(order_number)s"
 msgstr " %(date_to)s ennen jätetyt tilaukset, joiten tilausnumero sisältää %(order_number)s"
 
 #: apps/customer/forms.py:230
@@ -1933,7 +1980,10 @@ msgstr "%s:lla on jo aktiivinen varastohälytys"
 
 #: apps/customer/forms.py:405
 #, python-format
-msgid "%s has been sent a confirmation email for another product alert on this site. Please confirm or cancel that request before signing up for more alerts."
+msgid ""
+"%s has been sent a confirmation email for another product alert on this "
+"site. Please confirm or cancel that request before signing up for more "
+"alerts."
 msgstr ""
 
 #: apps/customer/forms.py:417
@@ -2013,12 +2063,15 @@ msgstr "Tilaus"
 
 #: apps/customer/views.py:554
 #, python-format
-msgid "All available lines from order %(number)s have been added to your basket"
+msgid ""
+"All available lines from order %(number)s have been added to your basket"
 msgstr "Kaikki rivit tilauksesta %(number)s on lisätty ostoskoriisi"
 
 #: apps/customer/views.py:560
 #, python-format
-msgid "It is not possible to re-order order %(number)s as none of its lines are available to purchase"
+msgid ""
+"It is not possible to re-order order %(number)s as none of its lines are "
+"available to purchase"
 msgstr "Ei ole mahdollista uudelleentilata tilausta %(number)s koska mikään riveistä ei ole ostettavissa"
 
 #: apps/customer/views.py:597
@@ -2237,7 +2290,9 @@ msgid "Select an option group"
 msgstr "Valitse vaihtoehtoryhmä"
 
 #: apps/dashboard/catalogue/formsets.py:96
-msgid "At least one stock record must be set to a partner that you're associated with."
+msgid ""
+"At least one stock record must be set to a partner that you're associated "
+"with."
 msgstr "Varastosaldo täytyy asettaa ainakin yhden toimittajan osalta."
 
 #: apps/dashboard/catalogue/formsets.py:114
@@ -2310,12 +2365,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: apps/dashboard/catalogue/tables.py:112
-#, fuzzy, python-format
-#| msgid "Option"
+#, python-format
 msgid "%s Option"
 msgid_plural "%s Options"
-msgstr[0] "Vaihtoehto"
-msgstr[1] "Vaihtoehto"
+msgstr[0] ""
+msgstr[1] ""
 
 #: apps/dashboard/catalogue/views.py:103
 msgid "Product search results"
@@ -2460,7 +2514,8 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:912
 #, python-format
-msgid "%i product attributes are still assigned to this attribute option group"
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:931
@@ -2468,52 +2523,40 @@ msgid "Attribute Option Group deleted successfully"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:978
-#, fuzzy
-#| msgid "Add a new category"
 msgid "Add a new Option"
-msgstr "Lisää uusi kategoria"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:981
-#, fuzzy
-#| msgid "Category created successfully"
 msgid "Option created successfully"
-msgstr "Kategorian luonti onnistui"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:994
-#, fuzzy, python-format
-#| msgid "Update category '%s'"
+#, python-format
 msgid "Update Option '%s'"
-msgstr "Päivitä kategoria '%s'"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:997
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Option updated successfully"
-msgstr "Kategorian päivitys onnistui"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1009
-#, fuzzy, python-format
-#| msgid "Deleted page '%s'"
+#, python-format
 msgid "Delete Option '%s'"
-msgstr "Sivu '%s' poistettu"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1019
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i products are still assigned to this option"
-msgstr "%i tuotetta yhä liitetty tähän tyyppiin"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1024
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i product classes are still assigned to this option"
-msgstr "%i tuotetta yhä liitetty tähän tyyppiin"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1030
-#, fuzzy
-#| msgid "Category deleted successfully"
 msgid "Option deleted successfully"
-msgstr "Kategorian poisto onnistui"
+msgstr ""
 
 #: apps/dashboard/communications/apps.py:11
 msgid "Communications dashboard"
@@ -2544,7 +2587,8 @@ msgid "Please enter an email address"
 msgstr "Kirjoita sähköpostiosoite"
 
 #: apps/dashboard/communications/views.py:31
-msgid "The submitted form was not valid, please correct the errors and resubmit"
+msgid ""
+"The submitted form was not valid, please correct the errors and resubmit"
 msgstr "Lähetettyä lomaketta ei kelpuutettu, korjaa virheet ja lähetä uudelleen"
 
 #: apps/dashboard/communications/views.py:40
@@ -2579,7 +2623,8 @@ msgid "Custom condition"
 msgstr "Erityisehto"
 
 #: apps/dashboard/offers/forms.py:86
-msgid "Please either choose a range, type and value OR select a custom condition"
+msgid ""
+"Please either choose a range, type and value OR select a custom condition"
 msgstr "Valitse valikoima, tyyppi ja arvo TAI valitse erityisehto"
 
 #: apps/dashboard/offers/forms.py:92
@@ -2591,7 +2636,8 @@ msgid "Custom incentive"
 msgstr "Erilliskannustin"
 
 #: apps/dashboard/offers/forms.py:139 apps/dashboard/offers/forms.py:149
-msgid "Please either choose a range, type and value OR select a custom incentive"
+msgid ""
+"Please either choose a range, type and value OR select a custom incentive"
 msgstr "Valitse valikoima, tyyppi ja arvo TAI valitse erilliskannustin"
 
 #: apps/dashboard/offers/forms.py:145
@@ -2909,7 +2955,9 @@ msgstr "Syötetty määrä riville #%s on virheellinen"
 
 #: apps/dashboard/orders/views.py:506
 #, python-format
-msgid "The entered quantity for line #%(line_id)s should not be higher than %(quantity)s"
+msgid ""
+"The entered quantity for line #%(line_id)s should not be higher than "
+"%(quantity)s"
 msgstr "Syötetty määrä riville #%(line_id)s ei pitäis olla korkeampi kuin %(quantity)s"
 
 #: apps/dashboard/orders/views.py:575
@@ -2943,7 +2991,9 @@ msgstr "'%(status)s' ei ole sallittu uusi tila riville %(line_id)d"
 
 #: apps/dashboard/orders/views.py:652
 #, python-format
-msgid "Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
+msgid ""
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
 msgstr "Rivi %(line_id)d muutettu tilasta '%(old_status)s' tilaan '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
@@ -2989,9 +3039,7 @@ msgstr "%(field)s muutettu '%(old_value)s':sta to '%(new_value)s':een"
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"Toimitusosoite päivitetty:\n"
-"%s"
+msgstr "Toimitusosoite päivitetty:\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -3012,7 +3060,9 @@ msgid "Example: '/about/contact/'."
 msgstr "Esimerkki: '/tietoja/otayhteytta/'."
 
 #: apps/dashboard/pages/forms.py:33
-msgid "This value must contain only letters, numbers, dots, underscores, dashes, slashes or tildes."
+msgid ""
+"This value must contain only letters, numbers, dots, underscores, dashes, "
+"slashes or tildes."
 msgstr ""
 
 #: apps/dashboard/pages/views.py:37
@@ -3236,7 +3286,9 @@ msgstr "-"
 
 #: apps/dashboard/reviews/views.py:29
 #, python-format
-msgid "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
+msgid ""
+"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
+"%(name_filter)s"
 msgstr "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
@@ -3482,7 +3534,8 @@ msgid "Site offer - available to all users"
 msgstr "Sivustotarjous – kaikkien käyttäjien saatavilla"
 
 #: apps/offer/abstract_models.py:146
-msgid "Voucher offer - only available after entering the appropriate voucher code"
+msgid ""
+"Voucher offer - only available after entering the appropriate voucher code"
 msgstr "Etukooditarjous – saatavilla kelvollisella koodilla"
 
 #: apps/offer/abstract_models.py:148
@@ -3490,7 +3543,9 @@ msgid "User offer - available to certain types of user"
 msgstr "Käyttäjätarjous – vain tietyntyyppisille käyttäjille"
 
 #: apps/offer/abstract_models.py:149
-msgid "Session offer - temporary offer, available for a user for the duration of their session"
+msgid ""
+"Session offer - temporary offer, available for a user for the duration of "
+"their session"
 msgstr "Istuntotarjous – tilapäinen tarjous, käyttäjän saatavilla istunnon ajan"
 
 #: apps/offer/abstract_models.py:156
@@ -3518,11 +3573,15 @@ msgid "The highest priority offers are applied first"
 msgstr "Korkeimman prioriteetin tarjoukset käytetään ensin"
 
 #: apps/offer/abstract_models.py:189
-msgid "Offers are active from the start date. Leave this empty if the offer has no start date."
+msgid ""
+"Offers are active from the start date. Leave this empty if the offer has no "
+"start date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:193
-msgid "Offers are active until the end date. Leave this empty if the offer has no expiry date."
+msgid ""
+"Offers are active until the end date. Leave this empty if the offer has no "
+"expiry date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:201
@@ -3554,7 +3613,9 @@ msgid "Max discount"
 msgstr "Max. alennus"
 
 #: apps/offer/abstract_models.py:227
-msgid "When an offer has given more discount to orders than this threshold, then the offer becomes unavailable"
+msgid ""
+"When an offer has given more discount to orders than this threshold, then "
+"the offer becomes unavailable"
 msgstr "Kun tarjous on tuonut enemmän alennusta tilauksille, kuin tämä raja-arvon, tarjous tulee arvottomaksi"
 
 #: apps/offer/abstract_models.py:236
@@ -3666,7 +3727,9 @@ msgid "Max Affected Items"
 msgstr "Tuotteiden enimmäismäärä"
 
 #: apps/offer/abstract_models.py:523
-msgid "Set this to prevent the discount consuming all items within the range that are in the basket."
+msgid ""
+"Set this to prevent the discount consuming all items within the range that "
+"are in the basket."
 msgstr "Aseta tämä estämää alennuksen kuluminen kaikille tuotteille tuotevalikoimassa, jotka ovat korissa."
 
 #: apps/offer/abstract_models.py:529 apps/offer/abstract_models.py:735
@@ -3717,7 +3780,8 @@ msgid "Shipping discounts don't require a 'max affected items' attribute"
 msgstr "Toimitusalennukset eivät vaadi 'Tuotteiden enimmäismäärä' -määrettä "
 
 #: apps/offer/abstract_models.py:643
-msgid "No range should be selected as the condition range will be used instead."
+msgid ""
+"No range should be selected as the condition range will be used instead."
 msgstr "Tuotevalikoimia ei pitäis olla valittuna, koska ehtojen mukaista valikoimaa käytetään"
 
 #: apps/offer/abstract_models.py:649
@@ -3737,7 +3801,8 @@ msgid "Depends on value of items in basket that are in condition range"
 msgstr "Riippuu tuotteiden arvosta korissa näillä ehtomäärittelyillä"
 
 #: apps/offer/abstract_models.py:721
-msgid "Needs to contain a set number of DISTINCT items from the condition range"
+msgid ""
+"Needs to contain a set number of DISTINCT items from the condition range"
 msgstr "Täytyy sisältää numerosarjan MÄÄRÄTYSTÄ ehtojen mukaisesta tuotteesta "
 
 #: apps/offer/abstract_models.py:741
@@ -4034,7 +4099,9 @@ msgstr "Vierailijan sähköposti"
 
 #: apps/order/abstract_models.py:135
 #, python-format
-msgid "'%(new_status)s' is not a valid status for order %(number)s (current status: '%(status)s')"
+msgid ""
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
 msgstr "'%(new_status)s' ei ole kelvollinen status tilaukselle %(number)s (nykyinen status: '%(status)s')"
 
 #: apps/order/abstract_models.py:272
@@ -4061,34 +4128,25 @@ msgid "Order Notes"
 msgstr "Tilausmerkinnät"
 
 #: apps/order/abstract_models.py:446 apps/order/abstract_models.py:456
-#, fuzzy
-#| msgid "Order and Item Charges"
 msgid "Order Status Changes"
-msgstr "Tilaus- ja tuotelaskutukset"
+msgstr ""
 
 #: apps/order/abstract_models.py:448
-#, fuzzy
-#| msgid "Status"
 msgid "Old Status"
-msgstr "Tila"
+msgstr ""
 
 #: apps/order/abstract_models.py:449
-#, fuzzy
-#| msgid "Status"
 msgid "New Status"
-msgstr "Tila"
+msgstr ""
 
 #: apps/order/abstract_models.py:455
-#, fuzzy
-#| msgid "Order status"
 msgid "Order Status Change"
-msgstr "Tilauksen tila"
+msgstr ""
 
 #: apps/order/abstract_models.py:460
-#, fuzzy, python-brace-format
-#| msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
+#, python-brace-format
 msgid "{order} has changed status from {old_status} to {new_status}"
-msgstr "Tilaus muutettu tilasta '%(old_status)s' tilaan '%(new_status)s'"
+msgstr ""
 
 #: apps/order/abstract_models.py:478 apps/order/abstract_models.py:947
 #: apps/order/abstract_models.py:1014
@@ -4761,7 +4819,9 @@ msgid "Upper Limit"
 msgstr "Yläraja"
 
 #: apps/shipping/abstract_models.py:199
-msgid "Enter upper limit of this weight band in kg. The lower limit will be determined by the other weight bands."
+msgid ""
+"Enter upper limit of this weight band in kg. The lower limit will be "
+"determined by the other weight bands."
 msgstr "Syötä yläraja painolle kilogrammoissa. Alaraja määritellään muissa painorajoituksissa."
 
 #: apps/shipping/abstract_models.py:202
@@ -4828,7 +4888,8 @@ msgid "VoucherSets"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:122
-msgid "This will be shown in the checkout and basket once the voucher is entered"
+msgid ""
+"This will be shown in the checkout and basket once the voucher is entered"
 msgstr "Tämä näytetään kassalla ja korissa, kunhan etukoodi on syötetty"
 
 #: apps/voucher/abstract_models.py:126
@@ -4889,10 +4950,8 @@ msgid "You have already used this voucher in a previous order"
 msgstr "Olet jo käyttänyt tämän etukupongin edellisessä tilauksessa"
 
 #: apps/voucher/abstract_models.py:232
-#, fuzzy
-#| msgid "This voucher is only available to signed in users"
 msgid "This voucher is not available for this basket"
-msgstr "Tämä etukuponki on vain kirjautuneille käyttäjille"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:301
 msgid "Voucher Application"
@@ -4931,7 +4990,9 @@ msgid "Private - Only the owner can see the wish list"
 msgstr "Yksityinen – Vain omistaja voi nähdä toivelistan"
 
 #: apps/wishlists/abstract_models.py:36
-msgid "Shared - Only the owner and people with access to the obfuscated link can see the wish list"
+msgid ""
+"Shared - Only the owner and people with access to the obfuscated link can "
+"see the wish list"
 msgstr "Jaettu – Vain omistaja ja salatun linkin saaneet voivat nähdä toivelistan"
 
 #: apps/wishlists/abstract_models.py:38
@@ -5142,9 +5203,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> lisätty koriisi."
+msgstr "\n<strong>%(title)s</strong> lisätty koriisi."
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5153,28 +5212,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(quantity)s</strong> kopiota <strong>%(title)s</strong>:sta\n"
-"lisätty koriisi."
+msgstr "\n<strong>%(quantity)s</strong> kopiota <strong>%(title)s</strong>:sta\nlisätty koriisi."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> siirretty takaisin koriisi.\n"
+msgstr "\n<strong>%(title)s</strong> siirretty takaisin koriisi.\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> laitettu talteen \n"
+msgstr "\n<strong>%(title)s</strong> laitettu talteen \n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5187,9 +5239,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
-"\n"
-"Korisi hinta on nyt yhteensä <strong>%(total)s</strong>"
+msgstr "\nKorisi hinta on nyt yhteensä <strong>%(total)s</strong>"
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -5207,10 +5257,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Korisi hyväksyy nyt \n"
-"<strong>%(name)s</strong> -tarjouksen.\n"
+msgstr "\nKorisi hyväksyy nyt \n<strong>%(name)s</strong> -tarjouksen.\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5218,10 +5265,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Korisi ei enää hyväksy\n"
-"tarjousta <strong>%(name)s</strong>.\n"
+msgstr "\nKorisi ei enää hyväksy\ntarjousta <strong>%(name)s</strong>.\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5237,9 +5281,7 @@ msgid ""
 "\n"
 "                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div class=\"warning\">%(message)s saadaksesi erikoistarjouksen <a href=\"%(url)s\">%(offer_name)s</a></div>"
+msgstr "\n<div class=\"warning\">%(message)s saadaksesi erikoistarjouksen <a href=\"%(url)s\">%(offer_name)s</a></div>"
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5515,12 +5557,8 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
-"\n"
-"Näytetään <strong>%(start)s</strong>–<strong>%(end)s</strong> yhteensä <strong>%(num_results)s</strong> osumasta."
-msgstr[1] ""
-"\n"
-"Näytetään <strong>%(start)s</strong>–<strong>%(end)s</strong> yhteensä <strong>%(num_results)s</strong> osumasta."
+msgstr[0] "\nNäytetään <strong>%(start)s</strong>–<strong>%(end)s</strong> yhteensä <strong>%(num_results)s</strong> osumasta."
+msgstr[1] "\nNäytetään <strong>%(start)s</strong>–<strong>%(end)s</strong> yhteensä <strong>%(num_results)s</strong> osumasta."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5532,14 +5570,8 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-"\n"
-"                    <strong>%(num_results)s</strong> osuma.\n"
-"                "
-msgstr[1] ""
-"\n"
-"                    <strong>%(num_results)s</strong> osumaa.\n"
-"                "
+msgstr[0] "\n                    <strong>%(num_results)s</strong> osuma.\n                "
+msgstr[1] "\n                    <strong>%(num_results)s</strong> osumaa.\n                "
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5561,10 +5593,8 @@ msgid "Edit this product"
 msgstr "Muokkaa tätä tuotetta"
 
 #: templates/oscar/catalogue/detail.html:88
-#, fuzzy
-#| msgid "Variants"
 msgid "Variants:"
-msgstr "Muunnokset"
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:105
 msgid "Product Description"
@@ -5607,9 +5637,7 @@ msgid ""
 "This product does not have any reviews yet -\n"
 "                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"Tällä tuotteella ei vielä ole arvioita -\n"
-"<a href=\"%(add_review_url)s#addreview\">kirjoita ensimmäinen</a>."
+msgstr "Tällä tuotteella ei vielä ole arvioita -\n<a href=\"%(add_review_url)s#addreview\">kirjoita ensimmäinen</a>."
 
 #: templates/oscar/catalogue/detail.html:176
 msgid "This product does not have any reviews yet"
@@ -5665,9 +5693,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
-"\n"
-"Lisää toivelistaan '%(name)s'"
+msgstr "\nLisää toivelistaan '%(name)s'"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -5679,9 +5705,7 @@ msgid ""
 "\n"
 "                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">Tuote on toivelistassa <a href=\"%(url)s\">'%(name)s'</a>.</span>"
+msgstr "\n<span class=\"pull-left\">Tuote on toivelistassa <a href=\"%(url)s\">'%(name)s'</a>.</span>"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -5699,9 +5723,7 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"Arvioit tämän %(review_date)s"
+msgstr "\nArvioit tämän %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
@@ -5709,9 +5731,7 @@ msgid ""
 "\n"
 "                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-" <strong>%(name)s</strong> arvioinut tämän %(review_date)s"
+msgstr "\n <strong>%(name)s</strong> arvioinut tämän %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -5745,12 +5765,8 @@ msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(num_up_votes)s</strong> asiakasta %(num_votes)s asiakkaasta piti tätä hyödyllisenä"
-msgstr[1] ""
-"\n"
-"<strong>%(num_up_votes)s</strong> asiakasta %(num_votes)s asiakkaasta piti tätä hyödyllisenä"
+msgstr[0] "\n<strong>%(num_up_votes)s</strong> asiakasta %(num_votes)s asiakkaasta piti tätä hyödyllisenä"
+msgstr[1] "\n<strong>%(num_up_votes)s</strong> asiakasta %(num_votes)s asiakkaasta piti tätä hyödyllisenä"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5770,12 +5786,8 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
-"\n"
-"%(num_reviews)s asiakasarvio"
-msgstr[1] ""
-"\n"
-"%(num_reviews)s asiakasarviota"
+msgstr[0] "\n%(num_reviews)s asiakasarvio"
+msgstr[1] "\n%(num_reviews)s asiakasarviota"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:85
@@ -5919,7 +5931,9 @@ msgid "Enter payment details"
 msgstr "Syötä maksutiedot"
 
 #: templates/oscar/checkout/payment_details.html:21
-msgid "This page needs implementing within your project.  You may want to use one of Oscar's payment gateway libraries:"
+msgid ""
+"This page needs implementing within your project.  You may want to use one "
+"of Oscar's payment gateway libraries:"
 msgstr "Tämä sivu on toteutettava projektissasi. Saatat haluta käytää jotakin Oscarin maksuväyläkirjastoista:"
 
 #: templates/oscar/checkout/preview.html:5
@@ -6008,10 +6022,7 @@ msgid ""
 "                                This includes a discount of <strong>%(amount)s</strong> as\n"
 "                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
-msgstr ""
-"\n"
-"Tämä sisältää <strong>%(amount)s</strong> alennuksen,\n"
-"koska korisi täyttää alennuksen <strong>%(name)s</strong> ehdot."
+msgstr "\nTämä sisältää <strong>%(amount)s</strong> alennuksen,\nkoska korisi täyttää alennuksen <strong>%(name)s</strong> ehdot."
 
 #: templates/oscar/checkout/shipping_methods.html:58
 msgid "Select option"
@@ -6024,9 +6035,7 @@ msgid ""
 "\n"
 "        Order %(number)s: confirmation\n"
 "    "
-msgstr ""
-"\n"
-"Tilaus %(number)s: vahvistus"
+msgstr "\nTilaus %(number)s: vahvistus"
 
 #: templates/oscar/checkout/thank_you.html:25
 #, python-format
@@ -6035,13 +6044,12 @@ msgid ""
 "        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
-msgstr ""
-"\n"
-"Tilaus on tehty, ja vahvistus on lähetetty sähköpostitse – tilausnumerosi on\n"
-"<strong>%(number)s</strong>."
+msgstr "\nTilaus on tehty, ja vahvistus on lähetetty sähköpostitse – tilausnumerosi on\n<strong>%(number)s</strong>."
 
 #: templates/oscar/checkout/thank_you.html:29
-msgid "Please make a note of this reference or print this page and quote it in any communication with us regarding your order."
+msgid ""
+"Please make a note of this reference or print this page and quote it in any "
+"communication with us regarding your order."
 msgstr "Kirjoita viite ylös, tai tulosta tämä sivu, ja käytä viitettä aina ottasessasi yhteyttä meihin tilaukseesi liittyen."
 
 #: templates/oscar/checkout/thank_you.html:62
@@ -6054,9 +6062,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"%(amount)s  Kohdennus tyypille %(type)s (referessi: %(reference)s)"
+msgstr "\n%(amount)s  Kohdennus tyypille %(type)s (referessi: %(reference)s)"
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6064,9 +6070,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"%(amount)s  Kohdennus tyypille %(type)s"
+msgstr "\n%(amount)s  Kohdennus tyypille %(type)s"
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
@@ -6077,18 +6081,12 @@ msgid "Items purchased"
 msgstr "Ostetut tuotteet"
 
 #: templates/oscar/checkout/thank_you.html:143
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                            Estimated dispatch: <strong>%(date)s</strong>\n"
-#| "                        "
+#, python-format
 msgid ""
 "\n"
 "                                Estimated dispatch: <strong>%(date)s</strong>\n"
 "                            "
 msgstr ""
-"\n"
-"Arvioitu lähetysaika: <strong>%(date)s</strong>"
 
 #: templates/oscar/checkout/thank_you.html:182
 msgid "Tracking your order"
@@ -6232,9 +6230,7 @@ msgstr "Peruuta"
 msgid ""
 "\n"
 "<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a> taas varastossa\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a> taas varastossa\n"
 
 #: templates/oscar/customer/alerts/message_subject.html:2
 #, python-format
@@ -6317,22 +6313,29 @@ msgstr "Tiimi %(name)s"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
 #, python-format
-msgid "You're receiving this email because your email address has been changed to <strong>%(email)s</strong>."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"<strong>%(email)s</strong>."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
-msgid "If it wasn't you who changed it, please reset your password immediately and correct your email address:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately and "
+"correct your email address:"
 msgstr "Jos sinä et vaihtanut sähköpostisoitetta, vaihda salasanasi heti, ja korjaa sähköpostiosoitteesi: "
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr "Jos vaihdoit sähköpostiosoitteesi, sinun ei tarvitse välittää tästä viestistä."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
 #, python-format
-msgid "You're receiving this email because your email address has been changed to %(email)s."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"%(email)s."
 msgstr "Tämä sähköposti lähtetettiin, koska sähköpostisi on vaihdettu osoiteeseen %(email)s."
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
@@ -6381,7 +6384,9 @@ msgstr "Toimitusosoite:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
-msgid "You can view the status of this order by clicking <a href=\"%(status_url)s\" title=\"order status\">here</a>"
+msgid ""
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
 msgstr "Voit tarkastella tilausta klikkaamalla <a href=\"%(status_url)s\" title=\"order status\">tästä</a>"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
@@ -6391,10 +6396,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"Hei,\n"
-"\n"
-"Vahvistamme, että tilauksenne %(order_number)s on vastaanotettu, ja käsitellään pian."
+msgstr "Hei,\n\nVahvistamme, että tilauksenne %(order_number)s on vastaanotettu, ja käsitellään pian."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6409,9 +6411,7 @@ msgstr "hinta:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"Tilauksen tilan voit tarkistaa alla olevast osoitteesta:\n"
-"%(status_url)s"
+msgstr "Tilauksen tilan voit tarkistaa alla olevast osoitteesta:\n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6424,12 +6424,15 @@ msgstr "Tilauksen %(number)s vahvistus"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
 #, python-format
-msgid "You're receiving this e-mail because your password has been changed at %(name)s."
+msgid ""
+"You're receiving this e-mail because your password has been changed at "
+"%(name)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
-msgid "If it wasn't you who changed it, please reset your password immediately:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately:"
 msgstr "Jos sinä et vaihtanut sitä, uusi salasana välittömästi:"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:25
@@ -6442,9 +6445,7 @@ msgstr "Muussa tapauksessa voit jättää tämän viestin huomiotta."
 msgid ""
 "\n"
 "You're receiving this email because your password has been changed at %(name)s.\n"
-msgstr ""
-"\n"
-"Tämä sähköposti lähetettiin, koska salasanasi on vaihdettu %(name)s:ssa.\n"
+msgstr "\nTämä sähköposti lähetettiin, koska salasanasi on vaihdettu %(name)s:ssa.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6454,7 +6455,9 @@ msgstr "Salasanasi on vaihdettu %(site_name)s:ssa."
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:7
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
-msgid "You're receiving this e-mail because you requested a password reset for your user account at %(name)s."
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr "Tämä sähköposti lähetettiin, koska  pyysit salasanan uusimista kaupassa %(name)s."
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
@@ -6509,9 +6512,7 @@ msgstr ""
 msgid ""
 "\n"
 "Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
-msgstr ""
-"\n"
-"Huomaa rajoitettu varasto. Ole nopea, tai joku saattaa ehtiä ensin.\n"
+msgstr "\nHuomaa rajoitettu varasto. Ole nopea, tai joku saattaa ehtiä ensin.\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
 #, python-format
@@ -6522,13 +6523,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"Tällä sähköpostilla olemme poistaneet hälytyksesi, \n"
-"etkä enää saa sähköposteja tästä tuotteesta.\n"
-"\n"
-"Kiitoksia mielenkiinnosta,\n"
-"%(site_name)s -tiimi\n"
+msgstr "\nTällä sähköpostilla olemme poistaneet hälytyksesi, \netkä enää saa sähköposteja tästä tuotteesta.\n\nKiitoksia mielenkiinnosta,\n%(site_name)s -tiimi\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_body.txt:1
 #, python-format
@@ -6657,18 +6652,14 @@ msgstr "Toimituspäivä"
 
 #: templates/oscar/customer/order/order_detail.html:66
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-ordering..."
 msgctxt "Buy again"
 msgid "Re-ordering..."
-msgstr "Tilataan uudelleen..."
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:66
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Buy again"
 msgid "Re-order"
-msgstr "Tilaa uudelleen"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:69
 #: templates/oscar/customer/wishlists/wishlists_detail.html:57
@@ -6701,11 +6692,9 @@ msgid "Shipping total"
 msgstr "Toimitus yhteensä"
 
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-order all items"
 msgctxt "Buy again"
 msgid "Re-order all items"
-msgstr "Uudelleentilaa kaikki tuotteet"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:167
 msgid "Contact Number"
@@ -6777,9 +6766,7 @@ msgid ""
 "                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"Tämä poistaa kaiken tiedon sinusta sivustolta. Poistettua profiilia ei voi palauttaa."
+msgstr "\nTämä poistaa kaiken tiedon sinusta sivustolta. Poistettua profiilia ei voi palauttaa."
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -6799,9 +6786,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"Oletko varma, että haluat poistaa toivelistan %(name)s?"
+msgstr "\nOletko varma, että haluat poistaa toivelistan %(name)s?"
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:18
 msgid "Remove product"
@@ -6813,9 +6798,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
-"\n"
-"Oletko karma, että haluat poistaa tuotteen %(product_name)s toivelistalta %(wishlist_name)s?"
+msgstr "\nOletko karma, että haluat poistaa tuotteen %(product_name)s toivelistalta %(wishlist_name)s?"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -6832,9 +6815,7 @@ msgid ""
 "\n"
 "                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
-"\n"
-"Siirretty toivelistalle '%(name)s'"
+msgstr "\nSiirretty toivelistalle '%(name)s'"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:103
 msgid "Update quantities"
@@ -6858,9 +6839,7 @@ msgid ""
 "\n"
 "                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
-"\n"
-"Kun toivelista on luotu, siihen lisätään <strong>%(title)s</strong>."
+msgstr "\nKun toivelista on luotu, siihen lisätään <strong>%(title)s</strong>."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -6891,7 +6870,9 @@ msgid "Delete Attribute Option Group?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
-msgid "Please make sure all Product Attributes are assigned to another Attribute Option Group before deletion."
+msgid ""
+"Please make sure all Product Attributes are assigned to another Attribute "
+"Option Group before deletion."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
@@ -6900,7 +6881,8 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
@@ -6950,9 +6932,7 @@ msgid ""
 "\n"
 "            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
-msgstr ""
-"\n"
-"<p>Poista luokka <strong>%(name)s</strong> – oletko varma?</p>"
+msgstr "\n<p>Poista luokka <strong>%(name)s</strong> – oletko varma?</p>"
 
 #: templates/oscar/dashboard/catalogue/category_list.html:23
 msgid "Create new category"
@@ -6994,9 +6974,7 @@ msgid ""
 "\n"
 "                    Created product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Tuotemuunnos '%(name)s' luotu."
+msgstr "\nTuotemuunnos '%(name)s' luotu."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
 #, python-format
@@ -7004,9 +6982,7 @@ msgid ""
 "\n"
 "                    Created variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Luotu muunnos '%(parent_name)s'."
+msgstr "\nLuotu muunnos '%(parent_name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
 #, python-format
@@ -7014,9 +6990,7 @@ msgid ""
 "\n"
 "                    Updated product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Tuotemuunos '%(name)s' päivitetty."
+msgstr "\nTuotemuunos '%(name)s' päivitetty."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
 #, python-format
@@ -7024,9 +6998,7 @@ msgid ""
 "\n"
 "                    Updated a variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Muunnos '%(parent_name)s' päivitetty."
+msgstr "\nMuunnos '%(parent_name)s' päivitetty."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
 #, python-format
@@ -7034,9 +7006,7 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"Tuote '%(name)s' luotu."
+msgstr "\nTuote '%(name)s' luotu."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -7044,9 +7014,7 @@ msgid ""
 "\n"
 "                Updated product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"Tuote '%(name)s' päivitetty."
+msgstr "\nTuote '%(name)s' päivitetty."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
 #: templates/oscar/dashboard/pages/messages/saved.html:10
@@ -7059,65 +7027,51 @@ msgid "View it on the site"
 msgstr "Katso tuotetta sivustolla"
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:5
-#, fuzzy
-#| msgid "Caption"
 msgid "Create Option"
-msgstr "Seloste"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:31
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option?"
-msgstr "Valitse vaihtoehto"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:42
-#, fuzzy
-#| msgid "Please make sure all products are assigned to another type before deletion."
-msgid "Please make sure option is not assigned to Products or Product Classes before deletion."
-msgstr "Varmista että kaikkien tuotteiden tyyppi on muutettu toiseksi ennen poistamista."
+msgid ""
+"Please make sure option is not assigned to Products or Product Classes "
+"before deletion."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:45
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option"
-msgstr "Valitse vaihtoehto"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:56
-#, fuzzy, python-format
-#| msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
+#, python-format
 msgid "Delete Option <strong>%(name)s</strong> - are you sure?"
-msgstr "Poista tuotetyyppi <strong>%(name)s</strong> - oletko varma?"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_form.html:50
-#, fuzzy
-#| msgid "Shipping details"
 msgid "Option details"
-msgstr "Tomitustiedot"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:20
-#, fuzzy
-#| msgid "Create new partner"
 msgid "Create new Option"
-msgstr "Luo uusi kumppani"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:34
-#, fuzzy
-#| msgid "No partners found."
 msgid "No Option found."
-msgstr "Kumppaneita ei löytynyt."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_row_actions.html:11
-#, fuzzy
-#| msgid "Option"
 msgid "Edit Option"
-msgstr "Vaihtoehto"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:14
 msgid "Delete product type?"
 msgstr "Poista tuotetyyppi?"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
-msgid "Please make sure all products are assigned to another type before deletion."
+msgid ""
+"Please make sure all products are assigned to another type before deletion."
 msgstr "Varmista että kaikkien tuotteiden tyyppi on muutettu toiseksi ennen poistamista."
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
@@ -7168,9 +7122,7 @@ msgid ""
 "\n"
 "                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-"<p>Poista tuotemuunnos <strong>%(title)s</strong> – oletko varma?</p>"
+msgstr "\n<p>Poista tuotemuunnos <strong>%(title)s</strong> – oletko varma?</p>"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:41
 #, python-format
@@ -7178,9 +7130,7 @@ msgid ""
 "\n"
 "                    Delete product <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-"<p>Poista tuote <strong>%(title)s</strong> – oletko varma?</p>"
+msgstr "\n<p>Poista tuote <strong>%(title)s</strong> – oletko varma?</p>"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:49
 msgid "This will also delete the following child products:"
@@ -7218,10 +7168,7 @@ msgid ""
 "                            You are currently editing a product variant of\n"
 "                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
 "                        "
-msgstr ""
-"\n"
-"Olet muokkaamassa tuotemuunnosta\n"
-"<a href=\"%(parent_url)s\">%(title)s</a>."
+msgstr "\nOlet muokkaamassa tuotemuunnosta\n<a href=\"%(parent_url)s\">%(title)s</a>."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:70
 #: templates/oscar/dashboard/catalogue/product_update.html:99
@@ -7251,7 +7198,9 @@ msgid "Upload, change or remove images"
 msgstr "Lataa, vaihda tai poista kuvia"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:176
-msgid "Drag images to re-order them. Space for additional images will appear when images are added."
+msgid ""
+"Drag images to re-order them. Space for additional images will appear when "
+"images are added."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:193
@@ -7484,10 +7433,8 @@ msgid "<em>Closed</em> stock alerts"
 msgstr "<em>Suljetut</em> varastohälytykset"
 
 #: templates/oscar/dashboard/index.html:163
-#, fuzzy
-#| msgid "Offer for voucher '%s'"
 msgid "Offers, vouchers"
-msgstr "Tarjous etukoodille '%s'"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:165
 msgid "Active <em>Site</em> Offers"
@@ -7510,7 +7457,9 @@ msgid "Log out"
 msgstr "Kirjaudu ulos"
 
 #: templates/oscar/dashboard/login.html:28
-msgid "Please enter a correct username and password. Note that both fields may be case-sensitive."
+msgid ""
+"Please enter a correct username and password. Note that both fields may be "
+"case-sensitive."
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
@@ -7523,18 +7472,12 @@ msgstr "Rakenna uusi kannustin"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:19
 #: templates/oscar/dashboard/offers/condition_form.html:23
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
-#| "        "
+#, python-format
 msgid ""
 "\n"
 "        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\" target=\"_blank\">range dashboard</a>.\n"
 "        "
 msgstr ""
-"\n"
-"Tuotevalikoimia voidaan luoda, ja muokata, <a href=\"%(range_list_url)s\">tuotevalikoiman kojelaudasta</a>."
 
 #: templates/oscar/dashboard/offers/benefit_form.html:28
 #: templates/oscar/dashboard/offers/condition_form.html:31
@@ -7572,9 +7515,7 @@ msgid ""
 "\n"
 "        %(name)s | Offers\n"
 "    "
-msgstr ""
-"\n"
-"%(name)s | Tarjoukset"
+msgstr "\n%(name)s | Tarjoukset"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
@@ -7703,9 +7644,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"Tilaus %(number)s - Rivi #%(id)s"
+msgstr "\nTilaus %(number)s - Rivi #%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -7888,30 +7827,20 @@ msgid "This order can't have its status changed."
 msgstr "Tämän tilauksen tilaa ei voi muuttaa."
 
 #: templates/oscar/dashboard/orders/order_detail.html:335
-#, fuzzy
-#| msgid "Save changes"
 msgid "Status Changes"
-msgstr "Tallenna muutokset"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:342
-#, fuzzy
-#| msgctxt "start date"
-#| msgid "From"
 msgid "From"
-msgstr "Keneltä"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:343
-#, fuzzy
-#| msgctxt "end date"
-#| msgid "To"
 msgid "To"
-msgstr "Kenelle"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:359
-#, fuzzy
-#| msgid "Save changes"
 msgid "No status changes."
-msgstr "Tallenna muutokset"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:391
 #, python-format
@@ -7919,9 +7848,7 @@ msgid ""
 "\n"
 "                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
-"\n"
-"%(title)s (määrä %(event_qty)s/%(total_qty)s)"
+msgstr "\n%(title)s (määrä %(event_qty)s/%(total_qty)s)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:405
 msgid "No shipping events."
@@ -8107,9 +8034,7 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
-"\n"
-"Sivu <strong>%(title)s</strong> tallennettu!"
+msgstr "\nSivu <strong>%(title)s</strong> tallennettu!"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
@@ -8135,9 +8060,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"Sivu %(page_num)s/%(total_pages)s"
+msgstr "\nSivu %(page_num)s/%(total_pages)s"
 
 #: templates/oscar/dashboard/partials/pagination.html:16
 #: templates/oscar/partials/pagination.html:16
@@ -8147,20 +8070,16 @@ msgstr "seuraava"
 
 #: templates/oscar/dashboard/partials/product_images.html:13
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Change the sequence order"
 msgid "Re-order"
-msgstr "Tilaa uudelleen"
+msgstr ""
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"Käyttäjän %(user_name)s liitos kumppaniin %(partner_name)s on poistettu.\n"
+msgstr "\nKäyttäjän %(user_name)s liitos kumppaniin %(partner_name)s on poistettu.\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8238,7 +8157,9 @@ msgid "Update details"
 msgstr "Päivitä tiedot"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
-msgid "A partial email address can be entered (eg '@example.com') to match multiple addresses."
+msgid ""
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
 msgstr "Sähköpostiosoitteen osa (esim. '@example.com') voidaan syöttää useamman osoitteen hakemiseksi."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
@@ -8247,9 +8168,7 @@ msgid ""
 "\n"
 "                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"Käyttäjä on jo liitetty kumppaniin %(name)s."
+msgstr "\nKäyttäjä on jo liitetty kumppaniin %(name)s."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:71
 msgid "Linking..."
@@ -8268,9 +8187,7 @@ msgstr "Käyttäjiä ei löytynyt."
 msgid ""
 "\n"
 "    <p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr ""
-"\n"
-"<p>Tiedosto <strong>%(filename)s</strong> käsitelty.</p>\n"
+msgstr "\n<p>Tiedosto <strong>%(filename)s</strong> käsitelty.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:9
 #, python-format
@@ -8282,12 +8199,8 @@ msgid_plural ""
 "\n"
 "                <strong>%(n)s</strong> products added\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(n)s</strong> tuote lisätty"
-msgstr[1] ""
-"\n"
-"<strong>%(n)s</strong> tuotetta lisätty"
+msgstr[0] "\n<strong>%(n)s</strong> tuote lisätty"
+msgstr[1] "\n<strong>%(n)s</strong> tuotetta lisätty"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8299,12 +8212,8 @@ msgid_plural ""
 "\n"
 "                There were <strong>%(n)s</strong> duplicate products in the file\n"
 "            "
-msgstr[0] ""
-"\n"
-"Tiedostossa oli <strong>%(n)s</strong> päällekkäinen tuote"
-msgstr[1] ""
-"\n"
-"Tiedostossa oli <strong>%(n)s</strong> päällekkäistä tuotetta"
+msgstr[0] "\nTiedostossa oli <strong>%(n)s</strong> päällekkäinen tuote"
+msgstr[1] "\nTiedostossa oli <strong>%(n)s</strong> päällekkäistä tuotetta"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8316,12 +8225,8 @@ msgid_plural ""
 "\n"
 "                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
 "            "
-msgstr[0] ""
-"\n"
-"Tiedostossa oli <strong>%(n)s</strong> tuote, jota ei ole luettelossa"
-msgstr[1] ""
-"\n"
-"Tiedostossa oli <strong>%(n)s</strong> tuotetta, joita ei ole luettelossa"
+msgstr[0] "\nTiedostossa oli <strong>%(n)s</strong> tuote, jota ei ole luettelossa"
+msgstr[1] "\nTiedostossa oli <strong>%(n)s</strong> tuotetta, joita ei ole luettelossa"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -8336,9 +8241,7 @@ msgstr "Palaa tuotevalikoimien kotisivulle"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p>Tuotevalikoima <strong>%(name)s</strong> talletettu.</p>\n"
+msgstr "\n<p>Tuotevalikoima <strong>%(name)s</strong> talletettu.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -8384,7 +8287,9 @@ msgid "products"
 msgstr "Tuotteet"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:32
-msgid "This range contains all products. To add products manually, please unselect the 'Includes All Products' option on the edit range page."
+msgid ""
+"This range contains all products. To add products manually, please unselect "
+"the 'Includes All Products' option on the edit range page."
 msgstr "Tämä valikoima sisältää kaikki tuotteet. Lisätäksesi tuote manuaalisesti, poista valinta \"sisältää kaikki tuotteet\" muokkaa valikoimaa -sivulta."
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
@@ -8528,18 +8433,14 @@ msgstr "Esikatselutieto"
 msgid ""
 "\n"
 "    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
-msgstr ""
-"\n"
-"<p>Painorja on lisätty toimitustspaan <strong>%(name)s</strong>.</p>\n"
+msgstr "\n<p>Painorja on lisätty toimitustspaan <strong>%(name)s</strong>.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
-msgstr ""
-"\n"
-"<p>Painorajoitus poistettu toimitustavalta <strong>%(name)s</strong>\n"
+msgstr "\n<p>Painorajoitus poistettu toimitustavalta <strong>%(name)s</strong>\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_updated.html:3
 msgid "Weight band updated"
@@ -8550,27 +8451,21 @@ msgstr "Painoraja päivitetty"
 msgid ""
 "\n"
 "<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
-msgstr ""
-"\n"
-"<p>Toimitustapa <strong>%(name)s</strong> luotu.</p>\n"
+msgstr "\n<p>Toimitustapa <strong>%(name)s</strong> luotu.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
-msgstr ""
-"\n"
-"<p>Toimitustapa <strong>%(name)s</strong> poistettu.</p>\n"
+msgstr "\n<p>Toimitustapa <strong>%(name)s</strong> poistettu.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_updated.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
-msgstr ""
-"\n"
-"<p>Toimitustapa <strong>%(name)s</strong> päivitetty.</p>\n"
+msgstr "\n<p>Toimitustapa <strong>%(name)s</strong> päivitetty.</p>\n"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:6
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:22
@@ -9000,9 +8895,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"Yhteensä: %(total)s"
+msgstr "\nYhteensä: %(total)s"
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -9041,7 +8934,9 @@ msgid "Enter a new password"
 msgstr "Syötä uusi salasana"
 
 #: templates/oscar/registration/password_reset_confirm.html:22
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr "Syötä uusi salasanasi kahdesti, niin voimme varmistaa, että kirjoitit sen oikein."
 
 #: templates/oscar/registration/password_reset_confirm.html:27
@@ -9053,7 +8948,9 @@ msgid "Password reset unsuccessful"
 msgstr "Salasanan uusiminen epäonnistui"
 
 #: templates/oscar/registration/password_reset_confirm.html:32
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr "Salasanan uusimislinkki ei kelvannut, mahdolisesti siksi, että sitä on jo käytetty. Ole hyvä ja pyydä salasanan uusimista uudelleen."
 
 #: templates/oscar/registration/password_reset_done.html:4
@@ -9070,9 +8967,7 @@ msgid ""
 "\n"
 "        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
-"\n"
-"Lähetimme sähköpostitse ohjeet salasanasi uusimiseen. Sähköpostin pitäisi saapua pian."
+msgstr "\nLähetimme sähköpostitse ohjeet salasanasi uusimiseen. Sähköpostin pitäisi saapua pian."
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
@@ -9080,12 +8975,12 @@ msgid ""
 "        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
-"\n"
-"Jos sähköposti ei saavu perille, tarkasta, että olet syöttänut saman osoitteen kuin rekisteröityessäsi, ja tarkasta roskapostikansiosi."
+msgstr "\nJos sähköposti ei saavu perille, tarkasta, että olet syöttänut saman osoitteen kuin rekisteröityessäsi, ja tarkasta roskapostikansiosi."
 
 #: templates/oscar/registration/password_reset_form.html:21
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr "Salasana unohtunut? Syötä sähköpostiostoitteesi alle, niin lähetämme ohjeet salasanan uusimiseksi."
 
 #: templates/oscar/registration/password_reset_form.html:24
@@ -9102,9 +8997,7 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"Tuotteet joiden nimessä on \"%(q)s\""
+msgstr "\nTuotteet joiden nimessä on \"%(q)s\""
 
 #: templates/oscar/search/results.html:52
 #, python-format
@@ -9112,9 +9005,7 @@ msgid ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr ""
-"\n"
-"Näytetään <strong>%(start)s</strong>–<strong>%(end)s</strong> yhteensä <strong>%(num_results)s</strong> osumasta."
+msgstr "\nNäytetään <strong>%(start)s</strong>–<strong>%(end)s</strong> yhteensä <strong>%(num_results)s</strong> osumasta."
 
 #: templates/oscar/search/results.html:56
 #, python-format
@@ -9139,9 +9030,7 @@ msgid ""
 "\n"
 "                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"Tarkoititko <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?"
+msgstr "\nTarkoititko <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?"
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9151,293 +9040,3 @@ msgstr "Takaisin hakutuloksiin"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Sinun tulee valita jokin %s"
-
-#~ msgid "Must be str or unicode"
-#~ msgstr "Täytyy olla merkkijono"
-
-#~ msgid "Promotions dashboard"
-#~ msgstr "Kampanjoiden kojelauta"
-
-#~ msgid "Promotion type"
-#~ msgstr "Kampanjan tyyppi"
-
-#~ msgid "Position"
-#~ msgstr "Sijainti"
-
-#~ msgid "Where in the page this content block will appear"
-#~ msgstr "Mihin tämä sisältölohko ilmestyy sivulla"
-
-#~ msgid "Content blocks can only be linked to internal URLs"
-#~ msgstr "Sisältölohkot voidaan liittää vain sisäiseen URLiin."
-
-#~ msgid "Content block removed successfully"
-#~ msgstr "Sisältölohko poistettu onnistuneesti"
-
-#~ msgid "Content block created successfully"
-#~ msgstr "Sisältölohko luotu onnistuneesti"
-
-#~ msgid "Create a new %s content block"
-#~ msgstr "Luo uusi %s sisältölohko"
-
-#~ msgid "Product list content block created"
-#~ msgstr "Tuotelistan sisältölohko luotu"
-
-#~ msgid "Update content block"
-#~ msgstr "Päivitä sisältölohko"
-
-#~ msgid "Content block updated successfully"
-#~ msgstr "Sisältölohko päivitetty"
-
-#~ msgid "Content block '%(block)s' added to page '%(page)s'"
-#~ msgstr "Sisältölohko '%(block)s' lisätty sivulle '%(page)s'"
-
-#~ msgid "No link found to delete"
-#~ msgstr "Poistettavaa linkkiä ei löytynyt"
-
-#~ msgid "Content block removed from page '%s'"
-#~ msgstr "Sisältölohko poistettu sivulta '%s'"
-
-#~ msgid "Product list promotion updated"
-#~ msgstr "Tuotelistauksen kampanja päivitetty"
-
-#~ msgid "Content block deleted successfully"
-#~ msgstr "Sisältölohko poistettu onnistuneesti"
-
-#~ msgid "Percentage off of products in range"
-#~ msgstr "Prosenttimääräinen alennus valikoiman tuotteille"
-
-#~ msgid "Fixed amount off of products in range"
-#~ msgstr "Kiinteä alennus valikoiman tuoteille"
-
-#~ msgid "Promotions"
-#~ msgstr "Kampanjat"
-
-#~ msgid "Display Order"
-#~ msgstr "Esittämisjärjestys"
-
-#~ msgid "Clicks"
-#~ msgstr "Klikkaukset"
-
-#~ msgid "Linked Promotion"
-#~ msgstr "Liitetty kampanja"
-
-#~ msgid "Linked Promotions"
-#~ msgstr "Liitetyt kampanjat"
-
-#~ msgid "Page URL"
-#~ msgstr "Sivun URL"
-
-#~ msgid "Page Promotion"
-#~ msgstr "Sivun kampanja"
-
-#~ msgid "Page Promotions"
-#~ msgstr "Sivun kampanjat"
-
-#~ msgid "Keyword Promotion"
-#~ msgstr "Hakusanakampanja"
-
-#~ msgid "Keyword Promotions"
-#~ msgstr "Hakusanakampanjat"
-
-#~ msgid "Keywords"
-#~ msgstr "Hakusanat"
-
-#~ msgid "Promotion"
-#~ msgstr "Kampanja"
-
-#~ msgid "Display type"
-#~ msgstr "Näyttötyyppi"
-
-#~ msgid "This can be used to have different types of HTML blocks (eg different widths)"
-#~ msgstr "Tämän avulla voi olla erityyppisiä HTML-lohkoja (esim. erilevyisiä)"
-
-#~ msgid "Raw HTML"
-#~ msgstr "Raaka HTML"
-
-#~ msgid "Link URL"
-#~ msgstr "Linkki URL"
-
-#~ msgid "This is where this promotion links to"
-#~ msgstr "Kampanja ohjaa tänne"
-
-#~ msgid "Choose the Image content blocks that this block will use. (You may need to create some first)."
-#~ msgstr "Valitse kuvasisältölohkot, joita tämä lohko tulee käyttämään. (Voi olla, että joudut luomaan joitain ensin)."
-
-#~ msgid "Multi Image"
-#~ msgstr "Usea kuva"
-
-#~ msgid "Multi Images"
-#~ msgstr "Useat kuvat"
-
-#~ msgid "Single product"
-#~ msgstr "Yksittäinen tuote"
-
-#~ msgctxt "Promotion product list title"
-#~ msgid "Title"
-#~ msgstr "Otsikko"
-
-#~ msgid "Link text"
-#~ msgstr "Linkin teksti"
-
-#~ msgid "Product list"
-#~ msgstr "Tuotelista"
-
-#~ msgid "Product lists"
-#~ msgstr "Tuotelistat"
-
-#~ msgid "Hand Picked Product List"
-#~ msgstr "Käsinkerätty tuotelista"
-
-#~ msgid "Hand Picked Product Lists"
-#~ msgstr "Käsinkerätyt tuotelistat"
-
-#~ msgid "List"
-#~ msgstr "Lista"
-
-#~ msgid "Ordered product"
-#~ msgstr "Tilatut tuotteet"
-
-#~ msgid "Bestselling products"
-#~ msgstr "Parhaiten myyvät tuotteet"
-
-#~ msgid "Recently added products"
-#~ msgstr "Lähiaikoina lisätyt tuotteet"
-
-#~ msgid "Number of Products"
-#~ msgstr "Tuotteiden määrä"
-
-#~ msgid "Automatic product list"
-#~ msgstr "Automaattinen tuotelista"
-
-#~ msgid "Automatic product lists"
-#~ msgstr "Automaattiset tuotelistat"
-
-#~ msgid "Tabbed Block"
-#~ msgstr "Välilehden lohko"
-
-#~ msgid "Ordered Product List"
-#~ msgstr "Tilattujen tuotteiden lista"
-
-#~ msgid "Ordered Product Lists"
-#~ msgstr "Tilattujen tuotteiden listat"
-
-#~ msgctxt "Tabbed block title"
-#~ msgid "Title"
-#~ msgstr "Otsikko"
-
-#~ msgid "Tabbed Blocks"
-#~ msgstr "Välilehtien lohkot"
-
-#~ msgid "Content blocks"
-#~ msgstr "Sisältölohkot"
-
-#~ msgid "Content blocks by page"
-#~ msgstr "Sivukohtaiset sisältölohkot"
-
-#~ msgid "Server error!"
-#~ msgstr "Palvelinvirhe!"
-
-#~ msgid "We're sorry but something went terribly wrong and we've been unable to generate the page you requested."
-#~ msgstr "Olemme pahoillamme, mutta jotain meni pahasti pieleen, emmekä voi luoda pyytämääsi sivua."
-
-#~ msgid "This incident has been logged and will be addressed by an engineer as soon as possible."
-#~ msgstr "Tämä tapaus on kirjattu ja insinööri tutkii sen ensi tilassa."
-
-#~ msgid "Offers, vouchers and promotions"
-#~ msgstr "Tarjoukset, kupongit ja kampanjat"
-
-#~ msgid "Delete content block '%(name)s'?\""
-#~ msgstr "Poista sisältölohko '%(name)s'?"
-
-#~ msgid "Delete content block"
-#~ msgstr "Poista sisältölohko"
-
-#~ msgid "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are you sure?"
-#~ msgstr "Poista %(object.type)s sisältölohko <strong>%(object.name)s</strong> - Oletko varma?"
-
-#~ msgid "Remove promotion from page?"
-#~ msgstr "Poista kampanja sivulta?"
-
-#~ msgid "Remove promotion"
-#~ msgstr "Poista kampanja"
-
-#~ msgid "Remove %(object.content_object.type)s content block <strong>%(object.name)s</strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
-#~ msgstr "Poista tyypin %(object.content_object.type)s sisältöosio <strong>%(object.name)s</strong> sivulta <strong>%(object.page_url)s</strong> – oletko varma?"
-
-#~ msgid "Content block"
-#~ msgstr "Sisältölohko"
-
-#~ msgid "Pages displaying this content blocks"
-#~ msgstr "Sivut, jotka näyttävät näitä sisältölohkoja"
-
-#~ msgid "Position on page"
-#~ msgstr "Sijainti sivulla"
-
-#~ msgid "View all blocks on this page"
-#~ msgstr "Katso kaikki lohkot tältä sivulta"
-
-#~ msgid "Remove from page"
-#~ msgstr "Poista sivulta"
-
-#~ msgid "This promotion is not displayed anywhere at the moment."
-#~ msgstr "Kampanjaa ei näytetä missään tällä hetkellä."
-
-#~ msgid "Add to a page"
-#~ msgstr "Lisää sivulle"
-
-#~ msgid "Add to page"
-#~ msgstr "Lisää sivulle"
-
-#~ msgid "Content blocks for page %(page_url)s"
-#~ msgstr "Sisältölohkot sivulle %(page_url)s"
-
-#~ msgid "Content blocks on page '%(page_url)s'"
-#~ msgstr "Sisältölohkot sivulle '%(page_url)s'"
-
-#~ msgid "Edit promotions in position '%(name)s'"
-#~ msgstr "Muokkaa kampanjoja sijainnissa '%(name)s'"
-
-#~ msgid "Promotion Name"
-#~ msgstr "Kampanjan nimi"
-
-#~ msgid "Change display order"
-#~ msgstr "Muuta näyttöjärjestystä"
-
-#~ msgid "No promotions in this position."
-#~ msgstr "Ei kampanjoja tässä sijainnissa"
-
-#~ msgid "Pages with content blocks"
-#~ msgstr "Sisältölohkon sisältävät sivut"
-
-#~ msgid "View by page"
-#~ msgstr "Sivukohtainen katselu"
-
-#~ msgid "View all content blocks"
-#~ msgstr "Katso kaikki sisältölohkot"
-
-#~ msgid "View content blocks by page"
-#~ msgstr "Katso kaikki sisältölohkot per sivu"
-
-#~ msgid "Pages with content blocks on them"
-#~ msgstr "Sivuja, joissa sisältölohko"
-
-#~ msgid "Number of content blocks"
-#~ msgstr "Sisältölohkojen lukumäärä"
-
-#~ msgid "No content blocks found."
-#~ msgstr "Sisältölohkoja ei löydy"
-
-#~ msgid "Create a new content block"
-#~ msgstr "Luo uusi sisältölohko"
-
-#~ msgid "Creating..."
-#~ msgstr "Luodaan..."
-
-#~ msgid "Create block"
-#~ msgstr "Luo lohko"
-
-#~ msgid "Number of times used"
-#~ msgstr "Käyttömäärä"
-
-#~ msgid "See more"
-#~ msgstr "Katso lisää"

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # shavlego kapanadze <shavlego91@gmail.com>, 2016,2018
 # Tekle Kapanadze <tekle.kapanadze.1@gmail.com>, 2016
@@ -10,13 +10,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-06 06:17+0300\n"
-"PO-Revision-Date: 2018-04-30 19:40+0000\n"
-"Last-Translator: shavlego kapanadze <shavlego91@gmail.com>\n"
+"PO-Revision-Date: 2019-09-06 03:20+0000\n"
+"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
 "Language-Team: Georgian (Georgia) (http://www.transifex.com/codeinthehole/django-oscar/language/ka_GE/)\n"
-"Language: ka_GE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ka_GE\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #: apps/address/abstract_models.py:24
@@ -270,9 +270,9 @@ msgstr "პარტნიორის ალტერნატული მი�
 #: apps/analytics/abstract_models.py:18 apps/analytics/abstract_models.py:83
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:626
 #: apps/catalogue/abstract_models.py:224 apps/catalogue/abstract_models.py:360
-#: apps/catalogue/abstract_models.py:927 apps/catalogue/abstract_models.py:1185
-#: apps/order/abstract_models.py:542 apps/partner/abstract_models.py:95
-#: apps/wishlists/abstract_models.py:115
+#: apps/catalogue/abstract_models.py:927
+#: apps/catalogue/abstract_models.py:1185 apps/order/abstract_models.py:542
+#: apps/partner/abstract_models.py:95 apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:23
@@ -412,7 +412,8 @@ msgstr "პროდუქტის ანალიზი"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:20
 #: apps/catalogue/abstract_models.py:46 apps/catalogue/abstract_models.py:93
-#: apps/catalogue/abstract_models.py:707 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:707
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1108 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:161 apps/dashboard/catalogue/tables.py:79
 #: apps/dashboard/catalogue/tables.py:103 apps/dashboard/users/forms.py:44
@@ -553,9 +554,10 @@ msgid "Vouchers"
 msgstr "ვაუჩერები"
 
 #: apps/basket/abstract_models.py:58 apps/basket/reports.py:83
-#: apps/catalogue/abstract_models.py:331 apps/catalogue/abstract_models.py:1195
-#: apps/customer/abstract_models.py:356 apps/order/abstract_models.py:956
-#: apps/partner/abstract_models.py:149 apps/wishlists/abstract_models.py:50
+#: apps/catalogue/abstract_models.py:331
+#: apps/catalogue/abstract_models.py:1195 apps/customer/abstract_models.py:356
+#: apps/order/abstract_models.py:956 apps/partner/abstract_models.py:149
+#: apps/wishlists/abstract_models.py:50
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/ranges/range_list.html:34
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
@@ -601,7 +603,9 @@ msgstr "%(status)s კალათა (owner: %(owner)s, ველები: %(n
 
 #: apps/basket/abstract_models.py:158
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
 msgstr "ტექნიკური ლიმიტის გამო ჩვენ არ შეგვიძლია ერთდროულად %(threshold)d მეტი ნივთის შესყიდვის გამოწერა."
 
 #: apps/basket/abstract_models.py:620
@@ -659,12 +663,16 @@ msgstr "არ შეგიძლიათ %s კალათის შეცვ
 
 #: apps/basket/abstract_models.py:910
 #, python-format
-msgid "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "კალათაში ჩამატების შემდეგ ამ პროდუქტის/ების ფასი %(product)s გაიზარდა %(old_price)s-დან %(new_price)s-მდე."
 
 #: apps/basket/abstract_models.py:915
 #, python-format
-msgid "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "კალათაში ჩამატების შემდეგ ამ პროდუქტის/ების %(product)s ფასი შემცირდა %(old_price)s-დან %(new_price)s-მდე."
 
 #: apps/basket/abstract_models.py:929 apps/order/abstract_models.py:838
@@ -729,21 +737,27 @@ msgstr "გთხოვთ მონიშნოთ ვალიდური პ
 
 #: apps/basket/forms.py:213
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order. Your basket currently has %(basket)d items."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
 msgstr "ტექნიკური შეზღუდვების გამო ჩვენ არ შეგვიძლია ერთდროულად მოვახდინოთ  %(threshold)d მეტი პროდუქტის შესყიდვის გაფორმება ერთდროულად. თქვენს კალათაში ამ დროისთვის %(basket)d ნივთია"
 
 #: apps/basket/forms.py:235
-#, fuzzy
-#| msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
-msgid "This product cannot be added to the basket because a price could not be determined for it."
-msgstr "ამ პროუქტის კალათში დამატება ამ დროისთვის შეუძლებელია რადგან ის განსხვავდება კალათში არსებული პროდუქტებისგან"
+msgid ""
+"This product cannot be added to the basket because a price could not be "
+"determined for it."
+msgstr ""
 
 #: apps/basket/forms.py:242
-msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
+msgid ""
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
 msgstr "ამ პროუქტის კალათში დამატება ამ დროისთვის შეუძლებელია რადგან ის განსხვავდება კალათში არსებული პროდუქტებისგან"
 
 #: apps/basket/middleware.py:174
-msgid "We have merged a basket from a previous session. Its contents might have changed."
+msgid ""
+"We have merged a basket from a previous session. Its contents might have "
+"changed."
 msgstr "სესიის დრო ამოიწურა. ამით არაფერი დაშავდება, უბრალოდ კიდევ ერთხელ გადაამოწმეთ კალათა."
 
 #: apps/basket/reports.py:19 apps/basket/reports.py:78
@@ -813,7 +827,8 @@ msgid "You can't save an item for later if you're not logged in!"
 msgstr "წიგნის შესანახად, პირველ რიგში, უნდა გაიაროთ ავტორიზაცია!"
 
 #: apps/basket/views.py:234
-msgid "Your basket couldn't be updated. Please correct any validation errors below."
+msgid ""
+"Your basket couldn't be updated. Please correct any validation errors below."
 msgstr "თქვენი კალათა ვერ განახლდა. გთხოვთ შეამოწმოთ შენიშვნების ვალიდურობა"
 
 #: apps/basket/views.py:322
@@ -948,10 +963,8 @@ msgid "Product structure"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:268
-#, fuzzy
-#| msgid "Is public?"
 msgid "Is public"
-msgstr "საჯაროა?"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:270
 msgid "Show this product in search results and catalogue listings."
@@ -967,11 +980,16 @@ msgid "UPC"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:274
-msgid "Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book."
+msgid ""
+"Universal Product Code (UPC) is an identifier for a product which is not "
+"specific to a particular  supplier. Eg an ISBN for a book."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:285
-msgid "Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product)."
+msgid ""
+"Only choose a parent product if you're creating a child product.  For "
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:541
@@ -1000,7 +1018,9 @@ msgid "Attributes"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:310
-msgid "A product attribute is something that this product may have, such as a size, as specified by its class"
+msgid ""
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:314
@@ -1008,7 +1028,10 @@ msgid "Product options"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:315
-msgid "Options are values that can be associated with a item when it is added to a customer's basket.  This could be something like a personalised message to be printed on a T-shirt."
+msgid ""
+"Options are values that can be associated with a item when it is added to a "
+"customer's basket.  This could be something like a personalised message to "
+"be printed on a T-shirt."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:322
@@ -1104,7 +1127,9 @@ msgid "Ranking"
 msgstr "შეფასება"
 
 #: apps/catalogue/abstract_models.py:683
-msgid "Determines order of the products. A product with a higher value will appear before one with a lower ranking."
+msgid ""
+"Determines order of the products. A product with a higher value will appear "
+"before one with a lower ranking."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:691
@@ -1116,7 +1141,9 @@ msgid "Product recomendations"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:714 apps/customer/abstract_models.py:155
-msgid "Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit."
+msgid ""
+"Code can only contain the letters a-z, A-Z, digits, and underscores, and "
+"can't start with a digit."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:733 apps/catalogue/abstract_models.py:929
@@ -1201,10 +1228,8 @@ msgid "Product attributes"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:847
-#, fuzzy
-#| msgid "Must be an integer"
 msgid "Must be str"
-msgstr "აუცილებლად მთელი რიცხვი უნდა იყოს"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:854
 msgid "Must be a float"
@@ -1320,7 +1345,9 @@ msgid "Caption"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:1193
-msgid "An image with a display order of zero will be the primary image for a product"
+msgid ""
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:1203
@@ -1530,7 +1557,9 @@ msgstr "კალათა ცარიელია. ჩაამატეთ �
 
 #: apps/checkout/session.py:131
 #, python-format
-msgid "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your basket to continue"
+msgid ""
+"'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
+"basket to continue"
 msgstr " ეს პროდუქტი/ები \"%(title)s\" ამ ეტაპზე ხელმიუწვდომელია (%(reason)s). ოპერაციის გასაგრძელებლად გთხოვთ განაახლოთ კალათა."
 
 #: apps/checkout/session.py:149
@@ -1542,7 +1571,9 @@ msgid "Please choose a shipping address"
 msgstr "გთხოვთ აირჩიოთ შეკვეთის მიმღების მისამართი."
 
 #: apps/checkout/session.py:182
-msgid "Your previously chosen shipping address is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping address is no longer valid.  Please choose "
+"another one"
 msgstr "თქვენს მიერ ბოლოს მითითებული მისამართი აღარ არის ვალიდური, გთხოვთ აირჩიოთ/მიუთითოთ სხვა მისამართი."
 
 #: apps/checkout/session.py:192
@@ -1550,11 +1581,15 @@ msgid "Please choose a shipping method"
 msgstr "მიტანის სერვისი"
 
 #: apps/checkout/session.py:204
-msgid "Your previously chosen shipping method is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping method is no longer valid.  Please choose "
+"another one"
 msgstr "თქვენს მიერ ბოლოს არჩეული მიტანის მეთოდის პირობები შეიცვალა. ამიტომ გთხოვთ აირჩიოთ თავიდან."
 
 #: apps/checkout/views.py:82
-msgid "Create your account and then you will be redirected back to the checkout process"
+msgid ""
+"Create your account and then you will be redirected back to the checkout "
+"process"
 msgstr "დარეგისტრირდით, რეგისტრაციის შემდეგ თქვენ ისევ ანგარიშსწორების გვერდზე გადმომისამართდებით და არ დაგეკარგებათ ეს გვერდი."
 
 #: apps/checkout/views.py:205
@@ -1566,7 +1601,8 @@ msgid "Address deleted"
 msgstr "მისამართი წაიშალა"
 
 #: apps/checkout/views.py:275
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "მიტანა შეუძლებელია ამ მისამართზე, გთხოვთ მიუთითოთ სხვა მისამართი."
 
 #: apps/checkout/views.py:318
@@ -1574,7 +1610,9 @@ msgid "Your submitted shipping method is not permitted"
 msgstr "თქვენ მიერ შერჩეული მიტანის მეთოდი არ არის ნებადართული"
 
 #: apps/checkout/views.py:568
-msgid "A problem occurred while processing payment for this order - no payment has been taken.  Please contact customer services if this problem persists"
+msgid ""
+"A problem occurred while processing payment for this order - no payment has "
+"been taken.  Please contact customer services if this problem persists"
 msgstr "შეკვეთაზე გადახდის დროს დაფიქსირდა შეცდომა - გადახდა არ განხორციელებულა. გთხოვთ მიმართოთ ტექნიკური მხარდაჭერის ოპერატორს."
 
 #: apps/checkout/views.py:672
@@ -1602,7 +1640,9 @@ msgid "Active"
 msgstr "აქტიური"
 
 #: apps/customer/abstract_models.py:68
-msgid "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
 msgstr ""
 
 #: apps/customer/abstract_models.py:70
@@ -1720,11 +1760,13 @@ msgstr "შემომავალი"
 msgid "Archive"
 msgstr "არქივი"
 
-#: apps/customer/abstract_models.py:299 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:299
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "შეტყობინება"
 
-#: apps/customer/abstract_models.py:300 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:300
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "შეტყობინებები"
@@ -1866,7 +1908,9 @@ msgstr "ყველა შეკვეთა"
 
 #: apps/customer/forms.py:213
 #, python-format
-msgid "Orders placed between %(date_from)s and %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed between %(date_from)s and %(date_to)s and order number "
+"containing %(order_number)s"
 msgstr "განხორციელებული შეკვეთები მოცემული თარიღის მიხედვით %(date_from)s - %(date_to)s | შეკვეთის ნომერი: %(order_number)s"
 
 #: apps/customer/forms.py:217 apps/dashboard/orders/forms.py:42
@@ -1876,7 +1920,9 @@ msgstr "განხორციელებული შეკვეთებ�
 
 #: apps/customer/forms.py:221
 #, python-format
-msgid "Orders placed since %(date_from)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed since %(date_from)s and order number containing "
+"%(order_number)s"
 msgstr "განხორციელებული შეკვეთები %(date_from)s-თარიღიდან და შეკვეთის ნომერი: %(order_number)s"
 
 #: apps/customer/forms.py:224
@@ -1886,7 +1932,8 @@ msgstr "განხორციელებული შეკვეთებ�
 
 #: apps/customer/forms.py:227
 #, python-format
-msgid "Orders placed until %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed until %(date_to)s and order number containing %(order_number)s"
 msgstr "განხორციელებული შეკვეთები %(date_to)s-თარიღამდე და შეკვეთის ნომერი: %(order_number)s"
 
 #: apps/customer/forms.py:230
@@ -1918,7 +1965,10 @@ msgstr ""
 
 #: apps/customer/forms.py:405
 #, python-format
-msgid "%s has been sent a confirmation email for another product alert on this site. Please confirm or cancel that request before signing up for more alerts."
+msgid ""
+"%s has been sent a confirmation email for another product alert on this "
+"site. Please confirm or cancel that request before signing up for more "
+"alerts."
 msgstr ""
 
 #: apps/customer/forms.py:417
@@ -1998,12 +2048,15 @@ msgstr "შეკვეთა"
 
 #: apps/customer/views.py:554
 #, python-format
-msgid "All available lines from order %(number)s have been added to your basket"
+msgid ""
+"All available lines from order %(number)s have been added to your basket"
 msgstr "შეკვეთის (%(number)s) ყველა ხელმისაწვდომი პროდუქტი თავიდან ჩაემატა თქვენს კალათაში."
 
 #: apps/customer/views.py:560
 #, python-format
-msgid "It is not possible to re-order order %(number)s as none of its lines are available to purchase"
+msgid ""
+"It is not possible to re-order order %(number)s as none of its lines are "
+"available to purchase"
 msgstr "შეკვეთის (%(number)s) განმეორება შეუძლებელია, რადგან აღნიშნული პროდუქტები აღარ არის მარაგში"
 
 #: apps/customer/views.py:597
@@ -2222,7 +2275,9 @@ msgid "Select an option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/formsets.py:96
-msgid "At least one stock record must be set to a partner that you're associated with."
+msgid ""
+"At least one stock record must be set to a partner that you're associated "
+"with."
 msgstr ""
 
 #: apps/dashboard/catalogue/formsets.py:114
@@ -2295,12 +2350,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: apps/dashboard/catalogue/tables.py:112
-#, fuzzy, python-format
-#| msgid "Option"
+#, python-format
 msgid "%s Option"
 msgid_plural "%s Options"
-msgstr[0] "არჩევანი"
-msgstr[1] "არჩევანი"
+msgstr[0] ""
+msgstr[1] ""
 
 #: apps/dashboard/catalogue/views.py:103
 msgid "Product search results"
@@ -2445,7 +2499,8 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:912
 #, python-format
-msgid "%i product attributes are still assigned to this attribute option group"
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:931
@@ -2453,34 +2508,26 @@ msgid "Attribute Option Group deleted successfully"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:978
-#, fuzzy
-#| msgid "Add a new category"
 msgid "Add a new Option"
-msgstr "კკატეგორიის დამატება"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:981
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Option created successfully"
-msgstr "კატეგორია წარმატებით განახლდა"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:994
-#, fuzzy, python-format
-#| msgid "Update category '%s'"
+#, python-format
 msgid "Update Option '%s'"
-msgstr "განაახლე კატეოგრია '%s'"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:997
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Option updated successfully"
-msgstr "კატეგორია წარმატებით განახლდა"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1009
-#, fuzzy, python-format
-#| msgid "Delete %s"
+#, python-format
 msgid "Delete Option '%s'"
-msgstr "წაშალე %s"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1019
 #, python-format
@@ -2493,10 +2540,8 @@ msgid "%i product classes are still assigned to this option"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1030
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Option deleted successfully"
-msgstr "კატეგორია წარმატებით განახლდა"
+msgstr ""
 
 #: apps/dashboard/communications/apps.py:11
 msgid "Communications dashboard"
@@ -2527,7 +2572,8 @@ msgid "Please enter an email address"
 msgstr ""
 
 #: apps/dashboard/communications/views.py:31
-msgid "The submitted form was not valid, please correct the errors and resubmit"
+msgid ""
+"The submitted form was not valid, please correct the errors and resubmit"
 msgstr ""
 
 #: apps/dashboard/communications/views.py:40
@@ -2562,7 +2608,8 @@ msgid "Custom condition"
 msgstr ""
 
 #: apps/dashboard/offers/forms.py:86
-msgid "Please either choose a range, type and value OR select a custom condition"
+msgid ""
+"Please either choose a range, type and value OR select a custom condition"
 msgstr ""
 
 #: apps/dashboard/offers/forms.py:92
@@ -2574,7 +2621,8 @@ msgid "Custom incentive"
 msgstr ""
 
 #: apps/dashboard/offers/forms.py:139 apps/dashboard/offers/forms.py:149
-msgid "Please either choose a range, type and value OR select a custom incentive"
+msgid ""
+"Please either choose a range, type and value OR select a custom incentive"
 msgstr ""
 
 #: apps/dashboard/offers/forms.py:145
@@ -2892,7 +2940,9 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:506
 #, python-format
-msgid "The entered quantity for line #%(line_id)s should not be higher than %(quantity)s"
+msgid ""
+"The entered quantity for line #%(line_id)s should not be higher than "
+"%(quantity)s"
 msgstr ""
 
 #: apps/dashboard/orders/views.py:575
@@ -2926,7 +2976,9 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:652
 #, python-format
-msgid "Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
+msgid ""
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
 msgstr ""
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
@@ -2972,9 +3024,7 @@ msgstr ""
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"მიტანის მისამართი განახლებულია:\n"
-"%s"
+msgstr "მიტანის მისამართი განახლებულია:\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -2995,7 +3045,9 @@ msgid "Example: '/about/contact/'."
 msgstr ""
 
 #: apps/dashboard/pages/forms.py:33
-msgid "This value must contain only letters, numbers, dots, underscores, dashes, slashes or tildes."
+msgid ""
+"This value must contain only letters, numbers, dots, underscores, dashes, "
+"slashes or tildes."
 msgstr ""
 
 #: apps/dashboard/pages/views.py:37
@@ -3219,7 +3271,9 @@ msgstr ""
 
 #: apps/dashboard/reviews/views.py:29
 #, python-format
-msgid "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
+msgid ""
+"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
+"%(name_filter)s"
 msgstr ""
 
 #: apps/dashboard/reviews/views.py:52
@@ -3465,7 +3519,8 @@ msgid "Site offer - available to all users"
 msgstr ""
 
 #: apps/offer/abstract_models.py:146
-msgid "Voucher offer - only available after entering the appropriate voucher code"
+msgid ""
+"Voucher offer - only available after entering the appropriate voucher code"
 msgstr ""
 
 #: apps/offer/abstract_models.py:148
@@ -3473,7 +3528,9 @@ msgid "User offer - available to certain types of user"
 msgstr ""
 
 #: apps/offer/abstract_models.py:149
-msgid "Session offer - temporary offer, available for a user for the duration of their session"
+msgid ""
+"Session offer - temporary offer, available for a user for the duration of "
+"their session"
 msgstr ""
 
 #: apps/offer/abstract_models.py:156
@@ -3501,11 +3558,15 @@ msgid "The highest priority offers are applied first"
 msgstr ""
 
 #: apps/offer/abstract_models.py:189
-msgid "Offers are active from the start date. Leave this empty if the offer has no start date."
+msgid ""
+"Offers are active from the start date. Leave this empty if the offer has no "
+"start date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:193
-msgid "Offers are active until the end date. Leave this empty if the offer has no expiry date."
+msgid ""
+"Offers are active until the end date. Leave this empty if the offer has no "
+"expiry date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:201
@@ -3537,7 +3598,9 @@ msgid "Max discount"
 msgstr ""
 
 #: apps/offer/abstract_models.py:227
-msgid "When an offer has given more discount to orders than this threshold, then the offer becomes unavailable"
+msgid ""
+"When an offer has given more discount to orders than this threshold, then "
+"the offer becomes unavailable"
 msgstr ""
 
 #: apps/offer/abstract_models.py:236
@@ -3649,7 +3712,9 @@ msgid "Max Affected Items"
 msgstr ""
 
 #: apps/offer/abstract_models.py:523
-msgid "Set this to prevent the discount consuming all items within the range that are in the basket."
+msgid ""
+"Set this to prevent the discount consuming all items within the range that "
+"are in the basket."
 msgstr ""
 
 #: apps/offer/abstract_models.py:529 apps/offer/abstract_models.py:735
@@ -3700,7 +3765,8 @@ msgid "Shipping discounts don't require a 'max affected items' attribute"
 msgstr ""
 
 #: apps/offer/abstract_models.py:643
-msgid "No range should be selected as the condition range will be used instead."
+msgid ""
+"No range should be selected as the condition range will be used instead."
 msgstr ""
 
 #: apps/offer/abstract_models.py:649
@@ -3720,7 +3786,8 @@ msgid "Depends on value of items in basket that are in condition range"
 msgstr ""
 
 #: apps/offer/abstract_models.py:721
-msgid "Needs to contain a set number of DISTINCT items from the condition range"
+msgid ""
+"Needs to contain a set number of DISTINCT items from the condition range"
 msgstr ""
 
 #: apps/offer/abstract_models.py:741
@@ -4017,7 +4084,9 @@ msgstr ""
 
 #: apps/order/abstract_models.py:135
 #, python-format
-msgid "'%(new_status)s' is not a valid status for order %(number)s (current status: '%(status)s')"
+msgid ""
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
 msgstr ""
 
 #: apps/order/abstract_models.py:272
@@ -4044,28 +4113,20 @@ msgid "Order Notes"
 msgstr ""
 
 #: apps/order/abstract_models.py:446 apps/order/abstract_models.py:456
-#, fuzzy
-#| msgid "Order date"
 msgid "Order Status Changes"
-msgstr "შეკვეთის თარიღი"
+msgstr ""
 
 #: apps/order/abstract_models.py:448
-#, fuzzy
-#| msgid "Status"
 msgid "Old Status"
-msgstr "სტატუსი"
+msgstr ""
 
 #: apps/order/abstract_models.py:449
-#, fuzzy
-#| msgid "Status"
 msgid "New Status"
-msgstr "სტატუსი"
+msgstr ""
 
 #: apps/order/abstract_models.py:455
-#, fuzzy
-#| msgid "Order date"
 msgid "Order Status Change"
-msgstr "შეკვეთის თარიღი"
+msgstr ""
 
 #: apps/order/abstract_models.py:460
 #, python-brace-format
@@ -4743,7 +4804,9 @@ msgid "Upper Limit"
 msgstr ""
 
 #: apps/shipping/abstract_models.py:199
-msgid "Enter upper limit of this weight band in kg. The lower limit will be determined by the other weight bands."
+msgid ""
+"Enter upper limit of this weight band in kg. The lower limit will be "
+"determined by the other weight bands."
 msgstr ""
 
 #: apps/shipping/abstract_models.py:202
@@ -4810,7 +4873,8 @@ msgid "VoucherSets"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:122
-msgid "This will be shown in the checkout and basket once the voucher is entered"
+msgid ""
+"This will be shown in the checkout and basket once the voucher is entered"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:126
@@ -4871,10 +4935,8 @@ msgid "You have already used this voucher in a previous order"
 msgstr "ეს ვაუჩერი უკვე გამოყენებული გაქვთ"
 
 #: apps/voucher/abstract_models.py:232
-#, fuzzy
-#| msgid " This offer is no longer available."
 msgid "This voucher is not available for this basket"
-msgstr "ამ შეთავაზებას ვადა გაუვიდა."
+msgstr ""
 
 #: apps/voucher/abstract_models.py:301
 msgid "Voucher Application"
@@ -4913,7 +4975,9 @@ msgid "Private - Only the owner can see the wish list"
 msgstr ""
 
 #: apps/wishlists/abstract_models.py:36
-msgid "Shared - Only the owner and people with access to the obfuscated link can see the wish list"
+msgid ""
+"Shared - Only the owner and people with access to the obfuscated link can "
+"see the wish list"
 msgstr ""
 
 #: apps/wishlists/abstract_models.py:38
@@ -5124,9 +5188,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> ჩაემატა კალათაში."
+msgstr "\n<strong>%(title)s</strong> ჩაემატა კალათაში."
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5142,18 +5204,14 @@ msgstr ""
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> დაბრუნდა კალათაში. \n"
+msgstr "\n<strong>%(title)s</strong> დაბრუნდა კალათაში. \n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> შენახულია შემდეგში შესაძენ წიგნებში\n"
+msgstr "\n<strong>%(title)s</strong> შენახულია შემდეგში შესაძენ წიგნებში\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5166,9 +5224,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
-"\n"
-"კალათის ჯამური ღირებულება <strong>%(total)s</strong>"
+msgstr "\nკალათის ჯამური ღირებულება <strong>%(total)s</strong>"
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -5486,12 +5542,8 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> წიგნიდან - ნაჩვენებია <strong>%(start)s</strong>-დან <strong>%(end)s</strong>-ის ჩათვლით."
-msgstr[1] ""
-"\n"
-"<strong>%(num_results)s</strong> წიგნიდან - ნაჩვენებია <strong>%(start)s</strong>-დან <strong>%(end)s</strong>-ის ჩათვლით."
+msgstr[0] "\n<strong>%(num_results)s</strong> წიგნიდან - ნაჩვენებია <strong>%(start)s</strong>-დან <strong>%(end)s</strong>-ის ჩათვლით."
+msgstr[1] "\n<strong>%(num_results)s</strong> წიგნიდან - ნაჩვენებია <strong>%(start)s</strong>-დან <strong>%(end)s</strong>-ის ჩათვლით."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5526,10 +5578,8 @@ msgid "Edit this product"
 msgstr ""
 
 #: templates/oscar/catalogue/detail.html:88
-#, fuzzy
-#| msgid "Variant"
 msgid "Variants:"
-msgstr "ვარიანტი"
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:105
 msgid "Product Description"
@@ -5572,9 +5622,7 @@ msgid ""
 "This product does not have any reviews yet -\n"
 "                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"წიგნს ჯერ არცერთი მიმოხილვა არ აქვს. \n"
-"იცნობ ამ წიგნს? <a href=\"%(add_review_url)s#addreview\">დაგვიტოვე მიმოხილვა</a>."
+msgstr "წიგნს ჯერ არცერთი მიმოხილვა არ აქვს. \nიცნობ ამ წიგნს? <a href=\"%(add_review_url)s#addreview\">დაგვიტოვე მიმოხილვა</a>."
 
 #: templates/oscar/catalogue/detail.html:176
 msgid "This product does not have any reviews yet"
@@ -5630,9 +5678,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
-"\n"
-"ჩაამატეთ სიაში: '%(name)s'"
+msgstr "\nჩაამატეთ სიაში: '%(name)s'"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -5644,9 +5690,7 @@ msgid ""
 "\n"
 "                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">წიგნი შენახულია სიაში: </span><a href=\"%(url)s\">'%(name)s'</a>"
+msgstr "\n<span class=\"pull-left\">წიგნი შენახულია სიაში: </span><a href=\"%(url)s\">'%(name)s'</a>"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -5664,9 +5708,7 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"განხილულია შენს მიერ %(review_date)s"
+msgstr "\nგანხილულია შენს მიერ %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
@@ -5674,9 +5716,7 @@ msgid ""
 "\n"
 "                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"ავტორი: <strong>%(name)s</strong> თარიღი: %(review_date)s"
+msgstr "\nავტორი: <strong>%(name)s</strong> თარიღი: %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -5710,12 +5750,8 @@ msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(num_up_votes)s</strong>-დან %(num_votes)s-მა მომხმარებელმა აღნიშნა, რომ ეს მიმოხილვა სასარგებლოა."
-msgstr[1] ""
-"\n"
-"<strong>%(num_up_votes)s</strong>-დან %(num_votes)s-მა მომხმარებელმა აღნიშნა, რომ ეს მიმოხილვა სასარგებლოა."
+msgstr[0] "\n<strong>%(num_up_votes)s</strong>-დან %(num_votes)s-მა მომხმარებელმა აღნიშნა, რომ ეს მიმოხილვა სასარგებლოა."
+msgstr[1] "\n<strong>%(num_up_votes)s</strong>-დან %(num_votes)s-მა მომხმარებელმა აღნიშნა, რომ ეს მიმოხილვა სასარგებლოა."
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5735,12 +5771,8 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
-"\n"
-"%(num_reviews)s მიმოხილვა"
-msgstr[1] ""
-"\n"
-"%(num_reviews)s მიმოხილვა"
+msgstr[0] "\n%(num_reviews)s მიმოხილვა"
+msgstr[1] "\n%(num_reviews)s მიმოხილვა"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:85
@@ -5884,7 +5916,9 @@ msgid "Enter payment details"
 msgstr "ჩაწერეთ გადახდის დეტალები"
 
 #: templates/oscar/checkout/payment_details.html:21
-msgid "This page needs implementing within your project.  You may want to use one of Oscar's payment gateway libraries:"
+msgid ""
+"This page needs implementing within your project.  You may want to use one "
+"of Oscar's payment gateway libraries:"
 msgstr ""
 
 #: templates/oscar/checkout/preview.html:5
@@ -5986,9 +6020,7 @@ msgid ""
 "\n"
 "        Order %(number)s: confirmation\n"
 "    "
-msgstr ""
-"\n"
-"თქვენი შეკვეთა #%(number)s წარმატებით გამოიგზავნა!"
+msgstr "\nთქვენი შეკვეთა #%(number)s წარმატებით გამოიგზავნა!"
 
 #: templates/oscar/checkout/thank_you.html:25
 #, python-format
@@ -5997,13 +6029,12 @@ msgid ""
 "        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
-msgstr ""
-"\n"
-"თქვენი შეკვეთა მიღებულია, შეკვეთის ინვოისი გამოგეგზავნათ იმეილზე - თქვენი შეკვეთის ნომერია:\n"
-" <strong>%(number)s</strong>. "
+msgstr "\nთქვენი შეკვეთა მიღებულია, შეკვეთის ინვოისი გამოგეგზავნათ იმეილზე - თქვენი შეკვეთის ნომერია:\n <strong>%(number)s</strong>. "
 
 #: templates/oscar/checkout/thank_you.html:29
-msgid "Please make a note of this reference or print this page and quote it in any communication with us regarding your order."
+msgid ""
+"Please make a note of this reference or print this page and quote it in any "
+"communication with us regarding your order."
 msgstr "გმადლობთ!"
 
 #: templates/oscar/checkout/thank_you.html:62
@@ -6035,18 +6066,12 @@ msgid "Items purchased"
 msgstr "შეკვეთილი პროდუქტები"
 
 #: templates/oscar/checkout/thank_you.html:143
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                                            Add to '%(name)s' wish list\n"
-#| "                                        "
+#, python-format
 msgid ""
 "\n"
 "                                Estimated dispatch: <strong>%(date)s</strong>\n"
 "                            "
 msgstr ""
-"\n"
-"ჩაამატეთ სიაში: '%(name)s'"
 
 #: templates/oscar/checkout/thank_you.html:182
 msgid "Tracking your order"
@@ -6273,22 +6298,29 @@ msgstr "%(name)s გუნდი"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
 #, python-format
-msgid "You're receiving this email because your email address has been changed to <strong>%(email)s</strong>."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"<strong>%(email)s</strong>."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
-msgid "If it wasn't you who changed it, please reset your password immediately and correct your email address:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately and "
+"correct your email address:"
 msgstr "თუ თქვენ არ შეგიცვლიათ პაროლი, გთხოვთ სასწრაფოდ მოითხოვოთ პაროლის განახლება."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
 #, python-format
-msgid "You're receiving this email because your email address has been changed to %(email)s."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"%(email)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
@@ -6337,7 +6369,9 @@ msgstr "მიწოდების მისამართი:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
-msgid "You can view the status of this order by clicking <a href=\"%(status_url)s\" title=\"order status\">here</a>"
+msgid ""
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
 msgstr "ამ შეკვეთის სტატუსის შესამოწმებლად დააკლიკეთ <a href=\"%(status_url)s\" title=\"order status\">აქ</a>"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
@@ -6347,10 +6381,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"მოგესალმებით,\n"
-"\n"
-"თქვენი შეკვეთა მიღებულია, შეკვეთის ნომერია:%(order_number)s"
+msgstr "მოგესალმებით,\n\nთქვენი შეკვეთა მიღებულია, შეკვეთის ნომერია:%(order_number)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6365,9 +6396,7 @@ msgstr "ფასი:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"მ შეკვეთის სტატუსის შესამოწმებლად დააკლიკეთ: \n"
-"%(status_url)s"
+msgstr "მ შეკვეთის სტატუსის შესამოწმებლად დააკლიკეთ: \n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6380,12 +6409,15 @@ msgstr "შეკვეთა #%(number)s მიღებულია"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
 #, python-format
-msgid "You're receiving this e-mail because your password has been changed at %(name)s."
+msgid ""
+"You're receiving this e-mail because your password has been changed at "
+"%(name)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
-msgid "If it wasn't you who changed it, please reset your password immediately:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately:"
 msgstr "თუ თქვენ არ შეგიცვლიათ პაროლი, გთხოვთ სასწრაფოდ მოითხოვოთ პაროლის განახლება."
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:25
@@ -6398,9 +6430,7 @@ msgstr ""
 msgid ""
 "\n"
 "You're receiving this email because your password has been changed at %(name)s.\n"
-msgstr ""
-"\n"
-"ამ წერილს იღებთ იმიტომ, რომ თქვენი პაროლი შეიცვალა საიტზე: %(name)s.\n"
+msgstr "\nამ წერილს იღებთ იმიტომ, რომ თქვენი პაროლი შეიცვალა საიტზე: %(name)s.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6410,7 +6440,9 @@ msgstr "შენი პაროლი შეიცვალა საიტზ
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:7
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
-msgid "You're receiving this e-mail because you requested a password reset for your user account at %(name)s."
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr "ეს წერილი გამოგეგზავნათ, რადგან თქვენ მოითხოვეთ პაროლის აღდგენა საიტზე %(name)s."
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
@@ -6605,18 +6637,14 @@ msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:66
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-ordering..."
 msgctxt "Buy again"
 msgid "Re-ordering..."
-msgstr "შეკვეთა მუშავდება..."
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:66
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Buy again"
 msgid "Re-order"
-msgstr "შეუკვეთეთ თავიდან"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:69
 #: templates/oscar/customer/wishlists/wishlists_detail.html:57
@@ -6649,11 +6677,9 @@ msgid "Shipping total"
 msgstr "მიწოდების ჯამური ღირებულება"
 
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-order all items"
 msgctxt "Buy again"
 msgid "Re-order all items"
-msgstr "ყველა პროდუქტის თავიდან შეკვეთა"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:167
 msgid "Contact Number"
@@ -6725,9 +6751,7 @@ msgid ""
 "                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"ამ ბრძანების საფუძველზე თქვენი ანგარიში სრულად გაუქმდება. გაფრთხილებთ, რომ პროფილის წაშლის შემთხვევაში თქვენი ინფორმაციის აღდგენა შეუძლებელი იქნება."
+msgstr "\nამ ბრძანების საფუძველზე თქვენი ანგარიში სრულად გაუქმდება. გაფრთხილებთ, რომ პროფილის წაშლის შემთხვევაში თქვენი ინფორმაციის აღდგენა შეუძლებელი იქნება."
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -6831,7 +6855,9 @@ msgid "Delete Attribute Option Group?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
-msgid "Please make sure all Product Attributes are assigned to another Attribute Option Group before deletion."
+msgid ""
+"Please make sure all Product Attributes are assigned to another Attribute "
+"Option Group before deletion."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
@@ -6840,7 +6866,8 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
@@ -6985,26 +7012,22 @@ msgid "View it on the site"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:5
-#, fuzzy
-#| msgid "Option"
 msgid "Create Option"
-msgstr "არჩევანი"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:31
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option?"
-msgstr "აირჩიეთ პარამეტრები"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:42
-msgid "Please make sure option is not assigned to Products or Product Classes before deletion."
+msgid ""
+"Please make sure option is not assigned to Products or Product Classes "
+"before deletion."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:45
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option"
-msgstr "აირჩიეთ პარამეტრები"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:56
 #, python-format
@@ -7012,35 +7035,28 @@ msgid "Delete Option <strong>%(name)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_form.html:50
-#, fuzzy
-#| msgid "Update details"
 msgid "Option details"
-msgstr "დეტალების განახლება"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:20
-#, fuzzy
-#| msgid "Create a new wishlist"
 msgid "Create new Option"
-msgstr "ახალი სიის შექმნა"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:34
-#, fuzzy
-#| msgid "No pages found."
 msgid "No Option found."
-msgstr "გვერდები ვერ მოიძებნა."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_row_actions.html:11
-#, fuzzy
-#| msgid "Option"
 msgid "Edit Option"
-msgstr "არჩევანი"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:14
 msgid "Delete product type?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
-msgid "Please make sure all products are assigned to another type before deletion."
+msgid ""
+"Please make sure all products are assigned to another type before deletion."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
@@ -7167,7 +7183,9 @@ msgid "Upload, change or remove images"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:176
-msgid "Drag images to re-order them. Space for additional images will appear when images are added."
+msgid ""
+"Drag images to re-order them. Space for additional images will appear when "
+"images are added."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:193
@@ -7424,7 +7442,9 @@ msgid "Log out"
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:28
-msgid "Please enter a correct username and password. Note that both fields may be case-sensitive."
+msgid ""
+"Please enter a correct username and password. Note that both fields may be "
+"case-sensitive."
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
@@ -7792,30 +7812,20 @@ msgid "This order can't have its status changed."
 msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:335
-#, fuzzy
-#| msgid "Save changes"
 msgid "Status Changes"
-msgstr "შენაცვა"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:342
-#, fuzzy
-#| msgctxt "start date"
-#| msgid "From"
 msgid "From"
-msgstr "დან"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:343
-#, fuzzy
-#| msgctxt "end date"
-#| msgid "To"
 msgid "To"
-msgstr "მდე"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:359
-#, fuzzy
-#| msgid "Save changes"
 msgid "No status changes."
-msgstr "შენაცვა"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:391
 #, python-format
@@ -8045,11 +8055,9 @@ msgstr "შემდეგი"
 
 #: templates/oscar/dashboard/partials/product_images.html:13
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Change the sequence order"
 msgid "Re-order"
-msgstr "შეუკვეთეთ თავიდან"
+msgstr ""
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
@@ -8134,7 +8142,9 @@ msgid "Update details"
 msgstr "დეტალების განახლება"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
-msgid "A partial email address can be entered (eg '@example.com') to match multiple addresses."
+msgid ""
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
 msgstr ""
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
@@ -8262,7 +8272,9 @@ msgid "products"
 msgstr ""
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:32
-msgid "This range contains all products. To add products manually, please unselect the 'Includes All Products' option on the edit range page."
+msgid ""
+"This range contains all products. To add products manually, please unselect "
+"the 'Includes All Products' option on the edit range page."
 msgstr ""
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
@@ -8868,9 +8880,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"სულ: %(total)s"
+msgstr "\nსულ: %(total)s"
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -8909,7 +8919,9 @@ msgid "Enter a new password"
 msgstr "ჩაწერეთ ახალი პაროლი"
 
 #: templates/oscar/registration/password_reset_confirm.html:22
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr "ჩაწერეთ ახალი პაროლი ორივე ველში, პაროლის შექმნისას მექანიკური შეცდომები რომ გამოვრიცხოთ."
 
 #: templates/oscar/registration/password_reset_confirm.html:27
@@ -8921,7 +8933,9 @@ msgid "Password reset unsuccessful"
 msgstr "პაროლის განახლება წარუმატებლად დასრულდა"
 
 #: templates/oscar/registration/password_reset_confirm.html:32
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr "პაროლის გასაახლებელი ბმული არავალიდურია. თავიდან მოითხოვეთ პაროლის აღდგენა."
 
 #: templates/oscar/registration/password_reset_done.html:4
@@ -8938,9 +8952,7 @@ msgid ""
 "\n"
 "        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
-"\n"
-"პაროლის განახლების ინსტრუქცია უკვე გამოიგზავნა შენ იმეილზე. წესით მალევე უნდა მოვიდეს."
+msgstr "\nპაროლის განახლების ინსტრუქცია უკვე გამოიგზავნა შენ იმეილზე. წესით მალევე უნდა მოვიდეს."
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
@@ -8948,13 +8960,12 @@ msgid ""
 "        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
-"\n"
-"თუ იმეილი არ მიგიღიათ, გთხოვთ გადაამოწმოთ რომ ნამდვილად ამ ელ-ფოსტით დარეგისტრირდით საიტზე. ასევე\n"
-"შეამოწმეთ თქვენი იმეილის spam საქაღალდე."
+msgstr "\nთუ იმეილი არ მიგიღიათ, გთხოვთ გადაამოწმოთ რომ ნამდვილად ამ ელ-ფოსტით დარეგისტრირდით საიტზე. ასევე\nშეამოწმეთ თქვენი იმეილის spam საქაღალდე."
 
 #: templates/oscar/registration/password_reset_form.html:21
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr "პაროლი დაგავიწყდა? ჩაწერე შენი ელ-ფოსტის მისამართი და იმეილზე გამოგიგზავნით პაროლის აღდგენის ინტრუქციას."
 
 #: templates/oscar/registration/password_reset_form.html:24
@@ -8971,9 +8982,7 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"ძიების შედეგები \"%(q)s\""
+msgstr "\nძიების შედეგები \"%(q)s\""
 
 #: templates/oscar/search/results.html:52
 #, python-format
@@ -8981,9 +8990,7 @@ msgid ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr ""
-"\n"
-"ნაპოვნია <strong>%(num_results)s</strong> წიგნი, ნაჩვენებია <strong>%(start)s</strong>-დამ <strong>%(end)s</strong>-ის ჩათვლით."
+msgstr "\nნაპოვნია <strong>%(num_results)s</strong> წიგნი, ნაჩვენებია <strong>%(start)s</strong>-დამ <strong>%(end)s</strong>-ის ჩათვლით."
 
 #: templates/oscar/search/results.html:56
 #, python-format
@@ -9008,9 +9015,7 @@ msgid ""
 "\n"
 "                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"<a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a> ხომ არ იგულისხმეთ?"
+msgstr "\n<a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a> ხომ არ იგულისხმეთ?"
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9020,32 +9025,3 @@ msgstr "ძიების შედეგებზე დაბრუნებ�
 #, python-format
 msgid "You need to select some %ss"
 msgstr "საჭიროა მონიშნოთ რამოდენიმე %ss"
-
-#~ msgid "Clicks"
-#~ msgstr "კლიკები"
-
-#~ msgid "Page URL"
-#~ msgstr "გვერდის URL"
-
-#~ msgid "Keywords"
-#~ msgstr "საკვანძო სიტყვები"
-
-#~ msgid "Display type"
-#~ msgstr "საჩვენებელი ტიპი"
-
-#~ msgctxt "Promotion product list title"
-#~ msgid "Title"
-#~ msgstr "სათაური"
-
-#~ msgctxt "Tabbed block title"
-#~ msgid "Title"
-#~ msgstr "სათაური"
-
-#~ msgid "Server error!"
-#~ msgstr "სერვერული შეცდომა!"
-
-#~ msgid "Creating..."
-#~ msgstr "იქმნება..."
-
-#~ msgid "See more"
-#~ msgstr "იხილეთ მეტი"

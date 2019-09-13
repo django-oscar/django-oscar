@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # alexeyismirnov <alexey@gmail.com>, 2013
 # bin <iamsk.info@gmail.com>, 2016
@@ -18,7 +18,7 @@
 # Kai-Chu Chung <cage.chung@gmail.com>, 2016
 # Lele Long <schemacs@gmail.com>, 2015
 # phiree yuen <phiree@gmail.com>, 2014
-# Samir Shah <solaris.smoke@gmail.com>, 2018
+# Samir Shah <solaris.smoke@gmail.com>, 2018-2019
 # Song Jin <songjin@hotmail.com>, 2014
 # sunsong <sunsongxp@gmail.com>, 2014
 # TIMCHOU <tim0405@gmail.com>, 2014
@@ -31,13 +31,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-06 06:17+0300\n"
-"PO-Revision-Date: 2018-05-23 04:51+0000\n"
+"PO-Revision-Date: 2019-09-06 03:20+0000\n"
 "Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/codeinthehole/django-oscar/language/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: apps/address/abstract_models.py:24
@@ -291,9 +291,9 @@ msgstr "夥伴的地址"
 #: apps/analytics/abstract_models.py:18 apps/analytics/abstract_models.py:83
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:626
 #: apps/catalogue/abstract_models.py:224 apps/catalogue/abstract_models.py:360
-#: apps/catalogue/abstract_models.py:927 apps/catalogue/abstract_models.py:1185
-#: apps/order/abstract_models.py:542 apps/partner/abstract_models.py:95
-#: apps/wishlists/abstract_models.py:115
+#: apps/catalogue/abstract_models.py:927
+#: apps/catalogue/abstract_models.py:1185 apps/order/abstract_models.py:542
+#: apps/partner/abstract_models.py:95 apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:23
@@ -433,7 +433,8 @@ msgstr "商品分析"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:20
 #: apps/catalogue/abstract_models.py:46 apps/catalogue/abstract_models.py:93
-#: apps/catalogue/abstract_models.py:707 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:707
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1108 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:161 apps/dashboard/catalogue/tables.py:79
 #: apps/dashboard/catalogue/tables.py:103 apps/dashboard/users/forms.py:44
@@ -574,9 +575,10 @@ msgid "Vouchers"
 msgstr "禮券"
 
 #: apps/basket/abstract_models.py:58 apps/basket/reports.py:83
-#: apps/catalogue/abstract_models.py:331 apps/catalogue/abstract_models.py:1195
-#: apps/customer/abstract_models.py:356 apps/order/abstract_models.py:956
-#: apps/partner/abstract_models.py:149 apps/wishlists/abstract_models.py:50
+#: apps/catalogue/abstract_models.py:331
+#: apps/catalogue/abstract_models.py:1195 apps/customer/abstract_models.py:356
+#: apps/order/abstract_models.py:956 apps/partner/abstract_models.py:149
+#: apps/wishlists/abstract_models.py:50
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/ranges/range_list.html:34
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
@@ -622,7 +624,9 @@ msgstr "%(status)s 購物車 (屬於: %(owner)s, 商品數: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:158
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
 msgstr "由於技術原因，單個訂單不能超過%(threshold)d件商品。"
 
 #: apps/basket/abstract_models.py:620
@@ -680,12 +684,16 @@ msgstr "您不能修改一個%s購物車"
 
 #: apps/basket/abstract_models.py:910
 #, python-format
-msgid "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "%(product)s 在你加到購物車後，價格從 %(old_price)s 提高為 %(new_price)s"
 
 #: apps/basket/abstract_models.py:915
 #, python-format
-msgid "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "%(product)s 在你加到購物車後，價格從 %(old_price)s 減少為 %(new_price)s"
 
 #: apps/basket/abstract_models.py:929 apps/order/abstract_models.py:838
@@ -750,21 +758,27 @@ msgstr "請選擇有效的商品"
 
 #: apps/basket/forms.py:213
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order. Your basket currently has %(basket)d items."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
 msgstr "由於技術原因，每個訂單不能郵寄超過%(threshold)d件商品。您的購物車裡有%(basket)d件產品。"
 
 #: apps/basket/forms.py:235
-#, fuzzy
-#| msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
-msgid "This product cannot be added to the basket because a price could not be determined for it."
-msgstr "無法將此商品加入購物車，因為該商品的貨幣單位與購物車內的商品不同"
+msgid ""
+"This product cannot be added to the basket because a price could not be "
+"determined for it."
+msgstr ""
 
 #: apps/basket/forms.py:242
-msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
+msgid ""
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
 msgstr "無法將此商品加入購物車，因為該商品的貨幣單位與購物車內的商品不同"
 
 #: apps/basket/middleware.py:174
-msgid "We have merged a basket from a previous session. Its contents might have changed."
+msgid ""
+"We have merged a basket from a previous session. Its contents might have "
+"changed."
 msgstr "當我們從上一個會話合併該購物車時，裡面的內容也許已被更改。"
 
 #: apps/basket/reports.py:19 apps/basket/reports.py:78
@@ -834,7 +848,8 @@ msgid "You can't save an item for later if you're not logged in!"
 msgstr "請先登入"
 
 #: apps/basket/views.py:234
-msgid "Your basket couldn't be updated. Please correct any validation errors below."
+msgid ""
+"Your basket couldn't be updated. Please correct any validation errors below."
 msgstr "您的購物車不能被更新，請更正下列錯誤。"
 
 #: apps/basket/views.py:322
@@ -969,10 +984,8 @@ msgid "Product structure"
 msgstr "產品結構"
 
 #: apps/catalogue/abstract_models.py:268
-#, fuzzy
-#| msgid "Is public?"
 msgid "Is public"
-msgstr "是公開的？"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:270
 msgid "Show this product in search results and catalogue listings."
@@ -988,11 +1001,16 @@ msgid "UPC"
 msgstr "UPC"
 
 #: apps/catalogue/abstract_models.py:274
-msgid "Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book."
+msgid ""
+"Universal Product Code (UPC) is an identifier for a product which is not "
+"specific to a particular  supplier. Eg an ISBN for a book."
 msgstr "通用商品碼 (UPC) 是給未指定供應商的商品的識別碼。例如：書本的 ISBN"
 
 #: apps/catalogue/abstract_models.py:285
-msgid "Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product)."
+msgid ""
+"Only choose a parent product if you're creating a child product.  For "
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
 msgstr "只有在創建子級產品時才需指定父級產品，比如這是某種T裇產品其中的4碼。如果它是個獨立產品(比如它只有一個版本)，則此處留空。"
 
 #: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:541
@@ -1021,7 +1039,9 @@ msgid "Attributes"
 msgstr "屬性"
 
 #: apps/catalogue/abstract_models.py:310
-msgid "A product attribute is something that this product may have, such as a size, as specified by its class"
+msgid ""
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
 msgstr "產品屬性是指產品可能有的用於標示其類型的特徵，如產品尺寸"
 
 #: apps/catalogue/abstract_models.py:314
@@ -1029,7 +1049,10 @@ msgid "Product options"
 msgstr "產品可選項"
 
 #: apps/catalogue/abstract_models.py:315
-msgid "Options are values that can be associated with a item when it is added to a customer's basket.  This could be something like a personalised message to be printed on a T-shirt."
+msgid ""
+"Options are values that can be associated with a item when it is added to a "
+"customer's basket.  This could be something like a personalised message to "
+"be printed on a T-shirt."
 msgstr "選項是在一件商品被加入購物籃時可以被聯繫的數值。這個可以是能印在T恤上的個性化訊息"
 
 #: apps/catalogue/abstract_models.py:322
@@ -1125,7 +1148,9 @@ msgid "Ranking"
 msgstr "排行"
 
 #: apps/catalogue/abstract_models.py:683
-msgid "Determines order of the products. A product with a higher value will appear before one with a lower ranking."
+msgid ""
+"Determines order of the products. A product with a higher value will appear "
+"before one with a lower ranking."
 msgstr "確定產品的訂單。一個具有較高價值的產品將出現在一個較低的排名前。 "
 
 #: apps/catalogue/abstract_models.py:691
@@ -1137,7 +1162,9 @@ msgid "Product recomendations"
 msgstr "商品推薦"
 
 #: apps/catalogue/abstract_models.py:714 apps/customer/abstract_models.py:155
-msgid "Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit."
+msgid ""
+"Code can only contain the letters a-z, A-Z, digits, and underscores, and "
+"can't start with a digit."
 msgstr "代碼只能包含字母a - z、a - z數字,下劃線,第一個字符不能是數字。"
 
 #: apps/catalogue/abstract_models.py:733 apps/catalogue/abstract_models.py:929
@@ -1222,10 +1249,8 @@ msgid "Product attributes"
 msgstr "商品屬性"
 
 #: apps/catalogue/abstract_models.py:847
-#, fuzzy
-#| msgid "Must be a float"
 msgid "Must be str"
-msgstr "必須是浮點數"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:854
 msgid "Must be a float"
@@ -1341,7 +1366,9 @@ msgid "Caption"
 msgstr "註釋"
 
 #: apps/catalogue/abstract_models.py:1193
-msgid "An image with a display order of zero will be the primary image for a product"
+msgid ""
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr "一個顯示順序為零的圖片將被作為商品的主要圖片"
 
 #: apps/catalogue/abstract_models.py:1203
@@ -1551,7 +1578,9 @@ msgstr "您必須要向購物車裡加些東西才能結帳"
 
 #: apps/checkout/session.py:131
 #, python-format
-msgid "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your basket to continue"
+msgid ""
+"'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
+"basket to continue"
 msgstr "'%(title)s' 不再提供購買(%(reason)s)，請檢查您的購物車再繼續"
 
 #: apps/checkout/session.py:149
@@ -1563,7 +1592,9 @@ msgid "Please choose a shipping address"
 msgstr "請選擇送貨地址"
 
 #: apps/checkout/session.py:182
-msgid "Your previously chosen shipping address is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping address is no longer valid.  Please choose "
+"another one"
 msgstr "您以前選擇送貨地址不是有效地址。請選擇另一個"
 
 #: apps/checkout/session.py:192
@@ -1571,11 +1602,15 @@ msgid "Please choose a shipping method"
 msgstr "請選擇運送方式"
 
 #: apps/checkout/session.py:204
-msgid "Your previously chosen shipping method is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping method is no longer valid.  Please choose "
+"another one"
 msgstr "先前選擇的運送方式已不提供，請選擇新的運送方式"
 
 #: apps/checkout/views.py:82
-msgid "Create your account and then you will be redirected back to the checkout process"
+msgid ""
+"Create your account and then you will be redirected back to the checkout "
+"process"
 msgstr "創建一個帳號，然後您會被轉回結帳流程"
 
 #: apps/checkout/views.py:205
@@ -1587,7 +1622,8 @@ msgid "Address deleted"
 msgstr "地址已刪除"
 
 #: apps/checkout/views.py:275
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "不能為您選定的地址送貨- 請選擇另一個"
 
 #: apps/checkout/views.py:318
@@ -1595,7 +1631,9 @@ msgid "Your submitted shipping method is not permitted"
 msgstr "你遞交的通貨方式不被允許"
 
 #: apps/checkout/views.py:568
-msgid "A problem occurred while processing payment for this order - no payment has been taken.  Please contact customer services if this problem persists"
+msgid ""
+"A problem occurred while processing payment for this order - no payment has "
+"been taken.  Please contact customer services if this problem persists"
 msgstr "在處理這個訂單的付款時發生了問題- 沒有收取任何付款。如問題依舊請聯繫客服"
 
 #: apps/checkout/views.py:672
@@ -1623,7 +1661,9 @@ msgid "Active"
 msgstr "有效的"
 
 #: apps/customer/abstract_models.py:68
-msgid "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
 msgstr "指定是否這個用戶可以被當做活躍用戶。取消選擇這個，而不是刪除帳戶"
 
 #: apps/customer/abstract_models.py:70
@@ -1741,11 +1781,13 @@ msgstr "收件箱"
 msgid "Archive"
 msgstr "檔案"
 
-#: apps/customer/abstract_models.py:299 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:299
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "提醒"
 
-#: apps/customer/abstract_models.py:300 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:300
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "提醒"
@@ -1887,7 +1929,9 @@ msgstr "所有訂單"
 
 #: apps/customer/forms.py:213
 #, python-format
-msgid "Orders placed between %(date_from)s and %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed between %(date_from)s and %(date_to)s and order number "
+"containing %(order_number)s"
 msgstr "在%(date_from)s到  %(date_to)s 期間下的，以及訂單號包含%(order_number)s的訂單"
 
 #: apps/customer/forms.py:217 apps/dashboard/orders/forms.py:42
@@ -1897,7 +1941,9 @@ msgstr "%(date_from)s 到 %(date_to)s 之間收到的訂單"
 
 #: apps/customer/forms.py:221
 #, python-format
-msgid "Orders placed since %(date_from)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed since %(date_from)s and order number containing "
+"%(order_number)s"
 msgstr "從%(date_from)s起下，和訂單號碼包含%(order_number)s的訂單"
 
 #: apps/customer/forms.py:224
@@ -1907,7 +1953,8 @@ msgstr "從%(date_from)s起下的訂單"
 
 #: apps/customer/forms.py:227
 #, python-format
-msgid "Orders placed until %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed until %(date_to)s and order number containing %(order_number)s"
 msgstr "截止到 %(date_to)s下的，以及訂單號碼包含%(order_number)s的訂單"
 
 #: apps/customer/forms.py:230
@@ -1939,7 +1986,10 @@ msgstr "%s 已啟用庫存提醒"
 
 #: apps/customer/forms.py:405
 #, python-format
-msgid "%s has been sent a confirmation email for another product alert on this site. Please confirm or cancel that request before signing up for more alerts."
+msgid ""
+"%s has been sent a confirmation email for another product alert on this "
+"site. Please confirm or cancel that request before signing up for more "
+"alerts."
 msgstr ""
 
 #: apps/customer/forms.py:417
@@ -2017,12 +2067,15 @@ msgstr "訂單"
 
 #: apps/customer/views.py:554
 #, python-format
-msgid "All available lines from order %(number)s have been added to your basket"
+msgid ""
+"All available lines from order %(number)s have been added to your basket"
 msgstr "從訂單號%(number)s開始的所有可用產品線都已經加入了您的購物車"
 
 #: apps/customer/views.py:560
 #, python-format
-msgid "It is not possible to re-order order %(number)s as none of its lines are available to purchase"
+msgid ""
+"It is not possible to re-order order %(number)s as none of its lines are "
+"available to purchase"
 msgstr "不可能重新下訂單 %(number)s ，因為它的所有產品線都不能被購買"
 
 #: apps/customer/views.py:597
@@ -2241,7 +2294,9 @@ msgid "Select an option group"
 msgstr "請選擇一個選項組"
 
 #: apps/dashboard/catalogue/formsets.py:96
-msgid "At least one stock record must be set to a partner that you're associated with."
+msgid ""
+"At least one stock record must be set to a partner that you're associated "
+"with."
 msgstr "必須為供貨商設置至少一條的庫存記錄"
 
 #: apps/dashboard/catalogue/formsets.py:114
@@ -2312,11 +2367,10 @@ msgid_plural "%s Attribute Option Groups"
 msgstr[0] ""
 
 #: apps/dashboard/catalogue/tables.py:112
-#, fuzzy, python-format
-#| msgid "Option"
+#, python-format
 msgid "%s Option"
 msgid_plural "%s Options"
-msgstr[0] "選項"
+msgstr[0] ""
 
 #: apps/dashboard/catalogue/views.py:103
 msgid "Product search results"
@@ -2461,7 +2515,8 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:912
 #, python-format
-msgid "%i product attributes are still assigned to this attribute option group"
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:931
@@ -2469,52 +2524,40 @@ msgid "Attribute Option Group deleted successfully"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:978
-#, fuzzy
-#| msgid "Add a new category"
 msgid "Add a new Option"
-msgstr "加入新類別"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:981
-#, fuzzy
-#| msgid "Category created successfully"
 msgid "Option created successfully"
-msgstr "成功建立類別"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:994
-#, fuzzy, python-format
-#| msgid "Update category '%s'"
+#, python-format
 msgid "Update Option '%s'"
-msgstr "更新「%s」類別"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:997
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Option updated successfully"
-msgstr "成功更新類別"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1009
-#, fuzzy, python-format
-#| msgid "Deleted page '%s'"
+#, python-format
 msgid "Delete Option '%s'"
-msgstr "已刪除頁面'%s'"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1019
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i products are still assigned to this option"
-msgstr "%i 商品仍被指定為此種類"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1024
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i product classes are still assigned to this option"
-msgstr "%i 商品仍被指定為此種類"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1030
-#, fuzzy
-#| msgid "Category deleted successfully"
 msgid "Option deleted successfully"
-msgstr "成功刪除類別"
+msgstr ""
 
 #: apps/dashboard/communications/apps.py:11
 msgid "Communications dashboard"
@@ -2545,7 +2588,8 @@ msgid "Please enter an email address"
 msgstr "請輸入一個電子郵件地址"
 
 #: apps/dashboard/communications/views.py:31
-msgid "The submitted form was not valid, please correct the errors and resubmit"
+msgid ""
+"The submitted form was not valid, please correct the errors and resubmit"
 msgstr "提交的表格不是有效的，請更正錯誤並重新提交"
 
 #: apps/dashboard/communications/views.py:40
@@ -2580,7 +2624,8 @@ msgid "Custom condition"
 msgstr "自定義條件"
 
 #: apps/dashboard/offers/forms.py:86
-msgid "Please either choose a range, type and value OR select a custom condition"
+msgid ""
+"Please either choose a range, type and value OR select a custom condition"
 msgstr "請在範圍，類型，數值和自定義條件中任選一個"
 
 #: apps/dashboard/offers/forms.py:92
@@ -2592,7 +2637,8 @@ msgid "Custom incentive"
 msgstr "自定義動機"
 
 #: apps/dashboard/offers/forms.py:139 apps/dashboard/offers/forms.py:149
-msgid "Please either choose a range, type and value OR select a custom incentive"
+msgid ""
+"Please either choose a range, type and value OR select a custom incentive"
 msgstr "請選擇一個範圍，類別，數值或尋則一個自定義動機"
 
 #: apps/dashboard/offers/forms.py:145
@@ -2910,7 +2956,9 @@ msgstr "為 line #%s 輸入的數量無效"
 
 #: apps/dashboard/orders/views.py:506
 #, python-format
-msgid "The entered quantity for line #%(line_id)s should not be higher than %(quantity)s"
+msgid ""
+"The entered quantity for line #%(line_id)s should not be higher than "
+"%(quantity)s"
 msgstr "輸入的數量#%(line_id)s不應高於%(quantity)s"
 
 #: apps/dashboard/orders/views.py:575
@@ -2944,7 +2992,9 @@ msgstr "'%(status)s' 對於行 %(line_id)d來說，不是一個有效的新狀�
 
 #: apps/dashboard/orders/views.py:652
 #, python-format
-msgid "Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
+msgid ""
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
 msgstr "#%(line_id)d 行的狀態從'%(old_status)s'轉變到了 '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
@@ -2990,9 +3040,7 @@ msgstr "%(field)s從 '%(old_value)s' 變化到了'%(new_value)s'"
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"送貨地址已更新：\n"
-"%s"
+msgstr "送貨地址已更新：\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -3013,7 +3061,9 @@ msgid "Example: '/about/contact/'."
 msgstr "例如：'/about/contact/'。"
 
 #: apps/dashboard/pages/forms.py:33
-msgid "This value must contain only letters, numbers, dots, underscores, dashes, slashes or tildes."
+msgid ""
+"This value must contain only letters, numbers, dots, underscores, dashes, "
+"slashes or tildes."
 msgstr ""
 
 #: apps/dashboard/pages/views.py:37
@@ -3235,7 +3285,9 @@ msgstr "到"
 
 #: apps/dashboard/reviews/views.py:29
 #, python-format
-msgid "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
+msgid ""
+"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
+"%(name_filter)s"
 msgstr "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
@@ -3480,7 +3532,8 @@ msgid "Site offer - available to all users"
 msgstr "網站促銷- 對所有用戶有效"
 
 #: apps/offer/abstract_models.py:146
-msgid "Voucher offer - only available after entering the appropriate voucher code"
+msgid ""
+"Voucher offer - only available after entering the appropriate voucher code"
 msgstr "優惠券促銷- 只有在輸入合適優惠券代碼之後才能使用"
 
 #: apps/offer/abstract_models.py:148
@@ -3488,7 +3541,9 @@ msgid "User offer - available to certain types of user"
 msgstr "用戶促銷- 只對特定類別的用戶有效"
 
 #: apps/offer/abstract_models.py:149
-msgid "Session offer - temporary offer, available for a user for the duration of their session"
+msgid ""
+"Session offer - temporary offer, available for a user for the duration of "
+"their session"
 msgstr "對話促銷- 臨時性促銷，只在使用這個網頁對話的用戶有效"
 
 #: apps/offer/abstract_models.py:156
@@ -3516,11 +3571,15 @@ msgid "The highest priority offers are applied first"
 msgstr "最高優先級的促銷會先被應用"
 
 #: apps/offer/abstract_models.py:189
-msgid "Offers are active from the start date. Leave this empty if the offer has no start date."
+msgid ""
+"Offers are active from the start date. Leave this empty if the offer has no "
+"start date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:193
-msgid "Offers are active until the end date. Leave this empty if the offer has no expiry date."
+msgid ""
+"Offers are active until the end date. Leave this empty if the offer has no "
+"expiry date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:201
@@ -3552,7 +3611,9 @@ msgid "Max discount"
 msgstr "最高折扣"
 
 #: apps/offer/abstract_models.py:227
-msgid "When an offer has given more discount to orders than this threshold, then the offer becomes unavailable"
+msgid ""
+"When an offer has given more discount to orders than this threshold, then "
+"the offer becomes unavailable"
 msgstr "當一個促銷交付訂單的折扣額超過閾值，這個促銷即失效"
 
 #: apps/offer/abstract_models.py:236
@@ -3664,7 +3725,9 @@ msgid "Max Affected Items"
 msgstr "最大受影響商品數量"
 
 #: apps/offer/abstract_models.py:523
-msgid "Set this to prevent the discount consuming all items within the range that are in the basket."
+msgid ""
+"Set this to prevent the discount consuming all items within the range that "
+"are in the basket."
 msgstr "設置這個以防止該折扣？？？？？？？"
 
 #: apps/offer/abstract_models.py:529 apps/offer/abstract_models.py:735
@@ -3715,7 +3778,8 @@ msgid "Shipping discounts don't require a 'max affected items' attribute"
 msgstr "運貨折扣不需要『最大受影響商品數目』屬性"
 
 #: apps/offer/abstract_models.py:643
-msgid "No range should be selected as the condition range will be used instead."
+msgid ""
+"No range should be selected as the condition range will be used instead."
 msgstr "因為條件範圍會轉而被使用，不應該選擇範圍"
 
 #: apps/offer/abstract_models.py:649
@@ -3735,7 +3799,8 @@ msgid "Depends on value of items in basket that are in condition range"
 msgstr "取決於在條件範圍內，購物車內的商品的價值"
 
 #: apps/offer/abstract_models.py:721
-msgid "Needs to contain a set number of DISTINCT items from the condition range"
+msgid ""
+"Needs to contain a set number of DISTINCT items from the condition range"
 msgstr "需要包含來自條件範圍的固定數目的不同商品"
 
 #: apps/offer/abstract_models.py:741
@@ -4031,7 +4096,9 @@ msgstr "客人電子郵箱地址"
 
 #: apps/order/abstract_models.py:135
 #, python-format
-msgid "'%(new_status)s' is not a valid status for order %(number)s (current status: '%(status)s')"
+msgid ""
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
 msgstr "'%(new_status)s' 對於訂單%(number)s(當前狀態：'%(status)s')不是一個有效的狀態"
 
 #: apps/order/abstract_models.py:272
@@ -4058,34 +4125,25 @@ msgid "Order Notes"
 msgstr "訂單備註"
 
 #: apps/order/abstract_models.py:446 apps/order/abstract_models.py:456
-#, fuzzy
-#| msgid "Order and Item Charges"
 msgid "Order Status Changes"
-msgstr "訂單和物品收費"
+msgstr ""
 
 #: apps/order/abstract_models.py:448
-#, fuzzy
-#| msgid "Status"
 msgid "Old Status"
-msgstr "狀態"
+msgstr ""
 
 #: apps/order/abstract_models.py:449
-#, fuzzy
-#| msgid "Status"
 msgid "New Status"
-msgstr "狀態"
+msgstr ""
 
 #: apps/order/abstract_models.py:455
-#, fuzzy
-#| msgid "Order status"
 msgid "Order Status Change"
-msgstr "訂單狀態"
+msgstr ""
 
 #: apps/order/abstract_models.py:460
-#, fuzzy, python-brace-format
-#| msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
+#, python-brace-format
 msgid "{order} has changed status from {old_status} to {new_status}"
-msgstr "訂單狀態從 '%(old_status)s'改變到了 '%(new_status)s'"
+msgstr ""
 
 #: apps/order/abstract_models.py:478 apps/order/abstract_models.py:947
 #: apps/order/abstract_models.py:1014
@@ -4758,7 +4816,9 @@ msgid "Upper Limit"
 msgstr "上限"
 
 #: apps/shipping/abstract_models.py:199
-msgid "Enter upper limit of this weight band in kg. The lower limit will be determined by the other weight bands."
+msgid ""
+"Enter upper limit of this weight band in kg. The lower limit will be "
+"determined by the other weight bands."
 msgstr "以公斤為單位輸入重量的上限，下限將由其決定。"
 
 #: apps/shipping/abstract_models.py:202
@@ -4825,7 +4885,8 @@ msgid "VoucherSets"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:122
-msgid "This will be shown in the checkout and basket once the voucher is entered"
+msgid ""
+"This will be shown in the checkout and basket once the voucher is entered"
 msgstr "在優惠券被輸入後，這個將會在結帳和購物車顯示一次"
 
 #: apps/voucher/abstract_models.py:126
@@ -4886,10 +4947,8 @@ msgid "You have already used this voucher in a previous order"
 msgstr "您在上一次購物時已使用過這張禮券"
 
 #: apps/voucher/abstract_models.py:232
-#, fuzzy
-#| msgid "This voucher is only available to signed in users"
 msgid "This voucher is not available for this basket"
-msgstr "這張禮券只能在登入後使用"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:301
 msgid "Voucher Application"
@@ -4928,7 +4987,9 @@ msgid "Private - Only the owner can see the wish list"
 msgstr "私有的 -只有擁有者才能查看心願單"
 
 #: apps/wishlists/abstract_models.py:36
-msgid "Shared - Only the owner and people with access to the obfuscated link can see the wish list"
+msgid ""
+"Shared - Only the owner and people with access to the obfuscated link can "
+"see the wish list"
 msgstr "分享 -只有擁有者和有權查看模糊連結的人才能看心願單"
 
 #: apps/wishlists/abstract_models.py:38
@@ -5139,9 +5200,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> 成功加入購物車"
+msgstr "\n<strong>%(title)s</strong> 成功加入購物車"
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5150,28 +5209,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(quantity)s</strong> 份 <strong>%(title)s</strong>\n"
-"成功加入購物車"
+msgstr "\n<strong>%(quantity)s</strong> 份 <strong>%(title)s</strong>\n成功加入購物車"
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> 已加入購物車\n"
+msgstr "\n<strong>%(title)s</strong> 已加入購物車\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> 已放入暫存清單\n"
+msgstr "\n<strong>%(title)s</strong> 已放入暫存清單\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5184,9 +5236,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
-"\n"
-"購物車目前總計 <strong>%(total)s</strong>"
+msgstr "\n購物車目前總計 <strong>%(total)s</strong>"
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -5204,10 +5254,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"您的購物籃已經夠資格使用\n"
-"<strong>%(name)s</strong> 促銷\n"
+msgstr "\n您的購物籃已經夠資格使用\n<strong>%(name)s</strong> 促銷\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5215,10 +5262,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"您的購物籃不再夠資格使用\n"
-"<strong>%(name)s</strong> 促銷\n"
+msgstr "\n您的購物籃不再夠資格使用\n<strong>%(name)s</strong> 促銷\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5234,10 +5278,7 @@ msgid ""
 "\n"
 "                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div class=\"warning\">%(message)s為了夠資格擁有<a href=\"%(url)s\">%(offer_name)s</a>\n"
-"特別促銷"
+msgstr "\n<div class=\"warning\">%(message)s為了夠資格擁有<a href=\"%(url)s\">%(offer_name)s</a>\n特別促銷"
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5513,9 +5554,7 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> 結果顯示 <strong>%(start)s</strong> to <strong>%(end)s</strong>."
+msgstr[0] "\n<strong>%(num_results)s</strong> 結果顯示 <strong>%(start)s</strong> to <strong>%(end)s</strong>."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5527,9 +5566,7 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> 結果."
+msgstr[0] "\n<strong>%(num_results)s</strong> 結果."
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5551,10 +5588,8 @@ msgid "Edit this product"
 msgstr "修改商品"
 
 #: templates/oscar/catalogue/detail.html:88
-#, fuzzy
-#| msgid "Variants"
 msgid "Variants:"
-msgstr "同類商品"
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:105
 msgid "Product Description"
@@ -5597,9 +5632,7 @@ msgid ""
 "This product does not have any reviews yet -\n"
 "                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"此商品還沒有評論\n"
-"<a href=\"%(add_review_url)s#addreview\">搶沙發</a>"
+msgstr "此商品還沒有評論\n<a href=\"%(add_review_url)s#addreview\">搶沙發</a>"
 
 #: templates/oscar/catalogue/detail.html:176
 msgid "This product does not have any reviews yet"
@@ -5655,9 +5688,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
-"\n"
-"添加'%(name)s'到心願單列表"
+msgstr "\n添加'%(name)s'到心願單列表"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -5669,9 +5700,7 @@ msgid ""
 "\n"
 "                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">產品位於<a href=\"%(url)s\">'%(name)s'</a>心願單內</span>"
+msgstr "\n<span class=\"pull-left\">產品位於<a href=\"%(url)s\">'%(name)s'</a>心願單內</span>"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -5689,9 +5718,7 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"在 %(review_date)s被您評論過"
+msgstr "\n在 %(review_date)s被您評論過"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
@@ -5699,9 +5726,7 @@ msgid ""
 "\n"
 "                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"被<strong>%(name)s</strong> 在 %(review_date)s評論過"
+msgstr "\n被<strong>%(name)s</strong> 在 %(review_date)s評論過"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -5735,9 +5760,7 @@ msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-"\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s客戶認為這個有用"
+msgstr[0] "\n            <strong>%(num_up_votes)s</strong> of %(num_votes)s客戶認為這個有用"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5757,10 +5780,7 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
-"\n"
-"%(num_reviews)s 用戶評論數\n"
-"                "
+msgstr[0] "\n%(num_reviews)s 用戶評論數\n                "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:85
@@ -5904,7 +5924,9 @@ msgid "Enter payment details"
 msgstr "輸入付款細節"
 
 #: templates/oscar/checkout/payment_details.html:21
-msgid "This page needs implementing within your project.  You may want to use one of Oscar's payment gateway libraries:"
+msgid ""
+"This page needs implementing within your project.  You may want to use one "
+"of Oscar's payment gateway libraries:"
 msgstr ""
 
 #: templates/oscar/checkout/preview.html:5
@@ -6018,7 +6040,9 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/checkout/thank_you.html:29
-msgid "Please make a note of this reference or print this page and quote it in any communication with us regarding your order."
+msgid ""
+"Please make a note of this reference or print this page and quote it in any "
+"communication with us regarding your order."
 msgstr "請記錄本訊息或者列印本頁，當你和我們就訂單問題進行交流時，請使用它。"
 
 #: templates/oscar/checkout/thank_you.html:62
@@ -6031,9 +6055,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"從類別%(type)s (參考號: %(reference)s)分配%(amount)s "
+msgstr "\n從類別%(type)s (參考號: %(reference)s)分配%(amount)s "
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6041,9 +6063,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"從類別%(type)s 分配%(amount)s"
+msgstr "\n從類別%(type)s 分配%(amount)s"
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
@@ -6054,18 +6074,12 @@ msgid "Items purchased"
 msgstr "已購買商品"
 
 #: templates/oscar/checkout/thank_you.html:143
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                                Allocation of %(amount)s from type %(type)s\n"
-#| "                            "
+#, python-format
 msgid ""
 "\n"
 "                                Estimated dispatch: <strong>%(date)s</strong>\n"
 "                            "
 msgstr ""
-"\n"
-"從類別%(type)s 分配%(amount)s"
 
 #: templates/oscar/checkout/thank_you.html:182
 msgid "Tracking your order"
@@ -6209,10 +6223,7 @@ msgstr "取消"
 msgid ""
 "\n"
 "<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a>恢復供貨了\n"
-"\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a>恢復供貨了\n\n"
 
 #: templates/oscar/customer/alerts/message_subject.html:2
 #, python-format
@@ -6295,22 +6306,29 @@ msgstr "%(name)s團隊"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
 #, python-format
-msgid "You're receiving this email because your email address has been changed to <strong>%(email)s</strong>."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"<strong>%(email)s</strong>."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
-msgid "If it wasn't you who changed it, please reset your password immediately and correct your email address:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately and "
+"correct your email address:"
 msgstr "如果不是您本人更換這個，請立即重設你的密碼並更正你的電子郵箱地址"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr "如果是您本人改變的電子郵件地址，您可以忽略這個郵件"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
 #, python-format
-msgid "You're receiving this email because your email address has been changed to %(email)s."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"%(email)s."
 msgstr "因為您的電子郵件地址被更改到%(email)s，所以您收到了這封電子郵件"
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
@@ -6359,7 +6377,9 @@ msgstr "送貨地址"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
-msgid "You can view the status of this order by clicking <a href=\"%(status_url)s\" title=\"order status\">here</a>"
+msgid ""
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
 msgstr "您可以點擊 <a href=\"%(status_url)s\" title=\"order status\">這裡</a>來查看這個訂單的狀態"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
@@ -6369,10 +6389,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"你好,\n"
-"\n"
-"我們很高興地通知你，你的%(order_number)s號訂單我們已經收到，我們將盡快處理。"
+msgstr "你好,\n\n我們很高興地通知你，你的%(order_number)s號訂單我們已經收到，我們將盡快處理。"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6387,9 +6404,7 @@ msgstr "價格:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"您可以在下面URL查看這個訂單的狀態：\n"
-"%(status_url)s"
+msgstr "您可以在下面URL查看這個訂單的狀態：\n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6402,12 +6417,15 @@ msgstr "訂單確認 %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
 #, python-format
-msgid "You're receiving this e-mail because your password has been changed at %(name)s."
+msgid ""
+"You're receiving this e-mail because your password has been changed at "
+"%(name)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
-msgid "If it wasn't you who changed it, please reset your password immediately:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately:"
 msgstr "如果不是您本人改變的，請立即重設您的密碼"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:25
@@ -6420,9 +6438,7 @@ msgstr "否則您可以忽視此郵件"
 msgid ""
 "\n"
 "You're receiving this email because your password has been changed at %(name)s.\n"
-msgstr ""
-"\n"
-"你收到本郵件是因為你在%(name)s名下的密碼被改變了\n"
+msgstr "\n你收到本郵件是因為你在%(name)s名下的密碼被改變了\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6432,7 +6448,9 @@ msgstr "您在 %(site_name)s 的密碼已更改"
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:7
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
-msgid "You're receiving this e-mail because you requested a password reset for your user account at %(name)s."
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr "您收到這封郵件是因為您為 %(name)s 的用戶帳戶申請了密碼重置。"
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
@@ -6487,10 +6505,7 @@ msgstr ""
 msgid ""
 "\n"
 "Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
-msgstr ""
-"\n"
-"注意這件商品的存貨有限。請盡快買，不然其他人可能\n"
-"先買了。\n"
+msgstr "\n注意這件商品的存貨有限。請盡快買，不然其他人可能\n先買了。\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
 #, python-format
@@ -6501,15 +6516,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"我們已經自動禁用了您的提醒功能\n"
-"您不再\n"
-"會收到關於這個商品的其他任何電子郵件\n"
-"\n"
-"謝謝你的惠顧\n"
-"%(site_name)s團隊\n"
-"\n"
+msgstr "\n我們已經自動禁用了您的提醒功能\n您不再\n會收到關於這個商品的其他任何電子郵件\n\n謝謝你的惠顧\n%(site_name)s團隊\n\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_body.txt:1
 #, python-format
@@ -6638,18 +6645,14 @@ msgstr "派發日期"
 
 #: templates/oscar/customer/order/order_detail.html:66
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-ordering..."
 msgctxt "Buy again"
 msgid "Re-ordering..."
-msgstr "重新排序中..."
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:66
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Buy again"
 msgid "Re-order"
-msgstr "重新訂貨"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:69
 #: templates/oscar/customer/wishlists/wishlists_detail.html:57
@@ -6682,11 +6685,9 @@ msgid "Shipping total"
 msgstr "送貨總計"
 
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-order all items"
 msgctxt "Buy again"
 msgid "Re-order all items"
-msgstr "重新訂購所有商品"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:167
 msgid "Contact Number"
@@ -6758,9 +6759,7 @@ msgid ""
 "                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"這將會刪除您在本網站上關於您所有的訊息。刪除您的資料是不可恢復的操作"
+msgstr "\n這將會刪除您在本網站上關於您所有的訊息。刪除您的資料是不可恢復的操作"
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -6780,9 +6779,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"您確定要刪除%(name)s?"
+msgstr "\n您確定要刪除%(name)s?"
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:18
 msgid "Remove product"
@@ -6794,9 +6791,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
-"\n"
-"您確定想要從心願單%(wishlist_name)s'刪除%(product_name)s'？"
+msgstr "\n您確定想要從心願單%(wishlist_name)s'刪除%(product_name)s'？"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -6813,9 +6808,7 @@ msgid ""
 "\n"
 "                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
-"\n"
-"移動到心願單'%(name)s' "
+msgstr "\n移動到心願單'%(name)s' "
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:103
 msgid "Update quantities"
@@ -6839,9 +6832,7 @@ msgid ""
 "\n"
 "                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
-"\n"
-"在您的心願單創建後，<strong>%(title)s</strong>會被添加"
+msgstr "\n在您的心願單創建後，<strong>%(title)s</strong>會被添加"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -6872,7 +6863,9 @@ msgid "Delete Attribute Option Group?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
-msgid "Please make sure all Product Attributes are assigned to another Attribute Option Group before deletion."
+msgid ""
+"Please make sure all Product Attributes are assigned to another Attribute "
+"Option Group before deletion."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
@@ -6881,7 +6874,8 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
@@ -6931,9 +6925,7 @@ msgid ""
 "\n"
 "            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
-msgstr ""
-"\n"
-"<p>刪除類別<strong>%(name)s</strong> - 您確定麼?</p>"
+msgstr "\n<p>刪除類別<strong>%(name)s</strong> - 您確定麼?</p>"
 
 #: templates/oscar/dashboard/catalogue/category_list.html:23
 msgid "Create new category"
@@ -7007,9 +6999,7 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"創建產品'%(name)s'."
+msgstr "\n創建產品'%(name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -7030,65 +7020,51 @@ msgid "View it on the site"
 msgstr "在網站上查看它"
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:5
-#, fuzzy
-#| msgid "Caption"
 msgid "Create Option"
-msgstr "註釋"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:31
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option?"
-msgstr "選擇操作"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:42
-#, fuzzy
-#| msgid "Please make sure all products are assigned to another type before deletion."
-msgid "Please make sure option is not assigned to Products or Product Classes before deletion."
-msgstr "請確定所有商品在刪除前都被指定到其他種類"
+msgid ""
+"Please make sure option is not assigned to Products or Product Classes "
+"before deletion."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:45
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option"
-msgstr "選擇操作"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:56
-#, fuzzy, python-format
-#| msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
+#, python-format
 msgid "Delete Option <strong>%(name)s</strong> - are you sure?"
-msgstr "刪除商品種類<strong>%(name)s</strong> - 您確定麼？"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_form.html:50
-#, fuzzy
-#| msgid "Shipping details"
 msgid "Option details"
-msgstr "送貨細節"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:20
-#, fuzzy
-#| msgid "Create new partner"
 msgid "Create new Option"
-msgstr "創建新供貨商"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:34
-#, fuzzy
-#| msgid "No partners found."
 msgid "No Option found."
-msgstr "沒有發現供貨商"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_row_actions.html:11
-#, fuzzy
-#| msgid "Option"
 msgid "Edit Option"
-msgstr "選項"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:14
 msgid "Delete product type?"
 msgstr "刪除商品種類？"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
-msgid "Please make sure all products are assigned to another type before deletion."
+msgid ""
+"Please make sure all products are assigned to another type before deletion."
 msgstr "請確定所有商品在刪除前都被指定到其他種類"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
@@ -7215,7 +7191,9 @@ msgid "Upload, change or remove images"
 msgstr "上傳、修改或刪除圖片"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:176
-msgid "Drag images to re-order them. Space for additional images will appear when images are added."
+msgid ""
+"Drag images to re-order them. Space for additional images will appear when "
+"images are added."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:193
@@ -7448,10 +7426,8 @@ msgid "<em>Closed</em> stock alerts"
 msgstr "<em>關閉</em>的庫存提醒"
 
 #: templates/oscar/dashboard/index.html:163
-#, fuzzy
-#| msgid "Offer for voucher '%s'"
 msgid "Offers, vouchers"
-msgstr "和優惠券'%s'有關的促銷"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:165
 msgid "Active <em>Site</em> Offers"
@@ -7474,7 +7450,9 @@ msgid "Log out"
 msgstr "退出"
 
 #: templates/oscar/dashboard/login.html:28
-msgid "Please enter a correct username and password. Note that both fields may be case-sensitive."
+msgid ""
+"Please enter a correct username and password. Note that both fields may be "
+"case-sensitive."
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
@@ -7487,18 +7465,12 @@ msgstr "建立一個新的動機"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:19
 #: templates/oscar/dashboard/offers/condition_form.html:23
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
-#| "        "
+#, python-format
 msgid ""
 "\n"
 "        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\" target=\"_blank\">range dashboard</a>.\n"
 "        "
 msgstr ""
-"\n"
-"在<a href=\"%(range_list_url)s\">系列儀表板</a>中能新增或編輯系列商品"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:28
 #: templates/oscar/dashboard/offers/condition_form.html:31
@@ -7665,9 +7637,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"訂單%(number)s -產品線#%(id)s"
+msgstr "\n訂單%(number)s -產品線#%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -7850,30 +7820,20 @@ msgid "This order can't have its status changed."
 msgstr "此訂單無法修改狀態"
 
 #: templates/oscar/dashboard/orders/order_detail.html:335
-#, fuzzy
-#| msgid "Save changes"
 msgid "Status Changes"
-msgstr "保存更改"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:342
-#, fuzzy
-#| msgctxt "start date"
-#| msgid "From"
 msgid "From"
-msgstr "從"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:343
-#, fuzzy
-#| msgctxt "end date"
-#| msgid "To"
 msgid "To"
-msgstr "到"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:359
-#, fuzzy
-#| msgid "Save changes"
 msgid "No status changes."
-msgstr "保存更改"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:391
 #, python-format
@@ -7881,9 +7841,7 @@ msgid ""
 "\n"
 "                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
-"\n"
-"%(title)s (數量 %(event_qty)s/%(total_qty)s)"
+msgstr "\n%(title)s (數量 %(event_qty)s/%(total_qty)s)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:405
 msgid "No shipping events."
@@ -8069,9 +8027,7 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
-"\n"
-"頁面 <strong>%(title)s</strong> 已保存!"
+msgstr "\n頁面 <strong>%(title)s</strong> 已保存!"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
@@ -8097,9 +8053,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"第%(page_num)s頁，共%(total_pages)s頁"
+msgstr "\n第%(page_num)s頁，共%(total_pages)s頁"
 
 #: templates/oscar/dashboard/partials/pagination.html:16
 #: templates/oscar/partials/pagination.html:16
@@ -8109,20 +8063,16 @@ msgstr "下一頁"
 
 #: templates/oscar/dashboard/partials/product_images.html:13
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Change the sequence order"
 msgid "Re-order"
-msgstr "重新訂貨"
+msgstr ""
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"用戶%(user_name)s 被取消從 %(partner_name)s的連繫.\n"
+msgstr "\n用戶%(user_name)s 被取消從 %(partner_name)s的連繫.\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8200,7 +8150,9 @@ msgid "Update details"
 msgstr "更新細節"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
-msgid "A partial email address can be entered (eg '@example.com') to match multiple addresses."
+msgid ""
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
 msgstr "一個不完全的電子郵件地址(例如 '@example.com') 可以被輸入以匹配多個電子郵件地址"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
@@ -8209,9 +8161,7 @@ msgid ""
 "\n"
 "                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"用戶已經被連接到%(name)s."
+msgstr "\n用戶已經被連接到%(name)s."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:71
 msgid "Linking..."
@@ -8281,9 +8231,7 @@ msgstr "回到系列商品主頁"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p>系列商品 <strong>%(name)s</strong> 已儲存</p>\n"
+msgstr "\n<p>系列商品 <strong>%(name)s</strong> 已儲存</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -8329,7 +8277,9 @@ msgid "products"
 msgstr "產品"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:32
-msgid "This range contains all products. To add products manually, please unselect the 'Includes All Products' option on the edit range page."
+msgid ""
+"This range contains all products. To add products manually, please unselect "
+"the 'Includes All Products' option on the edit range page."
 msgstr "這個系列商品包含所有商品。要手動加入商品，請到系列商品編輯畫面，取消勾選「包含所有商品」選項。"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
@@ -8935,9 +8885,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"總計：%(total)s"
+msgstr "\n總計：%(total)s"
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -8976,7 +8924,9 @@ msgid "Enter a new password"
 msgstr "輸入新密碼"
 
 #: templates/oscar/registration/password_reset_confirm.html:22
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr "請輸入您的新密碼兩次，因此我們能驗證您已經正確的輸入了密碼"
 
 #: templates/oscar/registration/password_reset_confirm.html:27
@@ -8988,7 +8938,9 @@ msgid "Password reset unsuccessful"
 msgstr "密碼重置失敗"
 
 #: templates/oscar/registration/password_reset_confirm.html:32
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr "密碼重設連結無效，可能因為它已經被使用過了。 請申請一個新的密碼重設"
 
 #: templates/oscar/registration/password_reset_done.html:4
@@ -9016,7 +8968,9 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/registration/password_reset_form.html:21
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr "忘記了您的密碼？在下面輸入您的電子郵件地址，然後我們將會電郵給您設置新密碼的步驟"
 
 #: templates/oscar/registration/password_reset_form.html:24
@@ -9033,9 +8987,7 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"商品匹配\"%(q)s\""
+msgstr "\n商品匹配\"%(q)s\""
 
 #: templates/oscar/search/results.html:52
 #, python-format
@@ -9067,9 +9019,7 @@ msgid ""
 "\n"
 "                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"您的意思是<a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>？"
+msgstr "\n您的意思是<a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>？"
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9079,293 +9029,3 @@ msgstr "返回到搜索結果"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "您需要選擇一些%ss"
-
-#~ msgid "Must be str or unicode"
-#~ msgstr "必須為字符串或統一代碼『unicode'"
-
-#~ msgid "Promotions dashboard"
-#~ msgstr "促銷管理"
-
-#~ msgid "Promotion type"
-#~ msgstr "促銷類別"
-
-#~ msgid "Position"
-#~ msgstr "位置"
-
-#~ msgid "Where in the page this content block will appear"
-#~ msgstr "這個內容模組會在頁面的什麼位置出現"
-
-#~ msgid "Content blocks can only be linked to internal URLs"
-#~ msgstr "內容塊只能被連結到內部URL"
-
-#~ msgid "Content block removed successfully"
-#~ msgstr "內容模組已成功移除"
-
-#~ msgid "Content block created successfully"
-#~ msgstr "內容模組已成功創建"
-
-#~ msgid "Create a new %s content block"
-#~ msgstr "創建一個新的 %s 內容模組"
-
-#~ msgid "Product list content block created"
-#~ msgstr "內容模組-商品列表已創建"
-
-#~ msgid "Update content block"
-#~ msgstr "更新內容模組"
-
-#~ msgid "Content block updated successfully"
-#~ msgstr "內容模組已成功更新"
-
-#~ msgid "Content block '%(block)s' added to page '%(page)s'"
-#~ msgstr "內容模組 '%(block)s' 已加入頁面'%(page)s'"
-
-#~ msgid "No link found to delete"
-#~ msgstr "沒有發現可刪除的連結"
-
-#~ msgid "Content block removed from page '%s'"
-#~ msgstr "內容模組已從頁面'%s'移除"
-
-#~ msgid "Product list promotion updated"
-#~ msgstr "商品列表-促銷已更新"
-
-#~ msgid "Content block deleted successfully"
-#~ msgstr "內容模組已成功刪除"
-
-#~ msgid "Percentage off of products in range"
-#~ msgstr "比例降價-該範圍的商品"
-
-#~ msgid "Fixed amount off of products in range"
-#~ msgstr "本範圍內的固定額度降價"
-
-#~ msgid "Promotions"
-#~ msgstr "促銷"
-
-#~ msgid "Display Order"
-#~ msgstr "顯示順序"
-
-#~ msgid "Clicks"
-#~ msgstr "點擊"
-
-#~ msgid "Linked Promotion"
-#~ msgstr "連結了的促銷"
-
-#~ msgid "Linked Promotions"
-#~ msgstr "連結了的促銷"
-
-#~ msgid "Page URL"
-#~ msgstr "頁面URL"
-
-#~ msgid "Page Promotion"
-#~ msgstr "頁面促銷"
-
-#~ msgid "Page Promotions"
-#~ msgstr "頁面促銷"
-
-#~ msgid "Keyword Promotion"
-#~ msgstr "關鍵詞促銷"
-
-#~ msgid "Keyword Promotions"
-#~ msgstr "關鍵詞促銷"
-
-#~ msgid "Keywords"
-#~ msgstr "關鍵詞"
-
-#~ msgid "Promotion"
-#~ msgstr "促銷"
-
-#~ msgid "Display type"
-#~ msgstr "顯示種類"
-
-#~ msgid "This can be used to have different types of HTML blocks (eg different widths)"
-#~ msgstr "這個課用於不同種類的HTML塊(例如不同的寬度)"
-
-#~ msgid "Raw HTML"
-#~ msgstr "原生HTML"
-
-#~ msgid "Link URL"
-#~ msgstr "連結URL"
-
-#~ msgid "This is where this promotion links to"
-#~ msgstr "這是促銷連結到的地方"
-
-#~ msgid "Choose the Image content blocks that this block will use. (You may need to create some first)."
-#~ msgstr " 選擇這個塊會使用的圖片內容塊(您可能需要先創建一些)"
-
-#~ msgid "Multi Image"
-#~ msgstr "多圖片"
-
-#~ msgid "Multi Images"
-#~ msgstr "多個圖片"
-
-#~ msgid "Single product"
-#~ msgstr "單個產品"
-
-#~ msgctxt "Promotion product list title"
-#~ msgid "Title"
-#~ msgstr "稱呼"
-
-#~ msgid "Link text"
-#~ msgstr "連結文本"
-
-#~ msgid "Product list"
-#~ msgstr "產品列表"
-
-#~ msgid "Product lists"
-#~ msgstr "產品列表"
-
-#~ msgid "Hand Picked Product List"
-#~ msgstr "手選產品列表"
-
-#~ msgid "Hand Picked Product Lists"
-#~ msgstr "手選產品列表"
-
-#~ msgid "List"
-#~ msgstr "列表"
-
-#~ msgid "Ordered product"
-#~ msgstr "已下訂單的商品"
-
-#~ msgid "Bestselling products"
-#~ msgstr "暢銷商品"
-
-#~ msgid "Recently added products"
-#~ msgstr "最新商品"
-
-#~ msgid "Number of Products"
-#~ msgstr "產品編號"
-
-#~ msgid "Automatic product list"
-#~ msgstr "自動生成商品列表"
-
-#~ msgid "Automatic product lists"
-#~ msgstr "自動生成商品列表"
-
-#~ msgid "Tabbed Block"
-#~ msgstr "分欄的塊"
-
-#~ msgid "Ordered Product List"
-#~ msgstr "以下訂單的商品列表"
-
-#~ msgid "Ordered Product Lists"
-#~ msgstr "已下訂單的商品列表"
-
-#~ msgctxt "Tabbed block title"
-#~ msgid "Title"
-#~ msgstr "稱呼"
-
-#~ msgid "Tabbed Blocks"
-#~ msgstr "分欄的塊"
-
-#~ msgid "Content blocks"
-#~ msgstr "內容塊"
-
-#~ msgid "Content blocks by page"
-#~ msgstr "內容塊(按頁)"
-
-#~ msgid "Server error!"
-#~ msgstr "伺服器錯誤"
-
-#~ msgid "We're sorry but something went terribly wrong and we've been unable to generate the page you requested."
-#~ msgstr "我們很抱歉，發生了一些故障，暫時無法呈現您所請求的頁面。"
-
-#~ msgid "This incident has been logged and will be addressed by an engineer as soon as possible."
-#~ msgstr "此次事故已經被記錄，一位工程師會盡快解決"
-
-#~ msgid "Offers, vouchers and promotions"
-#~ msgstr "促銷，優惠券和推銷活動"
-
-#~ msgid "Delete content block '%(name)s'?\""
-#~ msgstr "刪除內容塊'%(name)s'?\""
-
-#~ msgid "Delete content block"
-#~ msgstr "刪除內容塊"
-
-#~ msgid "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are you sure?"
-#~ msgstr "刪除%(object.type)s內容塊<strong>%(object.name)s</strong> -您確定麼"
-
-#~ msgid "Remove promotion from page?"
-#~ msgstr "從頁面中刪除促銷？"
-
-#~ msgid "Remove promotion"
-#~ msgstr "刪除促銷"
-
-#~ msgid "Remove %(object.content_object.type)s content block <strong>%(object.name)s</strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
-#~ msgstr "從頁面<strong>%(object.page_url)s</strong> 刪除內容塊%(object.content_object.type)s<strong>%(object.name)s</strong> -您確定麼？"
-
-#~ msgid "Content block"
-#~ msgstr "內容塊"
-
-#~ msgid "Pages displaying this content blocks"
-#~ msgstr "頁面正在顯示這個內容塊"
-
-#~ msgid "Position on page"
-#~ msgstr "在頁面上的位置"
-
-#~ msgid "View all blocks on this page"
-#~ msgstr "在這個頁面上查看所有的內容塊"
-
-#~ msgid "Remove from page"
-#~ msgstr "從頁面中刪除"
-
-#~ msgid "This promotion is not displayed anywhere at the moment."
-#~ msgstr "這個促銷沒有在任何地方顯示"
-
-#~ msgid "Add to a page"
-#~ msgstr "添加到頁"
-
-#~ msgid "Add to page"
-#~ msgstr "添加到頁"
-
-#~ msgid "Content blocks for page %(page_url)s"
-#~ msgstr "頁面%(page_url)s的內容塊"
-
-#~ msgid "Content blocks on page '%(page_url)s'"
-#~ msgstr "頁面%(page_url)s的內容塊"
-
-#~ msgid "Edit promotions in position '%(name)s'"
-#~ msgstr "編輯在位置'%(name)s'上的促銷"
-
-#~ msgid "Promotion Name"
-#~ msgstr "促銷名稱"
-
-#~ msgid "Change display order"
-#~ msgstr "更改顯示訂單"
-
-#~ msgid "No promotions in this position."
-#~ msgstr "在這個位置沒有促銷"
-
-#~ msgid "Pages with content blocks"
-#~ msgstr "帶有內容塊的頁面"
-
-#~ msgid "View by page"
-#~ msgstr "按頁面查看"
-
-#~ msgid "View all content blocks"
-#~ msgstr "查看所有內容塊"
-
-#~ msgid "View content blocks by page"
-#~ msgstr "按頁面查看內容塊"
-
-#~ msgid "Pages with content blocks on them"
-#~ msgstr "有內容塊的ye'm"
-
-#~ msgid "Number of content blocks"
-#~ msgstr "內容塊個數"
-
-#~ msgid "No content blocks found."
-#~ msgstr "沒有發現內容塊"
-
-#~ msgid "Create a new content block"
-#~ msgstr "創建一個新的內容塊"
-
-#~ msgid "Creating..."
-#~ msgstr "創建中..."
-
-#~ msgid "Create block"
-#~ msgstr "創建塊"
-
-#~ msgid "Number of times used"
-#~ msgstr "使用次數"
-
-#~ msgid "See more"
-#~ msgstr "更多"
