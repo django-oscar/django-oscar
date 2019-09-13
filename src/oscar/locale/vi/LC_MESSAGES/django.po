@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Pascal Bader <info@djangoviet.com>, 2015
 # Rain Le <rain@soi.vn>, 2018
@@ -13,13 +13,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-06 06:17+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2019-09-06 03:20+0000\n"
+"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/codeinthehole/django-oscar/language/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: apps/address/abstract_models.py:24
@@ -273,9 +273,9 @@ msgstr "Những địa chỉ của đối tác"
 #: apps/analytics/abstract_models.py:18 apps/analytics/abstract_models.py:83
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:626
 #: apps/catalogue/abstract_models.py:224 apps/catalogue/abstract_models.py:360
-#: apps/catalogue/abstract_models.py:927 apps/catalogue/abstract_models.py:1185
-#: apps/order/abstract_models.py:542 apps/partner/abstract_models.py:95
-#: apps/wishlists/abstract_models.py:115
+#: apps/catalogue/abstract_models.py:927
+#: apps/catalogue/abstract_models.py:1185 apps/order/abstract_models.py:542
+#: apps/partner/abstract_models.py:95 apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:23
@@ -415,7 +415,8 @@ msgstr "Phân tích sản phẩm "
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:20
 #: apps/catalogue/abstract_models.py:46 apps/catalogue/abstract_models.py:93
-#: apps/catalogue/abstract_models.py:707 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:707
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1108 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:161 apps/dashboard/catalogue/tables.py:79
 #: apps/dashboard/catalogue/tables.py:103 apps/dashboard/users/forms.py:44
@@ -556,9 +557,10 @@ msgid "Vouchers"
 msgstr "Phiếu giảm giá"
 
 #: apps/basket/abstract_models.py:58 apps/basket/reports.py:83
-#: apps/catalogue/abstract_models.py:331 apps/catalogue/abstract_models.py:1195
-#: apps/customer/abstract_models.py:356 apps/order/abstract_models.py:956
-#: apps/partner/abstract_models.py:149 apps/wishlists/abstract_models.py:50
+#: apps/catalogue/abstract_models.py:331
+#: apps/catalogue/abstract_models.py:1195 apps/customer/abstract_models.py:356
+#: apps/order/abstract_models.py:956 apps/partner/abstract_models.py:149
+#: apps/wishlists/abstract_models.py:50
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/ranges/range_list.html:34
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
@@ -604,7 +606,9 @@ msgstr "%(status)s giỏ hàng (owner: %(owner)s, dây : %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:158
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
 msgstr "Do hạn chế về kỹ thuật, chúng tôi không thể giao nhiều hơn %(threshold)d trong một đơn hàng."
 
 #: apps/basket/abstract_models.py:620
@@ -662,12 +666,16 @@ msgstr "Bạn không thể thay đổi %s giỏ hàng "
 
 #: apps/basket/abstract_models.py:910
 #, python-format
-msgid "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "Giá của  '%(product)s' đã tăng từ %(old_price)s đến %(new_price)s kể từ khi bạn thêm nó vào giỏ hàng của bạn "
 
 #: apps/basket/abstract_models.py:915
 #, python-format
-msgid "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "Giá của  '%(product)s' đã giảm  từ %(old_price)s đến %(new_price)s kể từ khi bạn thêm nó vào giỏ hàng của bạn "
 
 #: apps/basket/abstract_models.py:929 apps/order/abstract_models.py:838
@@ -732,21 +740,27 @@ msgstr "Vui lòng chọn sản phẩm hợp lệ "
 
 #: apps/basket/forms.py:213
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order. Your basket currently has %(basket)d items."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
 msgstr "Do hạn chế về kỹ thuật, chúng tôi không thể giao nhiều hơn%(threshold)d  mục trong một đơn hàng. Giỏ hàng của bạn hiện có%(basket)d mục."
 
 #: apps/basket/forms.py:235
-#, fuzzy
-#| msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
-msgid "This product cannot be added to the basket because a price could not be determined for it."
-msgstr "Sản phẩm này không thể thêm vào giỏ hàng vì loại tiền tệ  không giống như các sản phẩm khác trong giỏ hàng của bạn"
+msgid ""
+"This product cannot be added to the basket because a price could not be "
+"determined for it."
+msgstr ""
 
 #: apps/basket/forms.py:242
-msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
+msgid ""
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
 msgstr "Sản phẩm này không thể thêm vào giỏ hàng vì loại tiền tệ  không giống như các sản phẩm khác trong giỏ hàng của bạn"
 
 #: apps/basket/middleware.py:174
-msgid "We have merged a basket from a previous session. Its contents might have changed."
+msgid ""
+"We have merged a basket from a previous session. Its contents might have "
+"changed."
 msgstr "Chúng tôi đã gom một giỏ từ một phiên trước. Nội dung của nó có thể đã thay đổi."
 
 #: apps/basket/reports.py:19 apps/basket/reports.py:78
@@ -816,7 +830,8 @@ msgid "You can't save an item for later if you're not logged in!"
 msgstr "Bạn không thể lưu sản phẩm cho lần sau vì bạn chưa đăng nhập "
 
 #: apps/basket/views.py:234
-msgid "Your basket couldn't be updated. Please correct any validation errors below."
+msgid ""
+"Your basket couldn't be updated. Please correct any validation errors below."
 msgstr "Giỏ hàng của bạn chưa được cập nhật. Bạn vui lòng kiểm tra  lại các thông tin bên dưới."
 
 #: apps/basket/views.py:322
@@ -951,10 +966,8 @@ msgid "Product structure"
 msgstr "Cấu trúc sản phẩm "
 
 #: apps/catalogue/abstract_models.py:268
-#, fuzzy
-#| msgid "Is public?"
 msgid "Is public"
-msgstr "Công khai?"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:270
 msgid "Show this product in search results and catalogue listings."
@@ -970,11 +983,16 @@ msgid "UPC"
 msgstr "UPC"
 
 #: apps/catalogue/abstract_models.py:274
-msgid "Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book."
+msgid ""
+"Universal Product Code (UPC) is an identifier for a product which is not "
+"specific to a particular  supplier. Eg an ISBN for a book."
 msgstr "Mã vạch sản phẩm (UPC) là một định danh cho một sản phẩm mà không phải là cụ thể cho một nhà cung cấp cụ thể. Ví dụ: mã vạch cho một cuốn sách. "
 
 #: apps/catalogue/abstract_models.py:285
-msgid "Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product)."
+msgid ""
+"Only choose a parent product if you're creating a child product.  For "
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
 msgstr "Chỉ chọn một sản phẩm làm  gốc nếu bạn đang tạo ra một sản phẩm nhỏ hơn . Ví dụ, nếu đây là một kích thước 4 của một t-shirt đặc biệt. Để trống nếu điều này là một sản phẩm độc lập (tức là chỉ có một phiên bản của sản phẩm này)."
 
 #: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:541
@@ -1003,7 +1021,9 @@ msgid "Attributes"
 msgstr "Thuộc tính "
 
 #: apps/catalogue/abstract_models.py:310
-msgid "A product attribute is something that this product may have, such as a size, as specified by its class"
+msgid ""
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
 msgstr "Một thuộc tính của sản phẩm là điều mà sản phẩm này có thể có, chẳng hạn như kích thước, màu sắc..."
 
 #: apps/catalogue/abstract_models.py:314
@@ -1011,7 +1031,10 @@ msgid "Product options"
 msgstr "Lựa chọn sản phẩm "
 
 #: apps/catalogue/abstract_models.py:315
-msgid "Options are values that can be associated with a item when it is added to a customer's basket.  This could be something like a personalised message to be printed on a T-shirt."
+msgid ""
+"Options are values that can be associated with a item when it is added to a "
+"customer's basket.  This could be something like a personalised message to "
+"be printed on a T-shirt."
 msgstr "Tùy chọn là giá trị mà có thể được liên kết với một mục khi nó được thêm vào giỏ của khách hàng. Đây có thể là một cái gì đó giống như một tin nhắn cá nhân để được in trên một T-shirt."
 
 #: apps/catalogue/abstract_models.py:322
@@ -1107,7 +1130,9 @@ msgid "Ranking"
 msgstr "Xếp hạng "
 
 #: apps/catalogue/abstract_models.py:683
-msgid "Determines order of the products. A product with a higher value will appear before one with a lower ranking."
+msgid ""
+"Determines order of the products. A product with a higher value will appear "
+"before one with a lower ranking."
 msgstr "Xác định thứ tự của các sản phẩm. Một sản phẩm có giá trị cao hơn sẽ xuất hiện trước khi một người với một thứ hạng thấp hơn."
 
 #: apps/catalogue/abstract_models.py:691
@@ -1119,7 +1144,9 @@ msgid "Product recomendations"
 msgstr "Những sản phẩm đề nghị "
 
 #: apps/catalogue/abstract_models.py:714 apps/customer/abstract_models.py:155
-msgid "Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit."
+msgid ""
+"Code can only contain the letters a-z, A-Z, digits, and underscores, and "
+"can't start with a digit."
 msgstr "Mã chỉ có thể bao gồm các ký tự  a-z, A-Z, số , gạch dưới, và không thể bắt đầu với số."
 
 #: apps/catalogue/abstract_models.py:733 apps/catalogue/abstract_models.py:929
@@ -1204,10 +1231,8 @@ msgid "Product attributes"
 msgstr "Những thuộc tính sản phẩm "
 
 #: apps/catalogue/abstract_models.py:847
-#, fuzzy
-#| msgid "Must be a float"
 msgid "Must be str"
-msgstr "Phải là số nguyên "
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:854
 msgid "Must be a float"
@@ -1323,7 +1348,9 @@ msgid "Caption"
 msgstr "Chú thích "
 
 #: apps/catalogue/abstract_models.py:1193
-msgid "An image with a display order of zero will be the primary image for a product"
+msgid ""
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr "Hình ảnh với số thứ tự hiển thị bằng 0 sẽ là hình ảnh chính cho sản phẩm"
 
 #: apps/catalogue/abstract_models.py:1203
@@ -1533,7 +1560,9 @@ msgstr "Bạn cần phải thêm một số mặt hàng vào giỏ hàng của b
 
 #: apps/checkout/session.py:131
 #, python-format
-msgid "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your basket to continue"
+msgid ""
+"'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
+"basket to continue"
 msgstr "'%(title)s'không có sẵn (%(reason)s). Vui lòng điều chỉnh giỏ hàng của bạn để tiếp tục"
 
 #: apps/checkout/session.py:149
@@ -1545,7 +1574,9 @@ msgid "Please choose a shipping address"
 msgstr "Vui lòng chọn địa chỉ giao hàng"
 
 #: apps/checkout/session.py:182
-msgid "Your previously chosen shipping address is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping address is no longer valid.  Please choose "
+"another one"
 msgstr "Địa chỉ giao hàng cũ của bạn không chính xác. Vui lòng chọn một địa chỉ khác "
 
 #: apps/checkout/session.py:192
@@ -1553,11 +1584,15 @@ msgid "Please choose a shipping method"
 msgstr "Vui lòng chọn phương thức giao hàng "
 
 #: apps/checkout/session.py:204
-msgid "Your previously chosen shipping method is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping method is no longer valid.  Please choose "
+"another one"
 msgstr "Phương thức vận chuyển được chọn trước đó của bạn không còn hợp lệ. Hãy chọn một số khác"
 
 #: apps/checkout/views.py:82
-msgid "Create your account and then you will be redirected back to the checkout process"
+msgid ""
+"Create your account and then you will be redirected back to the checkout "
+"process"
 msgstr "Tạo tài khoản của bạn và sau đó bạn sẽ được chuyển trở lại các quy trình thanh toán"
 
 #: apps/checkout/views.py:205
@@ -1569,7 +1604,8 @@ msgid "Address deleted"
 msgstr "Xóa địa chỉ "
 
 #: apps/checkout/views.py:275
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "Phương thức vận chuyển không có sẵn cho địa chỉ của bạn lựa chọn - hãy chọn phương thức khác"
 
 #: apps/checkout/views.py:318
@@ -1577,7 +1613,9 @@ msgid "Your submitted shipping method is not permitted"
 msgstr "Phương thức vận chuyển bạn chọn  không được phép"
 
 #: apps/checkout/views.py:568
-msgid "A problem occurred while processing payment for this order - no payment has been taken.  Please contact customer services if this problem persists"
+msgid ""
+"A problem occurred while processing payment for this order - no payment has "
+"been taken.  Please contact customer services if this problem persists"
 msgstr "Một vấn đề xảy ra trong khi xử lý thanh toán cho đơn hàng này .Hãy liên hệ với dịch vụ khách hàng nếu vấn đề này vẫn tồn tại !"
 
 #: apps/checkout/views.py:672
@@ -1605,7 +1643,9 @@ msgid "Active"
 msgstr "Hoạt động "
 
 #: apps/customer/abstract_models.py:68
-msgid "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
 msgstr "Chỉ định cho người sử dụng này phải được coi là hoạt động. Bỏ chọn này thay vì xóa tài khoản."
 
 #: apps/customer/abstract_models.py:70
@@ -1723,11 +1763,13 @@ msgstr "Thư đến "
 msgid "Archive"
 msgstr "Lưu trữ "
 
-#: apps/customer/abstract_models.py:299 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:299
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "Thông báo "
 
-#: apps/customer/abstract_models.py:300 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:300
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "Những thông báo "
@@ -1869,7 +1911,9 @@ msgstr "Tất cả các đơn hàng "
 
 #: apps/customer/forms.py:213
 #, python-format
-msgid "Orders placed between %(date_from)s and %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed between %(date_from)s and %(date_to)s and order number "
+"containing %(order_number)s"
 msgstr "Đơh hàng từ  %(date_from)s  đến  %(date_to)s và số đơn hàng  %(order_number)s"
 
 #: apps/customer/forms.py:217 apps/dashboard/orders/forms.py:42
@@ -1879,7 +1923,9 @@ msgstr "Đơn hàng từ ngày  %(date_from)s đến ngày  %(date_to)s"
 
 #: apps/customer/forms.py:221
 #, python-format
-msgid "Orders placed since %(date_from)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed since %(date_from)s and order number containing "
+"%(order_number)s"
 msgstr "Đơn hàng từ ngày %(date_from)s và số hóa đơn bao gồm  %(order_number)s"
 
 #: apps/customer/forms.py:224
@@ -1889,7 +1935,8 @@ msgstr "Đơn hàng từ %(date_from)s"
 
 #: apps/customer/forms.py:227
 #, python-format
-msgid "Orders placed until %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed until %(date_to)s and order number containing %(order_number)s"
 msgstr " Đơn hàng đến ngày %(date_to)s và số đơn hàng %(order_number)s"
 
 #: apps/customer/forms.py:230
@@ -1921,7 +1968,10 @@ msgstr "Đã có thông báo đang hoạt động cho %s"
 
 #: apps/customer/forms.py:405
 #, python-format
-msgid "%s has been sent a confirmation email for another product alert on this site. Please confirm or cancel that request before signing up for more alerts."
+msgid ""
+"%s has been sent a confirmation email for another product alert on this "
+"site. Please confirm or cancel that request before signing up for more "
+"alerts."
 msgstr ""
 
 #: apps/customer/forms.py:417
@@ -1999,12 +2049,15 @@ msgstr "Đơn hàng "
 
 #: apps/customer/views.py:554
 #, python-format
-msgid "All available lines from order %(number)s have been added to your basket"
+msgid ""
+"All available lines from order %(number)s have been added to your basket"
 msgstr "Tất cả các dòng có sẵn từ thứ tự %(number)s  đã được thêm vào giỏ hàng của bạn"
 
 #: apps/customer/views.py:560
 #, python-format
-msgid "It is not possible to re-order order %(number)s as none of its lines are available to purchase"
+msgid ""
+"It is not possible to re-order order %(number)s as none of its lines are "
+"available to purchase"
 msgstr "Bạn không thể sắp xếp lại số đơn hàng %(number)s  "
 
 #: apps/customer/views.py:597
@@ -2223,7 +2276,9 @@ msgid "Select an option group"
 msgstr "Lựa chọn nhóm "
 
 #: apps/dashboard/catalogue/formsets.py:96
-msgid "At least one stock record must be set to a partner that you're associated with."
+msgid ""
+"At least one stock record must be set to a partner that you're associated "
+"with."
 msgstr "Cần ít nhất một tồn kho để thiết lập liên kết với đối tác "
 
 #: apps/dashboard/catalogue/formsets.py:114
@@ -2294,11 +2349,10 @@ msgid_plural "%s Attribute Option Groups"
 msgstr[0] ""
 
 #: apps/dashboard/catalogue/tables.py:112
-#, fuzzy, python-format
-#| msgid "Option"
+#, python-format
 msgid "%s Option"
 msgid_plural "%s Options"
-msgstr[0] "Lựa chọn "
+msgstr[0] ""
 
 #: apps/dashboard/catalogue/views.py:103
 msgid "Product search results"
@@ -2443,7 +2497,8 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:912
 #, python-format
-msgid "%i product attributes are still assigned to this attribute option group"
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:931
@@ -2451,52 +2506,40 @@ msgid "Attribute Option Group deleted successfully"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:978
-#, fuzzy
-#| msgid "Add a new category"
 msgid "Add a new Option"
-msgstr "Thêm mới danh mục "
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:981
-#, fuzzy
-#| msgid "Category created successfully"
 msgid "Option created successfully"
-msgstr "Danh mục đã được cập nhật thành công "
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:994
-#, fuzzy, python-format
-#| msgid "Update category '%s'"
+#, python-format
 msgid "Update Option '%s'"
-msgstr "Cập nhật danh mục '%s'"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:997
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Option updated successfully"
-msgstr "Danh mục đã cập nhật thành công "
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1009
-#, fuzzy, python-format
-#| msgid "Deleted page '%s'"
+#, python-format
 msgid "Delete Option '%s'"
-msgstr "Xóa trang '%s'"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1019
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i products are still assigned to this option"
-msgstr "%i sản phẩm vẫn được gán cho loại này"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1024
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i product classes are still assigned to this option"
-msgstr "%i sản phẩm vẫn được gán cho loại này"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1030
-#, fuzzy
-#| msgid "Category deleted successfully"
 msgid "Option deleted successfully"
-msgstr "Danh mục đã được xóa "
+msgstr ""
 
 #: apps/dashboard/communications/apps.py:11
 msgid "Communications dashboard"
@@ -2527,7 +2570,8 @@ msgid "Please enter an email address"
 msgstr "Vui lòng nhập địa chỉ email "
 
 #: apps/dashboard/communications/views.py:31
-msgid "The submitted form was not valid, please correct the errors and resubmit"
+msgid ""
+"The submitted form was not valid, please correct the errors and resubmit"
 msgstr "Yêu cầu của bạn chưa hợp lệ, vui lòng kiểm tra lại thông tin bên dưới "
 
 #: apps/dashboard/communications/views.py:40
@@ -2562,7 +2606,8 @@ msgid "Custom condition"
 msgstr "Điều kiện khách hàng "
 
 #: apps/dashboard/offers/forms.py:86
-msgid "Please either choose a range, type and value OR select a custom condition"
+msgid ""
+"Please either choose a range, type and value OR select a custom condition"
 msgstr "Xin vui lòng chọn loại và giá trị hoặc chọn một điều kiện tùy chỉnh"
 
 #: apps/dashboard/offers/forms.py:92
@@ -2574,7 +2619,8 @@ msgid "Custom incentive"
 msgstr "Tuỳ chỉnh ưu đãi"
 
 #: apps/dashboard/offers/forms.py:139 apps/dashboard/offers/forms.py:149
-msgid "Please either choose a range, type and value OR select a custom incentive"
+msgid ""
+"Please either choose a range, type and value OR select a custom incentive"
 msgstr "Xin vui lòng chọn loại và giá trị hoặc chọn một ưu đãi tùy chỉnh"
 
 #: apps/dashboard/offers/forms.py:145
@@ -2892,7 +2938,9 @@ msgstr "Số lượng nhập cho dòng #%s không hợp lệ "
 
 #: apps/dashboard/orders/views.py:506
 #, python-format
-msgid "The entered quantity for line #%(line_id)s should not be higher than %(quantity)s"
+msgid ""
+"The entered quantity for line #%(line_id)s should not be higher than "
+"%(quantity)s"
 msgstr "Số lượng nhập cho dòng #%(line_id)s không nên cao hơn %(quantity)s"
 
 #: apps/dashboard/orders/views.py:575
@@ -2926,7 +2974,9 @@ msgstr "'%(status)s' không hợp lệ cho  %(line_id)d"
 
 #: apps/dashboard/orders/views.py:652
 #, python-format
-msgid "Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
+msgid ""
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
 msgstr "Trạng thái của  #%(line_id)d thay đổi từ  '%(old_status)s'  sang '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
@@ -2972,9 +3022,7 @@ msgstr "%(field)s thay đổi từ '%(old_value)s' sang  '%(new_value)s'"
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"Địa chỉ giao hàng được cập nhật :\n"
-"%s"
+msgstr "Địa chỉ giao hàng được cập nhật :\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -2995,7 +3043,9 @@ msgid "Example: '/about/contact/'."
 msgstr "Ví dụ : 'thông tin về chúng tôi/ liên hệ '."
 
 #: apps/dashboard/pages/forms.py:33
-msgid "This value must contain only letters, numbers, dots, underscores, dashes, slashes or tildes."
+msgid ""
+"This value must contain only letters, numbers, dots, underscores, dashes, "
+"slashes or tildes."
 msgstr ""
 
 #: apps/dashboard/pages/views.py:37
@@ -3217,7 +3267,9 @@ msgstr "tới"
 
 #: apps/dashboard/reviews/views.py:29
 #, python-format
-msgid "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
+msgid ""
+"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
+"%(name_filter)s"
 msgstr "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
@@ -3462,7 +3514,8 @@ msgid "Site offer - available to all users"
 msgstr "Trang web cung cấp - có sẵn cho tất cả người dùng"
 
 #: apps/offer/abstract_models.py:146
-msgid "Voucher offer - only available after entering the appropriate voucher code"
+msgid ""
+"Voucher offer - only available after entering the appropriate voucher code"
 msgstr "Phiếu giảm giá cung cấp - chỉ có sẵn sau khi nhập phiếu giảm giá phù hợp"
 
 #: apps/offer/abstract_models.py:148
@@ -3470,7 +3523,9 @@ msgid "User offer - available to certain types of user"
 msgstr "Người sử dụng cung cấp - có sẵn cho một số loại người dùng"
 
 #: apps/offer/abstract_models.py:149
-msgid "Session offer - temporary offer, available for a user for the duration of their session"
+msgid ""
+"Session offer - temporary offer, available for a user for the duration of "
+"their session"
 msgstr "Phiên phục vụ - tạm thời phục vụ, sẵn sàng cho một người sử dụng trong suốt thời gian của phiên họp của họ"
 
 #: apps/offer/abstract_models.py:156
@@ -3498,11 +3553,15 @@ msgid "The highest priority offers are applied first"
 msgstr "Những ưu tiên cao nhất được áp dụng đầu tiên"
 
 #: apps/offer/abstract_models.py:189
-msgid "Offers are active from the start date. Leave this empty if the offer has no start date."
+msgid ""
+"Offers are active from the start date. Leave this empty if the offer has no "
+"start date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:193
-msgid "Offers are active until the end date. Leave this empty if the offer has no expiry date."
+msgid ""
+"Offers are active until the end date. Leave this empty if the offer has no "
+"expiry date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:201
@@ -3534,7 +3593,9 @@ msgid "Max discount"
 msgstr "Giảm giá tối đa"
 
 #: apps/offer/abstract_models.py:227
-msgid "When an offer has given more discount to orders than this threshold, then the offer becomes unavailable"
+msgid ""
+"When an offer has given more discount to orders than this threshold, then "
+"the offer becomes unavailable"
 msgstr "Khi một dịch vụ đã được giảm giá trên nhiều đơn hàng hơn ngưỡng này, thì dịch vụ ngừng hoạt động"
 
 #: apps/offer/abstract_models.py:236
@@ -3646,7 +3707,9 @@ msgid "Max Affected Items"
 msgstr "Vật phẩm bị ảnh hưởng lớn nhất"
 
 #: apps/offer/abstract_models.py:523
-msgid "Set this to prevent the discount consuming all items within the range that are in the basket."
+msgid ""
+"Set this to prevent the discount consuming all items within the range that "
+"are in the basket."
 msgstr "Thiết lập này để ngăn chặn chiết khấu trên tất cả các vật phẩm không nằm trong phạm vi của giỏ hàng"
 
 #: apps/offer/abstract_models.py:529 apps/offer/abstract_models.py:735
@@ -3697,7 +3760,8 @@ msgid "Shipping discounts don't require a 'max affected items' attribute"
 msgstr "Chiết khấu vận chuyển không yêu cầu thuộc tính 'những vật phẩm ảnh hưởng lớn nhất'"
 
 #: apps/offer/abstract_models.py:643
-msgid "No range should be selected as the condition range will be used instead."
+msgid ""
+"No range should be selected as the condition range will be used instead."
 msgstr "Chưa có phạm vi cần được lựa chọn như phạm vi điều kiện sẽ được sử dụng để thay thế."
 
 #: apps/offer/abstract_models.py:649
@@ -3717,7 +3781,8 @@ msgid "Depends on value of items in basket that are in condition range"
 msgstr "Phụ thuộc vào giá trị của những vật phẩm trong giỏ hàng mà nằm trong phạm vi điều kiện"
 
 #: apps/offer/abstract_models.py:721
-msgid "Needs to contain a set number of DISTINCT items from the condition range"
+msgid ""
+"Needs to contain a set number of DISTINCT items from the condition range"
 msgstr "Cần phải có một số thiết lập của các mặt hàng riêng biệt từ phạm vi điều kiện"
 
 #: apps/offer/abstract_models.py:741
@@ -4013,7 +4078,9 @@ msgstr "Địa chỉ email khách hàng"
 
 #: apps/order/abstract_models.py:135
 #, python-format
-msgid "'%(new_status)s' is not a valid status for order %(number)s (current status: '%(status)s')"
+msgid ""
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
 msgstr "'%(new_status)s' không phải là một trạng thái hợp lệ cho đơn hàng %(number)s (trạng thái hiện tại: '%(status)s')"
 
 #: apps/order/abstract_models.py:272
@@ -4040,34 +4107,25 @@ msgid "Order Notes"
 msgstr "Những lưu ý đơn hàng"
 
 #: apps/order/abstract_models.py:446 apps/order/abstract_models.py:456
-#, fuzzy
-#| msgid "Order and Item Charges"
 msgid "Order Status Changes"
-msgstr "Những đơn hàng và mặt hàng tính phí"
+msgstr ""
 
 #: apps/order/abstract_models.py:448
-#, fuzzy
-#| msgid "Status"
 msgid "Old Status"
-msgstr "Trạng thái "
+msgstr ""
 
 #: apps/order/abstract_models.py:449
-#, fuzzy
-#| msgid "Status"
 msgid "New Status"
-msgstr "Trạng thái "
+msgstr ""
 
 #: apps/order/abstract_models.py:455
-#, fuzzy
-#| msgid "Order status"
 msgid "Order Status Change"
-msgstr "Trạng thái đơn hàng "
+msgstr ""
 
 #: apps/order/abstract_models.py:460
-#, fuzzy, python-brace-format
-#| msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
+#, python-brace-format
 msgid "{order} has changed status from {old_status} to {new_status}"
-msgstr "Trạng thái đơn hàng thay đổi từ  '%(old_status)s' đến  '%(new_status)s'"
+msgstr ""
 
 #: apps/order/abstract_models.py:478 apps/order/abstract_models.py:947
 #: apps/order/abstract_models.py:1014
@@ -4740,7 +4798,9 @@ msgid "Upper Limit"
 msgstr "Giới hạn trên"
 
 #: apps/shipping/abstract_models.py:199
-msgid "Enter upper limit of this weight band in kg. The lower limit will be determined by the other weight bands."
+msgid ""
+"Enter upper limit of this weight band in kg. The lower limit will be "
+"determined by the other weight bands."
 msgstr "Nhập giới hạn trên của dải này trọng lượng tính bằng kg. Giới hạn thấp hơn sẽ được quyết định bởi dải cân khác."
 
 #: apps/shipping/abstract_models.py:202
@@ -4807,7 +4867,8 @@ msgid "VoucherSets"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:122
-msgid "This will be shown in the checkout and basket once the voucher is entered"
+msgid ""
+"This will be shown in the checkout and basket once the voucher is entered"
 msgstr "Điều này sẽ được hiển thị trong thanh toán và giỏ hàng một lần phiếu giảm giá được nhập"
 
 #: apps/voucher/abstract_models.py:126
@@ -4868,10 +4929,8 @@ msgid "You have already used this voucher in a previous order"
 msgstr "Bạn đã sử dụng phiếu giảm giá này trong một đơn hàng trước đó"
 
 #: apps/voucher/abstract_models.py:232
-#, fuzzy
-#| msgid "This voucher is only available to signed in users"
 msgid "This voucher is not available for this basket"
-msgstr "Phiếu giảm giá này chỉ dành cho người dùng đã đăng nhập"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:301
 msgid "Voucher Application"
@@ -4910,7 +4969,9 @@ msgid "Private - Only the owner can see the wish list"
 msgstr "Riêng tư - Chỉ chủ sử hữu có thể nhìn thấy danh sách mong muốn"
 
 #: apps/wishlists/abstract_models.py:36
-msgid "Shared - Only the owner and people with access to the obfuscated link can see the wish list"
+msgid ""
+"Shared - Only the owner and people with access to the obfuscated link can "
+"see the wish list"
 msgstr "Chia sẻ - Chỉ người chủ sở hữu và những người có quyền truy cập vào các liên kết phức tạp có thể nhìn thấy danh sách mong muốn"
 
 #: apps/wishlists/abstract_models.py:38
@@ -5121,9 +5182,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> đã được thêm vào giỏ hàng của bạn."
+msgstr "\n<strong>%(title)s</strong> đã được thêm vào giỏ hàng của bạn."
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5132,29 +5191,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(quantity)s</strong> sao chép từ <strong>%(title)s</strong>\n"
-"\n"
-"đã thêm vào giỏ hàng của bạn."
+msgstr "\n<strong>%(quantity)s</strong> sao chép từ <strong>%(title)s</strong>\n\nđã thêm vào giỏ hàng của bạn."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong>đã được xóa khỏi giỏ hàng của bạn.\n"
+msgstr "\n<strong>%(title)s</strong>đã được xóa khỏi giỏ hàng của bạn.\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> đã được lưu cho sau này\n"
+msgstr "\n<strong>%(title)s</strong> đã được lưu cho sau này\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5167,9 +5218,7 @@ msgid ""
 "\n"
 "            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
-msgstr ""
-"\n"
-"Tổng số giỏ hàng của bạn hiện tại <strong>%(total)s</strong>"
+msgstr "\nTổng số giỏ hàng của bạn hiện tại <strong>%(total)s</strong>"
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -5187,10 +5236,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Giỏ hàng của bạn không còn đủ điều kiện cho \n"
-" <strong>%(name)s</strong> ưu đãi.\n"
+msgstr "\nGiỏ hàng của bạn không còn đủ điều kiện cho \n <strong>%(name)s</strong> ưu đãi.\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5198,10 +5244,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Giỏ hàng của bạn không còn đủ điều kiện cho \n"
-"<strong>%(name)s</strong> ưu đãi.\n"
+msgstr "\nGiỏ hàng của bạn không còn đủ điều kiện cho \n<strong>%(name)s</strong> ưu đãi.\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5217,9 +5260,7 @@ msgid ""
 "\n"
 "                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div class=\"warning\">%(message)s để đủ điều kiện cho <a href=\"%(url)s\">%(offer_name)s</a> ưu đãi đặc biệt</div>"
+msgstr "\n<div class=\"warning\">%(message)s để đủ điều kiện cho <a href=\"%(url)s\">%(offer_name)s</a> ưu đãi đặc biệt</div>"
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5495,9 +5536,7 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> kết quả - hiển thị  <strong>%(start)s</strong> tới <strong>%(end)s</strong>."
+msgstr[0] "\n<strong>%(num_results)s</strong> kết quả - hiển thị  <strong>%(start)s</strong> tới <strong>%(end)s</strong>."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5509,9 +5548,7 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-"\n"
-"<strong>%(num_results)s</strong> kết quả."
+msgstr[0] "\n<strong>%(num_results)s</strong> kết quả."
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5533,10 +5570,8 @@ msgid "Edit this product"
 msgstr "Sửa sản phẩm này"
 
 #: templates/oscar/catalogue/detail.html:88
-#, fuzzy
-#| msgid "Variants"
 msgid "Variants:"
-msgstr "Loại khác "
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:105
 msgid "Product Description"
@@ -5579,9 +5614,7 @@ msgid ""
 "This product does not have any reviews yet -\n"
 "                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"Sản phẩm này chưa có đánh giá nào - \n"
-"<a href=\"%(add_review_url)s#addreview\"> hãy là người đầu tiên</a>."
+msgstr "Sản phẩm này chưa có đánh giá nào - \n<a href=\"%(add_review_url)s#addreview\"> hãy là người đầu tiên</a>."
 
 #: templates/oscar/catalogue/detail.html:176
 msgid "This product does not have any reviews yet"
@@ -5637,9 +5670,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
-"\n"
-"Thêm  '%(name)s' vào danh sách yêu thích"
+msgstr "\nThêm  '%(name)s' vào danh sách yêu thích"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -5651,9 +5682,7 @@ msgid ""
 "\n"
 "                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\"> Sản phẩm <a href=\"%(url)s\">'%(name)s'</a> trong danh sách yêu thích. </span>"
+msgstr "\n<span class=\"pull-left\"> Sản phẩm <a href=\"%(url)s\">'%(name)s'</a> trong danh sách yêu thích. </span>"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -5671,9 +5700,7 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"Đánh giá bởi bạn vào ngày %(review_date)s"
+msgstr "\nĐánh giá bởi bạn vào ngày %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
@@ -5681,9 +5708,7 @@ msgid ""
 "\n"
 "                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"Được đánh giá bởi <strong>%(name)s</strong> vào ngày %(review_date)s"
+msgstr "\nĐược đánh giá bởi <strong>%(name)s</strong> vào ngày %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -5717,9 +5742,7 @@ msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(num_up_votes)s</strong> của %(num_votes)s khách hàng tìm kiếm hữu ích"
+msgstr[0] "\n<strong>%(num_up_votes)s</strong> của %(num_votes)s khách hàng tìm kiếm hữu ích"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5739,9 +5762,7 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
-"\n"
-"%(num_reviews)s đánh giá của khách hàng"
+msgstr[0] "\n%(num_reviews)s đánh giá của khách hàng"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:85
@@ -5885,7 +5906,9 @@ msgid "Enter payment details"
 msgstr "Nhập chi tiết thanh toán"
 
 #: templates/oscar/checkout/payment_details.html:21
-msgid "This page needs implementing within your project.  You may want to use one of Oscar's payment gateway libraries:"
+msgid ""
+"This page needs implementing within your project.  You may want to use one "
+"of Oscar's payment gateway libraries:"
 msgstr "Trang này cần thực hiện trong dự án của bạn. Bạn có thể muốn sử dụng một trong các thư viện cổng thanh toán của Oscar:"
 
 #: templates/oscar/checkout/preview.html:5
@@ -5974,10 +5997,7 @@ msgid ""
 "                                This includes a discount of <strong>%(amount)s</strong> as\n"
 "                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
-msgstr ""
-"\n"
-"Điều này bao gồm giảm giá của <strong>%(amount)s</strong> như \n"
-"giỏ hàng của bạn đủ điều kiện cho <strong>%(name)s</strong> ưu đãi"
+msgstr "\nĐiều này bao gồm giảm giá của <strong>%(amount)s</strong> như \ngiỏ hàng của bạn đủ điều kiện cho <strong>%(name)s</strong> ưu đãi"
 
 #: templates/oscar/checkout/shipping_methods.html:58
 msgid "Select option"
@@ -5990,9 +6010,7 @@ msgid ""
 "\n"
 "        Order %(number)s: confirmation\n"
 "    "
-msgstr ""
-"\n"
-"Đơn hàng %(number)s: xác nhận"
+msgstr "\nĐơn hàng %(number)s: xác nhận"
 
 #: templates/oscar/checkout/thank_you.html:25
 #, python-format
@@ -6001,13 +6019,12 @@ msgid ""
 "        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
-msgstr ""
-"\n"
-"Đơn hàng của bạn đã được đặt và một email xác nhận đã được gửi - số thứ tự của bạn là\n"
-"<strong>%(number)s</strong>."
+msgstr "\nĐơn hàng của bạn đã được đặt và một email xác nhận đã được gửi - số thứ tự của bạn là\n<strong>%(number)s</strong>."
 
 #: templates/oscar/checkout/thank_you.html:29
-msgid "Please make a note of this reference or print this page and quote it in any communication with us regarding your order."
+msgid ""
+"Please make a note of this reference or print this page and quote it in any "
+"communication with us regarding your order."
 msgstr "Vui lòng ghi chú lại tài liệu này hoặc in trang này và trích dẫn chúng trong bất cứ cuộc trao đổi với chúng tôi liên quan dến đơn hàng của bạn."
 
 #: templates/oscar/checkout/thank_you.html:62
@@ -6020,9 +6037,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"Phân bổ %(amount)s từ kiểu %(type)s (reference: %(reference)s)"
+msgstr "\nPhân bổ %(amount)s từ kiểu %(type)s (reference: %(reference)s)"
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6030,9 +6045,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"Phân bổ của %(amount)s từ loại %(type)s"
+msgstr "\nPhân bổ của %(amount)s từ loại %(type)s"
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
@@ -6043,18 +6056,12 @@ msgid "Items purchased"
 msgstr "các mặt hàng mua"
 
 #: templates/oscar/checkout/thank_you.html:143
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                            Estimated dispatch: <strong>%(date)s</strong>\n"
-#| "                        "
+#, python-format
 msgid ""
 "\n"
 "                                Estimated dispatch: <strong>%(date)s</strong>\n"
 "                            "
 msgstr ""
-"\n"
-"Ước tính <strong>%(date)s</strong> gửi hàng"
 
 #: templates/oscar/checkout/thank_you.html:182
 msgid "Tracking your order"
@@ -6198,9 +6205,7 @@ msgstr "Thoát"
 msgid ""
 "\n"
 "<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a> quay lại hàng tồn kho\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a> quay lại hàng tồn kho\n"
 
 #: templates/oscar/customer/alerts/message_subject.html:2
 #, python-format
@@ -6283,22 +6288,29 @@ msgstr "Nhóm %(name)s"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
 #, python-format
-msgid "You're receiving this email because your email address has been changed to <strong>%(email)s</strong>."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"<strong>%(email)s</strong>."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
-msgid "If it wasn't you who changed it, please reset your password immediately and correct your email address:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately and "
+"correct your email address:"
 msgstr "Nếu bạn không phải là người thay đổi nó, vui lòng thiết lập lại mật khẩu của bạn ngay lập tức và đúng địa chỉ email của bạn:"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr "nếu bạn là người thay đổi địa chỉ email, bạn có thể bỏ qua email này."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
 #, python-format
-msgid "You're receiving this email because your email address has been changed to %(email)s."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"%(email)s."
 msgstr "Bạn nhận được email này vì địa chỉ email của bạn đã được thay đổi thành %(email)s."
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
@@ -6347,7 +6359,9 @@ msgstr "Địa chỉ giao hàng:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
-msgid "You can view the status of this order by clicking <a href=\"%(status_url)s\" title=\"order status\">here</a>"
+msgid ""
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
 msgstr "Bạn có thể xem trạng thái của đơn hàng này bằng cách nhấn vào <a href=\"%(status_url)s\" title=\"order status\">đây</a>"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
@@ -6357,11 +6371,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"Xin chào, \n"
-"\n"
-"Chúng tôi xin được xác nhận đơn hàng của bạn %(order_number)s đã được nhận và\n"
-"sẽ xử lý ngay."
+msgstr "Xin chào, \n\nChúng tôi xin được xác nhận đơn hàng của bạn %(order_number)s đã được nhận và\nsẽ xử lý ngay."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6376,9 +6386,7 @@ msgstr "Giá: "
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"Bạn có thể xem trạng thái của đơn hàng này bên dưới URL: \n"
-"%(status_url)s"
+msgstr "Bạn có thể xem trạng thái của đơn hàng này bên dưới URL: \n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6391,12 +6399,15 @@ msgstr "Xác nhận của đơn hàng %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
 #, python-format
-msgid "You're receiving this e-mail because your password has been changed at %(name)s."
+msgid ""
+"You're receiving this e-mail because your password has been changed at "
+"%(name)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
-msgid "If it wasn't you who changed it, please reset your password immediately:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately:"
 msgstr "Nếu không phải là bạn thay đổi nó, vui lòng thiết lập lại mật khẩu của bạn ngay lập tức:"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:25
@@ -6409,9 +6420,7 @@ msgstr "Nếu không thì bạn có thể bỏ qua email này."
 msgid ""
 "\n"
 "You're receiving this email because your password has been changed at %(name)s.\n"
-msgstr ""
-"\n"
-"Bạn nhận được email này bởi vì mật khẩu của bạn đã được thay đổi tại  %(name)s.\n"
+msgstr "\nBạn nhận được email này bởi vì mật khẩu của bạn đã được thay đổi tại  %(name)s.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6421,7 +6430,9 @@ msgstr "Mật khẩu của bạn đã được thay đổi tại %(site_name)s."
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:7
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
-msgid "You're receiving this e-mail because you requested a password reset for your user account at %(name)s."
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr "Bạn nhận được e-mail này bởi vì bạn yêu cầu một thiết lập mật khẩu cho  tài khoản của bạn tại %(name)s."
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
@@ -6476,9 +6487,7 @@ msgstr ""
 msgid ""
 "\n"
 "Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
-msgstr ""
-"\n"
-"Ghi nhớ rằng việc số tiền ghi trong tồn kho bị hạn chế. Hãy nhanh chóng hoặc một người nào đó có thể đạt được điều đó đầu tiên.\n"
+msgstr "\nGhi nhớ rằng việc số tiền ghi trong tồn kho bị hạn chế. Hãy nhanh chóng hoặc một người nào đó có thể đạt được điều đó đầu tiên.\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
 #, python-format
@@ -6489,13 +6498,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"Với email này chúng tôi vô hiệu hóa tự động thông báo của bạn và bạn sẽ không\n"
-"nhận bất cứ email nào liên quan tới sản phẩm này.\n"
-"\n"
-"Cảm ơn vì sự quan tâm của bạn,\n"
-"Nhóm  %(site_name)s \n"
+msgstr "\nVới email này chúng tôi vô hiệu hóa tự động thông báo của bạn và bạn sẽ không\nnhận bất cứ email nào liên quan tới sản phẩm này.\n\nCảm ơn vì sự quan tâm của bạn,\nNhóm  %(site_name)s \n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_body.txt:1
 #, python-format
@@ -6624,18 +6627,14 @@ msgstr "Ngày gửi đi"
 
 #: templates/oscar/customer/order/order_detail.html:66
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-ordering..."
 msgctxt "Buy again"
 msgid "Re-ordering..."
-msgstr "Đặt hàng lại..."
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:66
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Buy again"
 msgid "Re-order"
-msgstr "Đặt hàng lại"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:69
 #: templates/oscar/customer/wishlists/wishlists_detail.html:57
@@ -6668,11 +6667,9 @@ msgid "Shipping total"
 msgstr "Tổng giao hàng"
 
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-order all items"
 msgctxt "Buy again"
 msgid "Re-order all items"
-msgstr "đặt hàng lại tất cả mặt hàng"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:167
 msgid "Contact Number"
@@ -6744,11 +6741,7 @@ msgid ""
 "                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"Điều này sẽ xóa tất cả các thông tin cá nhân  \n"
-"nhân \n"
-"của bạn. "
+msgstr "\nĐiều này sẽ xóa tất cả các thông tin cá nhân  \nnhân \ncủa bạn. "
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -6768,9 +6761,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"Bạn có chắc muốn xóa %(name)s?"
+msgstr "\nBạn có chắc muốn xóa %(name)s?"
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:18
 msgid "Remove product"
@@ -6782,9 +6773,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
-"\n"
-"Bạn có chăcs bạn muốn xóa %(product_name)s ra khỏi danh sách yêu thích %(wishlist_name)s?"
+msgstr "\nBạn có chăcs bạn muốn xóa %(product_name)s ra khỏi danh sách yêu thích %(wishlist_name)s?"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -6801,9 +6790,7 @@ msgid ""
 "\n"
 "                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
-"\n"
-"Di chuyển  '%(name)s' đến danh sách yêu thích"
+msgstr "\nDi chuyển  '%(name)s' đến danh sách yêu thích"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:103
 msgid "Update quantities"
@@ -6827,9 +6814,7 @@ msgid ""
 "\n"
 "                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
-"\n"
-"Sau khi danh sách yêu thích của bạn được tạo, <strong>%(title)s</strong> sẽ được thêm vào."
+msgstr "\nSau khi danh sách yêu thích của bạn được tạo, <strong>%(title)s</strong> sẽ được thêm vào."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -6860,7 +6845,9 @@ msgid "Delete Attribute Option Group?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
-msgid "Please make sure all Product Attributes are assigned to another Attribute Option Group before deletion."
+msgid ""
+"Please make sure all Product Attributes are assigned to another Attribute "
+"Option Group before deletion."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
@@ -6869,7 +6856,8 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
@@ -6919,9 +6907,7 @@ msgid ""
 "\n"
 "            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
-msgstr ""
-"\n"
-"<p>Xóa danh mục <strong>%(name)s</strong> - bạn có chắc không?</p>"
+msgstr "\n<p>Xóa danh mục <strong>%(name)s</strong> - bạn có chắc không?</p>"
 
 #: templates/oscar/dashboard/catalogue/category_list.html:23
 msgid "Create new category"
@@ -6963,9 +6949,7 @@ msgid ""
 "\n"
 "                    Created product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Đã tạo biến thể sản phẩm  '%(name)s'."
+msgstr "\nĐã tạo biến thể sản phẩm  '%(name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
 #, python-format
@@ -6973,9 +6957,7 @@ msgid ""
 "\n"
 "                    Created variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Đã tạo biến thể của '%(parent_name)s'."
+msgstr "\nĐã tạo biến thể của '%(parent_name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
 #, python-format
@@ -6983,9 +6965,7 @@ msgid ""
 "\n"
 "                    Updated product variant '%(name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Đã cập nhật biến thể sản phẩm  '%(name)s'."
+msgstr "\nĐã cập nhật biến thể sản phẩm  '%(name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
 #, python-format
@@ -6993,9 +6973,7 @@ msgid ""
 "\n"
 "                    Updated a variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
-"\n"
-"Đã cập nhật biến thể của '%(parent_name)s'."
+msgstr "\nĐã cập nhật biến thể của '%(parent_name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
 #, python-format
@@ -7003,9 +6981,7 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"Đã tạo sản phẩm '%(name)s'."
+msgstr "\nĐã tạo sản phẩm '%(name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -7013,9 +6989,7 @@ msgid ""
 "\n"
 "                Updated product '%(name)s'.\n"
 "            "
-msgstr ""
-"\n"
-"Đã cập nhật sản phẩm '%(name)s'."
+msgstr "\nĐã cập nhật sản phẩm '%(name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
 #: templates/oscar/dashboard/pages/messages/saved.html:10
@@ -7028,65 +7002,51 @@ msgid "View it on the site"
 msgstr "Xem trên trang web"
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:5
-#, fuzzy
-#| msgid "Caption"
 msgid "Create Option"
-msgstr "Chú thích "
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:31
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option?"
-msgstr "Chọn tùy chọn"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:42
-#, fuzzy
-#| msgid "Please make sure all products are assigned to another type before deletion."
-msgid "Please make sure option is not assigned to Products or Product Classes before deletion."
-msgstr "Vui lòng chắc chắn rằng tất cả sản phẩm đã gán cho một loại khác trước khi xóa bỏ."
+msgid ""
+"Please make sure option is not assigned to Products or Product Classes "
+"before deletion."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:45
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option"
-msgstr "Chọn tùy chọn"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:56
-#, fuzzy, python-format
-#| msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
+#, python-format
 msgid "Delete Option <strong>%(name)s</strong> - are you sure?"
-msgstr "Xóa loại sản phẩm <strong>%(name)s</strong> - bạn có chắc không?"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_form.html:50
-#, fuzzy
-#| msgid "Shipping details"
 msgid "Option details"
-msgstr "Chi tiết giao hàng"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:20
-#, fuzzy
-#| msgid "Create new partner"
 msgid "Create new Option"
-msgstr "Tạo đối tác mới "
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:34
-#, fuzzy
-#| msgid "No partners found."
 msgid "No Option found."
-msgstr "Không tìm thấy đối tác nào."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_row_actions.html:11
-#, fuzzy
-#| msgid "Option"
 msgid "Edit Option"
-msgstr "Lựa chọn "
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:14
 msgid "Delete product type?"
 msgstr "Xóa loại sản phẩm?"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
-msgid "Please make sure all products are assigned to another type before deletion."
+msgid ""
+"Please make sure all products are assigned to another type before deletion."
 msgstr "Vui lòng chắc chắn rằng tất cả sản phẩm đã gán cho một loại khác trước khi xóa bỏ."
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
@@ -7137,9 +7097,7 @@ msgid ""
 "\n"
 "                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-"Xóa biến thể sản phẩm <strong>%(title)s</strong> - bạn có chắc không?"
+msgstr "\nXóa biến thể sản phẩm <strong>%(title)s</strong> - bạn có chắc không?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:41
 #, python-format
@@ -7147,9 +7105,7 @@ msgid ""
 "\n"
 "                    Delete product <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
-"\n"
-"Xóa sản phẩm <strong>%(title)s</strong> - bạn có chắc không?"
+msgstr "\nXóa sản phẩm <strong>%(title)s</strong> - bạn có chắc không?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:49
 msgid "This will also delete the following child products:"
@@ -7187,10 +7143,7 @@ msgid ""
 "                            You are currently editing a product variant of\n"
 "                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
 "                        "
-msgstr ""
-"\n"
-"Bạn hiện đang chỉnh sửa một biến thể sản phẩm của \n"
-"<a href=\"%(parent_url)s\">%(title)s</a>."
+msgstr "\nBạn hiện đang chỉnh sửa một biến thể sản phẩm của \n<a href=\"%(parent_url)s\">%(title)s</a>."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:70
 #: templates/oscar/dashboard/catalogue/product_update.html:99
@@ -7220,7 +7173,9 @@ msgid "Upload, change or remove images"
 msgstr "Cập nhật, thay đổi hoặc xóa hình ảnh"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:176
-msgid "Drag images to re-order them. Space for additional images will appear when images are added."
+msgid ""
+"Drag images to re-order them. Space for additional images will appear when "
+"images are added."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:193
@@ -7453,10 +7408,8 @@ msgid "<em>Closed</em> stock alerts"
 msgstr "<em> Đã đóng </em> thông báo tồn kho"
 
 #: templates/oscar/dashboard/index.html:163
-#, fuzzy
-#| msgid "Offer for voucher '%s'"
 msgid "Offers, vouchers"
-msgstr "Đưa cho phiếu giảm giá '%s'"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:165
 msgid "Active <em>Site</em> Offers"
@@ -7479,7 +7432,9 @@ msgid "Log out"
 msgstr "Đăng xuất"
 
 #: templates/oscar/dashboard/login.html:28
-msgid "Please enter a correct username and password. Note that both fields may be case-sensitive."
+msgid ""
+"Please enter a correct username and password. Note that both fields may be "
+"case-sensitive."
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
@@ -7492,18 +7447,12 @@ msgstr "Xây dựng một khuyến khích mới"
 
 #: templates/oscar/dashboard/offers/benefit_form.html:19
 #: templates/oscar/dashboard/offers/condition_form.html:23
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
-#| "        "
+#, python-format
 msgid ""
 "\n"
 "        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\" target=\"_blank\">range dashboard</a>.\n"
 "        "
 msgstr ""
-"\n"
-"Phạm vi có thể được tạo và sửa từ trong <a href=\"%(range_list_url)s\"> phạm vi bảng điều khiển."
 
 #: templates/oscar/dashboard/offers/benefit_form.html:28
 #: templates/oscar/dashboard/offers/condition_form.html:31
@@ -7541,9 +7490,7 @@ msgid ""
 "\n"
 "        %(name)s | Offers\n"
 "    "
-msgstr ""
-"\n"
-"%(name)s | Ưu đãi"
+msgstr "\n%(name)s | Ưu đãi"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
@@ -7672,9 +7619,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"Đơn hàng %(number)s - Dòng #%(id)s"
+msgstr "\nĐơn hàng %(number)s - Dòng #%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -7857,30 +7802,20 @@ msgid "This order can't have its status changed."
 msgstr "Đơn hàng này không thể có tình trạng thay đổi của nó."
 
 #: templates/oscar/dashboard/orders/order_detail.html:335
-#, fuzzy
-#| msgid "Save changes"
 msgid "Status Changes"
-msgstr "Lưu thay đổi"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:342
-#, fuzzy
-#| msgctxt "start date"
-#| msgid "From"
 msgid "From"
-msgstr "Từ "
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:343
-#, fuzzy
-#| msgctxt "end date"
-#| msgid "To"
 msgid "To"
-msgstr "Đến "
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:359
-#, fuzzy
-#| msgid "Save changes"
 msgid "No status changes."
-msgstr "Lưu thay đổi"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:391
 #, python-format
@@ -7888,9 +7823,7 @@ msgid ""
 "\n"
 "                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
-"\n"
-"%(title)s (quantity %(event_qty)s/%(total_qty)s)"
+msgstr "\n%(title)s (quantity %(event_qty)s/%(total_qty)s)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:405
 msgid "No shipping events."
@@ -8076,9 +8009,7 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
-"\n"
-"Trang <strong>%(title)s</strong> đã được lưu!"
+msgstr "\nTrang <strong>%(title)s</strong> đã được lưu!"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
@@ -8104,9 +8035,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"Trang %(page_num)s của %(total_pages)s"
+msgstr "\nTrang %(page_num)s của %(total_pages)s"
 
 #: templates/oscar/dashboard/partials/pagination.html:16
 #: templates/oscar/partials/pagination.html:16
@@ -8116,20 +8045,16 @@ msgstr "Kết tiếp"
 
 #: templates/oscar/dashboard/partials/product_images.html:13
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Change the sequence order"
 msgid "Re-order"
-msgstr "Đặt hàng lại"
+msgstr ""
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"Người dùng  %(user_name)s vừa ngắt kết nối với %(partner_name)s.\n"
+msgstr "\nNgười dùng  %(user_name)s vừa ngắt kết nối với %(partner_name)s.\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8207,7 +8132,9 @@ msgid "Update details"
 msgstr "Cập nhật chi tiết"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
-msgid "A partial email address can be entered (eg '@example.com') to match multiple addresses."
+msgid ""
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
 msgstr "Một phần địa chỉ email có thể nhập vào (ví dụ: '@example.com') để phù hợp với nhiều địa chỉ."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
@@ -8216,9 +8143,7 @@ msgid ""
 "\n"
 "                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"Người dùng đã liên kết tới %(name)s."
+msgstr "\nNgười dùng đã liên kết tới %(name)s."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:71
 msgid "Linking..."
@@ -8237,9 +8162,7 @@ msgstr "Không tìm thấy người dùng."
 msgid ""
 "\n"
 "    <p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr ""
-"\n"
-"<p>Tập tin <strong>%(filename)s</strong> được xử lý.</p>\n"
+msgstr "\n<p>Tập tin <strong>%(filename)s</strong> được xử lý.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:9
 #, python-format
@@ -8251,9 +8174,7 @@ msgid_plural ""
 "\n"
 "                <strong>%(n)s</strong> products added\n"
 "            "
-msgstr[0] ""
-"\n"
-"<strong>%(n)s</strong> sản phẩm được thêm vào"
+msgstr[0] "\n<strong>%(n)s</strong> sản phẩm được thêm vào"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8265,9 +8186,7 @@ msgid_plural ""
 "\n"
 "                There were <strong>%(n)s</strong> duplicate products in the file\n"
 "            "
-msgstr[0] ""
-"\n"
-"Đây là  <strong>%(n)s</strong> trùng sản phẩm trong thư mục"
+msgstr[0] "\nĐây là  <strong>%(n)s</strong> trùng sản phẩm trong thư mục"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8279,9 +8198,7 @@ msgid_plural ""
 "\n"
 "                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
 "            "
-msgstr[0] ""
-"\n"
-"Có <strong>%(n)s</strong>sản phẩm trong thư mục không tìm thấy trong danh mục sản phẩm ."
+msgstr[0] "\nCó <strong>%(n)s</strong>sản phẩm trong thư mục không tìm thấy trong danh mục sản phẩm ."
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -8296,9 +8213,7 @@ msgstr "Quay lại phạm vi trang chủ"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p> Phạm vi <strong>%(name)s</strong> đã được lưu.</p>\n"
+msgstr "\n<p> Phạm vi <strong>%(name)s</strong> đã được lưu.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -8344,7 +8259,9 @@ msgid "products"
 msgstr "những sản phẩm"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:32
-msgid "This range contains all products. To add products manually, please unselect the 'Includes All Products' option on the edit range page."
+msgid ""
+"This range contains all products. To add products manually, please unselect "
+"the 'Includes All Products' option on the edit range page."
 msgstr "Dòng sản phẩm này có chứa tất cả các sản phẩm. Để thêm các sản phẩm thủ công, hãy bỏ chọn 'Bao gồm tất cả các sản phẩm' tùy chọn trên trang chỉnh sửa nhiều."
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
@@ -8488,18 +8405,14 @@ msgstr "Kiểm tra thông tin"
 msgid ""
 "\n"
 "    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
-msgstr ""
-"\n"
-"<p>Một khối lượng nhóm đã được thêm vào <strong>%(name)s</strong> phương thức giao hàng.</p>\n"
+msgstr "\n<p>Một khối lượng nhóm đã được thêm vào <strong>%(name)s</strong> phương thức giao hàng.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
-msgstr ""
-"\n"
-"<p>Trọng lượng nhóm bị xóa từ <strong>%(name)s</strong> phương thức giao hàng\n"
+msgstr "\n<p>Trọng lượng nhóm bị xóa từ <strong>%(name)s</strong> phương thức giao hàng\n"
 
 #: templates/oscar/dashboard/shipping/messages/band_updated.html:3
 msgid "Weight band updated"
@@ -8510,27 +8423,21 @@ msgstr "Trọng lượng nhóm đã cập nhật"
 msgid ""
 "\n"
 "<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
-msgstr ""
-"\n"
-"<p> Phương thức vận chuyển <strong>%(name)s</strong> đã được tạo.</p>\n"
+msgstr "\n<p> Phương thức vận chuyển <strong>%(name)s</strong> đã được tạo.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
-msgstr ""
-"\n"
-"<p> Phương thức vận chuyển <strong>%(name)s</strong> đã được xóa.</p>\n"
+msgstr "\n<p> Phương thức vận chuyển <strong>%(name)s</strong> đã được xóa.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_updated.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
-msgstr ""
-"\n"
-"<p> Phương thức vận chuyển <strong>%(name)s</strong> đã được cập nhật.</p>\n"
+msgstr "\n<p> Phương thức vận chuyển <strong>%(name)s</strong> đã được cập nhật.</p>\n"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:6
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:22
@@ -8960,9 +8867,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"Tổng: %(total)s"
+msgstr "\nTổng: %(total)s"
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -9001,7 +8906,9 @@ msgid "Enter a new password"
 msgstr "Nhập mật khẩu mới"
 
 #: templates/oscar/registration/password_reset_confirm.html:22
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr "Vui lòng nhập mật khẩu mới của bạn hai lần vì vậy chúng tôi có thể xác minh bạn đã nhập vào chính xác."
 
 #: templates/oscar/registration/password_reset_confirm.html:27
@@ -9013,7 +8920,9 @@ msgid "Password reset unsuccessful"
 msgstr "khôi phục mật khẩu không thành công"
 
 #: templates/oscar/registration/password_reset_confirm.html:32
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr "Các liên kết đặt lại mật khẩu là không hợp lệ, có thể nó đã được sử dụng. Vui lòng yêu cầu một thiết lập lại mật khẩu mới."
 
 #: templates/oscar/registration/password_reset_done.html:4
@@ -9030,9 +8939,7 @@ msgid ""
 "\n"
 "        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
-"\n"
-"Chúng tôi đã gửi qua email hướng dẫn đặt lại mật khẩu cho bạn. Bạn nên kiểm tra nó ngay."
+msgstr "\nChúng tôi đã gửi qua email hướng dẫn đặt lại mật khẩu cho bạn. Bạn nên kiểm tra nó ngay."
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
@@ -9040,13 +8947,12 @@ msgid ""
 "        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
-"\n"
-"Nếu bạn không nhận được một email, hãy chắc chắn rằng bạn đã nhập đúng địa chỉ bạn đã đăng ký, và kiểm tra \n"
-"thư mục rác của bạn "
+msgstr "\nNếu bạn không nhận được một email, hãy chắc chắn rằng bạn đã nhập đúng địa chỉ bạn đã đăng ký, và kiểm tra \nthư mục rác của bạn "
 
 #: templates/oscar/registration/password_reset_form.html:21
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr "Quên mật khẩu của bạn? Nhập địa chỉ e-mail của bạn dưới đây, và chúng tôi sẽ gửi e-mail hướng dẫn cách thiết lập một mật khẩu mới."
 
 #: templates/oscar/registration/password_reset_form.html:24
@@ -9063,9 +8969,7 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"Sản phẩm phù hợp \"%(q)s\""
+msgstr "\nSản phẩm phù hợp \"%(q)s\""
 
 #: templates/oscar/search/results.html:52
 #, python-format
@@ -9073,9 +8977,7 @@ msgid ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
-msgstr ""
-"\n"
-"Tìm thấy <strong>%(num_results)s</strong> kết quả, hiển thị <strong>%(start)s</strong> đến <strong>%(end)s</strong>."
+msgstr "\nTìm thấy <strong>%(num_results)s</strong> kết quả, hiển thị <strong>%(start)s</strong> đến <strong>%(end)s</strong>."
 
 #: templates/oscar/search/results.html:56
 #, python-format
@@ -9099,9 +9001,7 @@ msgid ""
 "\n"
 "                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"Ý của bạn là <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?"
+msgstr "\nÝ của bạn là <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?"
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9111,293 +9011,3 @@ msgstr "Quay lại kết quả tìm kiếm"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Bạn cần chọn vài %ss"
-
-#~ msgid "Must be str or unicode"
-#~ msgstr "Phải là chữ hoặc số "
-
-#~ msgid "Promotions dashboard"
-#~ msgstr "Bảng điều khiển khuyến mãi "
-
-#~ msgid "Promotion type"
-#~ msgstr "Kiểu khuyến mãi "
-
-#~ msgid "Position"
-#~ msgstr "Vị trí"
-
-#~ msgid "Where in the page this content block will appear"
-#~ msgstr "Nơi trong trang khối nội dung này sẽ xuất hiện"
-
-#~ msgid "Content blocks can only be linked to internal URLs"
-#~ msgstr "Khối nội dung chỉ có thể được liên kết với địa chỉ URL"
-
-#~ msgid "Content block removed successfully"
-#~ msgstr "Khối nội dung đã được xóa bỏ "
-
-#~ msgid "Content block created successfully"
-#~ msgstr "Khối nội dung đã được tạo thành công "
-
-#~ msgid "Create a new %s content block"
-#~ msgstr "Tạo mới khối nội dung '%s'"
-
-#~ msgid "Product list content block created"
-#~ msgstr "Khối danh sách nội dung sản phẩm được tạo ra"
-
-#~ msgid "Update content block"
-#~ msgstr "Cập nhật khối nội dung "
-
-#~ msgid "Content block updated successfully"
-#~ msgstr "Khối nội dung được cập nhật thành công "
-
-#~ msgid "Content block '%(block)s' added to page '%(page)s'"
-#~ msgstr "Khối nội dung '%(block)s' đã được thêm vào trang  '%(page)s'"
-
-#~ msgid "No link found to delete"
-#~ msgstr "Không tìm thấy đường dẫn để xóa "
-
-#~ msgid "Content block removed from page '%s'"
-#~ msgstr "Khối nội dung đã được xóa khỏi trang '%s'"
-
-#~ msgid "Product list promotion updated"
-#~ msgstr "Danh sách sản phẩm khuyến mãi đã được cập nhật "
-
-#~ msgid "Content block deleted successfully"
-#~ msgstr "Khối nội dung đã được xóa thành công "
-
-#~ msgid "Percentage off of products in range"
-#~ msgstr "Tỷ lệ giảm giá của các sản phẩm trong phạm vi"
-
-#~ msgid "Fixed amount off of products in range"
-#~ msgstr "Cố định số tiền giảm giá của các sản phẩm trong phạm vi"
-
-#~ msgid "Promotions"
-#~ msgstr "Những khuyến mãi"
-
-#~ msgid "Display Order"
-#~ msgstr "Hiển thị thứ tự"
-
-#~ msgid "Clicks"
-#~ msgstr "Nhấp chuột"
-
-#~ msgid "Linked Promotion"
-#~ msgstr "Liên kết khuyến mãi"
-
-#~ msgid "Linked Promotions"
-#~ msgstr "Những liên kết khuyến mãi"
-
-#~ msgid "Page URL"
-#~ msgstr "Trang URL"
-
-#~ msgid "Page Promotion"
-#~ msgstr "Trang khuyến mãi"
-
-#~ msgid "Page Promotions"
-#~ msgstr "Những trang khuyến mãi"
-
-#~ msgid "Keyword Promotion"
-#~ msgstr "Từ khóa khuyến mãi"
-
-#~ msgid "Keyword Promotions"
-#~ msgstr "Những từ khóa khuyến mãi"
-
-#~ msgid "Keywords"
-#~ msgstr "Từ khóa"
-
-#~ msgid "Promotion"
-#~ msgstr "Khuyến mãi"
-
-#~ msgid "Display type"
-#~ msgstr "Hiển thị loại"
-
-#~ msgid "This can be used to have different types of HTML blocks (eg different widths)"
-#~ msgstr "Điều này có thể được sử dụng để có các loại khác nhau của các khối HTML (ví dụ như độ rộng khác nhau)"
-
-#~ msgid "Raw HTML"
-#~ msgstr "Raw HTML"
-
-#~ msgid "Link URL"
-#~ msgstr "Liên kết URL"
-
-#~ msgid "This is where this promotion links to"
-#~ msgstr "Đây là nơi khuyến mãi này liên kết đến"
-
-#~ msgid "Choose the Image content blocks that this block will use. (You may need to create some first)."
-#~ msgstr "Chọn các khối Nội dung hình ảnh mà khối này sẽ sử dụng. (Bạn có thể cần phải tạo ra một số đầu tiên)."
-
-#~ msgid "Multi Image"
-#~ msgstr "Đa hình ảnh"
-
-#~ msgid "Multi Images"
-#~ msgstr "Đa hình ảnh"
-
-#~ msgid "Single product"
-#~ msgstr "Sản phẩm đơn"
-
-#~ msgctxt "Promotion product list title"
-#~ msgid "Title"
-#~ msgstr "Tiêu đề"
-
-#~ msgid "Link text"
-#~ msgstr "Văn bản liên kết"
-
-#~ msgid "Product list"
-#~ msgstr "Danh sách sản phẩm"
-
-#~ msgid "Product lists"
-#~ msgstr "Những danh sách sản phẩm"
-
-#~ msgid "Hand Picked Product List"
-#~ msgstr "Danh sách sản phẩm chọn tay"
-
-#~ msgid "Hand Picked Product Lists"
-#~ msgstr "Những danh sách sản phẩm chọn tay"
-
-#~ msgid "List"
-#~ msgstr "Danh sách"
-
-#~ msgid "Ordered product"
-#~ msgstr "Sản phẩm sắp xếp thự tự"
-
-#~ msgid "Bestselling products"
-#~ msgstr "Những sản phẩm bán chạy nhất"
-
-#~ msgid "Recently added products"
-#~ msgstr "Các sản phẩm vừa thêm vào"
-
-#~ msgid "Number of Products"
-#~ msgstr "Số sản phẩm"
-
-#~ msgid "Automatic product list"
-#~ msgstr "Danh mục sản phẩm ngẫu nhiên"
-
-#~ msgid "Automatic product lists"
-#~ msgstr "Những danh mục sản phẩm ngẫu nhiên"
-
-#~ msgid "Tabbed Block"
-#~ msgstr "Tab khóa"
-
-#~ msgid "Ordered Product List"
-#~ msgstr "Danh mục sản phẩm được sắp xếp"
-
-#~ msgid "Ordered Product Lists"
-#~ msgstr "Những danh mục sản phẩm được sắp xếp"
-
-#~ msgctxt "Tabbed block title"
-#~ msgid "Title"
-#~ msgstr "Tiêu đề"
-
-#~ msgid "Tabbed Blocks"
-#~ msgstr "Tab khóa"
-
-#~ msgid "Content blocks"
-#~ msgstr "Khóa nội dung"
-
-#~ msgid "Content blocks by page"
-#~ msgstr "Khóa nội dung của trang"
-
-#~ msgid "Server error!"
-#~ msgstr "Máy chủ bị lỗi"
-
-#~ msgid "We're sorry but something went terribly wrong and we've been unable to generate the page you requested."
-#~ msgstr "Chúng tôi xin lỗi nhưng có gì đó sai sót và chúng tôi đã không thể tạo ra các trang mà bạn yêu cầu."
-
-#~ msgid "This incident has been logged and will be addressed by an engineer as soon as possible."
-#~ msgstr "Sự cố này đã được ghi lại và sẽ được giải quyết bởi một kỹ sư càng sớm càng tốt."
-
-#~ msgid "Offers, vouchers and promotions"
-#~ msgstr "Ưu đãi, phiếu giảm giá và chương trình khuyến mãi"
-
-#~ msgid "Delete content block '%(name)s'?\""
-#~ msgstr "Xóa khối nội dung '%(name)s'?\""
-
-#~ msgid "Delete content block"
-#~ msgstr "Xóa khối nội dung"
-
-#~ msgid "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are you sure?"
-#~ msgstr "Xóa %(object.type)s khối nội dung <strong>%(object.name)s</strong> - bạn có chắc không?"
-
-#~ msgid "Remove promotion from page?"
-#~ msgstr "Xóa chương trình khuyến mãi từ trang?"
-
-#~ msgid "Remove promotion"
-#~ msgstr "Xóa chương trình khuyến mãi"
-
-#~ msgid "Remove %(object.content_object.type)s content block <strong>%(object.name)s</strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
-#~ msgstr "Xóa  %(object.content_object.type)s khối nội dung <strong>%(object.name)s</strong> từ trang <strong>%(object.page_url)s</strong> - bạn có chắc không?"
-
-#~ msgid "Content block"
-#~ msgstr "Khối nội dung"
-
-#~ msgid "Pages displaying this content blocks"
-#~ msgstr "Các trang hiển thị nội dung khóa này"
-
-#~ msgid "Position on page"
-#~ msgstr "Vị trí trên trang"
-
-#~ msgid "View all blocks on this page"
-#~ msgstr "Xem tất cả các khóa trên trang này"
-
-#~ msgid "Remove from page"
-#~ msgstr "Xóa từ trang"
-
-#~ msgid "This promotion is not displayed anywhere at the moment."
-#~ msgstr "Khuyến mãi này không được hiển thị bất cứ nơi nào tại thời điểm này."
-
-#~ msgid "Add to a page"
-#~ msgstr "Thêm vào một trang"
-
-#~ msgid "Add to page"
-#~ msgstr "Thêm vào trang"
-
-#~ msgid "Content blocks for page %(page_url)s"
-#~ msgstr "Khóa nội dung cho  trang '%(page_url)s'"
-
-#~ msgid "Content blocks on page '%(page_url)s'"
-#~ msgstr "Khóa nội dung trên trang '%(page_url)s'"
-
-#~ msgid "Edit promotions in position '%(name)s'"
-#~ msgstr "Sửa chương trình khuyến mãi tại vị trí '%(name)s'"
-
-#~ msgid "Promotion Name"
-#~ msgstr "Tên chương trình khuyến mãi"
-
-#~ msgid "Change display order"
-#~ msgstr "Thay đổi thứ tự hiển thị"
-
-#~ msgid "No promotions in this position."
-#~ msgstr "Không có chương trình khuyến mãi ở vị trí này."
-
-#~ msgid "Pages with content blocks"
-#~ msgstr "Các trang với các nội dung khóa"
-
-#~ msgid "View by page"
-#~ msgstr "Xem theo trang"
-
-#~ msgid "View all content blocks"
-#~ msgstr "Xem tất cả các khóa nội dung"
-
-#~ msgid "View content blocks by page"
-#~ msgstr "Xem các nội dung khóa của trang"
-
-#~ msgid "Pages with content blocks on them"
-#~ msgstr "Các trang với các nội dung khóa trên chúng"
-
-#~ msgid "Number of content blocks"
-#~ msgstr "Số nội dung khóa"
-
-#~ msgid "No content blocks found."
-#~ msgstr "Không tìm thấy nội dung khóa"
-
-#~ msgid "Create a new content block"
-#~ msgstr "Tạo mới  khối nội dung"
-
-#~ msgid "Creating..."
-#~ msgstr "Đang tạo..."
-
-#~ msgid "Create block"
-#~ msgstr "Tạo khối"
-
-#~ msgid "Number of times used"
-#~ msgstr "Số lần sử dụng"
-
-#~ msgid "See more"
-#~ msgstr "Xem thêm"

@@ -92,7 +92,7 @@ test_migrations: install-migrations-testing-requirements ## Tests migrations
 # Translations Handling
 #######################
 extract_translations: ## Extract strings and create source .po files
-	cd src/oscar; django-admin.py makemessages -a --no-wrap
+	cd src/oscar; django-admin.py makemessages -a
 
 compile_translations: ## Compile translation files and create .mo files
 	cd src/oscar; django-admin.py compilemessages
