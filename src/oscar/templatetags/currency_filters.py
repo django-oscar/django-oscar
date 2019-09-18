@@ -14,6 +14,9 @@ def currency(value, currency=None):
     """
     Format decimal value as currency
     """
+    if currency is None:
+        currency = settings.OSCAR_DEFAULT_CURRENCY
+
     try:
         value = D(value)
     except (TypeError, InvalidOperation):
@@ -22,7 +25,7 @@ def currency(value, currency=None):
     # http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency
     OSCAR_CURRENCY_FORMAT = getattr(settings, 'OSCAR_CURRENCY_FORMAT', None)
     kwargs = {
-        'currency': currency or settings.OSCAR_DEFAULT_CURRENCY,
+        'currency': currency,
         'locale': to_locale(get_language() or settings.LANGUAGE_CODE)
     }
     if isinstance(OSCAR_CURRENCY_FORMAT, dict):
