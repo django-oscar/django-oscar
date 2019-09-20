@@ -53,18 +53,18 @@ class TestProductImages(ThumbnailMixin, TestCase):
         variant = factories.create_product(parent=parent)
         factories.create_product_image(product=variant, caption='Variant Image')
         all_images = variant.get_all_images()
-        self.assertEquals(all_images.count(), 1)
+        self.assertEqual(all_images.count(), 1)
         product_image = all_images.first()
-        self.assertEquals(product_image.caption, 'Variant Image')
+        self.assertEqual(product_image.caption, 'Variant Image')
 
     def test_variant_images_fallback_to_parent(self):
         parent = factories.ProductFactory(structure='parent')
         variant = factories.create_product(parent=parent)
         factories.create_product_image(product=parent, caption='Parent Product Image')
         all_images = variant.get_all_images()
-        self.assertEquals(all_images.count(), 1)
+        self.assertEqual(all_images.count(), 1)
         product_image = all_images.first()
-        self.assertEquals(product_image.caption, 'Parent Product Image')
+        self.assertEqual(product_image.caption, 'Parent Product Image')
 
 
 class TestMissingProductImage(StaticLiveServerTestCase):
