@@ -7,7 +7,7 @@
   "devDependencies": {
     "bootstrap": "^3.4.1",
     "bootstrap-datetime-picker": "^2.4.4",
-    "eslint": "^6.3.0",
+    "eslint": "^6.4.0",
     "extend": ">=3.0.2",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
