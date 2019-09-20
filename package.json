@@ -20,7 +20,7 @@
     "less": "^3.10.3",
     "pump": "^3.0.0",
     "require-dir": "^1.2.0",
-    "select2": "4.0.8",
+    "select2": "4.0.10",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tinymce": "^4.8.3"
   },
