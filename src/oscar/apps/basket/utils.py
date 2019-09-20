@@ -162,6 +162,6 @@ class LineOfferConsumer(object):
 
             # respect max_affected_items
             if offer.benefit.max_affected_items:
-                max_affected_items = offer.benefit.max_affected_items
+                max_affected_items = min(offer.benefit.max_affected_items, max_affected_items)
 
         return max_affected_items - self.consumed(offer)
