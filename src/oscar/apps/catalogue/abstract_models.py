@@ -120,13 +120,7 @@ class CategoryQuerySet(MP_NodeQuerySet):
         """
         Excludes non-public categories
         """
-        # build query to select all category subtrees.
-        included_in_non_public_subtree = self.filter(
-            is_public=False, path__rstartswith=OuterRef("path"), depth__lte=OuterRef("depth")
-        )
-        return self.annotate(
-            is_included_in_non_public_subtree=Exists(included_in_non_public_subtree.values("id"))
-        ).filter(is_included_in_non_public_subtree=False)
+        return self.filter(is_public=True, parents_are_public=True)
 
 
 class CategoryObjectManager(models.Manager):
@@ -156,6 +150,11 @@ class AbstractCategory(MP_Node):
         _('Is public'),
         default=True,
         help_text=_("Show this category in search results and catalogue listings."))
+
+    parents_are_public = models.BooleanField(
+        _('Parent categories are public'),
+        default=True,
+        help_text=_("The parents of this category are public"))
 
     _slug_separator = '/'
     _full_name_separator = ' > '
@@ -220,8 +219,20 @@ class AbstractCategory(MP_Node):
         """
         if not self.slug:
             self.slug = self.generate_slug()
-
         super().save(*args, **kwargs)
+
+    def set_parents_are_public(self):
+        # Update parents_are_public for the sub tree.
+        included_in_non_public_subtree = self.__class__.objects.filter(
+            is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
+        )
+        self.get_descendants().update(parents_are_public=Exists(included_in_non_public_subtree.values("id"), negated=True))
+
+    @classmethod
+    def fix_tree(cls, destructive=False):
+        super().fix_tree(destructive)
+        for node in cls.get_root_nodes():
+            node.set_parents_are_public()
 
     def get_ancestors_and_self(self):
         """
