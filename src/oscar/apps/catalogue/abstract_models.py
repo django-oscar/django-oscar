@@ -223,6 +223,8 @@ class AbstractCategory(MP_Node):
 
     def set_parents_are_public(self):
         # Update parents_are_public for the sub tree.
+        # note: This doesn't trigger a new save for each instance, rather
+        # just a SQL update.
         included_in_non_public_subtree = self.__class__.objects.filter(
             is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
         )
@@ -232,7 +234,13 @@ class AbstractCategory(MP_Node):
     def fix_tree(cls, destructive=False):
         super().fix_tree(destructive)
         for node in cls.get_root_nodes():
-            node.set_parents_are_public()
+            # parents_are_public *must* be True for root nodes, or all trees
+            # will become non-public
+            if not node.parents_are_public:
+                node.parents_are_public = True
+                node.save()
+            else:
+                node.set_parents_are_public()
 
     def get_ancestors_and_self(self):
         """
