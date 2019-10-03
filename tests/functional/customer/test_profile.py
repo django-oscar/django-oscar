@@ -3,13 +3,12 @@ from unittest.mock import patch
 
 from django.urls import reverse
 
-from oscar.test.factories import create_product, create_order
-from oscar.test.testcases import WebTestCase
-from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
-from oscar.apps.partner import strategy
 from oscar.apps.order.models import Order
-
+from oscar.apps.partner import strategy
+from oscar.core.compat import get_user_model
+from oscar.test.factories import create_order, create_product
+from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 

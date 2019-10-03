@@ -1,9 +1,8 @@
 from django import forms
 from django.test import TestCase, override_settings
 
-from oscar.test.factories import Member
-
 from oscar.apps.dashboard.widgets import RelatedFieldWidgetWrapper
+from oscar.test.factories import Member
 
 
 @override_settings(ROOT_URLCONF='oscar.test.factories.urls')

@@ -4,9 +4,9 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.apps.offer import models, utils
-from oscar.test.basket import add_product
+from oscar.apps.shipping import methods, repository
 from oscar.test import factories
-from oscar.apps.shipping import repository, methods
+from oscar.test.basket import add_product
 
 
 class ExcludingTax(methods.FixedPrice):

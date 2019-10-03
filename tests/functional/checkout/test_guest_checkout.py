@@ -1,18 +1,19 @@
-from importlib import import_module
-from http import client as http_client
-from unittest import mock
 import sys
+from http import client as http_client
+from importlib import import_module
+from unittest import mock
 
-from django.test.utils import override_settings
 from django.conf import settings
+from django.test.utils import override_settings
 from django.urls import clear_url_caches, reverse
 from django.utils.http import urlquote
 
+from oscar.apps.shipping import methods
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_classes, get_model
-from oscar.apps.shipping import methods
-from oscar.test.testcases import WebTestCase
 from oscar.test import factories
+from oscar.test.testcases import WebTestCase
+
 from . import CheckoutMixin
 
 GatewayForm = get_class('checkout.forms', 'GatewayForm')

@@ -1,7 +1,7 @@
 import json
 from datetime import timedelta
-from decimal import Decimal as D
 from decimal import ROUND_UP
+from decimal import Decimal as D
 
 from django.contrib import messages
 from django.db.models import Avg, Count, Sum

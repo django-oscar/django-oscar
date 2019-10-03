@@ -1,5 +1,5 @@
-from decimal import Decimal as D
 import datetime
+from decimal import Decimal as D
 from http import client as http_client
 from http.cookies import _unquote
 
@@ -16,7 +16,6 @@ from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
-
 
 User = get_user_model()
 

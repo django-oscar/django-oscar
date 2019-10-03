@@ -2,9 +2,8 @@ from django.test import TestCase
 
 from oscar.apps.offer import custom, models
 from oscar.test import factories
-
-from tests._site.model_tests_app.models import (BasketOwnerCalledBarry,
-                                                CustomBenefitModel)
+from tests._site.model_tests_app.models import (
+    BasketOwnerCalledBarry, CustomBenefitModel)
 
 
 class TestConditionalOfferDelete(TestCase):

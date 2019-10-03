@@ -4,8 +4,10 @@ from django.conf.urls.i18n import is_language_prefix_patterns_used
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.http import Http404
-from django.urls import resolve, get_urlconf
-from django.utils.translation import gettext_lazy as _, get_language_from_path, get_language, override
+from django.urls import get_urlconf, resolve
+from django.utils.translation import get_language, get_language_from_path
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import override
 
 from oscar.core.loading import get_model
 

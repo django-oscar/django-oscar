@@ -1,5 +1,5 @@
-from decimal import Decimal as D
 from decimal import ROUND_HALF_UP
+from decimal import Decimal as D
 
 
 def tax_subtract(price, tax_percentage=21):

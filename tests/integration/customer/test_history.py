@@ -1,5 +1,5 @@
-from django.test import TestCase
 from django import http
+from django.test import TestCase
 
 from oscar.apps.customer import history
 

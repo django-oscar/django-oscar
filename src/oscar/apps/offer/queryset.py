@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import OuterRef, Exists
+from django.db.models import Exists, OuterRef
 
 
 def product_class_as_queryset(product):

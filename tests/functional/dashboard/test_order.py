@@ -3,14 +3,13 @@ from http import client as http_client
 from django.conf import settings
 from django.urls import reverse
 
-from oscar.core.loading import get_model
 from oscar.apps.order.models import (
     Order, OrderNote, PaymentEvent, PaymentEventType)
-from oscar.test.factories import PartnerFactory, ShippingAddressFactory
-from oscar.test.factories import create_order, create_basket
+from oscar.core.loading import get_model
+from oscar.test.factories import (
+    PartnerFactory, ShippingAddressFactory, SourceTypeFactory,
+    create_basket, create_order)
 from oscar.test.testcases import WebTestCase
-from oscar.test.factories import SourceTypeFactory
-
 
 Basket = get_model('basket', 'Basket')
 Partner = get_model('partner', 'Partner')

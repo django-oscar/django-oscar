@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
+
 from django import template
 from django.test import TestCase
 from django.utils.translation import activate

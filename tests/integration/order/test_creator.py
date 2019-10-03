@@ -1,19 +1,19 @@
-from decimal import Decimal as D
 import threading
 import time
+from decimal import Decimal as D
 
 import pytest
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
 from django.test import TestCase, TransactionTestCase
 from django.test.utils import override_settings
-from django.contrib.auth.models import AnonymousUser
 
-from oscar.apps.catalogue.models import ProductClass, Product
+from oscar.apps.catalogue.models import Product, ProductClass
 from oscar.apps.checkout import calculators
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.methods import Free, FixedPrice
+from oscar.apps.shipping.methods import FixedPrice, Free
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.voucher.models import Voucher
 from oscar.core.loading import get_class

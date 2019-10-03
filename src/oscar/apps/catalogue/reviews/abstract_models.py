@@ -10,7 +10,6 @@ from oscar.core import validators
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class
 
-
 ProductReviewQuerySet = get_class('catalogue.reviews.managers', 'ProductReviewQuerySet')
 
 

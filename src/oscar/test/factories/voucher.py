@@ -6,7 +6,6 @@ from django.utils.timezone import now
 from oscar.core.loading import get_model
 from oscar.test.factories import ConditionalOfferFactory
 
-
 __all__ = ['VoucherFactory', 'VoucherSetFactory']
 
 

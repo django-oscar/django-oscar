@@ -1,4 +1,5 @@
-from oscar.apps.catalogue.views import ProductDetailView as OscarProductDetailView
+from oscar.apps.catalogue.views import (
+    ProductDetailView as OscarProductDetailView)
 
 
 class ParentProductDetailView(OscarProductDetailView):

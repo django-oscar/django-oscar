@@ -2,8 +2,8 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.apps.shipping.scales import Scale
 from oscar.apps.basket.models import Basket
+from oscar.apps.shipping.scales import Scale
 from oscar.test import factories
 
 

@@ -1,13 +1,13 @@
-from os.path import dirname
 import sys
+from os.path import dirname
 
 from django.apps import AppConfig, apps
-from django.test import override_settings, TestCase
 from django.conf import settings
+from django.test import TestCase, override_settings
 
 from oscar.core.loading import (
-    get_model, AppNotFoundError, get_classes, get_class, get_class_loader,
-    ClassNotFoundError)
+    AppNotFoundError, ClassNotFoundError, get_class, get_class_loader,
+    get_classes, get_model)
 from tests import temporary_python_path
 from tests._site.loader import DummyClass
 

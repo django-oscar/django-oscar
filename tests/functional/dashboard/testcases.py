@@ -1,11 +1,12 @@
 import json
-from django.conf import settings
 from http import client as http_client
+
+from django.conf import settings
+from django.contrib.messages import INFO
 from django.urls import reverse
 from django.utils.http import urlencode
-from django.contrib.messages import INFO
-from oscar.core.loading import get_class
 
+from oscar.core.loading import get_class
 
 RelatedFieldWidgetWrapper = get_class('dashboard.widgets',
                                       'RelatedFieldWidgetWrapper')

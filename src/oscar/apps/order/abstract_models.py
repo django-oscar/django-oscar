@@ -25,7 +25,6 @@ from oscar.utils.deprecation import RemovedInOscar21Warning
 
 from . import exceptions
 
-
 logger = logging.getLogger('oscar.order')
 
 

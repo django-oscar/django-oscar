@@ -1,7 +1,7 @@
-import pytest
 import datetime
 from decimal import Decimal as D
 
+import pytest
 from django.core import exceptions
 from django.test import TestCase
 from django.utils.timezone import utc
@@ -9,17 +9,8 @@ from django.utils.timezone import utc
 from oscar.apps.voucher.models import Voucher
 from oscar.core.compat import get_user_model
 from oscar.test.factories import (
-    ConditionFactory,
-    create_basket,
-    create_offer,
-    create_product,
-    OrderFactory,
-    RangeFactory,
-    UserFactory,
-    VoucherFactory,
-    VoucherSetFactory
-)
-
+    ConditionFactory, OrderFactory, RangeFactory, UserFactory, VoucherFactory,
+    VoucherSetFactory, create_basket, create_offer, create_product)
 
 START_DATETIME = datetime.datetime(2011, 1, 1).replace(tzinfo=utc)
 END_DATETIME = datetime.datetime(2012, 1, 1).replace(tzinfo=utc)

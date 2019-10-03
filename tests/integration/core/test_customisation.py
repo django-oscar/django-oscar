@@ -1,10 +1,9 @@
 import os
-from os.path import exists, join
 import sys
 import tempfile
+from os.path import exists, join
 
 import pytest
-
 from django.conf import settings
 from django.test import TestCase, override_settings
 

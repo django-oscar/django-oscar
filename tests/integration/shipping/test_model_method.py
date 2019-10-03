@@ -9,7 +9,6 @@ from oscar.apps.shipping.repository import Repository
 from oscar.core.compat import get_user_model
 from oscar.test import factories
 
-
 User = get_user_model()
 
 

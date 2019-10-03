@@ -1,8 +1,8 @@
 import logging
 
 from django.conf import settings
-from django.contrib.auth import login as auth_login
 from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 from django.contrib.sites.shortcuts import get_current_site
 
 from oscar.apps.customer.signals import user_registered

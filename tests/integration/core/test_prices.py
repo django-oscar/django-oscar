@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 from itertools import product
+
 from django.test import TestCase
 
 from oscar.core.prices import Price

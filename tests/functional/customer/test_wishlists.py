@@ -2,8 +2,7 @@
 from django.urls import reverse_lazy
 
 from oscar.core.loading import get_model
-
-from oscar.test.factories import create_product, WishListFactory
+from oscar.test.factories import WishListFactory, create_product
 from oscar.test.testcases import WebTestCase
 
 WishList = get_model('wishlists', 'WishList')

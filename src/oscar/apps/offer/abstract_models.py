@@ -1,16 +1,16 @@
 import operator
 import os
 import re
-from decimal import Decimal as D
 from decimal import ROUND_DOWN
+from decimal import Decimal as D
 
 from django.conf import settings
 from django.core import exceptions
 from django.db import models
-from django.db.models.lookups import StartsWith
+from django.db.models import Exists, OuterRef
 from django.db.models.fields import Field
+from django.db.models.lookups import StartsWith
 from django.db.models.query import Q
-from django.db.models import OuterRef, Exists
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -19,7 +19,8 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.decorators import deprecated
-from oscar.core.loading import get_class, get_classes, get_model, cached_import_string
+from oscar.core.loading import (
+    cached_import_string, get_class, get_classes, get_model)
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
 

@@ -1,7 +1,9 @@
-from django.test import TestCase
 import unittest.mock as mock
-from oscar.apps.dashboard.catalogue.forms import StockRecordForm
+
+from django.test import TestCase
+
 from oscar.apps.catalogue.models import ProductClass
+from oscar.apps.dashboard.catalogue.forms import StockRecordForm
 
 
 class StockRecordFormTextCase(TestCase):

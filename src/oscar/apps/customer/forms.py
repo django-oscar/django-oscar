@@ -13,8 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
-from oscar.core.compat import (
-    existing_user_fields, get_user_model)
+from oscar.core.compat import existing_user_fields, get_user_model
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.forms import widgets
 

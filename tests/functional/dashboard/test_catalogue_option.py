@@ -6,10 +6,10 @@ from oscar.core.loading import get_class, get_model
 from oscar.test.factories import (
     OptionFactory, ProductClassFactory, create_product)
 from oscar.test.testcases import WebTestCase
-from .testcases import (
-    ListViewMixin, PopUpObjectCreateMixin,
-    PopUpObjectUpdateMixin, PopUpObjectDeleteMixin)
 
+from .testcases import (
+    ListViewMixin, PopUpObjectCreateMixin, PopUpObjectDeleteMixin,
+    PopUpObjectUpdateMixin)
 
 Option = get_model('catalogue', 'Option')
 OptionForm = get_class('dashboard.catalogue.forms', 'OptionForm')

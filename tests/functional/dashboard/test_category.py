@@ -1,9 +1,9 @@
 from django.urls import reverse
 
-from oscar.test.testcases import WebTestCase
-from oscar.apps.catalogue.models import Category
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
+from oscar.apps.catalogue.models import Category
 from oscar.test.factories import UserFactory
+from oscar.test.testcases import WebTestCase
 
 
 class TestCategoryDashboard(WebTestCase):

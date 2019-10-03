@@ -2,7 +2,8 @@ from django.test import TestCase
 
 from oscar.apps.offer import custom
 from tests._site.model_tests_app.models import (
-    CustomBenefitModel, CustomBenefitWithoutName, CustomConditionModel, CustomConditionWithoutName)
+    CustomBenefitModel, CustomBenefitWithoutName, CustomConditionModel,
+    CustomConditionWithoutName)
 
 
 class TestCustomBenefit(TestCase):

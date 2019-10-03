@@ -1,8 +1,9 @@
-from django.test import TestCase
 from decimal import Decimal as D
 
-from oscar.core.prices import TaxNotKnown
+from django.test import TestCase
+
 from oscar.apps.partner import prices
+from oscar.core.prices import TaxNotKnown
 
 
 class TestUnavailable(TestCase):

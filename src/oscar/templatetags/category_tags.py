@@ -1,5 +1,6 @@
-from six import with_metaclass
 from django import template
+from six import with_metaclass
+
 from oscar.core.loading import get_model
 
 register = template.Library()
