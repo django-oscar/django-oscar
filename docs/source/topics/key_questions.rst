@@ -5,7 +5,7 @@ Building an e-commerce site: the key questions
 When building an e-commerce site, there are several components whose
 implementation is strongly domain-specific.  That is, every site will have
 different requirements for how such a component should operate.  As such, these
-components cannot easily be modeled using a generic system - no configurable
+components cannot easily be modelled using a generic system - no configurable
 system will be able to accurately capture all the domain-specific behaviour
 required.
 
@@ -48,7 +48,7 @@ How are products managed?
 -------------------------
 
 Is the catalogue managed by an admin using a dashboard, or though an automated
-process, such as processing feeds from a fulfillment system?  Where are your
+process, such as processing feeds from a fulfilment system?  Where are your
 product images going to be served from?
 
 * :doc:`/howto/how_to_disable_an_app_or_feature`
@@ -66,7 +66,7 @@ VAT whereas in the US, taxes are often not shown until the final stage of checko
 Furthermore, the amount of tax charged can vary depending on a number of
 factors, including:
 
-* The products being bought (eg in the UK, certain products have pay no VAT).
+* The products being bought (e.g., in the UK, certain products have pay no VAT).
 * Who the customer is.  For instance, sales reps will often not pay tax whereas
   regular customers will.
 * The shipping address of the order.
@@ -78,12 +78,12 @@ Recipes:
 What availability messages are shown to customers?
 --------------------------------------------------
 
-Based on the stock information from a fulfillment partner, what messaging should be
-displayed on the site?  
+Based on the stock information from a fulfilment partner, what messaging should be
+displayed on the site?
 
 * :doc:`/howto/how_to_configure_stock_messaging`
 
-Do you allow pre- and back-orders
+Do you allow pre-orders and back-orders
 ---------------------------------
 
 A pre-order is where you allow a product to be bought before it has been
@@ -162,7 +162,7 @@ Domain logic is often required to:
 When will payment be taken?
 ---------------------------
 
-A common pattern is to 'pre-auth' a bankcard at the point of checkout then
+A common pattern is to pre-authorise a bankcard at the point of checkout then
 'settle' for the appropriate amounts when the items actually ship.  However,
 sometimes payment is taken up front.  Often you won't have a choice due to
 limitations of the payment partner you need to integrate with, or legal
@@ -184,7 +184,7 @@ Orders can be processed in many ways, including:
   slip from the dashboard and mark products as shipped when they have been put in the van.
 
 * Fully automated process, where files are transferred between the merchant and
-  the fulfillment partner to indicate shipping statuses.
+  the fulfilment partner to indicate shipping statuses.
 
 Recipes:
 

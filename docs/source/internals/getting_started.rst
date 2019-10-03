@@ -1,9 +1,13 @@
+.. spelling::
+
+    Solr
+
 ======================
 Building your own shop
 ======================
 
 For simplicity, let's assume you're building a new e-commerce project from
-scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
+scratch and have decided to use Oscar.  Let's call this project ``frobshop``
 
 .. tip::
 
@@ -23,7 +27,7 @@ project:
     $ pip install django-oscar
     $ django-admin.py startproject frobshop
 
-If you do not have mkvirtualenv, then replace that line with::
+If you do not have :command:`mkvirtualenv`, then replace that line with::
 
     $ virtualenv oscar
     $ . ./oscar/bin/activate
@@ -146,7 +150,7 @@ your ``MIDDLEWARE`` setting.
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
 
-Set your auth backends to:
+Set your authentication backends to:
 
 .. code-block:: django
 
@@ -295,13 +299,13 @@ manually mark at least one country as a shipping country.
 .. _pycountry: https://pypi.python.org/pypi/pycountry
 
 
-Creating product classes and fulfillment partners
+Creating product classes and fulfilment partners
 =================================================
 
 Every Oscar deployment needs at least one
 :class:`product class <oscar.apps.catalogue.abstract_models.AbstractProductClass>`
 and one
-:class:`fulfillment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
+:class:`fulfilment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
 These aren't created automatically as they're highly specific to the shop you
 want to build.
 

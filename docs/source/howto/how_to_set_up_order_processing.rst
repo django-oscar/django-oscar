@@ -5,7 +5,7 @@ How to set up order processing
 How orders are processed differs for every shop.  Some shops will process orders
 manually, using the dashboard to print picking slips and update orders once
 items have shipped.  Others will use automated processes to send order details
-to fulfillment partners and pick up shipment and cancellation messages.
+to fulfilment partners and pick up shipment and cancellation messages.
 
 Oscar provides only a skeleton for building your order processing pipeline on
 top of.  This page details how it works and how to build your order processing
@@ -19,7 +19,7 @@ There are two relevant Oscar apps to order processing.
 * The checkout app is responsible for collecting the required shipping and
   payment information, taking payment in some sense and placing the order.  It
   is not normally used to process the order in any sense.  If your orders can be
-  fulfilled immediately after being placed (eg digital products), it's better to
+  fulfilled immediately after being placed (e.g. digital products), it's better to
   use a separate process (like a cronjob or celery task).  That way, if the
   fulfilment work fails for some reason, it can be retried easily later.  It's
   also a neater decoupling of responsibilities.
@@ -31,7 +31,7 @@ There are two relevant Oscar apps to order processing.
 Modelling
 ---------
 
-Oscar models order processsing through events.  There are three types to be
+Oscar models order processing through events.  There are three types to be
 aware of:
 
 * Shipping events.  These correspond to some change in the location or
@@ -102,10 +102,10 @@ Here is a reasonably common scenario for order processing.  Note that some of
 the functionality described here is not in Oscar.  However, Oscar provides the
 hook points to make implementing this workflow easy.
 
-* An order is placed and the customer's bankcard is pre-authed for the order
-  total.  The new order has status 'Pending'
+* An order is placed and the customer's bankcard is pre-authorised for the order
+  total. The new order has status 'Pending'
 
-* An admin logs into the dashboard and views all new orders.  They select the new
+* An admin logs into the dashboard and views all new orders. They select the new
   order, retrieve the goods from the warehouse and get them ready to ship.
 
 * When all items are retrieved, they select all the lines from the order and hit

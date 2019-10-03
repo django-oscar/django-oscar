@@ -10,9 +10,9 @@ This is Oscar 1.2.1, a bug fix release.
 Minor changes
 =============
 
-Change the babel requirement in setup.py to allow versions up to 3.0
+Change the babel requirement in :file:`setup.py` to allow versions up to 3.0
 
 Bug fixes
 =========
 
-* :issue:`2019`: Optimize ORM query on the offer detail page in the dashboard.
+* :issue:`2019`: Optimise ORM query on the offer detail page in the dashboard.

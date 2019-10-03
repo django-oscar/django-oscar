@@ -55,7 +55,7 @@ Oscar 0.4.6 release notes
 
 :release: 2013-03-05
 
-Fix dependencies in ``setup.py``
+Fix dependencies in :file:`setup.py`
 
 
 =========================
@@ -74,7 +74,7 @@ Oscar 0.4.4 release notes
 
 :release: 2013-01-16
 
-Correct django-haystack in setup.py
+Correct ``django-haystack`` in :file:`setup.py`
 
 
 =========================
@@ -83,7 +83,7 @@ Oscar 0.4.3 release notes
 
 :release: 2013-01-16
 
-Pin django-haystack version as backwards-incompatiable changes are happening
+Pin ``django-haystack`` version as backwards-incompatible changes are happening
 
 
 =========================
@@ -92,7 +92,7 @@ Oscar 0.4.2 release notes
 
 :release: 2012-12-14
 
-Nano-release to fix logout redirect bug
+Small release to fix logout redirect bug
 
 
 =========================
@@ -101,7 +101,7 @@ Oscar 0.4.1 release notes
 
 :release: 2012-12-06
 
-Nano-release to bump dependency versions.
+Small release to bump dependency versions.
 
 
 =========================
@@ -117,7 +117,7 @@ Quite a big release this one.  Several new features have been added since the
   model.
 * HTML editing within the dashboard
 * A new email dashboard
-* Major refactor of the offers module and test suite  
+* Major refactor of the offers module and test suite
 * Product stock alerts: customers can request an alert when when a product comes
   back into stock
 * Customer notifications: an API and inbox for sending users notifications
@@ -129,11 +129,11 @@ Four apps have new migrations.  If you subclass these apps in your project, you
 will need to create a new schema migration for each to pick up the upstream
 changes.
 
-* Basket: 
-  
+* Basket:
+
   - A ``price_excl_tax`` has been added to ``basket.Line``.  This is
     useful for applications that use dynamic pricing where both the price with and
-    without tax needs to be stored. 
+    without tax needs to be stored.
 
 * Catalogue:
 
@@ -143,7 +143,7 @@ changes.
 
   - The ``code`` field of ``catalogue.Option`` now has a unique index.
 
-* Customer: 
+* Customer:
 
   - New models for stock alerts and notifications
   - The ``email_subject_template`` field from

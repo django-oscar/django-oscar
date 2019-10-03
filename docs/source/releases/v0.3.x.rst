@@ -74,11 +74,11 @@ Oscar 0.3.0 release notes
 
 :release: 2012-08-08
 
-* i18n support added - Oscar now ships with .po files for seven languages.
+* i18n support added - Oscar now ships with ``.po`` files for seven languages.
   Translation files are welcome.
 * Category management added to dashboard
 * Some improvements to how group/variant products are handled
-* Improved installation process using makefile
+* Improved installation process using :file:`Makefile`
 
 
 Migrations
@@ -96,7 +96,7 @@ Breaking changes
 
 A new setting ``OSCAR_MAIN_TEMPLATE_DIR`` has been introduced
 as the template structure has been altered.  This requires your
-``TEMPLATE_DIRS`` setting to be altered to include this folder, eg::
+``TEMPLATE_DIRS`` setting to be altered to include this folder, e.g.::
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
     TEMPLATE_DIRS = (

@@ -1,0 +1,5 @@
+build:
+  docker:
+    web: Dockerfile
+run:
+  web: uwsgi --ini uwsgi.ini --http 0:$PORT

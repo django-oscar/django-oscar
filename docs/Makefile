@@ -128,3 +128,6 @@ doctest:
 	$(SPHINXBUILD) -a -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
+
+spelling:
+	$(SPHINXBUILD) -a -b spelling $(ALLSPHINXOPTS) $(BUILDDIR)/spelling

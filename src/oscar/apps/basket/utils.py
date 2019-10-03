@@ -3,10 +3,10 @@ from collections import defaultdict
 from django.contrib import messages
 from django.template.loader import render_to_string
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 Applicator = get_class('offer.applicator', 'Applicator')
-ConditionalOffer = get_class('offer.models', 'ConditionalOffer')
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
 
 class BasketMessageGenerator(object):
@@ -162,6 +162,6 @@ class LineOfferConsumer(object):
 
             # respect max_affected_items
             if offer.benefit.max_affected_items:
-                max_affected_items = offer.benefit.max_affected_items
+                max_affected_items = min(offer.benefit.max_affected_items, max_affected_items)
 
         return max_affected_items - self.consumed(offer)

@@ -1,3 +1,7 @@
+.. spelling::
+
+    Transifex
+
 =========================
 Oscar 0.6.1 release notes
 =========================
@@ -63,7 +67,7 @@ The following bugs were fixed:
 * `#1133`_ - The order detail page for anonymous checkouts failed to render if
   reviews were disabled.
 
-* `#1134`_ - Fixed a bug caused where unicode characters in child products'
+* `#1134`_ - Fixed a bug caused where Unicode characters in child products'
   titles were incorrectly handled.
 
 * `#1138`_ - Adjust the

@@ -15,8 +15,8 @@ except ImportError:
 
 class OscarConfigMixin(object):
     """
-    Base Oscar app configuration mixin, used to extend "django.apps.AppConfig"
-    to in addition provide URL configurations and permissions.
+    Base Oscar app configuration mixin, used to extend :py:class:`django.apps.AppConfig`
+    to also provide URL configurations and permissions.
     """
     # Instance namespace for the URLs
     namespace = None
@@ -27,7 +27,7 @@ class OscarConfigMixin(object):
 
     #: Maps view names to lists of permissions. We expect tuples of
     #: lists as dictionary values. A list is a set of permissions that all
-    #: needto be fulfilled (AND). Only one set of permissions has to be
+    #: need to be fulfilled (AND). Only one set of permissions has to be
     #: fulfilled (OR).
     #: If there's only one set of permissions, as a shortcut, you can also
     #: just define one list.
@@ -52,7 +52,7 @@ class OscarConfigMixin(object):
             'models',
         ]
         # To ensure sub classes do not add kwargs that are used by
-        # "django.apps.AppConfig"
+        # :py:class:`django.apps.AppConfig`
         clashing_kwargs = set(kwargs).intersection(app_config_attrs)
         if clashing_kwargs:
             raise ImproperlyConfigured(
@@ -67,7 +67,7 @@ class OscarConfigMixin(object):
 
     def get_urls(self):
         """
-        Return the url patterns for this app.
+        Return the URL patterns for this app.
         """
         return []
 
@@ -108,7 +108,7 @@ class OscarConfigMixin(object):
         Return a list of permissions for a given URL name
 
         Args:
-            url (str): A URL name (eg ``basket.basket``)
+            url (str): A URL name (e.g., ``basket.basket``)
 
         Returns:
             list: A list of permission strings.

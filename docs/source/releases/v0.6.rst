@@ -6,7 +6,7 @@ Oscar 0.6 release notes
 
 It took a while but it's finally here: welcome to Oscar 0.6!
 
-These release notes cover the `new features`_ as well as `backwards incompatible changes`_ 
+These release notes cover the `new features`_ as well as `backwards incompatible changes`_
 that you'll want to be aware of when upgrading from Oscar 0.5 or
 earlier.  This release contains some major changes to core APIs which means
 many old APIs are scheduled to be dropped - see the `deprecation plan`_ to avoid any
@@ -31,7 +31,7 @@ Table of contents:
 Overview
 ========
 
-The biggest change in Oscar 0.6 is the reworking of `pricing and availability`_, which 
+The biggest change in Oscar 0.6 is the reworking of `pricing and availability`_, which
 builds on top of the change to allow `multiple stockrecords per product`_.  The
 change is largely backwards compatible with the old system of "partner
 wrappers" but it is recommended to upgrade to the new system.  Support for
@@ -67,7 +67,7 @@ Other notable new features include:
 
 * `Reworked search app`_ with support for easy faceting.
 
-Also, to help justify Tangent's sponsorship of Oscar, 
+Also, to help justify Tangent's sponsorship of Oscar,
 a simple `tracking mechanism`_ has been introduced to keep track of which sites
 use Oscar.
 
@@ -89,7 +89,7 @@ key structural change that paves the way for many advanced features.
 If a product can be fulfilled by multiple partners, a different stockrecord can
 be created for each partner.  This is a common requirement for large-scale
 e-commerce sites selling millions of products that use many different
-fulfillment partners.   
+fulfilment partners.
 
 It also allows better support for international sites as stockrecords can be
 created for partners in different countries, who sell in different currencies.
@@ -109,7 +109,7 @@ Pricing and availability
 When products can have many stockrecords, a process needs to be in place to
 choose which one is selected for a given customer and product.  To handle this,
 a new "strategy" class has been introduced, responsible for selecting the appropriate
-stockrecord for a given customer and product.  
+stockrecord for a given customer and product.
 
 This change also paved the way for reworking how prices, taxes and availability
 are handled.  Instead of using `"partner wrappers"`_, the strategy class is
@@ -117,16 +117,16 @@ responsible for returning availability details and prices for a particular
 product.  New classes known as pricing and availability policies are used to
 cleanly encapsulate this information.
 
-These changes allow Oscar to dynamically determine prices, partner and availability 
+These changes allow Oscar to dynamically determine prices, partner and availability
 for a given customer and product.  This enables several advanced features such as:
 
 * Fulfilling a product from the partner that offers the best margin.
 * Fulfilling a product from the partner geographically closest to the customer.
 * Automatically switching to a new partner when when stock runs out.
 * Supporting transactions in multiple currencies on the same site.
-* Supporting different tax treatments on the same site (eg UK VAT and US sales
+* Supporting different tax treatments on the same site (e.g. UK VAT and US sales
   tax)
-* Having different pricing and availability policies for different customers. 
+* Having different pricing and availability policies for different customers.
 
 More generally, it provides a structure for customising how pricing,
 availability work on a per-customer basis.  This gives a great deal of
@@ -185,7 +185,7 @@ Partner dashboard & addresses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Partners can now have addresses.  These are useful for US sales tax where tax
-calculations need to know the origin of a product being shipped.  
+calculations need to know the origin of a product being shipped.
 
 A dashboard to handle partners, their users and addresses has been added.
 
@@ -197,11 +197,11 @@ been restructured for flexibility.  There is a new
 :meth:`~oscar.apps.checkout.views.PaymentDetailsView.build_submission` method
 which is responsible for building a dict of all data for passing to the
 ``submit`` method.  This includes the shipping address and shipping method
-which were previously loaded indirectly within the ``submit`` method.  
+which were previously loaded indirectly within the ``submit`` method.
 
 .. warning::
 
-   While not major, the changes to checkout are backwards incompatible.  See the 
+   While not major, the changes to checkout are backwards incompatible.  See the
    :ref:`backwards compatibility notes <checkout_incompatibilities>` for more details.
 
 Demo site
@@ -210,13 +210,13 @@ Demo site
 Oscar now ships with a demo site along side the sandbox site.  While the sandbox
 is a minimal Django project that uses Oscar with all its defaults, the demo site
 is a more realistic example of an Oscar project.  It has a custom skin and makes
-many alterations to the default Oscar behaviour.  
+many alterations to the default Oscar behaviour.
 
 It's features include:
 
 * A range of different product types: books, downloads, clothing
 * PayPal Express integration using django-oscar-paypal_
-* Datacash integration using django-oscar-datacash_
+* DataCash integration using django-oscar-datacash_
 
 .. _django-oscar-paypal: https://github.com/django-oscar/django-oscar-paypal
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
@@ -238,12 +238,12 @@ account forms inspect the model fields to dynamically pick up the fields for
 editing and display.
 
 There are some restrictions on what fields a custom user model must have.  For
-instance, Oscar's default auth backend requires the user model to have an email
+instance, Oscar's default authentication backend requires the user model to have an email
 and password field.  New Oscar projects are encouraged to use the provided
 abstract user model as the base for their users.
 
 Support for Django 1.6 is considered experimental at the moment as there hasn't
-been time to run thorough tests for all possible incompatibilities.  
+been time to run thorough tests for all possible incompatibilities.
 
 Further reading:
 
@@ -252,11 +252,11 @@ Further reading:
 .. _`custom user models`: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#specifying-a-custom-user-model
 .. _`documentation on user models`: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#specifying-a-custom-user-model
 
-Accounts 
+Accounts
 ~~~~~~~~
 
 The views and templates of the accounts section have been reworked to be clearer
-and easier to extend.  There is no longer a generic frontpage for the accounts
+and easier to extend.  There is no longer a generic front page for the accounts
 section - instead, each subsection has its own page.  The navigation has also
 moved to the left-hand side.
 
@@ -264,12 +264,12 @@ moved to the left-hand side.
 
    *The new-look account section with navigation on the left-hand side.*
 
-Bootstrap-WYSIHTML5 replaced by TinyMCE
+``Bootstrap-WYSIHTML5`` replaced by TinyMCE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`TinyMCE 4.0`_ is now used in the dashboard for all textareas with class
-``wysiwyg``.  This has better browser support and is easier to customise than
-bootstrap-wysihtml5 (which has now been removed).
+`TinyMCE 4.0`_ is now used in the dashboard for all ``textarea`` elements with
+the class ``wysiwyg``.  This has better browser support and is easier to
+customise than ``bootstrap-wysihtml5`` (which has now been removed).
 
 It is easy to configure or replace with the HTML editor of your choice.
 
@@ -284,11 +284,11 @@ Improved address fields
 
 The postcode and phone number fields have been improved.
 
-* The postcode field is now validated in the model's 
+* The postcode field is now validated in the model's
   :meth:`~oscar.apps.address.abstract_models.AbstractAddress.clean` method to
   ensure it is valid for the selected country.
 
-* The phone number field now uses a specialist 
+* The phone number field now uses a specialist
   :class:`~oscar.models.fields.PhoneNumberField` field class
   which validates and cleans the phone number.
 
@@ -320,7 +320,7 @@ extended with a HTML description field.
 Reworked search app
 ~~~~~~~~~~~~~~~~~~~
 
-Oscar's search app has been reviewed and simplified.  The main view class 
+Oscar's search app has been reviewed and simplified.  The main view class
 (now :class:`~oscar.apps.search.views.FacetedSearchView`)
 has been reworked to provide better support for faceting, which can be easily
 specified using the :ref:`oscar_search_facets` setting.
@@ -406,7 +406,7 @@ Checkout app
 ~~~~~~~~~~~~
 
 Several changes have been made to the checkout in the name of simplification
-and making things easier to customise.  
+and making things easier to customise.
 
 The ``PaymentDetailsView`` has been adjusted to explicitly pass variables
 around rather than relying on methods that load them on demand.  This makes
@@ -421,10 +421,10 @@ customisation easier and everything more explicit (a good thing).
     submission = self.build_submission()
     return self.submit(**submission)
 
-  If your payment or order submission process requires additional parameters (eg
-  a bankcard instance), override the ``build_submission`` method to provide them.  The
-  dict returned from the new ``build_submission`` method is also passed to the
-  template.
+  If your payment or order submission process requires additional parameters
+  (e.g.  a bankcard instance), override the ``build_submission`` method to
+  provide them.  The dict returned from the new ``build_submission`` method is
+  also passed to the template.
 
 * The ``handle_payment`` method in
   :class:`~oscar.apps.checkout.views.PaymentDetailsView` now accepts a
@@ -438,7 +438,7 @@ customisation easier and everything more explicit (a good thing).
   ``PaymentDetailsView``.
 
 * The ``place_order`` method in
-  :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` 
+  :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin`
   has a new signature.  The parameters have been reordered and the shipping
   address, shipping method and billing address must be passed in explicitly (as
   unsaved instances).
@@ -464,17 +464,17 @@ customisation easier and everything more explicit (a good thing).
 
 Other changes:
 
-* The checkout gateway page has a new option "Register and continue" which allows a customer 
+* The checkout gateway page has a new option "Register and continue" which allows a customer
   to register before checking out.  As part of this change, the option value ``new`` in
   ``GatewayForm`` has changed to ``guest`` as ``new`` option is used for this feature.
 
-* The checkout decorators ``basket_required`` and ``prev_steps_must_be_complete`` have been removed as they were 
+* The checkout decorators ``basket_required`` and ``prev_steps_must_be_complete`` have been removed as they were
   no longer used.
 
 Shipping app changes
 ~~~~~~~~~~~~~~~~~~~~
 
-The default implementation of the 
+The default implementation of the
 :class:`~oscar.apps.shipping.repository.Repository` class
 has been adjusted to avoid thread-safety issues.  If you define your own
 shipping ``Repository`` class, ensure that your shipping methods are
@@ -503,10 +503,10 @@ Instead, instantiate the methods within ``get_shipping_methods``:
 
 .. warning::
 
-    Beware of shipping methods that are configured via constructor parameters, like 
+    Beware of shipping methods that are configured via constructor parameters, like
     :class:`~oscar.apps.shipping.methods.FixedPrice`.  If you are using methods
     that work this way, ensure you instantiate them at runtime.
-    
+
     Shipping methods will be reworked for Oscar 0.7 to avoid these issues.
 
 Address model changes
@@ -517,17 +517,17 @@ Address model changes
 
 * The ``Country`` model's ``is_highlighted`` column has been renamed to
   ``display_order`` and is now an integer field to allow fine-grained country
-  selection. 
+  selection.
 
 Basket app changes
 ~~~~~~~~~~~~~~~~~~
 
 Several properties of the basket ``Line`` model have been renamed:
 
-* ``Line.line_price_excl_tax_and_discounts`` has been renamed to 
+* ``Line.line_price_excl_tax_and_discounts`` has been renamed to
   ``Line.line_price_excl_tax_incl_discounts``.
 
-* ``Line.line_price_incl_tax_and_discounts`` has been renamed to 
+* ``Line.line_price_incl_tax_and_discounts`` has been renamed to
   ``Line.line_price_incl_tax_incl_discounts``.
 
 The :func:`~oscar.templatetags.basket_tags.basket_form` templatetag has been
@@ -539,7 +539,7 @@ Catalogue app changes
 3 properties have been removed from
 :class:`oscar.apps.catalogue.abstract_models.AbstractProductImage` as they
 were unused: ``resized_image_url``, ``fullsize_url`` and ``thumbnail_url``.
-Thumbnailing is instead achieved in templates with Sorl.
+Thumbnailing is instead achieved in templates with :py:mod:`sorl-thumbnail`.
 
 * The function ``add_category_from_breadcrumbs`` was not used and has been
   removed.
@@ -552,7 +552,7 @@ Customer app changes
 ~~~~~~~~~~~~~~~~~~~~
 
 The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form now needs to
-be instantated with a host name so prevent redirects to external sites.
+be instantiated with a host name so prevent redirects to external sites.
 
 Offer app changes
 ~~~~~~~~~~~~~~~~~
@@ -562,7 +562,7 @@ The ManyToManyField ``included_product`` of the
 relationship:
 
 * Use ``Range.add_product(product)`` instead of
-  ``Range.included_product.add(product)``. 
+  ``Range.included_product.add(product)``.
 * Use ``Range.remove_product(product)`` instead of
   ``Range.included_product.remove(product)``.
 
@@ -687,7 +687,7 @@ Migrations
 ~~~~~~~~~~
 
 There are rather a lot of new migrations in Oscar 0.6.  They are all detailed
-below.  
+below.
 
 If you are upgrading and your project overrides one of these apps with
 new migrations, then ensure you pick up the schema changes in a new migration
@@ -715,14 +715,14 @@ Some of these migrations rename fields for consistency, while others ensure
 * Basket:
 
     - ``0004``: Add ``stockrecord`` field to the ``Line`` model to track which
-      stockrecord has been selected to fulfill a particular line.
+      stockrecord has been selected to fulfil a particular line.
     - ``0005``: Add ``price_currency`` field to the ``Line`` model.
 
 * Catalogue:
 
     - ``0011``: Larger ``max_length`` on FileFields and ImageFields
     - ``0012``: Use ``NullBooleanField`` for the ``value_boolean`` field of
-      the ``ProductAttributeValue`` model. 
+      the ``ProductAttributeValue`` model.
     - ``0013``: Add ``value_file`` and ``value_image`` fields to the
       ``ProductAttributeValue`` model to support file and image attributes.
 
@@ -741,11 +741,11 @@ Some of these migrations rename fields for consistency, while others ensure
     - ``0020``: Data migration to set null offer descriptions to empty string.
     - ``0021``: Don't allow null offer descriptions or benefit types.
     - ``0022``: Add a ``slug`` field to the :class:`~oscar.apps.offer.models.Range` model.
-    - ``0023``: A data migration to populate the new range slug field. 
+    - ``0023``: A data migration to populate the new range slug field.
     - ``0024``: Add a ``is_public`` field to the :class:`~oscar.apps.offer.models.Range` model.
     - ``0025``: Add a ``description`` field to the :class:`~oscar.apps.offer.models.Range` model.
     - ``0026``: Add a ``applies_to_tax_exclusive_price`` field to
-      ``ConditionalOffer`` model to try and handle offers that apply in bothe
+      ``ConditionalOffer`` model to try and handle offers that apply in both
       the US and UK (this field is later removed).
     - ``0027``: Create a joining table for the new M2M relationship between
       ranges and products.
@@ -756,14 +756,14 @@ Some of these migrations rename fields for consistency, while others ensure
     - ``0010``: Allow postcodes for shipping- and billing addresses to be
       nullable.
     - ``0011``: Rename ``date`` field on ``CommunicationEvent``,
-      ``ShippingEvent`` and ``PaymentEvent`` models to be ``date_created``. 
+      ``ShippingEvent`` and ``PaymentEvent`` models to be ``date_created``.
     - ``0012``: Add ``reference`` field to ``PaymentEvent`` model.
     - ``0013``: Add a foreign key to ``ShippingEvent`` from ``PaymentEvent``
       model.
     - ``0014``: Change ``postcode`` field on ``ShippingAddress`` and
       ``BillingAddress`` models to use ``UppercaseCharField`` field.
     - ``0015``: Remove ``is_required`` and ``sequence_number`` fields from
-      ``ShippingEventType`` and ``PaymentEventType`` models. 
+      ``ShippingEventType`` and ``PaymentEventType`` models.
     - ``0016``: Add ``currency`` field to ``Order model``.  Add a foreign key
       to the ``StockRecord`` model from the ``Line`` model.
     - ``0017``: Add a ``shipping_code`` field to the ``Order`` model.
@@ -800,7 +800,7 @@ Accessing a product's stockrecords
 
 Several properties and methods of the core
 :class:`~oscar.apps.catalogue.abstract_models.AbstractProduct`  class have been
-deprecated following the change to allow multiple stockrecords per product. 
+deprecated following the change to allow multiple stockrecords per product.
 
 * The :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecord` property
   no longer makes sense when there can be more than one stockrecord.  It is
@@ -809,12 +809,12 @@ deprecated following the change to allow multiple stockrecords per product.
 
 * The :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.stockrecord` property is
   deprecated since it presumes there is only one stockrecord per product.
-  Choosing the appropriate stockrecord is now the responsibility of the 
+  Choosing the appropriate stockrecord is now the responsibility of the
   :ref:`strategy class <strategy_class>`.  A backward compatible version has
   been kept in place that selects the first stockrecord for a product.  This
   will continue to work for sites that only have one stockrecord per product.
 
-All availability logic has been moved to :ref:`availability policies<availability_policies>` 
+All availability logic has been moved to :ref:`availability policies<availability_policies>`
 which are determined by the :ref:`strategy class <strategy_class>`.
 
 * The :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_available_to_buy` property
@@ -835,7 +835,7 @@ from the session, not loading shipping method instances.
 Checkout order placement mixin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following methods within 
+The following methods within
 :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` are deprecated as the
 flow of placing an order has been changed.
 
@@ -847,7 +847,7 @@ Bankcard model
 ~~~~~~~~~~~~~~
 
 The :attr:`~oscar.apps.payment.abstract_models.AbstractBankcard.card_number`
-is deprecated in favour of using 
+is deprecated in favour of using
 :attr:`~oscar.apps.payment.abstract_models.AbstractBankcard.number`.
 
 "Partner wrappers"
@@ -860,28 +860,28 @@ information for a particular partner, as specified by the
 properties and methods
 which delegated to the appropriate wrapper for the record's partner.
 
-This functionality is now deprecated in favour of using :ref:`strategy classes <strategy_class>`.  
+This functionality is now deprecated in favour of using :ref:`strategy classes <strategy_class>`.
 How prices and taxes are determined is not generally a function of the partner,
 and so this system was not a good model.  Strategy classes are much more
 flexible and allow better modelling of taxes and availability.
 
-The following properties and methods from :class:`~oscar.apps.partner.abstract_models.StockRecord` 
+The following properties and methods from :class:`~oscar.apps.partner.abstract_models.StockRecord`
 are deprecated and will be removed for Oscar 0.7.  These are all convenience
 properties and methods that delegate to the appropriate partner wrapper.
 
-* :attr:`AbstractStockRecord.is_available_to_buy <oscar.apps.partner.abstract_models.AbstractStockRecord.is_available_to_buy>` 
-* :meth:`AbstractStockRecord.is_purchase_permitted <oscar.apps.partner.abstract_models.AbstractStockRecord.is_purchase_permitted>` 
-* :attr:`AbstractStockRecord.availability_code <oscar.apps.partner.abstract_models.AbstractStockRecord.availability_code>` 
-* :attr:`AbstractStockRecord.availability <oscar.apps.partner.abstract_models.AbstractStockRecord.availability>` 
-* :attr:`AbstractStockRecord.max_purchase_quantity <oscar.apps.partner.abstract_models.AbstractStockRecord.max_purchase_quantity>` 
-* :attr:`AbstractStockRecord.dispatch_date <oscar.apps.partner.abstract_models.AbstractStockRecord.dispatch_date>` 
-* :attr:`AbstractStockRecord.lead_time <oscar.apps.partner.abstract_models.AbstractStockRecord.lead_time>` 
-* :attr:`AbstractStockRecord.price_incl_tax <oscar.apps.partner.abstract_models.AbstractStockRecord.price_incl_tax>` 
-* :attr:`AbstractStockRecord.price_tax <oscar.apps.partner.abstract_models.AbstractStockRecord.price_tax>` 
+* :attr:`AbstractStockRecord.is_available_to_buy <oscar.apps.partner.abstract_models.AbstractStockRecord.is_available_to_buy>`
+* :meth:`AbstractStockRecord.is_purchase_permitted <oscar.apps.partner.abstract_models.AbstractStockRecord.is_purchase_permitted>`
+* :attr:`AbstractStockRecord.availability_code <oscar.apps.partner.abstract_models.AbstractStockRecord.availability_code>`
+* :attr:`AbstractStockRecord.availability <oscar.apps.partner.abstract_models.AbstractStockRecord.availability>`
+* :attr:`AbstractStockRecord.max_purchase_quantity <oscar.apps.partner.abstract_models.AbstractStockRecord.max_purchase_quantity>`
+* :attr:`AbstractStockRecord.dispatch_date <oscar.apps.partner.abstract_models.AbstractStockRecord.dispatch_date>`
+* :attr:`AbstractStockRecord.lead_time <oscar.apps.partner.abstract_models.AbstractStockRecord.lead_time>`
+* :attr:`AbstractStockRecord.price_incl_tax <oscar.apps.partner.abstract_models.AbstractStockRecord.price_incl_tax>`
+* :attr:`AbstractStockRecord.price_tax <oscar.apps.partner.abstract_models.AbstractStockRecord.price_tax>`
 
 All the above properties and methods have effectively been moved to the availability and pricing
 policies that a strategy class is responsible for loading.  To upgrade your
-codebase, replace your partner wrapper classes with equivalent 
+project, replace your partner wrapper classes with equivalent
 :doc:`availability and pricing policies </topics/prices_and_availability>`.
 
 Test support extension brought back into core

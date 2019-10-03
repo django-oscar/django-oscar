@@ -24,9 +24,8 @@ class AbstractVoucherSet(models.Model):
     with groups of 4 characters: XXXX-XXXX-XXXX. The dashes (-) do not count for
     the code_length.
 
-    - start_datetime, end_datetime: defines the validity datetime range for
-    all vouchers in the set.
-
+    - :py:attr:`.start_datetime` and :py:attr:`.end_datetime` together define the validity
+      range for all vouchers in the set.
     """
 
     name = models.CharField(verbose_name=_('Name'), max_length=100)

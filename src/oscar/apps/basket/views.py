@@ -46,6 +46,10 @@ class BasketView(ModelFormSetView):
         return kwargs
 
     def get_queryset(self):
+        """
+        Return list of :py:class:`Line <oscar.apps.basket.abstract_models.AbstractLine>`
+        instances associated with the current basket.
+        """  # noqa: E501
         return self.request.basket.all_lines()
 
     def get_shipping_methods(self, basket):
@@ -243,7 +247,7 @@ class BasketAddView(FormView):
     """
     Handles the add-to-basket submissions, which are triggered from various
     parts of the site. The add-to-basket form is loaded into templates using
-    a templatetag from module basket_tags.py.
+    a templatetag from :py:mod:`oscar.templatetags.basket_tags`.
     """
     form_class = AddToBasketForm
     product_model = get_model('catalogue', 'product')
@@ -427,6 +431,11 @@ class SavedView(ModelFormSetView):
         return redirect('basket:summary')
 
     def get_queryset(self):
+        """
+        Return list of :py:class:`Line <oscar.apps.basket.abstract_models.AbstractLine>`
+        instances associated with the saved basked associated with the currently
+        authenticated user.
+        """  # noqa: E501
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
             saved_basket.strategy = self.request.strategy

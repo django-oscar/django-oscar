@@ -25,6 +25,10 @@ class WishListListView(PageTitleMixin, ListView):
     page_title = _('Wish Lists')
 
     def get_queryset(self):
+        """
+        Return a list of all the wishlists for the currently
+        authenticated user.
+        """
         return self.request.user.wishlists.all()
 
 
@@ -81,7 +85,7 @@ class WishListCreateView(PageTitleMixin, CreateView):
     """
     Create a new wishlist
 
-    If a product ID is assed as a kwargs, then this product will be added to
+    If a product ID is passed as a kwargs, then this product will be added to
     the wishlist.
     """
     model = WishList

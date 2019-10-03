@@ -9,14 +9,14 @@ Core models are abstract
 ------------------------
 
 Online shops can vary wildly, selling everything from turnips to concert
-tickets.  Trying to define a set of Django models capable for modeling all such
+tickets.  Trying to define a set of Django models capable for modelling all such
 scenarios is impossible - customisation is what matters.
 
 One way to model your domain is to have enormous models that have fields for
-every possible variation; however, this is unwieldy and ugly.  
+every possible variation; however, this is unwieldy and ugly.
 
-Another is to use the Entity-Attribute-Value pattern to use add meta-data for each of 
-your models.  However this is again ugly and mixes meta-data and data in your database (it's 
+Another is to use the Entity-Attribute-Value pattern to use add meta-data for each of
+your models.  However this is again ugly and mixes meta-data and data in your database (it's
 an SQL anti-pattern).
 
 Oscar's approach to this problem is to have minimal but abstract models

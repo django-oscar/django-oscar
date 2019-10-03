@@ -67,8 +67,8 @@ all Oscar URLs to your Django project, you only need to include the list of URLs
 Changing sub apps
 -----------------
 
-App configs of sub apps such as the ``catalogue`` app are dynamically obtained
-by looking them up in the Django app registry::
+:py:class:`~django.apps.config.AppConfig` of sub apps such as the ``catalogue`` app are dynamically
+obtained by looking them up in the Django app registry::
 
     # oscar/config.py
     from django.apps import apps
@@ -129,8 +129,8 @@ class and override the ``get_urls`` method::
     # myproject/__init__.py
     default_app_config = 'myproject.apps.MyShop'
 
-As the root app config is hardcoded in your project's ``urls.py``, you need to
-modify it to use your new app config instead of Oscar's default::
+Then change ``urls.py`` to use your new :py:class:`~django.apps.config.AppConfig`
+instead of Oscar's default::
 
     # urls.py
     from django.apps import apps

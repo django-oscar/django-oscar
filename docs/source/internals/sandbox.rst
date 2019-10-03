@@ -1,3 +1,7 @@
+.. spelling::
+
+    uWSGI
+
 =====================
 Sample Oscar projects
 =====================
@@ -31,11 +35,10 @@ The sandbox is, in effect, the blank canvas upon which you can build your site.
 Browse the external sandbox site
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An instance of the sandbox site is built hourly from master branch and made
-available at http://latest.oscarcommerce.com 
+An instance of the sandbox site is made available at https://latest.oscarcommerce.com
 
 .. warning::
-    
+
     It is possible for users to access the dashboard and edit the site content.
     Hence, the data can get quite messy.  It is periodically cleaned up.
 
@@ -47,7 +50,7 @@ It's pretty straightforward to get the sandbox site running locally so you can
 play around with Oscar.
 
 .. warning::
-    
+
     While installing Oscar is straightforward, some of Oscar's dependencies
     don't support Windows and are tricky to be properly installed, and therefore
     you might encounter some errors that prevent a successful installation.
@@ -55,7 +58,7 @@ play around with Oscar.
 In order to compile uWSGI, which is a dependency of the sandbox, you will
 first need to install the Python development headers with:::
 
-    $ sudo apt-get install python3-dev
+    $ sudo apt install python3-dev
 
 Install Oscar and its dependencies within a virtualenv:
 
@@ -68,7 +71,7 @@ Install Oscar and its dependencies within a virtualenv:
     (oscar) $ sandbox/manage.py runserver
 
 .. warning::
-    
+
     Note, these instructions will install the head of Oscar's 'master' branch,
     not an official release. Occasionally the sandbox installation process
     breaks while support for a new version of Django is being added (often due
@@ -79,7 +82,7 @@ If you do not have ``mkvirtualenv``, then replace that line with:
 
 .. code-block:: bash
 
-    $ virtualenv oscar
+    $ virtualenv --python=python3 oscar
     $ source ./oscar/bin/activate
     (oscar) $
 

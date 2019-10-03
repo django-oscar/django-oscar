@@ -17,9 +17,9 @@ Restrictions
 ------------
 
 Oscar does have some requirements on what fields a user model has.  For
-instance, the auth backend requires a user to have an 'email' and 'password'
-field. Oscar also assumes that the ``email`` field is unique, as this is used
-to identify users.
+instance, the authentication backend requires a user to have an 'email' and
+'password' field. Oscar also assumes that the ``email`` field is unique, as
+this is used to identify users.
 
 Oscar ships with its own abstract user model that supports the minimum
 fields and methods required for Oscar to work correctly.  New Oscar projects
@@ -44,7 +44,7 @@ Example
 -------
 
 If you want to use ``oscar.apps.customer.abstract_model.AbstractUser``
-which has ``email`` as an index, and want to customize some of the methods on
+which has ``email`` as an index, and want to customise some of the methods on
 ``User`` model, say, ``get_full_name`` for Asian names, a simple approach is
 to create your own ``user`` module::
 
@@ -61,7 +61,7 @@ to create your own ``user`` module::
             return full_name.strip()
 
 Then add this ``user`` app to the ``INSTALLED_APPS`` list. Beside that we
-need to tell ``django`` to use our customized user model instead of the
+need to tell ``django`` to use our customised user model instead of the
 default one as the authentication model [1]_::
 
     # use our own user model

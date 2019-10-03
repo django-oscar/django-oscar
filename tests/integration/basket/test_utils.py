@@ -1,6 +1,7 @@
 
 import pytest
 
+from oscar.apps.offer import models
 from oscar.apps.offer.applicator import Applicator
 from oscar.test.factories import (
     BasketFactory, ConditionalOfferFactory, ProductFactory)
@@ -57,6 +58,25 @@ class TestLineOfferConsumer:
     def test_consumed_no_offer(self, filled_basket):
         for line in filled_basket.all_lines():
             assert line.consumer.consumed() == 0
+
+    def test_available_with_offer(self):
+        basket = BasketFactory()
+        product1 = ProductFactory()
+        product2 = ProductFactory()
+        basket.add_product(product1, quantity=1)
+        basket.add_product(product2, quantity=10)
+
+        benefit = models.Benefit(
+            type=models.Benefit.PERCENTAGE,
+            value=10,
+            max_affected_items=5,
+        )
+        benefit.save()
+
+        offer1 = ConditionalOfferFactory(name='offer1', benefit=benefit)
+        lines = basket.all_lines()
+        assert lines[0].consumer.available(offer1) == 1
+        assert lines[1].consumer.available(offer1) == 5
 
     def test_consumed_with_offer(self, filled_basket):
         offer1 = ConditionalOfferFactory(name='offer1')

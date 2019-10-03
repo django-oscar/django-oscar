@@ -4,5 +4,5 @@ Oscar 1.6.4 release notes
 
 :release: 2018-08-09
 
-This is Oscar 1.6.4, a bugfix release that fixes the setup.py requirements for
+This is Oscar 1.6.4, a bugfix release that fixes the :file:`setup.py` requirements for
 Oscar to make it compatible with Django 2.1.

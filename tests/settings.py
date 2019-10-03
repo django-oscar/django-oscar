@@ -75,6 +75,7 @@ INSTALLED_APPS = [
 INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.partner')] = 'tests._site.apps.partner'
 INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.customer')] = 'tests._site.apps.customer'
 INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.catalogue')] = 'tests._site.apps.catalogue'
+INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.dashboard')] = 'tests._site.apps.dashboard'
 
 AUTH_USER_MODEL = 'myauth.User'
 

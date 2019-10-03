@@ -37,8 +37,10 @@ class ExtendedURLField(CharField):
         self.validators.append(validators.ExtendedURLValidator())
 
     def formfield(self, **kwargs):
-        # As with CharField, this will cause URL validation to be performed
-        # twice.
+        """
+        As with CharField, this will cause URL validation to be performed
+        twice.
+        """
         defaults = {
             'form_class': fields.ExtendedURLField,
         }
@@ -62,6 +64,9 @@ class PositiveDecimalField(DecimalField):
     restricts values to be non-negative.
     """
     def formfield(self, **kwargs):
+        """
+        Return a :py:class:`django.forms.Field` instantiated with a ``min_value`` of 0.
+        """
         return super().formfield(min_value=0)
 
 
@@ -69,9 +74,6 @@ class UppercaseCharField(CharField):
     """
     A simple subclass of ``django.db.models.fields.CharField`` that
     restricts all text to be uppercase.
-
-    Defined with the with_metaclass helper so that to_python is called
-    https://docs.djangoproject.com/en/1.6/howto/custom-model-fields/#the-subfieldbase-metaclass  # NOQA
     """
 
     def contribute_to_class(self, cls, name, **kwargs):
@@ -83,6 +85,9 @@ class UppercaseCharField(CharField):
         return self.to_python(value)
 
     def to_python(self, value):
+        """
+        Cast the supplied value to uppercase
+        """
         val = super().to_python(value)
         if isinstance(val, str):
             return val.upper()

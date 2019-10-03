@@ -28,7 +28,7 @@ install-js: ## Install js requirements
 	npm install
 
 venv: ## Create a virtual env and install test and production requirements
-	virtualenv --python=$(shell which python3) $(VENV)
+	$(shell which python3) -m venv $(VENV)
 	$(VENV)/bin/pip install -e .[test]
 	$(VENV)/bin/pip install -r docs/requirements.txt
 
@@ -92,7 +92,7 @@ test_migrations: install-migrations-testing-requirements ## Tests migrations
 # Translations Handling
 #######################
 extract_translations: ## Extract strings and create source .po files
-	cd src/oscar; django-admin.py makemessages -a --no-wrap
+	cd src/oscar; django-admin.py makemessages -a
 
 compile_translations: ## Compile translation files and create .mo files
 	cd src/oscar; django-admin.py compilemessages

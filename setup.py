@@ -33,7 +33,7 @@ install_requires = [
     'purl>=0.7',
     # For phone number field
     'phonenumbers',
-    'django-phonenumber-field>=2.0,<2.1',
+    'django-phonenumber-field>=3.0.0,<4.0.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
@@ -49,6 +49,7 @@ easy_thumbnails_version = 'easy-thumbnails==2.5'
 docs_requires = [
     'Sphinx==2.0.1',
     'sphinxcontrib-napoleon==0.7',
+    'sphinxcontrib-spelling==4.3.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-issues==1.2.0',
     sorl_thumbnail_version,
@@ -61,10 +62,9 @@ test_requires = [
     'django-webtest==1.9.4',
     'py>=1.4.31',
     'psycopg2>=2.7,<2.8',
-    'pytest>=4.0,<4.5',
-    'pytest-cov==2.6.1',
-    'pytest-django==3.4.8',
-    'pytest-xdist>=1.25,<1.28',
+    'pytest>=5.1,<5.2',
+    'pytest-django>=3.5,<3.6',
+    'pytest-xdist>=1.29,<1.30',
     'tox>=3.0,<3.9',
     sorl_thumbnail_version,
     easy_thumbnails_version,
@@ -96,7 +96,7 @@ setup(
         'easy-thumbnails': [easy_thumbnails_version],
     },
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.11',

@@ -37,7 +37,7 @@ class ShippingAddressFactory(factory.DjangoModelFactory):
     line2 = '1a'
     line4 = 'City'
     postcode = '1000 AA'
-    phone_number = '06-12345678'
+    phone_number = '+12125555555'
 
     class Meta:
         model = get_model('order', 'ShippingAddress')

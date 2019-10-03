@@ -8,7 +8,7 @@ Welcome to Oscar 0.7!
 
 These release notes cover the :ref:`new features <new_in_0.7>` as well as
 :ref:`backwards incompatible changes <incompatible_changes_in_0.7>` that you'll want to be aware of when
-upgrading from Oscar 0.6 or earlier.  
+upgrading from Oscar 0.6 or earlier.
 
 If you encounter any undocumented issues, please let us know on the `mailing
 list`_.
@@ -27,12 +27,12 @@ Overview
 ========
 
 Oscar 0.7 is largely a maintenance release, fixing minor issues, merging
-long-standing pull requests and other housekeeping. 
+long-standing pull requests and other housekeeping.
 
 As part of the clean-up, we have removed a few unused models and model fields,
 as well as removing ``null=True`` from a load of ``CharFields`` - so please read the
 release notes carefully when upgrading as some schema migrations may need some
-care. 
+care.
 
 Further, ensure you test your checkout implementation carefully after upgrading
 as the core Oscar checkout view classes have been reorganised slightly.  Any
@@ -43,7 +43,7 @@ upgrading work should be minor but be diligent.
 Compatibility
 =============
 
-Oscar 0.7 has experimental support for Python 3. 
+Oscar 0.7 has experimental support for Python 3.
 
 Support for Django 1.4 has been dropped, and support for Django 1.6 is
 now considered stable.
@@ -96,7 +96,7 @@ The checkout classes have been reworked to clean-up how pre-conditions are
 enforced. Each view class now has a ``pre_conditions`` attribute which is an
 iterable of method names (as strings). Each method is run within the
 ``dispatch`` method of the view and will redirect the customer back to the
-appropriate view if the check fails. 
+appropriate view if the check fails.
 
 This change makes pre-conditions easier to customise and simplifies the core
 checkout views.  Consequently, the following methods are no longer required and
@@ -109,18 +109,18 @@ Further, the ``PaymentDetailsView`` has been re-organised for extensibility.
 For instance, several new methods have been introduced to allow
 fine-grained overriding of functionality:
 
-* :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_payment_details_submission` - 
+* :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_payment_details_submission` -
   This is responsible for validating any forms submitted from the payment
-  URL 
+  URL
 
-* :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_place_order_submission` - 
+* :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_place_order_submission` -
   This is responsible for placing an order after a submission from the preview
   URL.
 
-* :func:`~oscar.apps.checkout.views.PaymentDetailsView.render_payment_details` - 
+* :func:`~oscar.apps.checkout.views.PaymentDetailsView.render_payment_details` -
   Render the payment details template.
 
-The implementation of 
+The implementation of
 :func:`~oscar.apps.checkout.views.PaymentDetailsView.submit` has been improved
 to handle payment errors in a more customer friendly way.  If an exception is
 raised during payment, the payment details page is now loaded with the
@@ -138,7 +138,7 @@ Minor changes
 
 * Oscar's LESS files now use Bootstrap 2.3.2 (Oscar 0.6 uses 2.1.1).
 
-* The product model now has a 
+* The product model now has a
   :attr:`~oscar.apps.catalogue.abstract_models.Product.num_approved_reviews`
   property to avoid unnecessary SQL queries when rendering templates (`#1299`_)
 
@@ -183,7 +183,7 @@ Minor changes
   is now settable via
   :doc:`OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION</ref/settings>`.
 
-* Vouchers start and end times are now datetimes instead of dates; allowing
+* Vouchers start and end times now use ``datetime`` instead of ``date``; allowing
   "lunch-time deals" etc.
 
 * Product classes can now be added from the dashboard. Editing options and
@@ -208,7 +208,7 @@ Minor changes
 .. _`32b7249`: https://github.com/django-oscar/django-oscar/commit/32b7249e44b40cb1b20d01226f77ae6777a20b91
 .. _`i18n_patterns`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/#language-prefix-in-url-patterns
 
-Bugfixes
+Bug fixes
 ~~~~~~~~
 
 * Addresses in non-shipping countries can no longer be selected as default shipping
@@ -274,7 +274,7 @@ Backwards incompatible changes in 0.7
 
         (r'^i18n/', include('django.conf.urls.i18n')),
 
-* jScrollPane, which was used to style the dashboard's scroll bars, has been
+* ``jScrollPane``, which was used to style the dashboard's scroll bars, has been
   removed.
 
 * The methods ``get_error_response`` and ``can_basket_be_submitted`` have been
