@@ -26,7 +26,8 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 CategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'description', 'image', 'is_public'])
+    fields=['name', 'description', 'image', 'is_public'],
+    exclude=['parents_are_public'])
 
 
 class ProductClassSelectForm(forms.Form):
