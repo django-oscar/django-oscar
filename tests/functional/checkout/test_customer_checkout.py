@@ -3,9 +3,10 @@ from unittest.mock import patch
 
 from django.urls import reverse
 
-from oscar.core.loading import get_model, get_class
+from oscar.core.loading import get_class, get_model
 from oscar.test import factories
 from oscar.test.testcases import WebTestCase
+
 from . import CheckoutMixin
 
 Order = get_model('order', 'Order')

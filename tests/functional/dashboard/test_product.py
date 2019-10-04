@@ -2,23 +2,22 @@ import datetime
 import os
 import posixpath
 import shutil
-from PIL import Image
 
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
-
-from oscar.test import factories
-from oscar.test.testcases import WebTestCase
-from oscar.core.compat import get_user_model
-from oscar.core.loading import get_model
-from oscar.apps.catalogue.models import Product, ProductAttribute
-from oscar.test.factories import (
-    CategoryFactory, ProductFactory, ProductAttributeFactory,
-    ProductClassFactory)
-
+from PIL import Image
 from six import BytesIO
 from webtest import Upload
+
+from oscar.apps.catalogue.models import Product, ProductAttribute
+from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
+from oscar.test import factories
+from oscar.test.factories import (
+    CategoryFactory, ProductAttributeFactory, ProductClassFactory,
+    ProductFactory)
+from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 ProductImage = get_model('catalogue', 'ProductImage')

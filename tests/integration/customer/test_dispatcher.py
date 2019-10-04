@@ -1,12 +1,11 @@
 from django.core import mail
 from django.test import TestCase
 
-from oscar.core.compat import get_user_model
-from oscar.apps.customer.utils import Dispatcher, get_password_reset_url
 from oscar.apps.customer.models import CommunicationEventType, Email
+from oscar.apps.customer.utils import Dispatcher, get_password_reset_url
 from oscar.apps.order.models import CommunicationEvent
-from oscar.test.factories import create_order, SiteFactory
-
+from oscar.core.compat import get_user_model
+from oscar.test.factories import SiteFactory, create_order
 
 User = get_user_model()
 

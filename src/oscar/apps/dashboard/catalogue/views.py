@@ -12,7 +12,6 @@ from django_tables2 import SingleTableMixin, SingleTableView
 from oscar.core.loading import get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 
-
 (ProductForm,
  ProductClassSelectForm,
  ProductSearchForm,

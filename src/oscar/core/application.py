@@ -4,7 +4,6 @@ from django.urls import reverse_lazy
 
 from oscar.core.loading import feature_hidden
 
-
 try:
     # Django 2
     from django.urls import URLPattern

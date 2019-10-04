@@ -3,10 +3,10 @@ from decimal import Decimal as D
 from django.test import TestCase
 
 from oscar.apps.offer import models, utils
-from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.models import WeightBased
-from oscar.test.basket import add_product
+from oscar.apps.shipping.repository import Repository
 from oscar.test import factories
+from oscar.test.basket import add_product
 
 
 def create_offer():

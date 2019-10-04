@@ -8,7 +8,6 @@ from oscar.core.loading import get_model
 from oscar.test.factories.catalogue import ProductReviewFactory
 from oscar.test.factories.customer import UserFactory
 
-
 now = timezone.now()
 
 

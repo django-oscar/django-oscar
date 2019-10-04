@@ -10,7 +10,6 @@ from oscar.templatetags.history_tags import get_back_button
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
 
-
 User = get_user_model()
 COOKIE_NAME = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
 

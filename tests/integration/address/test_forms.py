@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from oscar.apps.address import models, forms
+from oscar.apps.address import forms, models
 from oscar.test.factories import UserFactory
 
 

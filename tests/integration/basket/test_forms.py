@@ -1,8 +1,8 @@
 from decimal import Decimal as D
 from unittest import mock
 
-from django.test import TestCase, override_settings
 from django.conf import settings
+from django.test import TestCase, override_settings
 
 from oscar.apps.basket import forms, formsets
 from oscar.apps.offer.utils import Applicator
@@ -11,7 +11,6 @@ from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.factories import (
     BenefitFactory, ConditionalOfferFactory, ConditionFactory, RangeFactory)
-
 
 Line = get_model('basket', 'Line')
 

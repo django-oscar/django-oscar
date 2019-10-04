@@ -1,6 +1,7 @@
-from django.test import TestCase
-from oscar.core.loading import get_model
 from django.core.exceptions import ValidationError
+from django.test import TestCase
+
+from oscar.core.loading import get_model
 
 Product = get_model("catalogue", "Product")
 

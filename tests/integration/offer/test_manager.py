@@ -3,8 +3,8 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 
-from oscar.test import factories
 from oscar.apps.offer import models
+from oscar.test import factories
 
 
 class TestActiveOfferManager(TestCase):

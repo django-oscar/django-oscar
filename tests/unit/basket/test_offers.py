@@ -1,10 +1,11 @@
-from decimal import Decimal as D, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP
+from decimal import Decimal as D
 
-from django.test import TestCase, RequestFactory
-from django.urls import reverse
 from django.conf import settings
+from django.test import RequestFactory, TestCase
+from django.urls import reverse
 
-from oscar.core.loading import get_model, get_class, get_classes
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.test.factories import UserFactory
 
 Basket = get_model("basket", "Basket")

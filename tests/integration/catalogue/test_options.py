@@ -1,8 +1,7 @@
 from django.test import TestCase
 
-from oscar.test import factories
 from oscar.core.loading import get_model
-
+from oscar.test import factories
 
 Product = get_model('catalogue', 'Product')
 

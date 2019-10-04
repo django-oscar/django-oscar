@@ -1,7 +1,7 @@
 # coding=utf-8
-from decimal import Decimal as D
-import random
 import datetime
+import random
+from decimal import Decimal as D
 
 from django.conf import settings
 from django.utils import timezone
@@ -19,7 +19,6 @@ from oscar.test.factories.partner import *  # noqa
 from oscar.test.factories.payment import *  # noqa
 from oscar.test.factories.voucher import *  # noqa
 from oscar.test.factories.wishlists import *  # noqa
-
 
 Basket = get_model('basket', 'Basket')
 Free = get_class('shipping.methods', 'Free')

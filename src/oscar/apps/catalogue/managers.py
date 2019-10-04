@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from django.db import models
-from django.db.models import OuterRef, Exists
+from django.db.models import Exists, OuterRef
 from django.db.models.constants import LOOKUP_SEP
 
 from oscar.core.decorators import deprecated

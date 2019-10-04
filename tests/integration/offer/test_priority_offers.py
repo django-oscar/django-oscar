@@ -4,8 +4,8 @@ from unittest import mock
 from django.test import TestCase
 from django.utils import timezone
 
-from oscar.core.loading import get_model
 from oscar.apps.offer import utils
+from oscar.core.loading import get_model
 from oscar.test import factories
 
 Voucher = get_model('voucher', 'Voucher')

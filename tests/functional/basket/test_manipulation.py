@@ -1,6 +1,6 @@
-from oscar.test.testcases import WebTestCase
-from oscar.test import factories
 from oscar.apps.basket import models
+from oscar.test import factories
+from oscar.test.testcases import WebTestCase
 
 
 class TestAddingToBasket(WebTestCase):

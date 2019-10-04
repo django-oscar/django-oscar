@@ -4,9 +4,9 @@ import datetime
 import io
 import os
 from tempfile import NamedTemporaryFile
-from django.utils.encoding import smart_text
 
 from django.test import TestCase, override_settings
+from django.utils.encoding import smart_text
 
 from oscar.core.compat import UnicodeCSVWriter, existing_user_fields
 

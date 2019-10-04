@@ -1,7 +1,7 @@
 from decimal import Decimal as D
 
-from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from oscar.apps.shipping import models
 
