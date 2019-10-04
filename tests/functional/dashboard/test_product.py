@@ -287,17 +287,23 @@ class TestProductImages(ProductWebTest):
         self.assertEqual(images[2].display_order, 2)
 
     def test_product_images_reordering(self):
-        self.images = factories.ProductImageFactory.create_batch(3, product=self.product)
-        image_ids = list(self.product.images.values_list('id', flat=True))
-        self.assertEqual(image_ids, [3, 2, 1])
+        im1 = factories.ProductImageFactory(product=self.product, display_order=1)
+        im2 = factories.ProductImageFactory(product=self.product, display_order=2)
+        im3 = factories.ProductImageFactory(product=self.product, display_order=3)
+
+        self.assertEqual(
+            list(ProductImage.objects.all().order_by("display_order")),
+            [im1, im2, im3]
+        )
+
         page = self.get(self.url)
         product_form = page.form
-        product_form['images-0-display_order'] = '5'
-        product_form['images-1-display_order'] = '3'
-        product_form['images-2-display_order'] = '4'
+        product_form['images-1-display_order'] = '3'  # 1 is im2
+        product_form['images-2-display_order'] = '4'  # 2 is im3
+        product_form['images-0-display_order'] = '5'  # 0 is im1
         product_form.submit()
-        self.product = Product.objects.get(pk=self.product.id)
-        display_orders = list(self.product.images.values_list('display_order', flat=True))
-        image_ids = list(self.product.images.values_list('id', flat=True))
-        self.assertEqual(display_orders, [0, 1, 2])
-        self.assertEqual(image_ids, [2, 1, 3])
+
+        self.assertEqual(
+            list(ProductImage.objects.all().order_by("display_order")),
+            [im2, im3, im1]
+        )
