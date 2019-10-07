@@ -55,10 +55,9 @@
 {% endblock %}
 
 {% block cdn_scripts %}
-  {{ block.super }}
+    {{ block.super }}
     {# Load the on-the-fly scss compiler. Never do this in production. #}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sass.js/0.10.13/sass.min.js"></script>
-  {% endif %}
 {% endblock %}
 
 {# Local scripts #}
