@@ -138,8 +138,8 @@ div[data-spy="affix"].affix {
   color: $gray-800;
 }
 
-.bs-docs-sidenav > .active > a,
-.bs-docs-sidenav > .active > span {
+.bs-docs-sidenav > li > a.active,
+.bs-docs-sidenav > li > span.active {
   font-weight: bold;
   position: relative;
   color: $link-color;

@@ -10749,8 +10749,8 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav > li > span {
   color: #343a40; }
 
-.bs-docs-sidenav > .active > a,
-.bs-docs-sidenav > .active > span {
+.bs-docs-sidenav > li > a.active,
+.bs-docs-sidenav > li > span.active {
   font-weight: bold;
   position: relative;
   color: #007bff;
@@ -10758,12 +10758,12 @@ div[data-spy="affix"].affix {
   z-index: 2;
   padding: 9px 15px;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15); }
-  .bs-docs-sidenav > .active > a:hover,
-  .bs-docs-sidenav > .active > span:hover {
+  .bs-docs-sidenav > li > a.active:hover,
+  .bs-docs-sidenav > li > span.active:hover {
     background: #e9ecef;
     color: #007bff; }
-  .bs-docs-sidenav > .active > a:after,
-  .bs-docs-sidenav > .active > span:after {
+  .bs-docs-sidenav > li > a.active:after,
+  .bs-docs-sidenav > li > span.active:after {
     border-bottom: 10px solid transparent;
     border-left: 10px solid #e9ecef;
     border-top: 10px solid transparent;
@@ -10772,8 +10772,8 @@ div[data-spy="affix"].affix {
     position: absolute;
     right: -9px;
     top: 9px; }
-  .bs-docs-sidenav > .active > a:before,
-  .bs-docs-sidenav > .active > span:before {
+  .bs-docs-sidenav > li > a.active:before,
+  .bs-docs-sidenav > li > span.active:before {
     border-bottom: 11px solid transparent;
     border-left: 11px solid #ced4da;
     border-top: 11px solid transparent;
