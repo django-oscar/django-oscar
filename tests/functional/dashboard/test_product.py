@@ -1,11 +1,8 @@
 import datetime
 import os
-import posixpath
-import shutil
 
 from django.conf import settings
 from django.urls import reverse
-from django.utils import timezone
 from PIL import Image
 from six import BytesIO
 from webtest import Upload
@@ -21,6 +18,18 @@ from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 ProductImage = get_model('catalogue', 'ProductImage')
+
+
+def generate_test_image():
+    tempfile = BytesIO()
+    image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
+    image.save(tempfile, "PNG")
+    tempfile.seek(0)
+    return tempfile.read()
+
+
+def media_file_path(path):
+    return os.path.join(settings.MEDIA_ROOT, path)
 
 
 class ProductWebTest(WebTestCase):
@@ -181,18 +190,6 @@ class TestProductClass(ProductWebTest):
         self.product = factories.ProductFactory(product_class=self.pclass)
         self.url = reverse('dashboard:catalogue-product',
                            kwargs={'pk': self.product.id})
-        self.image_folder = datetime.datetime.now().strftime(settings.OSCAR_IMAGE_FOLDER)
-
-    def tearDown(self):
-        root_image_folder = self.image_folder.split(os.sep)[0]
-        shutil.rmtree(posixpath.join(settings.MEDIA_ROOT, root_image_folder), ignore_errors=True)
-
-    def generate_test_image(self, name):
-        tempfile = BytesIO()
-        image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
-        image.save(tempfile, "PNG")
-        tempfile.seek(0)
-        return tempfile.read()
 
     def test_product_update_attribute_values(self):
         page = self.get(self.url)
@@ -205,8 +202,11 @@ class TestProductClass(ProductWebTest):
         product_form['attr_boolean'] = 'yes'
         product_form['attr_richtext'] = 'longread'
         product_form['attr_date'] = '2016-10-12'
-        product_form['attr_file'] = Upload('file1.txt', b"test", 'text/plain')
-        product_form['attr_image'] = Upload('image1.png', self.generate_test_image('image1.png'), 'image/png')
+
+        file1 = Upload('file1.txt', b"test-1", 'text/plain')
+        image1 = Upload('image1.png', generate_test_image(), 'image/png')
+        product_form['attr_file'] = file1
+        product_form['attr_image'] = image1
         product_form.submit()
 
         # Reloading model instance to re-initiate ProductAttributeContainer
@@ -218,8 +218,26 @@ class TestProductClass(ProductWebTest):
         self.assertTrue(self.product.attr.boolean)
         self.assertEqual(self.product.attr.richtext, 'longread')
         self.assertEqual(self.product.attr.date, datetime.date(2016, 10, 12))
-        self.assertEqual(self.product.attr.file.name, posixpath.join(self.image_folder, 'file1.txt'))
-        self.assertEqual(self.product.attr.image.name, posixpath.join(self.image_folder, 'image1.png'))
+
+        file1_path = media_file_path(self.product.attr.file.name)
+        self.assertTrue(
+            os.path.isfile(file1_path)
+        )
+        with open(file1_path) as file1_file:
+            self.assertEqual(
+                file1_file.read(),
+                "test-1"
+            )
+
+        image1_path = media_file_path(self.product.attr.image.name)
+        self.assertTrue(
+            os.path.isfile(image1_path)
+        )
+        with open(image1_path, "rb") as image1_file:
+            self.assertEqual(
+                image1_file.read(),
+                image1.content
+            )
 
         page = self.get(self.url)
         product_form = page.form
@@ -229,8 +247,10 @@ class TestProductClass(ProductWebTest):
         product_form['attr_boolean'] = ''
         product_form['attr_richtext'] = 'article'
         product_form['attr_date'] = '2016-10-10'
-        product_form['attr_file'] = Upload('file2.txt', b"test", 'text/plain')
-        product_form['attr_image'] = Upload('image2.png', self.generate_test_image('image2.png'), 'image/png')
+        file2 = Upload('file2.txt', b"test-2", 'text/plain')
+        image2 = Upload('image2.png', generate_test_image(), 'image/png')
+        product_form['attr_file'] = file2
+        product_form['attr_image'] = image2
         product_form.submit()
 
         self.product = Product.objects.get(pk=self.product.id)
@@ -240,8 +260,26 @@ class TestProductClass(ProductWebTest):
         self.assertFalse(self.product.attr.boolean)
         self.assertEqual(self.product.attr.richtext, 'article')
         self.assertEqual(self.product.attr.date, datetime.date(2016, 10, 10))
-        self.assertEqual(self.product.attr.file.name, posixpath.join(self.image_folder, 'file2.txt'))
-        self.assertEqual(self.product.attr.image.name, posixpath.join(self.image_folder, 'image2.png'))
+
+        file2_path = media_file_path(self.product.attr.file.name)
+        self.assertTrue(
+            os.path.isfile(file2_path)
+        )
+        with open(file2_path) as file2_file:
+            self.assertEqual(
+                file2_file.read(),
+                "test-2"
+            )
+
+        image2_path = media_file_path(self.product.attr.image.name)
+        self.assertTrue(
+            os.path.isfile(image2_path)
+        )
+        with open(image2_path, "rb") as image2_file:
+            self.assertEqual(
+                image2_file.read(),
+                image2.content
+            )
 
 
 class TestProductImages(ProductWebTest):
@@ -251,53 +289,72 @@ class TestProductImages(ProductWebTest):
         self.product = factories.ProductFactory()
         self.url = reverse('dashboard:catalogue-product',
                            kwargs={'pk': self.product.id})
-        self.image_folder = timezone.now().strftime(settings.OSCAR_IMAGE_FOLDER)
-
-    def tearDown(self):
-        root_image_folder = self.image_folder.split(os.sep)[0]
-        shutil.rmtree(root_image_folder, ignore_errors=True)
-
-    def generate_test_image(self, name):
-        tempfile = BytesIO()
-        image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
-        image.save(tempfile, "PNG")
-        tempfile.seek(0)
-        return tempfile.read()
 
     def test_product_images_upload(self):
         page = self.get(self.url)
         product_form = page.form
-        product_form['images-0-original'] = Upload('image1.png', self.generate_test_image('image1.png'), 'image/png')
-        product_form['images-1-original'] = Upload('image2.png', self.generate_test_image('image2.png'), 'image/png')
+        image1 = Upload('image1.png', generate_test_image(), 'image/png')
+        image2 = Upload('image2.png', generate_test_image(), 'image/png')
+        image3 = Upload('image3.png', generate_test_image(), 'image/png')
+
+        product_form['images-0-original'] = image1
+        product_form['images-1-original'] = image2
         product_form.submit(name='action', value='continue').follow()
         self.product = Product.objects.get(pk=self.product.id)
         self.assertEqual(self.product.images.count(), 2)
         page = self.get(self.url)
         product_form = page.form
-        product_form['images-2-original'] = Upload('image3.png', self.generate_test_image('image3.png'), 'image/png')
+        product_form['images-2-original'] = image3
         product_form.submit()
         self.product = Product.objects.get(pk=self.product.id)
         self.assertEqual(self.product.images.count(), 3)
         images = self.product.images.all()
-        self.assertEqual(images[0].original.name, os.path.join(self.image_folder, 'image1.png'))
+
         self.assertEqual(images[0].display_order, 0)
-        self.assertEqual(images[1].original.name, os.path.join(self.image_folder, 'image2.png'))
+        image1_path = media_file_path(images[0].original.name)
+        self.assertTrue(os.path.isfile(image1_path))
+        with open(image1_path, "rb") as image1_file:
+            self.assertEqual(
+                image1_file.read(),
+                image1.content
+            )
+
         self.assertEqual(images[1].display_order, 1)
-        self.assertEqual(images[2].original.name, os.path.join(self.image_folder, 'image3.png'))
+        image2_path = media_file_path(images[1].original.name)
+        self.assertTrue(os.path.isfile(image2_path))
+        with open(image2_path, "rb") as image2_file:
+            self.assertEqual(
+                image2_file.read(),
+                image2.content
+            )
+
         self.assertEqual(images[2].display_order, 2)
+        image3_path = media_file_path(images[2].original.name)
+        self.assertTrue(os.path.isfile(image3_path))
+        with open(image3_path, "rb") as image3_file:
+            self.assertEqual(
+                image3_file.read(),
+                image3.content
+            )
 
     def test_product_images_reordering(self):
-        self.images = factories.ProductImageFactory.create_batch(3, product=self.product)
-        image_ids = list(self.product.images.values_list('id', flat=True))
-        self.assertEqual(image_ids, [3, 2, 1])
+        im1 = factories.ProductImageFactory(product=self.product, display_order=1)
+        im2 = factories.ProductImageFactory(product=self.product, display_order=2)
+        im3 = factories.ProductImageFactory(product=self.product, display_order=3)
+
+        self.assertEqual(
+            list(ProductImage.objects.all().order_by("display_order")),
+            [im1, im2, im3]
+        )
+
         page = self.get(self.url)
         product_form = page.form
-        product_form['images-0-display_order'] = '5'
-        product_form['images-1-display_order'] = '3'
-        product_form['images-2-display_order'] = '4'
+        product_form['images-1-display_order'] = '3'  # 1 is im2
+        product_form['images-2-display_order'] = '4'  # 2 is im3
+        product_form['images-0-display_order'] = '5'  # 0 is im1
         product_form.submit()
-        self.product = Product.objects.get(pk=self.product.id)
-        display_orders = list(self.product.images.values_list('display_order', flat=True))
-        image_ids = list(self.product.images.values_list('id', flat=True))
-        self.assertEqual(display_orders, [0, 1, 2])
-        self.assertEqual(image_ids, [2, 1, 3])
+
+        self.assertEqual(
+            list(ProductImage.objects.all().order_by("display_order")),
+            [im2, im3, im1]
+        )

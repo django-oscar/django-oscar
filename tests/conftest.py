@@ -1,4 +1,5 @@
 import os
+import shutil
 import warnings
 
 import django
@@ -31,3 +32,9 @@ def pytest_configure(config):
         os.environ['DATABASE_NAME'] = ':memory:'
 
     django.setup()
+
+
+def pytest_unconfigure(config):
+    # remove tests/public/media folder
+    from django.conf import settings
+    shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
