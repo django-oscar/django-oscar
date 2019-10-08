@@ -159,6 +159,8 @@ or
 
     {% oscar_thumbnail [source] [size] [options] as [variable] %}
 
+When the ``OSCAR_THUMBNAIL_DEBUG`` setting is set to ``True``, this template tag will fail with an error if an exception is raised while generating the thumbnail. If set to ``False``, an empty string is returned.
+
 The arguments are:
 
 ===================  =====================================================
