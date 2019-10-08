@@ -1,3 +1,4 @@
+import logging
 import re
 
 from django import template
@@ -11,6 +12,7 @@ from oscar.core.thumbnails import get_thumbnailer
 
 register = template.Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
+logger = logging.getLogger('oscar.thumbnail')
 
 
 def do_dynamic_image_url(parser, token):
@@ -101,9 +103,22 @@ class ThumbnailNode(template.Node):
             expr = parser.compile_filter(m.group('value'))
             self.options.append((key, expr))
 
+    def get_thumbnail_options(self, context):
+        return {'size': self.size_var.resolve(context)}
+
     def render(self, context):
+        try:
+            return self._render(context)
+        except Exception as e:
+            if getattr(settings, 'OSCAR_THUMBNAIL_DEBUG', settings.DEBUG):
+                raise e
+
+            logger.exception(e)
+            return ''
+
+    def _render(self, context):
         source = self.source_var.resolve(context)
-        options = {'size': self.size_var.resolve(context)}
+        options = self.get_thumbnail_options(context)
         for key, expr in self.options:
             value = self.no_resolve.get(text_type(expr), expr.resolve(context))
             options[key] = value

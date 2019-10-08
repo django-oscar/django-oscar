@@ -1,4 +1,5 @@
 import os
+from unittest.mock import patch
 
 from django import template
 from django.test import TestCase
@@ -58,6 +59,32 @@ class OscarThumbnailMixin:
 
     def test_oscar_thumbnail_sizes(self):
         self._test_oscar_thumbnail_tag_sizes()
+
+    @patch('oscar.templatetags.image_tags.ThumbnailNode._render')
+    def test_doesnt_raise_if_oscar_thumbnail_debug_is_false(self, render_mock):
+        render_mock.side_effect = ValueError()
+        with override_settings(OSCAR_THUMBNAIL_DEBUG=True):
+            with self.assertRaises(ValueError):
+                self.template.render(self.context)
+
+    @patch('oscar.templatetags.image_tags.ThumbnailNode._render')
+    def test_raises_if_oscar_thumbnail_debug_is_true(self, render_mock):
+        render_mock.side_effect = ValueError()
+        with override_settings(OSCAR_THUMBNAIL_DEBUG=False):
+            self.assertEqual(self.template.render(self.context), '')
+
+    @patch('oscar.templatetags.image_tags.ThumbnailNode._render')
+    def test_doesnt_raise_if_debug_is_false_and_oscar_thumbnail_debug_is_not_set(self, render_mock):
+        render_mock.side_effect = ValueError()
+        with override_settings(DEBUG=True):
+            with self.assertRaises(ValueError):
+                self.template.render(self.context)
+
+    @patch('oscar.templatetags.image_tags.ThumbnailNode._render')
+    def test_raises_if_debug_is_true_and_oscar_thumbnail_debug_is_not_set(self, render_mock):
+        render_mock.side_effect = ValueError()
+        with override_settings(DEBUG=False):
+            self.assertEqual(self.template.render(self.context), '')
 
 
 @override_settings(
