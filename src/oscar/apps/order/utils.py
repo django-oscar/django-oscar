@@ -13,6 +13,7 @@ from . import exceptions
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 OrderDiscount = get_model('order', 'OrderDiscount')
+Surcharge = get_model('order', 'Surcharge')
 
 
 class OrderNumberGenerator(object):
@@ -36,7 +37,7 @@ class OrderCreator(object):
     """
 
     def place_order(self, basket, total,  # noqa (too complex (12))
-                    shipping_method, shipping_charge, user=None,
+                    shipping_method, shipping_charge, surcharges, user=None,
                     shipping_address=None, billing_address=None,
                     order_number=None, status=None, request=None, **kwargs):
         """
@@ -59,7 +60,7 @@ class OrderCreator(object):
 
             # Ok - everything seems to be in order, let's place the order
             order = self.create_order_model(
-                user, basket, shipping_address, shipping_method, shipping_charge,
+                user, basket, shipping_address, shipping_method, shipping_charge, surcharges,
                 billing_address, total, order_number, status, request, **kwargs)
             for line in basket.all_lines():
                 self.create_line_models(order, line)
@@ -102,7 +103,7 @@ class OrderCreator(object):
         return order
 
     def create_order_model(self, user, basket, shipping_address,
-                           shipping_method, shipping_charge, billing_address,
+                           shipping_method, shipping_charge, surcharges, billing_address,
                            total, order_number, status, request=None, **extra_order_fields):
         """Create an order model."""
         order_data = {'basket': basket,
@@ -128,6 +129,14 @@ class OrderCreator(object):
             order_data['site'] = Site._default_manager.get_current(request)
         order = Order(**order_data)
         order.save()
+        if surcharges:
+            for charge in surcharges:
+                Surcharge.objects.create(
+                    order=order,
+                    name=charge.method.name,
+                    excl_tax=charge.price.excl_tax,
+                    incl_tax=charge.price.incl_tax
+                )
         return order
 
     def create_line_models(self, order, basket_line, extra_line_fields=None):

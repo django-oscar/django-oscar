@@ -149,6 +149,36 @@
                 {% endif %}
             {% endblock %}
 
+            {% block surcharges %}
+                {% if surcharges %}
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <th colspan="2">
+                            <h3>{% trans "Surcharges" %}</h3>
+                        </th>
+                    </tr>
+                    {% for surcharge in surcharges %}
+                        <tr>   
+                            <th class="total"> 
+                                {{surcharge.method.name}}
+                            </th>
+                            <th class="total align-right">
+                                {% if not show_tax_separately and surcharge.price.is_tax_known %}
+                                    {{ surcharge.price.incl_tax|currency:basket.currency }}
+                                {% else %}
+                                    {{ surcharge.price.excl_tax|currency:basket.currency }}
+                                {% endif %}
+                            </th>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endblock %}
+
+
             {% block tax_totals %}
                 {% if show_tax_separately %}
                     <tr>

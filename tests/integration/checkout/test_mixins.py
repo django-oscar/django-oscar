@@ -8,7 +8,10 @@ from django.test.utils import override_settings
 from oscar.apps.checkout.calculators import OrderTotalCalculator
 from oscar.apps.checkout.mixins import CheckoutSessionMixin, OrderPlacementMixin
 from oscar.apps.checkout.exceptions import FailedPreCondition
-from oscar.core.loading import get_model
+from oscar.apps.checkout.mixins import (
+    CheckoutSessionMixin, OrderPlacementMixin)
+from oscar.apps.shipping.methods import FixedPrice, Free
+from oscar.core.loading import get_class, get_model
 from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.utils import RequestFactory
@@ -16,6 +19,9 @@ from oscar.apps.shipping.methods import FixedPrice, Free
 
 
 Order = get_model('order', 'Order')
+Surcharge = get_model('order', 'Surcharge')
+
+SurchargeApplicator = get_class("checkout.applicator", "SurchargeApplicator")
 
 
 class TestOrderPlacementMixin(TestCase):
@@ -39,7 +45,9 @@ class TestOrderPlacementMixin(TestCase):
                                                             line2='159',
                                                             line4='London')
         shipping_charge = shipping_method.calculate(basket)
-        order_total = OrderTotalCalculator().calculate(basket, shipping_charge)
+        applicator = SurchargeApplicator()
+        surcharges = applicator.get_applicable_surcharges(basket)
+        order_total = OrderTotalCalculator().calculate(basket, shipping_charge, surcharges)
 
         order_submission_data = {'user': user,
                                  'order_number': '12345',
@@ -99,7 +107,9 @@ class TestOrderPlacementMixin(TestCase):
         add_product(basket, D('12.00'))
         shipping_method = Free()
         shipping_charge = shipping_method.calculate(basket)
-        order_total = OrderTotalCalculator().calculate(basket, shipping_charge)
+        applicator = SurchargeApplicator()
+        surcharges = applicator.get_applicable_surcharges(basket)
+        order_total = OrderTotalCalculator().calculate(basket, shipping_charge, surcharges)
 
         billing_address = factories.BillingAddressFactory()
         shipping_address = factories.ShippingAddressFactory()
@@ -114,6 +124,12 @@ class TestOrderPlacementMixin(TestCase):
                                  'request': request}
         OrderPlacementMixin().place_order(**order_submission_data)
         order1 = Order.objects.get(number='12345')
+        for charge in surcharges:
+            Surcharge(
+                order=order1,
+                name=charge.method.name,
+                excl_tax=charge.price.excl_tax,
+                incl_tax=charge.price.incl_tax)
         self.assertEqual(order1.site, site1)
 
         add_product(basket, D('12.00'))
@@ -133,7 +149,9 @@ class TestOrderPlacementMixin(TestCase):
         order_placement.add_payment_event('Credit Card Payment', D('90'))
         shipping_method = Free()
         shipping_charge = shipping_method.calculate(basket)
-        order_total = OrderTotalCalculator().calculate(basket, shipping_charge)
+        applicator = SurchargeApplicator()
+        surcharges = applicator.get_applicable_surcharges(basket)
+        order_total = OrderTotalCalculator().calculate(basket, shipping_charge, surcharges)
 
         billing_address = factories.BillingAddressFactory()
         shipping_address = factories.ShippingAddressFactory()
@@ -147,6 +165,12 @@ class TestOrderPlacementMixin(TestCase):
                                  'shipping_address': shipping_address}
         order_placement.place_order(**order_submission_data)
         order1 = Order.objects.get(number='12345')
+        for charge in surcharges:
+            Surcharge(
+                order=order1,
+                name=charge.method.name,
+                excl_tax=charge.price.excl_tax,
+                incl_tax=charge.price.incl_tax)
         self.assertEqual(order1.payment_events.count(), 2)
         event1 = order1.payment_events.all()[0]
         event2 = order1.payment_events.all()[1]
