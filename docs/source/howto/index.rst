@@ -61,6 +61,16 @@ Shipping
     :maxdepth: 1
 
     how_to_configure_shipping
+    
+    
+Surcharges
+----------
+
+.. toctree::
+    :maxdepth: 1
+    
+    how_to_configure_surcharges
+
 
 Order processing
 ----------------

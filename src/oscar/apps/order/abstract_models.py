@@ -186,14 +186,14 @@ class AbstractOrder(models.Model):
         """
         Return basket total including tax
         """
-        return self.total_incl_tax - self.shipping_incl_tax
+        return self.total_incl_tax - self.shipping_incl_tax - self.surcharge_incl_tax
 
     @property
     def basket_total_excl_tax(self):
         """
         Return basket total excluding tax
         """
-        return self.total_excl_tax - self.shipping_excl_tax
+        return self.total_excl_tax - self.shipping_excl_tax - self.surcharge_excl_tax
 
     @property
     def total_before_discounts_incl_tax(self):
@@ -225,6 +225,14 @@ class AbstractOrder(models.Model):
     @property
     def total_tax(self):
         return self.total_incl_tax - self.total_excl_tax
+
+    @property
+    def surcharge_excl_tax(self):
+        return sum(charge.excl_tax for charge in self.surcharges.all())
+
+    @property
+    def surcharge_incl_tax(self):
+        return sum(charge.incl_tax for charge in self.surcharges.all())
 
     @property
     def num_lines(self):
@@ -1169,3 +1177,36 @@ class AbstractOrderDiscount(models.Model):
         if self.voucher_code:
             return self.voucher_code
         return self.offer_name or ""
+
+
+class AbstractSurcharge(models.Model):
+    order = models.ForeignKey(
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name="surcharges",
+        verbose_name=_("Surcharges"))
+
+    name = models.CharField(
+        _("Surcharge"), max_length=128
+    )
+
+    code = models.CharField(
+        _("Surcharge code"), max_length=128
+    )
+
+    incl_tax = models.DecimalField(
+        _("Surcharge (inc. tax)"), decimal_places=2, max_digits=12,
+        default=0)
+
+    excl_tax = models.DecimalField(
+        _("Surcharge (excl. tax)"), decimal_places=2, max_digits=12,
+        default=0)
+
+    @property
+    def tax(self):
+        return self.incl_tax - self.excl_tax
+
+    class Meta:
+        abstract = True
+        app_label = 'order'
+        ordering = ['pk']

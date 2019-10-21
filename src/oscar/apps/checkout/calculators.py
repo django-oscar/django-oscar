@@ -13,12 +13,18 @@ class OrderTotalCalculator(object):
         # always changes the order total.
         self.request = request
 
-    def calculate(self, basket, shipping_charge, **kwargs):
+    def calculate(self, basket, shipping_charge, surcharges=None, **kwargs):
         excl_tax = basket.total_excl_tax + shipping_charge.excl_tax
         if basket.is_tax_known and shipping_charge.is_tax_known:
             incl_tax = basket.total_incl_tax + shipping_charge.incl_tax
         else:
             incl_tax = None
+
+        if surcharges is not None:
+            excl_tax += surcharges.total.excl_tax
+            if incl_tax is not None:
+                incl_tax += surcharges.total.incl_tax
+
         return prices.Price(
             currency=basket.currency,
             excl_tax=excl_tax, incl_tax=incl_tax)

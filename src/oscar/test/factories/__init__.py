@@ -26,6 +26,7 @@ Voucher = get_model('voucher', 'Voucher')
 OrderCreator = get_class('order.utils', 'OrderCreator')
 OrderTotalCalculator = get_class('checkout.calculators',
                                  'OrderTotalCalculator')
+SurchargeApplicator = get_class('checkout.applicator', 'SurchargeApplicator')
 Partner = get_model('partner', 'Partner')
 StockRecord = get_model('partner', 'StockRecord')
 PurchaseInfo = get_class('partner.strategy', 'PurchaseInfo')
@@ -164,8 +165,10 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     if shipping_method is None:
         shipping_method = Free()
     shipping_charge = shipping_method.calculate(basket)
+    surcharges = SurchargeApplicator().get_applicable_surcharges(basket)
     if total is None:
-        total = OrderTotalCalculator().calculate(basket, shipping_charge)
+        total = OrderTotalCalculator().calculate(basket, shipping_charge, surcharges)
+    kwargs['surcharges'] = surcharges
     order = OrderCreator().place_order(
         order_number=number,
         user=user,

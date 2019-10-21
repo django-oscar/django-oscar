@@ -27,6 +27,7 @@ Repository = get_class('shipping.repository', 'Repository')
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
 BasketMessageGenerator = get_class('basket.utils', 'BasketMessageGenerator')
+SurchargeApplicator = get_class("checkout.applicator", "SurchargeApplicator")
 
 
 class BasketView(ModelFormSetView):
@@ -115,9 +116,6 @@ class BasketView(ModelFormSetView):
         if method.is_discounted:
             excl_discount = method.calculate_excl_discount(self.request.basket)
             context['shipping_charge_excl_discount'] = excl_discount
-
-        context['order_total'] = OrderTotalCalculator().calculate(
-            self.request.basket, shipping_charge)
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(
@@ -138,6 +136,11 @@ class BasketView(ModelFormSetView):
                                                queryset=saved_queryset,
                                                prefix='saved')
                     context['saved_formset'] = formset
+
+        surcharges = SurchargeApplicator(self.request, context).get_applicable_surcharges(self.request.basket)
+        context['surcharges'] = surcharges
+        context['order_total'] = OrderTotalCalculator().calculate(
+            self.request.basket, shipping_charge, surcharges=surcharges)
         return context
 
     def get_success_url(self):
