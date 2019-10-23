@@ -967,7 +967,7 @@ class AbstractRange(models.Model):
 
         # select all those product that are selected either by product class,
         # category, or explicitly by included_products.
-        all_parents = (
+        selected_parents = (
             Product.objects.filter(
                 Q(product_class_id__in=self.classes.values("id"))
                 | Q(categories__in=category_tree)
@@ -975,15 +975,15 @@ class AbstractRange(models.Model):
             | self.included_products.all()
         )
 
-        # now go and exclude all explicitly excluded products
-        excludes = self.excluded_products.values("id")
-        selected_parents = all_parents.exclude(
-            Q(parent_id__in=excludes) | Q(id__in=excludes)
+        # select parents and their children
+        selected_products = (
+            selected_parents | Product.objects.filter(parent__in=selected_parents)
         )
 
-        # select parents and their children
-        return (
-            selected_parents | Product.objects.filter(parent__in=selected_parents)
+        # now go and exclude all explicitly excluded products
+        excludes = self.excluded_products.values("id")
+        return selected_products.exclude(
+            Q(parent_id__in=excludes) | Q(id__in=excludes)
         ).distinct()
 
     @property
