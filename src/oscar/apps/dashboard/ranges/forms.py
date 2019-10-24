@@ -9,6 +9,8 @@ from oscar.core.loading import get_model
 Product = get_model('catalogue', 'Product')
 Range = get_model('offer', 'Range')
 
+UPC_SET_REGEX = re.compile(r'[^,\s]+')
+
 
 class RangeForm(forms.ModelForm):
 
@@ -46,7 +48,7 @@ class RangeProductForm(forms.Form):
             return raw
 
         # Check that the search matches some products
-        ids = set(re.compile(r'[\w-]+').findall(raw))
+        ids = set(UPC_SET_REGEX.findall(raw))
         products = self.range.all_products()
         existing_skus = set(products.values_list(
             'stockrecords__partner_sku', flat=True))
