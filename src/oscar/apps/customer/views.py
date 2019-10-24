@@ -135,6 +135,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
 
     def get_login_form_kwargs(self, bind_data=False):
         kwargs = {}
+        kwargs['request'] = self.request
         kwargs['host'] = self.request.get_host()
         kwargs['prefix'] = self.login_prefix
         kwargs['initial'] = {
