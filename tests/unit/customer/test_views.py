@@ -1,6 +1,6 @@
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from oscar.apps.customer.forms import EmailAuthenticationForm
