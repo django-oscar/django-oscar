@@ -66,9 +66,12 @@ class OrderCreator(object):
                 self.update_stock_records(line)
 
             for voucher in basket.vouchers.select_for_update():
-                available_to_user, msg = voucher.is_available_to_user(user=user)
-                if not voucher.is_active() or not available_to_user:
-                    raise ValueError(msg)
+                if not voucher.is_active():  # basket ignores inactive vouchers
+                    basket.vouchers.remove(voucher)
+                else:
+                    available_to_user, msg = voucher.is_available_to_user(user=user)
+                    if not available_to_user:
+                        raise ValueError(msg)
 
             # Record any discounts associated with this order
             for application in basket.offer_applications:
