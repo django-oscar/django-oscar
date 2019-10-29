@@ -1,6 +1,6 @@
 import datetime
-import time
 import threading
+import time
 from decimal import Decimal as D
 
 import pytest
