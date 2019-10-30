@@ -39,7 +39,9 @@ INSTALLED_APPS = [
 ] + oscar.get_core_apps([
     'tests._site.apps.partner',
     'tests._site.apps.customer',
-    'tests._site.apps.catalogue'
+    'tests._site.apps.catalogue',
+    'tests._site.apps.dashboard',
+    'tests._site.apps.checkout'
 ])
 
 AUTH_USER_MODEL = 'myauth.User'

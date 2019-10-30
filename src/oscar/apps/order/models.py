@@ -102,3 +102,9 @@ if not is_model_registered('order', 'OrderDiscount'):
         pass
 
     __all__.append('OrderDiscount')
+
+if not is_model_registered('order', 'Surcharge'):
+    class Surcharge(AbstractSurcharge):
+        pass
+
+    __all__.append('Surcharge')
