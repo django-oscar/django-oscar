@@ -13,10 +13,6 @@ class Base(object):
     The interface is all properties.
     """
 
-    def __init__(self, excl_tax=None, incl_tax=None):
-        self.excl_tax = excl_tax
-        self.incl_tax = incl_tax
-
     def calculate(self, basket, **kwargs):
         raise NotImplementedError
 
@@ -24,12 +20,15 @@ class Base(object):
 class PercentageCharge(Base):
     name = "Percentage surcharge"
 
+    def __init__(self, percentage):
+        self.percentage = percentage
+
     def calculate(self, basket, **kwargs):
         if basket.total_excl_tax:
             return prices.Price(
                 currency=basket.currency,
-                excl_tax=basket.total_excl_tax * self.excl_tax / 100,
-                incl_tax=basket.total_incl_tax * self.incl_tax / 100
+                excl_tax=basket.total_excl_tax * self.percentage / 100,
+                incl_tax=basket.total_incl_tax * self.percentage / 100
             )
         else:
             return prices.Price(
@@ -41,6 +40,10 @@ class PercentageCharge(Base):
 
 class FlatCharge(Base):
     name = "Flat surcharge"
+
+    def __init__(self, excl_tax=None, incl_tax=None):
+        self.excl_tax = excl_tax
+        self.incl_tax = incl_tax
 
     def calculate(self, basket, **kwargs):
         return prices.Price(
