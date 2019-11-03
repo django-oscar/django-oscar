@@ -228,7 +228,13 @@ class AbstractCategory(MP_Node):
         included_in_non_public_subtree = self.__class__.objects.filter(
             is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
         )
-        self.get_descendants().update(parents_are_public=Exists(included_in_non_public_subtree.values("id"), negated=True))
+
+        self.get_descendants_and_self().update(
+            parents_are_public=Exists(
+                included_in_non_public_subtree.values("id"), negated=True))
+
+        # Correctly populate parents_are_public
+        self.refresh_from_db()
 
     @classmethod
     def fix_tree(cls, destructive=False):
