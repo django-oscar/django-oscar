@@ -275,6 +275,14 @@ var oscar = (function(o, $) {
                 if (!form || $(":invalid", form).length == 0)
                     $(this).button('loading');
             });
+
+            // Display tabs that have invalid input fields
+            $('input').on('invalid', function(){
+                var id = $(this).closest('.tab-pane').attr('id');
+                if (id) {
+                    $('.nav-list a[href="#' + id + '"]').tab('show');
+                }
+            });
         },
         initProductImages: function() {
             // convert last 'extra' form into a multi-upload
