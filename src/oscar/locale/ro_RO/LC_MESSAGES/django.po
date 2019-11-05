@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Arthur White <arthur@whitedevops.com>, 2017
 # Atr3ides <atreidesone@gmail.com>, 2014
@@ -11,13 +11,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-06 06:17+0300\n"
-"PO-Revision-Date: 2018-04-11 08:36+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"PO-Revision-Date: 2019-09-06 03:20+0000\n"
+"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/codeinthehole/django-oscar/language/ro_RO/)\n"
-"Language: ro_RO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ro_RO\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #: apps/address/abstract_models.py:24
@@ -271,9 +271,9 @@ msgstr "Adresele partenerului"
 #: apps/analytics/abstract_models.py:18 apps/analytics/abstract_models.py:83
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:626
 #: apps/catalogue/abstract_models.py:224 apps/catalogue/abstract_models.py:360
-#: apps/catalogue/abstract_models.py:927 apps/catalogue/abstract_models.py:1185
-#: apps/order/abstract_models.py:542 apps/partner/abstract_models.py:95
-#: apps/wishlists/abstract_models.py:115
+#: apps/catalogue/abstract_models.py:927
+#: apps/catalogue/abstract_models.py:1185 apps/order/abstract_models.py:542
+#: apps/partner/abstract_models.py:95 apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:23
@@ -413,7 +413,8 @@ msgstr "Statistici produs"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:20
 #: apps/catalogue/abstract_models.py:46 apps/catalogue/abstract_models.py:93
-#: apps/catalogue/abstract_models.py:707 apps/catalogue/abstract_models.py:1056
+#: apps/catalogue/abstract_models.py:707
+#: apps/catalogue/abstract_models.py:1056
 #: apps/catalogue/abstract_models.py:1108 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:161 apps/dashboard/catalogue/tables.py:79
 #: apps/dashboard/catalogue/tables.py:103 apps/dashboard/users/forms.py:44
@@ -554,9 +555,10 @@ msgid "Vouchers"
 msgstr "Cupoane"
 
 #: apps/basket/abstract_models.py:58 apps/basket/reports.py:83
-#: apps/catalogue/abstract_models.py:331 apps/catalogue/abstract_models.py:1195
-#: apps/customer/abstract_models.py:356 apps/order/abstract_models.py:956
-#: apps/partner/abstract_models.py:149 apps/wishlists/abstract_models.py:50
+#: apps/catalogue/abstract_models.py:331
+#: apps/catalogue/abstract_models.py:1195 apps/customer/abstract_models.py:356
+#: apps/order/abstract_models.py:956 apps/partner/abstract_models.py:149
+#: apps/wishlists/abstract_models.py:50
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/ranges/range_list.html:34
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
@@ -602,7 +604,9 @@ msgstr "%(status)s cos (owner: %(owner)s, linii: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:158
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
 msgstr "Datorita limitarilor tehnice nu putem livra mai mult de %(threshold)d bucati intr-o singura comanda."
 
 #: apps/basket/abstract_models.py:620
@@ -660,12 +664,16 @@ msgstr "Nu poti modifica un %s basket"
 
 #: apps/basket/abstract_models.py:910
 #, python-format
-msgid "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "Pretul '%(product)s' a crescut de la %(old_price)s la %(new_price)s de cand l-ai adaugat la cos"
 
 #: apps/basket/abstract_models.py:915
 #, python-format
-msgid "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s since you added it to your basket"
+msgid ""
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
 msgstr "Pretul '%(product)s' a scazut de la %(old_price)s la %(new_price)s de cand l-ai adaugat la cos"
 
 #: apps/basket/abstract_models.py:929 apps/order/abstract_models.py:838
@@ -730,19 +738,27 @@ msgstr "Te rugam selecteaza un produs valid"
 
 #: apps/basket/forms.py:213
 #, python-format
-msgid "Due to technical limitations we are not able to ship more than %(threshold)d items in one order. Your basket currently has %(basket)d items."
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
 msgstr "Datorita limitarilor tehnice, nu putem livra mai mult de %(threshold)d bucati intr-o singura comanda. Cosul tau are acum %(basket)d bucati."
 
 #: apps/basket/forms.py:235
-msgid "This product cannot be added to the basket because a price could not be determined for it."
+msgid ""
+"This product cannot be added to the basket because a price could not be "
+"determined for it."
 msgstr ""
 
 #: apps/basket/forms.py:242
-msgid "This product cannot be added to the basket as its currency isn't the same as other products in your basket"
+msgid ""
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
 msgstr ""
 
 #: apps/basket/middleware.py:174
-msgid "We have merged a basket from a previous session. Its contents might have changed."
+msgid ""
+"We have merged a basket from a previous session. Its contents might have "
+"changed."
 msgstr ""
 
 #: apps/basket/reports.py:19 apps/basket/reports.py:78
@@ -812,7 +828,8 @@ msgid "You can't save an item for later if you're not logged in!"
 msgstr "Nu poti salva un produs pentru mai tarziu daca nu esti autentificat!"
 
 #: apps/basket/views.py:234
-msgid "Your basket couldn't be updated. Please correct any validation errors below."
+msgid ""
+"Your basket couldn't be updated. Please correct any validation errors below."
 msgstr ""
 
 #: apps/basket/views.py:322
@@ -947,10 +964,8 @@ msgid "Product structure"
 msgstr "Structura produsului"
 
 #: apps/catalogue/abstract_models.py:268
-#, fuzzy
-#| msgid "Is public?"
 msgid "Is public"
-msgstr "Este public?"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:270
 msgid "Show this product in search results and catalogue listings."
@@ -966,11 +981,16 @@ msgid "UPC"
 msgstr "UPC"
 
 #: apps/catalogue/abstract_models.py:274
-msgid "Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book."
+msgid ""
+"Universal Product Code (UPC) is an identifier for a product which is not "
+"specific to a particular  supplier. Eg an ISBN for a book."
 msgstr "Universal Product Code (UPC) este un identificator unic de produs si nu este specfic unui anume furnizor. Eg ISBN pentru carti."
 
 #: apps/catalogue/abstract_models.py:285
-msgid "Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product)."
+msgid ""
+"Only choose a parent product if you're creating a child product.  For "
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:541
@@ -999,7 +1019,9 @@ msgid "Attributes"
 msgstr "Atribute"
 
 #: apps/catalogue/abstract_models.py:310
-msgid "A product attribute is something that this product may have, such as a size, as specified by its class"
+msgid ""
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:314
@@ -1007,7 +1029,10 @@ msgid "Product options"
 msgstr "Opțiunile produsului"
 
 #: apps/catalogue/abstract_models.py:315
-msgid "Options are values that can be associated with a item when it is added to a customer's basket.  This could be something like a personalised message to be printed on a T-shirt."
+msgid ""
+"Options are values that can be associated with a item when it is added to a "
+"customer's basket.  This could be something like a personalised message to "
+"be printed on a T-shirt."
 msgstr "Optiunile sunt valori care pot fi asociate cu un produs cand este adaugat la cosul unui client. Spre exemplu un mesaj personalizat ce poate fi tiparit pe un tricou."
 
 #: apps/catalogue/abstract_models.py:322
@@ -1103,7 +1128,9 @@ msgid "Ranking"
 msgstr "Ranking"
 
 #: apps/catalogue/abstract_models.py:683
-msgid "Determines order of the products. A product with a higher value will appear before one with a lower ranking."
+msgid ""
+"Determines order of the products. A product with a higher value will appear "
+"before one with a lower ranking."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:691
@@ -1115,7 +1142,9 @@ msgid "Product recomendations"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:714 apps/customer/abstract_models.py:155
-msgid "Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit."
+msgid ""
+"Code can only contain the letters a-z, A-Z, digits, and underscores, and "
+"can't start with a digit."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:733 apps/catalogue/abstract_models.py:929
@@ -1200,10 +1229,8 @@ msgid "Product attributes"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:847
-#, fuzzy
-#| msgid "Must be a float"
 msgid "Must be str"
-msgstr "Trebuie sa fie float"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:854
 msgid "Must be a float"
@@ -1319,7 +1346,9 @@ msgid "Caption"
 msgstr "Subtitlu"
 
 #: apps/catalogue/abstract_models.py:1193
-msgid "An image with a display order of zero will be the primary image for a product"
+msgid ""
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr "O imagine cu ordinea afisarii zero va fi imaginea principala a produsului"
 
 #: apps/catalogue/abstract_models.py:1203
@@ -1529,7 +1558,9 @@ msgstr "Trebuie sa adaugi produse la cos pentru a putea plati"
 
 #: apps/checkout/session.py:131
 #, python-format
-msgid "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your basket to continue"
+msgid ""
+"'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
+"basket to continue"
 msgstr "'%(title)s' nu mai este disponibil pentru a fi cumparat (%(reason)s). Te rugam sa iti modifici cosul pentru a putea continua"
 
 #: apps/checkout/session.py:149
@@ -1541,7 +1572,9 @@ msgid "Please choose a shipping address"
 msgstr "Te rugam sa alegi o adresa de livrare"
 
 #: apps/checkout/session.py:182
-msgid "Your previously chosen shipping address is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping address is no longer valid.  Please choose "
+"another one"
 msgstr ""
 
 #: apps/checkout/session.py:192
@@ -1549,11 +1582,15 @@ msgid "Please choose a shipping method"
 msgstr "Te rugam sa alegi o metoda de livrare"
 
 #: apps/checkout/session.py:204
-msgid "Your previously chosen shipping method is no longer valid.  Please choose another one"
+msgid ""
+"Your previously chosen shipping method is no longer valid.  Please choose "
+"another one"
 msgstr ""
 
 #: apps/checkout/views.py:82
-msgid "Create your account and then you will be redirected back to the checkout process"
+msgid ""
+"Create your account and then you will be redirected back to the checkout "
+"process"
 msgstr "Creaza-ti contul si vei fi redirectionat inapoi la procesul de comanda "
 
 #: apps/checkout/views.py:205
@@ -1565,7 +1602,8 @@ msgid "Address deleted"
 msgstr "Adresa stearsa"
 
 #: apps/checkout/views.py:275
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "Momentan nu puteam livra la adresa aleasa de tine - te rugam sa alegi alta"
 
 #: apps/checkout/views.py:318
@@ -1573,7 +1611,9 @@ msgid "Your submitted shipping method is not permitted"
 msgstr "Metoda de livrare aleasa nu este permisa"
 
 #: apps/checkout/views.py:568
-msgid "A problem occurred while processing payment for this order - no payment has been taken.  Please contact customer services if this problem persists"
+msgid ""
+"A problem occurred while processing payment for this order - no payment has "
+"been taken.  Please contact customer services if this problem persists"
 msgstr "A aparut o problema la procesarea platii pentru aceasta comanda - plata nu a fost efectuata .  Te rugam sa contactezi departamentul clienti daca aceasta problema persista"
 
 #: apps/checkout/views.py:672
@@ -1601,7 +1641,9 @@ msgid "Active"
 msgstr "Activ"
 
 #: apps/customer/abstract_models.py:68
-msgid "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
 msgstr "Specifica daca acest utilizator trebuie tratat ca active. Deselecteaza aceasta optiune ca alternativa la stergerea unui cont."
 
 #: apps/customer/abstract_models.py:70
@@ -1719,11 +1761,13 @@ msgstr "Inbox"
 msgid "Archive"
 msgstr "Arhiva"
 
-#: apps/customer/abstract_models.py:299 apps/customer/notifications/views.py:65
+#: apps/customer/abstract_models.py:299
+#: apps/customer/notifications/views.py:65
 msgid "Notification"
 msgstr "Notificare"
 
-#: apps/customer/abstract_models.py:300 apps/customer/notifications/views.py:22
+#: apps/customer/abstract_models.py:300
+#: apps/customer/notifications/views.py:22
 #: templates/oscar/customer/partials/standard_tabs.html:20
 msgid "Notifications"
 msgstr "Notificari"
@@ -1865,7 +1909,9 @@ msgstr "Toate comenzile"
 
 #: apps/customer/forms.py:213
 #, python-format
-msgid "Orders placed between %(date_from)s and %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed between %(date_from)s and %(date_to)s and order number "
+"containing %(order_number)s"
 msgstr "Comenzile plasate intre %(date_from)s si %(date_to)s si numarul comenzii continand %(order_number)s"
 
 #: apps/customer/forms.py:217 apps/dashboard/orders/forms.py:42
@@ -1875,7 +1921,9 @@ msgstr "Comenzile plasate intre %(date_from)s si %(date_to)s"
 
 #: apps/customer/forms.py:221
 #, python-format
-msgid "Orders placed since %(date_from)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed since %(date_from)s and order number containing "
+"%(order_number)s"
 msgstr "Comenzile plasate incepand cu %(date_from)s si numarul comenzii continand %(order_number)s"
 
 #: apps/customer/forms.py:224
@@ -1885,7 +1933,8 @@ msgstr "Comenzile plasate incepand cu %(date_from)s"
 
 #: apps/customer/forms.py:227
 #, python-format
-msgid "Orders placed until %(date_to)s and order number containing %(order_number)s"
+msgid ""
+"Orders placed until %(date_to)s and order number containing %(order_number)s"
 msgstr "Comenzile plasate pana la %(date_to)s si numarul comenzii continand %(order_number)s"
 
 #: apps/customer/forms.py:230
@@ -1917,7 +1966,10 @@ msgstr "Exista deja o alerta de stoc activa pentru %s"
 
 #: apps/customer/forms.py:405
 #, python-format
-msgid "%s has been sent a confirmation email for another product alert on this site. Please confirm or cancel that request before signing up for more alerts."
+msgid ""
+"%s has been sent a confirmation email for another product alert on this "
+"site. Please confirm or cancel that request before signing up for more "
+"alerts."
 msgstr ""
 
 #: apps/customer/forms.py:417
@@ -1999,12 +2051,15 @@ msgstr "Comanda"
 
 #: apps/customer/views.py:554
 #, python-format
-msgid "All available lines from order %(number)s have been added to your basket"
+msgid ""
+"All available lines from order %(number)s have been added to your basket"
 msgstr "Toate liniile disponibile ale comenzii %(number)s au fost adaugate in cos"
 
 #: apps/customer/views.py:560
 #, python-format
-msgid "It is not possible to re-order order %(number)s as none of its lines are available to purchase"
+msgid ""
+"It is not possible to re-order order %(number)s as none of its lines are "
+"available to purchase"
 msgstr "Nu este posibil sa retrimiti comanda %(number)s deoarece nici una dintre liniile ei nu este disponibila pentru cumparare"
 
 #: apps/customer/views.py:597
@@ -2223,7 +2278,9 @@ msgid "Select an option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/formsets.py:96
-msgid "At least one stock record must be set to a partner that you're associated with."
+msgid ""
+"At least one stock record must be set to a partner that you're associated "
+"with."
 msgstr ""
 
 #: apps/dashboard/catalogue/formsets.py:114
@@ -2298,13 +2355,12 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: apps/dashboard/catalogue/tables.py:112
-#, fuzzy, python-format
-#| msgid "Option"
+#, python-format
 msgid "%s Option"
 msgid_plural "%s Options"
-msgstr[0] "Optiune"
-msgstr[1] "Optiune"
-msgstr[2] "Optiune"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: apps/dashboard/catalogue/views.py:103
 msgid "Product search results"
@@ -2449,7 +2505,8 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:912
 #, python-format
-msgid "%i product attributes are still assigned to this attribute option group"
+msgid ""
+"%i product attributes are still assigned to this attribute option group"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:931
@@ -2457,52 +2514,40 @@ msgid "Attribute Option Group deleted successfully"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:978
-#, fuzzy
-#| msgid "Add a new category"
 msgid "Add a new Option"
-msgstr "Adauga o categorie noua"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:981
-#, fuzzy
-#| msgid "Category created successfully"
 msgid "Option created successfully"
-msgstr "Categorie creata cu succes"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:994
-#, fuzzy, python-format
-#| msgid "Update category '%s'"
+#, python-format
 msgid "Update Option '%s'"
-msgstr "Modifica categoria '%s'"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:997
-#, fuzzy
-#| msgid "Category updated successfully"
 msgid "Option updated successfully"
-msgstr "Categorie modificata cu succes"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1009
-#, fuzzy, python-format
-#| msgid "Deleted page '%s'"
+#, python-format
 msgid "Delete Option '%s'"
-msgstr "Pagina '%s' a fost stearsa"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1019
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i products are still assigned to this option"
-msgstr "%i produse sunt inca asociate cu acest tip"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1024
-#, fuzzy, python-format
-#| msgid "%i products are still assigned to this type"
+#, python-format
 msgid "%i product classes are still assigned to this option"
-msgstr "%i produse sunt inca asociate cu acest tip"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1030
-#, fuzzy
-#| msgid "Category deleted successfully"
 msgid "Option deleted successfully"
-msgstr "Categorie stearsa cu succes"
+msgstr ""
 
 #: apps/dashboard/communications/apps.py:11
 msgid "Communications dashboard"
@@ -2533,7 +2578,8 @@ msgid "Please enter an email address"
 msgstr "Te rugam sa specifici o adresa de email"
 
 #: apps/dashboard/communications/views.py:31
-msgid "The submitted form was not valid, please correct the errors and resubmit"
+msgid ""
+"The submitted form was not valid, please correct the errors and resubmit"
 msgstr "Formularul trimis nu a fost valid, te rugam sa corectezi erorile si sa il retrimiti"
 
 #: apps/dashboard/communications/views.py:40
@@ -2568,7 +2614,8 @@ msgid "Custom condition"
 msgstr "Conditie personalizata"
 
 #: apps/dashboard/offers/forms.py:86
-msgid "Please either choose a range, type and value OR select a custom condition"
+msgid ""
+"Please either choose a range, type and value OR select a custom condition"
 msgstr "Te rugam sa alegi un set, tip sau valoare SAU sa selectezi o conditie personalizata"
 
 #: apps/dashboard/offers/forms.py:92
@@ -2580,7 +2627,8 @@ msgid "Custom incentive"
 msgstr "Stimulent personalizat"
 
 #: apps/dashboard/offers/forms.py:139 apps/dashboard/offers/forms.py:149
-msgid "Please either choose a range, type and value OR select a custom incentive"
+msgid ""
+"Please either choose a range, type and value OR select a custom incentive"
 msgstr "Te rugam sa alegi un set, tip sau valoare SAU sa selectezi un stimulent personalizat"
 
 #: apps/dashboard/offers/forms.py:145
@@ -2898,7 +2946,9 @@ msgstr "Cantitatea introdusa pentru linia #%s este invalida"
 
 #: apps/dashboard/orders/views.py:506
 #, python-format
-msgid "The entered quantity for line #%(line_id)s should not be higher than %(quantity)s"
+msgid ""
+"The entered quantity for line #%(line_id)s should not be higher than "
+"%(quantity)s"
 msgstr "Cantitatea introdusa pentru linia #%(line_id)s nu poate depasi %(quantity)s"
 
 #: apps/dashboard/orders/views.py:575
@@ -2932,7 +2982,9 @@ msgstr "'%(status)s' nu este o stare noua valida pentru linia %(line_id)d"
 
 #: apps/dashboard/orders/views.py:652
 #, python-format
-msgid "Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
+msgid ""
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
 msgstr "Starea liniei #%(line_id)d a fost schimbata din '%(old_status)s' in '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
@@ -2978,9 +3030,7 @@ msgstr "%(field)s a fost schimbat din '%(old_value)s' in '%(new_value)s'"
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"Adresa de livrare a fost modificata:\n"
-"%s"
+msgstr "Adresa de livrare a fost modificata:\n%s"
 
 #: apps/dashboard/orders/views.py:821
 msgid "Delivery address updated"
@@ -3001,7 +3051,9 @@ msgid "Example: '/about/contact/'."
 msgstr "Exemplu: '/about/contact/'."
 
 #: apps/dashboard/pages/forms.py:33
-msgid "This value must contain only letters, numbers, dots, underscores, dashes, slashes or tildes."
+msgid ""
+"This value must contain only letters, numbers, dots, underscores, dashes, "
+"slashes or tildes."
 msgstr ""
 
 #: apps/dashboard/pages/views.py:37
@@ -3227,7 +3279,9 @@ msgstr "catre"
 
 #: apps/dashboard/reviews/views.py:29
 #, python-format
-msgid "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
+msgid ""
+"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
+"%(name_filter)s"
 msgstr "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
@@ -3474,7 +3528,8 @@ msgid "Site offer - available to all users"
 msgstr "Oferta de site - disponibila tuturor utilizatorilor"
 
 #: apps/offer/abstract_models.py:146
-msgid "Voucher offer - only available after entering the appropriate voucher code"
+msgid ""
+"Voucher offer - only available after entering the appropriate voucher code"
 msgstr "Oferta de voucher - disponibila doar dupa introducerea codului de voucher"
 
 #: apps/offer/abstract_models.py:148
@@ -3482,7 +3537,9 @@ msgid "User offer - available to certain types of user"
 msgstr "Oferta utilizator - disponibila anumitor tipuri de utilizatori"
 
 #: apps/offer/abstract_models.py:149
-msgid "Session offer - temporary offer, available for a user for the duration of their session"
+msgid ""
+"Session offer - temporary offer, available for a user for the duration of "
+"their session"
 msgstr "Oferta de sesiune - oferta temporara, disponibila unui utilizator pe durata sesiunii acestuia"
 
 #: apps/offer/abstract_models.py:156
@@ -3510,11 +3567,15 @@ msgid "The highest priority offers are applied first"
 msgstr "Ofertele cu cea mai mare prioritate sunt aplicate primele"
 
 #: apps/offer/abstract_models.py:189
-msgid "Offers are active from the start date. Leave this empty if the offer has no start date."
+msgid ""
+"Offers are active from the start date. Leave this empty if the offer has no "
+"start date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:193
-msgid "Offers are active until the end date. Leave this empty if the offer has no expiry date."
+msgid ""
+"Offers are active until the end date. Leave this empty if the offer has no "
+"expiry date."
 msgstr ""
 
 #: apps/offer/abstract_models.py:201
@@ -3546,7 +3607,9 @@ msgid "Max discount"
 msgstr "Max discount"
 
 #: apps/offer/abstract_models.py:227
-msgid "When an offer has given more discount to orders than this threshold, then the offer becomes unavailable"
+msgid ""
+"When an offer has given more discount to orders than this threshold, then "
+"the offer becomes unavailable"
 msgstr "Cand o oferta a oferit mai mult discount comenzilor decat aceasta limita, atunci oferta devine indisponibila"
 
 #: apps/offer/abstract_models.py:236
@@ -3658,7 +3721,9 @@ msgid "Max Affected Items"
 msgstr "Max Produse Afectate"
 
 #: apps/offer/abstract_models.py:523
-msgid "Set this to prevent the discount consuming all items within the range that are in the basket."
+msgid ""
+"Set this to prevent the discount consuming all items within the range that "
+"are in the basket."
 msgstr "Bifeaza pentru a restrictiona discount-ul astfel incat sa nu consume toate produsele ce satisfac conditia si sunt in cos"
 
 #: apps/offer/abstract_models.py:529 apps/offer/abstract_models.py:735
@@ -3709,7 +3774,8 @@ msgid "Shipping discounts don't require a 'max affected items' attribute"
 msgstr "Discount-urile la transport nu necesita atributul 'max produse afectate'"
 
 #: apps/offer/abstract_models.py:643
-msgid "No range should be selected as the condition range will be used instead."
+msgid ""
+"No range should be selected as the condition range will be used instead."
 msgstr "Nu e nevoie sa selectezi un interval deoarece conditia de selectie va fi folosita in schimb."
 
 #: apps/offer/abstract_models.py:649
@@ -3729,7 +3795,8 @@ msgid "Depends on value of items in basket that are in condition range"
 msgstr "Depinde de valoare produselor din cos care satisfac conditia"
 
 #: apps/offer/abstract_models.py:721
-msgid "Needs to contain a set number of DISTINCT items from the condition range"
+msgid ""
+"Needs to contain a set number of DISTINCT items from the condition range"
 msgstr "Trebuie sa contina un numar specificat de produse DISTINCTE ce satisfac conditia"
 
 #: apps/offer/abstract_models.py:741
@@ -4027,7 +4094,9 @@ msgstr "Adresa de email"
 
 #: apps/order/abstract_models.py:135
 #, python-format
-msgid "'%(new_status)s' is not a valid status for order %(number)s (current status: '%(status)s')"
+msgid ""
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
 msgstr "'%(new_status)s' nu este o stare valida pentru comanda %(number)s (stare curenta: '%(status)s')"
 
 #: apps/order/abstract_models.py:272
@@ -4054,34 +4123,25 @@ msgid "Order Notes"
 msgstr "Note Comanda"
 
 #: apps/order/abstract_models.py:446 apps/order/abstract_models.py:456
-#, fuzzy
-#| msgid "Order and Item Charges"
 msgid "Order Status Changes"
-msgstr "Costuri Comanda si Produs"
+msgstr ""
 
 #: apps/order/abstract_models.py:448
-#, fuzzy
-#| msgid "Status"
 msgid "Old Status"
-msgstr "Stare"
+msgstr ""
 
 #: apps/order/abstract_models.py:449
-#, fuzzy
-#| msgid "Status"
 msgid "New Status"
-msgstr "Stare"
+msgstr ""
 
 #: apps/order/abstract_models.py:455
-#, fuzzy
-#| msgid "Order status"
 msgid "Order Status Change"
-msgstr "Stare comanda"
+msgstr ""
 
 #: apps/order/abstract_models.py:460
-#, fuzzy, python-brace-format
-#| msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
+#, python-brace-format
 msgid "{order} has changed status from {old_status} to {new_status}"
-msgstr "Starea comenzii a fost schimbata din '%(old_status)s' in '%(new_status)s'"
+msgstr ""
 
 #: apps/order/abstract_models.py:478 apps/order/abstract_models.py:947
 #: apps/order/abstract_models.py:1014
@@ -4754,7 +4814,9 @@ msgid "Upper Limit"
 msgstr "Limita Superioara"
 
 #: apps/shipping/abstract_models.py:199
-msgid "Enter upper limit of this weight band in kg. The lower limit will be determined by the other weight bands."
+msgid ""
+"Enter upper limit of this weight band in kg. The lower limit will be "
+"determined by the other weight bands."
 msgstr "Introdu limita superioara pentru acest interval de greutati in kg. Limita inferioara va fi determinata in functie de celelalte intervale de greutati."
 
 #: apps/shipping/abstract_models.py:202
@@ -4821,7 +4883,8 @@ msgid "VoucherSets"
 msgstr ""
 
 #: apps/voucher/abstract_models.py:122
-msgid "This will be shown in the checkout and basket once the voucher is entered"
+msgid ""
+"This will be shown in the checkout and basket once the voucher is entered"
 msgstr "Va fi afisat in cos si la casa odata ce este introdus voucherul"
 
 #: apps/voucher/abstract_models.py:126
@@ -4882,10 +4945,8 @@ msgid "You have already used this voucher in a previous order"
 msgstr "Ai folosit deja acest voucher intr-o comanda anterioara"
 
 #: apps/voucher/abstract_models.py:232
-#, fuzzy
-#| msgid "This voucher is only available to signed in users"
 msgid "This voucher is not available for this basket"
-msgstr "Acest voucher este disponibil doar utilizatorilor autentificati"
+msgstr ""
 
 #: apps/voucher/abstract_models.py:301
 msgid "Voucher Application"
@@ -4924,7 +4985,9 @@ msgid "Private - Only the owner can see the wish list"
 msgstr "Privat - Doar detinatorul poate vedea lista de cumparaturi"
 
 #: apps/wishlists/abstract_models.py:36
-msgid "Shared - Only the owner and people with access to the obfuscated link can see the wish list"
+msgid ""
+"Shared - Only the owner and people with access to the obfuscated link can "
+"see the wish list"
 msgstr "Shared - Doar detinatorul si persoanele cu acces la link pot sa vada lista de cumparaturi"
 
 #: apps/wishlists/abstract_models.py:38
@@ -5135,10 +5198,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"    <strong>%(title)s</strong> a fost adaugat in cos.\n"
-"    "
+msgstr "\n    <strong>%(title)s</strong> a fost adaugat in cos.\n    "
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5147,28 +5207,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(quantity)s</strong> copii ale <strong>%(title)s</strong>\n"
-"au fost adaugate la cosul tau."
+msgstr "\n<strong>%(quantity)s</strong> copii ale <strong>%(title)s</strong>\nau fost adaugate la cosul tau."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> a fost mutat inapoi in cos.\n"
+msgstr "\n<strong>%(title)s</strong> a fost mutat inapoi in cos.\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> a fost salvat pentru mai tarziu\n"
+msgstr "\n<strong>%(title)s</strong> a fost salvat pentru mai tarziu\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5199,10 +5252,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Cosul tau se califica acum pentru oferta \n"
-"<strong>%(name)s</strong>.\n"
+msgstr "\nCosul tau se califica acum pentru oferta \n<strong>%(name)s</strong>.\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5210,9 +5260,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"Cosul tau nu se mai califica pentru oferta <strong>%(name)s</strong>.\n"
+msgstr "\nCosul tau nu se mai califica pentru oferta <strong>%(name)s</strong>.\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5228,10 +5276,7 @@ msgid ""
 "\n"
 "                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
-"\n"
-"                <div class=\"warning\">%(message)s pentru a beneficia de oferta speciala <a href=\"%(url)s\">%(offer_name)s</a></div>\n"
-"            "
+msgstr "\n                <div class=\"warning\">%(message)s pentru a beneficia de oferta speciala <a href=\"%(url)s\">%(offer_name)s</a></div>\n            "
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5545,10 +5590,8 @@ msgid "Edit this product"
 msgstr "Modifica acest produs"
 
 #: templates/oscar/catalogue/detail.html:88
-#, fuzzy
-#| msgid "Variants"
 msgid "Variants:"
-msgstr "Variante"
+msgstr ""
 
 #: templates/oscar/catalogue/detail.html:105
 msgid "Product Description"
@@ -5591,9 +5634,7 @@ msgid ""
 "This product does not have any reviews yet -\n"
 "                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"Acest produs nu are nici o recenzie pana acum -\n"
-"<a href=\"%(add_review_url)s#addreview\">fii primul care scrie una</a>."
+msgstr "Acest produs nu are nici o recenzie pana acum -\n<a href=\"%(add_review_url)s#addreview\">fii primul care scrie una</a>."
 
 #: templates/oscar/catalogue/detail.html:176
 msgid "This product does not have any reviews yet"
@@ -5661,10 +5702,7 @@ msgid ""
 "\n"
 "                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"                    <span class=\"pull-left\">Produsul este in lista de cumparaturi <a href=\"%(url)s\">'%(name)s'</a>.</span>\n"
-"                "
+msgstr "\n                    <span class=\"pull-left\">Produsul este in lista de cumparaturi <a href=\"%(url)s\">'%(name)s'</a>.</span>\n                "
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:32
@@ -5682,9 +5720,7 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"Recenzie adaugata de tine la %(review_date)s"
+msgstr "\nRecenzie adaugata de tine la %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
@@ -5692,9 +5728,7 @@ msgid ""
 "\n"
 "                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"Recenzie adaugata de <strong>%(name)s</strong> la %(review_date)s"
+msgstr "\nRecenzie adaugata de <strong>%(name)s</strong> la %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -5896,7 +5930,9 @@ msgid "Enter payment details"
 msgstr "Specifica modalitatea de plata"
 
 #: templates/oscar/checkout/payment_details.html:21
-msgid "This page needs implementing within your project.  You may want to use one of Oscar's payment gateway libraries:"
+msgid ""
+"This page needs implementing within your project.  You may want to use one "
+"of Oscar's payment gateway libraries:"
 msgstr ""
 
 #: templates/oscar/checkout/preview.html:5
@@ -6010,7 +6046,9 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/checkout/thank_you.html:29
-msgid "Please make a note of this reference or print this page and quote it in any communication with us regarding your order."
+msgid ""
+"Please make a note of this reference or print this page and quote it in any "
+"communication with us regarding your order."
 msgstr "Te rugam sa notezi numarul comenzii sau sa tiparesti aceasta pagina si sa il mentionezi atunci cand vrei sa comunici cu noi referitor la aceasta comanda."
 
 #: templates/oscar/checkout/thank_you.html:62
@@ -6023,9 +6061,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"Alocare a %(amount)s din tipul %(type)s (referinta: %(reference)s)"
+msgstr "\nAlocare a %(amount)s din tipul %(type)s (referinta: %(reference)s)"
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6033,9 +6069,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"Alocare a %(amount)s din tipul %(type)s"
+msgstr "\nAlocare a %(amount)s din tipul %(type)s"
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
@@ -6046,18 +6080,12 @@ msgid "Items purchased"
 msgstr "Produse achizitionate"
 
 #: templates/oscar/checkout/thank_you.html:143
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                                Allocation of %(amount)s from type %(type)s\n"
-#| "                            "
+#, python-format
 msgid ""
 "\n"
 "                                Estimated dispatch: <strong>%(date)s</strong>\n"
 "                            "
 msgstr ""
-"\n"
-"Alocare a %(amount)s din tipul %(type)s"
 
 #: templates/oscar/checkout/thank_you.html:182
 msgid "Tracking your order"
@@ -6201,9 +6229,7 @@ msgstr "Renunta"
 msgid ""
 "\n"
 "<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a> a revenit pe stoc\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a> a revenit pe stoc\n"
 
 #: templates/oscar/customer/alerts/message_subject.html:2
 #, python-format
@@ -6286,22 +6312,29 @@ msgstr "Echipa %(name)s"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:7
 #, python-format
-msgid "You're receiving this email because your email address has been changed to <strong>%(email)s</strong>."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"<strong>%(email)s</strong>."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
-msgid "If it wasn't you who changed it, please reset your password immediately and correct your email address:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately and "
+"correct your email address:"
 msgstr "Daca nu ti-ai schimbat parola, te rugam sa iti resetezi parola imediat si sa iti corectezi adresa de email: "
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:25
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr "Daca ai modificat adresa de email, te rugam sa ignori acest email."
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
 #, python-format
-msgid "You're receiving this email because your email address has been changed to %(email)s."
+msgid ""
+"You're receiving this email because your email address has been changed to "
+"%(email)s."
 msgstr "Primesti acest email deoarece adresa ta de email a fost schimbata in %(email)s."
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
@@ -6350,7 +6383,9 @@ msgstr "Adresa de livrare:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:60
 #, python-format
-msgid "You can view the status of this order by clicking <a href=\"%(status_url)s\" title=\"order status\">here</a>"
+msgid ""
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
 msgstr "Poti vedea starea acestei comenzi <a href=\"%(status_url)s\" title=\"order status\">aici</a>"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
@@ -6360,11 +6395,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"Buna ziua,\n"
-"\n"
-"Comanda cu numarul %(order_number)s a fost primita si \n"
-"va fi procesata in curand."
+msgstr "Buna ziua,\n\nComanda cu numarul %(order_number)s a fost primita si \nva fi procesata in curand."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6379,9 +6410,7 @@ msgstr "pret:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"Poti vedea starea acestei comenzi la linkul:\n"
-"%(status_url)s"
+msgstr "Poti vedea starea acestei comenzi la linkul:\n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6394,12 +6423,15 @@ msgstr "Confirmarea comenzii %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:7
 #, python-format
-msgid "You're receiving this e-mail because your password has been changed at %(name)s."
+msgid ""
+"You're receiving this e-mail because your password has been changed at "
+"%(name)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:13
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
-msgid "If it wasn't you who changed it, please reset your password immediately:"
+msgid ""
+"If it wasn't you who changed it, please reset your password immediately:"
 msgstr "Daca nu ai cerut aceasta modificare, te rugam sa iti resetezi parola imediat:"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:25
@@ -6412,9 +6444,7 @@ msgstr "Altfel, poti ignora acest email."
 msgid ""
 "\n"
 "You're receiving this email because your password has been changed at %(name)s.\n"
-msgstr ""
-"\n"
-"Primesti acest email deoarce parola ta a fost schimbata pe %(name)s.\n"
+msgstr "\nPrimesti acest email deoarce parola ta a fost schimbata pe %(name)s.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6424,7 +6454,9 @@ msgstr "Parola ta a fost schimbata pe %(site_name)s."
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:7
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
-msgid "You're receiving this e-mail because you requested a password reset for your user account at %(name)s."
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr "Primesti acest email deoarece ai solicitat resetarea parolei pentru contul tau pe %(name)s"
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:13
@@ -6479,9 +6511,7 @@ msgstr ""
 msgid ""
 "\n"
 "Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
-msgstr ""
-"\n"
-"Te rugam sa iei in calcul ca numarul de bucati aflate in stoc este limitat. Grabeste-te sau pot fi comandate de altcineva.\n"
+msgstr "\nTe rugam sa iei in calcul ca numarul de bucati aflate in stoc este limitat. Grabeste-te sau pot fi comandate de altcineva.\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_body.txt:7
 #, python-format
@@ -6492,13 +6522,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"In urma acestui email alerta ta a fost dezactivata automat si nu vei mai primi\n"
-"notificari cu privire la acest produs.\n"
-"\n"
-"Multumim pentru interes,\n"
-"Echipa %(site_name)s\n"
+msgstr "\nIn urma acestui email alerta ta a fost dezactivata automat si nu vei mai primi\nnotificari cu privire la acest produs.\n\nMultumim pentru interes,\nEchipa %(site_name)s\n"
 
 #: templates/oscar/customer/emails/commtype_product_alert_confirmation_body.txt:1
 #, python-format
@@ -6627,18 +6651,14 @@ msgstr "Data expedierii"
 
 #: templates/oscar/customer/order/order_detail.html:66
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Buy again"
 msgid "Re-ordering..."
-msgstr "Comanda din nou"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:66
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Buy again"
 msgid "Re-order"
-msgstr "Comanda din nou"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:69
 #: templates/oscar/customer/wishlists/wishlists_detail.html:57
@@ -6671,11 +6691,9 @@ msgid "Shipping total"
 msgstr "Total transport"
 
 #: templates/oscar/customer/order/order_detail.html:151
-#, fuzzy
-#| msgid "Re-order all items"
 msgctxt "Buy again"
 msgid "Re-order all items"
-msgstr "Re-comanda toate produsele"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:167
 msgid "Contact Number"
@@ -6747,9 +6765,7 @@ msgid ""
 "                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"Toata informatia referitoare la tine va fi stearsa de pe site. Odata sters, profilul tau nu va mai putea fi recuperat."
+msgstr "\nToata informatia referitoare la tine va fi stearsa de pe site. Odata sters, profilul tau nu va mai putea fi recuperat."
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:18
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
@@ -6769,10 +6785,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"                Esti sigur ca vrei sa stergi %(name)s?\n"
-"            "
+msgstr "\n                Esti sigur ca vrei sa stergi %(name)s?\n            "
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:18
 msgid "Remove product"
@@ -6784,10 +6797,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
-"\n"
-"                Esti sigur ca vrei sa stergi %(product_name)s din lista de cumparaturi %(wishlist_name)s?\n"
-"            "
+msgstr "\n                Esti sigur ca vrei sa stergi %(product_name)s din lista de cumparaturi %(wishlist_name)s?\n            "
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -6804,10 +6814,7 @@ msgid ""
 "\n"
 "                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
-"\n"
-"                                                            Muta in lista de cumparaturi '%(name)s'\n"
-"                                                        "
+msgstr "\n                                                            Muta in lista de cumparaturi '%(name)s'\n                                                        "
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:103
 msgid "Update quantities"
@@ -6831,10 +6838,7 @@ msgid ""
 "\n"
 "                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
-"\n"
-"                    Dupa ce lista de cumparaturi este creata, <strong>%(title)s</strong> va fi adaugat.\n"
-"                "
+msgstr "\n                    Dupa ce lista de cumparaturi este creata, <strong>%(title)s</strong> va fi adaugat.\n                "
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -6865,7 +6869,9 @@ msgid "Delete Attribute Option Group?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:42
-msgid "Please make sure all Product Attributes are assigned to another Attribute Option Group before deletion."
+msgid ""
+"Please make sure all Product Attributes are assigned to another Attribute "
+"Option Group before deletion."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
@@ -6874,7 +6880,8 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
-msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgid ""
+"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
@@ -6924,10 +6931,7 @@ msgid ""
 "\n"
 "            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
 "        "
-msgstr ""
-"\n"
-"            <p>Sterge categoria <strong>%(name)s</strong> - esti sigur?</p>\n"
-"        "
+msgstr "\n            <p>Sterge categoria <strong>%(name)s</strong> - esti sigur?</p>\n        "
 
 #: templates/oscar/dashboard/catalogue/category_list.html:23
 msgid "Create new category"
@@ -7022,65 +7026,51 @@ msgid "View it on the site"
 msgstr "Vizualizeaza pe site"
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:5
-#, fuzzy
-#| msgid "Caption"
 msgid "Create Option"
-msgstr "Subtitlu"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:31
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option?"
-msgstr "Selecteaza optiunea"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:42
-#, fuzzy
-#| msgid "Please make sure all products are assigned to another type before deletion."
-msgid "Please make sure option is not assigned to Products or Product Classes before deletion."
-msgstr "Te rugam sa te asiguri ca toate produsele sunt asociate altui tip inainte de stergere."
+msgid ""
+"Please make sure option is not assigned to Products or Product Classes "
+"before deletion."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:45
-#, fuzzy
-#| msgid "Select option"
 msgid "Delete Option"
-msgstr "Selecteaza optiunea"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:56
-#, fuzzy, python-format
-#| msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
+#, python-format
 msgid "Delete Option <strong>%(name)s</strong> - are you sure?"
-msgstr "Sterge tipul de produs <strong>%(name)s</strong> - esti sigur?"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_form.html:50
-#, fuzzy
-#| msgid "Shipping details"
 msgid "Option details"
-msgstr "Detalii livrare"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:20
-#, fuzzy
-#| msgid "Create new partner"
 msgid "Create new Option"
-msgstr "Creaza partener nou"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:34
-#, fuzzy
-#| msgid "No partners found."
 msgid "No Option found."
-msgstr "Nu a fost gasit nici un partener."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_row_actions.html:11
-#, fuzzy
-#| msgid "Option"
 msgid "Edit Option"
-msgstr "Optiune"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:14
 msgid "Delete product type?"
 msgstr "Sterge tipul de produs?"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:24
-msgid "Please make sure all products are assigned to another type before deletion."
+msgid ""
+"Please make sure all products are assigned to another type before deletion."
 msgstr "Te rugam sa te asiguri ca toate produsele sunt asociate altui tip inainte de stergere."
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:27
@@ -7207,7 +7197,9 @@ msgid "Upload, change or remove images"
 msgstr "Incarca, schimba sau elimina imagini"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:176
-msgid "Drag images to re-order them. Space for additional images will appear when images are added."
+msgid ""
+"Drag images to re-order them. Space for additional images will appear when "
+"images are added."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:193
@@ -7440,10 +7432,8 @@ msgid "<em>Closed</em> stock alerts"
 msgstr "Alerte stoc <em>Inchise</em>"
 
 #: templates/oscar/dashboard/index.html:163
-#, fuzzy
-#| msgid "Offer for voucher '%s'"
 msgid "Offers, vouchers"
-msgstr "Oferta pentru voucherul '%s'"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:165
 msgid "Active <em>Site</em> Offers"
@@ -7466,7 +7456,9 @@ msgid "Log out"
 msgstr "Iesire"
 
 #: templates/oscar/dashboard/login.html:28
-msgid "Please enter a correct username and password. Note that both fields may be case-sensitive."
+msgid ""
+"Please enter a correct username and password. Note that both fields may be "
+"case-sensitive."
 msgstr ""
 
 #: templates/oscar/dashboard/login.html:41
@@ -7522,9 +7514,7 @@ msgid ""
 "\n"
 "        %(name)s | Offers\n"
 "    "
-msgstr ""
-"\n"
-"%(name)s | Oferte"
+msgstr "\n%(name)s | Oferte"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
@@ -7653,10 +7643,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"        Comanda %(number)s - Linia #%(id)s\n"
-"    "
+msgstr "\n        Comanda %(number)s - Linia #%(id)s\n    "
 
 #: templates/oscar/dashboard/orders/line_detail.html:21
 #, python-format
@@ -7839,30 +7826,20 @@ msgid "This order can't have its status changed."
 msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:335
-#, fuzzy
-#| msgid "Save changes"
 msgid "Status Changes"
-msgstr "Salveaza modificarile"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:342
-#, fuzzy
-#| msgctxt "start date"
-#| msgid "From"
 msgid "From"
-msgstr "De la"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:343
-#, fuzzy
-#| msgctxt "end date"
-#| msgid "To"
 msgid "To"
-msgstr "Pana la"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:359
-#, fuzzy
-#| msgid "Save changes"
 msgid "No status changes."
-msgstr "Salveaza modificarile"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:391
 #, python-format
@@ -7870,10 +7847,7 @@ msgid ""
 "\n"
 "                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
-"\n"
-"                                                                %(title)s (cantitate %(event_qty)s/%(total_qty)s)\n"
-"                                                            "
+msgstr "\n                                                                %(title)s (cantitate %(event_qty)s/%(total_qty)s)\n                                                            "
 
 #: templates/oscar/dashboard/orders/order_detail.html:405
 msgid "No shipping events."
@@ -8059,9 +8033,7 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
-"\n"
-"Pagina <strong>%(title)s</strong> a fost salvata!"
+msgstr "\nPagina <strong>%(title)s</strong> a fost salvata!"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
@@ -8087,10 +8059,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"                Pagina %(page_num)s din %(total_pages)s\n"
-"            "
+msgstr "\n                Pagina %(page_num)s din %(total_pages)s\n            "
 
 #: templates/oscar/dashboard/partials/pagination.html:16
 #: templates/oscar/partials/pagination.html:16
@@ -8100,20 +8069,16 @@ msgstr "inainte"
 
 #: templates/oscar/dashboard/partials/product_images.html:13
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
-#, fuzzy
-#| msgid "Re-order"
 msgctxt "Change the sequence order"
 msgid "Re-order"
-msgstr "Comanda din nou"
+msgstr ""
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"Utilizatorul %(user_name)s a fost dezasociat de %(partner_name)s.\n"
+msgstr "\nUtilizatorul %(user_name)s a fost dezasociat de %(partner_name)s.\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8191,7 +8156,9 @@ msgid "Update details"
 msgstr "Modifica detalii"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:37
-msgid "A partial email address can be entered (eg '@example.com') to match multiple addresses."
+msgid ""
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
 msgstr "Poate fi introdusa o adresa de email partiala (ex. '@example.com') pentru a obtine mai multe adrese."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:65
@@ -8200,9 +8167,7 @@ msgid ""
 "\n"
 "                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"Utilizatorul este deja asociat la %(name)s."
+msgstr "\nUtilizatorul este deja asociat la %(name)s."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:71
 msgid "Linking..."
@@ -8278,9 +8243,7 @@ msgstr "Inapoi la pagina de baza a seturilor de produse"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p>Set <strong>%(name)s</strong> salvat.</p>\n"
+msgstr "\n<p>Set <strong>%(name)s</strong> salvat.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -8326,7 +8289,9 @@ msgid "products"
 msgstr "produse"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:32
-msgid "This range contains all products. To add products manually, please unselect the 'Includes All Products' option on the edit range page."
+msgid ""
+"This range contains all products. To add products manually, please unselect "
+"the 'Includes All Products' option on the edit range page."
 msgstr "Acest set contine toate produsele. Pentru a adauga produse manual, deselecteaza optiunea 'Include Toate Produsele' din pagina de modificare a setului."
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:36
@@ -8932,10 +8897,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"                        Total: %(total)s\n"
-"                    "
+msgstr "\n                        Total: %(total)s\n                    "
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
@@ -8974,7 +8936,9 @@ msgid "Enter a new password"
 msgstr ""
 
 #: templates/oscar/registration/password_reset_confirm.html:22
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr "Te rugam sa introduci noua parola de doua ori ca sa putem verifica daca ai scris-o corect."
 
 #: templates/oscar/registration/password_reset_confirm.html:27
@@ -8986,7 +8950,9 @@ msgid "Password reset unsuccessful"
 msgstr "Parola nu a putut fi resetata"
 
 #: templates/oscar/registration/password_reset_confirm.html:32
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr "Link-ul de resetare a parolei a fost invalid, probabil pentru ca a fost deja folosit. Te rugam sa soliciti o noua resetare a parolei."
 
 #: templates/oscar/registration/password_reset_done.html:4
@@ -9014,7 +8980,9 @@ msgid ""
 msgstr ""
 
 #: templates/oscar/registration/password_reset_form.html:21
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr "Ti-ai uitat parola? Specifica adresa de e-mail mai jos si iti vom trimite un email cu instructiuni pentru a seta o parola noua."
 
 #: templates/oscar/registration/password_reset_form.html:24
@@ -9031,10 +8999,7 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"        Produse care se potrivesc cu \"%(q)s\"\n"
-"    "
+msgstr "\n        Produse care se potrivesc cu \"%(q)s\"\n    "
 
 #: templates/oscar/search/results.html:52
 #, python-format
@@ -9068,9 +9033,7 @@ msgid ""
 "\n"
 "                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"Ai vrut sa spui <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?"
+msgstr "\nAi vrut sa spui <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?"
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
@@ -9080,255 +9043,3 @@ msgstr "Inapoi la rezultatele cautarii"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Trebuie sa selectezi cateva %ss"
-
-#~ msgid "Must be str or unicode"
-#~ msgstr "Trebuie sa fie str sau unicode"
-
-#~ msgid "Promotion type"
-#~ msgstr "Tip promotie"
-
-#~ msgid "Position"
-#~ msgstr "Pozitie"
-
-#~ msgid "Where in the page this content block will appear"
-#~ msgstr "Unde va aparea in pagina acest bloc de continut"
-
-#~ msgid "Content blocks can only be linked to internal URLs"
-#~ msgstr "Blocurile de continut pot fi asociate doar cu URL-uri interne"
-
-#~ msgid "Content block removed successfully"
-#~ msgstr "Blocul de continut a fost eliminat cu succes"
-
-#~ msgid "Content block created successfully"
-#~ msgstr "Blocul de continut a fost creat cu succes"
-
-#~ msgid "Create a new %s content block"
-#~ msgstr "Creaza un nou bloc de continut %s"
-
-#~ msgid "Product list content block created"
-#~ msgstr "Blocul de continut lista de produse a fost creat"
-
-#~ msgid "Update content block"
-#~ msgstr "Modifica blocul de continut"
-
-#~ msgid "Content block updated successfully"
-#~ msgstr "Blocul de continut a fost modificat cu succes"
-
-#~ msgid "Content block '%(block)s' added to page '%(page)s'"
-#~ msgstr "Blocul de continut '%(block)s' a fost adaugat la pagina '%(page)s'"
-
-#~ msgid "No link found to delete"
-#~ msgstr "Nu a fost gasit nici un link pentru stergere"
-
-#~ msgid "Content block removed from page '%s'"
-#~ msgstr "Blocul de continut a fost eliminat de pe pagina '%s'"
-
-#~ msgid "Product list promotion updated"
-#~ msgstr "Promotia listei de produse a fost modificata"
-
-#~ msgid "Content block deleted successfully"
-#~ msgstr "Blocul de continut a fost sters cu succes"
-
-#~ msgid "Percentage off of products in range"
-#~ msgstr "Procent reducere la produsele din set"
-
-#~ msgid "Fixed amount off of products in range"
-#~ msgstr "Suma fixa reducere la produsele din set"
-
-#~ msgid "Promotions"
-#~ msgstr "Promotii"
-
-#~ msgid "Display Order"
-#~ msgstr "Ordinea Afisarii"
-
-#~ msgid "Clicks"
-#~ msgstr "Click-uri"
-
-#~ msgid "Linked Promotion"
-#~ msgstr "Promotie Asociata"
-
-#~ msgid "Linked Promotions"
-#~ msgstr "Promotii Asociate"
-
-#~ msgid "Page URL"
-#~ msgstr "URL Pagina"
-
-#~ msgid "Page Promotion"
-#~ msgstr "Promotie Pagina"
-
-#~ msgid "Page Promotions"
-#~ msgstr "Promotii Pagina"
-
-#~ msgid "Keyword Promotion"
-#~ msgstr "Promotie Cuvant Cheie"
-
-#~ msgid "Keyword Promotions"
-#~ msgstr "Promotii Cuvint Cheie"
-
-#~ msgid "Keywords"
-#~ msgstr "Cuvinte cheie"
-
-#~ msgid "Promotion"
-#~ msgstr "Promotie"
-
-#~ msgid "Display type"
-#~ msgstr "Tip afisare"
-
-#~ msgid "This can be used to have different types of HTML blocks (eg different widths)"
-#~ msgstr "Poate fi configurat astfel incat sa contina diverse tipuri de bloc de continut HTML (ex diverse latimi)"
-
-#~ msgid "Raw HTML"
-#~ msgstr "HTML pur"
-
-#~ msgid "Link URL"
-#~ msgstr "Link URL"
-
-#~ msgid "This is where this promotion links to"
-#~ msgstr "Promotia directioneaza catre aceasta locatie"
-
-#~ msgid "Choose the Image content blocks that this block will use. (You may need to create some first)."
-#~ msgstr "Alege blocurile de continut Imagine pe care le va folosi acest bloc. (Este posibil sa fie nevoie sa le creezi inainte)."
-
-#~ msgid "Multi Image"
-#~ msgstr "Imagine Multipla"
-
-#~ msgid "Multi Images"
-#~ msgstr "Imagini Multiple"
-
-#~ msgid "Link text"
-#~ msgstr "Text link"
-
-#~ msgid "Hand Picked Product List"
-#~ msgstr "Lista Produse Alese Manual"
-
-#~ msgid "Hand Picked Product Lists"
-#~ msgstr "Liste Produse Alese Manual"
-
-#~ msgid "List"
-#~ msgstr "Lista"
-
-#~ msgid "Bestselling products"
-#~ msgstr "Cele mai vandute produse"
-
-#~ msgid "Recently added products"
-#~ msgstr "Cele mai recente produse"
-
-#~ msgid "Number of Products"
-#~ msgstr "Numar Produse"
-
-#~ msgid "Tabbed Block"
-#~ msgstr "Bloc cu file"
-
-#~ msgid "Ordered Product List"
-#~ msgstr "Lista Produse Ordonate"
-
-#~ msgid "Ordered Product Lists"
-#~ msgstr "Liste Produse Ordonate"
-
-#~ msgid "Tabbed Blocks"
-#~ msgstr "Blocuri cu file"
-
-#~ msgid "Content blocks"
-#~ msgstr "Blocuri de continut"
-
-#~ msgid "Content blocks by page"
-#~ msgstr "Blocuri de continut dupa pagina"
-
-#~ msgid "Server error!"
-#~ msgstr "Eroare de server!"
-
-#~ msgid "This incident has been logged and will be addressed by an engineer as soon as possible."
-#~ msgstr "Acest incident a fost inregistrat si va fi adresat de catre un specialist in cel mai scurt timp."
-
-#~ msgid "Offers, vouchers and promotions"
-#~ msgstr "Oferte, vouchere si promotii"
-
-#~ msgid "Delete content block '%(name)s'?\""
-#~ msgstr "Sterge blocul de continut '%(name)s'?\""
-
-#~ msgid "Delete content block"
-#~ msgstr "Sterge bloc de continut"
-
-#~ msgid "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are you sure?"
-#~ msgstr "Sterge blocul de continut %(object.type)s cu numele <strong>%(object.name)s</strong> - esti sigur?"
-
-#~ msgid "Remove promotion from page?"
-#~ msgstr "Elimina promotia de pe pagina?"
-
-#~ msgid "Remove promotion"
-#~ msgstr "Elimina promotia"
-
-#~ msgid "Remove %(object.content_object.type)s content block <strong>%(object.name)s</strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
-#~ msgstr "Elimina blocul de continut %(object.content_object.type)s cu numele <strong>%(object.name)s</strong> de pe pagina <strong>%(object.page_url)s</strong> - esti sigur?"
-
-#~ msgid "Content block"
-#~ msgstr "Bloc de continut"
-
-#~ msgid "Pages displaying this content blocks"
-#~ msgstr "Pagini care afiseaza acest bloc de continut"
-
-#~ msgid "Position on page"
-#~ msgstr "Pozitia pe pagina"
-
-#~ msgid "View all blocks on this page"
-#~ msgstr "Vezi toate blocurie de pe aceasta pagina"
-
-#~ msgid "Remove from page"
-#~ msgstr "Elimina de pe pagina"
-
-#~ msgid "This promotion is not displayed anywhere at the moment."
-#~ msgstr "Aceasta promotie nu e afisata nicaieri momentan."
-
-#~ msgid "Add to a page"
-#~ msgstr "Adauga la o pagina"
-
-#~ msgid "Add to page"
-#~ msgstr "Adauga la pagina"
-
-#~ msgid "Content blocks for page %(page_url)s"
-#~ msgstr "Blocuri de continut pentru pagina %(page_url)s"
-
-#~ msgid "Content blocks on page '%(page_url)s'"
-#~ msgstr "Blocuri de continut pe pagina '%(page_url)s'"
-
-#~ msgid "Edit promotions in position '%(name)s'"
-#~ msgstr "Modifica promotiile din pozitia '%(name)s'"
-
-#~ msgid "Promotion Name"
-#~ msgstr "Nume Promotie"
-
-#~ msgid "No promotions in this position."
-#~ msgstr "Nu exista promotii in aceasta pozitie."
-
-#~ msgid "Pages with content blocks"
-#~ msgstr "Pagini cu blocuri de continut"
-
-#~ msgid "View by page"
-#~ msgstr "Vezi dupa pagina"
-
-#~ msgid "View all content blocks"
-#~ msgstr "Vezi toate blocurile de continut"
-
-#~ msgid "View content blocks by page"
-#~ msgstr "Vezi blocuri de continut dupa pagina"
-
-#~ msgid "Pages with content blocks on them"
-#~ msgstr "Pagini cu blocuri de continut"
-
-#~ msgid "Number of content blocks"
-#~ msgstr "Numar de blocuri de continut"
-
-#~ msgid "No content blocks found."
-#~ msgstr "Nu au fost gasite blocuri de continut."
-
-#~ msgid "Create a new content block"
-#~ msgstr "Creaza bloc continut nou"
-
-#~ msgid "Create block"
-#~ msgstr "Creaza bloc"
-
-#~ msgid "Number of times used"
-#~ msgstr "Numar utilizari"
-
-#~ msgid "See more"
-#~ msgstr "Vezi mai multe"

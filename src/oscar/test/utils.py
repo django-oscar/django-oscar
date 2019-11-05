@@ -1,22 +1,21 @@
-import queue
 import os
+import queue
 import shutil
 import threading
 from datetime import date
 
-from django.contrib.auth.models import AnonymousUser
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
 from django.core.signing import Signer
 from django.db import connection
 from django.test import RequestFactory as BaseRequestFactory
+from sorl.thumbnail.conf import settings as sorl_settings
 
 from oscar.core.loading import get_class, get_model
 from oscar.core.thumbnails import get_thumbnailer
 from oscar.test.factories import ProductImageFactory
-from sorl.thumbnail.conf import settings as sorl_settings
-
 
 OSCAR_IMAGE_FOLDER_FORMATTED = 'images/products/{0}/{1:02d}/'.format(date.today().year, date.today().month)
 FULL_PATH_TO_IMAGES_FOLDER = os.path.join(settings.MEDIA_ROOT, OSCAR_IMAGE_FOLDER_FORMATTED)

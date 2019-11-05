@@ -1,18 +1,17 @@
 from unittest import mock
 
-from django_webtest import WebTest
-
 from django.contrib.auth.models import AnonymousUser
-from django.urls import reverse
 from django.core import mail
 from django.test import TestCase
+from django.urls import reverse
+from django_webtest import WebTest
 
 from oscar.apps.customer.alerts.utils import (
     send_alert_confirmation, send_product_alerts)
 from oscar.apps.customer.forms import ProductAlertForm
 from oscar.apps.customer.models import ProductAlert
 from oscar.test.factories import (
-    create_product, create_stockrecord, ProductAlertFactory, UserFactory)
+    ProductAlertFactory, UserFactory, create_product, create_stockrecord)
 
 
 class TestAUser(WebTest):

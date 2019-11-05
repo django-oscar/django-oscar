@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from oscar.apps.offer import models
 from oscar.apps.catalogue import models as catalogue_models
+from oscar.apps.offer import models
 from oscar.test.factories import create_product
 
 

@@ -1,8 +1,7 @@
 from django.test import TestCase
 
-from oscar.test import factories
 from oscar.core.loading import get_model
-
+from oscar.test import factories
 
 Product = get_model('catalogue', 'Product')
 
@@ -43,7 +42,7 @@ class ProductOptionTests(TestCase):
         self.test_product_has_options_per_product_class()
         self.test_product_has_options_per_product()
         self.assertTrue(self.product.has_options, "Options should be present")
-        self.assertEquals(
+        self.assertEqual(
             self.product.options.count(), 1,
             "options attribute should not contain duplicates"
         )
@@ -58,12 +57,12 @@ class ProductOptionTests(TestCase):
             "has_product_options should indicate the number of product options"
         )
         self.product_class.options.add(factories.OptionFactory(code="henk"))
-        self.assertEquals(
+        self.assertEqual(
             self.product.options.count(), 2,
             "New product_class options should be immediately visible"
         )
         self.product.product_options.add(factories.OptionFactory(code="klaas"))
-        self.assertEquals(
+        self.assertEqual(
             self.product.options.count(), 3,
             "New product options should be immediately visible"
         )

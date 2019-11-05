@@ -3,8 +3,8 @@ from decimal import Decimal as D
 
 from django import template
 from django.test import TestCase
-from django.utils import translation
 from django.test.utils import override_settings
+from django.utils import translation
 
 
 def render(template_string, ctx):

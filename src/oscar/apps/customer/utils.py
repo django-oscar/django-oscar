@@ -9,7 +9,6 @@ from django.utils.encoding import force_bytes
 from oscar.core.compat import urlsafe_base64_encode
 from oscar.core.loading import get_model
 
-
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('customer', 'Email')
 

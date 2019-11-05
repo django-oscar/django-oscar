@@ -426,6 +426,13 @@ Thumbnailer class that will be used to generate thumbnails. Available options:
 ``pip install django-oscar[easy-thumbnails]``. Custom thumbnailer class (based on
 ``oscar.core.thumbnails.AbstractThumbnailer``) can be used as well.
 
+``OSCAR_THUMBNAIL_DEBUG``
+-------------------------
+
+Default: Same as ``DEBUG``
+
+When set to ``True`` the ``ThumbnailNode.render`` method can raise errors. Django recommends that tags never raise errors in the ``Node.render`` method in production.
+
 Slug settings
 =============
 

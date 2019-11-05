@@ -3,7 +3,7 @@ from decimal import Decimal as D
 from django.test import TestCase
 
 from oscar.apps.offer import models, results
-from oscar.test.factories import VoucherFactory, ConditionalOfferFactory
+from oscar.test.factories import ConditionalOfferFactory, VoucherFactory
 
 
 class TestOfferApplicationsObject(TestCase):

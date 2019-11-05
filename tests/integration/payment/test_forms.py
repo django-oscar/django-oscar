@@ -1,11 +1,11 @@
 import datetime
 
 from django.core.exceptions import ImproperlyConfigured
-from django.test import TestCase
 from django.forms import ValidationError
-
+from django.test import TestCase
 
 from oscar.apps.payment import forms, models
+
 # types=[bankcards.VISA, bankcards.VISA_ELECTRON, bankcards.MASTERCARD,
 #               bankcards.AMEX, bankcards.MAESTRO, bankcards.DINERS_CLUB,
 #               bankcards.DISCOVER, bankcards.JCB, bankcards.CHINA_UNIONPAY,

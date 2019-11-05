@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from decimal import Decimal as D
 from unittest import mock
 
@@ -8,17 +8,18 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.order.exceptions import (
-    InvalidOrderStatus, InvalidLineStatus, InvalidShippingEvent)
+    InvalidLineStatus, InvalidOrderStatus, InvalidShippingEvent)
 from oscar.apps.order.models import (
-    Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity,
-    OrderNote, OrderDiscount)
-from oscar.apps.order.signals import order_line_status_changed, order_status_changed
+    Line, Order, OrderDiscount, OrderNote, ShippingEvent,
+    ShippingEventQuantity, ShippingEventType)
+from oscar.apps.order.signals import (
+    order_line_status_changed, order_status_changed)
 from oscar.test.basket import add_product
 from oscar.test.contextmanagers import mock_signal_receiver
 from oscar.test.factories import (
-    create_order, create_offer, create_voucher, create_basket,
     OrderFactory, OrderLineFactory, ShippingAddressFactory,
-    ShippingEventFactory)
+    ShippingEventFactory, create_basket, create_offer,
+    create_order, create_voucher)
 
 ORDER_PLACED = 'order_placed'
 

@@ -1,14 +1,15 @@
 from django.contrib.messages import ERROR
 from django.utils.translation import gettext
-from oscar.core.loading import get_class, get_model
-from oscar.test.testcases import WebTestCase
-from oscar.test.factories import (
-    AttributeOptionFactory,
-    AttributeOptionGroupFactory, ProductAttributeFactory)
-from .testcases import (
-    ListViewMixin, PopUpObjectCreateMixin,
-    PopUpObjectUpdateMixin, PopUpObjectDeleteMixin)
 
+from oscar.core.loading import get_class, get_model
+from oscar.test.factories import (
+    AttributeOptionFactory, AttributeOptionGroupFactory,
+    ProductAttributeFactory)
+from oscar.test.testcases import WebTestCase
+
+from .testcases import (
+    ListViewMixin, PopUpObjectCreateMixin, PopUpObjectDeleteMixin,
+    PopUpObjectUpdateMixin)
 
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 AttributeOption = get_model('catalogue', 'AttributeOption')

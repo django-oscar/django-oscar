@@ -1,6 +1,6 @@
 from django import template
-from oscar.core.utils import format_timedelta
 
+from oscar.core.utils import format_timedelta
 
 register = template.Library()
 

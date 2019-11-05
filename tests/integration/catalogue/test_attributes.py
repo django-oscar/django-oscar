@@ -1,8 +1,8 @@
-from datetime import datetime, date
+from datetime import date, datetime
 
-from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
 
 from oscar.test import factories
 

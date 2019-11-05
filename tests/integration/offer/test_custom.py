@@ -2,7 +2,8 @@ from django.test import TestCase
 
 from oscar.apps.offer import custom
 from tests._site.model_tests_app.models import (
-    CustomBenefitModel, CustomBenefitWithoutName, CustomConditionModel, CustomConditionWithoutName)
+    CustomBenefitModel, CustomBenefitWithoutName, CustomConditionModel,
+    CustomConditionWithoutName)
 
 
 class TestCustomBenefit(TestCase):
@@ -11,7 +12,7 @@ class TestCustomBenefit(TestCase):
             custom.create_benefit(CustomBenefitModel), custom.create_benefit(CustomBenefitWithoutName)]
 
     def test_name(self):
-        self.assertEquals(self.custom_benefits[0].name, 'Test benefit')
+        self.assertEqual(self.custom_benefits[0].name, 'Test benefit')
 
     def test_raises_assert_on_missing_name(self):
         with self.assertRaisesMessage(AssertionError, 'Name property is not defined on proxy class.'):
@@ -24,7 +25,7 @@ class TestCustomCondition(TestCase):
             custom.create_condition(CustomConditionModel), custom.create_condition(CustomConditionWithoutName)]
 
     def test_name(self):
-        self.assertEquals(self.custom_conditions[0].name, 'Test condition')
+        self.assertEqual(self.custom_conditions[0].name, 'Test condition')
 
     def test_raises_assert_on_missing_name(self):
         with self.assertRaisesMessage(AssertionError, 'Name property is not defined on proxy class.'):

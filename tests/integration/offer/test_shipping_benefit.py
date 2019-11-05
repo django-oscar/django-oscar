@@ -4,10 +4,10 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.apps.offer import models, utils
-from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.methods import FixedPrice
-from oscar.test.basket import add_product
+from oscar.apps.shipping.repository import Repository
 from oscar.test import factories
+from oscar.test.basket import add_product
 
 
 class StubRepository(Repository):

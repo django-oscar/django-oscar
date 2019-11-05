@@ -1,5 +1,6 @@
-from oscar.forms import fields
 from django.test import TestCase
+
+from oscar.forms import fields
 
 
 class TestExtendedURLField(TestCase):

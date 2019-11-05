@@ -6,8 +6,8 @@ from django.test import TestCase
 
 from oscar.apps.offer import models
 from oscar.apps.offer.utils import Applicator
-from oscar.test.basket import add_product, add_products
 from oscar.test import factories
+from oscar.test.basket import add_product, add_products
 
 
 class TestAnAbsoluteDiscountAppliedWithCountConditionOnDifferentRange(TestCase):

@@ -1,12 +1,11 @@
 # coding=utf-8
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
-from django.core.exceptions import ValidationError
 
-from oscar.apps.catalogue.models import (Product, ProductClass,
-                                         ProductAttribute,
-                                         AttributeOption,
-                                         ProductRecommendation)
+from oscar.apps.catalogue.models import (
+    AttributeOption, Product, ProductAttribute,
+    ProductClass, ProductRecommendation)
 from oscar.test import factories
 
 

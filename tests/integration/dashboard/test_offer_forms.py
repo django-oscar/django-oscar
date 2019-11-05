@@ -2,11 +2,11 @@ from decimal import Decimal as D
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
 from oscar.apps.dashboard.offers import forms
 from oscar.apps.offer.custom import create_benefit
-from oscar.apps.offer.models import Range, Benefit
+from oscar.apps.offer.models import Benefit, Range
 from oscar.test.factories import create_product
-
 from tests._site.model_tests_app.models import CustomBenefitModel
 
 

@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 import pytest
-from django.test import TestCase
 from django.core import exceptions
+from django.test import TestCase
 
+from oscar.apps.address import models
 from oscar.apps.order.models import ShippingAddress
 from oscar.core.compat import get_user_model
-from oscar.apps.address import models
 from oscar.test import factories
-
 from tests._site.model_tests_app.models import (
-    UserAddressModelWithCustomBaseFields, UserAddressModelWithCustomHashFields
-)
+    UserAddressModelWithCustomBaseFields, UserAddressModelWithCustomHashFields)
 
 User = get_user_model()
 

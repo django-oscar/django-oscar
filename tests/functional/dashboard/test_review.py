@@ -8,7 +8,6 @@ from oscar.core.loading import get_model
 from oscar.test.factories import ProductReviewFactory, UserFactory
 from oscar.test.testcases import WebTestCase
 
-
 ProductReview = get_model('reviews', 'productreview')
 User = get_user_model()
 

@@ -1,0 +1,16 @@
+=======================
+Oscar 2.0.2 release notes
+=======================
+
+:release: 2019-09-20
+
+This is Oscar 2.0.2, a bugfix release.
+
+Bug fixes
+=========
+
+- Fixed location of ``flatpages/default.html`` template.
+- Fixed determination of availability for offers where ``max_affected_items`` is set.
+- Added an ``email_user`` method to the ``AbstractUser`` base model, which Django
+  expects to be present.
+- Fixed incomplete fallback to ``OSCAR_DEFAULT_CURRENCY`` in the ``currency`` template filter.

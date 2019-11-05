@@ -1,8 +1,8 @@
 from decimal import Decimal as D
-from oscar.core.loading import get_model
 
 from django.test import TestCase
 
+from oscar.core.loading import get_model
 from oscar.test import factories
 
 Partner = get_model('partner', 'Partner')

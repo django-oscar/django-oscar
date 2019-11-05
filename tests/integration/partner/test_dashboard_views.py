@@ -1,9 +1,9 @@
 from django.contrib.auth.models import Permission
-from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
+from django.test import TestCase
 
-from oscar.test.factories import PartnerFactory, PermissionFactory, UserFactory
 from oscar.apps.dashboard.partners import views
+from oscar.test.factories import PartnerFactory, PermissionFactory, UserFactory
 
 
 class TestPartnerUserUnlinkView(TestCase):

@@ -1,9 +1,7 @@
 from django.test import TestCase, override_settings
 
 from oscar.core.thumbnails import get_thumbnailer
-from oscar.test.utils import (
-    EASY_THUMBNAIL_BASEDIR, ThumbnailMixin,
-)
+from oscar.test.utils import EASY_THUMBNAIL_BASEDIR, ThumbnailMixin
 
 
 class TestThumbnailer(ThumbnailMixin, TestCase):

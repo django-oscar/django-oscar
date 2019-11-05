@@ -6,11 +6,10 @@ from django.test import TestCase
 from oscar.apps.offer import models
 from oscar.apps.offer.results import OfferApplications
 from oscar.apps.offer.utils import Applicator
-from oscar.test.factories import (
-    BasketFactory, RangeFactory, BenefitFactory, ConditionFactory,
-    ConditionalOfferFactory)
-
 from oscar.test.basket import add_product
+from oscar.test.factories import (
+    BasketFactory, BenefitFactory, ConditionalOfferFactory, ConditionFactory,
+    RangeFactory)
 
 
 class TestOfferApplicator(TestCase):

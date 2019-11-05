@@ -3,8 +3,8 @@ from unittest import mock
 
 from django.test import TestCase
 
-from oscar.apps.shipping import methods
 from oscar.apps.basket.models import Basket
+from oscar.apps.shipping import methods
 
 
 class TestFreeShipppingForEmptyBasket(TestCase):

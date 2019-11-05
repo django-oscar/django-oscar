@@ -1,10 +1,11 @@
-from django.test import TestCase
 from decimal import Decimal as D
 
-from oscar.apps.partner import strategy
-from oscar.apps.catalogue import models
-from oscar.test import factories
+from django.test import TestCase
+
 from oscar.apps.basket.models import Line
+from oscar.apps.catalogue import models
+from oscar.apps.partner import strategy
+from oscar.test import factories
 
 
 class TestDefaultStrategy(TestCase):

@@ -82,8 +82,8 @@ coverage: venv ## Generate coverage report
 lint: ## Run flake8 and isort checks
 	flake8 src/oscar/
 	flake8 tests/
-	isort -q --recursive --diff src/
-	isort -q --recursive --diff tests/
+	isort -c -q --recursive --diff src/
+	isort -c -q --recursive --diff tests/
 
 test_migrations: install-migrations-testing-requirements ## Tests migrations
 	cd sandbox && ./test_migrations.sh
@@ -92,7 +92,7 @@ test_migrations: install-migrations-testing-requirements ## Tests migrations
 # Translations Handling
 #######################
 extract_translations: ## Extract strings and create source .po files
-	cd src/oscar; django-admin.py makemessages -a --no-wrap
+	cd src/oscar; django-admin.py makemessages -a
 
 compile_translations: ## Compile translation files and create .mo files
 	cd src/oscar; django-admin.py compilemessages

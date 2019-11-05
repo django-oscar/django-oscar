@@ -3,7 +3,7 @@ from unittest import mock
 
 from django.test import TestCase
 
-from oscar.apps.partner import strategy, availability
+from oscar.apps.partner import availability, strategy
 
 
 class TestStockRequiredMixin(TestCase):

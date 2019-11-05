@@ -6,14 +6,14 @@ from django.test import TestCase
 from django.test.utils import override_settings
 
 from oscar.apps.checkout.calculators import OrderTotalCalculator
-from oscar.apps.checkout.mixins import CheckoutSessionMixin, OrderPlacementMixin
 from oscar.apps.checkout.exceptions import FailedPreCondition
+from oscar.apps.checkout.mixins import (
+    CheckoutSessionMixin, OrderPlacementMixin)
+from oscar.apps.shipping.methods import FixedPrice, Free
 from oscar.core.loading import get_model
 from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.utils import RequestFactory
-from oscar.apps.shipping.methods import FixedPrice, Free
-
 
 Order = get_model('order', 'Order')
 
