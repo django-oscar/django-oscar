@@ -49,6 +49,13 @@ class TestChildRange(TestCase):
     def test_does_not_include_sibling(self):
         self.assertFalse(self.range.contains_product(self.child2))
 
+    def test_parent_with_child_exception(self):
+        self.range.add_product(self.parent)
+        self.range.remove_product(self.child1)
+        self.assertTrue(self.range.contains_product(self.parent))
+        self.assertTrue(self.range.contains_product(self.child2))
+        self.assertFalse(self.range.contains_product(self.child1))
+
 
 class TestPartialRange(TestCase):
 
