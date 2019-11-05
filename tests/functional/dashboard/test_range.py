@@ -185,3 +185,25 @@ class RangeProductViewTest(WebTestCase):
         self.assertTrue(self.range.contains_product(self.child1))
         self.assertTrue(self.range.contains_product(self.child2))
         self.assertFalse(self.range.contains_product(self.parent))
+
+    def test_adding_multiple_children_does_not_add_parent(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[0]
+        form['query'] = '1234.345 1234-345'
+        response = form.submit()
+        all_products = self.range.all_products()
+        self.assertEqual(len(all_products), 2)
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertTrue(self.range.contains_product(self.child2))
+        self.assertFalse(self.range.contains_product(self.parent))
+
+    def test_adding_multiple_comma_separated_children_does_not_add_parent(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[0]
+        form['query'] = '1234.345, 1234-345'
+        response = form.submit()
+        all_products = self.range.all_products()
+        self.assertEqual(len(all_products), 2)
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertTrue(self.range.contains_product(self.child2))
+        self.assertFalse(self.range.contains_product(self.parent))
