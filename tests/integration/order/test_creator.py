@@ -1,3 +1,4 @@
+import datetime
 import threading
 import time
 from decimal import Decimal as D
@@ -7,6 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
 from django.test import TestCase, TransactionTestCase
 from django.test.utils import override_settings
+from django.utils import timezone
 
 from oscar.apps.catalogue.models import Product, ProductClass
 from oscar.apps.checkout import calculators
@@ -265,6 +267,19 @@ class TestPlaceOrderWithVoucher(TestCase):
         # Make sure the voucher usage is rechecked
         with pytest.raises(ValueError):
             place_order(creator, basket=basket, order_number='12347', user=user)
+
+    def test_expired_voucher(self):
+        user = AnonymousUser()
+        basket = factories.create_basket()
+        creator = OrderCreator()
+
+        voucher = factories.VoucherFactory(usage=Voucher.SINGLE_USE)
+        voucher.offers.add(factories.create_offer(offer_type='Voucher'))
+        basket.vouchers.add(voucher)
+        voucher.end_datetime = timezone.now() - datetime.timedelta(days=100)
+        voucher.save()
+        place_order(creator, basket=basket, order_number='12346', user=user)
+        assert voucher.applications.count() == 0
 
 
 class TestConcurrentOrderPlacement(TransactionTestCase):
