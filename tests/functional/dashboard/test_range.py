@@ -179,7 +179,7 @@ class RangeProductViewTest(WebTestCase):
 
         form = range_products_page.forms[0]
         form['query'] = '1234-345'
-        response = form.submit()
+        form.submit().follow()
         all_products = self.range.all_products()
         self.assertEqual(len(all_products), 1)
         self.assertTrue(self.range.contains_product(self.child1))
@@ -190,7 +190,7 @@ class RangeProductViewTest(WebTestCase):
         range_products_page = self.get(self.url)
         form = range_products_page.forms[0]
         form['query'] = '1234.345 1234-345'
-        response = form.submit()
+        form.submit().follow()
         all_products = self.range.all_products()
         self.assertEqual(len(all_products), 2)
         self.assertTrue(self.range.contains_product(self.child1))
@@ -201,7 +201,7 @@ class RangeProductViewTest(WebTestCase):
         range_products_page = self.get(self.url)
         form = range_products_page.forms[0]
         form['query'] = '1234.345, 1234-345'
-        response = form.submit()
+        form.submit().follow()
         all_products = self.range.all_products()
         self.assertEqual(len(all_products), 2)
         self.assertTrue(self.range.contains_product(self.child1))
