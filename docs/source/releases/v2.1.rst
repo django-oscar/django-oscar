@@ -35,6 +35,13 @@ What's new in Oscar 2.1?
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Minor changes
+~~~~~~~~~~~~~
+
+- ``OrderPlacementMixin.place_order`` now ignores inactive vouchers when placing
+  an order (instead of raising an exception), for consistency with how
+  the basket flows handle inactive vouchers.
+
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
