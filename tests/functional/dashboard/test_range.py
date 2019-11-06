@@ -77,6 +77,9 @@ class RangeProductViewTest(WebTestCase):
         )
         self.product3 = create_product(partner_sku='456')
         self.product4 = create_product(partner_sku='789')
+        self.parent = create_product(upc="1234", structure="parent")
+        self.child1 = create_product(upc="1234.345", structure="child", parent=self.parent)
+        self.child2 = create_product(upc="1234-345", structure="child", parent=self.parent)
 
     def test_upload_file_with_skus(self):
         range_products_page = self.get(self.url)
@@ -162,3 +165,45 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(
             messages[1].message, 'There are more than one product with SKU 123123'
         )
+
+    def test_adding_child_does_not_add_parent(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[0]
+        form['query'] = '1234.345'
+        form.submit().follow()
+        all_products = self.range.all_products()
+        self.assertEqual(len(all_products), 1)
+        self.assertFalse(self.range.contains_product(self.parent))
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertFalse(self.range.contains_product(self.child2))
+
+        form = range_products_page.forms[0]
+        form['query'] = '1234-345'
+        form.submit().follow()
+        all_products = self.range.all_products()
+        self.assertEqual(len(all_products), 1)
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertTrue(self.range.contains_product(self.child2))
+        self.assertFalse(self.range.contains_product(self.parent))
+
+    def test_adding_multiple_children_does_not_add_parent(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[0]
+        form['query'] = '1234.345 1234-345'
+        form.submit().follow()
+        all_products = self.range.all_products()
+        self.assertEqual(len(all_products), 2)
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertTrue(self.range.contains_product(self.child2))
+        self.assertFalse(self.range.contains_product(self.parent))
+
+    def test_adding_multiple_comma_separated_children_does_not_add_parent(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[0]
+        form['query'] = '1234.345, 1234-345'
+        form.submit().follow()
+        all_products = self.range.all_products()
+        self.assertEqual(len(all_products), 2)
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertTrue(self.range.contains_product(self.child2))
+        self.assertFalse(self.range.contains_product(self.parent))
