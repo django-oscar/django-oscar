@@ -42,6 +42,9 @@ Minor changes
   an order (instead of raising an exception), for consistency with how
   the basket flows handle inactive vouchers.
 
+- Fixed the logic of ``StockRequired.parent_availability_policy`` to use
+  child products to determine availability of children, rather than the parent.
+
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
