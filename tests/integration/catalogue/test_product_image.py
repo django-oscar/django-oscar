@@ -92,6 +92,7 @@ class TestMissingProductImage(StaticLiveServerTestCase):
         for d in [os.path.join(self.TEMP_MEDIA_ROOT, 'image'), self.TEMP_MEDIA_ROOT]:
             os.rmdir(d)
 
+    @override_settings(MEDIA_ROOT='')
     @mock.patch('oscar.apps.catalogue.abstract_models.MissingProductImage.symlink_missing_image')
     def test_no_symlink_when_no_media_root(self, mock_symlink):
         MissingProductImage()

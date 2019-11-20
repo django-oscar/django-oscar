@@ -56,9 +56,9 @@ in ``sites/sandbox/settings_local.py``.  This will include the on-the-fly
 ``less`` pre-processor. That will allow you to see changes to the LESS
 files after a page reload.
 
-You can manually compile the CSS files by running::
+You can manually compile static assets files by running::
 
-    make css
+    npm run build
 
 For this to work, you will need to ensure that the pre-processor binary
 ``lessc`` is installed. Using npm_, install LESS using::
