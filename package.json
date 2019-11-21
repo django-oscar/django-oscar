@@ -19,15 +19,14 @@
     "jquery-sortable": "^0.9.13",
     "less": "^3.10.3",
     "pump": "^3.0.0",
-    "require-dir": "^1.2.0",
     "select2": "4.0.10",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tinymce": "^4.8.3"
   },
   "scripts": {
-    "build": "gulp",
-    "start": "gulp watch",
-    "eslint": "./node_modules/.bin/eslint src/oscar/static/oscar/js/oscar/"
+    "build": "gulp copy && gulp less",
+    "watch": "gulp watch",
+    "eslint": "./node_modules/.bin/eslint src/oscar/static_src/oscar/js/oscar/"
   },
   "license": "MIT",
   "homepage": "https://github.com/django-oscar/django-oscar#readme"

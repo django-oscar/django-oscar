@@ -13,7 +13,6 @@ RUN chown -R django /app
 
 WORKDIR /app
 
-
 RUN make install
 
 USER django
