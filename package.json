@@ -21,7 +21,7 @@
     "pump": "^3.0.0",
     "select2": "4.0.12",
     "select2-bootstrap-theme": "0.1.0-beta.10",
-    "tinymce": "^4.8.3"
+    "tinymce": "^5.1.2"
   },
   "scripts": {
     "build": "gulp copy && gulp less",
