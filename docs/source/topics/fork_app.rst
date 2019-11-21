@@ -11,6 +11,18 @@ This guide explains how to fork an app in Oscar.
   But there's no need to do this manually anymore! More information is
   available in :ref:`fork-oscar-app`.
 
+.. note::
+
+  Because of the way dynamic class loading works, when forking dashboard apps,
+  the ``oscar.apps.dashboard`` app also needs to be forked; and the forked
+  dashboard app's code must live inside the forked ``oscar.apps.dashboard``
+  app's directory.
+
+  Similarly, when forking ``oscar.apps.catalogue.reviews``,
+  ``oscar.apps.catalogue`` needs to be forked as well; and the forked
+  ``oscar.apps.catalogue.reviews`` app's code must live inside the forked
+  ``oscar.apps.catalogue`` app's directory.
+
 Create Python module with same label
 ====================================
 
