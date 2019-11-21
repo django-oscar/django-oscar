@@ -145,6 +145,63 @@ class BasketReportTests(TestCase):
 class SavedBasketTests(WebTestCase):
     csrf_checks = False
 
+    def test_moving_to_saved_basket_creates_new(self):
+        self.user = factories.UserFactory()
+        product = factories.ProductFactory()
+        basket = factories.BasketFactory(owner=self.user)
+        basket.add_product(product)
+
+        response = self.get(reverse('basket:summary'))
+        formset = response.context['formset']
+        form = formset.forms[0]
+
+        data = {
+            formset.add_prefix('INITIAL_FORMS'): 1,
+            formset.add_prefix('TOTAL_FORMS'): 1,
+            formset.add_prefix('MIN_FORMS'): 0,
+            formset.add_prefix('MAX_NUM_FORMS'): 1,
+            form.add_prefix('id'): form.instance.pk,
+            form.add_prefix('quantity'): form.initial['quantity'],
+            form.add_prefix('save_for_later'): True,
+        }
+        response = self.post(reverse('basket:summary'), params=data)
+
+        self.assertRedirects(response, reverse('basket:summary'))
+        self.assertFalse(Basket.open.get(pk=basket.pk).lines.exists())
+        self.assertEqual(Basket.saved.get(owner=self.user).lines.get(
+            product=product).quantity, 1)
+
+    def test_moving_to_saved_basket_updates_existing(self):
+        self.user = factories.UserFactory()
+        product = factories.ProductFactory()
+
+        basket = factories.BasketFactory(owner=self.user)
+        basket.add_product(product)
+
+        saved_basket = factories.BasketFactory(owner=self.user,
+                                               status=Basket.SAVED)
+        saved_basket.add_product(product)
+
+        response = self.get(reverse('basket:summary'))
+        formset = response.context['formset']
+        form = formset.forms[0]
+
+        data = {
+            formset.add_prefix('INITIAL_FORMS'): 1,
+            formset.add_prefix('TOTAL_FORMS'): 1,
+            formset.add_prefix('MIN_FORMS'): 0,
+            formset.add_prefix('MAX_NUM_FORMS'): 1,
+            form.add_prefix('id'): form.instance.pk,
+            form.add_prefix('quantity'): form.initial['quantity'],
+            form.add_prefix('save_for_later'): True,
+        }
+        response = self.post(reverse('basket:summary'), params=data)
+
+        self.assertRedirects(response, reverse('basket:summary'))
+        self.assertFalse(Basket.open.get(pk=basket.pk).lines.exists())
+        self.assertEqual(Basket.saved.get(pk=saved_basket.pk).lines.get(
+            product=product).quantity, 2)
+
     def test_moving_from_saved_basket(self):
         self.user = User.objects.create_user(username='test', password='pass',
                                              email='test@example.com')
