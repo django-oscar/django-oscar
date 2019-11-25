@@ -37,6 +37,9 @@ Bug fixes
 - Fixed a bug in the handling of requests to save an item in the basket for
   later(:issue:`3215`).
 
+- Fixed an error when deleting an offer whose related conditions/benefits have
+  been deleted.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

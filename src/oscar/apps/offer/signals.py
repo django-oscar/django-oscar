@@ -12,16 +12,20 @@ Benefit = get_model('offer', 'Benefit')
 def delete_unused_related_conditions_and_benefits(instance, **kwargs):
     offer = instance  # the object is no longer in the database
 
-    condition_id = offer.condition_id
-    condition = Condition.objects.get(id=condition_id)
-    condition_is_unique = condition.offers.count() == 0
-    condition_is_not_custom = condition.proxy_class == ''
-    if condition_is_not_custom and condition_is_unique:
-        condition.delete()
+    try:
+        condition = Condition.objects.get(id=offer.condition_id)
+    except Condition.DoesNotExist:
+        pass
+    else:
+        # Only delete if not using a proxy, and not used by other offers
+        if condition.proxy_class == '' and not condition.offers.exists():
+            condition.delete()
 
-    benefit_id = offer.benefit_id
-    benefit = Benefit.objects.get(id=benefit_id)
-    benefit_is_unique = benefit.offers.count() == 0
-    benefit_is_not_custom = benefit.proxy_class == ''
-    if benefit_is_not_custom and benefit_is_unique:
-        benefit.delete()
+    try:
+        benefit = Benefit.objects.get(id=offer.benefit_id)
+    except Benefit.DoesNotExist:
+        pass
+    else:
+        # Only delete if not using a proxy, and not used by other offers
+        if benefit.proxy_class == '' and not benefit.offers.exists():
+            benefit.delete()
