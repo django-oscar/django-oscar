@@ -31,6 +31,11 @@ What's new in Oscar 2.1?
   Django doesn't generate migrations if a project modifies the ``OSCAR_IMAGE_FOLDER``
   to specify a custom directory structure for uploaded images.
 
+Bug fixes
+~~~~~~~~~
+
+- Fixed a bug in the handling of requests to save an item in the basket for
+  later(:issue:`3215`).
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
