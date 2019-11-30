@@ -14,7 +14,6 @@ from oscar.core.exceptions import (
     AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
 from oscar.utils.deprecation import RemovedInOscar22Warning
 
-
 # To preserve backwards compatibility of loading classes which moved
 # from one Oscar module to another, we look into the dictionary below
 # for the moved items during loading.

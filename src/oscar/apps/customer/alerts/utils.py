@@ -7,7 +7,6 @@ from django.template import loader
 from oscar.core.loading import get_class, get_model
 from oscar.utils.deprecation import RemovedInOscar22Warning
 
-
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
 Dispatcher = get_class('communication.utils', 'Dispatcher')

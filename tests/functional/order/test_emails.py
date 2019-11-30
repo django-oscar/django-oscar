@@ -1,13 +1,11 @@
 import os
 
-from django.test import TestCase
-
 from django.core import mail
+from django.test import TestCase
 
 from oscar.core.loading import get_class
 from oscar.test.factories import ProductImageFactory, create_order
 from oscar.test.utils import EmailsMixin, remove_image_folders
-
 
 OrderDispatcher = get_class('order.utils', 'OrderDispatcher')
 

@@ -6,7 +6,6 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from oscar.core.loading import get_model
 
-
 CommunicationEventType = get_model('communication', 'CommunicationEventType')
 Email = get_model('communication', 'Email')
 Notification = get_model('communication', 'Notification')

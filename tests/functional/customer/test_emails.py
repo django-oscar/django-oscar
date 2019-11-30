@@ -1,12 +1,11 @@
-from django.test import TestCase
-
 from django.contrib.sites.models import Site
 from django.core import mail
+from django.test import TestCase
 
 from oscar.core.loading import get_class
-from oscar.test.factories import ProductAlertFactory, UserFactory, create_product
+from oscar.test.factories import (
+    ProductAlertFactory, UserFactory, create_product)
 from oscar.test.utils import EmailsMixin
-
 
 CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 AlertsDispatcher = get_class('customer.alerts.utils', 'AlertsDispatcher')

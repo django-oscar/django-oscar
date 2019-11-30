@@ -5,7 +5,6 @@ from oscar.core.loading import get_model
 from oscar.test.factories import UserFactory
 from oscar.test.testcases import WebTestCase
 
-
 CommunicationEventType = get_model('communication', 'CommunicationEventType')
 
 

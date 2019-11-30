@@ -5,7 +5,6 @@ from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 from oscar.test.factories import create_order
 
-
 User = get_user_model()
 
 CommunicationEventType = get_model('communication', 'CommunicationEventType')

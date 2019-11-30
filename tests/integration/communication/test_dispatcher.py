@@ -1,9 +1,9 @@
 from django.core import mail
 from django.test import TestCase
 
+from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
-from oscar.apps.customer.utils import get_password_reset_url
 from oscar.test.factories import SiteFactory
 
 User = get_user_model()
