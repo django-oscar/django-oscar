@@ -10,9 +10,6 @@ module.exports = function(done) {
     gulp.src("node_modules/jquery/dist/jquery.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/jquery"));
 
-    gulp.src("node_modules/bootstrap/less/**/*")
-        .pipe(gulp.dest("src/oscar/static/oscar/less/bootstrap3"));
-
     gulp.src("node_modules/bootstrap/dist/js/bootstrap.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
 
