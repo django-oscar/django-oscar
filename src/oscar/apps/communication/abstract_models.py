@@ -55,10 +55,10 @@ class AbstractCommunicationEventType(models.Model):
         separator='_', uppercase=True, editable=True,
         validators=[
             RegexValidator(
-                regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
+                regex=r'^[A-Z_][0-9A-Z_]*$',
                 message=_(
-                    "Code can only contain the letters a-z, A-Z, digits, "
-                    "and underscores, and can't start with a digit."))],
+                    "Code can only contain the uppercase letters (A-Z), "
+                    "digits, and underscores, and can't start with a digit."))],
         help_text=_("Code used for looking up this event programmatically"))
 
     #: Name is the friendly description of an event for use in the admin
