@@ -1,0 +1,34 @@
+=======================
+Oscar 2.0.4 release notes
+=======================
+
+:release: 2019-12-05
+
+This is Oscar 2.0.4, a security release.
+
+Security fixes
+==============
+
+The file handling behaviour of uploaded CSV files for ranges (handled by
+``RangeProductListView``) has been modified to address a potential security
+risk when invalid files are uploaded, as these would previously be left on disk
+if parsing of the uploaded file failed.
+
+Uploaded files are no longer written to disk by Oscar, but processed directly
+from the temporary uploaded file.
+
+This means that ``RangeProductFileUpload.filepath`` no longer stores a
+reference to the stored path of an uploaded file, but only its file name for
+reporting purposes. The ``filename`` property of ``RangeProductFileUpload``
+has been removed.
+
+The ``RangeProductListView.create_upload_object``,
+``RangeProductFileUpload.process`` and ``RangeProductFileUpload.extract_ids``
+methods now both expect a file object as a positional argument.
+Projects that have overridden any of these methods will need to make
+corresponding changes.
+
+The ``OSCAR_UPLOAD_ROOT`` setting which was used exclusively by this feature has
+been removed.
+
+Thanks to Mina Mohsen Edwar for reporting this issue.
