@@ -1,4 +1,4 @@
-import os
+from io import TextIOWrapper
 
 from django.conf import settings
 from django.contrib import messages
@@ -175,8 +175,9 @@ class RangeProductListView(BulkEditMixin, ListView):
     def handle_file_products(self, request, range, form):
         if 'file_upload' not in request.FILES:
             return
-        upload = self.create_upload_object(request, range)
-        products = upload.process()
+        f = request.FILES['file_upload']
+        upload = self.create_upload_object(request, range, f)
+        products = upload.process(TextIOWrapper(f, encoding=request.encoding))
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
@@ -185,19 +186,13 @@ class RangeProductListView(BulkEditMixin, ListView):
                 {'range': range,
                  'upload': upload})
             messages.success(request, msg, extra_tags='safe noicon block')
-        upload.delete_file()
         self.check_imported_products_sku_duplicates(request, products)
 
-    def create_upload_object(self, request, range):
-        f = request.FILES['file_upload']
-        destination_path = os.path.join(settings.OSCAR_UPLOAD_ROOT, f.name)
-        with open(destination_path, 'wb+') as dest:
-            for chunk in f.chunks():
-                dest.write(chunk)
+    def create_upload_object(self, request, range, f):
         upload = RangeProductFileUpload.objects.create(
             range=range,
             uploaded_by=request.user,
-            filepath=destination_path,
+            filepath=f.name,
             size=f.size
         )
         return upload
