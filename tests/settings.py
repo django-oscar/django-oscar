@@ -27,35 +27,35 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
 
-    'oscar',
-    'oscar.apps.analytics',
-    'oscar.apps.checkout',
-    'oscar.apps.address',
-    'oscar.apps.shipping',
-    'oscar.apps.catalogue',
-    'oscar.apps.catalogue.reviews',
-    'oscar.apps.partner',
-    'oscar.apps.basket',
-    'oscar.apps.payment',
-    'oscar.apps.offer',
-    'oscar.apps.order',
-    'oscar.apps.customer',
-    'oscar.apps.search',
-    'oscar.apps.voucher',
-    'oscar.apps.wishlists',
-    'oscar.apps.dashboard',
-    'oscar.apps.dashboard.reports',
-    'oscar.apps.dashboard.users',
-    'oscar.apps.dashboard.orders',
-    'oscar.apps.dashboard.catalogue',
-    'oscar.apps.dashboard.offers',
-    'oscar.apps.dashboard.partners',
-    'oscar.apps.dashboard.pages',
-    'oscar.apps.dashboard.ranges',
-    'oscar.apps.dashboard.reviews',
-    'oscar.apps.dashboard.vouchers',
-    'oscar.apps.dashboard.communications',
-    'oscar.apps.dashboard.shipping',
+    'oscar.config.Shop',
+    'oscar.apps.analytics.apps.AnalyticsConfig',
+    'oscar.apps.checkout.apps.CheckoutConfig',
+    'oscar.apps.address.apps.AddressConfig',
+    'oscar.apps.shipping.apps.ShippingConfig',
+    'oscar.apps.catalogue.apps.CatalogueConfig',
+    'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
+    'oscar.apps.partner.apps.PartnerConfig',
+    'oscar.apps.basket.apps.BasketConfig',
+    'oscar.apps.payment.apps.PaymentConfig',
+    'oscar.apps.offer.apps.OfferConfig',
+    'oscar.apps.order.apps.OrderConfig',
+    'oscar.apps.customer.apps.CustomerConfig',
+    'oscar.apps.search.apps.SearchConfig',
+    'oscar.apps.voucher.apps.VoucherConfig',
+    'oscar.apps.wishlists.apps.WishlistsConfig',
+    'oscar.apps.dashboard.apps.DashboardConfig',
+    'oscar.apps.dashboard.reports.apps.ReportsDashboardConfig',
+    'oscar.apps.dashboard.users.apps.UsersDashboardConfig',
+    'oscar.apps.dashboard.orders.apps.OrdersDashboardConfig',
+    'oscar.apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
+    'oscar.apps.dashboard.offers.apps.OffersDashboardConfig',
+    'oscar.apps.dashboard.partners.apps.PartnersDashboardConfig',
+    'oscar.apps.dashboard.pages.apps.PagesDashboardConfig',
+    'oscar.apps.dashboard.ranges.apps.RangesDashboardConfig',
+    'oscar.apps.dashboard.reviews.apps.ReviewsDashboardConfig',
+    'oscar.apps.dashboard.vouchers.apps.VouchersDashboardConfig',
+    'oscar.apps.dashboard.communications.apps.CommunicationsDashboardConfig',
+    'oscar.apps.dashboard.shipping.apps.ShippingDashboardConfig',
 
     # 3rd-party apps that oscar depends on
     'widget_tweaks',
@@ -72,10 +72,14 @@ INSTALLED_APPS = [
 
 # Use a custom partner app to test overriding models. I can't find a way of
 # doing this on a per-test basis, so I'm using a global change.
-INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.partner')] = 'tests._site.apps.partner'
-INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.customer')] = 'tests._site.apps.customer'
-INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.catalogue')] = 'tests._site.apps.catalogue'
-INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.dashboard')] = 'tests._site.apps.dashboard'
+partner_app_idx = INSTALLED_APPS.index('oscar.apps.partner.apps.PartnerConfig')
+INSTALLED_APPS[partner_app_idx] = 'tests._site.apps.partner.apps.PartnerConfig'
+customer_app_idx = INSTALLED_APPS.index('oscar.apps.customer.apps.CustomerConfig')
+INSTALLED_APPS[customer_app_idx] = 'tests._site.apps.customer.apps.CustomerConfig'
+catalogue_app_idx = INSTALLED_APPS.index('oscar.apps.catalogue.apps.CatalogueConfig')
+INSTALLED_APPS[catalogue_app_idx] = 'tests._site.apps.catalogue.apps.CatalogueConfig'
+dashboard_app_idx = INSTALLED_APPS.index('oscar.apps.dashboard.apps.DashboardConfig')
+INSTALLED_APPS[dashboard_app_idx] = 'tests._site.apps.dashboard.apps.DashboardConfig'
 
 AUTH_USER_MODEL = 'myauth.User'
 

@@ -105,7 +105,7 @@ class TestForkApp(TestCase):
     def test_fork_third_party(self):
         tmpdir = tempfile.mkdtemp()
         installed_apps = list(settings.INSTALLED_APPS)
-        installed_apps.append('thirdparty_package.apps.myapp')
+        installed_apps.append('thirdparty_package.apps.myapp.apps.MyAppConfig')
         with override_settings(INSTALLED_APPS=installed_apps):
             customisation.fork_app('myapp', tmpdir, 'custom_myapp')
             forked_app_dir = join(tmpdir, 'custom_myapp')

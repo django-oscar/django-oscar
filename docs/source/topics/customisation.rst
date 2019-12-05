@@ -87,12 +87,12 @@ with that for your own app.
             # all your non-Oscar apps
             ...
             # core applications
-            'yourappsfolder.catalogue',
-            'yourappsfolder.order',
+            'yourappsfolder.catalogue.apps.CatalogueConfig',
+            'yourappsfolder.order.apps.OrderConfig',
             # dashboard applications
-            'yourappsfolder.dashboard',
-            'yourappsfolder.dashboard.orders',
-            'yourappsfolder.dashboard.reports',
+            'yourappsfolder.dashboard.apps.DashboardConfig',
+            'yourappsfolder.dashboard.orders.apps.OrdersDashboardConfig',
+            'yourappsfolder.dashboard.reports.apps.ReportsDashboardConfig',
         ]
 
 
