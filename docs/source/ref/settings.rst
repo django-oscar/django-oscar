@@ -407,13 +407,6 @@ Default: ``image_not_found.jpg``
 Copy this image from ``oscar/static/img`` to your ``MEDIA_ROOT`` folder. It needs to
 be there so the thumbnailer can resize it.
 
-``OSCAR_UPLOAD_ROOT``
----------------------
-
-Default: ``/tmp``
-
-The folder is used to temporarily hold uploaded files until they are processed.
-Such files should always be deleted afterwards.
 
 ``OSCAR_THUMBNAILER``
 ---------------------

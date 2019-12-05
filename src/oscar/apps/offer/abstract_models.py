@@ -1,7 +1,6 @@
+import csv
 import itertools
 import operator
-import os
-import re
 from decimal import Decimal as D
 from decimal import ROUND_DOWN
 
@@ -1084,10 +1083,6 @@ class AbstractRangeProductFileUpload(models.Model):
         verbose_name = _("Range Product Uploaded File")
         verbose_name_plural = _("Range Product Uploaded Files")
 
-    @property
-    def filename(self):
-        return os.path.basename(self.filepath)
-
     def mark_as_failed(self, message=None):
         self.date_processed = now()
         self.error_message = message
@@ -1105,11 +1100,11 @@ class AbstractRangeProductFileUpload(models.Model):
     def was_processing_successful(self):
         return self.status == self.PROCESSED
 
-    def process(self):
+    def process(self, file_obj):
         """
         Process the file upload and add products to the range
         """
-        all_ids = set(self.extract_ids())
+        all_ids = set(self.extract_ids(file_obj))
         products = self.range.all_products()
         existing_skus = products.values_list(
             'stockrecords__partner_sku', flat=True)
@@ -1138,15 +1133,8 @@ class AbstractRangeProductFileUpload(models.Model):
         self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
         return products
 
-    def extract_ids(self):
-        """
-        Extract all SKU- or UPC-like strings from the file
-        """
-        with open(self.filepath, 'r') as fh:
-            for line in fh:
-                for id in re.split(r'[^\w:\.-]', line):
-                    if id:
-                        yield id
-
-    def delete_file(self):
-        os.unlink(self.filepath)
+    def extract_ids(self, file_obj):
+        reader = csv.reader(file_obj)
+        for line in reader:
+            if line:
+                yield line[0]
