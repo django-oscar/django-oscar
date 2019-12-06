@@ -22,17 +22,17 @@ matrix:
       env: TOXENV=py36-django22
     - python: 3.7
       env: TOXENV=py37-django22
-    - python: 3.6
-      env: TOXENV=py36-djangomaster
+    - python: 3.7
+      env: TOXENV=py37-djangomaster
 
-    - python: 3.6
+    - python: 3.7
       env: TOXENV=lint
-    - python: 3.5
+    - python: 3.7
       env: TOXENV=sandbox
     - python: 3.7
       env: TOXENV=docs
   allow_failures:
-    - env: TOXENV=py36-djangomaster
+    - env: TOXENV=py37-djangomaster
 
 branches:
   only:
