@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.7
 ENV PYTHONUNBUFFERED 1
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
