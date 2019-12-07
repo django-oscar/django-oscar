@@ -1,5 +1,4 @@
-const gulp = require("gulp"),
-    concat = require("gulp-concat");
+const gulp = require("gulp");
 
 module.exports = function(done) {
     // Copy all tracked static files into the build directory
@@ -12,7 +11,7 @@ module.exports = function(done) {
 
     gulp.src("node_modules/bootstrap/dist/js/bootstrap.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
-
+c
     gulp.src("node_modules/bootstrap/fonts/*")
         .pipe(gulp.dest("src/oscar/static/oscar/fonts/"));
 
@@ -24,15 +23,7 @@ module.exports = function(done) {
     gulp.src("node_modules/moment/min/moment-with-locales.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
-    gulp.src("node_modules/bootstrap-datetime-picker/js/locales/*")
-        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker/locales"));
-
-    // Concatenate all timepicker locales into a single file for use in the dashboard
-    gulp.src("node_modules/bootstrap-datetime-picker/js/locales/*")
-        .pipe(concat("bootstrap-datetimepicker.all.js"))
-        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker/locales"));
-
-    gulp.src("node_modules/inputmask/dist/jquery.inputmask.min.js")
+    gulp.src("node_modules/inputmask/dist/jquery.inputmask.bundle.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/inputmask"));
 
     gulp.src("node_modules/jquery-mousewheel/jquery.mousewheel.js")
@@ -57,4 +48,4 @@ module.exports = function(done) {
         .pipe(gulp.dest("src/oscar/static/oscar/css"));
 
     done();
-}
+};
