@@ -1,5 +1,5 @@
 // Bootstrap (all dependencies)
-@import "bootstrap4/bootstrap";
+@import "../../../../../node_modules/bootstrap/scss/bootstrap";
 
 // Components: Icons / Fonts
 @import "fontawesome/solid";
@@ -10,10 +10,10 @@
 @import "dashboard/variables";
 @import "dashboard/mixins";
 @import "dashboard/alerts";
-@import "dashboard/base";  // TODO
+@import "dashboard/base";
 @import "dashboard/buttons";
 @import "dashboard/catalogue";
 @import "dashboard/navbar";
 @import "dashboard/forms";
-@import "dashboard/tables";  // TODO
+@import "dashboard/tables";
 @import "dashboard/index";
