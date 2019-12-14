@@ -524,12 +524,6 @@ context. If setting is set, enables Universal Analytics tracking code for page v
 transactions.
 
 
-``OSCAR_USE_LESS``
-------------------
-
-Allows to use raw LESS styles directly. Refer to :ref:`less-css` document for more details.
-
-
 ``OSCAR_CSV_INCLUDE_BOM``
 -------------------------
 
