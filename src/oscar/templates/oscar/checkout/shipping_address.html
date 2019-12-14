@@ -27,14 +27,14 @@
                         {% block select_address_form %}
                             <div class="col-sm-6">
                                 <div class="card card-body bg-light">
-                                    <address>
+                                    <address class="mb-0">
                                         {% block select_address_fields %}
                                             {% for field in address.active_address_fields %}
                                                 <span>{{ field }}</span>{% if not forloop.first %}<br/>{% endif %}
                                             {% endfor %}
                                         {% endblock %}
                                     </address>
-                                    <form action="{% url 'checkout:shipping-address' %}" method="post" id="select_shipping_address_{{ address.id }}">
+                                    <form action="{% url 'checkout:shipping-address' %}" method="post" id="select_shipping_address_{{ address.id }}" class="mb-0">
                                         {% csrf_token %}
                                         <input type="hidden" name="action" value="ship_to" />
                                         <input type="hidden" name="address_id" value="{{ address.id }}" />

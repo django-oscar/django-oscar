@@ -3,10 +3,6 @@
 
 form {
   @include clearfix;
-
-  &.flat {
-    margin: 0;
-  }
 }
 
 // For IE: adds width for selects inside overflow hidden containers
@@ -35,12 +31,6 @@ form {
   color: $red;
   content: "*";
   display: inline-block;
-}
-
-// Weird alternative to btn-block for specific use on the product page,
-// where btn-block would cause a vertical misalignment when product size options are shown
-.btn-add-to-basket {
-  width: 100%;
 }
 
 // Star rating functionality for product review page

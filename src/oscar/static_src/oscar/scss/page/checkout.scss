@@ -30,10 +30,6 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
   clear: both;
   border-bottom: 1px solid $gray-200;
   padding: 0 10px;
-
-  h4 {
-    margin: 0;
-  }
 }
 
 // Basket items
@@ -46,14 +42,9 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
     background: $gray-200;
   }
 
-  img {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   .price_color {
     @extend .h4;
-    font-size: 1rem;
+    font-size: $font-size-base;
     color: $success;
     font-weight: bold;
 
@@ -64,7 +55,7 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
   }
 
   .basket-line-actions {
-    font-size: 0.75rem;
+    font-size: $font-size-small;
   }
 }
 
@@ -86,15 +77,9 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
   .card {
     position: relative;
     min-height: 285px;
-
-    form {
-      margin-bottom: 0;
-    }
   }
 
   address {
-    margin-bottom: 0;
-
     span:first-child {
       display: block;
       font-weight: bold;

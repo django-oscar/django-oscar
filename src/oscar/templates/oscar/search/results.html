@@ -78,9 +78,9 @@
     {% if page.object_list %}
         <section>
             <div>
-                <ol class="row">
+                <ol class="row list-unstyled ml-0 pl-0">
                     {% for result in page.object_list %}
-                        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product result.object %}</li>
+                        <li class="col-sm-4 col-md-3 col-lg-3">{% render_product result.object %}</li>
                     {% endfor %}
                 </ol>
                 {% include "oscar/partials/pagination.html" with page_obj=page %}

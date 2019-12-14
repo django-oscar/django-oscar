@@ -28,8 +28,8 @@
             <div class="row">
                 <h4 class="col-md-6">{% trans "Items to buy now" %}</h4>
                 <h4 class="col-md-3">{% trans "Quantity" %}</h4>
-                <h4 class="col-md-1 align-right">{% trans "Price" %}</h4>
-                <h4 class="col-md-2 align-right">{% trans "Total" %}</h4>
+                <h4 class="col-md-1 text-right">{% trans "Price" %}</h4>
+                <h4 class="col-md-2 text-right">{% trans "Total" %}</h4>
             </div>
         </div>
     {% endblock %}
@@ -49,7 +49,7 @@
                                 {% with image=product.primary_image %}
                                     {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img class="img-thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
+                                        <img class="img-thumbnail w-auto mx-auto my-0" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
                                     </a>
                                 {% endwith %}
                             </div>
@@ -86,9 +86,9 @@
                             </div>
                             <div class="col-md-1">
                                 {% if not line.unit_price_incl_tax and not line.unit_tax_excl_tax %}
-                                    <p class="align-right">&mdash;</p>
+                                    <p class="text-right">&mdash;</p>
                                 {% else %}
-                                    <p class="price_color align-right">
+                                    <p class="price_color text-right">
                                         <span class="price-title d-md-none">{% trans "Price" %}:</span>
                                         {% if line.is_tax_known %}
                                             {{ line.unit_price_incl_tax|currency:line.price_currency }}
@@ -101,9 +101,9 @@
                             <div class="col-md-2">
 
                                 {% if not line.line_price_incl_tax and not line_price_excl_tax %}
-                                    <p class="align-right">&mdash;</p>
+                                    <p class="text-right">&mdash;</p>
                                 {% else %}
-                                    <p class="price_color align-right">
+                                    <p class="price_color text-right">
                                         <span class="price-title d-md-none">{% trans "Total" %}:</span>
                                         {% if line.is_tax_known %}
                                             {{ line.line_price_incl_tax|currency:line.price_currency }}
@@ -180,7 +180,7 @@
             </div>
             <div class="row basket-title hidden-xs">
                 <p class="col-sm-8 h4">{% trans "Items" %}</p>
-                <p class="col-sm-2 h4 align-center">{% trans "Price" %}</p>
+                <p class="col-sm-2 h4 text-center">{% trans "Price" %}</p>
                 <div class="col-sm-2">&nbsp;</div>
             </div>
             <form action="{% url 'basket:saved' %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
@@ -195,7 +195,7 @@
                                 {% with image=form.instance.product.primary_image %}
                                     {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                     <a href="{{ form.instance.product.get_absolute_url }}">
-                                        <img class="card card-body" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
+                                        <img class="card card-body mx-auto" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}">
                                     </a>
                                 {% endwith %}
                             </div>
@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                             {% purchase_info_for_product request form.instance.product as saved %}
-                            <div class="col-sm-2 align-center">
+                            <div class="col-sm-2 text-center">
                                 <p class="price_color">
                                     {% if saved.price.is_tax_known %}
                                         {{ saved.price.incl_tax|currency:saved.price.currency }}

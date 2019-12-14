@@ -1,20 +1,3 @@
-// No margin on lists
-ol,
-ul {
-  &.row {
-    margin-left: 0;
-    padding-left: 0;
-    list-style: none;
-  }
-}
-
-// Remove margin if condition
-.row [class*="col-"] {
-  &.no-margin {
-    margin-left: 0;
-  }
-}
-
 // Products listed container
 // Space between products in a list is determined by the Grid and therefore the
 // gutter width: 20px
@@ -31,7 +14,6 @@ ul {
 
   h3 {
     @extend .h5;
-    margin-bottom: 0;
   }
 
   .price_color {
@@ -48,13 +30,12 @@ ul {
   .image_container,
   .availability,
   .price_color {
-    margin-bottom: $base-margin-bottom;
+    margin-bottom: $base-margin-bottom / 2;
   }
 
   .product_price {
     position: absolute;
     bottom: 0;
-    width: 100%;
   }
 }
 
@@ -62,7 +43,6 @@ ul {
 // This can be used to vertically align the image with same line-height
 // Alternatively if you are cropping images and have a specific W & H this isn't neccessary
 .image_container {
-  width: 100%;
   min-height: $image-container-height;
   overflow: hidden;
   text-align: center;
@@ -71,8 +51,6 @@ ul {
   img {
     max-height: $image-container-height - 10px;
     max-width: 100%;
-    width: auto;
-    margin: 0 auto;
   }
 }
 

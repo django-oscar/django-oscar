@@ -1,17 +1,15 @@
+@import "page/variables";
+
 // Bootstrap (all dependencies)
 @import "../../../../../node_modules/bootstrap/scss/bootstrap";
 
-// Oscar variables
-@import "page/variables"; // Kept separate for bootstrap updates
-
-
 // Components: Icons / Fonts
-@import "fontawesome/solid";
-@import "fontawesome/regular";
-@import "fontawesome/fontawesome"; // Replaced sprites with font-awesome
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
 
-// Oscar: Unique
-@import "page/alerts";
+// Oscar public side pages styles
+@import "alerts";
 @import "page/checkout";
 @import "page/forms";
 @import "page/header";

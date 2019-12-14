@@ -111,8 +111,8 @@
         <div class="basket-title">
             <div class="row">
                 <p class="col-sm-9 h4">{% trans "Item" %}</p>
-                <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
-                <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
+                <p class="col-sm-1 h4 text-center">{% trans "Quantity" %}</p>
+                <p class="col-sm-2 h4 text-right">{% trans "Total" %}</p>
             </div>
         </div>
         {% for line in basket.all_lines %}
@@ -120,11 +120,11 @@
             <div class="basket-items">
                 <div class="row">
                     <div class="col-sm-2">
-                        <div class="image_container">
+                        <div class="image_container w-100">
                             {% with image=line.product.primary_image %}
                                 {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                 <a href="{{ form.instance.product.get_absolute_url }}">
-                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}">
+                                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="img-thumbnail w-auto mx-auto my-0">
                                 </a>
                             {% endwith %}
                         </div>
@@ -133,10 +133,10 @@
                         <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
                         <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
                     </div>
-                    <div class="col-sm-1 align-center">
+                    <div class="col-sm-1 text-center">
                         {{ line.quantity }}
                     </div>
-                    <div class="col-sm-2 align-right">
+                    <div class="col-sm-2 text-right">
                         <p class="price_color">
                             {% if not show_tax_separately and line.is_tax_known %}
                                 {{ line.line_price_incl_tax|currency:basket.currency }}

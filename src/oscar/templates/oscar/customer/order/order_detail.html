@@ -83,7 +83,7 @@
                         {% for discount in discounts %}
                         <tr>
                             <td colspan="4">
-                                <span class="label label-success">{% trans "Discount" %}</span>
+                                <span class="badge badge-success">{% trans "Discount" %}</span>
                                 {{ discount.offer_name }}
                             </td>
                             <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>
@@ -116,7 +116,7 @@
                     {% for discount in order.shipping_discounts %}
                     <tr>
                         <td colspan="4">
-                            <span class="label label-success">{% trans "Discount" %}</span>
+                            <span class="badge badge-success">{% trans "Discount" %}</span>
                             {{ discount.offer_name }}
                         </td>
                         <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>

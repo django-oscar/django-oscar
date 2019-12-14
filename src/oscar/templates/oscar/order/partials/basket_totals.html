@@ -11,12 +11,12 @@
                 {% if discounts %}
                     <tr>
                         <td>{% trans "Basket total (before discounts)" %}</td>
-                        <td class="align-right">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
+                        <td class="text-right">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
                     </tr>
                     {% for discount in discounts %}
                         <tr>
-                            <td><span class="label label-success">{% trans "Discount" %}</span> {{ discount.offer }}</td>
-                            <td class="align-right">- {{ discount.amount|currency:order.currency }}</td>
+                            <td><span class="badge badge-success">{% trans "Discount" %}</span> {{ discount.offer }}</td>
+                            <td class="text-right">- {{ discount.amount|currency:order.currency }}</td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -26,12 +26,12 @@
                 {% if discounts %}
                     <tr>
                         <th class="total">{% trans "Basket total (after discounts)" %}</th>
-                        <th class="total align-right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
+                        <th class="total text-right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
                     </tr>
                 {% else %}
                     <tr class="basket-items">
                         <th class="total">{% trans "Basket total" %}</th>
-                        <th class="total align-right">
+                        <th class="total text-right">
                             {% if show_tax_separately %}
                                 {{ order.basket_total_excl_tax|currency:order.currency }}
                             {% else %}
@@ -53,27 +53,27 @@
             </tr>
             <tr>
                 <td>{% trans "Shipping method" %}</td>
-                <td class="align-right">{{ order.shipping_method }}</td>
+                <td class="text-right">{{ order.shipping_method }}</td>
             </tr>
             {% if order.has_shipping_discounts %}
                 <tr>
                     <td>{% trans "Shipping charge (before discounts)" %}</td>
-                    <td class="align-right">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
+                    <td class="text-right">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
                 </tr>
                 {% for discount in order.shipping_discounts %}
                     <tr>
-                        <td><span class="label label-success">{% trans "Discount" %}</span> {{ discount.offer }}</td>
-                        <td class="align-right">- {{ discount.amount|currency:order.currency }}</td>
+                        <td><span class="badge badge-success">{% trans "Discount" %}</span> {{ discount.offer }}</td>
+                        <td class="text-right">- {{ discount.amount|currency:order.currency }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
                     <th class="total">{% trans "Shipping charge (after discounts)" %}</th>
-                    <th class="total align-right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
+                    <th class="total text-right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
                 </tr>
             {% else %}
                 <tr>
                     <th class="total">{% trans "Shipping charge" %}</th>
-                    <th class="total align-right">
+                    <th class="total text-right">
                         {% if show_tax_separately %}
                             {{ order.shipping_excl_tax|currency:order.currency }}
                         {% else %}
@@ -90,7 +90,7 @@
             </tr>
             <tr>
                 <th class="total">{% trans "Order tax" %}</th>
-                <th class="total align-right">
+                <th class="total text-right">
                     {{ order.total_tax|currency:order.currency }}
                 </th>
             </tr>
@@ -120,7 +120,7 @@
             </tr>
             <tr>
                 <td class="total"><h3>{% trans "Order total" %}</h3></td>
-                <td class="total align-right"><h3 class="price_color">{{ order.total_incl_tax|currency:order.currency }}</h3></td>
+                <td class="total text-right"><h3 class="price_color">{{ order.total_incl_tax|currency:order.currency }}</h3></td>
             </tr>
         {% endblock order_total %}
     </table>

@@ -42,10 +42,10 @@
                                             {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                             {% if product.is_public %}
                                                 <a href="{{ product.get_absolute_url }}">
-                                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                                    <img class="img-thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
                                                 </a>
                                             {% else %}
-                                                <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                                <img class="img-thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
                                             {% endif %}
                                         {% endwith %}
                                     {% endif %}
