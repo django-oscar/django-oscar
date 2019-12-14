@@ -400,14 +400,6 @@ OSCAR_ORDER_STATUS_CASCADE = {
     'Complete': 'Shipped',
 }
 
-# LESS/CSS
-# ========
-
-# We default to using CSS files, rather than the LESS files that generate them.
-# If you want to develop Oscar's CSS, then set OSCAR_USE_LESS=True to enable the
-# on-the-fly less processor.
-OSCAR_USE_LESS = False
-
 # Sorl
 # ====
 
