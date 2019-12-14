@@ -9,7 +9,7 @@ module.exports = function(done) {
     gulp.src("node_modules/jquery/dist/jquery.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/jquery"));
 
-    gulp.src("node_modules/bootstrap/dist/js/bootstrap.min.js")
+    gulp.src("node_modules/bootstrap/dist/js/bootstrap.bundle.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
 c
     gulp.src("node_modules/bootstrap/fonts/*")
@@ -46,6 +46,9 @@ c
 
     gulp.src("node_modules/select2-bootstrap-theme/dist/*.min.css")
         .pipe(gulp.dest("src/oscar/static/oscar/css"));
+
+    gulp.src("node_modules/@fortawesome/fontawesome-free/webfonts/*")
+        .pipe(gulp.dest("src/oscar/static/oscar/webfonts"));
 
     done();
 };
