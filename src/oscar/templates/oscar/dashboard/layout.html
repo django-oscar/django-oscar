@@ -6,11 +6,7 @@
 {% load static %}
 
 {% block styles %}
-    {% if use_scss %}
-        <link rel="stylesheet/scss" type="text/css" href="{% static "oscar/scss/dashboard.scss" %}" />
-    {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
 {% endblock %}
 
 {% block extrastyles %}
