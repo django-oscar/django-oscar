@@ -64,15 +64,15 @@
                         <td>{{ offer.benefit.description|safe }}</td>
                         <td>{{ offer.condition.description|safe }}</td>
                         <td>{% if offer.is_available %}
-                                <span class="label label-success">{% trans "Yes" %}</span>
+                                <span class="badge badge-success">{% trans "Yes" %}</span>
                             {% else %}
-                                <span class="label label-danger">{% trans "No" %}</span>
+                                <span class="badge badge-danger">{% trans "No" %}</span>
                             {% endif %}
                         </td>
                         <td>
                             {% for restriction in offer.availability_restrictions %}
                                 {% if not restriction.is_satisfied %}
-                                    <label class="label label-danger">
+                                    <label class="badge badge-danger">
                                         {{ restriction.description }}
                                     </label>
                                 {% else %}

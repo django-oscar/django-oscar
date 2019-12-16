@@ -79,7 +79,7 @@
 
     <div class="tabbable dashboard">
 
-        <ul class="nav nav-tabs"  role="tablist">
+        <ul class="nav nav-tabs mb-0" role="tablist">
             {% block nav_tabs %}
                 <li class="nav-item">
                     <a class="nav-link {% if active_tab == 'lines' %}active{% endif %}" href="#lines" data-toggle="tab">
@@ -192,7 +192,7 @@
                                             <tr>
                                                 <td colspan="9"></td>
                                                 <td>
-                                                    <span class="label label-success">{% trans "Discount" %}</span>
+                                                    <span class="badge badge-success">{% trans "Discount" %}</span>
                                                     {{ discount.offer_name }}
                                                 </td>
                                                 <td class="text-right"></td>
@@ -230,7 +230,7 @@
                                         <tr>
                                             <td colspan="9"></td>
                                             <td>
-                                                <span class="label label-success">{% trans "Discount" %}</span>
+                                                <span class="badge badge-success">{% trans "Discount" %}</span>
                                                 {{ discount.offer_name }}
                                             </td>
                                             <td></td>
@@ -672,8 +672,8 @@
                                         <td>{{ note.message|linebreaks }}</td>
                                         <td>
                                             {% if note.is_editable %}
-                                                &nbsp;<a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
-                                                <form method="post" class="float-left flat">
+                                                <a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
+                                                <form method="post" class="float-left m-0">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_action" value="delete_note" />
                                                     <input type="hidden" name="note_id" value="{{ note.id }}" />

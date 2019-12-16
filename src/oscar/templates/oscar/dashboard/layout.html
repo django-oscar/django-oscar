@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="{% static "oscar/js/select2/select2.min.css" %}" />
     <link rel="stylesheet" href="{% static "oscar/css/select2-bootstrap.min.css" %}" />
     <link rel="stylesheet" href="{% static "oscar/js/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/css/datetimepicker.css" %}" />
 {% endblock %}
 
 {% block title %}
@@ -120,18 +119,10 @@
 
 {% endblock %}
 
-{% block cdn_scripts %}
-  {{ block.super }}
-  {% if use_less and debug %}
-    {# Load the on-the-fly less compiler. Never do this in production. #}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
-  {% endif %}
-{% endblock %}
-
 {# Local scripts #}
 {% block scripts %}
     <!-- Twitter Bootstrap -->
-    <script src="{% static "oscar/js/bootstrap4/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4/bootstrap.bundle.js" %}"></script>
     <!-- Oscar -->
     <script src="{% static "oscar/js/oscar/ui.js" %}"></script>
 {% endblock %}

@@ -1,15 +1,15 @@
+@import "dashboard/variables";
+
 // Bootstrap (all dependencies)
 @import "../../../../../node_modules/bootstrap/scss/bootstrap";
 
 // Components: Icons / Fonts
-@import "fontawesome/solid";
-@import "fontawesome/regular";
-@import "fontawesome/fontawesome";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
 
-// Core variables and mixins separate from frontend variables and mixins
-@import "dashboard/variables";
-@import "dashboard/mixins";
-@import "dashboard/alerts";
+// Oscar dashboard styles
+@import "alerts";
 @import "dashboard/base";
 @import "dashboard/buttons";
 @import "dashboard/catalogue";

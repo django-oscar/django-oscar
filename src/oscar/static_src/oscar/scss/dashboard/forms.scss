@@ -1,8 +1,5 @@
 // FORM CHANGES
-// -----------
-form.flat {
-  margin: 0;
-}
+// ------------
 
 .form-horizontal,
 .form-stacked {
@@ -20,7 +17,7 @@ form.flat {
   input[type=url],
   textarea,
   select {
-    font-size: 12px;
+    font-size: $body-font-size;
   }
 
   textarea {
@@ -104,7 +101,7 @@ form {
   }
 
   .form-control {
-    font-size: 12px;
+    font-size: $body-font-size;
   }
 
   .form-group .form-inline {
@@ -144,7 +141,7 @@ textarea {
   height: 400px;
 }
 
-/* ADDITIONAL ERRORS */
+// ADDITIONAL ERRORS
 .errorlist {
   margin: 0 0 0 20px;
   padding: 0 0 10px 0;

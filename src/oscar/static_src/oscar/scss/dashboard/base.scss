@@ -1,26 +1,13 @@
-
 body {
   background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 $white;
 }
 
 // TYPES CHANGES
-// -----------
+// -------------
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: $line-height-base / 2;
   margin-top: 0;
   font-weight: normal;
-}
-
-h1 {
-  font-size: 30px;
-}
-
-h2 {
-  font-size: 18px;
-}
-
-h3 {
-  font-size: 20px;
 }
 
 h3.app-ico:before {
@@ -28,15 +15,15 @@ h3.app-ico:before {
 }
 
 body {
-  font-size: 12px;
+  font-size: $body-font-size;
 }
 
 label, input, button, select, textarea {
-  font-size: 12px;
+  font-size: $body-font-size;
 }
 
 .breadcrumb {
-  margin-top: 20px;
+  margin-top: ($spacer * 1.25);
 }
 
 .page-header {
@@ -63,9 +50,9 @@ label, input, button, select, textarea {
 }
 
 .tabbable.dashboard {
-  margin-bottom: $line-height-base;
+  margin-bottom: $paragraph-margin-bottom;
 
-  .navbar, .nav-tabs {
+  .navbar {
     margin-bottom: 0;
   }
 
@@ -89,7 +76,7 @@ label, input, button, select, textarea {
 
 
 // MODALS
-// -----
+// ------
 .modal {
   > form {
     margin-bottom: 0;
@@ -110,8 +97,6 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav {
   padding: 0;
   background-color: $white;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
   box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
 }
 
@@ -201,7 +186,7 @@ div[data-spy="affix"].affix {
 
 
 // RESPONSIVE
-// ---------
+// ----------
 @media (max-width: 1300px) {
   div[data-spy="affix"] {
     width: 200px;
@@ -224,6 +209,6 @@ div[data-spy="affix"].affix {
   }
   div[data-spy="affix"] {
     width: 100%;
-    margin-bottom: $line-height-base;
+    margin-bottom: $paragraph-margin-bottom;
   }
 }

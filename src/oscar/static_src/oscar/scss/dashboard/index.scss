@@ -1,4 +1,3 @@
-// ----------------
 #order_graph {
   position: relative;
   margin-bottom: 5em;
@@ -11,7 +10,7 @@
     top: 0;
 
     h1 {
-      font-size: 18px;
+      font-size: $h2-font-size;
       color: $gray-900;
       font-weight: bold;
       text-transform: uppercase;
@@ -105,50 +104,21 @@
     margin-bottom: 15px;
     padding: 12px;
     color: $gray-500;
-    font-size: 12px;
+    font-size: $body-font-size;
 
     span {
       display: inline-block;
       font-weight: bold;
       width: 30%;
-      font-size: 16px;
+      font-size: $font-size-base;
       color: $gray-900;
     }
 
     i {
       color: $cyan;
       margin-right: 5px;
-      font-size: 18px;
+      font-size: $h2-font-size;
     }
-  }
-}
-
-.order-summary {
-  @include horiz_col();
-  background: $gray-200;
-
-  li {
-    width: 20%;
-    text-align: center;
-  }
-
-  div {
-    border-left: 1px solid $gray-300;
-    padding: 20px 10px;
-    min-height: 85px;
-  }
-
-  strong {
-    display: block;
-    margin-top: 20px;
-  }
-
-  li {
-    width: 16%;
-  }
-
-  li:first-child div {
-    border-left: none;
   }
 }
 

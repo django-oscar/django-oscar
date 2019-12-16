@@ -1,9 +1,22 @@
-$font-family-sans-serif:      "Open Sans", 'Helvetica Neue', Helvetica, Arial, sans-serif;
+// Overridden Bootstrap4 variables
+// -------------------------------
+
+$font-size-base:              1rem; // The value copied from Bootstrap (assumes the browser default, typically `16px`)
+
+$h1-font-size:                $font-size-base * 1.875;  // 30px
+$h2-font-size:                $font-size-base * 1.125;  // 18px
+$h3-font-size:                $font-size-base * 1.25;   // 20px
+
+
+// Custom variables
+// ----------------
+
 $font-family-icons:           "Font Awesome 5 Free";
+
+$body-font-size:              $font-size-base * 0.75;   // 12px
 
 $navbar-padding-vertical:     14px;
 
-// Oscar variables
 $graph-height:                330px;
 $graph-segments-height:       33px;
 $bar-height:                  300px;

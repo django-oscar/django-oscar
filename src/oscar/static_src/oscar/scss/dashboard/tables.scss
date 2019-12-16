@@ -27,7 +27,7 @@ caption,
 
   h2, h3 {
     font-weight: bold;
-    font-size: 14px;
+    font-size: $font-size-sm;
     line-height: normal;
     margin: 0;
 
@@ -37,7 +37,7 @@ caption,
   }
 
   font-weight: bold;
-  font-size: 14px;
+  font-size: $font-size-sm;
   margin-bottom: 0;
   border: 1px solid $gray-400;
   border-bottom: none;

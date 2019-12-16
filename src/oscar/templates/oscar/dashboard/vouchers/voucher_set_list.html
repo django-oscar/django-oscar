@@ -46,9 +46,9 @@
             <td>{{ voucher.count }}</td>
             <td>
                 {% if voucher.is_active %}
-                    <span class="label label-success">{% trans "Active" %}</span>
+                    <span class="badge badge-success">{% trans "Active" %}</span>
                 {% else %}
-                    <span class="label label-warning">{% trans "Inactive" %}</span>
+                    <span class="badge badge-warning">{% trans "Inactive" %}</span>
                 {% endif %}
             </td>
             <td>{{ voucher.num_basket_additions }}</td>

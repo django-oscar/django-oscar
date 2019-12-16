@@ -94,13 +94,13 @@
         {% for voucher in vouchers %}
         <tr>
             <td>
-                <span class="label label-default">{{ voucher.code }}</span>
+                <span class="badge badge-secondary">{{ voucher.code }}</span>
             </td>
             <td>
                 {% if voucher.is_active %}
-                    <span class="label label-success">{% trans "Active" %}</span>
+                    <span class="badge badge-success">{% trans "Active" %}</span>
                 {% else %}
-                    <span class="label label-danger">{% trans "Inactive" %}</span>
+                    <span class="badge badge-danger">{% trans "Inactive" %}</span>
                 {% endif %}
             </td>
             <td>{{ voucher.num_basket_additions }}</td>

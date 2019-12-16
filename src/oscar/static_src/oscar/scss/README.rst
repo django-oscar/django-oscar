@@ -2,11 +2,11 @@
 CSS and SCSS
 ============
 
-Oscar uses SCSS to build its CSS files. Each of the 3 main CSS files has a
+Oscar uses SCSS to build its CSS files. Each of the 2 main CSS files has a
 corresponding scss file::
 
-    styles-bootstap4.scss -> styles-bootstap4.css
-    dashboard-bootstap4.scss -> dashboard-bootstap4.css
+    styles.scss -> styles.css
+    dashboard.scss -> dashboard.css
 
 Oscar's CSS uses SCSS files from the `Bootstrap project`_ - these are housed
 in the bootstrap folder.

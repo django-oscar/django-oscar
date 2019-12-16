@@ -7,7 +7,7 @@
 .btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn {
-  font-size: 12px;
+  font-size: $body-font-size;
   font-family: inherit;
 }
 
@@ -66,6 +66,6 @@ td .btn-toolbar {
 
 @media (max-width: 1300px) {
   table .btn {
-    font-size: 12px;
+    font-size: $body-font-size;
   }
 }
