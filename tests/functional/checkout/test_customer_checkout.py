@@ -1,5 +1,4 @@
 from http import client as http_client
-from unittest.mock import patch
 
 from django.urls import reverse
 
@@ -247,24 +246,3 @@ class TestThankYouView(CheckoutMixin, WebTestCase):
         test_url = '%s?order_id=%s' % (reverse('checkout:thank-you'), order.pk)
         response = self.get(test_url, status='*', user=user)
         self.assertEqual(response.status_code, http_client.NOT_FOUND)
-
-
-class TestOrderPlacementMixin(CheckoutMixin, WebTestCase):
-
-    @patch('oscar.apps.checkout.mixins.logger')
-    def test_get_message_context_with_no_code(self, mock_logger):
-        original_get_message_context = OrderPlacementMixin.get_message_context
-
-        def get_message_context(self_, order):
-            get_message_context.called = True
-            return original_get_message_context(self_, order)
-        get_message_context.called = False
-
-        with patch.object(OrderPlacementMixin, 'get_message_context',
-                          get_message_context):
-            self.add_product_to_basket()
-            self.enter_shipping_address()
-            self.place_order()
-
-        self.assertTrue(mock_logger.warning.called)
-        self.assertTrue(get_message_context.called)

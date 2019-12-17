@@ -1,0 +1,23 @@
+{% extends "oscar/communication/emails/base.html" %}
+{% load i18n %}
+{% load url_tags %}
+
+{% block body %}
+    {% absolute_url site.domain alert.get_confirm_url as confirm_url %}
+    {% absolute_url site.domain alert.get_cancel_url as cancel_url %}
+    {% blocktrans with title=alert.product.get_title|safe confirm_url=confirm_url cancel_url=cancel_url %}
+        Hello,
+        <p>
+            Somebody (hopefully you) has requested an email alert when '{{ title }}' is back in stock.
+            Please click the following link to confirm: {{ confirm_url }}
+        </p>
+        <p>
+            You can cancel this alert at any time by clicking the following link: {{ cancel_url }}
+        </p>
+
+        <p>
+            Thanks for your interest,
+            The {{ site }} Team
+        </p>
+    {% endblocktrans %}
+{% endblock %}

@@ -193,3 +193,30 @@ This renders something like:
 .. code-block:: html
 
     Time since creation: 2 days
+
+
+URL tags
+-----------
+
+Load these tags using ``{% load url_tags %}``.
+
+``absolute_url``
+~~~~~~~~~~~~~~~~~~
+
+Returns an absolute URL for the provided domain and path.
+
+.. code-block:: html+django
+
+    <a href="{% absolute_url site.domain reset_url %}" class="btn-primary">Reset password</a>
+
+This tag can be used with ``blocktrans`` as follows:
+
+.. code-block:: html+django
+
+    {% absolute_url site.domain reset_url as absolute_reset_url %}
+    {% blocktrans with url=absolute_reset_url %}
+        You can reset your password here - {{ url }}
+    {% endblocktrans %}
+
+The schema for absolute url can be set through ``OSCAR_URL_SCHEMA``
+setting (``http`` by default).

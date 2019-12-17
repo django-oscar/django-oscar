@@ -292,6 +292,14 @@ A URL which is passed into the templates for communication events.  It is not
 used in Oscar's default templates but could be used to include static assets
 (e.g. images) in a HTML email template.
 
+``OSCAR_SAVE_SENT_EMAILS_TO_DB``
+--------------------------------
+
+Default: ``True``
+
+Indicates if sent emails will be saved to database as instances of
+``oscar.apps.communication.models.Email``.
+
 Offer settings
 ==============
 
@@ -530,3 +538,11 @@ Default: ``False``
 A flag to control whether Oscar's CSV writer should prepend a byte order mark
 (BOM) to CSV files that are encoded in UTF-8. Useful for compatibility with some
 CSV readers, Microsoft Excel in particular.
+
+
+``OSCAR_URL_SCHEMA``
+--------------------
+
+Default: ``http``
+
+The schema that will be used to build absolute url in ``absolute_url`` template tag.

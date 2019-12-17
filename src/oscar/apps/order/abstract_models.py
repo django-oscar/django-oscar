@@ -472,7 +472,7 @@ class AbstractCommunicationEvent(models.Model):
         related_name="communication_events",
         verbose_name=_("Order"))
     event_type = models.ForeignKey(
-        'customer.CommunicationEventType',
+        'communication.CommunicationEventType',
         on_delete=models.CASCADE,
         verbose_name=_("Event Type"))
     date_created = models.DateTimeField(_("Date"), auto_now_add=True, db_index=True)

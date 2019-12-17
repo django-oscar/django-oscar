@@ -1,5 +1,6 @@
-{% extends "oscar/customer/emails/base.html" %}
+{% extends "oscar/communication/emails/base.html" %}
 {% load i18n %}
+{% load url_tags %}
 
 {% block body %}
     <p>
@@ -11,9 +12,10 @@
     </p>
 
     <p>
-        {% blocktrans with title=alert.product.get_title|safe path=alert.product.get_absolute_url %}
+        {% absolute_url site.domain alert.product.get_absolute_url as url %}
+        {% blocktrans with title=alert.product.get_title|safe url=url %}
             We are happy to inform you that our product '{{ title }}' is back in stock:
-            http://{{ site }}{{ path }}
+            {{ url }}
         {% endblocktrans %}
     </p>
 
@@ -26,7 +28,7 @@
     {% endif %}
 
     <p>
-        {% blocktrans with site_name=site.name %}
+        {% blocktrans %}
             With this email we have disabled your alert automatically and you will not
             receive any further email regarding this product.
         {% endblocktrans %}

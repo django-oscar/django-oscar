@@ -3,13 +3,15 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.urls import reverse
 from django.views import generic
 
 from apps.gateway import forms
 from oscar.apps.customer.forms import generate_username
+from oscar.core.loading import get_class
+
+Dispatcher = get_class('communication.utils', 'Dispatcher')
 
 logger = logging.getLogger('gateway')
 
@@ -41,10 +43,10 @@ class GatewayView(generic.FormView):
         return user
 
     def send_confirmation_email(self, real_email, user, password):
-        msg = get_template('gateway/email.txt').render({
-            'email': user.email,
-            'password': password
-        })
-        send_mail('Dashboard access to Oscar sandbox',
-                  msg, 'blackhole@latest.oscarcommerce.com',
-                  [real_email])
+        msgs = {
+            'subject': 'Dashboard access to Oscar sandbox',
+            'body': get_template('gateway/email.txt').render({
+                'email': user.email, 'password': password})
+        }
+        Dispatcher().send_email_messages(
+            real_email, msgs, from_email='blackhole@latest.oscarcommerce.com')

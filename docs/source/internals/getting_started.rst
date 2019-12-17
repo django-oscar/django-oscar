@@ -64,7 +64,7 @@ Now add Oscar's context processors to the template settings, listed below:
 
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.checkout.context_processors.checkout',
-    'oscar.apps.customer.notifications.context_processors.notifications',
+    'oscar.apps.communication.notifications.context_processors.notifications',
     'oscar.core.context_processors.metadata',
 
 Next, modify ``INSTALLED_APPS`` to be a list, and add ``django.contrib.sites``,
@@ -91,6 +91,7 @@ depends on. Also set ``SITE_ID``:
         'oscar.apps.shipping.apps.ShippingConfig',
         'oscar.apps.catalogue.apps.CatalogueConfig',
         'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
+        'oscar.apps.communication.apps.CommunicationConfig',
         'oscar.apps.partner.apps.PartnerConfig',
         'oscar.apps.basket.apps.BasketConfig',
         'oscar.apps.payment.apps.PaymentConfig',

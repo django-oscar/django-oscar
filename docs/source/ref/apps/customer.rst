@@ -2,10 +2,9 @@
 Customer
 ========
 
-The customer app bundles communication with customers. This includes models
-to record product alerts and sent emails. It also contains the views that
-allow a customer to manage their data (profile information, shipping addresses,
-etc.)
+The customer app includes models to record product alerts and sent emails.
+It also contains the views that allow a customer to manage their data
+(profile information, shipping addresses, etc.)
 
 Abstract models
 ---------------
@@ -40,4 +39,13 @@ The context for the alert email body contains a ``hurry`` variable that is set
 to ``True`` if the number of active alerts for a product is greater than the
 quantity of the product available in stock.
 
-Alerts are sent using the Communication Event framework.
+CustomerDispatcher
+------------------
+
+``oscar.apps.customer.utils.CustomerDispatcher`` is used to send customer emails
+(e.g., registration, password reset, order confirmations).
+
+AlertsDispatcher
+----------------
+
+``oscar.apps.customer.alerts.utils.AlertsDispatcher`` is used to send product alerts.
