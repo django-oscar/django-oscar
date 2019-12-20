@@ -115,6 +115,16 @@ Minor changes
 - Fixed the logic of ``StockRequired.parent_availability_policy`` to use
   child products to determine availability of children, rather than the parent.
 
+- ``customer.forms.PasswordResetForm`` now uses the parent class' ``get_users()``
+  method to determine the list of users to send an email to. ``get_users()``
+  filters out users who do not currently have a usable password - which
+  did not happen previously.
+
+  This change was made in response to changes in Django to address
+  CVE-2019-19844. Oscar's ``PasswordResetForm`` was not vulnerable to the issue
+  in Django's form, but it was possible to send a password reset email to
+  unintended recipients because of unicode character collision.
+
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~

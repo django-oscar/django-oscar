@@ -46,10 +46,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         site = get_current_site(request)
         if domain_override is not None:
             site.domain = site.name = domain_override
-        email = self.cleaned_data['email']
-        active_users = User._default_manager.filter(
-            email__iexact=email, is_active=True)
-        for user in active_users:
+        for user in self.get_users(self.cleaned_data['email']):
             self.send_password_reset_email(site, user)
 
     def send_password_reset_email(self, site, user):
