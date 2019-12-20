@@ -58,14 +58,12 @@ docs_requires = [
 
 test_requires = [
     'WebTest>=2.0,<2.1',
-    'coverage>=4.5,<4.6',
-    'django-webtest==1.9.4',
-    'py>=1.4.31',
-    'psycopg2>=2.7,<2.8',
-    'pytest>=5.1,<5.2',
-    'pytest-django>=3.5,<3.6',
-    'pytest-xdist>=1.29,<1.30',
-    'tox>=3.0,<3.9',
+    'coverage>=5.0,<5.1',
+    'django-webtest>=1.9,<1.10',
+    'psycopg2-binary>=2.8,<2.9',
+    'pytest-django>=3.7,<3.8',
+    'pytest-xdist>=1.31,<1.32',
+    'tox>=3.14,<3.15',
     sorl_thumbnail_version,
     easy_thumbnails_version,
 ]
