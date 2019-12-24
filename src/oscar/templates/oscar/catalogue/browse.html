@@ -24,7 +24,7 @@
     {% category_tree as tree_categories %}
     {% if tree_categories %}
         <h4>{% trans "Show results for" %}</h4>
-        <div class="side_categories card card-body">
+        <div class="side_categories card card-body bg-light">
             <ul class="nav nav-list">
                 {% for tree_category in tree_categories %}
                     <li class="mt-2">
@@ -46,7 +46,7 @@
     {% endif %}
     {% if has_facets %}
         <h4>{% trans "Refine by" %}</h4>
-        <div class="side_categories card card-body">
+        <div class="side_categories card card-body bg-light">
             {% for field, data in facet_data.items %}
                 {% if data.results %}
                     {% include 'oscar/search/partials/facet.html' with name=data.name items=data.results %}
