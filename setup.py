@@ -67,6 +67,7 @@ test_requires = [
     'pytest-django==3.4.8',
     'pytest-xdist>=1.25,<1.28',
     'tox>=3.0,<3.9',
+    'freezegun>=0.3,<0.4',
     sorl_thumbnail_version,
     easy_thumbnails_version,
 ]
