@@ -29,7 +29,7 @@ Are you selling books, DVDs, clothing, downloads, or fruit and vegetables?  You 
 need to capture the attributes of your product types within your models.  Oscar
 divides products into 'product classes' which each have their own set of
 attributes. Modelling the catalogue on the backend is explained in
-:doc:`/topics/modelling_your_catalogue`
+:doc:`/topics/modelling_your_catalogue`.
 
 How is your catalogue organised?
 --------------------------------
