@@ -111,7 +111,7 @@ class ProductListView(SingleTableView):
         return table
 
     def get_table_pagination(self, table):
-        return dict(per_page=20)
+        return dict(per_page=settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE)
 
     def filter_queryset(self, queryset):
         """
