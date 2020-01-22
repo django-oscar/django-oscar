@@ -25,4 +25,4 @@ class UserTable(DashboardTable):
     icon = "group"
 
     class Meta(DashboardTable.Meta):
-        template = 'oscar/dashboard/users/table.html'
+        template_name = 'oscar/dashboard/users/table.html'
