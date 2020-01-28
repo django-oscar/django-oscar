@@ -287,9 +287,11 @@ each app that you have forked, you will need to:
   ``oscar.core.application.OscarDashboardConfig``.
 
 - Move any changes you've made to the Oscar ``Application`` subclass in the ``app.py``
-  module, to the ``AppConfig`` subclass in the ``apps.py`` module.
-
-- Rename the ``name`` attribute to ``namespace``.
+  module, to the ``AppConfig`` subclass in the ``apps.py`` module. When moving
+  the ``name`` attribute over, rename it to ``namespace``. Your merged app
+  config class should end up having a ``namespace`` (for declaring the URL
+  application namespace) as well as ``name`` (for configuring the
+  ``django.apps.config.AppConfig.name``) attribute.
 
 - In your project URLconf and in `get_urls` methods replace the ``application``
   import by finding the app in the Django app registry.
