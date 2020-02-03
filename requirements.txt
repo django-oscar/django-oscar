@@ -2,7 +2,7 @@
 
 # development
 Werkzeug==0.16.1
-django-debug-toolbar==2.1
+django-debug-toolbar==2.2
 django-extensions==2.2.6
 psycopg2-binary>=2.8,<2.9
 
