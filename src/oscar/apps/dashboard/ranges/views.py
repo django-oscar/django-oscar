@@ -9,7 +9,7 @@ from django.shortcuts import HttpResponse, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import ngettext
 from django.views.generic import (
     CreateView, DeleteView, ListView, UpdateView, View)
 
@@ -128,9 +128,10 @@ class RangeProductListView(BulkEditMixin, ListView):
         for product in products:
             range.remove_product(product)
         num_products = len(products)
-        messages.success(request, ungettext("Removed %d product from range",
-                                            "Removed %d products from range",
-                                            num_products) % num_products)
+        messages.success(
+            request,
+            ngettext("Removed %d product from range", "Removed %d products from range", num_products) % num_products
+        )
         return HttpResponseRedirect(self.get_success_url(request))
 
     def add_products(self, request):
@@ -154,9 +155,10 @@ class RangeProductListView(BulkEditMixin, ListView):
             range.add_product(product)
 
         num_products = len(products)
-        messages.success(request, ungettext("%d product added to range",
-                                            "%d products added to range",
-                                            num_products) % num_products)
+        messages.success(
+            request,
+            ngettext("%d product added to range", "%d products added to range", num_products) % num_products
+        )
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
             messages.warning(

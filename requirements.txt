@@ -1,9 +1,9 @@
 # These requirements are only necessary when developing on Oscar.
 
 # development
-Werkzeug==0.16.1
-django-debug-toolbar==2.1
-django-extensions==2.2.6
+Werkzeug>=1.0,<1.1
+django-debug-toolbar>=2.2,<2.3
+django-extensions>=2.2,<2.3
 psycopg2-binary>=2.8,<2.9
 
 # Sandbox
@@ -26,7 +26,7 @@ isort==4.3.21
 # Helpers
 pyprof2calltree==1.4.4
 ipdb==0.12.3
-ipython==7.11.1
+ipython>=7.12,<7.13
 
 # Country data
-pycountry==19.8.18
+pycountry>=19.8,<19.9

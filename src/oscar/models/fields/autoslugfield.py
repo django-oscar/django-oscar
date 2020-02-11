@@ -27,15 +27,11 @@ THE SOFTWARE.
 import re
 
 from django.conf import settings
+from django.utils.encoding import force_str
 
 from oscar.core.utils import slugify
 
 from .slugfield import SlugField
-
-try:
-    from django.utils.encoding import force_unicode  # NOQA
-except ImportError:
-    from django.utils.encoding import force_text as force_unicode  # NOQA
 
 
 class AutoSlugField(SlugField):
@@ -169,7 +165,7 @@ class AutoSlugField(SlugField):
         return slug
 
     def pre_save(self, model_instance, add):
-        value = force_unicode(self.create_slug(model_instance, add))
+        value = force_str(self.create_slug(model_instance, add))
         setattr(model_instance, self.attname, value)
         return value
 

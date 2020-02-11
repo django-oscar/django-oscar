@@ -2,7 +2,7 @@ from decimal import ROUND_UP
 from decimal import Decimal as D
 
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import ngettext
 
 from oscar.core.loading import get_classes, get_model
 from oscar.templatetags.currency_filters import currency
@@ -70,8 +70,8 @@ class CountCondition(Condition):
     def get_upsell_message(self, offer, basket):
         num_matches = self._get_num_matches(basket, offer)
         delta = self.value - num_matches
-        return ungettext('Buy %(delta)d more product from %(range)s',
-                         'Buy %(delta)d more products from %(range)s', delta) \
+        return ngettext('Buy %(delta)d more product from %(range)s',
+                        'Buy %(delta)d more products from %(range)s', delta) \
             % {'delta': delta, 'range': self.range}
 
     def consume_items(self, offer, basket, affected_lines):
@@ -158,8 +158,8 @@ class CoverageCondition(Condition):
 
     def get_upsell_message(self, offer, basket):
         delta = self.value - self._get_num_covered_products(basket, offer)
-        return ungettext('Buy %(delta)d more product from %(range)s',
-                         'Buy %(delta)d more products from %(range)s', delta) \
+        return ngettext('Buy %(delta)d more product from %(range)s',
+                        'Buy %(delta)d more products from %(range)s', delta) \
             % {'delta': delta, 'range': self.range}
 
     def is_partially_satisfied(self, offer, basket):

@@ -6,7 +6,7 @@ import os
 from tempfile import NamedTemporaryFile
 
 from django.test import TestCase, override_settings
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from oscar.core.compat import UnicodeCSVWriter, existing_user_fields
 
@@ -51,7 +51,7 @@ class TestUnicodeCSVWriter(TestCase):
             writer.writerows([row])
 
         with open(tmp_file.name, 'r') as read_file:
-            content = smart_text(read_file.read(), encoding='utf-8').strip()
+            content = smart_str(read_file.read(), encoding='utf-8').strip()
             self.assertEqual(content, 'ünįcodē,123,foo-bar')
 
         # Clean up

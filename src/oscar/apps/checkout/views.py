@@ -1,11 +1,11 @@
 import logging
+from urllib.parse import quote
 
 from django import http
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.utils.http import urlquote
 from django.utils.translation import gettext as _
 from django.views import generic
 
@@ -84,7 +84,7 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
                 self.success_url = "%s?next=%s&email=%s" % (
                     reverse('customer:register'),
                     reverse('checkout:shipping-address'),
-                    urlquote(email)
+                    quote(email)
                 )
         else:
             user = form.get_user()
