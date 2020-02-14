@@ -6,7 +6,6 @@ from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile
 from django.utils.encoding import smart_str
 from django.utils.html import escape
-from django.utils.six import text_type
 
 from oscar.core.thumbnails import get_thumbnailer
 
@@ -120,7 +119,7 @@ class ThumbnailNode(template.Node):
         source = self.source_var.resolve(context)
         options = self.get_thumbnail_options(context)
         for key, expr in self.options:
-            value = self.no_resolve.get(text_type(expr), expr.resolve(context))
+            value = self.no_resolve.get(str(expr), expr.resolve(context))
             options[key] = value
 
         thumbnailer = get_thumbnailer()

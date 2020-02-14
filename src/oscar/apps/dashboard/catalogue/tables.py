@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ngettext_lazy
 from django_tables2 import A, Column, LinkColumn, TemplateColumn
 
 from oscar.core.loading import get_class, get_model
@@ -67,7 +67,7 @@ class CategoryTable(DashboardTable):
         orderable=False)
 
     icon = "sitemap"
-    caption = ungettext_lazy("%s Category", "%s Categories")
+    caption = ngettext_lazy("%s Category", "%s Categories")
 
     class Meta(DashboardTable.Meta):
         model = Category
@@ -89,7 +89,7 @@ class AttributeOptionGroupTable(DashboardTable):
         orderable=False)
 
     icon = "sitemap"
-    caption = ungettext_lazy("%s Attribute Option Group", "%s Attribute Option Groups")
+    caption = ngettext_lazy("%s Attribute Option Group", "%s Attribute Option Groups")
 
     class Meta(DashboardTable.Meta):
         model = AttributeOptionGroup
@@ -109,7 +109,7 @@ class OptionTable(DashboardTable):
         orderable=False)
 
     icon = "reorder"
-    caption = ungettext_lazy("%s Option", "%s Options")
+    caption = ngettext_lazy("%s Option", "%s Options")
 
     class Meta(DashboardTable.Meta):
         model = Option

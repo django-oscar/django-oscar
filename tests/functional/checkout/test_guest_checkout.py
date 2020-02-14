@@ -1,12 +1,13 @@
 import sys
 from http import client as http_client
+from imp import reload
 from importlib import import_module
 from unittest import mock
+from urllib.parse import quote
 
 from django.conf import settings
 from django.test.utils import override_settings
 from django.urls import clear_url_caches, reverse
-from django.utils.http import urlquote
 
 from oscar.apps.shipping import methods
 from oscar.core.compat import get_user_model
@@ -26,12 +27,6 @@ UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 Basket = get_model('basket', 'Basket')
 Order = get_model('order', 'Order')
 User = get_user_model()
-
-# Python 3 compat
-try:
-    from imp import reload
-except ImportError:
-    pass
 
 
 def reload_url_conf():
@@ -77,7 +72,7 @@ class TestIndexView(CheckoutMixin, WebTestCase):
         expected_url = '{register_url}?next={forward}&email={email}'.format(
             register_url=reverse('customer:register'),
             forward='/checkout/shipping-address/',
-            email=urlquote(new_user_email))
+            email=quote(new_user_email))
         self.assertRedirects(response, expected_url)
 
     def test_redirects_existing_customers_to_shipping_address_page(self):

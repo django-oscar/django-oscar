@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.models import ModelChoiceIterator
 from django.forms.widgets import FileInput
 from django.utils import formats
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 
 class ImageInput(FileInput):
@@ -208,12 +208,12 @@ class AdvancedSelect(forms.Select):
     """
 
     def __init__(self, attrs=None, choices=(), disabled_values=()):
-        self.disabled_values = set(force_text(v) for v in disabled_values)
+        self.disabled_values = set(force_str(v) for v in disabled_values)
         super().__init__(attrs, choices)
 
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
-        if force_text(value) in self.disabled_values:
+        if force_str(value) in self.disabled_values:
             option['attrs']['disabled'] = True
         return option
 
@@ -254,7 +254,7 @@ class RemoteSelect(forms.Select):
         default = (None, [], 0)
         groups = [default]
         has_selected = False
-        selected_choices = {force_text(v) for v in value}
+        selected_choices = {force_str(v) for v in value}
         if not self.is_required and not self.allow_multiple_selected:
             default[1].append(self.create_option(name, '', '', False, 0))
 
@@ -266,7 +266,7 @@ class RemoteSelect(forms.Select):
             c for c in selected_choices if c not in self.choices.field.empty_values
         }
         choices = (
-            (obj.pk, force_text(obj))
+            (obj.pk, force_str(obj))
             for obj in self.choices.queryset.filter(pk__in=selected_choices)
         )
         for option_value, option_label in choices:

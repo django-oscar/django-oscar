@@ -25,7 +25,6 @@ User = get_user_model()
 
 class IndexView(BulkEditMixin, FormMixin, SingleTableView):
     template_name = 'oscar/dashboard/users/index.html'
-    table_pagination = True
     model = User
     actions = ('make_active', 'make_inactive', )
     form_class = UserSearchForm
@@ -38,6 +37,9 @@ class IndexView(BulkEditMixin, FormMixin, SingleTableView):
         form_class = self.get_form_class()
         self.form = self.get_form(form_class)
         return super().dispatch(request, *args, **kwargs)
+
+    def get_table_pagination(self, table):
+        return dict(per_page=settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE)
 
     def get_form_kwargs(self):
         """
