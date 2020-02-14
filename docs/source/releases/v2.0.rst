@@ -345,5 +345,5 @@ Deprecated features
 - ``catalogue.managers.BrowsableProductManager`` is deprecated.  Use
   ``Product.objects.browsable()`` instead.
 
-- ``catalogue.Product.browseable`` is deprecated. Use
-  ``Product.objects.browseable()`` instead.
+- ``catalogue.Product.browsable`` is deprecated. Use
+  ``Product.objects.browsable()`` instead.

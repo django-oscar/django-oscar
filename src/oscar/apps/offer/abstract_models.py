@@ -15,7 +15,6 @@ from django.utils.timezone import get_current_timezone, now
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.decorators import deprecated
 from oscar.core.loading import (
     cached_import_string, get_class, get_classes, get_model)
 from oscar.models import fields
@@ -873,11 +872,6 @@ class AbstractRange(models.Model):
         if self.proxy:
             return self.proxy.contains_product(product)
         return self.product_queryset.filter(id=product.id).exists()
-
-    # Deprecated alias
-    @deprecated
-    def contains(self, product):
-        return self.contains_product(product)
 
     def invalidate_cached_queryset(self):
         try:

@@ -5,7 +5,6 @@ from django.db.models import Exists, OuterRef
 from django.db.models.constants import LOOKUP_SEP
 from treebeard.mp_tree import MP_NodeQuerySet
 
-from oscar.core.decorators import deprecated
 from oscar.core.loading import get_model
 
 
@@ -115,36 +114,6 @@ class ProductQuerySet(models.query.QuerySet):
         Excludes non-canonical products, but includes non-public products.
         """
         return self.filter(parent=None)
-
-
-@deprecated
-class ProductManager(models.Manager):
-    """
-    Deprecated. Use ProductQuerySet.as_manager() instead.
-    """
-
-    def get_queryset(self):
-        return ProductQuerySet(self.model, using=self._db)
-
-    def browsable(self):
-        return self.get_queryset().browsable()
-
-    def base_queryset(self):
-        return self.get_queryset().base_queryset()
-
-
-class BrowsableProductManager(ProductManager):
-    """
-    Deprecated. Use Product.objects.browsable() instead.
-
-    The @deprecated decorator isn't applied to the class, because doing
-    so would log warnings, and we still initialise this class
-    in the Product.browsable for backward compatibility.
-    """
-
-    @deprecated
-    def get_queryset(self):
-        return super().get_queryset().browsable()
 
 
 class CategoryQuerySet(MP_NodeQuerySet):
