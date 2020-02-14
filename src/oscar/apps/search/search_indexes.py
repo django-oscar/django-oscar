@@ -37,10 +37,10 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         # Only index browsable products (not each individual child product)
-        return self.get_model().browsable.order_by('-date_updated')
+        return self.get_model().objects.browsable().order_by('-date_updated')
 
     def read_queryset(self, using=None):
-        return self.get_model().browsable.base_queryset()
+        return self.get_model().objects.browsable().base_queryset()
 
     def prepare_product_class(self, obj):
         return obj.get_product_class().name

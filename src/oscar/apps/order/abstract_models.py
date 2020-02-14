@@ -1,11 +1,8 @@
-import hashlib
 import logging
-import warnings
 from collections import OrderedDict
 from decimal import Decimal as D
 
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.core.signing import BadSignature, Signer
 from django.db import models
 from django.db.models import Sum
@@ -21,7 +18,6 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
-from oscar.utils.deprecation import RemovedInOscar21Warning
 
 from . import exceptions
 
@@ -314,38 +310,11 @@ class AbstractOrder(models.Model):
         signer = Signer(salt='oscar.apps.order.Order')
         return signer.sign(self.number)
 
-    def check_deprecated_verification_hash(self, hash_to_check):
-        """
-        Backward compatible check for MD5 hashes that were generated in
-        Oscar 1.5 and lower.
-
-        This must explicitly be enabled by setting OSCAR_DEPRECATED_ORDER_VERIFY_KEY,
-        which must not be equal to SECRET_KEY - i.e., the project must
-        have changed its SECRET_KEY since this change was applied.
-        """
-        old_verification_key = getattr(settings, 'OSCAR_DEPRECATED_ORDER_VERIFY_KEY', None)
-        if old_verification_key is None:
-            return False
-
-        warnings.warn('Use of OSCAR_DEPRECATED_ORDER_VERIFY_KEY is deprecated', RemovedInOscar21Warning, stacklevel=2)
-
-        if old_verification_key == settings.SECRET_KEY:
-            raise ImproperlyConfigured(
-                'OSCAR_DEPRECATED_ORDER_VERIFY_KEY cannot be equal to SECRET_KEY')
-
-        logger.warning('Using insecure md5 hashing for order URL hash verification.')
-        string_to_hash = '%s%s' % (self.number, old_verification_key)
-        order_hash = hashlib.md5(string_to_hash.encode('utf8')).hexdigest()
-        return constant_time_compare(order_hash, hash_to_check)
-
     def check_verification_hash(self, hash_to_check):
         """
         Checks the received verification hash against this order number.
         Returns False if the verification failed, True otherwise.
         """
-        if self.check_deprecated_verification_hash(hash_to_check):
-            return True
-
         signer = Signer(salt='oscar.apps.order.Order')
         try:
             signed_number = signer.unsign(hash_to_check)

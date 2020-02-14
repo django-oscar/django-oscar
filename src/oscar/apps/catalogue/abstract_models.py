@@ -30,7 +30,6 @@ from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
 from oscar.utils.models import get_image_upload_path
 
-BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManager')
 CategoryQuerySet, ProductQuerySet = get_classes(
     'catalogue.managers', ['CategoryQuerySet', 'ProductQuerySet'])
 ProductAttributesContainer = get_class(
@@ -425,9 +424,6 @@ class AbstractProduct(models.Model):
             "or not"))
 
     objects = ProductQuerySet.as_manager()
-    # browsable property is deprecated and will be removed in Oscar 2.1
-    # Use Product.objects.browsable() instead.
-    browsable = BrowsableProductManager()
 
     class Meta:
         abstract = True
