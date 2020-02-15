@@ -32,10 +32,10 @@ calculating prices and availability information.
    >>> info.availability.is_available_to_buy
    True
    >>> msg = info.availability.message
-   >>> unicode(msg)
-   u"In stock (58 available)"
+   >>> str(msg)
+   "In stock (58 available)"
    >>> info.availability.is_purchase_permitted(59)
-   (False, u"A maximum of 58 can be bought")
+   (False, "A maximum of 58 can be bought")
 
    # Price information
    >>> info.price.excl_tax

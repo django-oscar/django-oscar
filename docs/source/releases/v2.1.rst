@@ -194,3 +194,6 @@ Deprecated features
 
 - ``customer.views.ChangePasswordView.form_valid`` was modified
   to use a new ``send_password_changed_email`` method.
+
+- The internal class ``oscar.core.compat.UnicodeSCVReader`` has been removed.
+  Use ``csv.reader`` instead.

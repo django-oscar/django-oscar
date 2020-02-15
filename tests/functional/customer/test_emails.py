@@ -80,7 +80,7 @@ class TestAlertsConcreteEmailsSending(EmailsMixin, TestCase):
         self.dispatcher.send_product_alert_email_for_user(product)
 
         self._test_common_part()
-        expected_subject = u'{} is back in stock'.format(product.title)
+        expected_subject = '{} is back in stock'.format(product.title)
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         self.assertIn('We are happy to inform you that our product', mail.outbox[0].body)
         # No `hurry_mode`
@@ -94,7 +94,7 @@ class TestAlertsConcreteEmailsSending(EmailsMixin, TestCase):
 
         self.dispatcher.send_product_alert_email_for_user(product)
         self.assertEqual(len(mail.outbox), 2)  # Separate email for each user
-        expected_subject = u'{} is back in stock'.format(product.title)
+        expected_subject = '{} is back in stock'.format(product.title)
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         for outboxed_email in mail.outbox:
             self.assertEqual(expected_subject, outboxed_email.subject)

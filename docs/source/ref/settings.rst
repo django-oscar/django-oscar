@@ -111,10 +111,10 @@ The default is::
                  'queries': [
                      # This is a list of (name, query) tuples where the name will
                      # be displayed on the front-end.
-                     (_('0 to 20'), u'[0 TO 20]'),
-                     (_('20 to 40'), u'[20 TO 40]'),
-                     (_('40 to 60'), u'[40 TO 60]'),
-                     (_('60+'), u'[60 TO *]'),
+                     (_('0 to 20'), '[0 TO 20]'),
+                     (_('20 to 40'), '[20 TO 40]'),
+                     (_('40 to 60'), '[40 TO 60]'),
+                     (_('60+'), '[60 TO *]'),
                  ]
              }),
         ]),
@@ -377,7 +377,7 @@ For example::
             'format_type': "accounting",
         },
         'EUR': {
-            'format': u'#,##0\xa0¤',
+            'format': '#,##0\xa0¤',
         }
     }
 

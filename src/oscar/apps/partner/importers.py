@@ -1,10 +1,10 @@
+import csv
 import os
 from decimal import Decimal as D
 
 from django.db.transaction import atomic
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.compat import UnicodeCSVReader
 from oscar.core.loading import get_class, get_model
 
 ImportingError = get_class('partner.exceptions', 'ImportingError')
@@ -55,9 +55,8 @@ class CatalogueImporter(object):
         stats = {'new_items': 0,
                  'updated_items': 0}
         row_number = 0
-        with UnicodeCSVReader(
-                file_path, delimiter=self._delimiter,
-                quotechar='"', escapechar='\\') as reader:
+        with open(file_path, 'rt') as f:
+            reader = csv.reader(f, escapechar='\\')
             for row in reader:
                 row_number += 1
                 self._import_row(row_number, row, stats)
