@@ -2,12 +2,13 @@ from decimal import Decimal as D
 
 from django.urls import reverse
 
-from oscar.core import prices
-from oscar.core.loading import get_model
 from oscar.apps.dashboard.views import IndexView
 from oscar.apps.order.models import Order
+from oscar.core import prices
+from oscar.core.loading import get_model
+from oscar.test.factories import (
+    UserFactory, create_basket, create_order, create_product)
 from oscar.test.testcases import WebTestCase
-from oscar.test.factories import create_order, create_product, create_basket, UserFactory
 
 StockAlert = get_model('partner', 'StockAlert')
 

@@ -8,18 +8,16 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
-from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.compat import (
-    existing_user_fields, get_user_model)
+    existing_user_fields, get_user_model, url_has_allowed_host_and_scheme)
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.forms import widgets
 
-Dispatcher = get_class('customer.utils', 'Dispatcher')
-CommunicationEventType = get_model('customer', 'communicationeventtype')
+CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
@@ -37,12 +35,10 @@ def generate_username():
 
 class PasswordResetForm(auth_forms.PasswordResetForm):
     """
-    This form takes the same structure as its parent from django.contrib.auth
+    This form takes the same structure as its parent from :py:mod:`django.contrib.auth`
     """
-    communication_type_code = "PASSWORD_RESET"
 
-    def save(self, domain_override=None, use_https=False, request=None,
-             **kwargs):
+    def save(self, domain_override=None, request=None, **kwargs):
         """
         Generates a one-use only link for resetting password and sends to the
         user.
@@ -50,35 +46,23 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         site = get_current_site(request)
         if domain_override is not None:
             site.domain = site.name = domain_override
-        email = self.cleaned_data['email']
-        active_users = User._default_manager.filter(
-            email__iexact=email, is_active=True)
-        for user in active_users:
-            reset_url = self.get_reset_url(site, request, user, use_https)
-            ctx = {
-                'user': user,
-                'site': site,
-                'reset_url': reset_url}
-            messages = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(user, messages)
+        for user in self.get_users(self.cleaned_data['email']):
+            self.send_password_reset_email(site, user)
 
-    def get_reset_url(self, site, request, user, use_https):
-        # the request argument isn't used currently, but implementors might
-        # need it to determine the correct subdomain
-        reset_url = "%s://%s%s" % (
-            'https' if use_https else 'http',
-            site.domain,
-            get_password_reset_url(user))
-
-        return reset_url
+    def send_password_reset_email(self, site, user):
+        extra_context = {
+            'user': user,
+            'site': site,
+            'reset_url': get_password_reset_url(user),
+        }
+        CustomerDispatcher().send_password_reset_email_for_user(user, extra_context)
 
 
 class EmailAuthenticationForm(AuthenticationForm):
     """
     Extends the standard django AuthenticationForm, to support 75 character
     usernames. 75 character usernames are needed to support the EmailOrUsername
-    auth backend.
+    authentication backend.
     """
     username = forms.EmailField(label=_('Email address'))
     redirect_url = forms.CharField(
@@ -90,7 +74,7 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if url and is_safe_url(url, self.host):
+        if url and url_has_allowed_host_and_scheme(url, self.host):
             return url
 
 
@@ -98,7 +82,7 @@ class ConfirmPasswordForm(forms.Form):
     """
     Extends the standard django AuthenticationForm, to support 75 character
     usernames. 75 character usernames are needed to support the EmailOrUsername
-    auth backend.
+    authentication backend.
     """
     password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
@@ -163,7 +147,7 @@ class EmailUserCreationForm(forms.ModelForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if url and is_safe_url(url, self.host):
+        if url and url_has_allowed_host_and_scheme(url, self.host):
             return url
         return settings.LOGIN_REDIRECT_URL
 
@@ -266,9 +250,9 @@ class UserForm(forms.ModelForm):
 
     def clean_email(self):
         """
-        Make sure that the email address is aways unique as it is
+        Make sure that the email address is always unique as it is
         used instead of the username. This is necessary because the
-        unique-ness of email addresses is *not* enforced on the model
+        uniqueness of email addresses is *not* enforced on the model
         level in ``django.contrib.auth.models.User``.
         """
         email = normalise_email(self.cleaned_data['email'])

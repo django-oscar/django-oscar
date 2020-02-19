@@ -1,18 +1,20 @@
 from http import client as http_client
 
-from oscar.test.testcases import WebTestCase
-from oscar.apps.customer.notifications import services
-from oscar.test.factories import UserFactory
 from django.urls import reverse
 
-from oscar.apps.customer.models import Notification
+from oscar.core.loading import get_class, get_model
+from oscar.test.factories import UserFactory
+from oscar.test.testcases import WebTestCase
+
+Dispatcher = get_class('communication.utils', 'Dispatcher')
+Notification = get_model('communication', 'Notification')
 
 
 class TestAUserWithUnreadNotifications(WebTestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        services.notify_user(self.user, "Test message")
+        Dispatcher().notify_user(self.user, "Test message")
 
     def test_can_see_them_in_page_header(self):
         homepage = self.app.get('/', user=self.user)

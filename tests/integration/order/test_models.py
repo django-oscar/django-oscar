@@ -1,24 +1,24 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from decimal import Decimal as D
 from unittest import mock
 
-from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.order.exceptions import (
-    InvalidOrderStatus, InvalidLineStatus, InvalidShippingEvent)
+    InvalidLineStatus, InvalidOrderStatus, InvalidShippingEvent)
 from oscar.apps.order.models import (
-    Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity,
-    OrderNote, OrderDiscount)
-from oscar.apps.order.signals import order_line_status_changed, order_status_changed
+    Line, Order, OrderDiscount, OrderNote, ShippingEvent,
+    ShippingEventQuantity, ShippingEventType)
+from oscar.apps.order.signals import (
+    order_line_status_changed, order_status_changed)
 from oscar.test.basket import add_product
 from oscar.test.contextmanagers import mock_signal_receiver
 from oscar.test.factories import (
-    create_order, create_offer, create_voucher, create_basket,
     OrderFactory, OrderLineFactory, ShippingAddressFactory,
-    ShippingEventFactory)
+    ShippingEventFactory, create_basket, create_offer,
+    create_order, create_voucher)
 
 ORDER_PLACED = 'order_placed'
 
@@ -36,12 +36,20 @@ class OrderStatusPipelineTests(TestCase):
 
     def setUp(self):
         Order.pipeline = {'PENDING': ('SHIPPED', 'CANCELLED'),
-                          'SHIPPED': ('COMPLETE',)}
+                          'SHIPPED': ('COMPLETE',),
+                          'COMPLETE': (),
+                          'CANCELLED': ()}
         Order.cascade = {'SHIPPED': 'SHIPPED'}
 
     def tearDown(self):
         Order.pipeline = {}
         Order.cascade = {}
+
+    def test_all_statuses_class_method(self):
+        self.assertEqual(
+            ['CANCELLED', 'COMPLETE', 'PENDING', 'SHIPPED'],
+            sorted(Order.all_statuses()),
+        )
 
     def test_available_statuses_for_pending(self):
         self.order = create_order(status='PENDING')
@@ -216,15 +224,14 @@ class LineTests(TestCase):
 class LineStatusTests(TestCase):
 
     def setUp(self):
-        Line.pipeline = {'A': ('B', 'C'),
-                         'B': ('C',)}
+        Line.pipeline = {'A': ('B', 'C'), 'B': ('C',), 'C': ()}
         self.order = create_order()
         self.line = self.order.lines.all()[0]
         self.line.status = 'A'
         self.line.save()
 
     def test_all_statuses_class_method(self):
-        self.assertEqual(['A', 'B'], sorted(Line.all_statuses()))
+        self.assertEqual(['A', 'B', 'C'], sorted(Line.all_statuses()))
 
     def test_invalid_status_set_raises_exception(self):
         with self.assertRaises(InvalidLineStatus):
@@ -423,29 +430,3 @@ class OrderTests(TestCase):
         order = OrderFactory(number='111000')
         # Hash is valid, but it is for a different order number
         self.assertFalse(order.check_verification_hash('222000:knvoMB1KAiJu8meWtGce00Y88j4'))
-
-    @override_settings(OSCAR_DEPRECATED_ORDER_VERIFY_KEY='deprecated_order_hash_secret')
-    def test_check_deprecated_hash_verification(self):
-        order = OrderFactory(number='100001')
-        # Check that check_deprecated_verification_hash validates the hash
-        self.assertTrue(
-            order.check_deprecated_verification_hash('3efd0339e8c789447469f37851cbaaaf')
-        )
-        # Check that check_verification_hash calls it correctly
-        self.assertTrue(order.check_verification_hash('3efd0339e8c789447469f37851cbaaaf'))
-
-    def test_check_deprecated_hash_verification_without_old_key(self):
-        order = OrderFactory(number='100001')
-        # Check that check_deprecated_verification_hash validates the hash
-        self.assertFalse(
-            order.check_deprecated_verification_hash('3efd0339e8c789447469f37851cbaaaf')
-        )
-
-    @override_settings(
-        OSCAR_DEPRECATED_ORDER_VERIFY_KEY='deprecated_order_hash_secret',
-        SECRET_KEY='deprecated_order_hash_secret')
-    def test_check_deprecated_hash_verification_old_key_matches_new(self):
-        order = OrderFactory(number='100001')
-        # OSCAR_DEPRECATED_ORDER_VERIFY_KEY must not be equal to SECRET_KEY.
-        with self.assertRaises(ImproperlyConfigured):
-            order.check_deprecated_verification_hash('3efd0339e8c789447469f37851cbaaaf')

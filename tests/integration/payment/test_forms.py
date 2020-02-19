@@ -1,11 +1,12 @@
 import datetime
 
 from django.core.exceptions import ImproperlyConfigured
-from django.test import TestCase
 from django.forms import ValidationError
-
+from django.test import TestCase
+from freezegun import freeze_time
 
 from oscar.apps.payment import forms, models
+
 # types=[bankcards.VISA, bankcards.VISA_ELECTRON, bankcards.MASTERCARD,
 #               bankcards.AMEX, bankcards.MAESTRO, bankcards.DINERS_CLUB,
 #               bankcards.DISCOVER, bankcards.JCB, bankcards.CHINA_UNIONPAY,
@@ -45,6 +46,7 @@ class TestBankcardNumberField(TestCase):
             self.field.clean(None)
 
 
+@freeze_time('2016-01-01')      # BankcardStartingMonthField limits date to last 5 years
 class TestStartingMonthField(TestCase):
 
     def setUp(self):

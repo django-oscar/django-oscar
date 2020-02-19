@@ -3,7 +3,7 @@ Core functionality
 ==================
 
 This page details the core classes and functions that Oscar uses.  These aren't
-specific to one particular app, but are used throughout Oscar's codebase.
+specific to one particular app, but are used throughout Oscar.
 
 Dynamic class loading
 ---------------------
@@ -40,6 +40,7 @@ Oscar uses a few custom model fields.
 
 .. automodule:: oscar.models.fields
     :members:
+    :exclude-members: contribute_to_class, deconstruct, get_prep_value, to_python, formfield
 
 
 Form helpers

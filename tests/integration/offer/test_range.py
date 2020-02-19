@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from oscar.apps.offer import models
 from oscar.apps.catalogue import models as catalogue_models
+from oscar.apps.offer import models
 from oscar.test.factories import create_product
 
 
@@ -48,6 +48,13 @@ class TestChildRange(TestCase):
 
     def test_does_not_include_sibling(self):
         self.assertFalse(self.range.contains_product(self.child2))
+
+    def test_parent_with_child_exception(self):
+        self.range.add_product(self.parent)
+        self.range.remove_product(self.child1)
+        self.assertTrue(self.range.contains_product(self.parent))
+        self.assertTrue(self.range.contains_product(self.child2))
+        self.assertFalse(self.range.contains_product(self.child1))
 
 
 class TestPartialRange(TestCase):
@@ -209,11 +216,11 @@ class TestPartialRange(TestCase):
             product=product, category=included_category)
         self.range.included_categories.add(included_category)
 
-        self.range.invalidate_cached_ids()
+        self.range.invalidate_cached_queryset()
         self.assertFalse(self.range.is_reorderable)
 
         self.range.included_categories.remove(included_category)
-        self.range.invalidate_cached_ids()
+        self.range.invalidate_cached_queryset()
         self.assertTrue(self.range.is_reorderable)
 
 

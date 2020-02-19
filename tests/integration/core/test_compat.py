@@ -4,20 +4,11 @@ import datetime
 import io
 import os
 from tempfile import NamedTemporaryFile
-from django.utils.encoding import smart_text
 
 from django.test import TestCase, override_settings
+from django.utils.encoding import smart_str
 
 from oscar.core.compat import UnicodeCSVWriter, existing_user_fields
-
-
-class unicodeobj(object):
-
-    def __init__(self, s):
-        self.s = s
-
-    def __str__(self):
-        return self.s
 
 
 class TestExistingUserFields(TestCase):
@@ -32,7 +23,7 @@ class TestUnicodeCSVWriter(TestCase):
     def test_can_write_different_values(self):
         writer = UnicodeCSVWriter(open_file=io.StringIO())
         s = 'ünįcodē'
-        rows = [[s, unicodeobj(s), 123, datetime.date.today()], ]
+        rows = [[s, s, 123, datetime.date.today()], ]
         writer.writerows(rows)
         self.assertRaises(TypeError, writer.writerows, [object()])
 
@@ -40,7 +31,7 @@ class TestUnicodeCSVWriter(TestCase):
         tmp_file = NamedTemporaryFile()
         with UnicodeCSVWriter(filename=tmp_file.name) as writer:
             s = 'ünįcodē'
-            rows = [[s, unicodeobj(s), 123, datetime.date.today()], ]
+            rows = [[s, s, 123, datetime.date.today()], ]
             writer.writerows(rows)
 
     def test_csv_write_output(self):
@@ -51,7 +42,7 @@ class TestUnicodeCSVWriter(TestCase):
             writer.writerows([row])
 
         with open(tmp_file.name, 'r') as read_file:
-            content = smart_text(read_file.read(), encoding='utf-8').strip()
+            content = smart_str(read_file.read(), encoding='utf-8').strip()
             self.assertEqual(content, 'ünįcodē,123,foo-bar')
 
         # Clean up

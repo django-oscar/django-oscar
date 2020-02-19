@@ -1,0 +1,22 @@
+{
+  "name": "django-oscar",
+  "description": "Django Oscar sandbox site",
+  "env": {
+    "ALLOWED_HOSTS": {
+      "required": true
+    },
+    "SECRET_KEY": {
+      "required": true
+    },
+    "SECURE_SSL_REDIRECT": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "stack": "container"
+}

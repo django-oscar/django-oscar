@@ -10,22 +10,10 @@ location = lambda x: os.path.join(
 
 DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = [
-    'latest.oscarcommerce.com',
-    'master.oscarcommerce.com',
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
-# This is needed for the hosted version of the sandbox
-ADMINS = (
-    ('David Winterbottom', 'david.winterbottom@gmail.com'),
-    ('Michael van Tellingen', 'michaelvantellingen@gmail.com'),
-)
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-MANAGERS = ADMINS
 
 # Use a Sqlite database by default
 DATABASES = {
@@ -119,7 +107,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
+SECRET_KEY = env.str('SECRET_KEY', default='UajFCuyjDKmWHe29neauXzHi9eZoRXr6RMbT5JyAdPiACBP6Cra2')
 
 TEMPLATES = [
     {
@@ -143,7 +131,7 @@ TEMPLATES = [
 
                 # Oscar specific
                 'oscar.apps.search.context_processors.search_form',
-                'oscar.apps.customer.notifications.context_processors.notifications',
+                'oscar.apps.communication.notifications.context_processors.notifications',
                 'oscar.apps.checkout.context_processors.checkout',
                 'oscar.core.context_processors.metadata',
             ],
@@ -160,6 +148,7 @@ MIDDLEWARE = [
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
@@ -268,35 +257,36 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
 
-    'oscar',
-    'oscar.apps.analytics',
-    'oscar.apps.checkout',
-    'oscar.apps.address',
-    'oscar.apps.shipping',
-    'oscar.apps.catalogue',
-    'oscar.apps.catalogue.reviews',
-    'oscar.apps.partner',
-    'oscar.apps.basket',
-    'oscar.apps.payment',
-    'oscar.apps.offer',
-    'oscar.apps.order',
-    'oscar.apps.customer',
-    'oscar.apps.search',
-    'oscar.apps.voucher',
-    'oscar.apps.wishlists',
-    'oscar.apps.dashboard',
-    'oscar.apps.dashboard.reports',
-    'oscar.apps.dashboard.users',
-    'oscar.apps.dashboard.orders',
-    'oscar.apps.dashboard.catalogue',
-    'oscar.apps.dashboard.offers',
-    'oscar.apps.dashboard.partners',
-    'oscar.apps.dashboard.pages',
-    'oscar.apps.dashboard.ranges',
-    'oscar.apps.dashboard.reviews',
-    'oscar.apps.dashboard.vouchers',
-    'oscar.apps.dashboard.communications',
-    'oscar.apps.dashboard.shipping',
+    'oscar.config.Shop',
+    'oscar.apps.analytics.apps.AnalyticsConfig',
+    'oscar.apps.checkout.apps.CheckoutConfig',
+    'oscar.apps.address.apps.AddressConfig',
+    'oscar.apps.shipping.apps.ShippingConfig',
+    'oscar.apps.catalogue.apps.CatalogueConfig',
+    'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
+    'oscar.apps.communication.apps.CommunicationConfig',
+    'oscar.apps.partner.apps.PartnerConfig',
+    'oscar.apps.basket.apps.BasketConfig',
+    'oscar.apps.payment.apps.PaymentConfig',
+    'oscar.apps.offer.apps.OfferConfig',
+    'oscar.apps.order.apps.OrderConfig',
+    'oscar.apps.customer.apps.CustomerConfig',
+    'oscar.apps.search.apps.SearchConfig',
+    'oscar.apps.voucher.apps.VoucherConfig',
+    'oscar.apps.wishlists.apps.WishlistsConfig',
+    'oscar.apps.dashboard.apps.DashboardConfig',
+    'oscar.apps.dashboard.reports.apps.ReportsDashboardConfig',
+    'oscar.apps.dashboard.users.apps.UsersDashboardConfig',
+    'oscar.apps.dashboard.orders.apps.OrdersDashboardConfig',
+    'oscar.apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
+    'oscar.apps.dashboard.offers.apps.OffersDashboardConfig',
+    'oscar.apps.dashboard.partners.apps.PartnersDashboardConfig',
+    'oscar.apps.dashboard.pages.apps.PagesDashboardConfig',
+    'oscar.apps.dashboard.ranges.apps.RangesDashboardConfig',
+    'oscar.apps.dashboard.reviews.apps.ReviewsDashboardConfig',
+    'oscar.apps.dashboard.vouchers.apps.VouchersDashboardConfig',
+    'oscar.apps.dashboard.communications.apps.CommunicationsDashboardConfig',
+    'oscar.apps.dashboard.shipping.apps.ShippingDashboardConfig',
 
     # 3rd-party apps that Oscar depends on
     'widget_tweaks',
@@ -418,20 +408,6 @@ OSCAR_ORDER_STATUS_CASCADE = {
 # on-the-fly less processor.
 OSCAR_USE_LESS = False
 
-
-# Sentry
-# ======
-
-if env('SENTRY_DSN', default=None):
-    RAVEN_CONFIG = {'dsn': env('SENTRY_DSN', default=None)}
-    LOGGING['handlers']['sentry'] = {
-        'level': 'ERROR',
-        'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-    }
-    LOGGING['root']['handlers'].append('sentry')
-    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
-
-
 # Sorl
 # ====
 
@@ -448,6 +424,12 @@ THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
 # django/core/serializers/json.Serializer to have the `dumps` function. Also
 # in tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
+# Security
+SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
+SECURE_HSTS_SECONDS = env.int('SECURE_HSTS_SECONDS', default=0)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
 
 # Try and import local settings which can be used to override any of the above.
 try:

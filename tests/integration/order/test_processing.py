@@ -3,8 +3,7 @@ from unittest import mock
 
 from django.test import TestCase
 
-from oscar.apps.order import processing
-from oscar.apps.order import exceptions
+from oscar.apps.order import exceptions, processing
 
 
 class TestValidatePaymentEvent(TestCase):

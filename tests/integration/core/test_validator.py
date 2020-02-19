@@ -1,9 +1,10 @@
-from django.core.exceptions import ValidationError
 from django.contrib.flatpages.models import FlatPage
+from django.core.exceptions import ValidationError
 from django.test import TestCase, override_settings
 from django.utils.translation import activate
 
-from oscar.core.validators import ExtendedURLValidator, URLDoesNotExistValidator
+from oscar.core.validators import (
+    ExtendedURLValidator, URLDoesNotExistValidator)
 
 
 class TestExtendedURLValidator(TestCase):

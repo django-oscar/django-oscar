@@ -13,7 +13,7 @@ help: ## Display this help message
 ##################
 # Install commands
 ##################
-install: install-python install-test install-js ## Install requirements for local development and production
+install: install-python install-test assets ## Install requirements for local development and production
 
 install-python: ## Install python requirements
 	pip install -r requirements.txt
@@ -24,11 +24,12 @@ install-test: ## Install test requirements
 install-migrations-testing-requirements: ## Install migrations testing requirements
 	pip install -r requirements_migrations.txt
 
-install-js: ## Install js requirements
+assets: ## Install static assets
 	npm install
+	npm run build
 
 venv: ## Create a virtual env and install test and production requirements
-	virtualenv --python=$(shell which python3) $(VENV)
+	$(shell which python3) -m venv $(VENV)
 	$(VENV)/bin/pip install -e .[test]
 	$(VENV)/bin/pip install -r docs/requirements.txt
 
@@ -82,8 +83,8 @@ coverage: venv ## Generate coverage report
 lint: ## Run flake8 and isort checks
 	flake8 src/oscar/
 	flake8 tests/
-	isort -q --recursive --diff src/
-	isort -q --recursive --diff tests/
+	isort -c -q --recursive --diff src/
+	isort -c -q --recursive --diff tests/
 
 test_migrations: install-migrations-testing-requirements ## Tests migrations
 	cd sandbox && ./test_migrations.sh
@@ -100,9 +101,6 @@ compile_translations: ## Compile translation files and create .mo files
 ######################
 # Project Management
 ######################
-css: install-js ## Compile css files
-	npm run build
-
 clean: ## Remove files not in source control
 	find . -type f -name "*.pyc" -delete
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt

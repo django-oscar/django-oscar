@@ -8,11 +8,12 @@ from oscar.apps.basket.signals import basket_addition
 from oscar.apps.catalogue.signals import product_viewed
 from oscar.apps.order.signals import order_placed
 from oscar.apps.search.signals import user_search
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_model
 
-UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
-    'analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord',
-                         'UserProductView'])
+ProductRecord = get_model('analytics', 'ProductRecord')
+UserProductView = get_model('analytics', 'UserProductView')
+UserRecord = get_model('analytics', 'UserRecord')
+UserSearch = get_model('analytics', 'UserSearch')
 
 # Helpers
 

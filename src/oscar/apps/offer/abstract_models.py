@@ -1,13 +1,12 @@
-import itertools
+import csv
 import operator
-import os
-import re
-from decimal import Decimal as D
 from decimal import ROUND_DOWN
+from decimal import Decimal as D
 
 from django.conf import settings
 from django.core import exceptions
 from django.db import models
+from django.db.models import Exists, OuterRef
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
@@ -16,13 +15,13 @@ from django.utils.timezone import get_current_timezone, now
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.decorators import deprecated
-from oscar.core.loading import get_class, get_classes, get_model, cached_import_string
+from oscar.core.loading import (
+    cached_import_string, get_class, get_classes, get_model)
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
 
-ActiveOfferManager, BrowsableRangeManager \
-    = get_classes('offer.managers', ['ActiveOfferManager', 'BrowsableRangeManager'])
+ActiveOfferManager, RangeManager, BrowsableRangeManager \
+    = get_classes('offer.managers', ['ActiveOfferManager', 'RangeManager', 'BrowsableRangeManager'])
 ZERO_DISCOUNT = get_class('offer.results', 'ZERO_DISCOUNT')
 load_proxy, unit_price = get_classes('offer.utils', ['load_proxy', 'unit_price'])
 
@@ -61,7 +60,7 @@ class BaseOfferMixin(models.Model):
     @property
     def name(self):
         """
-        A plaintext description of the benefit/condition. Every proxy class
+        A text description of the benefit/condition. Every proxy class
         has to implement it.
 
         This is used in the dropdowns within the offer dashboard.
@@ -82,7 +81,7 @@ class BaseOfferMixin(models.Model):
 
 class AbstractConditionalOffer(models.Model):
     """
-    A conditional offer (eg buy 1, get 10% off)
+    A conditional offer (e.g. buy 1, get 10% off)
     """
     name = models.CharField(
         _("Name"), max_length=128, unique=True,
@@ -94,14 +93,14 @@ class AbstractConditionalOffer(models.Model):
                                                " browsing page"))
 
     # Offers come in a few different types:
-    # (a) Offers that are available to all customers on the site.  Eg a
+    # (a) Offers that are available to all customers on the site. e.g. a
     #     3-for-2 offer.
     # (b) Offers that are linked to a voucher, and only become available once
     #     that voucher has been applied to the basket
-    # (c) Offers that are linked to a user.  Eg, all students get 10% off.  The
+    # (c) Offers that are linked to a user.  e.g. all students get 10% off.  The
     #     code to apply this offer needs to be coded
     # (d) Session offers - these are temporarily available to a user after some
-    #     trigger event.  Eg, users coming from some affiliate site get 10%
+    #     trigger event.  e.g. users coming from some affiliate site get 10%
     #     off.
     SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
     TYPE_CHOICES = (
@@ -818,13 +817,7 @@ class AbstractRange(models.Model):
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
-    __included_product_ids = None
-    __excluded_product_ids = None
-    __included_categories = None
-    __class_ids = None
-    __category_ids = None
-
-    objects = models.Manager()
+    objects = RangeManager()
     browsable = BrowsableRangeManager()
 
     class Meta:
@@ -856,7 +849,7 @@ class AbstractRange(models.Model):
         """
 
         initial_order = display_order or 0
-        RangeProduct = get_model('offer', 'RangeProduct')
+        RangeProduct = self.included_products.through
         relation, __ = RangeProduct.objects.get_or_create(
             range=self, product=product,
             defaults={'display_order': initial_order})
@@ -868,132 +861,36 @@ class AbstractRange(models.Model):
 
         # Remove product from excluded products if it was removed earlier and
         # re-added again, thus it returns back to the range product list.
-        if product.id in self._excluded_product_ids():
-            self.excluded_products.remove(product)
-            self.invalidate_cached_ids()
+        self.excluded_products.remove(product)
+
+        # invalidate cache because queryset has changed
+        self.invalidate_cached_queryset()
 
     def remove_product(self, product):
         """
         Remove product from range. To save on queries, this function does not
         check if the product is in fact in the range.
         """
-        RangeProduct = get_model('offer', 'RangeProduct')
+        RangeProduct = self.included_products.through
         RangeProduct.objects.filter(range=self, product=product).delete()
         # Making sure product will be excluded from range products list by adding to
         # respective field. Otherwise, it could be included as a product from included
         # category or etc.
         self.excluded_products.add(product)
-        # Invalidating cached property value with list of IDs of already excluded products.
-        self.invalidate_cached_ids()
 
-    def contains_product(self, product):  # noqa (too complex (12))
-        """
-        Check whether the passed product is part of this range.
-        """
+        # invalidate cache because queryset has changed
+        self.invalidate_cached_queryset()
 
-        # Delegate to a proxy class if one is provided
+    def contains_product(self, product):
         if self.proxy:
             return self.proxy.contains_product(product)
+        return self.product_queryset.filter(id=product.id).exists()
 
-        excluded_product_ids = self._excluded_product_ids()
-        if product.id in excluded_product_ids:
-            return False
-        if self.includes_all_products:
-            return True
-        class_ids = self._class_ids()
-        if class_ids and product.get_product_class().id in class_ids:
-            return True
-        included_product_ids = self._included_product_ids()
-        # If the product's parent is in the range, the child is automatically included as well
-        if product.is_child and product.parent.id in included_product_ids:
-            return True
-        if product.id in included_product_ids:
-            return True
-        test_categories = self._included_categories()
-        if test_categories:
-            for category in product.get_categories().only(
-                    *self._category_comparison_fields):
-                for test_category in test_categories:
-                    if category == test_category \
-                            or category.is_descendant_of(test_category):
-                        return True
-        return False
-
-    # Deprecated alias
-    @deprecated
-    def contains(self, product):
-        return self.contains_product(product)
-
-    def __get_pks_and_child_pks(self, queryset):
-        """
-        Expects a product queryset; gets the primary keys of the passed
-        products and their children.
-
-        Verbose, but database and memory friendly.
-        """
-        # One query to get parent and children; [(4, None), (5, 10), (5, 11)]
-        pk_tuples_iterable = queryset.values_list('pk', 'children__pk')
-        # Flatten list without unpacking; [4, None, 5, 10, 5, 11]
-        flat_iterable = itertools.chain.from_iterable(pk_tuples_iterable)
-        # Ensure uniqueness and remove None; {4, 5, 10, 11}
-        return set(flat_iterable) - {None}
-
-    @cached_property
-    def _category_comparison_fields(self):
-        # Overwritten Category models could contain a lot of data, e.g CMS
-        # content. Hence, this avoids fetching unneeded data in the costly
-        # range comparison queries. Note that using .only() with an empty list
-        # is a no-op essentially, so nothing breaks when the field is missing.
-        Category = get_model('catalogue', 'Category')
-        return getattr(Category, 'COMPARISON_FIELDS', ())
-
-    def _included_categories(self):
-        if not self.id:
-            return self.included_categories.none()
-        if self.__included_categories is None:
-            self.__included_categories = self.included_categories.only(
-                *self._category_comparison_fields)
-        return self.__included_categories
-
-    def _included_product_ids(self):
-        if not self.id:
-            return []
-        if self.__included_product_ids is None:
-            self.__included_product_ids = self.__get_pks_and_child_pks(
-                self.included_products)
-        return self.__included_product_ids
-
-    def _excluded_product_ids(self):
-        if not self.id:
-            return []
-        if self.__excluded_product_ids is None:
-            self.__excluded_product_ids = self.__get_pks_and_child_pks(
-                self.excluded_products)
-        return self.__excluded_product_ids
-
-    def _class_ids(self):
-        if self.__class_ids is None:
-            self.__class_ids = self.classes.values_list('pk', flat=True)
-        return self.__class_ids
-
-    def _category_ids(self):
-        if self.__category_ids is None:
-            ids = []
-            for category in self._included_categories():
-                children_ids = category.get_descendants().values_list(
-                    'pk', flat=True)
-                ids.append(category.pk)
-                ids.extend(list(children_ids))
-
-            self.__category_ids = ids
-
-        return self.__category_ids
-
-    def invalidate_cached_ids(self):
-        self.__category_ids = None
-        self.__included_categories = None
-        self.__included_product_ids = None
-        self.__excluded_product_ids = None
+    def invalidate_cached_queryset(self):
+        try:
+            del self.product_queryset
+        except AttributeError:
+            pass
 
     def num_products(self):
         # Delegate to a proxy class if one is provided
@@ -1014,17 +911,49 @@ class AbstractRange(models.Model):
         if self.proxy:
             return self.proxy.all_products()
 
-        Product = get_model("catalogue", "Product")
+        return self.product_queryset
+
+    @cached_property
+    def product_queryset(self):
+        "cached queryset of all the products in the Range"
+        Product = self.included_products.model
+
         if self.includes_all_products:
             # Filter out child products and blacklisted products
             return Product.objects.browsable().exclude(
-                id__in=self._excluded_product_ids())
+                id__in=self.excluded_products.values("id")
+            )
 
-        return Product.objects.filter(
-            Q(id__in=self._included_product_ids())
-            | Q(product_class_id__in=self._class_ids())
-            | Q(productcategory__category_id__in=self._category_ids())
-        ).exclude(id__in=self._excluded_product_ids()).distinct()
+        Category = self.included_categories.model
+
+        # build query to select all category subtrees.
+        included_in_subtree = self.included_categories.filter(
+            path__rstartswith=OuterRef("path"), depth__lte=OuterRef("depth")
+        )
+        category_tree = Category.objects.annotate(
+            is_included_in_subtree=Exists(included_in_subtree.values("id"))
+        ).filter(is_included_in_subtree=True)
+
+        # select all those product that are selected either by product class,
+        # category, or explicitly by included_products.
+        selected_parents = (
+            Product.objects.filter(
+                Q(product_class_id__in=self.classes.values("id"))
+                | Q(categories__in=category_tree)
+            )
+            | self.included_products.all()
+        )
+
+        # select parents and their children
+        selected_products = (
+            selected_parents | Product.objects.filter(parent__in=selected_parents)
+        )
+
+        # now go and exclude all explicitly excluded products
+        excludes = self.excluded_products.values("id")
+        return selected_products.exclude(
+            Q(parent_id__in=excludes) | Q(id__in=excludes)
+        ).distinct()
 
     @property
     def is_editable(self):
@@ -1038,7 +967,7 @@ class AbstractRange(models.Model):
         """
         Test whether products for the range can be re-ordered.
         """
-        return len(self._class_ids()) == 0 and len(self._included_categories()) == 0
+        return not (self.included_categories.exists() or self.classes.exists())
 
 
 class AbstractRangeProduct(models.Model):
@@ -1097,10 +1026,6 @@ class AbstractRangeProductFileUpload(models.Model):
         verbose_name = _("Range Product Uploaded File")
         verbose_name_plural = _("Range Product Uploaded Files")
 
-    @property
-    def filename(self):
-        return os.path.basename(self.filepath)
-
     def mark_as_failed(self, message=None):
         self.date_processed = now()
         self.error_message = message
@@ -1118,11 +1043,11 @@ class AbstractRangeProductFileUpload(models.Model):
     def was_processing_successful(self):
         return self.status == self.PROCESSED
 
-    def process(self):
+    def process(self, file_obj):
         """
         Process the file upload and add products to the range
         """
-        all_ids = set(self.extract_ids())
+        all_ids = set(self.extract_ids(file_obj))
         products = self.range.all_products()
         existing_skus = products.values_list(
             'stockrecords__partner_sku', flat=True)
@@ -1151,15 +1076,8 @@ class AbstractRangeProductFileUpload(models.Model):
         self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
         return products
 
-    def extract_ids(self):
-        """
-        Extract all SKU- or UPC-like strings from the file
-        """
-        with open(self.filepath, 'r') as fh:
-            for line in fh:
-                for id in re.split(r'[^\w:\.-]', line):
-                    if id:
-                        yield id
-
-    def delete_file(self):
-        os.unlink(self.filepath)
+    def extract_ids(self, file_obj):
+        reader = csv.reader(file_obj)
+        for line in reader:
+            if line:
+                yield line[0]

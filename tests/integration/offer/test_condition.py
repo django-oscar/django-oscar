@@ -1,14 +1,13 @@
-import pytest
 from decimal import Decimal as D
 from unittest import mock
 
+import pytest
 from django.test import TestCase
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.offer import custom, models
 from oscar.test import factories
 from oscar.test.basket import add_product
-
 from tests._site.model_tests_app.models import BasketOwnerCalledBarry
 
 

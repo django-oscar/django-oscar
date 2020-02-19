@@ -5,8 +5,8 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.apps.offer import models
-from oscar.test.basket import add_product, add_products
 from oscar.test import factories
+from oscar.test.basket import add_product, add_products
 
 
 class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):

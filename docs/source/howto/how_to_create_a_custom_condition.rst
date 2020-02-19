@@ -17,7 +17,7 @@ At a minimum, a custom condition must:
 
 * have a ``name`` attribute which with the condition name.
 * have a ``description`` attribute which describes what needs to happen to
-  satisfy the condition (eg "basket must have 4 items").
+  satisfy the condition (e.g. "basket must have 4 items").
 * have an ``is_satisfied`` method that takes a basket instance and an offer
   instance and returns a boolean indicating if the condition is satisfied
 
@@ -33,7 +33,7 @@ It can also implement:
   letting them know what they would need to do to qualify for this offer.
 
 * a ``is_partially_satisfied`` method that tests to see if the customer's basket
-  partially satisfies the condition (ie when you might want to show them an
+  partially satisfies the condition (i.e. when you might want to show them an
   upsell message)
 
 Silly example:

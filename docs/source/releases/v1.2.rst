@@ -1,3 +1,7 @@
+.. spelling::
+
+    jQuery
+
 =======================
 Oscar 1.2 release notes
 =======================
@@ -26,24 +30,22 @@ Oscar 1.2 is compatible with Django 1.7 and 1.8 as well as Python 2.7,
 
 What's new in Oscar 1.2?
 ------------------------
- - ``django-compressor`` has been removed as a dependency, and as a way
-   of building ``less`` files for development. Removing or disabling it
-   was commonly required as it didn't work well with deploying on PaaS
-   providers, and many current projects understandably prefer to use
-   Javascript build chains (``gulp``, ``grunt``, etc.) for all their
-   statics.
-   But ``django-compressor`` was hard to remove  on a per-project basis,
+ - ``django-compressor`` has been removed as a dependency, and as a way of
+   building ``less`` files for development. Removing or disabling it was
+   commonly required as it didn't work well with deploying on :abbr:`PaaS
+   (Platform as a Service)` providers, and many current projects understandably
+   prefer to use Javascript build chains (``gulp``, ``grunt``, etc.) for all their
+   statics.  But ``django-compressor`` was hard to remove  on a per-project basis,
    so the decision was made to remove it altogether.
 
    For development, ``USE_LESS`` now enables the browser-based on-the-fly
-   pre-processor. ``make css`` continues to run a locally installed
-   LESS binary.
+   pre-processor. ``make css`` continues to run a locally installed LESS binary.
 
 .. _minor_changes_in_1.2:
 
 Minor changes
 ~~~~~~~~~~~~~
- - Fix missing page_url field in the promotions form (:issue:`1816`)
+ - Fix missing ``page_url`` field in the promotions form (:issue:`1816`)
  - The order of basket, order and wishlist lines in now guaranteed
    to be in the order of creation. Previously, this wasn't guaranteed,
    but still almost always the case.
@@ -57,7 +59,7 @@ Minor changes
  - Move logic to create basket messages to it's own utility class
    `basket.utils.BasketMessageGenerator()`. (:issue:`1930`)
  - Fix a caching issue in `Product.get_absolute_url()` (:issue:`1925`)
- - Update the `recently_viewed_products` templatetag to accept a 
+ - Update the `recently_viewed_products` templatetag to accept a
    `current_product` attribute. (:issue:`1948`)
 
 
@@ -74,15 +76,15 @@ Backwards incompatible changes in Oscar 1.2
 
 - The `keywords` block is removed from the main template (:issue:`1799`)
 
-- The US and Demo sites were both removed from the repository as they 
-  were not up-to-date anymore. These might return in the future as 
+- The US and Demo sites were both removed from the repository as they
+  were not up-to-date anymore. These might return in the future as
   separate repositories.
 
-- The `RecentReviewsManager`, `TopScoredReviewsManager` and 
-  `TopVotedReviewsManager` managers are removed from the reviews app 
+- The `RecentReviewsManager`, `TopScoredReviewsManager` and
+  `TopVotedReviewsManager` managers are removed from the reviews app
   since they were broken and unused.
 
- - A new unique index is added to `catalogue.AbstractAttributeOption` to make 
+ - A new unique index is added to `catalogue.AbstractAttributeOption` to make
    sure that the `group`, `option` combination is unique (:issue:`1935`)
 
 
@@ -92,4 +94,4 @@ Dependency changes
 * The following packages are updated:
     - `django-treebeard >= 4.0` (Django 1.9 support)
     - `sorl.thumbnail >= 12.4a1` (Django 1.9 support)
-* JQuery UI is no longer included in the dashboard (:issue:`1792`)
+* jQuery UI is no longer included in the dashboard (:issue:`1792`)

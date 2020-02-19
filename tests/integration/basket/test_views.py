@@ -103,7 +103,7 @@ class TestBasketSummaryView(TestCase):
         )
         request = RequestFactory().get(self.url, user=self.user)
         view = views.BasketView(request=request)
-        self.assertEquals(view.get_default_shipping_address(), user_address)
+        self.assertEqual(view.get_default_shipping_address(), user_address)
 
     def test_default_shipping_address_for_anonymous_user(self):
         request = RequestFactory().get(self.url)

@@ -11,25 +11,61 @@ from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Count, Sum
+from django.db.models import Count, Exists, OuterRef, Sum
+from django.db.models.fields import Field
+from django.db.models.lookups import StartsWith
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import get_language, pgettext_lazy
+from django.utils.translation import pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
+from oscar.utils.models import get_image_upload_path
 
-BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManager')
-ProductQuerySet = get_class('catalogue.managers', 'ProductQuerySet')
+CategoryQuerySet, ProductQuerySet = get_classes(
+    'catalogue.managers', ['CategoryQuerySet', 'ProductQuerySet'])
 ProductAttributesContainer = get_class(
     'catalogue.product_attributes', 'ProductAttributesContainer')
+
+
+class ReverseStartsWith(StartsWith):
+    """
+    Adds a new lookup method to the django query language, that allows the
+    following syntax::
+
+        henk__rstartswith="koe"
+
+    The regular version of startswith::
+
+        henk__startswith="koe"
+
+     Would be about the same as the python statement::
+
+        henk.startswith("koe")
+
+    ReverseStartsWith will flip the right and left hand side of the expression,
+    effectively making this the same query as::
+
+    "koe".startswith(henk)
+    """
+    def process_rhs(self, compiler, connection):
+        return super().process_lhs(compiler, connection)
+
+    def process_lhs(self, compiler, connection, lhs=None):
+        if lhs is not None:
+            raise Exception("Flipped process_lhs does not accept lhs argument")
+        return super().process_rhs(compiler, connection)
+
+
+Field.register_lookup(ReverseStartsWith, "rstartswith")
 
 
 class AbstractProductClass(models.Model):
@@ -46,7 +82,7 @@ class AbstractProductClass(models.Model):
     slug = AutoSlugField(_('Slug'), max_length=128, unique=True,
                          populate_from='name')
 
-    #: Some product type don't require shipping (eg digital products) - we use
+    #: Some product type don't require shipping (e.g. digital products) - we use
     #: this field to take some shortcuts in the checkout.
     requires_shipping = models.BooleanField(_("Requires shipping?"),
                                             default=True)
@@ -82,10 +118,10 @@ class AbstractCategory(MP_Node):
     A product category. Merely used for navigational purposes; has no
     effects on business logic.
 
-    Uses django-treebeard.
+    Uses :py:mod:`django-treebeard`.
     """
     #: Allow comparison of categories on a limited number of fields by ranges.
-    #: When the Category model is overwriten to provide CMS content, defining
+    #: When the Category model is overwritten to provide CMS content, defining
     #: this avoids fetching a lot of unneeded extra data from the database.
     COMPARISON_FIELDS = ('pk', 'path', 'depth')
 
@@ -95,8 +131,22 @@ class AbstractCategory(MP_Node):
                               null=True, max_length=255)
     slug = SlugField(_('Slug'), max_length=255, db_index=True)
 
+    is_public = models.BooleanField(
+        _('Is public'),
+        default=True,
+        db_index=True,
+        help_text=_("Show this category in search results and catalogue listings."))
+
+    ancestors_are_public = models.BooleanField(
+        _('Ancestor categories are public'),
+        default=True,
+        db_index=True,
+        help_text=_("The ancestors of this category are public"))
+
     _slug_separator = '/'
     _full_name_separator = ' > '
+
+    objects = CategoryQuerySet.as_manager()
 
     def __str__(self):
         return self.full_name
@@ -107,9 +157,9 @@ class AbstractCategory(MP_Node):
         Returns a string representation of the category and it's ancestors,
         e.g. 'Books > Non-fiction > Essential programming'.
 
-        It's rarely used in Oscar's codebase, but used to be stored as a
-        CharField and is hence kept for backwards compatibility. It's also
-        sufficiently useful to keep around.
+        It's rarely used in Oscar, but used to be stored as a CharField and is
+        hence kept for backwards compatibility. It's also sufficiently useful
+        to keep around.
         """
         names = [category.name for category in self.get_ancestors_and_self()]
         return self._full_name_separator.join(names)
@@ -156,8 +206,33 @@ class AbstractCategory(MP_Node):
         """
         if not self.slug:
             self.slug = self.generate_slug()
-
         super().save(*args, **kwargs)
+
+    def set_ancestors_are_public(self):
+        # Update ancestors_are_public for the sub tree.
+        # note: This doesn't trigger a new save for each instance, rather
+        # just a SQL update.
+        included_in_non_public_subtree = self.__class__.objects.filter(
+            is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
+        )
+        self.get_descendants_and_self().update(
+            ancestors_are_public=Exists(
+                included_in_non_public_subtree.values("id"), negated=True))
+
+        # Correctly populate ancestors_are_public
+        self.refresh_from_db()
+
+    @classmethod
+    def fix_tree(cls, destructive=False):
+        super().fix_tree(destructive)
+        for node in cls.get_root_nodes():
+            # ancestors_are_public *must* be True for root nodes, or all trees
+            # will become non-public
+            if not node.ancestors_are_public:
+                node.ancestors_are_public = True
+                node.save()
+            else:
+                node.set_ancestors_are_public()
 
     def get_ancestors_and_self(self):
         """
@@ -176,7 +251,7 @@ class AbstractCategory(MP_Node):
         if you don't want to include the category itself. It's a separate
         function as it's commonly used in templates.
         """
-        return list(self.get_descendants()) + [self]
+        return self.get_tree(self)
 
     def get_url_cache_key(self):
         current_locale = get_language()
@@ -266,6 +341,7 @@ class AbstractProduct(models.Model):
     is_public = models.BooleanField(
         _('Is public'),
         default=True,
+        db_index=True,
         help_text=_("Show this product in search results and catalogue listings."))
 
     upc = NullCharField(
@@ -348,9 +424,6 @@ class AbstractProduct(models.Model):
             "or not"))
 
     objects = ProductQuerySet.as_manager()
-    # browsable property is deprecated and will be removed in Oscar 2.1
-    # Use Product.objects.browsable() instead.
-    browsable = BrowsableProductManager()
 
     class Meta:
         abstract = True
@@ -373,7 +446,7 @@ class AbstractProduct(models.Model):
 
     def get_absolute_url(self):
         """
-        Return a product's absolute url
+        Return a product's absolute URL
         """
         return reverse('catalogue:detail',
                        kwargs={'product_slug': self.slug, 'pk': self.id})
@@ -493,17 +566,17 @@ class AbstractProduct(models.Model):
         It's possible to have options product class-wide, and per product.
         """
         pclass_options = self.get_product_class().options.all()
-        return set(pclass_options) or set(self.product_options.all())
+        return pclass_options | self.product_options.all()
 
     @cached_property
     def has_options(self):
         # Extracting annotated value with number of product class options
         # from product list queryset.
-        num_product_class_options = getattr(self, 'num_product_class_options', None)
-        num_product_options = getattr(self, 'num_product_options', None)
-        if num_product_class_options is not None and num_product_options is not None:
-            return num_product_class_options > 0 or num_product_options > 0
-        return self.get_product_class().options.exists() or self.product_options.exists()
+        has_product_class_options = getattr(self, 'has_product_class_options', None)
+        has_product_options = getattr(self, 'has_product_options', None)
+        if has_product_class_options is not None and has_product_options is not None:
+            return has_product_class_options or has_product_options
+        return self.options.exists()
 
     @property
     def is_shipping_required(self):
@@ -551,7 +624,7 @@ class AbstractProduct(models.Model):
 
     def get_is_discountable(self):
         """
-        At the moment, is_discountable can't be set individually for child
+        At the moment, :py:attr:`.is_discountable` can't be set individually for child
         products; they inherit it from their parent.
         """
         if self.is_child:
@@ -580,7 +653,7 @@ class AbstractProduct(models.Model):
         return MissingProductImage()
 
     def get_all_images(self):
-        if self.is_child and not self.images.exists():
+        if self.is_child and not self.images.exists() and self.parent_id is not None:
             return self.parent.images.all()
         return self.images.all()
 
@@ -909,11 +982,11 @@ class AbstractProductAttribute(models.Model):
 
 class AbstractProductAttributeValue(models.Model):
     """
-    The "through" model for the m2m relationship between catalogue.Product and
-    catalogue.ProductAttribute.  This specifies the value of the attribute for
+    The "through" model for the m2m relationship between :py:class:`Product <.AbstractProduct>` and
+    :py:class:`ProductAttribute <.AbstractProductAttribute>`  This specifies the value of the attribute for
     a particular product
 
-    For example: number_of_pages = 295
+    For example: ``number_of_pages = 295``
     """
     attribute = models.ForeignKey(
         'catalogue.ProductAttribute',
@@ -943,10 +1016,10 @@ class AbstractProductAttributeValue(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Value option"))
     value_file = models.FileField(
-        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        upload_to=get_image_upload_path, max_length=255,
         blank=True, null=True)
     value_image = models.ImageField(
-        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        upload_to=get_image_upload_path, max_length=255,
         blank=True, null=True)
     value_entity = GenericForeignKey(
         'entity_content_type', 'entity_object_id')
@@ -1033,8 +1106,9 @@ class AbstractProductAttributeValue(models.Model):
     def value_as_html(self):
         """
         Returns a HTML representation of the attribute's value. To customise
-        e.g. image attribute values, declare a _image_as_html property and
-        return e.g. an <img> tag.  Defaults to the _as_text representation.
+        e.g. image attribute values, declare a ``_image_as_html`` property and
+        return e.g. an ``<img>`` tag.  Defaults to the ``_as_text``
+        representation.
         """
         property_name = '_%s_as_html' % self.attribute.type
         return getattr(self, property_name, self.value_as_text)
@@ -1134,11 +1208,11 @@ class MissingProductImage(object):
     """
     Mimics a Django file field by having a name property.
 
-    sorl-thumbnail requires all it's images to be in MEDIA_ROOT. This class
+    :py:mod:`sorl-thumbnail` requires all it's images to be in MEDIA_ROOT. This class
     tries symlinking the default "missing image" image in STATIC_ROOT
     into MEDIA_ROOT for convenience, as that is necessary every time an Oscar
     project is setup. This avoids the less helpful NotFound IOError that would
-    be raised when sorl-thumbnail tries to access it.
+    be raised when :py:mod:`sorl-thumbnail` tries to access it.
     """
 
     def __init__(self, name=None):
@@ -1182,7 +1256,7 @@ class AbstractProductImage(models.Model):
         related_name='images',
         verbose_name=_("Product"))
     original = models.ImageField(
-        _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
+        _("Original"), upload_to=get_image_upload_path, max_length=255)
     caption = models.CharField(_("Caption"), max_length=200, blank=True)
 
     #: Use display_order to determine which is the "primary" image

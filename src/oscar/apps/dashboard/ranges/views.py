@@ -1,4 +1,4 @@
-import os
+from io import TextIOWrapper
 
 from django.conf import settings
 from django.contrib import messages
@@ -9,7 +9,7 @@ from django.shortcuts import HttpResponse, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import ngettext
 from django.views.generic import (
     CreateView, DeleteView, ListView, UpdateView, View)
 
@@ -128,9 +128,10 @@ class RangeProductListView(BulkEditMixin, ListView):
         for product in products:
             range.remove_product(product)
         num_products = len(products)
-        messages.success(request, ungettext("Removed %d product from range",
-                                            "Removed %d products from range",
-                                            num_products) % num_products)
+        messages.success(
+            request,
+            ngettext("Removed %d product from range", "Removed %d products from range", num_products) % num_products
+        )
         return HttpResponseRedirect(self.get_success_url(request))
 
     def add_products(self, request):
@@ -154,9 +155,10 @@ class RangeProductListView(BulkEditMixin, ListView):
             range.add_product(product)
 
         num_products = len(products)
-        messages.success(request, ungettext("%d product added to range",
-                                            "%d products added to range",
-                                            num_products) % num_products)
+        messages.success(
+            request,
+            ngettext("%d product added to range", "%d products added to range", num_products) % num_products
+        )
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
             messages.warning(
@@ -175,8 +177,9 @@ class RangeProductListView(BulkEditMixin, ListView):
     def handle_file_products(self, request, range, form):
         if 'file_upload' not in request.FILES:
             return
-        upload = self.create_upload_object(request, range)
-        products = upload.process()
+        f = request.FILES['file_upload']
+        upload = self.create_upload_object(request, range, f)
+        products = upload.process(TextIOWrapper(f, encoding=request.encoding))
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
@@ -185,19 +188,13 @@ class RangeProductListView(BulkEditMixin, ListView):
                 {'range': range,
                  'upload': upload})
             messages.success(request, msg, extra_tags='safe noicon block')
-        upload.delete_file()
         self.check_imported_products_sku_duplicates(request, products)
 
-    def create_upload_object(self, request, range):
-        f = request.FILES['file_upload']
-        destination_path = os.path.join(settings.OSCAR_UPLOAD_ROOT, f.name)
-        with open(destination_path, 'wb+') as dest:
-            for chunk in f.chunks():
-                dest.write(chunk)
+    def create_upload_object(self, request, range, f):
         upload = RangeProductFileUpload.objects.create(
             range=range,
             uploaded_by=request.user,
-            filepath=destination_path,
+            filepath=f.name,
             size=f.size
         )
         return upload

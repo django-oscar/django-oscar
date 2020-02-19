@@ -3,7 +3,7 @@ from django.core import exceptions
 from django.utils.translation import gettext_lazy as _
 from treebeard.forms import movenodeform_factory
 
-from oscar.core.loading import get_class, get_model, get_classes
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.forms.widgets import DateTimePickerInput, ImageInput
 
@@ -26,7 +26,8 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 CategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'description', 'image'])
+    fields=['name', 'description', 'image', 'is_public'],
+    exclude=['ancestors_are_public'])
 
 
 class ProductClassSelectForm(forms.Form):
@@ -50,7 +51,7 @@ class ProductClassSelectForm(forms.Form):
 
 
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
+    upc = forms.CharField(max_length=64, required=False, label=_('UPC'))
     title = forms.CharField(
         max_length=255, required=False, label=_('Product title'))
 

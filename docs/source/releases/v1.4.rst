@@ -30,7 +30,7 @@ What's new in Oscar 1.4?
 ------------------------
 
  - Django 1.10 compatibility (:issue:`2055`)
- - If a product variant has no primary image then the primary image of the 
+ - If a product variant has no primary image then the primary image of the
    parent is now served. (:issue:`1998`)
 
 
@@ -50,11 +50,11 @@ Minor changes
    has a related entity (:issue:`2015`)
  - Fix the offers report in the dashboard on Python 3 (:issue:`2223`)
  - It is no longer needed to pass ``Application.urls`` to the ``include()``
-   function when creating the urlpatterns. You can pass it directly to the
+   function when creating the ``urlpatterns``. You can pass it directly to the
    ``url()`` function instead. (:issue:`2222`)
  - Oscar now set's the ``on_delete`` kwarg on all ForeignKey's since leaving
    it out is deprecated in Django 1.10+
- - ``oscar.core.compat.user_is_authenticated()`` is now used instead of 
+ - ``oscar.core.compat.user_is_authenticated()`` is now used instead of
    ``user.is_authenticated()``, since this resulted in Deprecation warnings
    for Django 1.10+. (:issue:`2222`)
 
@@ -66,4 +66,4 @@ The following packages are updated:
     - `treebeard >= 4.1.0` (Django 1.10 support)
     - `Pillow >= 3.4.2` (Security issue)
     - `phonenumbers>=6.3.0,<9.0.0` (Allow version 8.x)
-    - `django-tables2 >= 1.2.0,<2.0.0` 
+    - `django-tables2 >= 1.2.0,<2.0.0`

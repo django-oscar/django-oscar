@@ -1,12 +1,11 @@
 # coding=utf-8
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
-from django.core.exceptions import ValidationError
 
-from oscar.apps.catalogue.models import (Product, ProductClass,
-                                         ProductAttribute,
-                                         AttributeOption,
-                                         ProductRecommendation)
+from oscar.apps.catalogue.models import (
+    AttributeOption, Product, ProductAttribute,
+    ProductClass, ProductRecommendation)
 from oscar.test import factories
 
 
@@ -72,12 +71,6 @@ class TopLevelProductTests(ProductTests):
             product_class=self.product_class, title="Kopfhörer")
         self.assertEqual(set([product]), set(Product.objects.browsable()))
 
-    def test_top_level_products_are_part_of_browsable_deprecated(self):
-        # Test for deprecated Product.browsable.
-        product = Product.objects.create(
-            product_class=self.product_class, title="Kopfhörer")
-        self.assertEqual(set([product]), set(Product.browsable.all()))
-
 
 class ChildProductTests(ProductTests):
 
@@ -110,13 +103,6 @@ class ChildProductTests(ProductTests):
             product_class=self.product_class, parent=self.parent,
             structure=Product.CHILD)
         self.assertEqual(set([self.parent]), set(Product.objects.browsable()))
-
-    def test_child_products_are_not_part_of_browsable_deprecated(self):
-        # Test for deprecated Product.browsable
-        Product.objects.create(
-            product_class=self.product_class, parent=self.parent,
-            structure=Product.CHILD)
-        self.assertEqual(set([self.parent]), set(Product.browsable.all()))
 
 
 class TestAChildProduct(TestCase):

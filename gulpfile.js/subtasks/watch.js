@@ -1,5 +1,7 @@
-var gulp = require('gulp');
+const gulp = require('gulp'),
+    copy = require('./copy'),
+    less = require('./less');
 
-gulp.task('watch', function() {
-    gulp.watch('src/oscar/static/oscar/less/**/*.less', gulp.parallel('less'));
-});
+module.exports = function() {
+    gulp.watch('src/oscar/static_src/**/*', gulp.series(copy, less));
+}

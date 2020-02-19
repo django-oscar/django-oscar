@@ -1,8 +1,12 @@
+.. spelling::
+
+    Sorl
+
 =======================
 Oscar 2.0 release notes
 =======================
 
-:release: tbd
+:release: 2019-07-04
 
 Welcome to Oscar 2.0. This is a significant release which includes a number of
 new features and backwards incompatible changes. In particular the way Oscar
@@ -142,16 +146,16 @@ Minor changes
 - Dropped ``action=""`` and ``action="."`` attributes, following the lead of
   Django and as per the HTML5 specification.
 
-- Replaced use of Django's procedural auth views with the corresponding
+- Replaced use of Django's procedural authentication views with the corresponding
   class-based views.
 
 - ``OrderPlacementMixin.get_message_context()`` is now passed a ``code``
   argument specifying the communication event type code for the message being
   sent.
 
-- We've dropped the dependency on Unidecode due to license incompatibilities,
+- We've dropped the dependency on `Unidecode <https://pypi.org/project/Unidecode/>`_ due to license incompatibilities,
   ``oscar.core.utils.default_slugifier`` now uses
-  ``oscar.core.utils.cautious_slugify`` to handle unicode characters in slugs
+  ``oscar.core.utils.cautious_slugify`` to handle Unicode characters in slugs
   when ``OSCAR_SLUG_ALLOW_UNICODE`` is ``False``.
 
 - Fixed input validation for ``dashboard.offers.forms.BenefitForm`` when a
@@ -212,7 +216,7 @@ Backwards incompatible changes in Oscar 2.0
 - Renamed the modules containing the Django app config classes for Oscar apps
   (apart from the ``oscar`` app), from ``config`` to ``apps``.
 
-- Removed the ``app`` modules of Oscar apps, moving the configs (related to
+- Removed the ``app`` modules of Oscar apps, moving the configuration (related to
   permissions, URLconfs, and feature hiding) they contained into the apps'
   Django app config classes. They include the following attributes: ``name``
   (since renamed ``namespace``), ``login_url``, ``hidable_feature_name``,
@@ -245,10 +249,10 @@ Backwards incompatible changes in Oscar 2.0
 - Changed the calling signature for the ``oscar_fork_app`` management command.
   The ``app_label`` argument is the Django app label of the app to be forked.
   ``target_path`` is the directory into which the new app shall be copied.
-  ``new_app_subpackage`` is the optional dotted path to the subpackage of the
+  ``new_app_subpackage`` is the optional dotted path to the package of the
   new app, from which, together with the ``target_path``, the full Python path
   to the app will be derived. If ``new_app_subpackage`` is omitted, then the
-  subpackage of the app being forked will be used instead.
+  package of the app being forked will be used instead.
 
 - Removed the ``promotions`` app. The app is now available in a separate package
   - `django_oscar_promotions`_.
@@ -283,9 +287,11 @@ each app that you have forked, you will need to:
   ``oscar.core.application.OscarDashboardConfig``.
 
 - Move any changes you've made to the Oscar ``Application`` subclass in the ``app.py``
-  module, to the ``AppConfig`` subclass in the ``apps.py`` module.
-
-- Rename the ``name`` attribute to ``namespace``.
+  module, to the ``AppConfig`` subclass in the ``apps.py`` module. When moving
+  the ``name`` attribute over, rename it to ``namespace``. Your merged app
+  config class should end up having a ``namespace`` (for declaring the URL
+  application namespace) as well as ``name`` (for configuring the
+  ``django.apps.config.AppConfig.name``) attribute.
 
 - In your project URLconf and in `get_urls` methods replace the ``application``
   import by finding the app in the Django app registry.
@@ -298,6 +304,18 @@ each app that you have forked, you will need to:
 - If the urls you're including don't define an instance namespace then use
   ``include(application.urls[0])``, which only passes in the list of URL
   patterns.
+
+  .. note::
+
+    Because of the way dynamic class loading now works, when forking dashboard
+    apps, the ``oscar.apps.dashboard`` app also needs to be forked; and the
+    forked dashboard app's code must live inside the forked
+    ``oscar.apps.dashboard`` app's directory.
+
+    Similarly, when forking ``oscar.apps.catalogue.reviews``,
+    ``oscar.apps.catalogue`` needs to be forked as well; and the forked
+    ``oscar.apps.catalogue.reviews`` app's code must live inside the forked
+    ``oscar.apps.catalogue`` app's directory.
 
 Dependency changes
 ------------------
@@ -327,5 +345,5 @@ Deprecated features
 - ``catalogue.managers.BrowsableProductManager`` is deprecated.  Use
   ``Product.objects.browsable()`` instead.
 
-- ``catalogue.Product.browseable`` is deprecated. Use
-  ``Product.objects.browseable()`` instead.
+- ``catalogue.Product.browsable`` is deprecated. Use
+  ``Product.objects.browsable()`` instead.

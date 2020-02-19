@@ -4,7 +4,7 @@ Sandbox site
 
 This site is deployed there:
 
-http://latest.oscarcommerce.com
+https://latest.oscarcommerce.com
 -------------------------------
 
 This is a vanilla install of Oscar with as little customisation as possible to
@@ -17,4 +17,4 @@ It does have a few customisations:
 * A profile model with a few fields, designed to test Oscar's account section
   which should automatically allow the profile fields to be edited.
 
-It is deployed automatically to: http://latest.oscarcommerce.com
+It is deployed automatically to: https://latest.oscarcommerce.com

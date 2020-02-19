@@ -1,10 +1,9 @@
 import os
-from os.path import exists, join
 import sys
 import tempfile
+from os.path import exists, join
 
 import pytest
-
 from django.conf import settings
 from django.test import TestCase, override_settings
 
@@ -106,7 +105,7 @@ class TestForkApp(TestCase):
     def test_fork_third_party(self):
         tmpdir = tempfile.mkdtemp()
         installed_apps = list(settings.INSTALLED_APPS)
-        installed_apps.append('thirdparty_package.apps.myapp')
+        installed_apps.append('thirdparty_package.apps.myapp.apps.MyAppConfig')
         with override_settings(INSTALLED_APPS=installed_apps):
             customisation.fork_app('myapp', tmpdir, 'custom_myapp')
             forked_app_dir = join(tmpdir, 'custom_myapp')
@@ -117,7 +116,6 @@ class TestForkApp(TestCase):
             config_module = __import__('custom_myapp.apps', fromlist=['CustomMyAppConfig'])
             assert hasattr(config_module, 'MyAppConfig')
             assert config_module.MyAppConfig.name.endswith('.custom_myapp')
-            assert config_module.MyAppConfig.label == 'myapp'
 
     def test_absolute_target_path(self):
         tmpdir = tempfile.mkdtemp()

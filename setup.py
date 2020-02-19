@@ -18,13 +18,13 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=1.11,<2.3',
+    'django>=2.2,<3.1',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
-    'pillow>=4.0',
+    'pillow>=6.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
-    'django-extra-views>=0.11,<0.12',
+    'django-extra-views>=0.13,<0.14',
     # Search support
-    'django-haystack>=2.5.0,<3.0.0',
+    'django-haystack>=3.0b1',
     # Treebeard is used for categories
     'django-treebeard>=4.3.0',
     # Babel is used for currency formatting
@@ -33,37 +33,38 @@ install_requires = [
     'purl>=0.7',
     # For phone number field
     'phonenumbers',
-    'django-phonenumber-field>=2.0,<2.1',
+    'django-phonenumber-field>=3.0.0,<4.0.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
-    'django-tables2>=1.19,<2.0',
+    'django-tables2>=2.2,<2.3',
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
 ]
 
+sorl_thumbnail_version = 'sorl-thumbnail>=12.6,<12.7'
+easy_thumbnails_version = 'easy-thumbnails>=2.7,<2.8'
+
 docs_requires = [
-    'Sphinx==2.0.1',
+    'Sphinx==2.2.2',
     'sphinxcontrib-napoleon==0.7',
+    'sphinxcontrib-spelling==4.3.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-issues==1.2.0',
+    sorl_thumbnail_version,
+    easy_thumbnails_version,
 ]
-
-sorl_thumbnail_version = 'sorl-thumbnail>=12.4.1,<12.5'
-easy_thumbnails_version = 'easy-thumbnails==2.5'
 
 test_requires = [
     'WebTest>=2.0,<2.1',
-    'coverage>=4.5,<4.6',
-    'django-webtest==1.9.4',
-    'py>=1.4.31',
-    'psycopg2>=2.7,<2.8',
-    'pytest>=4.0,<4.5',
-    'pytest-cov==2.6.1',
-    'pytest-django==3.4.8',
-    'pytest-xdist>=1.25,<1.28',
-    'tox>=3.0,<3.9',
+    'coverage>=5.0,<5.1',
+    'django-webtest>=1.9,<1.10',
+    'psycopg2-binary>=2.8,<2.9',
+    'pytest-django>=3.7,<3.8',
+    'pytest-xdist>=1.31,<1.32',
+    'tox>=3.14,<3.15',
+    'freezegun>=0.3,<0.4',
     sorl_thumbnail_version,
     easy_thumbnails_version,
 ]
@@ -94,12 +95,11 @@ setup(
         'easy-thumbnails': [easy_thumbnails_version],
     },
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 1.11',
-        'Framework :: Django :: 2.1',
         'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: Unix',

@@ -1,5 +1,4 @@
 from django.utils.translation import gettext_lazy as _
-
 from django_tables2 import A, Column, LinkColumn, TemplateColumn
 
 from oscar.core.loading import get_class
@@ -18,7 +17,7 @@ class UserTable(DashboardTable):
     active = Column(accessor='is_active')
     staff = Column(accessor='is_staff')
     date_registered = Column(accessor='date_joined')
-    num_orders = Column(accessor='orders.count', orderable=False, verbose_name=_('Number of Orders'))
+    num_orders = Column(accessor='orders__count', orderable=False, verbose_name=_('Number of Orders'))
     actions = TemplateColumn(
         template_name='oscar/dashboard/users/user_row_actions.html',
         verbose_name=' ')
@@ -26,4 +25,4 @@ class UserTable(DashboardTable):
     icon = "group"
 
     class Meta(DashboardTable.Meta):
-        template = 'oscar/dashboard/users/table.html'
+        template_name = 'oscar/dashboard/users/table.html'

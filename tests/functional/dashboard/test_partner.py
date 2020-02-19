@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-from oscar.test.testcases import WebTestCase
 from oscar.apps.partner import models
+from oscar.test.testcases import WebTestCase
 
 
 class TestPartnerDashboard(WebTestCase):

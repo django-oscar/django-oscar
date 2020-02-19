@@ -3,7 +3,7 @@ import logging
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext_lazy as _
 
-from oscar.apps.customer.alerts import utils
+from oscar.apps.customer.alerts.utils import AlertsDispatcher
 
 logger = logging.getLogger(__name__)
 
@@ -22,4 +22,4 @@ class Command(BaseCommand):
         availability and send out email alerts when a product is
         available to buy.
         """
-        utils.send_alerts()
+        AlertsDispatcher().send_alerts()

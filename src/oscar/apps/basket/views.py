@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, View
 from extra_views import ModelFormSetView
@@ -13,6 +12,7 @@ from extra_views import ModelFormSetView
 from oscar.apps.basket.signals import (
     basket_addition, voucher_addition, voucher_removal)
 from oscar.core import ajax
+from oscar.core.compat import url_has_allowed_host_and_scheme
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
@@ -46,6 +46,10 @@ class BasketView(ModelFormSetView):
         return kwargs
 
     def get_queryset(self):
+        """
+        Return list of :py:class:`Line <oscar.apps.basket.abstract_models.AbstractLine>`
+        instances associated with the current basket.
+        """  # noqa: E501
         return self.request.basket.all_lines()
 
     def get_shipping_methods(self, basket):
@@ -152,7 +156,7 @@ class BasketView(ModelFormSetView):
 
         for form in formset:
             if (hasattr(form, 'cleaned_data')
-                    and getattr(form.cleaned_data, 'save_for_later', False)):
+                    and form.cleaned_data.get('save_for_later', False)):
                 line = form.instance
                 if self.request.user.is_authenticated:
                     self.move_line_to_saved_basket(line)
@@ -243,7 +247,7 @@ class BasketAddView(FormView):
     """
     Handles the add-to-basket submissions, which are triggered from various
     parts of the site. The add-to-basket form is loaded into templates using
-    a templatetag from module basket_tags.py.
+    a templatetag from :py:mod:`oscar.templatetags.basket_tags`.
     """
     form_class = AddToBasketForm
     product_model = get_model('catalogue', 'product')
@@ -298,7 +302,7 @@ class BasketAddView(FormView):
 
     def get_success_url(self):
         post_url = self.request.POST.get('next')
-        if post_url and is_safe_url(post_url, self.request.get_host()):
+        if post_url and url_has_allowed_host_and_scheme(post_url, self.request.get_host()):
             return post_url
         return safe_referrer(self.request, 'basket:summary')
 
@@ -427,6 +431,11 @@ class SavedView(ModelFormSetView):
         return redirect('basket:summary')
 
     def get_queryset(self):
+        """
+        Return list of :py:class:`Line <oscar.apps.basket.abstract_models.AbstractLine>`
+        instances associated with the saved basked associated with the currently
+        authenticated user.
+        """  # noqa: E501
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
             saved_basket.strategy = self.request.strategy

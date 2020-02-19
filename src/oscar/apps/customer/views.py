@@ -5,7 +5,6 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -23,7 +22,7 @@ from . import signals
 
 PageTitleMixin, RegisterUserMixin = get_classes(
     'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
-Dispatcher = get_class('customer.utils', 'Dispatcher')
+CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
                        'OrderSearchForm'])
@@ -31,11 +30,8 @@ ProfileForm, ConfirmPasswordForm = get_classes(
     'customer.forms', ['ProfileForm', 'ConfirmPasswordForm'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Order = get_model('order', 'Order')
-Line = get_model('basket', 'Line')
-Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
-Email = get_model('customer', 'Email')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
+Email = get_model('communication', 'Email')
 
 User = get_user_model()
 
@@ -135,6 +131,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
 
     def get_login_form_kwargs(self, bind_data=False):
         kwargs = {}
+        kwargs['request'] = self.request
         kwargs['host'] = self.request.get_host()
         kwargs['prefix'] = self.login_prefix
         kwargs['initial'] = {
@@ -304,7 +301,6 @@ class ProfileView(PageTitleMixin, generic.TemplateView):
 class ProfileUpdateView(PageTitleMixin, generic.FormView):
     form_class = ProfileForm
     template_name = 'oscar/customer/profile/profile_form.html'
-    communication_type_code = 'EMAIL_CHANGED'
     page_title = _('Edit Profile')
     active_tab = 'profile'
     success_url = reverse_lazy('customer:profile-view')
@@ -333,18 +329,19 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
             # Email address has changed - send a confirmation email to the old
             # address including a password reset link in case this is a
             # suspicious change.
-            ctx = {
-                'user': self.request.user,
-                'site': get_current_site(self.request),
-                'reset_url': get_password_reset_url(old_user),
-                'new_email': new_email,
-            }
-            msgs = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(old_user, msgs)
+            self.send_email_changed_email(old_user, new_email)
 
         messages.success(self.request, _("Profile updated"))
         return redirect(self.get_success_url())
+
+    def send_email_changed_email(self, old_user, new_email):
+        user = self.request.user
+        extra_context = {
+            'user': user,
+            'reset_url': get_password_reset_url(old_user),
+            'new_email': new_email,
+        }
+        CustomerDispatcher().send_email_changed_email_for_user(old_user, extra_context)
 
 
 class ProfileDeleteView(PageTitleMixin, generic.FormView):
@@ -370,7 +367,6 @@ class ProfileDeleteView(PageTitleMixin, generic.FormView):
 class ChangePasswordView(PageTitleMixin, generic.FormView):
     form_class = PasswordChangeForm
     template_name = 'oscar/customer/profile/change_password_form.html'
-    communication_type_code = 'PASSWORD_CHANGED'
     page_title = _('Change Password')
     active_tab = 'profile'
     success_url = reverse_lazy('customer:profile-view')
@@ -385,16 +381,17 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
         update_session_auth_hash(self.request, self.request.user)
         messages.success(self.request, _("Password updated"))
 
-        ctx = {
-            'user': self.request.user,
-            'site': get_current_site(self.request),
-            'reset_url': get_password_reset_url(self.request.user),
-        }
-        msgs = CommunicationEventType.objects.get_and_render(
-            code=self.communication_type_code, context=ctx)
-        Dispatcher().dispatch_user_messages(self.request.user, msgs)
+        self.send_password_changed_email()
 
         return redirect(self.get_success_url())
+
+    def send_password_changed_email(self):
+        user = self.request.user
+        extra_context = {
+            'user': user,
+            'reset_url': get_password_reset_url(self.request.user),
+        }
+        CustomerDispatcher().send_password_changed_email_for_user(user, extra_context)
 
 
 # =============
@@ -403,18 +400,22 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
 
 class EmailHistoryView(PageTitleMixin, generic.ListView):
     context_object_name = "emails"
-    template_name = 'oscar/customer/email/email_list.html'
+    template_name = 'oscar/communication/email/email_list.html'
     paginate_by = settings.OSCAR_EMAILS_PER_PAGE
     page_title = _('Email History')
     active_tab = 'emails'
 
     def get_queryset(self):
+        """
+        Return Queryset of :py:class:`Email <oscar.apps.customer.abstract_models.AbstractEmail>`
+        instances, that has been sent to the currently authenticated user.
+        """  # noqa
         return Email._default_manager.filter(user=self.request.user)
 
 
 class EmailDetailView(PageTitleMixin, generic.DetailView):
     """Customer email"""
-    template_name = "oscar/customer/email/email_detail.html"
+    template_name = "oscar/communication/email/email_detail.html"
     context_object_name = 'email'
     active_tab = 'emails'
 
@@ -469,6 +470,10 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
+        """
+        Return Queryset of :py:class:`Order <oscar.apps.order.abstract_models.AbstractOrder>`
+        instances for the currently authenticated user.
+        """  # noqa
         qs = self.model._default_manager.filter(user=self.request.user)
         if self.form.is_bound and self.form.is_valid():
             qs = qs.filter(**self.form.get_filters())

@@ -2,7 +2,7 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.apps.offer import models, utils, custom
+from oscar.apps.offer import custom, models, utils
 from oscar.test import factories
 from oscar.test.basket import add_product
 

@@ -33,7 +33,7 @@ class Shop(OscarConfig):
         from oscar.views.decorators import login_forbidden
 
         urls = [
-            url(r'^$', RedirectView.as_view(url=reverse_lazy('catalogue:index')), name='home'),
+            url(r'^$', RedirectView.as_view(url=settings.OSCAR_HOMEPAGE), name='home'),
             url(r'^catalogue/', self.catalogue_app.urls),
             url(r'^basket/', self.basket_app.urls),
             url(r'^checkout/', self.checkout_app.urls),

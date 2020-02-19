@@ -40,14 +40,10 @@ def inherit_app_config(local_app_folder_path, local_app_name, app_config):
         join(local_app_folder_path, 'apps.py'),
         "import {app_config_class_module} as apps\n\n\n"
         "class {app_config_class_name}(apps.{app_config_class_name}):\n"
-        "    label = '{app_label}'\n"
-        "    name = '{app_name}'\n"
-        "    verbose_name = '{app_verbose_name}'\n".format(
+        "    name = '{app_name}'\n".format(
             app_config_class_module=app_config.__module__,
             app_config_class_name=app_config.__class__.__name__,
-            app_label=app_config.label,
-            app_name=local_app_name,
-            app_verbose_name=app_config.verbose_name))
+            app_name=local_app_name))
 
 
 def fork_app(label, local_folder_path, local_app_subpackage=None, logger=None):

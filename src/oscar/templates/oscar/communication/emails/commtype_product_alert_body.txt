@@ -1,0 +1,14 @@
+{% load i18n %}{% load url_tags %}{% if alert.user and alert.user.get_short_name %}{% blocktrans with name=alert.user.get_short_name %}Dear {{ name }},{% endblocktrans %}{% else %}{% trans "Hello," %}{% endif %}
+{% absolute_url site.domain alert.product.get_absolute_url as url %}
+{% blocktrans with title=alert.product.get_title|safe url=url %}
+We are happy to inform you that our product '{{ title }}' is back in stock:
+{{ url }}
+{% endblocktrans %}{% if hurry %}{% blocktrans %}
+Beware that the amount of items in stock is limited. Be quick or someone might get there first.
+{% endblocktrans %}{% endif %}{% blocktrans with site_name=site.name %}
+With this email we have disabled your alert automatically and you will not
+receive any further email regarding this product.
+
+Thanks for your interest,
+The {{ site_name }} Team
+{% endblocktrans %}

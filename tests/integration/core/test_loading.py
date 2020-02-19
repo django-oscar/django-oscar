@@ -1,13 +1,13 @@
-from os.path import dirname
 import sys
+from os.path import dirname
 
 from django.apps import AppConfig, apps
-from django.test import override_settings, TestCase
 from django.conf import settings
+from django.test import TestCase, override_settings
 
 from oscar.core.loading import (
-    get_model, AppNotFoundError, get_classes, get_class, get_class_loader,
-    ClassNotFoundError)
+    AppNotFoundError, ClassNotFoundError, get_class, get_class_loader,
+    get_classes, get_model)
 from tests import temporary_python_path
 from tests._site.loader import DummyClass
 
@@ -50,7 +50,8 @@ class TestClassLoading(TestCase):
         triggered when we override the INSTALLED_APPS setting.
         """
         apps = list(settings.INSTALLED_APPS)
-        apps[apps.index('tests._site.apps.catalogue')] = 'tests._site.import_error_app.catalogue'
+        replaced_app_idx = apps.index('tests._site.apps.catalogue.apps.CatalogueConfig')
+        apps[replaced_app_idx] = 'tests._site.import_error_app.catalogue.apps.CatalogueConfig'
         with override_settings(INSTALLED_APPS=apps):
             with self.assertRaises(ImportError):
                 get_class('catalogue.import_error_module', 'ImportErrorClass')
@@ -60,7 +61,8 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests._site.apps.shipping'
+        replaced_app_idx = self.installed_apps.index('oscar.apps.shipping.apps.ShippingConfig')
+        self.installed_apps[replaced_app_idx] = 'tests._site.apps.shipping.apps.ShippingConfig'
 
     def test_loading_class_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
@@ -87,8 +89,8 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
         import tests._site.shipping
         path = dirname(dirname(tests._site.shipping.__file__))
         with temporary_python_path([path]):
-            self.installed_apps[
-                self.installed_apps.index('tests._site.apps.shipping')] = 'shipping'
+            replaced_app_idx = self.installed_apps.index('tests._site.apps.shipping.apps.ShippingConfig')
+            self.installed_apps[replaced_app_idx] = 'shipping.apps.ShippingConfig'
             with override_settings(INSTALLED_APPS=self.installed_apps):
                 (Free,) = get_classes('shipping.methods', ('Free',))
                 self.assertEqual('shipping.methods', Free.__module__)
@@ -108,7 +110,8 @@ class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests._site.apps.shipping'
+        replaced_app_idx = self.installed_apps.index('oscar.apps.shipping.apps.ShippingConfig')
+        self.installed_apps[replaced_app_idx] = 'tests._site.apps.shipping.apps.ShippingConfig'
 
     def test_loading_class_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
@@ -160,14 +163,14 @@ class TestDynamicLoadingOn3rdPartyApps(TestCase):
         sys.path.remove('./tests/_site/')
 
     def test_load_core_3rd_party_class_correctly(self):
-        self.installed_apps.append('thirdparty_package.apps.myapp')
+        self.installed_apps.append('thirdparty_package.apps.myapp.apps.MyAppConfig')
         with override_settings(INSTALLED_APPS=self.installed_apps):
             Cow, Goat = get_classes('myapp.models', ('Cow', 'Goat'), self.core_app_prefix)
             self.assertEqual('thirdparty_package.apps.myapp.models', Cow.__module__)
             self.assertEqual('thirdparty_package.apps.myapp.models', Goat.__module__)
 
     def test_load_overriden_3rd_party_class_correctly(self):
-        self.installed_apps.append('tests._site.apps.myapp')
+        self.installed_apps.append('tests._site.apps.myapp.apps.TestConfig')
         with override_settings(INSTALLED_APPS=self.installed_apps):
             Cow, Goat = get_classes('myapp.models', ('Cow', 'Goat'), self.core_app_prefix)
             self.assertEqual('thirdparty_package.apps.myapp.models', Cow.__module__)

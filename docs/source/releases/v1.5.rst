@@ -20,7 +20,7 @@ Compatibility
 -------------
 
 Oscar 1.5 is compatible with Django 1.8, 1.10 and 1.11 as well as Python 2.7,
-3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is no longer officialy supported
+3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is no longer officially supported
 since it is longer supported by Django (end of life).
 
 
@@ -126,7 +126,7 @@ Backwards incompatible changes in Oscar 1.5
    more. Instead, it just hides the field declared by AddToBasketForm
    and sets the quantity to one. This means ``SimpleAddToBasketForm``
    doesn't need to be overridden for most cases, but please check
-   things still work as expected for you if you have customized it.
+   things still work as expected for you if you have customised it.
 
  - ``OSCAR_CURRENCY_FORMAT`` setting changed to dictionary form in order to
    support multi-currency for currency formatting. You can set `format`,

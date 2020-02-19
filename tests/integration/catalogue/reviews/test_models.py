@@ -1,10 +1,9 @@
-from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 
-from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews import models
-from oscar.test.factories import create_product
-from oscar.test.factories import UserFactory
+from oscar.core.compat import get_user_model
+from oscar.test.factories import UserFactory, create_product
 
 User = get_user_model()
 

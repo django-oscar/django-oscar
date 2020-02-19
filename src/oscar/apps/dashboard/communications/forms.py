@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.loading import get_model
 
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
 Order = get_model('order', 'Order')
 
 

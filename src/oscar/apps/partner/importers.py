@@ -1,18 +1,21 @@
+import csv
 import os
 from decimal import Decimal as D
 
 from django.db.transaction import atomic
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.compat import UnicodeCSVReader
-from oscar.core.loading import get_class, get_classes
+from oscar.core.loading import get_class, get_model
 
 ImportingError = get_class('partner.exceptions', 'ImportingError')
-Partner, StockRecord = get_classes('partner.models', ['Partner',
-                                                      'StockRecord'])
-ProductClass, Product, Category, ProductCategory = get_classes(
-    'catalogue.models', ('ProductClass', 'Product', 'Category',
-                         'ProductCategory'))
+
+Category = get_model('catalogue', 'Category')
+Partner = get_model('partner', 'Partner')
+Product = get_model('catalogue', 'Product')
+ProductCategory = get_model('catalogue', 'ProductCategory')
+ProductClass = get_model('catalogue', 'ProductClass')
+StockRecord = get_model('partner', 'StockRecord')
+
 create_from_breadcrumbs = get_class('catalogue.categories', 'create_from_breadcrumbs')
 
 
@@ -52,9 +55,8 @@ class CatalogueImporter(object):
         stats = {'new_items': 0,
                  'updated_items': 0}
         row_number = 0
-        with UnicodeCSVReader(
-                file_path, delimiter=self._delimiter,
-                quotechar='"', escapechar='\\') as reader:
+        with open(file_path, 'rt') as f:
+            reader = csv.reader(f, escapechar='\\')
             for row in reader:
                 row_number += 1
                 self._import_row(row_number, row, stats)

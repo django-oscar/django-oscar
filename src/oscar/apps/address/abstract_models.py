@@ -399,7 +399,7 @@ class AbstractAddress(models.Model):
 
 class AbstractCountry(models.Model):
     """
-    International Organization for Standardization (ISO) 3166-1 Country list.
+    `ISO 3166 Country Codes <https://www.iso.org/iso-3166-country-codes.html>`_
 
     The field names are a bit awkward, but kept for backwards compatibility.
     pycountry's syntax of alpha2, alpha3, name and official_name seems sane.
@@ -446,10 +446,10 @@ class AbstractCountry(models.Model):
         """
         Shorthand for the ISO 3166 numeric code.
 
-        iso_3166_1_numeric used to wrongly be a integer field, but has to be
-        padded with leading zeroes. It's since been converted to a char field,
-        but the database might still contain non-padded strings. That's why
-        the padding is kept.
+        :py:attr:`.iso_3166_1_numeric` used to wrongly be a integer field, but has to
+        be padded with leading zeroes. It's since been converted to a char
+        field, but the database might still contain non-padded strings. That's
+        why the padding is kept.
         """
         return "%.03d" % int(self.iso_3166_1_numeric)
 

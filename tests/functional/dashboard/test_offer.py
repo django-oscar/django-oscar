@@ -1,8 +1,8 @@
 from django.urls import reverse
 from django.utils import timezone
 
-from oscar.test import testcases, factories
 from oscar.apps.offer import models
+from oscar.test import factories, testcases
 
 
 class TestAnAdmin(testcases.WebTestCase):

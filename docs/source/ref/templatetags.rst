@@ -133,7 +133,7 @@ Load these tags using ``{% load image_tags %}``.
 ``oscar_thumbnail``
 ~~~~~~~~~~~~~~~~~~~
 
-Returns the thumbnail url for a source file.
+Returns the thumbnail URL for a source file.
 
 .. code-block:: html+django
 
@@ -159,13 +159,15 @@ or
 
     {% oscar_thumbnail [source] [size] [options] as [variable] %}
 
+When the ``OSCAR_THUMBNAIL_DEBUG`` setting is set to ``True``, this template tag will fail with an error if an exception is raised while generating the thumbnail. If set to ``False``, an empty string is returned.
+
 The arguments are:
 
 ===================  =====================================================
 Argument             Description
 ===================  =====================================================
-``source``           Can be an ImageField, FileField, a file name (assuming default_storage), a url.
-``size``             Specified as "WIDTHxHEIGHT", "WIDTHx" or "xHEIGHT". Width and height are in pixels.
+``source``           Can be an ImageField, FileField, a file name (assuming default_storage), a URL.
+``size``             Specified as :samp:`{width}x{height}`, :samp:`{width}x` or :samp:`x{height}`. Width and height are in pixels.
                      E.g. "70x120", "50x", "x155".
 ``options``          Space separated list of options which are used when processing the image to a thumbnail.
                      E.g. option ``upscale=False``.
@@ -191,3 +193,30 @@ This renders something like:
 .. code-block:: html
 
     Time since creation: 2 days
+
+
+URL tags
+-----------
+
+Load these tags using ``{% load url_tags %}``.
+
+``absolute_url``
+~~~~~~~~~~~~~~~~~~
+
+Returns an absolute URL for the provided domain and path.
+
+.. code-block:: html+django
+
+    <a href="{% absolute_url site.domain reset_url %}" class="btn-primary">Reset password</a>
+
+This tag can be used with ``blocktrans`` as follows:
+
+.. code-block:: html+django
+
+    {% absolute_url site.domain reset_url as absolute_reset_url %}
+    {% blocktrans with url=absolute_reset_url %}
+        You can reset your password here - {{ url }}
+    {% endblocktrans %}
+
+The schema for absolute url can be set through ``OSCAR_URL_SCHEMA``
+setting (``http`` by default).

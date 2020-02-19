@@ -1,10 +1,11 @@
 from collections import defaultdict
 
 from django.db import models
-from django.db.models import Count
+from django.db.models import Exists, OuterRef
 from django.db.models.constants import LOOKUP_SEP
+from treebeard.mp_tree import MP_NodeQuerySet
 
-from oscar.core.decorators import deprecated
+from oscar.core.loading import get_model
 
 
 class AttributeFilter(dict):
@@ -92,10 +93,13 @@ class ProductQuerySet(models.query.QuerySet):
         Applies select_related and prefetch_related for commonly related
         models to save on queries
         """
+        Option = get_model('catalogue', 'Option')
+        product_class_options = Option.objects.filter(productclass=OuterRef('product_class'))
+        product_options = Option.objects.filter(product=OuterRef('pk'))
         return self.select_related('product_class')\
             .prefetch_related('children', 'product_options', 'product_class__options', 'stockrecords', 'images') \
-            .annotate(num_product_class_options=Count('product_class__options'),
-                      num_product_options=Count('product_options'))
+            .annotate(has_product_class_options=Exists(product_class_options),
+                      has_product_options=Exists(product_options))
 
     def browsable(self):
         """
@@ -112,31 +116,10 @@ class ProductQuerySet(models.query.QuerySet):
         return self.filter(parent=None)
 
 
-@deprecated
-class ProductManager(models.Manager):
-    """
-    Deprecated. Use ProductQuerySet.as_manager() instead.
-    """
-
-    def get_queryset(self):
-        return ProductQuerySet(self.model, using=self._db)
+class CategoryQuerySet(MP_NodeQuerySet):
 
     def browsable(self):
-        return self.get_queryset().browsable()
-
-    def base_queryset(self):
-        return self.get_queryset().base_queryset()
-
-
-class BrowsableProductManager(ProductManager):
-    """
-    Deprecated. Use Product.objects.browsable() instead.
-
-    The @deprecated decorator isn't applied to the class, because doing
-    so would log warnings, and we still initialise this class
-    in the Product.browsable for backward compatibility.
-    """
-
-    @deprecated
-    def get_queryset(self):
-        return super().get_queryset().browsable()
+        """
+        Excludes non-public categories
+        """
+        return self.filter(is_public=True, ancestors_are_public=True)

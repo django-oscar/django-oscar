@@ -1,9 +1,13 @@
+.. spelling::
+
+    Solr
+
 ======================
 Building your own shop
 ======================
 
 For simplicity, let's assume you're building a new e-commerce project from
-scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
+scratch and have decided to use Oscar.  Let's call this project ``frobshop``
 
 .. tip::
 
@@ -23,7 +27,7 @@ project:
     $ pip install django-oscar
     $ django-admin.py startproject frobshop
 
-If you do not have mkvirtualenv, then replace that line with::
+If you do not have :command:`mkvirtualenv`, then replace that line with::
 
     $ virtualenv oscar
     $ . ./oscar/bin/activate
@@ -60,7 +64,7 @@ Now add Oscar's context processors to the template settings, listed below:
 
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.checkout.context_processors.checkout',
-    'oscar.apps.customer.notifications.context_processors.notifications',
+    'oscar.apps.communication.notifications.context_processors.notifications',
     'oscar.core.context_processors.metadata',
 
 Next, modify ``INSTALLED_APPS`` to be a list, and add ``django.contrib.sites``,
@@ -80,35 +84,36 @@ depends on. Also set ``SITE_ID``:
         'django.contrib.sites',
         'django.contrib.flatpages',
 
-        'oscar',
-        'oscar.apps.analytics',
-        'oscar.apps.checkout',
-        'oscar.apps.address',
-        'oscar.apps.shipping',
-        'oscar.apps.catalogue',
-        'oscar.apps.catalogue.reviews',
-        'oscar.apps.partner',
-        'oscar.apps.basket',
-        'oscar.apps.payment',
-        'oscar.apps.offer',
-        'oscar.apps.order',
-        'oscar.apps.customer',
-        'oscar.apps.search',
-        'oscar.apps.voucher',
-        'oscar.apps.wishlists',
-        'oscar.apps.dashboard',
-        'oscar.apps.dashboard.reports',
-        'oscar.apps.dashboard.users',
-        'oscar.apps.dashboard.orders',
-        'oscar.apps.dashboard.catalogue',
-        'oscar.apps.dashboard.offers',
-        'oscar.apps.dashboard.partners',
-        'oscar.apps.dashboard.pages',
-        'oscar.apps.dashboard.ranges',
-        'oscar.apps.dashboard.reviews',
-        'oscar.apps.dashboard.vouchers',
-        'oscar.apps.dashboard.communications',
-        'oscar.apps.dashboard.shipping',
+        'oscar.config.Shop',
+        'oscar.apps.analytics.apps.AnalyticsConfig',
+        'oscar.apps.checkout.apps.CheckoutConfig',
+        'oscar.apps.address.apps.AddressConfig',
+        'oscar.apps.shipping.apps.ShippingConfig',
+        'oscar.apps.catalogue.apps.CatalogueConfig',
+        'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
+        'oscar.apps.communication.apps.CommunicationConfig',
+        'oscar.apps.partner.apps.PartnerConfig',
+        'oscar.apps.basket.apps.BasketConfig',
+        'oscar.apps.payment.apps.PaymentConfig',
+        'oscar.apps.offer.apps.OfferConfig',
+        'oscar.apps.order.apps.OrderConfig',
+        'oscar.apps.customer.apps.CustomerConfig',
+        'oscar.apps.search.apps.SearchConfig',
+        'oscar.apps.voucher.apps.VoucherConfig',
+        'oscar.apps.wishlists.apps.WishlistsConfig',
+        'oscar.apps.dashboard.apps.DashboardConfig',
+        'oscar.apps.dashboard.reports.apps.ReportsDashboardConfig',
+        'oscar.apps.dashboard.users.apps.UsersDashboardConfig',
+        'oscar.apps.dashboard.orders.apps.OrdersDashboardConfig',
+        'oscar.apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
+        'oscar.apps.dashboard.offers.apps.OffersDashboardConfig',
+        'oscar.apps.dashboard.partners.apps.PartnersDashboardConfig',
+        'oscar.apps.dashboard.pages.apps.PagesDashboardConfig',
+        'oscar.apps.dashboard.ranges.apps.RangesDashboardConfig',
+        'oscar.apps.dashboard.reviews.apps.ReviewsDashboardConfig',
+        'oscar.apps.dashboard.vouchers.apps.VouchersDashboardConfig',
+        'oscar.apps.dashboard.communications.apps.CommunicationsDashboardConfig',
+        'oscar.apps.dashboard.shipping.apps.ShippingDashboardConfig',
 
         # 3rd-party apps that oscar depends on
         'widget_tweaks',
@@ -146,7 +151,7 @@ your ``MIDDLEWARE`` setting.
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
 
-Set your auth backends to:
+Set your authentication backends to:
 
 .. code-block:: django
 
@@ -295,13 +300,13 @@ manually mark at least one country as a shipping country.
 .. _pycountry: https://pypi.python.org/pypi/pycountry
 
 
-Creating product classes and fulfillment partners
+Creating product classes and fulfilment partners
 =================================================
 
 Every Oscar deployment needs at least one
 :class:`product class <oscar.apps.catalogue.abstract_models.AbstractProductClass>`
 and one
-:class:`fulfillment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
+:class:`fulfilment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
 These aren't created automatically as they're highly specific to the shop you
 want to build.
 

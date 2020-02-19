@@ -12,7 +12,6 @@ from django_tables2 import SingleTableMixin, SingleTableView
 from oscar.core.loading import get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 
-
 (ProductForm,
  ProductClassSelectForm,
  ProductSearchForm,
@@ -112,7 +111,7 @@ class ProductListView(SingleTableView):
         return table
 
     def get_table_pagination(self, table):
-        return dict(per_page=20)
+        return dict(per_page=settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE)
 
     def filter_queryset(self, queryset):
         """

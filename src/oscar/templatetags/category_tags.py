@@ -1,5 +1,6 @@
-from six import with_metaclass
 from django import template
+from six import with_metaclass
+
 from oscar.core.loading import get_model
 
 register = template.Library()
@@ -92,6 +93,8 @@ def get_annotated_list(depth=None, parent=None):
 
     if max_depth is not None:
         categories = categories.filter(depth__lte=max_depth)
+
+    categories = categories.browsable()
 
     info = CheapCategoryInfo(parent, url="")
 

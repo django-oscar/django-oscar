@@ -5,16 +5,15 @@ import re
 import unicodedata
 
 from babel.dates import format_timedelta as format_td
-
 from django.conf import settings
 from django.shortcuts import redirect, resolve_url
-from django.utils.translation import get_language, to_locale
 from django.template.defaultfilters import date as date_filter
-from django.utils.http import is_safe_url
 from django.utils.module_loading import import_string
 from django.utils.text import slugify as django_slugify
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
+from django.utils.translation import get_language, to_locale
 
+from oscar.core.compat import url_has_allowed_host_and_scheme
 
 SLUGIFY_RE = re.compile(r'[^\w\s-]', re.UNICODE)
 
@@ -142,7 +141,7 @@ def safe_referrer(request, default):
     or a regular URL
     """
     referrer = request.META.get('HTTP_REFERER')
-    if referrer and is_safe_url(referrer, request.get_host()):
+    if referrer and url_has_allowed_host_and_scheme(referrer, request.get_host()):
         return referrer
     if default:
         # Try to resolve. Can take a model instance, Django URL name or URL.

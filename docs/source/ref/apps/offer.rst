@@ -19,7 +19,7 @@ A conditional offer is composed of several components:
 
 * Availability - this determines when an offer is available.
 
-* Condition - this determines when a customer qualifies for the offer (eg spend
+* Condition - this determines when a customer qualifies for the offer (e.g. spend
   £20 on DVDs).  There are various condition types available.
 
 * Benefit - this determines the discount a customer receives.  The discount can
@@ -58,10 +58,10 @@ There are 3 built-in condition types that can be created via the dashboard.
 Each needs to be linked with a range object, which is subset of the product
 catalogue.  Ranges are created independently in the dashboard.
 
-* Count-based - ie a customer must buy X products from the condition range
-* Coverge-based - ie a customer must buy X DISTINCT products from the condition range.  This can be used to
+* Count-based - i.e. a customer must buy X products from the condition range
+* Coverage-based - i.e. a customer must buy X DISTINCT products from the condition range.  This can be used to
   create "bundle" offers.
-* Value-based - ie a customer must spend X on products from the condition range
+* Value-based - i.e. a customer must spend X on products from the condition range
 
 It is also possible to create custom conditions in Python and register these so they
 are available to be selected within the dashboard.  For instance, you could
@@ -80,16 +80,16 @@ discount.
 
 Basket benefits:
 
-* Fixed discount - ie get £5 off DVDs
-* Percentage discount - ie get 25% off books
-* Fixed price - ie get any DVD for £8
-* Multibuy - ie get the cheapest product that meets the condition for free
+* Fixed discount - i.e. get £5 off DVDs
+* Percentage discount - i.e. get 25% off books
+* Fixed price - i.e. get any DVD for £8
+* Multi-buy - i.e. get the cheapest product that meets the condition for free
 
 Shipping benefits (these largely mirror the basket benefits):
 
-* Fixed discount - ie £5 off shipping
-* Percentage discount - ie get 25% off shipping
-* Fixed price - ie get shipping for £8
+* Fixed discount - i.e. £5 off shipping
+* Percentage discount - i.e. get 25% off shipping
+* Fixed price - i.e. get shipping for £8
 
 Like conditions, it is possible to create a custom benefit.  An example might be
 to allow customers to earn extra credits/points when they qualify for some

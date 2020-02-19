@@ -3,10 +3,8 @@ import csv
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.http import urlsafe_base64_encode as django_urlsafe_base64_encode
 
 from oscar.core.loading import get_model
-
 
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -15,6 +13,14 @@ try:
 except ValueError:
     raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
                                " 'app_label.model_name'")
+
+
+# Backward-compatible import for url_has_allowed_host_and_scheme.
+try:
+    # Django 3.0 and above
+    from django.utils.http import url_has_allowed_host_and_scheme       # noqa F401
+except ImportError:
+    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme    # noqa F401
 
 
 def get_user_model():
@@ -69,51 +75,9 @@ def existing_user_fields(fields):
     return [field for field in fields if field in user_field_names]
 
 
-# Python3 compatibility layer
-
-"""
-Unicode compatible wrapper for CSV reader and writer that abstracts away
-differences between Python 2 and 3. A package like unicodecsv would be
-preferable, but it's not Python 3 compatible yet.
-
-Code from http://python3porting.com/problems.html
-Changes:
-- Classes renamed to include CSV.
-- Unused 'codecs' import is dropped.
-- Added possibility to specify an open file to the writer to send as response
-  of a view
-"""
-
-
-class UnicodeCSVReader:
-    def __init__(self, filename, dialect=csv.excel,
-                 encoding="utf-8", **kw):
-        self.filename = filename
-        self.dialect = dialect
-        self.encoding = encoding
-        self.kw = kw
-
-    def __enter__(self):
-        self.f = open(self.filename, 'rt', encoding=self.encoding, newline='')
-        self.reader = csv.reader(self.f, dialect=self.dialect,
-                                 **self.kw)
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.f.close()
-
-    def next(self):
-        return next(self.reader)
-
-    __next__ = next
-
-    def __iter__(self):
-        return self
-
-
 class UnicodeCSVWriter:
     """
-    Python 2 3 compatible CSV writer. Supports two modes:
+    MS Excel compatible CSV writer. Supports two modes:
     * Writing to an open file or file-like object:
       writer = UnicodeCSVWriter(open_file=your_file)
       ...
@@ -163,12 +127,3 @@ class UnicodeCSVWriter:
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
-
-
-def urlsafe_base64_encode(value):
-    # In Django 2.2 function returns string, but not bytestring, so it is necessary
-    # to decode value only for the previous Django versions.
-    encoded_value = django_urlsafe_base64_encode(value)
-    if isinstance(encoded_value, bytes):
-        encoded_value = encoded_value.decode()
-    return encoded_value
