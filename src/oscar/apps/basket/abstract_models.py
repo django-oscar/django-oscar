@@ -599,11 +599,10 @@ class AbstractLine(models.Model):
            another one, and new items are added to the top as well.  Amazon
            mostly does this, but doesn't change the position when you update
            the quantity in the basket view.
-           To get this behaviour, add a date_updated field, change
-           Meta.ordering and optionally do something similar on wishlist lines.
-           Order lines should already be created in the order of the basket
-           lines, and are sorted by their primary key, so no changes should be
-           necessary there.
+           To get this behaviour, change Meta.ordering and optionally do
+           something similar on wishlist lines. Order lines should already
+           be created in the order of the basket lines, and are sorted by
+           their primary key, so no changes should be necessary there.
 
     """
     basket = models.ForeignKey(
