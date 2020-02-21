@@ -646,6 +646,7 @@ class AbstractLine(models.Model):
 
     # Track date of first addition
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True, db_index=True)
+    date_updated = models.DateTimeField(_("Date Updated"), auto_now=True, db_index=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
