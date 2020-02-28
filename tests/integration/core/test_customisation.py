@@ -8,6 +8,7 @@ from django.conf import settings
 from django.test import TestCase, override_settings
 
 from oscar.core import customisation
+from tests import delete_from_import_cache
 
 VALID_FOLDER_PATH = 'tests/_site/apps'
 
@@ -39,11 +40,21 @@ def test_creates_new_folder(tmpdir):
     path.join('order').ensure_dir()
 
 
-def test_creates_init_file(tmpdir):
+def test_creates_init_file(tmpdir, monkeypatch):
     path = tmpdir.mkdir('fork')
     customisation.fork_app('order', str(path), 'order')
 
     path.join('order').join('__init__.py').ensure()
+
+    monkeypatch.syspath_prepend(str(tmpdir))
+
+    config_module = __import__('fork.order.apps', fromlist=['OrderConfig'])
+    delete_from_import_cache('fork.order.apps')
+
+    expected_string = "default_app_config = '{}.apps.OrderConfig".format(
+        config_module.OrderConfig.name)
+    contents = path.join('order').join('__init__.py').read()
+    assert expected_string in contents
 
 
 def test_handles_dashboard_app(tmpdir):
