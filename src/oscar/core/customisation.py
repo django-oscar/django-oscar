@@ -37,6 +37,11 @@ def subfolders(path):
 
 def inherit_app_config(local_app_folder_path, local_app_name, app_config):
     create_file(
+        join(local_app_folder_path, '__init__.py'),
+        "default_app_config = '{app_name}.apps.{app_config_class_name}'\n".format(
+            app_name=local_app_name,
+            app_config_class_name=app_config.__class__.__name__))
+    create_file(
         join(local_app_folder_path, 'apps.py'),
         "import {app_config_class_module} as apps\n\n\n"
         "class {app_config_class_name}(apps.{app_config_class_name}):\n"
