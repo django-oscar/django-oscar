@@ -851,6 +851,10 @@ class AbstractProductAttribute(models.Model):
     def __str__(self):
         return self.name
 
+    def clean(self):
+        if self.type == self.BOOLEAN and self.required:
+            raise ValidationError(_("Boolean attribute should not be required."))
+
     def _save_file(self, value_obj, value):
         # File fields in Django are treated differently, see
         # django.db.models.fields.FileField and method save_form_data
