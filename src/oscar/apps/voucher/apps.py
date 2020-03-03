@@ -10,3 +10,4 @@ class VoucherConfig(OscarConfig):
 
     def ready(self):
         from . import receivers  # noqa
+        from . import signals  # noqa
