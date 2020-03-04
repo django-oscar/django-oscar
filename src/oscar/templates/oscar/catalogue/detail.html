@@ -21,7 +21,7 @@
     <li>
         <a href="{{ homepage_url }}">{% trans "Home" %}</a>
     </li>
-    {% with category=product.categories.all.0 %}
+    {% with category=product.get_categories.first %}
         {% for c in category.get_ancestors_and_self %}
         <li>
             <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
