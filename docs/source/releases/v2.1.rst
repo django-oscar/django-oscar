@@ -41,6 +41,9 @@ What's new in Oscar 2.1?
   also non-public. This is enforced through an ``ancestors_are_public`` field
   on the ``Category`` model.
 
+- A ``date_updated`` field was added to the ``basket.Line`` model, which is updated
+  every time a line is saved. This change requires a database migration.
+
 Communications app
 ------------------
 
