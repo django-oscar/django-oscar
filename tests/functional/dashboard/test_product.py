@@ -1,10 +1,10 @@
 import datetime
+import io
 import os
 
 from django.conf import settings
 from django.urls import reverse
 from PIL import Image
-from six import BytesIO
 from webtest import Upload
 
 from oscar.apps.catalogue.models import Product, ProductAttribute
@@ -21,7 +21,7 @@ ProductImage = get_model('catalogue', 'ProductImage')
 
 
 def generate_test_image():
-    tempfile = BytesIO()
+    tempfile = io.BytesIO()
     image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
     image.save(tempfile, "PNG")
     tempfile.seek(0)
