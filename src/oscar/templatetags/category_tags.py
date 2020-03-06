@@ -1,5 +1,4 @@
 from django import template
-from six import with_metaclass
 
 from oscar.core.loading import get_model
 
@@ -34,7 +33,7 @@ class CategoryFieldPassThroughMetaClass(type):
         return type.__new__(cls, name, bases, field_accessors)
 
 
-class CheapCategoryInfo(with_metaclass(CategoryFieldPassThroughMetaClass, dict)):
+class CheapCategoryInfo(dict, metaclass=CategoryFieldPassThroughMetaClass):
     """
     Wrapper class for Category.
 
