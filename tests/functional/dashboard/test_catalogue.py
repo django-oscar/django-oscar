@@ -30,7 +30,8 @@ class TestCatalogueViews(WebTestCase):
     def test_exist(self):
         urls = [reverse('dashboard:catalogue-product-list'),
                 reverse('dashboard:catalogue-category-list'),
-                reverse('dashboard:stock-alert-list')]
+                reverse('dashboard:stock-alert-list'),
+                reverse('dashboard:catalogue-product-lookup')]
         for url in urls:
             self.assertIsOk(self.get(url))
 
