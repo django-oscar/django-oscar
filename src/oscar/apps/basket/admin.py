@@ -25,6 +25,7 @@ class BasketAdmin(admin.ModelAdmin):
                     'time_before_submit')
     readonly_fields = ('owner', 'date_merged', 'date_submitted')
     inlines = [LineInline]
+    extra = 3
 
 
 admin.site.register(get_model('basket', 'basket'), BasketAdmin)
