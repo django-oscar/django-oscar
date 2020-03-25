@@ -2,6 +2,7 @@ from itertools import zip_longest
 
 from django.db import connection
 from django.utils.crypto import get_random_string
+from django.utils.translation import gettext_lazy as _
 
 
 def generate_code(length, chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
@@ -33,3 +34,11 @@ def get_unused_code(length=12, group_length=4, separator='-'):
             "SELECT 1 FROM voucher_voucher WHERE code=%s", [code])
         if not cursor.fetchall():
             return code
+
+
+def get_offer_name(voucher_name):
+    """
+    Return the name used for the auto-generated offer created
+    when a voucher is created through the dashboard.
+    """
+    return _("Offer for voucher '%s'") % voucher_name

@@ -162,6 +162,9 @@ Minor changes
 - ``catalogue.Product.is_public`` is now an indexed field. This change requires
   a database migration.
 
+- When a voucher that was created through the Oscar dashboard is deleted, the
+  auto-generated offer that was created with the voucher is also deleted.
+
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
 
