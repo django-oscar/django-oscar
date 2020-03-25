@@ -92,3 +92,16 @@ at: http://localhost:8000.  A sample superuser is installed with credentials::
     username: superuser
     email: superuser@example.com
     password: testing
+
+
+Run the sandbox using Docker
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To run the Oscar sandbox using `Docker`_, run the following commands:
+
+.. _`Docker`: https://www.docker.com/
+
+.. code-block:: bash
+
+    $ docker pull oscarcommerce/django-oscar-sandbox
+    $ docker run -p 8080:8080/tcp oscarcommerce/django-oscar-sandbox:latest
