@@ -122,14 +122,11 @@ good starting point for rapidly building elegant e-commerce sites.
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dashboard.thumb.png
     :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dashboard.png
 
-The sandbox site is also available to browse at
-https://latest.oscarcommerce.com.  Dashboard users can be created using `this
-gateway page`_.
+The sandbox site is also available to browse at https://latest.oscarcommerce.com.
 
 The sandbox site can be set-up locally `in 5 commands`_.  Want to
 make changes?  Check out the `contributing guidelines`_.
 
-.. _`this gateway page`: https://latest.oscarcommerce.com/gateway/
 .. _`in 5 commands`: https://django-oscar.readthedocs.io/en/stable/internals/sandbox.html#running-the-sandbox-locally
 .. _`contributing guidelines`: https://django-oscar.readthedocs.io/en/stable/internals/contributing/index.html
 

@@ -8,7 +8,6 @@ from django.contrib import admin
 from django.contrib.sitemaps import views
 from oscar.views import handler403, handler404, handler500
 
-from apps.gateway import urls as gateway_urls
 from apps.sitemaps import base_sitemaps
 
 admin.autodiscover()
@@ -31,9 +30,6 @@ urlpatterns = [
 
 # Prefix Oscar URLs with language codes
 urlpatterns += i18n_patterns(
-    # Custom functionality to allow dashboard users to be created
-    url(r'gateway/', include(gateway_urls)),
-    # Oscar's normal URLs
     url(r'^', include(apps.get_app_config('oscar').urls[0])),
 )
 
