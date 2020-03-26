@@ -906,8 +906,8 @@ class AbstractRange(models.Model):
         Product = self.included_products.model
 
         if self.includes_all_products:
-            # Filter out child products and blacklisted products
-            return Product.objects.browsable().exclude(
+            # Filter out blacklisted products
+            return Product.objects.all().exclude(
                 id__in=self.excluded_products.values("id")
             )
 
