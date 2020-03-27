@@ -108,7 +108,7 @@ class OrderSearchForm(forms.Form):
 
         if data:
             if data.get('response_format', None) not in self.format_choices:
-                # Handle POST/GET dictionaries, which are unmutable.
+                # Handle POST/GET dictionaries, which are immutable.
                 if isinstance(data, QueryDict):
                     data = data.dict()
                 data['response_format'] = 'html'
