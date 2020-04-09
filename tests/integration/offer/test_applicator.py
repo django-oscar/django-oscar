@@ -73,6 +73,21 @@ class TestOfferApplicator(TestCase):
         self.assertEqual(len(site_offers), 1)
         self.assertEqual(site_offers[0].name, "globaloffer")
 
+    def test_apply_offer_with_multibuy_benefit_and_count_condition(self):
+        rng = RangeFactory(includes_all_products=True)
+        condition = ConditionFactory(range=rng, type=ConditionFactory._meta.model.COUNT, value=1)
+        benefit = BenefitFactory(range=rng, type=BenefitFactory._meta.model.MULTIBUY, value=1)
+        offer = ConditionalOfferFactory(condition=condition, benefit=benefit)
+
+        add_product(self.basket, D('100'), 5)
+
+        self.applicator.apply_offers(self.basket, [offer])
+        line = self.basket.all_lines()[0]
+        assert line.quantity_with_offer_discount(offer) == 1
+
+        self.basket.refresh_from_db()
+        assert self.basket.total_discount == D('100')
+
 
 class TestOfferApplicationsWrapper(TestCase):
 
