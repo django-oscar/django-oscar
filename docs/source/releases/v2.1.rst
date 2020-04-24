@@ -115,6 +115,11 @@ Bug fixes
 - Fixed an error when deleting an offer whose related conditions/benefits have
   been deleted.
 
+- Fixed handling of count conditions in ``MultibuyDiscountBenefit``.
+  Previously, when a count condition was used with this benefit it would result
+  in a discount being applied for all items in the basket rather than the
+  cheapest one.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
