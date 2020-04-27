@@ -275,12 +275,15 @@ class MultibuyDiscountBenefit(Benefit):
 
         # Cheapest line gives free product
         discount, line = line_tuples[0]
-        apply_discount(line, discount, 1, offer)
+        if line.quantity_with_offer_discount(offer) == 0:
+            apply_discount(line, discount, 1, offer)
 
-        affected_lines = [(line, discount, 1)]
-        condition.consume_items(offer, basket, affected_lines)
+            affected_lines = [(line, discount, 1)]
+            condition.consume_items(offer, basket, affected_lines)
 
-        return BasketDiscount(discount)
+            return BasketDiscount(discount)
+        else:
+            return ZERO_DISCOUNT
 
 
 # =================

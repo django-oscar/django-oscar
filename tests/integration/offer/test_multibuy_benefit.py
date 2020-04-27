@@ -5,8 +5,11 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.apps.offer import models
-from oscar.test import factories
+from oscar.apps.offer.utils import Applicator
 from oscar.test.basket import add_product, add_products
+from oscar.test.factories import (
+    BenefitFactory, ConditionalOfferFactory, ConditionFactory,
+    RangeFactory, create_basket)
 
 
 class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
@@ -22,7 +25,7 @@ class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Benefit.MULTIBUY)
         self.offer = mock.Mock()
-        self.basket = factories.create_basket(empty=True)
+        self.basket = create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition, self.offer)
@@ -45,6 +48,22 @@ class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(5, self.basket.num_items_without_discount)
 
+    def test_apply_offer_with_multibuy_benefit_and_count_condition(self):
+        rng = RangeFactory(includes_all_products=True)
+        condition = ConditionFactory(range=rng, type=ConditionFactory._meta.model.COUNT, value=1)
+        benefit = BenefitFactory(range=rng, type=BenefitFactory._meta.model.MULTIBUY, value=1)
+        offer = ConditionalOfferFactory(condition=condition, benefit=benefit)
+
+        add_product(self.basket, D('100'), 5)
+
+        applicator = Applicator()
+        applicator.apply_offers(self.basket, [offer])
+        line = self.basket.all_lines()[0]
+        assert line.quantity_with_offer_discount(offer) == 1
+
+        self.basket.refresh_from_db()
+        assert self.basket.total_discount == D('100')
+
 
 class TestAMultibuyDiscountAppliedWithAValueCondition(TestCase):
 
@@ -60,7 +79,7 @@ class TestAMultibuyDiscountAppliedWithAValueCondition(TestCase):
             type=models.Benefit.MULTIBUY,
             value=1)
         self.offer = mock.Mock()
-        self.basket = factories.create_basket(empty=True)
+        self.basket = create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition, self.offer)
@@ -93,7 +112,7 @@ class TestMultibuyValidation(TestCase):
             type=models.Condition.COUNT,
             value=3)
         self.offer = mock.Mock()
-        self.basket = factories.create_basket(empty=True)
+        self.basket = create_basket(empty=True)
 
     def test_multibuy_range_required(self):
         benefit = models.Benefit(
