@@ -51,7 +51,7 @@ recommended to install Oscar in a virtualenv.
 Django settings
 ===============
 
-First, edit your settings file ``frobshop.frobshop.settings.py`` to import all of Oscar's default settings.
+First, edit your settings file ``frobshop/frobshop/settings.py`` to import all of Oscar's default settings.
 
 .. code-block:: django
 
@@ -173,39 +173,6 @@ files from a remote storage (e.g. Amazon S3), you must manually copy a
 .. _sandbox settings: https://github.com/django-oscar/django-oscar/blob/master/sandbox/settings.py#L102
 
 
-URLs
-====
-
-Alter your ``frobshop/urls.py`` to include Oscar's URLs. You can also include
-the Django admin for debugging purposes. But please note that Oscar makes no
-attempts at having that be a workable interface; admin integration exists
-to ease the life of developers.
-
-If you have more than one language set your Django settings for ``LANGUAGES``,
-you will also need to include Django's i18n URLs:
-
-.. code-block:: django
-
-    from django.apps import apps
-    from django.conf.urls import include, url  # < Django-2.0
-    # from django.urls import include, path  # > Django-2.0
-    from django.contrib import admin
-
-    urlpatterns = [
-        url(r'^i18n/', include('django.conf.urls.i18n')),
-        # path('i18n/', include('django.conf.urls.i18n')),  # > Django-2.0
-
-        # The Django admin is not officially supported; expect breakage.
-        # Nonetheless, it's often useful for debugging.
-
-        url(r'^admin/', admin.site.urls),
-        # path('admin/', admin.site.urls),  # > Django-2.0
-
-        url(r'^', include(apps.get_app_config('oscar').urls[0])),
-        # path('', include(apps.get_app_config('oscar').urls[0])),  # > Django-2.0
-    ]
-
-
 Search backend
 ==============
 If you're happy with basic search for now, you can just add Haystack's simple
@@ -259,6 +226,35 @@ Check your database settings. A quick way to get started is to use SQLite:
 
 Note that we recommend using ``ATOMIC_REQUESTS`` to tie transactions to
 requests.
+
+URLs
+====
+
+Alter your ``frobshop/urls.py`` to include Oscar's URLs. You can also include
+the Django admin for debugging purposes. But please note that Oscar makes no
+attempts at having that be a workable interface; admin integration exists
+to ease the life of developers.
+
+If you have more than one language set your Django settings for ``LANGUAGES``,
+you will also need to include Django's i18n URLs:
+
+.. code-block:: django
+
+    from django.apps import apps
+    from django.urls import include, path  
+    from django.contrib import admin
+
+    urlpatterns = [
+        path('i18n/', include('django.conf.urls.i18n')),  
+
+        # The Django admin is not officially supported; expect breakage.
+        # Nonetheless, it's often useful for debugging.
+
+        path('admin/', admin.site.urls),  
+
+        path('', include(apps.get_app_config('oscar').urls[0])),  
+    ]
+
 
 Create database
 ---------------
