@@ -170,6 +170,8 @@ Minor changes
 - When a voucher that was created through the Oscar dashboard is deleted, the
   auto-generated offer that was created with the voucher is also deleted.
 
+- Fixed the ``brand_title`` block in ``partials/brand.html`` so that it doesn't span unclosed HTML tags.
+
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
 
