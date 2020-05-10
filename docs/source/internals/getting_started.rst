@@ -25,7 +25,7 @@ project:
 
     $ mkvirtualenv oscar
     $ pip install django-oscar
-    $ django-admin.py startproject frobshop
+    $ django-admin startproject frobshop
 
 If you do not have :command:`mkvirtualenv`, then replace that line with::
 
