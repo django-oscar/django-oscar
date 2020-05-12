@@ -108,6 +108,7 @@ class AbstractSource(models.Model):
     class Meta:
         abstract = True
         app_label = 'payment'
+        ordering = ['pk']
         verbose_name = _("Source")
         verbose_name_plural = _("Sources")
 
@@ -205,7 +206,7 @@ class AbstractSourceType(models.Model):
     This could be an external partner like PayPal or DataCash,
     or an internal source such as a managed account.
     """
-    name = models.CharField(_("Name"), max_length=128)
+    name = models.CharField(_("Name"), max_length=128, db_index=True)
     code = AutoSlugField(
         _("Code"), max_length=128, populate_from='name', unique=True,
         help_text=_("This is used within forms to identify this source type"))
@@ -213,6 +214,7 @@ class AbstractSourceType(models.Model):
     class Meta:
         abstract = True
         app_label = 'payment'
+        ordering = ['name']
         verbose_name = _("Source Type")
         verbose_name_plural = _("Source Types")
 

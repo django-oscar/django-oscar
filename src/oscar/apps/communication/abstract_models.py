@@ -30,6 +30,7 @@ class AbstractEmail(models.Model):
     class Meta:
         abstract = True
         app_label = 'communication'
+        ordering = ['-date_sent']
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
 
@@ -62,7 +63,7 @@ class AbstractCommunicationEventType(models.Model):
         help_text=_("Code used for looking up this event programmatically"))
 
     #: Name is the friendly description of an event for use in the admin
-    name = models.CharField(_('Name'), max_length=255)
+    name = models.CharField(_('Name'), max_length=255, db_index=True)
 
     # We allow communication types to be categorised
     # For backwards-compatibility, the choice values are quite verbose
@@ -108,6 +109,7 @@ class AbstractCommunicationEventType(models.Model):
     class Meta:
         abstract = True
         app_label = 'communication'
+        ordering = ['name']
         verbose_name = _("Communication event type")
         verbose_name_plural = _("Communication event types")
 

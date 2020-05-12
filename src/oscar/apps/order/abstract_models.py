@@ -401,6 +401,7 @@ class AbstractOrderNote(models.Model):
     class Meta:
         abstract = True
         app_label = 'order'
+        ordering = ['-date_updated']
         verbose_name = _("Order Note")
         verbose_name_plural = _("Order Notes")
 
@@ -1124,6 +1125,7 @@ class AbstractOrderDiscount(models.Model):
     class Meta:
         abstract = True
         app_label = 'order'
+        ordering = ['pk']
         verbose_name = _("Order Discount")
         verbose_name_plural = _("Order Discounts")
 
