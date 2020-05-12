@@ -1,7 +1,7 @@
 from django import shortcuts
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
+from django.http import JsonResponse, QueryDict
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -229,9 +229,17 @@ class BasketView(ModelFormSetView):
         saved_basket.merge_line(line)
 
     def formset_invalid(self, formset):
+        has_deletion = any(formset._should_delete_form(form) for form in formset.forms)
+        has_no_invalid_non_deletion = all(form.is_valid() or formset._should_delete_form(form)
+                                          for form in formset.forms)
+        if has_deletion:
+            self.remove_deleted_forms(formset)
+            if has_no_invalid_non_deletion:
+                return self.formset_valid(formset)
+
         flash_messages = ajax.FlashMessages()
         flash_messages.warning(_(
-            "Your basket couldn't be updated. "
+            "Your basket has got some issues. "
             "Please correct any validation errors below."))
 
         if self.request.is_ajax():
@@ -241,6 +249,53 @@ class BasketView(ModelFormSetView):
 
         flash_messages.apply_to_request(self.request)
         return super().formset_invalid(formset)
+
+    def remove_deleted_forms(self, formset):
+        """
+        Removes forms marked for deletion, from the formset, as well as deletes
+        their model instance objects; and modifies the formset's request data,
+        to match the state of the data in the database, for the remaining forms.
+
+        This is useful for redisplaying a formset containing other invalid
+        forms, after deleting one of the forms from it.
+        """
+        form_data = {}
+        form_index = 0
+        for form in formset.forms:
+            # Delete forms marked for deletion, and retain the request data
+            # for the other forms
+            if formset._should_delete_form(form):
+                if form.instance.id is not None:
+                    form.instance.delete()
+            else:
+                old_form_prefix = form.prefix
+                new_form_prefix = formset.add_prefix(form_index)
+                for field_name in form.fields:
+                    form.prefix = old_form_prefix
+                    old_prefixed_field_name = form.add_prefix(field_name)
+                    form.prefix = new_form_prefix
+                    new_prefixed_field_name = form.add_prefix(field_name)
+                    try:
+                        form_data[new_prefixed_field_name] = formset.data[old_prefixed_field_name]
+                    except KeyError:
+                        pass
+                form_index += 1
+        for field_name in formset.management_form.fields:
+            prefixed_field_name = formset.management_form.add_prefix(field_name)
+            if field_name in ['INITIAL_FORMS', 'TOTAL_FORMS']:
+                form_data[prefixed_field_name] = str(form_index)
+            else:
+                form_data[prefixed_field_name] = formset.data[prefixed_field_name]
+
+        query_dict = QueryDict(mutable=True)
+        query_dict.update(form_data)
+        formset.data = query_dict
+        # Clear cached values, so that they are recomputed using the modified
+        # request data
+        del formset.management_form
+        del formset.forms
+        # Clean the formset's modified request data
+        formset.full_clean()
 
 
 class BasketAddView(FormView):

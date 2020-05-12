@@ -120,6 +120,10 @@ Bug fixes
   in a discount being applied for all items in the basket rather than the
   cheapest one.
 
+- Fixed a bug where a line could not be deleted from the basket, if the basket
+  had another line with a validation error - i.e. its product was out of stock
+  (see :issue:`2791` and :issue:`1654`).
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
