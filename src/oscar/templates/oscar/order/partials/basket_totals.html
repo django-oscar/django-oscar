@@ -84,6 +84,32 @@
             {% endif %}
         {% endblock shipping_total %}
 
+        {% block surcharges %}
+            {% with surcharges=order.surcharges.all %}
+            {% if surcharges %}
+                <tr>
+                    <th>&nbsp;</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th colspan="2"><h3>{% trans "Surcharges" %}</h3></th>
+                </tr>
+                {% for charge in surcharges %}
+                <tr>
+                        <th class="total">{{ charge.name }}</th>
+                        <th class="total align-right"> 
+                            {% if show_tax_separately %}
+                                {{ charge.excl_tax|currency:order.currency }}
+                            {% else %}
+                                {{ charge.incl_tax|currency:order.currency }}
+                            {% endif %}
+                        </th>
+                </tr>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        {% endblock %}
+
         {% if show_tax_separately %}
             <tr>
                 <th colspan="2">&nbsp;</th>

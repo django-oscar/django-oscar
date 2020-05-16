@@ -237,6 +237,20 @@
                                     </tr>
                                 {% endif %}
 
+                                {% with surcharges=order.surcharges.all %}
+                                {% if surcharges %}
+                                    {% for charge in surcharges %}
+                                        <tr>
+                                            <td colspan="9"></td>
+                                            <th>{% blocktrans with name=charge.name %}Surcharge (name){% endblocktrans %}</th>
+                                            <th class="text-right">{{ charge.excl_tax|currency:order.currency }}</th>
+                                            <th class="text-right">{{ charge.incl_tax|currency:order.currency }}</th>
+                                            <td></td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+
                                 <tr>
                                     <td colspan="9"></td>
                                     <th>{% trans "Order total" %}</th>

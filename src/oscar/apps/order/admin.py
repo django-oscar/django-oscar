@@ -17,6 +17,7 @@ PaymentEventType = get_model('order', 'PaymentEventType')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 LineAttribute = get_model('order', 'LineAttribute')
 OrderDiscount = get_model('order', 'OrderDiscount')
+Surcharge = get_model('order', 'Surcharge')
 
 
 class LineInline(admin.TabularInline):
@@ -67,6 +68,10 @@ class OrderDiscountAdmin(admin.ModelAdmin):
                     'voucher_code', 'amount')
 
 
+class SurchargeAdmin(admin.ModelAdmin):
+    raw_id_fields = ("order",)
+
+
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderNote)
 admin.site.register(OrderStatusChange)
@@ -81,3 +86,4 @@ admin.site.register(LineAttribute)
 admin.site.register(OrderDiscount, OrderDiscountAdmin)
 admin.site.register(CommunicationEvent)
 admin.site.register(BillingAddress)
+admin.site.register(Surcharge, SurchargeAdmin)

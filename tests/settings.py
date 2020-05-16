@@ -81,6 +81,8 @@ catalogue_app_idx = INSTALLED_APPS.index('oscar.apps.catalogue.apps.CatalogueCon
 INSTALLED_APPS[catalogue_app_idx] = 'tests._site.apps.catalogue.apps.CatalogueConfig'
 dashboard_app_idx = INSTALLED_APPS.index('oscar.apps.dashboard.apps.DashboardConfig')
 INSTALLED_APPS[dashboard_app_idx] = 'tests._site.apps.dashboard.apps.DashboardConfig'
+checkout_app_idx = INSTALLED_APPS.index('oscar.apps.checkout.apps.CheckoutConfig')
+INSTALLED_APPS[checkout_app_idx] = 'tests._site.apps.checkout.apps.CheckoutConfig'
 
 AUTH_USER_MODEL = 'myauth.User'
 

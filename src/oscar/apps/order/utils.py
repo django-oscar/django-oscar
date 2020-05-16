@@ -16,6 +16,7 @@ OrderDiscount = get_model('order', 'OrderDiscount')
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 CommunicationEventType = get_model('communication', 'CommunicationEventType')
 Dispatcher = get_class('communication.utils', 'Dispatcher')
+Surcharge = get_model('order', 'Surcharge')
 
 
 class OrderNumberGenerator(object):
@@ -41,7 +42,7 @@ class OrderCreator(object):
     def place_order(self, basket, total,  # noqa (too complex (12))
                     shipping_method, shipping_charge, user=None,
                     shipping_address=None, billing_address=None,
-                    order_number=None, status=None, request=None, **kwargs):
+                    order_number=None, status=None, request=None, surcharges=None, **kwargs):
         """
         Placing an order involves creating all the relevant models based on the
         basket and session data.
@@ -60,6 +61,7 @@ class OrderCreator(object):
 
         with transaction.atomic():
 
+            kwargs['surcharges'] = surcharges
             # Ok - everything seems to be in order, let's place the order
             order = self.create_order_model(
                 user, basket, shipping_address, shipping_method, shipping_charge,
@@ -106,7 +108,7 @@ class OrderCreator(object):
 
     def create_order_model(self, user, basket, shipping_address,
                            shipping_method, shipping_charge, billing_address,
-                           total, order_number, status, request=None, **extra_order_fields):
+                           total, order_number, status, request=None, surcharges=None, **extra_order_fields):
         """Create an order model."""
         order_data = {'basket': basket,
                       'number': order_number,
@@ -131,6 +133,15 @@ class OrderCreator(object):
             order_data['site'] = Site._default_manager.get_current(request)
         order = Order(**order_data)
         order.save()
+        if surcharges is not None:
+            for charge in surcharges:
+                Surcharge.objects.create(
+                    order=order,
+                    name=charge.surcharge.name,
+                    code=charge.surcharge.code,
+                    excl_tax=charge.price.excl_tax,
+                    incl_tax=charge.price.incl_tax
+                )
         return order
 
     def create_line_models(self, order, basket_line, extra_line_fields=None):

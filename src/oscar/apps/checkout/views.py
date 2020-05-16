@@ -512,7 +512,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
 
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
                shipping_charge, billing_address, order_total,
-               payment_kwargs=None, order_kwargs=None):
+               payment_kwargs=None, order_kwargs=None, surcharges=None):
         """
         Submit a basket for order placement.
 
@@ -623,7 +623,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         try:
             return self.handle_order_placement(
                 order_number, user, basket, shipping_address, shipping_method,
-                shipping_charge, billing_address, order_total, **order_kwargs)
+                shipping_charge, billing_address, order_total, surcharges=surcharges, **order_kwargs)
         except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a
