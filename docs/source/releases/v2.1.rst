@@ -1,10 +1,11 @@
-========================================
-Oscar 2.1 release notes (in development)
-========================================
+=======================
+Oscar 2.1 release notes
+=======================
 
 :release: tbd
 
-Welcome to Oscar 2.1.
+Welcome to Oscar 2.1! This is a significant release which includes a number of
+new features and performance improvements.
 
 .. contents::
     :local:
@@ -15,11 +16,19 @@ Welcome to Oscar 2.1.
 Compatibility
 ~~~~~~~~~~~~~
 
+Oscar 2.1 is compatible with Django versions 2.2 and 3.0, and Python versions 3.5, 3.6, 3.7 and 3.8.
+
+Support for Django versions 1.11 and 2.0 has been dropped.
 
 .. _new_in_2.1:
 
 What's new in Oscar 2.1?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The ability to add arbitrary surcharges to orders (e.g., a processing fee for
+  a particular payment method) was introduced.
+  See :ref:`how_to_surcharges` for details on how to configure this.
+  This change requires a database migration.
 
 - The database performance of ``offer.Range.all_products()`` was substantially
   improved. The internals of that method have changed and specifically
@@ -30,12 +39,13 @@ What's new in Oscar 2.1?
   ``ProductAttributeValue`` models was changed to use a callable, so that
   Django doesn't generate migrations if a project modifies the ``OSCAR_IMAGE_FOLDER``
   to specify a custom directory structure for uploaded images.
+  This change requires a database migration.
 
 - ``catalogue.Category`` now has an ``is_public`` boolean field that serves a
-  similar purpose to ``catalogue.Product.is_public`` - i.e., hides them from
+  similar purpose to ``catalogue.Product.is_public`` - i.e., to hide categories
   public views. The ``Category`` model also now has a custom manager
   that provides a ``browsable()`` queryset method that excludes non-public
-  categories. This changes requires a database migration.
+  categories. This change requires a database migration.
 
   Category hierarchy implies that the children of any non-public category are
   also non-public. This is enforced through an ``ancestors_are_public`` field
@@ -58,7 +68,7 @@ as follows:
   moved from the ``customer`` app to the ``communication`` app. In order to
   preserve existing data, the table names for these models are unchanged.
 
-  This is a change that requires database migration.
+  This change requires a database migration.
 
 - The ``Dispatcher`` class moved from ``customer.utils`` to
   ``communication.utils``. ``Dispatcher`` is now responsible for sending
@@ -148,6 +158,11 @@ Removal of deprecated features
   URLs that are not provided by a subclass of ``oscar.core.application.OscarDashboardConfig``
   will result in a ``KeyError``.
 
+- ``customer.forms.PasswordResetForm.get_reset_url`` has been removed.
+
+- The internal and undocumented class ``oscar.core.compat.UnicodeCSVReader``
+  has been removed. Use ``csv.reader`` instead.
+
 Minor changes
 ~~~~~~~~~~~~~
 
@@ -176,12 +191,32 @@ Minor changes
 
 - Fixed the ``brand_title`` block in ``partials/brand.html`` so that it doesn't span unclosed HTML tags.
 
+- ``customer.views.ProfileUpdateView.form_valid`` was modified
+  to use a new ``send_email_changed_email`` method.
+
+- ``customer.views.ChangePasswordView.form_valid`` was modified
+  to use a new ``send_password_changed_email`` method.
+
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
 
-- Upgraded ``django-phonenumber-field`` to use the latest in the 3.x series.
-- Upgraded ``select2`` to version 4.0.10.
-- Upgraded ``inputmask`` to version 4.0.8.
+Python package dependencies:
+
+- Upgraded ``pillow`` to version 6.0.0 or higher.
+- Upgraded ``django-extra-views`` to version 0.13.
+- Upgraded ``django-haystack`` to version 3.0 or higher.
+- Upgraded ``django-phonenumber-field`` to version 3.0.
+- Upgraded ``django-tables2`` to version 2.2.
+- Upgraded ``sorl-thumbnail`` (optional requirement) to version 12.6.
+- Upgraded ``easy-thumbnails`` (optional requirement) to version 2.7.
+
+
+Javascript dependencies:
+
+- Upgraded ``jquery`` to version 3.5.
+- Upgraded ``inputmask`` to version 5.0.
+- Upgraded ``select2`` to version 4.0.
+- Upgraded ``tinymce`` to version 5.2.
 
 .. _deprecated_features_in_2.1:
 
@@ -203,14 +238,3 @@ Deprecated features
 
 - ``customer.notifications.services.notify_users`` is deprecated.
   Use ``Dispatcher.notify_users`` instead.
-
-- ``customer.forms.PasswordResetForm.get_reset_url`` has been removed.
-
-- ``customer.views.ProfileUpdateView.form_valid`` was modified
-  to use a new ``send_email_changed_email`` method.
-
-- ``customer.views.ChangePasswordView.form_valid`` was modified
-  to use a new ``send_password_changed_email`` method.
-
-- The internal class ``oscar.core.compat.UnicodeSCVReader`` has been removed.
-  Use ``csv.reader`` instead.

@@ -1,3 +1,5 @@
+.. _how_to_surcharges:
+
 =========================
 How to configure surcharges
 =========================
@@ -25,7 +27,7 @@ This method is called in several places:
 
 * To give the applicable surcharges to the order total calculator so wo can show the correct price breakdown.
 
-The ``get_applicable_surcharges`` method takes the basket and any other kwargs. 
+The ``get_applicable_surcharges`` method takes the basket and any other kwargs.
 These kwargs can later be determined when setting up your own surcharges.
 
 Note that you can also implement surcharges as models just like shipping methods.
@@ -33,7 +35,7 @@ Note that you can also implement surcharges as models just like shipping methods
 Custom applicators
 -------------------
 
-If the available surcharges are the same for all customers and payment 
+If the available surcharges are the same for all customers and payment
 methods, then override the ``get_surcharges`` method of the repository:
 
 .. code-block:: python
@@ -62,7 +64,7 @@ For more complex logic, override the ``is_applicable`` method:
                return True
            else:
                return False
-               
+
 
 Surcharges
 ----------------
@@ -72,8 +74,8 @@ following properties which define the metadata about the surcharge:
 
 * ``name`` - The name of the surcharges. This will be visible to the
   customer during checkout and is translatable
-  
-* ``code`` - The code of the surcharge. This could be the slugified name or anything else. 
+
+* ``code`` - The code of the surcharge. This could be the slugified name or anything else.
   The code is used as a non-translatable identifier for a charge.
 
 Further, each surcharge must implement a ``calculate`` method which accepts the
@@ -91,7 +93,7 @@ subclassed and customised:
 * :class:`~oscar.apps.checkout.surcharges.PercentageCharge` - percentage based charge
 
 * :class:`~oscar.apps.checkout.surcharges.FlatCharge` - flat surcharge
-  
+
   Example usage:
 
 .. code-block:: python

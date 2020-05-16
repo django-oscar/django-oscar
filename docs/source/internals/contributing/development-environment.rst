@@ -38,7 +38,7 @@ As the sandbox is a vanilla Oscar site, it is what we use to build migrations
 against::
 
     $ make sandbox
-    $ sites/sandbox/manage.py schemamigration $YOURAPP --auto
+    $ sandbox/manage.py makemigrations
 
 Writing LESS/CSS
 ----------------
@@ -52,7 +52,7 @@ If you want to develop the LESS files, set::
 
     OSCAR_USE_LESS = True
 
-in ``sites/sandbox/settings_local.py``.  This will include the on-the-fly
+in ``sandbox/settings_local.py``.  This will include the on-the-fly
 ``less`` pre-processor. That will allow you to see changes to the LESS
 files after a page reload.
 
