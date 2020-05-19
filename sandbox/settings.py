@@ -18,12 +18,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Use a Sqlite database by default
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('DATABASE_NAME', location('db.sqlite')),
-        'USER': os.environ.get('DATABASE_USER', None),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD', None),
-        'HOST': os.environ.get('DATABASE_HOST', None),
-        'PORT': os.environ.get('DATABASE_PORT', None),
+        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.postgresql_psycopg2'),
+        'NAME': os.environ.get('DATABASE_NAME', 'oscar'),
+        'USER': os.environ.get('DATABASE_USER', 'oscar'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'oscar'),
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DATABASE_PORT', 5432),
         'ATOMIC_REQUESTS': True
     }
 }
@@ -302,6 +302,10 @@ INSTALLED_APPS = [
     # 3rd-party apps that the sandbox depends on
     'django_extensions',
     'debug_toolbar',
+
+    #oscar api
+    'rest_framework',
+    'oscarapi',
 ]
 
 # Add Oscar's custom auth backend so users can sign in using their email

@@ -36,7 +36,8 @@ __pycache__
 /src/oscar/static/
 *.pdf
 TODO
-venv
+venv/
+venv-oscar/
 
 # Test files
 .coverage

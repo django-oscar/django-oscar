@@ -16,13 +16,13 @@ help: ## Display this help message
 install: install-python install-test assets ## Install requirements for local development and production
 
 install-python: ## Install python requirements
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 
 install-test: ## Install test requirements
-	pip install -e .[test]
+	pip3 install -e .[test]
 
 install-migrations-testing-requirements: ## Install migrations testing requirements
-	pip install -r requirements_migrations.txt
+	pip3 install -r requirements_migrations.txt
 
 assets: ## Install static assets
 	npm install
@@ -30,8 +30,8 @@ assets: ## Install static assets
 
 venv: ## Create a virtual env and install test and production requirements
 	$(shell which python3) -m venv $(VENV)
-	$(VENV)/bin/pip install -e .[test]
-	$(VENV)/bin/pip install -r docs/requirements.txt
+	$(VENV)/bin/pip3 install -e .[test]
+	$(VENV)/bin/pip3 install -r docs/requirements.txt
 
 #############################
 # Sandbox management commands
@@ -114,7 +114,7 @@ todo: ## Look for areas of the code that need updating when some event has taken
 	-grep -rnH "django.VERSION" src/oscar/apps
 
 release: clean ## Creates release
-	pip install twine wheel
+	pip3 install twine wheel
 	rm -rf dist/*
 	python setup.py sdist bdist_wheel
 	twine upload -s dist/*

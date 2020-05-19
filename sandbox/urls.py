@@ -9,6 +9,8 @@ from django.contrib.sitemaps import views
 from oscar.views import handler403, handler404, handler500
 
 from apps.sitemaps import base_sitemaps
+from django.urls import include, path
+
 
 admin.autodiscover()
 
@@ -25,7 +27,9 @@ urlpatterns = [
         {'sitemaps': base_sitemaps}),
     url(r'^sitemap-(?P<section>.+)\.xml$', views.sitemap,
         {'sitemaps': base_sitemaps},
-        name='django.contrib.sitemaps.views.sitemap')
+        name='django.contrib.sitemaps.views.sitemap'),
+
+    path("api/", include("oscarapi.urls")),
 ]
 
 # Prefix Oscar URLs with language codes
@@ -45,3 +49,4 @@ if settings.DEBUG:
         url(r'^500$', handler500),
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
+
