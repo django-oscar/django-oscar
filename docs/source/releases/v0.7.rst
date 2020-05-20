@@ -192,7 +192,7 @@ Minor changes
 * Experimental support for having a language prefix in the URL has been added,
   and enabled for the sandbox. This can be achieved by using Django's
   `i18n_patterns`_ function in your ``urls.py``. for the sandbox.
-  See ``sites/sandbox/urls.py`` for an example.
+  See ``sandbox/urls.py`` for an example.
 
 * A basic example for a multi-language sitemap has been added to the sandbox.
 
