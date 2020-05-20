@@ -1,13 +1,14 @@
 David Winterbottom
 Maik Hoepfel
-Michael van Tellingen
 Samir Shah
+Michael van Tellingen
 Alexander Gaevsky
+pyup-bot
 Sebastian Vetter
 Jon Price
 Markus Bertheau
-pyup-bot
 Andrew Ingram
+dependabot-preview[bot]
 Asia Biega
 Xavier Ordoquy
 Oliver Randell
@@ -19,31 +20,35 @@ Andy Sellick
 Kura
 Pavel Vavruska
 Patryk Zawadzki
+Craig Loftus
 Jonathan Moss
 andysellick
 Paweł Kowalski
 Dawid Lorenz
 Michael
 Janusz Harkot
-Craig Loftus
+Victor Munene
 st4lk
 Martijn Jacobs
+Joseph Wayodi
 Federico Marani
 Diederik van der Boor
 Davi Vidal
+Lars van de Kerkhof
 itbabu
+dfirst
 Alex Crawley
 Pete Graham
 Paul J Stevens
 Matus Moravcik
 Łukasz Lechowicz
 Jannis Leidel
+Basil Dubyk
+Anthony Ricaud
 Aliaksei Urbanski
 Vladimir Bolshakov
-Victor Munene
 Monika Sulik
 Kees Hink
-dfirst
 Costas Basdekis
 Srdjan Cosic
 Skirmantas Jurgaitis
@@ -64,14 +69,12 @@ pyup.io bot
 Piper Merriam
 Nathan Staines
 Lijo Antony
-Lars van de Kerkhof
-Joseph Wayodi
 Francis Reyes
 Edvinas Jurevicius
 danyilmaz
 Bojan Mihelac
-Basil Dubyk
 Alex Moon
+Roel Bruggink
 Piotr Jakimiak
 Pierre Dulac
 Mohammad Abbas
@@ -89,7 +92,6 @@ Alexander Pugachev
 aamir
 Tobias Englert
 Sergey Maranchuk
-Roel Bruggink
 Rachel Willmer
 Paolo Donadeo
 Mike de Bock
@@ -113,15 +115,21 @@ Wu Jiang
 Tuna Vargi
 Tim Jacobi
 SrdjanCosicPrica
+Shimul Chowdhury
 Shafique Jamal
 rsp2k
 Rob Moorman
 Róbert Čerňanský
 PaulO
+Nicola Marangon
+Nasir Hussain
 Matt Moran
+marangonico
 Mads Jensen
 Lex Berezhny
+Leandro Gomez
 Krzysiek Szularz
+John-Scott Atlakson
 Jay Modi
 Jason Cater
 Jan Klapuch
@@ -145,10 +153,12 @@ xyzzy
 Will Daly
 WeJie
 vkaracic
+Viggo de Vries
 v1kku
 Tom Hendrikx
 Tomasz Wysocki
 Tobias
+Tim Gates
 TiendaPaisa
 tiberiuichim
 Teemu Heikkilä
@@ -163,7 +173,9 @@ Sergey Fedoseev
 Sergei G
 Seppo Erviälä
 Selim
+samitnuk
 ryneeverett
+Roger Erens
 Richard
 resteve
 Rachel Graves
@@ -180,15 +192,16 @@ Osvaldo Santana Neto
 orf
 Oleg Rybkin
 Oleg Fish
-Nicola Marangon
 Nando Davis
 mvdwaeter
 mostafa-anm
 monikasulik
+mongkyo
 M O Faruque Sarker
 Mirek Mencel
 Miloud Belarbi
 Michal Raška
+Michał Mazur
 Matt Miller
 Matthew O'Loughlin
 Matt Drayer
@@ -197,7 +210,6 @@ Matas Dailyda
 Marek Matulka
 marcustas
 marco
-marangonico
 Lysergia
 Lukasz Kryger
 lucaippo
@@ -210,6 +222,7 @@ kisiel
 kemar
 Kai-Chu Chung
 Kaarle Ritvanen
+Justin Hopkins
 Julien Maupetit
 jsa
 Josh Kalderimis
@@ -221,7 +234,6 @@ Joris Vankerschaver
 Jon Aylard
 Jonathan Fiebelkorn
 Jonas Borges
-John-Scott Atlakson
 John Franey
 johndt6
 John Carter
@@ -253,6 +265,7 @@ discort
 Developers
 Denis Proskurin
 Darian Moody
+Dan Raviv
 Daniel Hepper
 Daniel DUONG
 Daniel
@@ -261,6 +274,9 @@ Dan Atkinson
 Dan
 Chris McKinnel
 Carlos Ramirez
+capelito
+Cameron
+Brennan Wright
 Bonza-Times
 Bogdan I. Bursuc
 Blake Griffith
@@ -268,6 +284,7 @@ bharathwaaj
 benvand
 Ben Burry
 Becky Lewis
+Bartek Gruszka
 Bart
 ayub-khan
 Ayub
@@ -277,6 +294,7 @@ Art Skvira
 Ariel Kaplan
 anywhim
 anentropic
+andruten
 André Ericson
 amirrpp
 Alexander Kaidalov
