@@ -116,5 +116,7 @@ todo: ## Look for areas of the code that need updating when some event has taken
 release: clean ## Creates release
 	pip install twine wheel
 	rm -rf dist/*
+	rm -rf src/oscar/static/*
+	npm run build
 	python setup.py sdist bdist_wheel
 	twine upload -s dist/*
