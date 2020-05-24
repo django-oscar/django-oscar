@@ -4,10 +4,10 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.apps.dashboard.offers import forms
-from oscar.apps.offer.custom import create_benefit
+from oscar.apps.offer.custom import create_benefit, create_condition
 from oscar.apps.offer.models import Benefit, Range
 from oscar.test.factories import create_product
-from tests._site.model_tests_app.models import CustomBenefitModel
+from tests._site.model_tests_app.models import CustomBenefitModel, CustomConditionModel
 
 
 class TestBenefitForm(TestCase):
@@ -159,3 +159,53 @@ class TestBenefitForm(TestCase):
             'custom_benefit': '',
             'max_affected_items': None
         }, form.clean())
+
+
+class TestConditionForm(TestCase):
+
+    def setUp(self):
+        self.range = Range.objects.create(
+            name="All products", includes_all_products=True)
+
+    def test_clean_no_value(self):
+        """
+        If a custom condition exists, and only the data for range and type is supplied,
+        the form should be invalid.
+        """
+        create_condition(CustomConditionModel)
+        form = forms.ConditionForm(data={
+            'range': self.range,
+            'type': 'Count',
+            'value': '',
+            'custom_condition': ''
+        })
+        self.assertFalse(form.is_valid())
+
+    def test_clean_no_type(self):
+        """
+        If a custom condition exists, and only the data for range and value is supplied,
+        the form should be invalid.
+        """
+        create_condition(CustomConditionModel)
+        form = forms.ConditionForm(data={
+            'range': self.range,
+            'type': '',
+            'value': 23,
+            'custom_condition': ''
+        })
+        self.assertFalse(form.is_valid())
+
+    def test_clean_custom_condition(self):
+        """
+        If a custom condition exists, and the data for range and custom condition is supplied,
+        the form should be valid.
+        """
+        custom_condition = create_condition(CustomConditionModel)
+        # import pdb; pdb.set_trace()
+        form = forms.ConditionForm(data={
+            'range': self.range,
+            'type': '',
+            'value': '',
+            'custom_condition': custom_condition.id
+        })
+        self.assertTrue(form.is_valid())
