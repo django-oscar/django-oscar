@@ -175,7 +175,7 @@ class TestConditionForm(TestCase):
         """
         create_condition(CustomConditionModel)
         form = forms.ConditionForm(data={
-            'range': self.range,
+            'range': self.range.id,
             'type': 'Count',
             'value': 1,
             'custom_condition': ''
@@ -188,15 +188,15 @@ class TestConditionForm(TestCase):
         the form should be invalid.
         """
         create_condition(CustomConditionModel)
-        test_data = [{'range', self.range}, {'type', 'Count'}, {'value', 1}]
-        for provided_data in test_data:
+        test_data = [('range', self.range), ('type', 'Count'), ('value', 1)]
+        for field, value in test_data:
             data = {
                 'range': '',
                 'type': '',
                 'value': '',
                 'custom_condition': ''
             }
-            data.update(data)
+            data[field] = value
             form = forms.ConditionForm(data=data)
             self.assertFalse(form.is_valid())
 
@@ -207,7 +207,7 @@ class TestConditionForm(TestCase):
         """
         custom_condition = create_condition(CustomConditionModel)
         form = forms.ConditionForm(data={
-            'range': self.range,
+            'range': self.range.id,
             'type': '',
             'value': '',
             'custom_condition': custom_condition.id
