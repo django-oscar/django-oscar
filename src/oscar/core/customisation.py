@@ -35,7 +35,7 @@ def subfolders(path):
     return folders
 
 
-def inherit_app_config(local_app_folder_path, local_app_name, app_config):
+def inherit_app_config(local_app_folder_path, local_app_name, app_config, label):
     create_file(
         join(local_app_folder_path, '__init__.py'),
         "default_app_config = '{app_name}.apps.{app_config_class_name}'\n".format(
@@ -45,10 +45,21 @@ def inherit_app_config(local_app_folder_path, local_app_name, app_config):
         join(local_app_folder_path, 'apps.py'),
         "import {app_config_class_module} as apps\n\n\n"
         "class {app_config_class_name}(apps.{app_config_class_name}):\n"
-        "    name = '{app_name}'\n".format(
+        "    name = '{app_name}'\n"
+        "    label = '{label}'\n".format(
             app_config_class_module=app_config.__module__,
             app_config_class_name=app_config.__class__.__name__,
-            app_name=local_app_name))
+            app_name=local_app_name,
+            label=label,
+            ))
+
+    create_file(
+        join(local_app_folder_path, '__init__.py'),
+        "default_app_config = '{app_name}.apps.{app_config_class_name}'"
+        "\n".format(
+            app_config_class_name=app_config.__class__.__name__,
+            app_name=local_app_name,
+            ))
 
 
 def fork_app(label, local_folder_path, local_app_subpackage=None, logger=None):
@@ -105,7 +116,7 @@ def fork_app(label, local_folder_path, local_app_subpackage=None, logger=None):
 
     logger.info("Creating app config")
     local_app_name = local_apps_package + ('.' if local_apps_package else '') + local_app_subpackage
-    inherit_app_config(local_app_folder_path, local_app_name, app_config)
+    inherit_app_config(local_app_folder_path, local_app_name, app_config, label)
 
     # Only create models.py and migrations if they exist in the Oscar app
     models_file_path = join(app_folder_path, 'models.py')
