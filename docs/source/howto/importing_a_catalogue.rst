@@ -40,3 +40,8 @@ Let's take a closer look at ``CatalogueImporter``::
 
 The two steps procedure we talked about are obvious in this example, and are
 implemented in ``_import`` and ``_import_row`` functions, respectively.
+
+You can find an example of the CSV data that the ``CatalogueImporter``
+expects `in the repository`_.
+
+.. _`in the repository`: https://github.com/django-oscar/django-oscar/blob/master/sandbox/fixtures/books.essential.csv
