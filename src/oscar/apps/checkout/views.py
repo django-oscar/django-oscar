@@ -608,9 +608,9 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         except Exception as e:
             # Unhandled exception - hopefully, you will only ever see this in
             # development...
-            logger.error(
+            logger.exception(
                 "Order #%s: unhandled exception while taking payment (%s)",
-                order_number, e, exc_info=True)
+                order_number, e)
             self.restore_frozen_basket()
             return self.render_preview(
                 self.request, error=error_msg, **payment_kwargs)
@@ -635,6 +635,12 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             self.restore_frozen_basket()
             return self.render_preview(
                 self.request, error=msg, **payment_kwargs)
+        except Exception as e:
+            # Hopefully you only ever reach this in development
+            logger.exception("Order #%s: unhandled exception while placing order (%s)", order_number, e)
+            error_msg = _("A problem occurred while placing this order. Please contact customer services.")
+            self.restore_frozen_basket()
+            return self.render_preview(self.request, error=error_msg, **payment_kwargs)
 
     def get_template_names(self):
         return [self.template_name_preview] if self.preview else [

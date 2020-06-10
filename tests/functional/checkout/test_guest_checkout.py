@@ -399,7 +399,7 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         preview = self.ready_to_place_an_order(is_guest=True)
         response = preview.forms['place_order_form'].submit()
         self.assertIsOk(response)
-        self.assertTrue(mock_logger.error.called)
+        self.assertTrue(mock_logger.exception.called)
         basket = Basket.objects.get()
         self.assertEqual(basket.status, Basket.OPEN)
 
@@ -413,6 +413,17 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         response = preview.forms['place_order_form'].submit()
         self.assertIsOk(response)
         self.assertTrue(mock_logger.error.called)
+        basket = Basket.objects.get()
+        self.assertEqual(basket.status, Basket.OPEN)
+
+    @mock.patch('oscar.apps.checkout.views.logger')
+    @mock.patch('oscar.apps.checkout.views.PaymentDetailsView.handle_order_placement')
+    def test_handles_all_other_exceptions_gracefully(self, mock_method, mock_logger):
+        mock_method.side_effect = Exception()
+        preview = self.ready_to_place_an_order(is_guest=True)
+        response = preview.forms['place_order_form'].submit()
+        self.assertIsOk(response)
+        self.assertTrue(mock_logger.exception.called)
         basket = Basket.objects.get()
         self.assertEqual(basket.status, Basket.OPEN)
 
