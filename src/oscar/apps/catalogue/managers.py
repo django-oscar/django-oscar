@@ -107,6 +107,12 @@ class ProductQuerySet(models.query.QuerySet):
         """
         return self.filter(parent=None, is_public=True)
 
+    def public(self):
+        """
+        Excludes non-public products
+        """
+        return self.filter(is_public=True)
+
     def browsable_dashboard(self):
         """
         Products that should be browsable in the dashboard.
