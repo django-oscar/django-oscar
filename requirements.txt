@@ -12,7 +12,7 @@ Whoosh==2.7.4
 django-environ==0.4.5
 django-redis==4.12.1
 pysolr==3.8.1
-redis==3.5.2
+redis==3.5.3
 requests==2.23.0
 uWSGI==2.0.18
 whitenoise==5.1.0
