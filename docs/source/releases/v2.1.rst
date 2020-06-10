@@ -134,6 +134,9 @@ Bug fixes
   had another line with a validation error - i.e. its product was out of stock
   (see :issue:`2791` and :issue:`1654`).
 
+- Fixed a bug where non-public child products were not excluded from parent product
+  forms and detail views.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -196,6 +199,8 @@ Minor changes
 
 - ``customer.views.ChangePasswordView.form_valid`` was modified
   to use a new ``send_password_changed_email`` method.
+
+- A ``public`` method was added to the ``ProductQuerySet``, which filters on products with ``is_public=True``.
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
