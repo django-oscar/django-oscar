@@ -1,0 +1,8 @@
+=========================
+Oscar 1.6.6 release notes
+=========================
+
+:release: 2018-01-18
+
+This is Oscar 1.6.6, a bugfix release that adds updated CSS assets that should
+have been included in Oscar 1.6.5.

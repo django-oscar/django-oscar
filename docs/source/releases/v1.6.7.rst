@@ -1,0 +1,8 @@
+=========================
+Oscar 1.6.7 release notes
+=========================
+
+:release: 2018-01-31
+
+This is Oscar 1.6.7, a bugfix release that adds updated dashboard CSS assets that should
+have been included in Oscar 1.6.5.
