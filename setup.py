@@ -66,7 +66,7 @@ test_requires = [
     'pytest>=3.6,<3.7',
     'pytest-cov==2.5.1',
     'pytest-django==3.1.2',
-    'pytest-xdist>=1.22<1.23',
+    'pytest-xdist==1.22.3',
     'tox>=3.0,<3.1',
 ]
 
