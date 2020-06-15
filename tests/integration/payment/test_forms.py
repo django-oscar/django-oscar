@@ -3,7 +3,7 @@ import datetime
 from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 from django.forms import ValidationError
-
+from freezegun import freeze_time
 
 from oscar.apps.payment import forms, models
 # types=[bankcards.VISA, bankcards.VISA_ELECTRON, bankcards.MASTERCARD,
@@ -45,6 +45,7 @@ class TestBankcardNumberField(TestCase):
             self.field.clean(None)
 
 
+@freeze_time('2016-01-01')
 class TestStartingMonthField(TestCase):
 
     def setUp(self):
@@ -72,6 +73,7 @@ class TestStartingMonthField(TestCase):
         self.assertEqual(1, start_date.day)
 
 
+@freeze_time('2016-01-01')
 class TestExpiryMonthField(TestCase):
 
     def setUp(self):

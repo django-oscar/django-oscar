@@ -61,12 +61,13 @@ test_requires = [
     'WebTest>=2.0,<2.1',
     'coverage>=4.5,<4.6',
     'django-webtest==1.9.2',
+    'freezegun',
     'py>=1.4.31',
     'psycopg2>=2.7,<2.8',
     'pytest>=3.6,<3.7',
     'pytest-cov==2.5.1',
     'pytest-django==3.1.2',
-    'pytest-xdist>=1.22<1.23',
+    'pytest-xdist==1.22.3',
     'tox>=3.0,<3.1',
 ]
 
