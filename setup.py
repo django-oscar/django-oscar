@@ -69,6 +69,7 @@ test_requires = [
     'pytest-django==3.1.2',
     'pytest-xdist==1.22.3',
     'tox>=3.0,<3.1',
+    'Faker<=4.1.0',     # Pinned for python 3.4 compatibility
 ]
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
