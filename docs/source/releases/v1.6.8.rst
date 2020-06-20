@@ -2,7 +2,7 @@
 Oscar 1.6.8 release notes
 =========================
 
-:release: ????-??-??
+:release: 2020-06-20
 
 This is Oscar 1.6.8, a Django 2.2 compatibility release.
 
