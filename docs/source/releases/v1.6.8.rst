@@ -1,0 +1,10 @@
+=========================
+Oscar 1.6.8 release notes
+=========================
+
+:release: 2020-06-20
+
+This is Oscar 1.6.8, a Django 2.2 compatibility release.
+
+It also updates Bootstrap to 3.4.1 and explicitly specifies extend in the
+npm dependencies to fix CVE-2019-8331 and CVE-2018-16492 vulnerabilities.
