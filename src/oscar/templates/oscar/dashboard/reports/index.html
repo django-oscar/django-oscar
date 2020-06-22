@@ -27,7 +27,8 @@
         <form method="get" class="form-inline">
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
             <span class="form-group">
-                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Generating...' %}">{% trans "Generate report" %}</button>
+                {# data-loading-text is deliberately not used here so that the button doesn't stay disabled after a CSV download has started #}
+                <button type="submit" id='generate_report' class="btn btn-primary">{% trans "Generate report" %}</button>
             </span>
         </form>
     </div>
