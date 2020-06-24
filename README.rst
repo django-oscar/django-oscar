@@ -190,7 +190,7 @@ The following are community-written extensions:
 
 * django-oscar-przelewy24_ - Integration with the Przelewy24 payment gateway
 * oscar-sagepay_ - Payment integration with Sage Pay
-* django-oscar-erp_
+
 * django-oscar-sofortueberweisung_ - Integration with SOFORT
 
 * django-oscar-support_ - Customer services and ticketing plugin for Oscar
@@ -222,7 +222,6 @@ The following are community-written extensions:
 Let us know if you're writing a new one!
 
 .. _django-oscar-unicredit: https://bitbucket.org/marsim/django-oscar-unicredit/
-.. _django-oscar-erp: https://bitbucket.org/zikzakmedia/django-oscar_erp
 .. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
 .. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
 
