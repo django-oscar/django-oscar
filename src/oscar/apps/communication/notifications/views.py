@@ -71,6 +71,7 @@ class DetailView(PageTitleMixin, generic.DetailView):
 
 class UpdateView(BulkEditMixin, generic.View):
     model = Notification
+    http_method_names = ['post']
     actions = ('archive', 'delete')
     checkbox_object_name = 'notification'
 
