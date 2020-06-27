@@ -220,6 +220,9 @@ class ProductCreateUpdateView(generic.UpdateView):
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_formset = StockRecordFormSet
 
+    creating = False
+    parent = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.formsets = {'category_formset': self.category_formset,
