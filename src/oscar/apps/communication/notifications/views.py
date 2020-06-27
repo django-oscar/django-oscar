@@ -69,11 +69,10 @@ class DetailView(PageTitleMixin, generic.DetailView):
             recipient=self.request.user)
 
 
-class UpdateView(BulkEditMixin, generic.RedirectView):
+class UpdateView(BulkEditMixin, generic.View):
     model = Notification
     actions = ('archive', 'delete')
     checkbox_object_name = 'notification'
-    permanent = False
 
     def get_object_dict(self, ids):
         return self.model.objects.filter(
