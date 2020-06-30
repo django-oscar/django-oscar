@@ -4,7 +4,7 @@ from django.db.models import Sum
 from django.forms.utils import ErrorDict
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from oscar.forms import widgets
 
 Line = get_model('basket', 'line')
@@ -268,7 +268,7 @@ class AddToBasketForm(forms.Form):
         return options
 
 
-class SimpleAddToBasketForm(AddToBasketForm):
+class SimpleAddToBasketForm(get_class('basket.forms', 'AddToBasketForm')):
     """
     Simplified version of the add to basket form where the quantity is
     defaulted to 1 and rendered in a hidden widget
