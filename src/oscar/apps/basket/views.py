@@ -122,6 +122,7 @@ class BasketView(ModelFormSetView):
             self.request.basket)
 
         if self.request.user.is_authenticated:
+            context.setdefault('save_formset', None)
             try:
                 saved_basket = self.basket_model.saved.get(
                     owner=self.request.user)
@@ -217,6 +218,7 @@ class BasketView(ModelFormSetView):
         return response
 
     def json_response(self, ctx, flash_messages):
+        ctx.setdefault('save_formset', None)
         basket_html = render_to_string(
             'oscar/basket/partials/basket_content.html',
             context=ctx, request=self.request)
