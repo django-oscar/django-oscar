@@ -2,7 +2,7 @@
 Oscar 2.1 release notes
 =======================
 
-:release: tbd
+:release: 2020-07-10
 
 Welcome to Oscar 2.1! This is a significant release which includes a number of
 new features and performance improvements.
@@ -221,7 +221,7 @@ Javascript dependencies:
 - Upgraded ``jquery`` to version 3.5.
 - Upgraded ``inputmask`` to version 5.0.
 - Upgraded ``select2`` to version 4.0.
-- Upgraded ``tinymce`` to version 5.2.
+- Upgraded ``tinymce`` to version 5.3.
 
 .. _deprecated_features_in_2.1:
 

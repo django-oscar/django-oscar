@@ -1,6 +1,6 @@
 {
   "name": "django-oscar",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A domain-driven e-commerce framework for Django",
   "main": "index.js",
   "dependencies": {},
