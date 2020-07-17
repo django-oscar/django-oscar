@@ -83,8 +83,7 @@ coverage: venv ## Generate coverage report
 lint: ## Run flake8 and isort checks
 	flake8 src/oscar/
 	flake8 tests/
-	isort -c -q --recursive --diff src/
-	isort -c -q --recursive --diff tests/
+	isort -c -q --diff src/ tests/
 
 test_migrations: install-migrations-testing-requirements ## Tests migrations
 	cd sandbox && ./test_migrations.sh

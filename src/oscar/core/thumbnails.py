@@ -19,6 +19,7 @@ class SorlThumbnail(AbstractThumbnailer):
 
     def generate_thumbnail(self, source, **opts):
         from sorl.thumbnail import get_thumbnail
+
         # Sorl can accept only: "width x height", "width", "x height".
         # https://sorl-thumbnail.readthedocs.io/en/latest/template.html#geometry
         # So for example value '50x' must be converted to '50'.
