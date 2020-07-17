@@ -1,9 +1,9 @@
-dist: xenial
+dist: bionic
 sudo: false
 language: python
 
 addons:
-  postgresql: "9.6"
+  postgresql: "10"
   apt_packages:
     - enchant
 
