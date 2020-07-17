@@ -18,9 +18,9 @@ except ValueError:
 # Backward-compatible import for url_has_allowed_host_and_scheme.
 try:
     # Django 3.0 and above
-    from django.utils.http import url_has_allowed_host_and_scheme       # noqa F401
+    from django.utils.http import url_has_allowed_host_and_scheme  # noqa F401
 except ImportError:
-    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme    # noqa F401
+    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme  # noqa F401 isort:skip
 
 
 def get_user_model():

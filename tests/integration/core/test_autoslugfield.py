@@ -171,9 +171,10 @@ class AutoSlugFieldTest(TestCase):
         Tests making migrations with Django 1.7+'s migration framework
         """
 
-        import oscar
         from django.db import migrations
         from django.db.migrations.writer import MigrationWriter
+
+        import oscar
         from oscar.models.fields import AutoSlugField
         fields = {
             'autoslugfield': AutoSlugField(populate_from='otherfield'),

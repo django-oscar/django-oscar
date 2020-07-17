@@ -10,6 +10,7 @@ Category = get_model("catalogue", "Category")
 
 if settings.OSCAR_DELETE_IMAGE_FILES:
     from django.db import models
+
     from oscar.core.thumbnails import get_thumbnailer
 
     ProductImage = get_model('catalogue', 'ProductImage')
