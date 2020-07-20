@@ -433,9 +433,8 @@ class AbstractOrderStatusChange(models.Model):
         ordering = ['-date_created']
 
     def __str__(self):
-        return _('{order} has changed status from {old_status} to {new_status}').format(
-            order=self.order, old_status=self.old_status, new_status=self.new_status
-        )
+        return _("%(order)s has changed status from %(old_status)s to %(new_status)s") \
+            % {'order': self.order, 'old_status': self.old_status, 'new_status': self.new_status, }
 
 
 class AbstractCommunicationEvent(models.Model):
