@@ -98,6 +98,22 @@ Core team:
 .. _`Alexander Gaevsky`: https://github.com/sasha0
 .. _`Samir Shah`: https://github.com/solarissmoke
 
+
+Supported versions
+------------------
+
+The currently supported versions of Oscar are:
+
++---------+----------------+
+| Version | End of support |
++=========+================+
+| 2.1 LTS | August 2023    |
++---------+----------------+
+
+Supported verions are eligible for fixes for data loss bugs and security issues. Releases designated as
+Long-term support (LTS) releases will receive support for an extended period of 3 years from their release date.
+
+
 Screenshots
 -----------
 
