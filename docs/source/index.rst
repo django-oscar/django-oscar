@@ -98,6 +98,7 @@ All you need to start developing an Oscar project.
 .. toctree::
    :maxdepth: 1
 
+   ref/platform_database_support
    topics/customisation
    topics/class_loading_explained
    topics/prices_and_availability
@@ -129,4 +130,3 @@ Learn about the ideas behind Oscar and how you can contribute.
    internals/design-decisions
    releases/index
    internals/contributing/index
-

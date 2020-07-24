@@ -5,9 +5,6 @@ Reporting bugs and requesting features
 Before reporting a bug or requesting a new feature, please consider these
 general points:
 
-* Be aware that Windows and the Django admin interface are unsupported; any
-  tickets regarding that will get closed.
-
 * Check that someone hasn't already filed the bug or feature request by
   searching in the ticket tracker.
 
