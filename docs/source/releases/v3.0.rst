@@ -1,0 +1,53 @@
+========================================
+Oscar 3.0 release notes (in development)
+========================================
+
+:release: TBD
+
+Welcome to Oscar 3.0!
+
+.. contents::
+    :local:
+    :depth: 1
+
+.. _compatibility_of_3.0:
+
+Compatibility
+~~~~~~~~~~~~~
+
+
+.. _new_in_3.0:
+
+What's new in Oscar 3.0?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Backwards incompatible changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Bug fixes
+~~~~~~~~~
+
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Minor changes
+~~~~~~~~~~~~~
+
+
+Dependency changes
+~~~~~~~~~~~~~~~~~~
+
+Python package dependencies:
+
+
+Javascript dependencies:
+
+
+.. _deprecated_features_in_2.0:
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
