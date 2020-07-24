@@ -111,7 +111,6 @@
                                     <th>{% trans "Status" %}</th>
                                     <th>{% trans "Supplier" %}</th>
                                     <th>{% trans "Supplier SKU" %}</th>
-                                    <th>{% trans "Est. dispatch date" %}</th>
                                     <th>{% trans "Price excl tax (before discounts)" %}</th>
                                     <th>{% trans "Price inc tax (before discounts)" %}</th>
                                     <th>{% trans "Actions" %}</th>
@@ -145,7 +144,6 @@
                                             {% endif %}
                                         </td>
                                         <td>{{ line.partner_sku }}</td>
-                                        <td>{{ line.est_dispatch_date|default:"-" }}</td>
                                         <td class="text-right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                                         <td class="text-right">{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                                         <td>

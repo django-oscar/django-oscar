@@ -47,7 +47,6 @@
         "stockrecord": 6,
         "partner_sku": "9780553380958",
         "line_price_excl_tax": "7.99",
-        "unit_retail_price": null,
         "partner_line_reference": "",
         "partner_name": "Book partner",
         "line_price_incl_tax": "7.99",
@@ -56,10 +55,8 @@
         "line_price_before_discounts_excl_tax": "7.99",
         "upc": "9780553380958",
         "line_price_before_discounts_incl_tax": "7.99",
-        "est_dispatch_date": null,
         "partner_line_notes": "",
         "unit_price_incl_tax": "7.99",
-        "unit_cost_price": null,
         "partner": 3,
         "order": 1,
         "quantity": 1

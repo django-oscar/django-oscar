@@ -69,7 +69,7 @@ class ZeroFreeThresholdTest(TestCase):
         self.assertEqual(D('0.00'), charge.incl_tax)
 
     def test_free_shipping_with_nonempty_basket(self):
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        record = factories.create_stockrecord(price=D('5.00'))
         self.basket.add_product(record.product)
         charge = self.method.calculate(self.basket)
         self.assertEqual(D('0.00'), charge.incl_tax)
@@ -83,7 +83,7 @@ class TestNonZeroFreeThreshold(TestCase):
         self.basket = factories.create_basket(empty=True)
 
     def test_basket_below_threshold(self):
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        record = factories.create_stockrecord(price=D('5.00'))
         self.basket.add_product(record.product)
 
         charge = self.method.calculate(self.basket)
@@ -91,7 +91,7 @@ class TestNonZeroFreeThreshold(TestCase):
         self.assertEqual(D('10.00'), charge.incl_tax)
 
     def test_basket_on_threshold(self):
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        record = factories.create_stockrecord(price=D('5.00'))
         self.basket.add_product(record.product, quantity=4)
 
         charge = self.method.calculate(self.basket)
@@ -99,7 +99,7 @@ class TestNonZeroFreeThreshold(TestCase):
         self.assertEqual(D('0.00'), charge.incl_tax)
 
     def test_basket_above_threshold(self):
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        record = factories.create_stockrecord(price=D('5.00'))
         self.basket.add_product(record.product, quantity=8)
 
         charge = self.method.calculate(self.basket)

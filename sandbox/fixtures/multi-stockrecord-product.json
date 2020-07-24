@@ -81,15 +81,13 @@
         "price_currency": "GBP",
         "product": 1,
         "partner_sku": "a1",
-        "price_retail": null,
         "date_updated": "2013-07-18T12:25:41.107Z",
         "num_in_stock": 5,
         "num_allocated": null,
         "low_stock_threshold": null,
         "date_created": "2013-07-18T12:25:41.107Z",
         "partner": 1,
-        "price_excl_tax": "20",
-        "cost_price": null
+        "price": "20"
     }
 },
 {
@@ -99,15 +97,13 @@
         "price_currency": "GBP",
         "product": 1,
         "partner_sku": "a2",
-        "price_retail": null,
         "date_updated": "2013-07-18T12:25:49.939Z",
         "num_in_stock": 15,
         "num_allocated": null,
         "low_stock_threshold": null,
         "date_created": "2013-07-18T12:25:49.939Z",
         "partner": 1,
-        "price_excl_tax": "10",
-        "cost_price": null
+        "price": "10"
     }
 }
 ]

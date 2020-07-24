@@ -543,10 +543,6 @@ class AbstractLine(models.Model):
         _("Price before discounts (excl. tax)"),
         decimal_places=2, max_digits=12)
 
-    # Deprecated - will be removed in Oscar 2.1
-    unit_cost_price = models.DecimalField(
-        _("Unit Cost Price"), decimal_places=2, max_digits=12, blank=True,
-        null=True)
     # Normal site price for item (without discounts)
     unit_price_incl_tax = models.DecimalField(
         _("Unit Price (inc. tax)"), decimal_places=2, max_digits=12,
@@ -554,18 +550,10 @@ class AbstractLine(models.Model):
     unit_price_excl_tax = models.DecimalField(
         _("Unit Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
-    # Deprecated - will be removed in Oscar 2.1
-    unit_retail_price = models.DecimalField(
-        _("Unit Retail Price"), decimal_places=2, max_digits=12,
-        blank=True, null=True)
 
     # Partners often want to assign some status to each line to help with their
     # own business processes.
     status = models.CharField(_("Status"), max_length=255, blank=True)
-
-    # Deprecated - will be removed in Oscar 2.1
-    est_dispatch_date = models.DateField(
-        _("Estimated Dispatch Date"), blank=True, null=True)
 
     #: Order status pipeline.  This should be a dict where each (key, value)
     #: corresponds to a status and the possible statuses that can follow that

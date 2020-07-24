@@ -100,24 +100,16 @@ class OrderLineFactory(factory.DjangoModelFactory):
         lambda l: l.product.stockrecords.first())
     quantity = 1
 
-    line_price_incl_tax = factory.LazyAttribute(
-        lambda obj: tax_add(obj.stockrecord.price_excl_tax) * obj.quantity)
-    line_price_excl_tax = factory.LazyAttribute(
-        lambda obj: obj.stockrecord.price_excl_tax * obj.quantity)
+    line_price_incl_tax = factory.LazyAttribute(lambda obj: tax_add(obj.stockrecord.price) * obj.quantity)
+    line_price_excl_tax = factory.LazyAttribute(lambda obj: obj.stockrecord.price * obj.quantity)
 
     line_price_before_discounts_incl_tax = (
         factory.SelfAttribute('.line_price_incl_tax'))
     line_price_before_discounts_excl_tax = (
         factory.SelfAttribute('.line_price_excl_tax'))
 
-    unit_price_incl_tax = factory.LazyAttribute(
-        lambda obj: tax_add(obj.stockrecord.price_excl_tax))
-    unit_cost_price = factory.LazyAttribute(
-        lambda obj: obj.stockrecord.cost_price)
-    unit_price_excl_tax = factory.LazyAttribute(
-        lambda obj: obj.stockrecord.price_excl_tax)
-    unit_retail_price = factory.LazyAttribute(
-        lambda obj: obj.stockrecord.price_retail)
+    unit_price_incl_tax = factory.LazyAttribute(lambda obj: tax_add(obj.stockrecord.price))
+    unit_price_excl_tax = factory.LazyAttribute(lambda obj: obj.stockrecord.price)
 
     class Meta:
         model = get_model('order', 'Line')

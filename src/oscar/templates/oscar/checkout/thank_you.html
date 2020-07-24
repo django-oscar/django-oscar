@@ -136,14 +136,7 @@
                     </div>
                     <div class="col-sm-7">
                         <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
-                        <p>
-                        {% if line.upc %}{{ line.upc }}<br/>{% endif %}
-                        {% if line.est_dispatch_date %}
-                            {% blocktrans with date=line.est_dispatch_date %}
-                                Estimated dispatch: <strong>{{ date }}</strong>
-                            {% endblocktrans %}
-                        {% endif %}
-                        </p>
+                        {% if line.upc %}<p>{{ line.upc }}</p>{% endif %}
                     </div>
                     <div class="col-sm-1 align-center">
                         {{ line.quantity }}

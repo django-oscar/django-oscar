@@ -96,7 +96,7 @@ class ImportSmokeTest(TestCase):
 
     def test_price_is_imported(self):
         stockrecord = self.product.stockrecords.all()[0]
-        self.assertEqual(D('10.32'), stockrecord.price_excl_tax)
+        self.assertEqual(D('10.32'), stockrecord.price)
 
     def test_num_in_stock_is_imported(self):
         stockrecord = self.product.stockrecords.all()[0]

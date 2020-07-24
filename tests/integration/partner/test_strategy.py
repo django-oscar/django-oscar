@@ -53,7 +53,7 @@ class TestDefaultStrategy(TestCase):
         # The availability policy should be independent of price.
         product_class = factories.ProductClassFactory(track_stock=False)
         product = factories.ProductFactory(product_class=product_class, stockrecords=[])
-        factories.StockRecordFactory(price_excl_tax=None, product=product)
+        factories.StockRecordFactory(price=None, product=product)
         info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
 
@@ -123,7 +123,7 @@ class TestFixedRateTax(TestCase):
 
     def test_pricing_policy_unavailable_if_no_price_excl_tax(self):
         product = factories.ProductFactory(stockrecords=[])
-        factories.StockRecordFactory(price_excl_tax=None, product=product)
+        factories.StockRecordFactory(price=None, product=product)
         info = strategy.UK().fetch_for_product(product)
         self.assertFalse(info.price.exists)
 
@@ -132,6 +132,6 @@ class TestDeferredTax(TestCase):
 
     def test_pricing_policy_unavailable_if_no_price_excl_tax(self):
         product = factories.ProductFactory(stockrecords=[])
-        factories.StockRecordFactory(price_excl_tax=None, product=product)
+        factories.StockRecordFactory(price=None, product=product)
         info = strategy.US().fetch_for_product(product)
         self.assertFalse(info.price.exists)

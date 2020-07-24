@@ -40,7 +40,7 @@
                     <th>{% trans 'Notes' %}</th>
                     <td>{{ address.notes|linebreaks }}</td>
                 </tr>
-            {% endif %} 
+            {% endif %}
         </table>
     {% endwith %}
 
@@ -57,7 +57,6 @@
         <tr>
             <th>{% trans 'Product' %}</th>
             <th>{% trans 'Status' %}</th>
-            <th>{% trans 'Estimated dispatch date' %}</th>
             <th>{% trans 'Quantity' %}</th>
             <th>{% trans 'Line price excl. tax' %}</th>
             <th>{% trans 'Line price incl. tax' %}</th>
@@ -75,7 +74,6 @@
                     {% endif %}
                 </td>
                 <td>{{ line.shipping_status|default:"-" }}</td>
-                <td>{{ line.est_dispatch_date|default:"-" }}</td>
                 <td>{{ line.quantity }}</td>
                 <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
