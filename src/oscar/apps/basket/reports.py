@@ -30,7 +30,7 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
             if basket.owner:
                 row = [basket.owner_id, basket.owner.get_full_name(),
                        basket.owner.email,
-                       basket.status, basket.num_lines,
+                       basket.status, basket.num_lines, basket.num_items,
                        self.format_datetime(basket.date_created),
                        basket.time_since_creation]
             else:
