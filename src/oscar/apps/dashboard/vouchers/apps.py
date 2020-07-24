@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarDashboardConfig
@@ -32,25 +32,16 @@ class VouchersDashboardConfig(OscarDashboardConfig):
 
     def get_urls(self):
         urls = [
-            url(r'^$', self.list_view.as_view(), name='voucher-list'),
-            url(r'^create/$', self.create_view.as_view(),
-                name='voucher-create'),
-            url(r'^update/(?P<pk>\d+)/$', self.update_view.as_view(),
-                name='voucher-update'),
-            url(r'^delete/(?P<pk>\d+)/$', self.delete_view.as_view(),
-                name='voucher-delete'),
-            url(r'^stats/(?P<pk>\d+)/$', self.stats_view.as_view(),
-                name='voucher-stats'),
+            path('', self.list_view.as_view(), name='voucher-list'),
+            path('create/', self.create_view.as_view(), name='voucher-create'),
+            path('update/<int:pk>/', self.update_view.as_view(), name='voucher-update'),
+            path('delete/<int:pk>/', self.delete_view.as_view(), name='voucher-delete'),
+            path('stats/<int:pk>/', self.stats_view.as_view(), name='voucher-stats'),
 
-            url(r'^sets$', self.set_list_view.as_view(),
-                name='voucher-set-list'),
-            url(r'^sets/create/$', self.set_create_view.as_view(),
-                name='voucher-set-create'),
-            url(r'^sets/update/(?P<pk>\d+)/$', self.set_update_view.as_view(),
-                name='voucher-set-update'),
-            url(r'^sets/(?P<pk>\d+)/$', self.set_detail_view.as_view(),
-                name='voucher-set'),
-            url(r'^sets/(?P<pk>\d+)/download$', self.set_download_view.as_view(),
-                name='voucher-set-download'),
+            path('sets/', self.set_list_view.as_view(), name='voucher-set-list'),
+            path('sets/create/', self.set_create_view.as_view(), name='voucher-set-create'),
+            path('sets/update/<int:pk>/', self.set_update_view.as_view(), name='voucher-set-update'),
+            path('sets/<int:pk>/', self.set_detail_view.as_view(), name='voucher-set'),
+            path('sets/<int:pk>/download/', self.set_download_view.as_view(), name='voucher-set-download'),
         ]
         return self.post_process_urls(urls)

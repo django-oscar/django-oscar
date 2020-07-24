@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarConfig
@@ -23,7 +23,7 @@ class SearchConfig(OscarConfig):
         # The form class has to be passed to the __init__ method as that is how
         # Haystack works.  It's slightly different to normal CBVs.
         urlpatterns = [
-            url(r'^$', search_view_factory(
+            path('', search_view_factory(
                 view_class=self.search_view,
                 form_class=self.search_form,
                 searchqueryset=self.get_sqs()),

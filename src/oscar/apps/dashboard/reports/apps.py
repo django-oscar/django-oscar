@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarDashboardConfig
@@ -17,6 +17,6 @@ class ReportsDashboardConfig(OscarDashboardConfig):
 
     def get_urls(self):
         urls = [
-            url(r'^$', self.index_view.as_view(), name='reports-index'),
+            path('', self.index_view.as_view(), name='reports-index'),
         ]
         return self.post_process_urls(urls)

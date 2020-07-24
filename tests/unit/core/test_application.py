@@ -1,9 +1,9 @@
 from unittest import mock
 
 from django.apps import apps
-from django.conf.urls import url
 from django.test import TestCase
 from django.test.utils import modify_settings
+from django.urls import path
 from django.views.generic import View
 
 
@@ -25,7 +25,7 @@ class OscarConfigTestCase(TestCase):
 
     @mock.patch('oscar.views.decorators.permissions_required')
     def test_get_url_decorator_fetches_correct_perms(self, mock_permissions_required):
-        pattern = url('^$', View.as_view(), name='index')
+        pattern = path('', View.as_view(), name='index')
         self.myapp.get_url_decorator(pattern)
         mock_permissions_required.assert_called_once_with('is_staff', login_url=None)
 
@@ -36,7 +36,7 @@ class OscarConfigTestCase(TestCase):
         self.myapp.get_url_decorator = mock.Mock()
         self.myapp.get_url_decorator.return_value = fake_decorator
 
-        pattern = url('^$', View.as_view(), name='index')
+        pattern = path('', View.as_view(), name='index')
         processed_patterns = self.myapp.post_process_urls([pattern])
 
         self.myapp.get_url_decorator.assert_called_once_with(pattern)
