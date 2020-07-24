@@ -49,12 +49,6 @@ Run the sandbox locally
 It's pretty straightforward to get the sandbox site running locally so you can
 play around with Oscar.
 
-.. warning::
-
-    While installing Oscar is straightforward, some of Oscar's dependencies
-    don't support Windows and are tricky to be properly installed, and therefore
-    you might encounter some errors that prevent a successful installation.
-
 In order to compile uWSGI, which is a dependency of the sandbox, you will
 first need to install the Python development headers with:::
 

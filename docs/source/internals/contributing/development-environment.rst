@@ -73,10 +73,10 @@ For this to work, you will need to ensure that the pre-processor binary
 
 .. _npm: https://www.npmjs.com/
 
-Testing migrations against MySQL and PostgreSQL
------------------------------------------------
+Testing migrations
+------------------
 
-To test the migrations against MySQL and PostgreSQL you will need to set
+To test the migrations against PostgreSQL you will need to set
 up an environment with both installed and do the following:
 
 1. Change to sandbox folder and activate your virtualenv
@@ -85,5 +85,4 @@ up an environment with both installed and do the following:
 
     ./test_migrations.sh
 
-This will recreate the Oscar database in both MySQL and PostgreSQL and rebuild
-it using ``migrate``.
+This will recreate the Oscar database in PostgreSQL and rebuild it using ``migrate``.
