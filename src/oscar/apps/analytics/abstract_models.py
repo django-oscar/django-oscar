@@ -86,6 +86,7 @@ class AbstractUserProductView(models.Model):
     class Meta:
         abstract = True
         app_label = 'analytics'
+        ordering = ['-pk']
         verbose_name = _('User product view')
         verbose_name_plural = _('User product views')
 
@@ -106,6 +107,7 @@ class AbstractUserSearch(models.Model):
     class Meta:
         abstract = True
         app_label = 'analytics'
+        ordering = ['-pk']
         verbose_name = _("User search query")
         verbose_name_plural = _("User search queries")
 

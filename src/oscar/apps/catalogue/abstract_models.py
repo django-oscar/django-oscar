@@ -1202,7 +1202,7 @@ class AbstractOption(models.Model):
         (DATE, _("Date")),
     )
 
-    name = models.CharField(_("Name"), max_length=128)
+    name = models.CharField(_("Name"), max_length=128, db_index=True)
     code = AutoSlugField(_("Code"), max_length=128, unique=True, populate_from='name')
     type = models.CharField(_("Type"), max_length=255, default=TEXT, choices=TYPE_CHOICES)
     required = models.BooleanField(_("Is this option required?"), default=False)
@@ -1210,6 +1210,7 @@ class AbstractOption(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
+        ordering = ['name']
         verbose_name = _("Option")
         verbose_name_plural = _("Options")
 

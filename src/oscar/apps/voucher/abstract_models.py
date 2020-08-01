@@ -33,7 +33,7 @@ class AbstractVoucherSet(models.Model):
     code_length = models.IntegerField(
         verbose_name=_('Length of Code'), default=12)
     description = models.TextField(verbose_name=_('Description'))
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True)
     start_datetime = models.DateTimeField(_('Start datetime'))
     end_datetime = models.DateTimeField(_('End datetime'))
 
@@ -46,6 +46,7 @@ class AbstractVoucherSet(models.Model):
         abstract = True
         app_label = 'voucher'
         get_latest_by = 'date_created'
+        ordering = ['-date_created']
         verbose_name = _("VoucherSet")
         verbose_name_plural = _("VoucherSets")
 
@@ -155,11 +156,12 @@ class AbstractVoucher(models.Model):
         on_delete=models.CASCADE
     )
 
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         abstract = True
         app_label = 'voucher'
+        ordering = ['-date_created']
         get_latest_by = 'date_created'
         verbose_name = _("Voucher")
         verbose_name_plural = _("Vouchers")
@@ -293,11 +295,12 @@ class AbstractVoucherApplication(models.Model):
         'order.Order',
         on_delete=models.CASCADE,
         verbose_name=_("Order"))
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         abstract = True
         app_label = 'voucher'
+        ordering = ['-date_created']
         verbose_name = _("Voucher Application")
         verbose_name_plural = _("Voucher Applications")
 

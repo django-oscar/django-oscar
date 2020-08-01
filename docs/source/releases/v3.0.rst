@@ -64,6 +64,8 @@ Removal of deprecated features
 Minor changes
 ~~~~~~~~~~~~~
 
+- Several models were updated to define a default ordering, to avoid issues with inconsistent ordering of
+  items in the dashboard and elsewhere. Database migrations are required for these changes.
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~

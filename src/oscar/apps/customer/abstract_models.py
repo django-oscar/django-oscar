@@ -153,7 +153,7 @@ class AbstractProductAlert(models.Model):
     status = models.CharField(_("Status"), max_length=20,
                               choices=STATUS_CHOICES, default=ACTIVE)
 
-    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True, db_index=True)
     date_confirmed = models.DateTimeField(_("Date confirmed"), blank=True,
                                           null=True)
     date_cancelled = models.DateTimeField(_("Date cancelled"), blank=True,
@@ -163,6 +163,7 @@ class AbstractProductAlert(models.Model):
     class Meta:
         abstract = True
         app_label = 'customer'
+        ordering = ['-date_created']
         verbose_name = _('Product alert')
         verbose_name_plural = _('Product alerts')
 

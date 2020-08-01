@@ -810,6 +810,7 @@ class AbstractRange(models.Model):
     class Meta:
         abstract = True
         app_label = 'offer'
+        ordering = ['name']
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
 
