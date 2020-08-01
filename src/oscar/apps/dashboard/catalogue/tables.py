@@ -113,6 +113,6 @@ class OptionTable(DashboardTable):
 
     class Meta(DashboardTable.Meta):
         model = Option
-        fields = ('name', 'type')
-        sequence = ('name', 'type', 'actions')
+        fields = ('name', 'type', 'required')
+        sequence = ('name', 'type', 'required', 'actions')
         per_page = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE

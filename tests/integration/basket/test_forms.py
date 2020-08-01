@@ -10,9 +10,11 @@ from oscar.core.loading import get_model
 from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.factories import (
-    BenefitFactory, ConditionalOfferFactory, ConditionFactory, RangeFactory)
+    BenefitFactory, ConditionalOfferFactory, ConditionFactory,
+    OptionFactory, RangeFactory)
 
 Line = get_model('basket', 'Line')
+Option = get_model('catalogue', 'Option')
 
 
 class TestBasketLineForm(TestCase):
@@ -204,4 +206,81 @@ class TestAddToBasketForm(TestCase):
             form.errors['__all__'][0],
             'This product cannot be added to the basket because a price '
             'could not be determined for it.',
+        )
+
+
+class TestAddToBasketWithOptionForm(TestCase):
+
+    def setUp(self):
+        self.basket = factories.create_basket(empty=True)
+        self.product = factories.create_product(num_in_stock=1)
+
+    def _get_basket_form(self, basket, product, data=None):
+        return forms.AddToBasketForm(basket=basket, product=product, data=data)
+
+    def test_basket_option_field_exists(self):
+        option = OptionFactory()
+        self.product.product_class.options.add(option)
+        form = self._get_basket_form(basket=self.basket, product=self.product)
+        self.assertIn(option.code, form.fields)
+
+    def test_add_to_basket_with_not_required_option(self):
+        option = OptionFactory(required=False)
+        self.product.product_class.options.add(option)
+        data = {'quantity': 1}
+        form = self._get_basket_form(
+            basket=self.basket, product=self.product, data=data,
+        )
+        self.assertTrue(form.is_valid())
+        self.assertFalse(form.fields[option.code].required)
+
+    def test_add_to_basket_with_required_option(self):
+        option = OptionFactory(required=True)
+        self.product.product_class.options.add(option)
+        data = {'quantity': 1}
+        invalid_form = self._get_basket_form(
+            basket=self.basket, product=self.product, data=data,
+        )
+        self.assertFalse(invalid_form.is_valid())
+        self.assertTrue(invalid_form.fields[option.code].required)
+        data[option.code] = 'Test value'
+        valid_form = self._get_basket_form(
+            basket=self.basket, product=self.product, data=data,
+        )
+        self.assertTrue(valid_form.is_valid())
+
+    def _test_add_to_basket_with_specific_option_type(
+            self, option_type, invalid_value, valid_value
+    ):
+        option = OptionFactory(required=True, type=option_type)
+        self.product.product_class.options.add(option)
+        data = {'quantity': 1, option.code: invalid_value}
+        invalid_form = self._get_basket_form(
+            basket=self.basket, product=self.product, data=data,
+        )
+        self.assertFalse(invalid_form.is_valid())
+        data[option.code] = valid_value
+        valid_form = self._get_basket_form(
+            basket=self.basket, product=self.product, data=data,
+        )
+        self.assertTrue(valid_form.is_valid())
+
+    def test_add_to_basket_with_integer_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.INTEGER, 1.55, 1,
+        )
+
+    def test_add_to_basket_with_float_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.FLOAT, 'invalid_float', 1,
+        )
+
+    def test_add_to_basket_with_bool_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.BOOLEAN, None, True,
+        )
+
+    def test_add_to_basket_with_date_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.DATE, 'invalid_date', '2019-03-03',
         )
