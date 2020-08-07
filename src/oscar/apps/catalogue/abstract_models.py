@@ -227,7 +227,7 @@ class AbstractCategory(MP_Node):
         else:
             included_in_non_public_subtree = self.__class__.objects.filter(
                 is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
-            ).exists()
+            )
             self.get_descendants_and_self().update(
                 ancestors_are_public=Exists(
                     included_in_non_public_subtree.values("id"), negated=True))
