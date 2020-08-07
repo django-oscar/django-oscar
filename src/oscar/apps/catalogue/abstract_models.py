@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
 from django.core.validators import RegexValidator
-from django.db import models
+from django.db import models, connections
 from django.db.models import Count, Exists, OuterRef, Sum
 from django.db.models.fields import Field
 from django.db.models.lookups import StartsWith
@@ -213,12 +213,24 @@ class AbstractCategory(MP_Node):
         # Update ancestors_are_public for the sub tree.
         # note: This doesn't trigger a new save for each instance, rather
         # just a SQL update.
-        included_in_non_public_subtree = self.__class__.objects.filter(
-            is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
-        )
-        self.get_descendants_and_self().update(
-            ancestors_are_public=Exists(
-                included_in_non_public_subtree.values("id"), negated=True))
+        if connections['default'].settings_dict['ENGINE'] == 'django.db.backends.mysql':
+            descendants = self.get_descendants_and_self()
+
+            for d in descendants:
+                included_in_non_public_subtree = self.__class__.objects.filter(
+                    is_public=False, path__rstartswith=d.path, depth__lt=d.depth
+                )
+                d.ancestors_are_public = not included_in_non_public_subtree.exists()
+                d._set_ancestors_are_public = True
+                d.save()
+                del d._set_ancestors_are_public
+        else:
+            included_in_non_public_subtree = self.__class__.objects.filter(
+                is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
+            ).exists()
+            self.get_descendants_and_self().update(
+                ancestors_are_public=Exists(
+                    included_in_non_public_subtree.values("id"), negated=True))
 
         # Correctly populate ancestors_are_public
         self.refresh_from_db()
