@@ -27,11 +27,20 @@ class PercentageCharge(BaseSurcharge):
         self.percentage = percentage
 
     def calculate(self, basket, **kwargs):
-        if basket.total_excl_tax:
+        if not basket.is_empty:
+            shipping_charge = kwargs.get("shipping_charge")
+
+            if shipping_charge is not None:
+                total_excl_tax = basket.total_excl_tax + shipping_charge.excl_tax
+                total_incl_tax = basket.total_incl_tax + shipping_charge.incl_tax
+            else:
+                total_excl_tax = basket.total_excl_tax
+                total_incl_tax = basket.total_incl_tax
+
             return prices.Price(
                 currency=basket.currency,
-                excl_tax=basket.total_excl_tax * self.percentage / 100,
-                incl_tax=basket.total_incl_tax * self.percentage / 100
+                excl_tax=total_excl_tax * self.percentage / 100,
+                incl_tax=total_incl_tax * self.percentage / 100
             )
         else:
             return prices.Price(
