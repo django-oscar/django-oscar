@@ -15,7 +15,7 @@ pysolr==3.8.1
 redis==3.5.3
 requests==2.24.0
 uWSGI==2.0.19.1
-whitenoise==5.1.0
+whitenoise==5.2.0
 
 # Linting
 flake8==3.8.3
