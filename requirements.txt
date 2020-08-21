@@ -11,7 +11,7 @@ Pillow==7.2.0
 Whoosh==2.7.4
 django-environ==0.4.5
 django-redis==4.12.1
-pysolr==3.8.1
+pysolr==3.9.0
 redis==3.5.3
 requests==2.24.0
 uWSGI==2.0.19.1
