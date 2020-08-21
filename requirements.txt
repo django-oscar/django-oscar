@@ -26,7 +26,7 @@ isort==5.2.2
 # Helpers
 pyprof2calltree==1.4.5
 ipdb==0.13.3
-ipython>=7.12,<7.17
+ipython>=7.12,<7.18
 
 # Country data
 pycountry>=19.8,<20.8
