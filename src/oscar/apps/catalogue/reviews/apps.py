@@ -1,5 +1,5 @@
-from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarConfig
@@ -21,13 +21,9 @@ class CatalogueReviewsConfig(OscarConfig):
 
     def get_urls(self):
         urls = [
-            url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(),
-                name='reviews-detail'),
-            url(r'^add/$', self.create_view.as_view(),
-                name='reviews-add'),
-            url(r'^(?P<pk>\d+)/vote/$',
-                login_required(self.vote_view.as_view()),
-                name='reviews-vote'),
-            url(r'^$', self.list_view.as_view(), name='reviews-list'),
+            path('<int:pk>/', self.detail_view.as_view(), name='reviews-detail'),
+            path('add/', self.create_view.as_view(), name='reviews-add'),
+            path('<int:pk>)/vote/', login_required(self.vote_view.as_view()), name='reviews-vote'),
+            path('', self.list_view.as_view(), name='reviews-list'),
         ]
         return self.post_process_urls(urls)

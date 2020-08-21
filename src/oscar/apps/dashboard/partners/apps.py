@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarDashboardConfig
@@ -31,25 +31,21 @@ class PartnersDashboardConfig(OscarDashboardConfig):
 
     def get_urls(self):
         urls = [
-            url(r'^$', self.list_view.as_view(), name='partner-list'),
-            url(r'^create/$', self.create_view.as_view(),
-                name='partner-create'),
-            url(r'^(?P<pk>\d+)/$', self.manage_view.as_view(),
-                name='partner-manage'),
-            url(r'^(?P<pk>\d+)/delete/$', self.delete_view.as_view(),
-                name='partner-delete'),
+            path('', self.list_view.as_view(), name='partner-list'),
+            path('create/', self.create_view.as_view(), name='partner-create'),
+            path('<int:pk>/', self.manage_view.as_view(), name='partner-manage'),
+            path('<int:pk>/delete/', self.delete_view.as_view(), name='partner-delete'),
 
-            url(r'^(?P<partner_pk>\d+)/users/add/$',
-                self.user_create_view.as_view(),
-                name='partner-user-create'),
-            url(r'^(?P<partner_pk>\d+)/users/select/$',
-                self.user_select_view.as_view(),
-                name='partner-user-select'),
-            url(r'^(?P<partner_pk>\d+)/users/(?P<user_pk>\d+)/link/$',
+            path('<int:partner_pk>/users/add/', self.user_create_view.as_view(), name='partner-user-create'),
+            path('<int:partner_pk>/users/select/', self.user_select_view.as_view(), name='partner-user-select'),
+            path(
+                '<int:partner_pk>/users/<int:user_pk>/link/',
                 self.user_link_view.as_view(), name='partner-user-link'),
-            url(r'^(?P<partner_pk>\d+)/users/(?P<user_pk>\d+)/unlink/$',
+            path(
+                '<int:partner_pk>/users/<int:user_pk>/unlink/',
                 self.user_unlink_view.as_view(), name='partner-user-unlink'),
-            url(r'^(?P<partner_pk>\d+)/users/(?P<user_pk>\d+)/update/$',
+            path(
+                '<int:partner_pk>/users/<int:user_pk>/update/',
                 self.user_update_view.as_view(),
                 name='partner-user-update'),
         ]

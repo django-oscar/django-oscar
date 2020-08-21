@@ -47,8 +47,8 @@ config class illustrates this nicely::
 
         def get_urls(self):
             urls = [
-                url(r'^catalogue/', self.catalogue_app.urls),
-                url(r'^basket/', self.basket_app.urls),
+                path('catalogue/', self.catalogue_app.urls),
+                path('basket/', self.basket_app.urls),
                 # ...
             ]
 
@@ -61,7 +61,7 @@ all Oscar URLs to your Django project, you only need to include the list of URLs
 
     urlpatterns = [
         # Your other URLs
-        url(r'^', include(apps.get_app_config('oscar').urls[0])),
+        path('', include(apps.get_app_config('oscar').urls[0])),
     ]
 
 Changing sub apps
@@ -101,7 +101,7 @@ configuration::
         def get_urls(self):
             urls = super().get_urls()
             urls += [
-                url(r'extra/$', self.extra_view.as_view(), name='extra'),
+                path('extra/', self.extra_view.as_view(), name='extra'),
             ]
             return self.post_process_urls(urls)
 
@@ -120,7 +120,7 @@ class and override the ``get_urls`` method::
         # Override get_urls method
         def get_urls(self):
             urlpatterns = [
-                url(r'^catalog/', self.catalogue_app.urls),
+                path('catalog/', self.catalogue_app.urls),
                 # all the remaining URLs, removed for simplicity
                 # ...
             ]
@@ -137,7 +137,7 @@ instead of Oscar's default::
 
     urlpatterns = [
        # Your other URLs
-       url(r'^', include(apps.get_app_config('myproject').urls[0])),
+       path('', include(apps.get_app_config('myproject').urls[0])),
     ]
 
 All URLs containing ``/catalogue/`` previously are now displayed as ``/catalog/``.

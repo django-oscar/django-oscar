@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarDashboardConfig
@@ -19,10 +19,8 @@ class ReviewsDashboardConfig(OscarDashboardConfig):
 
     def get_urls(self):
         urls = [
-            url(r'^$', self.list_view.as_view(), name='reviews-list'),
-            url(r'^(?P<pk>\d+)/$', self.update_view.as_view(),
-                name='reviews-update'),
-            url(r'^(?P<pk>\d+)/delete/$', self.delete_view.as_view(),
-                name='reviews-delete'),
+            path('', self.list_view.as_view(), name='reviews-list'),
+            path('<int:pk>/', self.update_view.as_view(), name='reviews-update'),
+            path('<int:pk>/delete/', self.delete_view.as_view(), name='reviews-delete'),
         ]
         return self.post_process_urls(urls)

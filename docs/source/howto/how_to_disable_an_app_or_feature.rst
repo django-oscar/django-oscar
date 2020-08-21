@@ -16,7 +16,7 @@ structure.  So your root ``urls.py`` should have::
 
     urlpatterns = [
         ...
-        url(r'^', include(apps.get_app_config('myproject').urls[0])),
+        path('', include(apps.get_app_config('myproject').urls[0])),
     ]
 
 where ``myproject`` is a Django/Oscar app with an app config class that is a
