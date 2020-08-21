@@ -2,6 +2,7 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
+from oscar.core import prices
 from oscar.core.loading import get_class
 from oscar.test import factories
 from oscar.test.basket import add_product
@@ -46,3 +47,15 @@ class TestSurcharges(TestCase):
         self.assertEqual(self.basket.total_incl_tax, D(12))
         self.assertEqual(price.incl_tax, D("1.21"))
         self.assertEqual(price.excl_tax, D(1))
+
+    def test_percentage_with_shipping_charge(self):
+        percentage_surcharge = PercentageCharge(percentage=D(4))
+        add_product(self.basket, D(10))
+        shipping_charge = prices.Price(
+            currency=self.basket.currency,
+            excl_tax=D('3.95'), tax=D('1.05'))
+        price = percentage_surcharge.calculate(self.basket, shipping_charge=shipping_charge)
+
+        self.assertEqual(self.basket.total_incl_tax, D(10))
+        self.assertEqual(shipping_charge.incl_tax, D(5))
+        self.assertEqual(price.incl_tax, D("0.6"))
