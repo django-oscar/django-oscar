@@ -95,7 +95,7 @@ The main template ``base.html`` has a 'tracking' block which includes a Google
 Analytics partial.  We want to replace this with our own code.  To do this,
 create a new ``base.html`` in your project that subclasses the original::
 
-    # yourproject/templates/base.html
+    # yourproject/templates/oscar/base.html
     {% extends 'oscar/base.html' %}
 
     {% block tracking %}
