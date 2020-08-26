@@ -171,7 +171,7 @@ class VoucherUpdateView(generic.FormView):
 
     def get_initial(self):
         voucher = self.get_voucher()
-        offer = voucher.offers.all()[0]
+        offer = voucher.offers.first()
         benefit = offer.benefit
         return {
             'name': voucher.name,
@@ -195,7 +195,7 @@ class VoucherUpdateView(generic.FormView):
         voucher.end_datetime = form.cleaned_data['end_datetime']
         voucher.save()
 
-        offer = voucher.offers.all()[0]
+        offer = voucher.offers.first()
         offer.condition.range = form.cleaned_data['benefit_range']
         offer.condition.save()
 

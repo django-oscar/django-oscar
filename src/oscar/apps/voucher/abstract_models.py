@@ -267,7 +267,7 @@ class AbstractVoucher(models.Model):
         A voucher is commonly only linked to one offer. In that case,
         this helper can be used for convenience.
         """
-        return self.offers.all()[0].benefit
+        return self.offers.first().benefit
 
 
 class AbstractVoucherApplication(models.Model):
