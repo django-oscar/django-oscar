@@ -195,10 +195,7 @@ class UseFirstStockRecord(object):
     """
 
     def select_stockrecord(self, product):
-        try:
-            return product.stockrecords.all()[0]
-        except IndexError:
-            return None
+        return product.stockrecords.first()
 
 
 class StockRequired(object):

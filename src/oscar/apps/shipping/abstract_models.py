@@ -166,11 +166,7 @@ class AbstractWeightBased(AbstractBase):
         """
         Return the closest matching weight band for a given weight.
         """
-        try:
-            return self.bands.filter(
-                upper_limit__gte=weight).order_by('upper_limit')[0]
-        except IndexError:
-            return None
+        return self.bands.filter(upper_limit__gte=weight).order_by('upper_limit').first()
 
     @property
     def num_bands(self):
@@ -178,10 +174,7 @@ class AbstractWeightBased(AbstractBase):
 
     @property
     def top_band(self):
-        try:
-            return self.bands.order_by('-upper_limit')[0]
-        except IndexError:
-            return None
+        return self.bands.order_by('-upper_limit').first()
 
 
 class AbstractWeightBand(models.Model):
