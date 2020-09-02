@@ -24,10 +24,20 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
                                                   ('RelatedFieldWidgetWrapper',
                                                    'RelatedMultipleFieldWidgetWrapper'))
 
-CategoryForm = movenodeform_factory(
+
+BaseCategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'description', 'image', 'is_public'],
+    fields=['name', 'slug', 'description', 'image', 'is_public'],
     exclude=['ancestors_are_public'])
+
+
+class CategoryForm(BaseCategoryForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'slug' in self.fields:
+            self.fields['slug'].required = False
+            self.fields['slug'].help_text = _('Leave blank to generate from category name')
 
 
 class ProductClassSelectForm(forms.Form):
