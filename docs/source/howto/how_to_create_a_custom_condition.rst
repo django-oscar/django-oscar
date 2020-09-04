@@ -68,6 +68,6 @@ Deploying custom conditions
 ---------------------------
 
 To avoid manual steps in each of your test/stage/production environments, use
-South's `data migrations`_ to create conditions.
+Django `data migrations`_ to create conditions.
 
-.. _`data migrations`: https://south.readthedocs.io/en/latest/tutorial/part3.html#data-migrations
+.. _`data migrations`: https://docs.djangoproject.com/en/stable/topics/migrations/#data-migrations
