@@ -105,3 +105,22 @@ Here's an example of a post-order action benefit::
                 basket.owner.save()
                 return "Your name has been changed to Barry!"
             return "We were unable to change your name as you are not signed in"
+
+Create benefit instance
+-------------------------
+
+To make this benefit available to be used in offers, do the following::
+
+    from oscar.apps.offer.custom import create_benefit
+
+    create_benefit(ChangesCustomersName)
+
+Now you should see this benefit in the dashboard when creating/updating an offer.
+
+Deploying custom benefits
+---------------------------
+
+To avoid manual steps in each of your test/stage/production environments, use
+Django `data migrations`_ to create benefits.
+
+.. _`data migrations`: https://docs.djangoproject.com/en/stable/topics/migrations/#data-migrations
