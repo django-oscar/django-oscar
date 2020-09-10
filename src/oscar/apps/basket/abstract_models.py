@@ -714,7 +714,7 @@ class AbstractLine(models.Model):
 
         Consumed items are no longer available to be used in offers.
         """
-        self.consumer.consume(quantity, offer=offer)
+        return self.consumer.consume(quantity, offer=offer)
 
     def get_price_breakdown(self):
         """
