@@ -47,6 +47,10 @@ Backwards incompatible changes
 Bug fixes
 ~~~~~~~~~
 
+- ``catalogue.product_attributes.ProductAttributesContainer`` was refactored to ensure that attributes
+  inside the container are always properly loaded at initialisation. The container is now wrapped in a
+  ``SimpleLazyObject`` when assigned to ``Product.attr``. ``ProductAttributesContainer.initiate_attributes()``
+  was removed as the database query now happens on instantiation.
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

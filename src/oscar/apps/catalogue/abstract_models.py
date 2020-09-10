@@ -15,7 +15,7 @@ from django.db.models import Count, Exists, OuterRef, Sum
 from django.db.models.fields import Field
 from django.db.models.lookups import StartsWith
 from django.urls import reverse
-from django.utils.functional import cached_property
+from django.utils.functional import SimpleLazyObject, cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
@@ -435,7 +435,7 @@ class AbstractProduct(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.attr = ProductAttributesContainer(product=self)
+        self.attr = SimpleLazyObject(lambda: ProductAttributesContainer(product=self))
 
     def __str__(self):
         if self.title:
