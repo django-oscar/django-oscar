@@ -29,10 +29,8 @@ Further reading:
 * `Documentation`_ on the excellent `readthedocs.org`_
 * `Docker image`_ on http://hub.docker.com/
 * `django-oscar group`_ - mailing list for questions and announcements
-* `django-oscar-jobs group`_ - mailing list for job offers
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
-* #django-oscar on Freenode (community-run IRC channel) with `public logs`_
 * `Slack`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
@@ -73,9 +71,7 @@ Docs status:
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/django-oscar/django-oscar
 .. _`travis-ci.org`: http://travis-ci.org/
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
-.. _`public logs`: https://botbot.me/freenode/django-oscar/
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
-.. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
 .. _`Slack`: https://slack.oscarcommerce.com/
@@ -170,8 +166,6 @@ The following extensions are stable and ready for use:
 * django-oscar-stores_ - Physical stores integration (opening hours, store
   locator etc)
 
-* django-oscar-eway_ - Integration with the eWay_ payment gateway.
-
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
 
 * django_oscar_docdata_ - Integration with Docdata_ payment gateway.
@@ -191,7 +185,6 @@ The following extensions are stable and ready for use:
 .. _django-oscar-accounts: https://github.com/django-oscar/django-oscar-accounts
 .. _django-oscar-easyrec: https://github.com/django-oscar/django-oscar-easyrec
 .. _EasyRec: http://easyrec.org/
-.. _django-oscar-eway: https://github.com/snowball-one/django-oscar-eway
 .. _django-oscar-stores: https://github.com/django-oscar/django-oscar-stores
 .. _django-oscar-sagepay-direct: https://github.com/django-oscar/django-oscar-sagepay-direct
 .. _eWay: https://www.eway.com.au
@@ -202,12 +195,8 @@ The following extensions are stable and ready for use:
 The following are community-written extensions:
 
 * django-oscar-payments_ - Pluggable payments for Oscar
-* django-oscar-recurly_ - Integration with the Recurly payment gateway
 
-* django-oscar-przelewy24_ - Integration with the Przelewy24 payment gateway
 * oscar-sagepay_ - Payment integration with Sage Pay
-
-* django-oscar-sofortueberweisung_ - Integration with SOFORT
 
 * django-oscar-support_ - Customer services and ticketing plugin for Oscar
 
@@ -237,14 +226,8 @@ The following are community-written extensions:
 
 Let us know if you're writing a new one!
 
-.. _django-oscar-unicredit: https://bitbucket.org/marsim/django-oscar-unicredit/
 .. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
-.. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
-
-.. _django-oscar-przelewy24: https://github.com/kisiel/django-oscar-przelewy24
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
-.. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
-
 .. _django-oscar-support: https://github.com/SalahAdDin/django-oscar-support
 .. _django-oscar-api-checkout: https://github.com/thelabnyc/django-oscar-api-checkout
 .. _django-oscar-bundles: https://github.com/thelabnyc/django-oscar-bundles
