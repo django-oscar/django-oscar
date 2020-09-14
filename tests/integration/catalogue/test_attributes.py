@@ -4,7 +4,31 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
+from oscar.apps.catalogue.models import Product
 from oscar.test import factories
+
+
+class TestContainer(TestCase):
+
+    def test_attributes_initialised_before_write(self):
+        # Regression test for https://github.com/django-oscar/django-oscar/issues/3258
+        product_class = factories.ProductClassFactory()
+        product_class.attributes.create(name='a1', code='a1', required=True)
+        product_class.attributes.create(name='a2', code='a2', required=False)
+        product_class.attributes.create(name='a3', code='a3', required=True)
+        product = factories.ProductFactory(product_class=product_class)
+        product.attr.a1 = "v1"
+        product.attr.a3 = "v3"
+        product.attr.save()
+
+        product = Product.objects.get(pk=product.pk)
+        product.attr.a1 = "v2"
+        product.attr.a3 = "v6"
+        product.attr.save()
+
+        product = Product.objects.get(pk=product.pk)
+        assert product.attr.a1 == "v2"
+        assert product.attr.a3 == "v6"
 
 
 class TestBooleanAttributes(TestCase):
@@ -52,7 +76,7 @@ class TestMultiOptionAttributes(TestCase):
         product = factories.ProductFactory()
         # We'll save two out of the three available options
         self.attr.save_value(product, [self.options[0], self.options[2]])
-        product.refresh_from_db()
+        product = Product.objects.get(pk=product.pk)
         self.assertEqual(list(product.attr.sizes), [self.options[0], self.options[2]])
 
     def test_delete_multi_option_value(self):
@@ -60,7 +84,7 @@ class TestMultiOptionAttributes(TestCase):
         self.attr.save_value(product, [self.options[0], self.options[1]])
         # Now delete these values
         self.attr.save_value(product, None)
-        product.refresh_from_db()
+        product = Product.objects.get(pk=product.pk)
         self.assertFalse(hasattr(product.attr, 'sizes'))
 
     def test_multi_option_value_as_text(self):
