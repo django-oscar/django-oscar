@@ -26,7 +26,7 @@ class ReportGenerator(object):
         self.start_date = kwargs.get('start_date')
         self.end_date = kwargs.get('end_date')
 
-        formatter_name = '%s_formatter' % kwargs['formatter']
+        formatter_name = '%s_formatter' % kwargs.get('formatter', 'HTML')
         self.formatter = self.formatters[formatter_name]()
         if self.queryset is None:
             self.queryset = self.get_queryset()
