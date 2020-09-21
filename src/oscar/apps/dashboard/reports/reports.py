@@ -48,7 +48,7 @@ class ReportGenerator(object):
         return queryset
 
     def generate(self):
-        pass
+        return self.formatter.generate_response(self.queryset)
 
     def filename(self):
         """

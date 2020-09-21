@@ -41,6 +41,3 @@ class VoucherReportGenerator(ReportGenerator):
     formatters = {
         'CSV_formatter': VoucherReportCSVFormatter,
         'HTML_formatter': VoucherReportHTMLFormatter}
-
-    def generate(self):
-        return self.formatter.generate_response(self.queryset)
