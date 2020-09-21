@@ -45,7 +45,7 @@ class ReportGenerator(object):
                 "or override the qet_queryset() method."
             )
         queryset = self.model_class._default_manager.all()
-        return queryset
+        return self.filter_with_date_range(queryset)
 
     def generate(self):
         return self.formatter.generate_response(self.queryset)
