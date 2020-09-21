@@ -46,9 +46,6 @@ class ProductReportGenerator(ReportGenerator):
     def report_description(self):
         return self.description
 
-    def generate(self):
-        return self.formatter.generate_response(self.queryset)
-
     def is_available_to(self, user):
         return user.is_staff
 
