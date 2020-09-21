@@ -37,6 +37,7 @@ class ProductReportHTMLFormatter(ReportHTMLFormatter):
 class ProductReportGenerator(ReportGenerator):
     code = 'product_analytics'
     description = _('Product analytics')
+    model_class = ProductRecord
 
     formatters = {
         'CSV_formatter': ProductReportCSVFormatter,
@@ -46,8 +47,7 @@ class ProductReportGenerator(ReportGenerator):
         return self.description
 
     def generate(self):
-        records = ProductRecord._default_manager.all()
-        return self.formatter.generate_response(records)
+        return self.formatter.generate_response(self.queryset)
 
     def is_available_to(self, user):
         return user.is_staff
@@ -89,14 +89,14 @@ class UserReportHTMLFormatter(ReportHTMLFormatter):
 class UserReportGenerator(ReportGenerator):
     code = 'user_analytics'
     description = _('User analytics')
+    queryset = UserRecord._default_manager.select_related().all()
 
     formatters = {
         'CSV_formatter': UserReportCSVFormatter,
         'HTML_formatter': UserReportHTMLFormatter}
 
     def generate(self):
-        users = UserRecord._default_manager.select_related().all()
-        return self.formatter.generate_response(users)
+        return self.formatter.generate_response(self.queryset)
 
     def is_available_to(self, user):
         return user.is_staff

@@ -51,21 +51,21 @@ class OrderReportGenerator(ReportGenerator):
         'HTML_formatter': OrderReportHTMLFormatter,
     }
 
-    def generate(self):
+    def get_queryset(self):
         qs = Order._default_manager.all()
-
         if self.start_date:
             qs = qs.filter(date_placed__gte=self.start_date)
         if self.end_date:
             qs = qs.filter(
                 date_placed__lt=self.end_date + datetime.timedelta(days=1))
+        return qs
 
+    def generate(self):
         additional_data = {
             'start_date': self.start_date,
             'end_date': self.end_date
         }
-
-        return self.formatter.generate_response(qs, **additional_data)
+        return self.formatter.generate_response(self.queryset, **additional_data)
 
     def is_available_to(self, user):
         return user.is_staff

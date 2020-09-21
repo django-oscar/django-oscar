@@ -34,14 +34,13 @@ class VoucherReportHTMLFormatter(ReportHTMLFormatter):
 
 
 class VoucherReportGenerator(ReportGenerator):
-
     code = 'vouchers'
     description = _('Voucher performance')
+    model_class = Voucher
 
     formatters = {
         'CSV_formatter': VoucherReportCSVFormatter,
         'HTML_formatter': VoucherReportHTMLFormatter}
 
     def generate(self):
-        vouchers = Voucher._default_manager.all()
-        return self.formatter.generate_response(vouchers)
+        return self.formatter.generate_response(self.queryset)
