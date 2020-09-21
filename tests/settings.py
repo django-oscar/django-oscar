@@ -14,7 +14,7 @@ DATABASES = {
                                  'django.db.backends.postgresql'),
         'NAME': os.environ.get('DATABASE_NAME', 'oscar'),
         'USER': os.environ.get('DATABASE_USER', None),
-        'PASSWORD': os.environ.get('DATABASE_USER', None),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', None),
     }
 }
 
