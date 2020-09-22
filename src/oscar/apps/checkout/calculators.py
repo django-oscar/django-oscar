@@ -6,6 +6,9 @@ class OrderTotalCalculator(object):
     Calculator class for calculating the order total.
     """
 
+    def __init__(self, **kwargs):
+        pass
+
     def calculate(self, basket, shipping_charge, surcharges=None, **kwargs):
         excl_tax = basket.total_excl_tax + shipping_charge.excl_tax
         if basket.is_tax_known and shipping_charge.is_tax_known:
