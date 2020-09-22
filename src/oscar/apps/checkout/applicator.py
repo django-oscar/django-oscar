@@ -4,7 +4,7 @@ class SurchargeList(list):
         return sum([surcharge.price for surcharge in self])
 
 
-class SurchargePrice():
+class SurchargePrice:
     surcharge = None
     price = None
 
@@ -13,7 +13,7 @@ class SurchargePrice():
         self.price = price
 
 
-class SurchargeApplicator():
+class SurchargeApplicator:
 
     def __init__(self, request=None, context=None):
         self.context = context
