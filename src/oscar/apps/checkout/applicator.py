@@ -15,9 +15,8 @@ class SurchargePrice:
 
 class SurchargeApplicator:
 
-    def __init__(self, request=None, context=None):
+    def __init__(self, context=None, **kwargs):
         self.context = context
-        self.request = request
 
     def get_surcharges(self, basket, **kwargs):
         """

@@ -240,7 +240,8 @@ class CheckoutSessionMixin(object):
                 tax=D('0.00')
             )
 
-        surcharges = SurchargeApplicator(request).get_applicable_surcharges(
+        surcharge_applicator = self.get_surcharge_applicator()
+        surcharges = surcharge_applicator.get_applicable_surcharges(
             basket=request.basket, shipping_charge=shipping_charge
         )
         total = self.get_order_totals(request.basket, shipping_charge, surcharges)
@@ -294,7 +295,8 @@ class CheckoutSessionMixin(object):
             total = shipping_charge = surcharges = None
         else:
             shipping_charge = shipping_method.calculate(basket)
-            surcharges = SurchargeApplicator(self.request, submission).get_applicable_surcharges(
+            surcharge_applicator = self.get_surcharge_applicator(context=submission)
+            surcharges = surcharge_applicator.get_applicable_surcharges(
                 basket, shipping_charge=shipping_charge
             )
             total = self.get_order_totals(
@@ -427,6 +429,9 @@ class CheckoutSessionMixin(object):
 
     def get_order_calculator(self):
         return OrderTotalCalculator()
+
+    def get_surcharge_applicator(self, **kwargs):
+        return SurchargeApplicator(**kwargs)
 
     def get_order_totals(self, basket, shipping_charge, surcharges=None, **kwargs):
         """
