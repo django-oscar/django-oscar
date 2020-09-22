@@ -420,9 +420,12 @@ class CheckoutSessionMixin(object):
                 user_address.populate_alternative_model(billing_address)
                 return billing_address
 
+    def get_order_calculator(self):
+        return OrderTotalCalculator()
+
     def get_order_totals(self, basket, shipping_charge, surcharges=None, **kwargs):
         """
         Returns the total for the order with and without tax
         """
-        return OrderTotalCalculator(self.request).calculate(
-            basket, shipping_charge, surcharges, **kwargs)
+        order_calculator = self.get_order_calculator()
+        return order_calculator.calculate(basket, shipping_charge, surcharges, **kwargs)
