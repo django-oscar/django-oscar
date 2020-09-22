@@ -22,7 +22,187 @@ BillingAddress = get_model('order', 'BillingAddress')
 UserAddress = get_model('address', 'UserAddress')
 
 
-class CheckoutSessionMixin(object):
+class OrderSubmissionMixin(object):
+    def build_submission(self, **kwargs):
+        """
+        Return a dict of data that contains everything required for an order
+        submission.  This includes payment details (if any).
+
+        This can be the right place to perform tax lookups and apply them to
+        the basket.
+        """
+        # Pop the basket if there is one, because we pass it as a positional
+        # argument to methods below
+        basket = kwargs.pop('basket', None)
+        if basket is None:
+            raise ValueError(_('Basket parameter is mandatory for the order submission.'))
+
+        user = kwargs.pop('user', basket.owner)
+        shipping_address = self.get_shipping_address(basket)
+        shipping_method = self.get_shipping_method(
+            basket, shipping_address)
+        billing_address = self.get_billing_address(shipping_address)
+        submission = {
+            'user': user,
+            'basket': basket,
+            'shipping_address': shipping_address,
+            'shipping_method': shipping_method,
+            'billing_address': billing_address,
+            'order_kwargs': {},
+            'payment_kwargs': {}
+        }
+
+        if not shipping_method:
+            total = shipping_charge = surcharges = None
+        else:
+            shipping_charge = shipping_method.calculate(basket)
+            surcharge_applicator = self.get_surcharge_applicator(context=submission)
+            surcharges = surcharge_applicator.get_applicable_surcharges(
+                basket, shipping_charge=shipping_charge
+            )
+            total = self.get_order_totals(
+                basket, shipping_charge=shipping_charge, surcharges=surcharges, **kwargs)
+
+        submission["shipping_charge"] = shipping_charge
+        submission["order_total"] = total
+        submission['surcharges'] = surcharges
+
+        # If there is a billing address, add it to the payment kwargs as calls
+        # to payment gateways generally require the billing address. Note, that
+        # it normally makes sense to pass the form instance that captures the
+        # billing address information. That way, if payment fails, you can
+        # render bound forms in the template to make re-submission easier.
+        if billing_address:
+            submission['payment_kwargs']['billing_address'] = billing_address
+
+        # Allow overrides to be passed in
+        submission.update(kwargs)
+
+        # Set guest email after overrides as we need to update the order_kwargs
+        # entry.
+        user = submission['user']
+        if (not user.is_authenticated
+                and 'guest_email' not in submission['order_kwargs']):
+            email = self.checkout_session.get_guest_email()
+            submission['order_kwargs']['guest_email'] = email
+        return submission
+
+    def get_shipping_address(self, basket):
+        """
+        Return the (unsaved) shipping address for this checkout session.
+
+        If the shipping address was entered manually, then we instantiate a
+        ``ShippingAddress`` model with the appropriate form data (which is
+        saved in the session).
+
+        If the shipping address was selected from the user's address book,
+        then we convert the ``UserAddress`` to a ``ShippingAddress``.
+
+        The ``ShippingAddress`` instance is not saved as sometimes you need a
+        shipping address instance before the order is placed.  For example, if
+        you are submitting fraud information as part of a payment request.
+
+        The ``OrderPlacementMixin.create_shipping_address`` method is
+        responsible for saving a shipping address when an order is placed.
+        """
+        if not basket.is_shipping_required():
+            return None
+
+        addr_data = self.checkout_session.new_shipping_address_fields()
+        if addr_data:
+            # Load address data into a blank shipping address model
+            return ShippingAddress(**addr_data)
+        addr_id = self.checkout_session.shipping_user_address_id()
+        if addr_id:
+            try:
+                address = UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
+                # An address was selected but now it has disappeared.  This can
+                # happen if the customer flushes their address book midway
+                # through checkout.  No idea why they would do this but it can
+                # happen.  Checkouts are highly vulnerable to race conditions
+                # like this.
+                return None
+            else:
+                # Copy user address data into a blank shipping address instance
+                shipping_addr = ShippingAddress()
+                address.populate_alternative_model(shipping_addr)
+                return shipping_addr
+
+    def get_shipping_method(self, basket, shipping_address=None, **kwargs):
+        """
+        Return the selected shipping method instance from this checkout session
+
+        The shipping address is passed as we need to check that the method
+        stored in the session is still valid for the shipping address.
+        """
+        code = self.checkout_session.shipping_method_code(basket)
+        methods = Repository().get_shipping_methods(
+            basket=basket, user=self.request.user,
+            shipping_addr=shipping_address, request=self.request)
+        for method in methods:
+            if method.code == code:
+                return method
+
+    def get_billing_address(self, shipping_address):
+        """
+        Return an unsaved instance of the billing address (if one exists)
+
+        This method only returns a billing address if the session has been used
+        to store billing address information. It's also possible to capture
+        billing address information as part of the payment details forms, which
+        never get stored in the session. In that circumstance, the billing
+        address can be set directly in the build_submission dict.
+        """
+        if not self.checkout_session.is_billing_address_set():
+            return None
+        if self.checkout_session.is_billing_address_same_as_shipping():
+            if shipping_address:
+                address = BillingAddress()
+                shipping_address.populate_alternative_model(address)
+                return address
+
+        addr_data = self.checkout_session.new_billing_address_fields()
+        if addr_data:
+            # A new billing address has been entered - load address data into a
+            # blank billing address model.
+            return BillingAddress(**addr_data)
+
+        addr_id = self.checkout_session.billing_user_address_id()
+        if addr_id:
+            # An address from the user's address book has been selected as the
+            # billing address - load it and convert it into a billing address
+            # instance.
+            try:
+                user_address = UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
+                # An address was selected but now it has disappeared.  This can
+                # happen if the customer flushes their address book midway
+                # through checkout.  No idea why they would do this but it can
+                # happen.  Checkouts are highly vulnerable to race conditions
+                # like this.
+                return None
+            else:
+                # Copy user address data into a blank shipping address instance
+                billing_address = BillingAddress()
+                user_address.populate_alternative_model(billing_address)
+                return billing_address
+
+    def get_order_calculator(self):
+        return OrderTotalCalculator()
+
+    def get_surcharge_applicator(self, **kwargs):
+        return SurchargeApplicator(**kwargs)
+
+    def get_order_totals(self, basket, shipping_charge, surcharges=None, **kwargs):
+        """
+        Returns the total for the order with and without tax
+        """
+        order_calculator = self.get_order_calculator()
+        return order_calculator.calculate(basket, shipping_charge, surcharges, **kwargs)
+
+
+class CheckoutSessionMixin(OrderSubmissionMixin):
     """
     Mixin to provide common functionality shared between checkout views.
 
@@ -262,180 +442,3 @@ class CheckoutSessionMixin(object):
         ctx.update(ctx['order_kwargs'])
         return ctx
 
-    def build_submission(self, **kwargs):
-        """
-        Return a dict of data that contains everything required for an order
-        submission.  This includes payment details (if any).
-
-        This can be the right place to perform tax lookups and apply them to
-        the basket.
-        """
-        # Pop the basket if there is one, because we pass it as a positional
-        # argument to methods below
-        basket = kwargs.pop('basket', None)
-        if basket is None:
-            raise ValueError(_('Basket parameter is mandatory for the order submission.'))
-
-        user = kwargs.pop('user', basket.owner)
-        shipping_address = self.get_shipping_address(basket)
-        shipping_method = self.get_shipping_method(
-            basket, shipping_address)
-        billing_address = self.get_billing_address(shipping_address)
-        submission = {
-            'user': user,
-            'basket': basket,
-            'shipping_address': shipping_address,
-            'shipping_method': shipping_method,
-            'billing_address': billing_address,
-            'order_kwargs': {},
-            'payment_kwargs': {}
-        }
-
-        if not shipping_method:
-            total = shipping_charge = surcharges = None
-        else:
-            shipping_charge = shipping_method.calculate(basket)
-            surcharge_applicator = self.get_surcharge_applicator(context=submission)
-            surcharges = surcharge_applicator.get_applicable_surcharges(
-                basket, shipping_charge=shipping_charge
-            )
-            total = self.get_order_totals(
-                basket, shipping_charge=shipping_charge, surcharges=surcharges, **kwargs)
-
-        submission["shipping_charge"] = shipping_charge
-        submission["order_total"] = total
-        submission['surcharges'] = surcharges
-
-        # If there is a billing address, add it to the payment kwargs as calls
-        # to payment gateways generally require the billing address. Note, that
-        # it normally makes sense to pass the form instance that captures the
-        # billing address information. That way, if payment fails, you can
-        # render bound forms in the template to make re-submission easier.
-        if billing_address:
-            submission['payment_kwargs']['billing_address'] = billing_address
-
-        # Allow overrides to be passed in
-        submission.update(kwargs)
-
-        # Set guest email after overrides as we need to update the order_kwargs
-        # entry.
-        user = submission['user']
-        if (not user.is_authenticated
-                and 'guest_email' not in submission['order_kwargs']):
-            email = self.checkout_session.get_guest_email()
-            submission['order_kwargs']['guest_email'] = email
-        return submission
-
-    def get_shipping_address(self, basket):
-        """
-        Return the (unsaved) shipping address for this checkout session.
-
-        If the shipping address was entered manually, then we instantiate a
-        ``ShippingAddress`` model with the appropriate form data (which is
-        saved in the session).
-
-        If the shipping address was selected from the user's address book,
-        then we convert the ``UserAddress`` to a ``ShippingAddress``.
-
-        The ``ShippingAddress`` instance is not saved as sometimes you need a
-        shipping address instance before the order is placed.  For example, if
-        you are submitting fraud information as part of a payment request.
-
-        The ``OrderPlacementMixin.create_shipping_address`` method is
-        responsible for saving a shipping address when an order is placed.
-        """
-        if not basket.is_shipping_required():
-            return None
-
-        addr_data = self.checkout_session.new_shipping_address_fields()
-        if addr_data:
-            # Load address data into a blank shipping address model
-            return ShippingAddress(**addr_data)
-        addr_id = self.checkout_session.shipping_user_address_id()
-        if addr_id:
-            try:
-                address = UserAddress._default_manager.get(pk=addr_id)
-            except UserAddress.DoesNotExist:
-                # An address was selected but now it has disappeared.  This can
-                # happen if the customer flushes their address book midway
-                # through checkout.  No idea why they would do this but it can
-                # happen.  Checkouts are highly vulnerable to race conditions
-                # like this.
-                return None
-            else:
-                # Copy user address data into a blank shipping address instance
-                shipping_addr = ShippingAddress()
-                address.populate_alternative_model(shipping_addr)
-                return shipping_addr
-
-    def get_shipping_method(self, basket, shipping_address=None, **kwargs):
-        """
-        Return the selected shipping method instance from this checkout session
-
-        The shipping address is passed as we need to check that the method
-        stored in the session is still valid for the shipping address.
-        """
-        code = self.checkout_session.shipping_method_code(basket)
-        methods = Repository().get_shipping_methods(
-            basket=basket, user=self.request.user,
-            shipping_addr=shipping_address, request=self.request)
-        for method in methods:
-            if method.code == code:
-                return method
-
-    def get_billing_address(self, shipping_address):
-        """
-        Return an unsaved instance of the billing address (if one exists)
-
-        This method only returns a billing address if the session has been used
-        to store billing address information. It's also possible to capture
-        billing address information as part of the payment details forms, which
-        never get stored in the session. In that circumstance, the billing
-        address can be set directly in the build_submission dict.
-        """
-        if not self.checkout_session.is_billing_address_set():
-            return None
-        if self.checkout_session.is_billing_address_same_as_shipping():
-            if shipping_address:
-                address = BillingAddress()
-                shipping_address.populate_alternative_model(address)
-                return address
-
-        addr_data = self.checkout_session.new_billing_address_fields()
-        if addr_data:
-            # A new billing address has been entered - load address data into a
-            # blank billing address model.
-            return BillingAddress(**addr_data)
-
-        addr_id = self.checkout_session.billing_user_address_id()
-        if addr_id:
-            # An address from the user's address book has been selected as the
-            # billing address - load it and convert it into a billing address
-            # instance.
-            try:
-                user_address = UserAddress._default_manager.get(pk=addr_id)
-            except UserAddress.DoesNotExist:
-                # An address was selected but now it has disappeared.  This can
-                # happen if the customer flushes their address book midway
-                # through checkout.  No idea why they would do this but it can
-                # happen.  Checkouts are highly vulnerable to race conditions
-                # like this.
-                return None
-            else:
-                # Copy user address data into a blank shipping address instance
-                billing_address = BillingAddress()
-                user_address.populate_alternative_model(billing_address)
-                return billing_address
-
-    def get_order_calculator(self):
-        return OrderTotalCalculator()
-
-    def get_surcharge_applicator(self, **kwargs):
-        return SurchargeApplicator(**kwargs)
-
-    def get_order_totals(self, basket, shipping_charge, surcharges=None, **kwargs):
-        """
-        Returns the total for the order with and without tax
-        """
-        order_calculator = self.get_order_calculator()
-        return order_calculator.calculate(basket, shipping_charge, surcharges, **kwargs)
