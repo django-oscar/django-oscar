@@ -28,8 +28,7 @@ class ReportGenerator(object):
 
         formatter_name = '%s_formatter' % kwargs.get('formatter', 'HTML')
         self.formatter = self.formatters[formatter_name]()
-        if self.queryset is None:
-            self.queryset = self.get_queryset()
+        self.queryset = self.get_queryset()
 
     def report_description(self):
         return _('%(report_filter)s between %(start_date)s and %(end_date)s') \
@@ -39,6 +38,9 @@ class ReportGenerator(object):
                }
 
     def get_queryset(self):
+        if self.queryset is not None:
+            return self.queryset
+
         if not self.model_class:
             raise ValueError(
                 "Please define a model_class property on your report generator class, "
