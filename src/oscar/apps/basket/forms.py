@@ -299,7 +299,15 @@ class AddToBasketForm(forms.Form):
         return options
 
 
-class SimpleAddToBasketForm(AddToBasketForm):
+class SimpleAddToBasketMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'quantity' in self.fields:
+            self.fields['quantity'].initial = 1
+            self.fields['quantity'].widget = forms.HiddenInput()
+
+
+class SimpleAddToBasketForm(SimpleAddToBasketMixin, AddToBasketForm):
     """
     Simplified version of the add to basket form where the quantity is
     defaulted to 1 and rendered in a hidden widget
@@ -307,9 +315,3 @@ class SimpleAddToBasketForm(AddToBasketForm):
     Most of the time, you won't need to override this class. Just change
     AddToBasketForm to change behaviour in both forms at once.
     """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if 'quantity' in self.fields:
-            self.fields['quantity'].initial = 1
-            self.fields['quantity'].widget = forms.HiddenInput()
