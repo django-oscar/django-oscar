@@ -255,7 +255,8 @@ class CheckoutSessionMixin(object):
         # Use the proposed submission as template context data.  Flatten the
         # order kwargs so they are easily available too.
         ctx = super().get_context_data()
-        ctx.update(self.build_submission(**kwargs))
+        submission_params = self.build_submission(basket=self.request.basket, user=self.request.user, **kwargs)
+        ctx.update(submission_params)
         ctx.update(kwargs)
         ctx.update(ctx['order_kwargs'])
         return ctx
@@ -270,13 +271,17 @@ class CheckoutSessionMixin(object):
         """
         # Pop the basket if there is one, because we pass it as a positional
         # argument to methods below
-        basket = kwargs.pop('basket', self.request.basket)
+        basket = kwargs.pop('basket', None)
+        if basket is None:
+            raise ValueError(_('Basket parameter is mandatory for the order submission.'))
+
+        user = kwargs.pop('user', basket.owner)
         shipping_address = self.get_shipping_address(basket)
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
         billing_address = self.get_billing_address(shipping_address)
         submission = {
-            'user': self.request.user,
+            'user': user,
             'basket': basket,
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
@@ -290,7 +295,7 @@ class CheckoutSessionMixin(object):
         else:
             shipping_charge = shipping_method.calculate(basket)
             surcharges = SurchargeApplicator(self.request, submission).get_applicable_surcharges(
-                self.request.basket, shipping_charge=shipping_charge
+                basket, shipping_charge=shipping_charge
             )
             total = self.get_order_totals(
                 basket, shipping_charge=shipping_charge, surcharges=surcharges, **kwargs)

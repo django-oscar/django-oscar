@@ -450,7 +450,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         override this method to ensure they are valid before extracting their
         data into the submission dict and passing it onto `submit`.
         """
-        return self.submit(**self.build_submission())
+        submission_params = self.build_submission(basket=self.request.basket, user=self.request.user)
+        return self.submit(**submission_params)
 
     def handle_payment_details_submission(self, request):
         """
