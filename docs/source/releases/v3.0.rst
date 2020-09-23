@@ -36,6 +36,9 @@ What's new in Oscar 3.0?
   administrators can now define a restricted set of other offers that offer can be used in combination with.
   This changes introduces a new ``combinations`` field on the ``Offer`` model which requires a database migration.
 
+- Report generator classes now can define ``model_class`` or ``queryset``, similar to Django class based views.
+  You can also override queryset in the ``get_queryset`` method. Filtering by date range is now properly applied
+  during CSV export as well.
 
 Backwards incompatible changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
