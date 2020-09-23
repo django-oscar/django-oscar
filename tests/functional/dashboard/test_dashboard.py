@@ -84,6 +84,14 @@ class TestDashboardIndexForStaffUser(WebTestCase):
         for key in GENERIC_STATS_KEYS + STAFF_STATS_KEYS:
             self.assertInContext(response, key)
 
+    def test_login_redirects_to_dashboard_index(self):
+        page = self.get(reverse('dashboard:login'))
+        form = page.forms['dashboard_login_form']
+        form['username'] = self.email
+        form['password'] = self.password
+        response = form.submit('login_submit')
+        self.assertRedirectsTo(response, 'dashboard:index')
+
 
 class TestDashboardIndexForPartnerUser(WebTestCase):
     permissions = ['partner.dashboard_access']
