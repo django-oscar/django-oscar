@@ -312,6 +312,9 @@ class SimpleAddToBasketForm(SimpleAddToBasketMixin, AddToBasketForm):
     Simplified version of the add to basket form where the quantity is
     defaulted to 1 and rendered in a hidden widget
 
-    Most of the time, you won't need to override this class. Just change
-    AddToBasketForm to change behaviour in both forms at once.
+    If you changed `AddToBasketForm`, you'll need to override this class
+    as well by doing:
+
+    class SimpleAddToBasketForm(SimpleAddToBasketMixin, AddToBasketForm):
+        pass
     """
