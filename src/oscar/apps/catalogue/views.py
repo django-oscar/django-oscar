@@ -130,11 +130,12 @@ class CatalogueView(TemplateView):
         try:
             self.search_handler = self.get_search_handler(
                 self.request.GET, request.get_full_path(), [])
+            response = super().get(request, *args, **kwargs)
         except InvalidPage:
             # Redirect to page one.
             messages.error(request, _('The given page number was invalid.'))
             return redirect('catalogue:index')
-        return super().get(request, *args, **kwargs)
+        return response
 
     def get_search_handler(self, *args, **kwargs):
         return get_product_search_handler_class()(*args, **kwargs)
@@ -172,11 +173,12 @@ class ProductCategoryView(TemplateView):
         try:
             self.search_handler = self.get_search_handler(
                 request.GET, request.get_full_path(), self.get_categories())
+            response = super().get(request, *args, **kwargs)
         except InvalidPage:
             messages.error(request, _('The given page number was invalid.'))
             return redirect(self.category.get_absolute_url())
 
-        return super().get(request, *args, **kwargs)
+        return response
 
     def is_viewable(self, category, request):
         return category.is_public or request.user.is_staff
