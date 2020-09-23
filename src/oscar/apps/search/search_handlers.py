@@ -1,5 +1,4 @@
 from django.core.paginator import InvalidPage, Paginator
-from django.utils.translation import gettext_lazy as _
 from haystack import connections
 
 from oscar.core.loading import get_class
@@ -9,13 +8,10 @@ from . import facets
 FacetMunger = get_class('search.facets', 'FacetMunger')
 
 
-class SearchResultsPaginationMixin(object):
+class SearchResultsPaginationMixin:
     paginate_by = None
     paginator_class = Paginator
     page_kwarg = 'page'
-
-    def get_paginate_by(self, *args, **kwargs):
-        return self.paginate_by
 
     def paginate_queryset(self, queryset, page_size):
         """
@@ -31,8 +27,7 @@ class SearchResultsPaginationMixin(object):
             if page_number == 'last':
                 page_number = paginator.num_pages
             else:
-                raise InvalidPage(_(
-                    "Page is not 'last', nor can it be converted to an int."))
+                raise InvalidPage
         # This can also raise an InvalidPage exception.
         page = paginator.page(page_number)
         return paginator, page, page.object_list, page.has_other_pages()
@@ -84,8 +79,7 @@ class SearchHandler(SearchResultsPaginationMixin):
         self.results = self.get_search_results(self.search_form)
         # If below raises an UnicodeDecodeError, you're running pysolr < 3.2
         # with Solr 4.
-        page_size = self.get_paginate_by()
-        self.paginator, self.page = self.paginate_queryset(self.results, page_size)[0:2]
+        self.paginator, self.page = self.paginate_queryset(self.results, self.paginate_by)[0:2]
 
     # Search related methods
 
