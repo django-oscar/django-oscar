@@ -138,7 +138,7 @@
                 <td>{{ session.availability.message }}</td>
             </tr>
         {% endif %}
-        {% for av in product.attribute_values.all %}
+        {% for av in product.get_attribute_values %}
             <tr>
                 <th>{{ av.attribute.name }}</th>
                 <td>{{ av.value_as_html }}</td>
