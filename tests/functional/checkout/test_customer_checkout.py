@@ -230,7 +230,7 @@ class TestThankYouView(CheckoutMixin, WebTestCase):
         response = self.get(test_url, status='*', user=user)
         self.assertIsOk(response)
 
-    def test_users_cannot_force_an_other_custumer_order(self):
+    def test_users_cannot_force_an_other_customer_order(self):
         self.add_product_to_basket()
         self.enter_shipping_address()
         self.place_order()
