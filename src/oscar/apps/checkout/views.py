@@ -667,7 +667,7 @@ class ThankYouView(generic.DetailView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         # We allow superusers to force an order thank-you page for testing
         order = None
         if self.request.user.is_superuser:
