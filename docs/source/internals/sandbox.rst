@@ -88,6 +88,13 @@ at: http://localhost:8000.  A sample superuser is installed with credentials::
     password: testing
 
 
+.. warning::
+
+    The sandbox has Django Debug Toolbar enabled by default, which will affect
+    its performance. You can disable it by setting ``INTERNAL_IPS`` to an
+    empty list in your local settings.
+
+
 Run the sandbox using Docker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
