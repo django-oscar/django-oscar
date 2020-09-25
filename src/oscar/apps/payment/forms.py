@@ -3,6 +3,7 @@ from calendar import monthrange
 from datetime import date
 
 from django import forms
+from django.core import validators
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
@@ -140,10 +141,10 @@ class BankcardExpiryMonthField(BankcardMonthField):
 
     def compress(self, data_list):
         if data_list:
-            if data_list[1] in forms.fields.EMPTY_VALUES:
+            if data_list[1] in validators.EMPTY_VALUES:
                 error = self.error_messages['invalid_year']
                 raise forms.ValidationError(error)
-            if data_list[0] in forms.fields.EMPTY_VALUES:
+            if data_list[0] in validators.EMPTY_VALUES:
                 error = self.error_messages['invalid_month']
                 raise forms.ValidationError(error)
             year = int(data_list[1])
@@ -186,10 +187,10 @@ class BankcardStartingMonthField(BankcardMonthField):
 
     def compress(self, data_list):
         if data_list:
-            if data_list[1] in forms.fields.EMPTY_VALUES:
+            if data_list[1] in validators.EMPTY_VALUES:
                 error = self.error_messages['invalid_year']
                 raise forms.ValidationError(error)
-            if data_list[0] in forms.fields.EMPTY_VALUES:
+            if data_list[0] in validators.EMPTY_VALUES:
                 error = self.error_messages['invalid_month']
                 raise forms.ValidationError(error)
             year = int(data_list[1])
