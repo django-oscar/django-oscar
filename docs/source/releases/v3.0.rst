@@ -77,7 +77,11 @@ Minor changes
 
 - Category slugs can now be edited via the dashboard.
 
-- A new method get_attribute_values() was added to the Product model which returns a merged set of attribute values for child and parent products.
+- A new method ``get_attribute_values()`` was added to the Product model which returns a merged set of
+  attribute values for child and parent products.
+
+- The behaviour of ``checkout.views.ThankYouView`` when no order is found in the session has changed,
+  to redirect the user to the URL defined by ``settings.OSCAR_HOMEPAGE`` instead of returning a page not found error.
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
