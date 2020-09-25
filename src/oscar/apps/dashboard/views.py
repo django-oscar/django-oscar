@@ -4,8 +4,11 @@ from decimal import ROUND_UP
 from decimal import Decimal as D
 
 from django.contrib import messages
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Avg, Count, Sum
 from django.template.response import TemplateResponse
+from django.urls import reverse_lazy
 from django.utils.timezone import now
 from django.views.generic import TemplateView
 
@@ -308,3 +311,13 @@ class PopUpWindowDeleteMixin(PopUpWindowMixin):
             )
         else:
             return response
+
+
+class LoginView(auth_views.LoginView):
+    template_name = 'oscar/dashboard/login.html'
+    authentication_form = AuthenticationForm
+    login_redirect_url = reverse_lazy('dashboard:index')
+
+    def get_success_url(self):
+        url = self.get_redirect_url()
+        return url or self.login_redirect_url
