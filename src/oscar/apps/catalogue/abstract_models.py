@@ -599,7 +599,7 @@ class AbstractProduct(models.Model):
         """
         Return a string of all of a product's attributes
         """
-        attributes = self.attribute_values.all()
+        attributes = self.get_attribute_values()
         pairs = [attribute.summary() for attribute in attributes]
         return ", ".join(pairs)
 
@@ -642,6 +642,16 @@ class AbstractProduct(models.Model):
         else:
             return self.categories
     get_categories.short_description = _("Categories")
+
+    def get_attribute_values(self):
+        attribute_values = self.attribute_values.all()
+        if self.is_child:
+            parent_attribute_values = self.parent.attribute_values.exclude(
+                attribute__code__in=attribute_values.values("attribute__code")
+            )
+            return attribute_values | parent_attribute_values
+
+        return attribute_values
 
     # Images
 

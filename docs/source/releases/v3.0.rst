@@ -77,6 +77,8 @@ Minor changes
 
 - Category slugs can now be edited via the dashboard.
 
+- A new method get_attribute_values() was added to the Product model which returns a merged set of attribute values for child and parent products.
+
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
 
