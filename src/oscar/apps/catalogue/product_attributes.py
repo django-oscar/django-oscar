@@ -50,7 +50,7 @@ class ProductAttributesContainer(object):
                         {'attr': attribute.code, 'err': e})
 
     def get_values(self):
-        return self.product.attribute_values.all()
+        return self.product.get_attribute_values()
 
     def get_value_by_attribute(self, attribute):
         return self.get_values().get(attribute=attribute)
