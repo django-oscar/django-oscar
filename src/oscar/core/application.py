@@ -154,3 +154,4 @@ class OscarConfig(OscarConfigMixin, AppConfig):
 
 class OscarDashboardConfig(OscarConfig):
     login_url = reverse_lazy('dashboard:login')
+    is_basket_disabled = True
