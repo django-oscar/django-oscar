@@ -28,6 +28,8 @@ class OscarConfigMixin(object):
     #: Default permission for any view not in permissions_map
     default_permissions = None
 
+    is_basket_disabled = False
+
     def __init__(self, app_name, app_module, namespace=None, **kwargs):
         """
         kwargs:
@@ -77,6 +79,8 @@ class OscarConfigMixin(object):
             urlpatterns (list): A list of URL patterns
 
         """
+        from oscar.views.decorators import disable_basket
+
         # Test if this the URLs in the Application instance should be
         # available.  If the feature is hidden then we don't include the URLs.
         if feature_hidden(self.hidable_feature_name):
@@ -92,6 +96,9 @@ class OscarConfigMixin(object):
                 decorator = self.get_url_decorator(pattern)
                 if decorator:
                     pattern.callback = decorator(pattern.callback)
+
+                if self.is_basket_disabled:
+                    pattern.callback = disable_basket(pattern.callback)
 
         return urlpatterns
 
