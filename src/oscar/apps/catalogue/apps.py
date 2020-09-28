@@ -47,14 +47,15 @@ class CatalogueReviewsOnlyConfig(OscarConfig):
         from . import receivers  # noqa
 
         super().ready()
-
-        self.reviews_app = apps.get_app_config('reviews')
+        if apps.is_installed('oscar.apps.catalogue.reviews'):
+            self.reviews_app = apps.get_app_config('reviews')
 
     def get_urls(self):
         urls = super().get_urls()
-        urls += [
-            re_path(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/', include(self.reviews_app.urls[0])),
-        ]
+        if apps.is_installed('oscar.apps.catalogue.reviews'):
+            urls += [
+                re_path(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/', include(self.reviews_app.urls[0])),
+            ]
         return self.post_process_urls(urls)
 
 
