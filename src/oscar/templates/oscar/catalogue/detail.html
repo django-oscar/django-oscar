@@ -12,8 +12,12 @@
     {{ product.get_title }} | {{ block.super }}
 {% endblock %}
 
+{% block meta_title %}
+    {{ product.meta_title|default:product.get_title|default:""|striptags }}
+{% endblock %}
+
 {% block description %}
-    {{ product.description|default:""|striptags }}
+    {{ product.meta_description|default:product.description|default:""|striptags }}
 {% endblock %}
 
 {% block breadcrumbs %}
