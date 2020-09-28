@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.core import exceptions
 from django.utils.translation import gettext_lazy as _
@@ -27,7 +29,7 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 BaseCategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'meta_title', 'slug', 'description', 'meta_description', 'image', 'is_public'],
+    fields=['name', 'slug', 'description', 'image', 'is_public'],
     exclude=['ancestors_are_public'])
 
 
@@ -224,6 +226,18 @@ class ProductForm(forms.ModelForm):
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})
+        if 'meta_description' in self.fields:
+            self.fields['meta_description'].widget.attrs['class'] = 'no-widget-init'
+
+    def visible_fields(self):
+        return [field for field in self if not field.is_hidden and not self.is_seo_field(field)]
+
+    def seo_fields(self):
+        return [field for field in self if self.is_seo_field(field)]
+
+    @staticmethod
+    def is_seo_field(field):
+        return re.match(r'^meta[\w_]+|slug$', field.name)
 
     def set_initial(self, product_class, parent, kwargs):
         """
