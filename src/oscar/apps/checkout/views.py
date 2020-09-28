@@ -2,6 +2,7 @@ import logging
 from urllib.parse import quote
 
 from django import http
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
@@ -659,7 +660,14 @@ class ThankYouView(generic.DetailView):
     template_name = 'oscar/checkout/thank_you.html'
     context_object_name = 'order'
 
-    def get_object(self):
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object is None:
+            return redirect(settings.OSCAR_HOMEPAGE)
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+    def get_object(self, queryset=None):
         # We allow superusers to force an order thank-you page for testing
         order = None
         if self.request.user.is_superuser:
@@ -674,9 +682,6 @@ class ThankYouView(generic.DetailView):
             if 'checkout_order_id' in self.request.session:
                 order = Order._default_manager.get(
                     pk=self.request.session['checkout_order_id'])
-            else:
-                raise http.Http404(_("No order found"))
-
         return order
 
     def get_context_data(self, *args, **kwargs):

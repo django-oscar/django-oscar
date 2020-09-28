@@ -14,15 +14,10 @@ class Scale(object):
     def weigh_product(self, product):
         weight = None
         try:
-            weight = product.attribute_values.get(
+            weight = product.get_attribute_values().get(
                 attribute__code=self.attribute).value
         except ObjectDoesNotExist:
-            if product.parent:
-                try:
-                    weight = product.parent.attribute_values.get(
-                        attribute__code=self.attribute).value
-                except ObjectDoesNotExist:
-                    pass
+            pass
 
         if weight is None:
             if self.default_weight is None:
