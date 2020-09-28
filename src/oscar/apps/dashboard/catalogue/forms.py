@@ -29,17 +29,31 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 BaseCategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'slug', 'description', 'image', 'is_public'],
+    fields=['name', 'slug', 'description', 'meta_title', 'meta_description', 'image', 'is_public'],
     exclude=['ancestors_are_public'])
 
 
-class CategoryForm(BaseCategoryForm):
+class _SEOFormMixin(object):
+    def visible_fields(self):
+        return [field for field in self if not field.is_hidden and not self.is_seo_field(field)]
+
+    def seo_fields(self):
+        return [field for field in self if self.is_seo_field(field)]
+
+    @staticmethod
+    def is_seo_field(field):
+        return re.match(r'^meta[\w_]+|slug$', field.name)
+
+
+class CategoryForm(_SEOFormMixin, BaseCategoryForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'slug' in self.fields:
             self.fields['slug'].required = False
             self.fields['slug'].help_text = _('Leave blank to generate from category name')
+        if 'meta_description' in self.fields:
+            self.fields['meta_description'].widget.attrs['class'] = 'no-widget-init'
 
 
 class ProductClassSelectForm(forms.Form):
@@ -180,7 +194,7 @@ def _attr_image_field(attribute):
         label=attribute.name, required=attribute.required)
 
 
-class ProductForm(forms.ModelForm):
+class ProductForm(_SEOFormMixin, forms.ModelForm):
     FIELD_FACTORIES = {
         "text": _attr_text_field,
         "richtext": _attr_textarea_field,
@@ -200,7 +214,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'title', 'meta_title', 'upc', 'slug', 'description',  'meta_description',
+            'title', 'upc', 'slug', 'description', 'meta_title', 'meta_description',
             'is_public', 'is_discountable', 'structure']
         widgets = {
             'structure': forms.HiddenInput()
@@ -228,16 +242,6 @@ class ProductForm(forms.ModelForm):
                 attrs={'autocomplete': 'off'})
         if 'meta_description' in self.fields:
             self.fields['meta_description'].widget.attrs['class'] = 'no-widget-init'
-
-    def visible_fields(self):
-        return [field for field in self if not field.is_hidden and not self.is_seo_field(field)]
-
-    def seo_fields(self):
-        return [field for field in self if self.is_seo_field(field)]
-
-    @staticmethod
-    def is_seo_field(field):
-        return re.match(r'^meta[\w_]+|slug$', field.name)
 
     def set_initial(self, product_class, parent, kwargs):
         """
