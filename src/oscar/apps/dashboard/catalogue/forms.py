@@ -27,7 +27,7 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 BaseCategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'slug', 'description', 'image', 'is_public'],
+    fields=['name', 'meta_title', 'slug', 'description', 'meta_description', 'image', 'is_public'],
     exclude=['ancestors_are_public'])
 
 
@@ -198,7 +198,8 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'title', 'upc', 'description', 'is_public', 'is_discountable', 'structure']
+            'title', 'meta_title', 'upc', 'slug', 'description',  'meta_description',
+            'is_public', 'is_discountable', 'structure']
         widgets = {
             'structure': forms.HiddenInput()
         }
