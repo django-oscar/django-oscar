@@ -1,6 +1,7 @@
 import zlib
 from decimal import Decimal as D
 
+from django import apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import models
@@ -311,8 +312,8 @@ class AbstractBasket(models.Model):
         basket.save()
         # Ensure all vouchers are moved to the new basket
         for voucher in basket.vouchers.all():
-            basket.vouchers.remove(voucher)
-            self.vouchers.add(voucher)
+            voucher.basket = basket
+            voucher.save()
     merge.alters_data = True
 
     def freeze(self):
