@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='meta_title',
-            field=models.CharField(db_index=True, default='', max_length=255, verbose_name='Meta Title'),
+            field=models.CharField(blank=True, db_index=True, default='', max_length=255, verbose_name='Meta Title'),
             preserve_default=False,
         ),
         migrations.AddField(
