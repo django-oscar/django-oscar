@@ -19,7 +19,7 @@ class VoucherConfig(OscarConfig):
 
     def get_urls(self):
         urls = [
-            path('vouchers/add/', self.add_voucher_view.as_view(), name='vouchers-add'),
-            path('vouchers/<int:pk>/remove/', self.remove_voucher_view.as_view(), name='vouchers-remove'),
+            path('add/', self.add_voucher_view.as_view(), name='vouchers-add'),
+            path('<int:pk>/remove/', self.remove_voucher_view.as_view(), name='vouchers-remove'),
         ]
         return self.post_process_urls(urls)
