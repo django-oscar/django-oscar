@@ -131,16 +131,6 @@ class SavedLineForm(forms.ModelForm):
         return cleaned_data
 
 
-class BasketVoucherForm(forms.Form):
-    code = forms.CharField(max_length=128, label=_('Code'))
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def clean_code(self):
-        return self.cleaned_data['code'].strip().upper()
-
-
 class AddToBasketForm(forms.Form):
 
     OPTION_FIELD_FACTORIES = {

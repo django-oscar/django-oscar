@@ -1,6 +1,6 @@
 from django.db.models import F
 
-from oscar.apps.basket.signals import voucher_addition, voucher_removal
+from oscar.apps.voucher.signals import voucher_addition, voucher_removal
 
 
 def track_voucher_addition(basket, voucher, **kwargs):

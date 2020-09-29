@@ -17,15 +17,11 @@ class BasketConfig(OscarConfig):
         self.summary_view = get_class('basket.views', 'BasketView')
         self.saved_view = get_class('basket.views', 'SavedView')
         self.add_view = get_class('basket.views', 'BasketAddView')
-        self.add_voucher_view = get_class('basket.views', 'VoucherAddView')
-        self.remove_voucher_view = get_class('basket.views', 'VoucherRemoveView')
 
     def get_urls(self):
         urls = [
             path('', self.summary_view.as_view(), name='summary'),
             path('add/<int:pk>/', self.add_view.as_view(), name='add'),
-            path('vouchers/add/', self.add_voucher_view.as_view(), name='vouchers-add'),
-            path('vouchers/<int:pk>/remove/', self.remove_voucher_view.as_view(), name='vouchers-remove'),
             path('saved/', login_required(self.saved_view.as_view()), name='saved'),
         ]
         return self.post_process_urls(urls)
