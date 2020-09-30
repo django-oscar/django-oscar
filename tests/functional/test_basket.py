@@ -3,8 +3,7 @@ from decimal import Decimal as D
 from http import client as http_client
 from http.cookies import _unquote
 
-from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils.translation import gettext
 
@@ -93,13 +92,7 @@ class BasketSummaryViewTests(WebTestCase):
 class BasketThresholdTest(WebTestCase):
     csrf_checks = False
 
-    def setUp(self):
-        self._old_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
-        settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 3
-
-    def tearDown(self):
-        settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = self._old_threshold
-
+    @override_settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=3)
     def test_adding_more_than_threshold_raises(self):
         dummy_product = create_product(price=D('10.00'), num_in_stock=10)
         url = reverse('basket:add', kwargs={'pk': dummy_product.pk})
@@ -107,7 +100,7 @@ class BasketThresholdTest(WebTestCase):
                        'action': 'add',
                        'quantity': 2}
         response = self.app.post(url, params=post_params)
-        self.assertTrue('oscar_open_basket' in response.test_app.cookies)
+        self.assertIn('oscar_open_basket', response.test_app.cookies)
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
                        'quantity': 2}
@@ -118,7 +111,7 @@ class BasketThresholdTest(WebTestCase):
             "than %(threshold)d items in one order. Your basket currently "
             "has %(basket)d items."
         ) % ({'threshold': 3, 'basket': 2})
-        self.assertTrue(expected in response.test_app.cookies['messages'])
+        self.assertIn(expected, response.test_app.cookies['messages'])
 
 
 class BasketReportTests(TestCase):
