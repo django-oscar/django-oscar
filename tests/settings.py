@@ -1,6 +1,6 @@
 import os
-
-from oscar.defaults import *  # noqa
+# noqa
+from oscar.defaults import *  
 
 # Path helper
 location = lambda x: os.path.join(
