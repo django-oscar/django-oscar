@@ -239,7 +239,6 @@ class TestVoucherSet(object):
         voucherset = VoucherSetFactory()
         assert voucherset.num_orders == 0
 
-        order = OrderFactory()
         user, order = UserFactory(), OrderFactory()
         voucher = voucherset.vouchers.first()
         voucher.record_usage(order, user)
