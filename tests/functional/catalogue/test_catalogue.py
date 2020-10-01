@@ -53,7 +53,7 @@ class TestProductDetailView(WebTestCase):
         url = reverse('catalogue:detail', kwargs=kwargs)
         response = self.app.get(url)
 
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, http_client.OK)
 
     def test_is_public_off(self):
         product = create_product(upc="kleine-bats", is_public=False)
@@ -62,7 +62,7 @@ class TestProductDetailView(WebTestCase):
         url = reverse('catalogue:detail', kwargs=kwargs)
         response = self.app.get(url, expect_errors=True)
 
-        self.assertTrue(response.status_code, 404)
+        self.assertEqual(response.status_code, http_client.NOT_FOUND)
 
 
 class TestProductListView(WebTestCase):
