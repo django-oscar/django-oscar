@@ -3,11 +3,11 @@
 {% load i18n %}
 
 {% block title %}
-    {{ category.name }} | {{ block.super }}
+    {{ category.meta_title|default:category.name|default:""|striptags }} | {{ block.super }}
 {% endblock %}
 
 {% block description %}
-    {{ category.description|default:""|striptags }}
+    {{ category.meta_description|default:category.description|default:""|striptags }}
 {% endblock %}
 
 {% block header%}
