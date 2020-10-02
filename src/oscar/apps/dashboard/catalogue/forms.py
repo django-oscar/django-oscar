@@ -33,27 +33,29 @@ BaseCategoryForm = movenodeform_factory(
     exclude=['ancestors_are_public'])
 
 
-class _SEOFormMixin(object):
-    def visible_fields(self):
+class SEOFormMixin:
+    seo_fields = ['meta_title', 'meta_description', 'slug']
+
+    def primary_form_fields(self):
         return [field for field in self if not field.is_hidden and not self.is_seo_field(field)]
 
-    def seo_fields(self):
+    def seo_form_fields(self):
         return [field for field in self if self.is_seo_field(field)]
 
-    @staticmethod
-    def is_seo_field(field):
-        return re.match(r'^meta[\w_]+|slug$', field.name)
+    def is_seo_field(self, field):
+        return field.name in self.seo_fields
 
 
-class CategoryForm(_SEOFormMixin, BaseCategoryForm):
+class CategoryForm(SEOFormMixin, BaseCategoryForm):
+    meta_description = forms.CharField(required=False, label=_('Meta-description'), widget=forms.Textarea(attrs={
+        'class': 'no-widget-init'
+    }))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'slug' in self.fields:
             self.fields['slug'].required = False
             self.fields['slug'].help_text = _('Leave blank to generate from category name')
-        if 'meta_description' in self.fields:
-            self.fields['meta_description'].widget.attrs['class'] = 'no-widget-init'
 
 
 class ProductClassSelectForm(forms.Form):
@@ -194,7 +196,7 @@ def _attr_image_field(attribute):
         label=attribute.name, required=attribute.required)
 
 
-class ProductForm(_SEOFormMixin, forms.ModelForm):
+class ProductForm(SEOFormMixin, forms.ModelForm):
     FIELD_FACTORIES = {
         "text": _attr_text_field,
         "richtext": _attr_textarea_field,
@@ -210,6 +212,9 @@ class ProductForm(_SEOFormMixin, forms.ModelForm):
         "file": _attr_file_field,
         "image": _attr_image_field,
     }
+    meta_description = forms.CharField(required=False, label=_('Meta-description'), widget=forms.Textarea(attrs={
+        'class': 'no-widget-init'
+    }))
 
     class Meta:
         model = Product
@@ -240,8 +245,6 @@ class ProductForm(_SEOFormMixin, forms.ModelForm):
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})
-        if 'meta_description' in self.fields:
-            self.fields['meta_description'].widget.attrs['class'] = 'no-widget-init'
 
     def set_initial(self, product_class, parent, kwargs):
         """
