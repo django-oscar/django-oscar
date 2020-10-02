@@ -103,7 +103,7 @@
                                             {{ field }}
                                         {% endfor %}
 
-                                        {% for field in form.visible_fields %}
+                                        {% for field in form.primary_form_fields %}
                                             {% if 'attr' not in field.id_for_label %}
                                                 {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
                                             {% endif %}
@@ -319,7 +319,7 @@
                                             {{ field }}
                                         {% endfor %}
 
-                                        {% for field in form.seo_fields %}
+                                        {% for field in form.seo_form_fields %}
                                             {% if 'attr' not in field.id_for_label %}
                                                 {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
                                             {% endif %}

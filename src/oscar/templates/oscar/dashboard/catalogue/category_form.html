@@ -32,7 +32,7 @@
                         <div class="table-header">
                             <h3>{% trans "Sections" %}</h3>
                         </div>
-                        <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
+                        <ul class="nav nav-list bs-docs-sidenav" id="category_update_tabs">
                             {% block tabs %}
                                 <li class="active"><a href="#category_details" data-toggle="tab">{% trans 'Category details' %}</a></li>
                                 <li><a href="#seo" data-toggle="tab">{% trans 'Search Engine Optimization' %}</a></li>
@@ -56,7 +56,7 @@
                                             {{ field }}
                                         {% endfor %}
 
-                                        {% for field in form.visible_fields %}
+                                        {% for field in form.primary_form_fields %}
                                             {% if 'attr' not in field.id_for_label %}
                                                 {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
                                             {% endif %}
@@ -77,7 +77,7 @@
                                             {{ field }}
                                         {% endfor %}
 
-                                        {% for field in form.seo_fields %}
+                                        {% for field in form.seo_form_fields %}
                                             {% if 'attr' not in field.id_for_label %}
                                                 {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
                                             {% endif %}
