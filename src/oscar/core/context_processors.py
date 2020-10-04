@@ -23,6 +23,7 @@ def metadata(request):
     return {'shop_name': settings.OSCAR_SHOP_NAME,
             'shop_tagline': settings.OSCAR_SHOP_TAGLINE,
             'homepage_url': settings.OSCAR_HOMEPAGE,
+            'oscar_favicon': settings.OSCAR_FAVICON,
             'language_neutral_url_path': strip_language_code(request),
             # Fallback to old settings name for backwards compatibility
             'use_less': (getattr(settings, 'OSCAR_USE_LESS', None)
