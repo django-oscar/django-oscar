@@ -365,6 +365,7 @@ from oscar.defaults import *
 # ====
 
 OSCAR_SHOP_TAGLINE = 'Sandbox'
+OSCAR_FAVICON = 'favicon/favicon.ico'
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
