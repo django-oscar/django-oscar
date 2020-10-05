@@ -27,11 +27,27 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 BaseCategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'slug', 'description', 'image', 'is_public'],
+    fields=['name', 'slug', 'description', 'image', 'is_public', 'meta_title', 'meta_description'],
     exclude=['ancestors_are_public'])
 
 
-class CategoryForm(BaseCategoryForm):
+class SEOFormMixin:
+    seo_fields = ['meta_title', 'meta_description', 'slug']
+
+    def primary_form_fields(self):
+        return [field for field in self if not field.is_hidden and not self.is_seo_field(field)]
+
+    def seo_form_fields(self):
+        return [field for field in self if self.is_seo_field(field)]
+
+    def is_seo_field(self, field):
+        return field.name in self.seo_fields
+
+
+class CategoryForm(SEOFormMixin, BaseCategoryForm):
+    meta_description = forms.CharField(required=False, label=_('Meta description'), widget=forms.Textarea(attrs={
+        'class': 'no-widget-init'
+    }))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -178,7 +194,7 @@ def _attr_image_field(attribute):
         label=attribute.name, required=attribute.required)
 
 
-class ProductForm(forms.ModelForm):
+class ProductForm(SEOFormMixin, forms.ModelForm):
     FIELD_FACTORIES = {
         "text": _attr_text_field,
         "richtext": _attr_textarea_field,
@@ -194,11 +210,15 @@ class ProductForm(forms.ModelForm):
         "file": _attr_file_field,
         "image": _attr_image_field,
     }
+    meta_description = forms.CharField(required=False, label=_('Meta description'), widget=forms.Textarea(attrs={
+        'class': 'no-widget-init'
+    }))
 
     class Meta:
         model = Product
         fields = [
-            'title', 'upc', 'description', 'is_public', 'is_discountable', 'structure']
+            'title', 'upc', 'description', 'is_public', 'is_discountable', 'structure', 'slug', 'meta_title',
+            'meta_description']
         widgets = {
             'structure': forms.HiddenInput()
         }
