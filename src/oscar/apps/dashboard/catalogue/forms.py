@@ -27,12 +27,25 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 BaseCategoryForm = movenodeform_factory(
     Category,
-    fields=['name', 'slug', 'description', 'image', 'is_public'],
-    exclude=['ancestors_are_public'])
+    fields=['name', 'slug', 'description', 'image', 'is_public', 'meta_title', 'meta_description'],
+    exclude=['ancestors_are_public'],
+    widgets={'meta_description': forms.Textarea(attrs={'class': 'no-widget-init'})})
 
 
-class CategoryForm(BaseCategoryForm):
+class SEOFormMixin:
+    seo_fields = ['meta_title', 'meta_description', 'slug']
 
+    def primary_form_fields(self):
+        return [field for field in self if not field.is_hidden and not self.is_seo_field(field)]
+
+    def seo_form_fields(self):
+        return [field for field in self if self.is_seo_field(field)]
+
+    def is_seo_field(self, field):
+        return field.name in self.seo_fields
+
+
+class CategoryForm(SEOFormMixin, BaseCategoryForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'slug' in self.fields:
@@ -178,7 +191,7 @@ def _attr_image_field(attribute):
         label=attribute.name, required=attribute.required)
 
 
-class ProductForm(forms.ModelForm):
+class ProductForm(SEOFormMixin, forms.ModelForm):
     FIELD_FACTORIES = {
         "text": _attr_text_field,
         "richtext": _attr_textarea_field,
@@ -198,9 +211,11 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'title', 'upc', 'description', 'is_public', 'is_discountable', 'structure']
+            'title', 'upc', 'description', 'is_public', 'is_discountable', 'structure', 'slug', 'meta_title',
+            'meta_description']
         widgets = {
-            'structure': forms.HiddenInput()
+            'structure': forms.HiddenInput(),
+            'meta_description': forms.Textarea(attrs={'class': 'no-widget-init'})
         }
 
     def __init__(self, product_class, data=None, parent=None, *args, **kwargs):
@@ -220,6 +235,9 @@ class ProductForm(forms.ModelForm):
             self.instance.product_class = product_class
         self.add_attribute_fields(product_class, self.instance.is_parent)
 
+        if 'slug' in self.fields:
+            self.fields['slug'].required = False
+            self.fields['slug'].help_text = _('Leave blank to generate from product title')
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})

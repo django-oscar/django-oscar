@@ -23,10 +23,70 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="table-header">
-        <h2>{{ title }}</h2>
-    </div>
-    <div class="well">
-        {% include 'oscar/dashboard/partials/form.html' with includes_files=1 class='wysiwyg' %}
-    </div>
+    <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
+        {% csrf_token %}
+        <div class="row">
+            {% block tab_nav %}
+                <div class="col-md-3">
+                    <div data-spy="affix" class="affix-top" data-offset-top="200">
+                        <div class="table-header">
+                            <h3>{% trans "Sections" %}</h3>
+                        </div>
+                        <ul class="nav nav-list bs-docs-sidenav" id="category_update_tabs">
+                            {% block tabs %}
+                                <li class="active"><a href="#category_details" data-toggle="tab">{% trans 'Category details' %}</a></li>
+                                <li><a href="#seo" data-toggle="tab">{% trans 'Search engine optimisation' %}</a></li>
+                            {% endblock tabs %}
+                        </ul>
+                    </div>
+                </div>
+            {% endblock tab_nav %}
+            <div class="col-md-9">
+                <div class="tab-content">
+                    {% block tab_content %}
+                        {% block category_details %}
+                            <div class="tab-pane active" id="category_details">
+                                <div class="table-header">
+                                    <h3>{% trans "Category details" %}</h3>
+                                </div>
+                                <div class="well category-details">
+                                    {% block category_details_content %}
+                                        <span class="error-block">{{ form.non_field_errors }}</span>
+                                        {% for field in form.hidden_fields %}
+                                            {{ field }}
+                                        {% endfor %}
+                                        {% for field in form.primary_form_fields %}
+                                            {% if 'attr' not in field.id_for_label %}
+                                                {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endblock category_details_content %}
+                                </div>
+                            </div>
+                        {% endblock category_details %}
+                        {% block seo %}
+                            <div class="tab-pane" id="seo">
+                                <div class="table-header">
+                                    <h3>{% trans "Search engine optimisation" %}</h3>
+                                </div>
+                                <div class="well">
+                                    {% block seo_content %}
+                                        <span class="error-block">{{ form.non_field_errors }}</span>
+                                        {% for field in form.hidden_fields %}
+                                            {{ field }}
+                                        {% endfor %}
+                                        {% for field in form.seo_form_fields %}
+                                            {% if 'attr' not in field.id_for_label %}
+                                                {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endblock seo_content %}
+                                </div>
+                            </div>
+                        {% endblock seo %}
+                    {% endblock tab_content %}
+                </div>
+            </div>
+        </div>
+    </form>
 {% endblock dashboard_content %}
