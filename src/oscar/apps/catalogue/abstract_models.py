@@ -128,6 +128,8 @@ class AbstractCategory(MP_Node):
 
     name = models.CharField(_('Name'), max_length=255, db_index=True)
     description = models.TextField(_('Description'), blank=True)
+    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True)
+    meta_description = models.TextField(_('Meta description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = SlugField(_('Slug'), max_length=255, db_index=True)
@@ -369,6 +371,8 @@ class AbstractProduct(models.Model):
                              max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
+    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True)
+    meta_description = models.TextField(_('Meta description'), blank=True)
 
     #: "Kind" of product, e.g. T-Shirt, Book, etc.
     #: None for child products, they inherit their parent's product class
