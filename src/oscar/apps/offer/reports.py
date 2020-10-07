@@ -42,15 +42,17 @@ class OfferReportGenerator(ReportGenerator):
         'HTML_formatter': OfferReportHTMLFormatter,
     }
 
-    def generate(self):
+    def get_queryset(self):
         qs = OrderDiscount._default_manager.all()
         if self.start_date:
             qs = qs.filter(order__date_placed__gte=self.start_date)
         if self.end_date:
             qs = qs.filter(order__date_placed__lt=self.end_date + datetime.timedelta(days=1))
+        return qs
 
+    def generate(self):
         offer_discounts = {}
-        for discount in qs:
+        for discount in self.queryset:
             if discount.offer_id not in offer_discounts:
                 try:
                     all_offers = ConditionalOffer._default_manager

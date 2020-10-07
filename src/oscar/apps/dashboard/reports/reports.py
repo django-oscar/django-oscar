@@ -19,13 +19,17 @@ class ReportGenerator(object):
     code = ''
     description = '<insert report description>'
     date_range_field_name = None
+    model_class = None
+    queryset = None
 
     def __init__(self, **kwargs):
         self.start_date = kwargs.get('start_date')
         self.end_date = kwargs.get('end_date')
 
-        formatter_name = '%s_formatter' % kwargs['formatter']
+        formatter_name = '%s_formatter' % kwargs.get('formatter', 'HTML')
         self.formatter = self.formatters[formatter_name]()
+        self.queryset = self.get_queryset()
+        self.queryset = self.filter_with_date_range(self.queryset)
 
     def report_description(self):
         return _('%(report_filter)s between %(start_date)s and %(end_date)s') \
@@ -34,8 +38,19 @@ class ReportGenerator(object):
                'end_date': date(self.end_date, 'DATE_FORMAT')
                }
 
+    def get_queryset(self):
+        if self.queryset is not None:
+            return self.queryset
+
+        if not self.model_class:
+            raise ValueError(
+                "Please define a model_class property on your report generator class, "
+                "or override the qet_queryset() method."
+            )
+        return self.model_class._default_manager.all()
+
     def generate(self):
-        pass
+        return self.formatter.generate_response(self.queryset)
 
     def filename(self):
         """

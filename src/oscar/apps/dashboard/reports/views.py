@@ -47,7 +47,8 @@ class IndexView(ListView):
                 if form.cleaned_data['download']:
                     return report
                 else:
-                    self.set_list_view_attrs(generator, report)
+                    self.template_name = generator.filename()
+                    self.object_list = self.queryset = generator.queryset
                     context = self.get_context_data(object_list=self.queryset)
                     context['form'] = form
                     context['description'] = generator.report_description()
@@ -55,8 +56,3 @@ class IndexView(ListView):
         else:
             form = self.report_form_class()
         return TemplateResponse(request, self.template_name, {'form': form})
-
-    def set_list_view_attrs(self, generator, report):
-        self.template_name = generator.filename()
-        queryset = generator.filter_with_date_range(report)
-        self.object_list = self.queryset = queryset
