@@ -47,6 +47,11 @@ Backwards incompatible changes
   Projects that have forked the ``partner`` app will need to generate their own migration
   to rename this field.
 
+- The ``annotate_form_field`` template tag will now set the ``widget_type`` in `the format of Django 3.1`_: so no longer
+  ``CheckboxField``, but just ``checkbox``.
+
+.. _`the format of Django 3.1`: https://docs.djangoproject.com/en/3.1/ref/forms/api/#django.forms.BoundField.widget_type
+
 Bug fixes
 ~~~~~~~~~
 
