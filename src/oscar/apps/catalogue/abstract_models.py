@@ -14,6 +14,7 @@ from django.db import models
 from django.db.models import Count, Exists, OuterRef, Sum
 from django.db.models.fields import Field
 from django.db.models.lookups import StartsWith
+from django.template.defaultfilters import striptags
 from django.urls import reverse
 from django.utils.functional import SimpleLazyObject, cached_property
 from django.utils.html import strip_tags
@@ -128,8 +129,8 @@ class AbstractCategory(MP_Node):
 
     name = models.CharField(_('Name'), max_length=255, db_index=True)
     description = models.TextField(_('Description'), blank=True)
-    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True)
-    meta_description = models.TextField(_('Meta description'), blank=True)
+    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True, null=True)
+    meta_description = models.TextField(_('Meta description'), blank=True, null=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = SlugField(_('Slug'), max_length=255, db_index=True)
@@ -241,7 +242,7 @@ class AbstractCategory(MP_Node):
         return self.meta_title or self.name
 
     def get_meta_description(self):
-        return self.meta_description or self.description
+        return self.meta_description or striptags(self.description)
 
     def get_ancestors_and_self(self):
         """
@@ -377,8 +378,8 @@ class AbstractProduct(models.Model):
                              max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
-    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True)
-    meta_description = models.TextField(_('Meta description'), blank=True)
+    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True, null=True)
+    meta_description = models.TextField(_('Meta description'), blank=True, null=True)
 
     #: "Kind" of product, e.g. T-Shirt, Book, etc.
     #: None for child products, they inherit their parent's product class
@@ -634,7 +635,7 @@ class AbstractProduct(models.Model):
         meta_description = self.meta_description
         if not meta_description and self.is_child:
             meta_description = self.parent.meta_description
-        return meta_description or self.description
+        return meta_description or striptags(self.description)
     get_meta_description.short_description = pgettext_lazy("Product meta description", "Meta description")
 
     def get_product_class(self):

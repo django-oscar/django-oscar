@@ -13,21 +13,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='meta_description',
-            field=models.TextField(blank=True, verbose_name='Meta description'),
+            field=models.TextField(blank=True, null=True, verbose_name='Meta description'),
         ),
         migrations.AddField(
             model_name='category',
             name='meta_title',
-            field=models.CharField(blank=True, max_length=255, verbose_name='Meta title'),
+            field=models.CharField(blank=True, null=True, max_length=255, verbose_name='Meta title'),
         ),
         migrations.AddField(
             model_name='product',
             name='meta_description',
-            field=models.TextField(blank=True, verbose_name='Meta description'),
+            field=models.TextField(blank=True, null=True, verbose_name='Meta description'),
         ),
         migrations.AddField(
             model_name='product',
             name='meta_title',
-            field=models.CharField(blank=True, max_length=255, verbose_name='Meta title'),
+            field=models.CharField(blank=True, null=True, max_length=255, verbose_name='Meta title'),
         ),
     ]
