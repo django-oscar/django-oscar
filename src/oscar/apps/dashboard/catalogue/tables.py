@@ -72,7 +72,7 @@ class CategoryTable(DashboardTable):
     class Meta(DashboardTable.Meta):
         model = Category
         fields = ('name', 'description', 'is_public')
-        sequenze = ('name', 'description', '...', 'is_public', 'actions')
+        sequence = ('name', 'description', '...', 'is_public', 'actions')
 
 
 class AttributeOptionGroupTable(DashboardTable):
