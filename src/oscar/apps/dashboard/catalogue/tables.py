@@ -44,9 +44,9 @@ class ProductTable(DashboardTable):
 
     class Meta(DashboardTable.Meta):
         model = Product
-        fields = ('upc',  'is_public', 'date_updated')
-        sequence = ('title', 'upc', 'image', 'product_class', 'variants',
-                'stock_records', '...', 'is_public', 'date_updated', 'actions')
+        fields = ('upc', 'is_public', 'date_updated')
+        sequence = ('title', 'upc', 'image', 'product_class', 'variants', 
+                    'stock_records', '...', 'is_public', 'date_updated', 'actions')
         order_by = '-date_updated'
 
 
