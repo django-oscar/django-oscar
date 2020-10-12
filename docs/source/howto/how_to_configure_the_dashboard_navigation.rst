@@ -42,7 +42,7 @@ resolve permissions to the current node::
     OSCAR_DASHBOARD_NAVIGATION += [
         {
             'label': _('Admin site'),
-            'icon': 'icon-dashboard',
+            'icon': 'fas fa-list',
             'url_name': 'admin:index',
             'access_fn': lambda user, url_name, url_args, url_kwargs: user.is_staff,
         }
@@ -68,7 +68,7 @@ icon class for the icon to your menu heading::
     OSCAR_DASHBOARD_NAVIGATION += [
         {
             'label': _('Store manager'),
-            'icon': 'icon-map-marker',
+            'icon': 'fas fa-map-marker',
             'children': [
                 {
                     'label': _('Stores'),

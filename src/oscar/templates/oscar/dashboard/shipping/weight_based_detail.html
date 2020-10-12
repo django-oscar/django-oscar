@@ -7,15 +7,13 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
-        </li>
-        <li class="active">{{ method.name }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ method.name }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -23,7 +21,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <div class="well">
+    <div class="card card-body bg-light">
         <h2>{% trans "Shipping method" %}</h2>
         <table class="table table-bordered">
             <tbody>

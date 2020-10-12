@@ -1,5 +1,4 @@
-const gulp = require("gulp"),
-    concat = require("gulp-concat");
+const gulp = require("gulp");
 
 module.exports = function(done) {
     // Copy all tracked static files into the build directory
@@ -10,27 +9,19 @@ module.exports = function(done) {
     gulp.src("node_modules/jquery/dist/jquery.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/jquery"));
 
-    gulp.src("node_modules/bootstrap/less/**/*")
-        .pipe(gulp.dest("src/oscar/static/oscar/less/bootstrap3"));
-
-    gulp.src("node_modules/bootstrap/dist/js/bootstrap.min.js")
-        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap3"));
+    gulp.src("node_modules/bootstrap/dist/js/bootstrap.bundle.js")
+        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
 
     gulp.src("node_modules/bootstrap/fonts/*")
         .pipe(gulp.dest("src/oscar/static/oscar/fonts/"));
 
     gulp.src([
-        "node_modules/bootstrap-datetime-picker/js/*.min.js",
-        "node_modules/bootstrap-datetime-picker/css/*.min.css"
-    ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker"));
+        "node_modules/tempusdominus-bootstrap-4/build/js/*.min.js",
+        "node_modules/tempusdominus-bootstrap-4/build/css/*.min.css"
+    ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
-    gulp.src("node_modules/bootstrap-datetime-picker/js/locales/*")
-        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker/locales"));
-
-    // Concatenate all timepicker locales into a single file for use in the dashboard
-    gulp.src("node_modules/bootstrap-datetime-picker/js/locales/*")
-        .pipe(concat("bootstrap-datetimepicker.all.js"))
-        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap-datetimepicker/locales"));
+    gulp.src("node_modules/moment/min/moment-with-locales.min.js")
+        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
     gulp.src("node_modules/inputmask/dist/jquery.inputmask.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/inputmask"));
@@ -56,5 +47,8 @@ module.exports = function(done) {
     gulp.src("node_modules/select2-bootstrap-theme/dist/*.min.css")
         .pipe(gulp.dest("src/oscar/static/oscar/css"));
 
+    gulp.src("node_modules/@fortawesome/fontawesome-free/webfonts/*")
+        .pipe(gulp.dest("src/oscar/static/oscar/webfonts"));
+
     done();
-}
+};

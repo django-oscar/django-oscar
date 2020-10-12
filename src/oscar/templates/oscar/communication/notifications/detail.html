@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block extra_breadcrumbs %}
-    <li>
+    <li class="breadcrumb-item">
         <a href="{% url 'customer:notifications-inbox' %}">{% trans 'Notifications inbox' %}</a>
     </li>
 {% endblock %}
@@ -35,6 +35,6 @@
             </tr>
         {% endif %}
     </table>
-    <div class="form-group form-actions"><a href="{% url 'customer:notifications-inbox' %}" class="btn btn-default">{% trans 'Return to notifications inbox' %}</a></div>
+    <div class="form-group form-actions"><a href="{% url 'customer:notifications-inbox' %}" class="btn btn-secondary">{% trans 'Return to notifications inbox' %}</a></div>
 {% endblock tabcontent %}
 

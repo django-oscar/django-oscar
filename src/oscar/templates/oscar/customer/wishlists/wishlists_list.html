@@ -16,22 +16,16 @@
                         <td>{{ wishlist.lines.count }}</td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-default" href="{% url 'customer:wishlists-detail' key=wishlist.key %}">{% trans 'View' %}</a>
-                                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{% url 'customer:wishlists-update' key=wishlist.key %}">
-                                            {% trans 'Wish list settings' %}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'customer:wishlists-delete' key=wishlist.key %}">
-                                            {% trans 'Delete' %}
-                                        </a>
-                                    </li>
-                                </ul>
+                                <a class="btn btn-secondary" href="{% url 'customer:wishlists-detail' key=wishlist.key %}">{% trans 'View' %}</a>
+                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"></button>
+                                <div class="dropdown-menu">
+                                    <a href="{% url 'customer:wishlists-update' key=wishlist.key %}" class="dropdown-item">
+                                        {% trans 'Wish list settings' %}
+                                    </a>
+                                    <a href="{% url 'customer:wishlists-delete' key=wishlist.key %}" class="dropdown-item">
+                                        {% trans 'Delete' %}
+                                    </a>
+                                </div>
                             </div>
                         </td>
                     </tr>

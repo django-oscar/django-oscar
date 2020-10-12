@@ -4,8 +4,12 @@
 {% block tabcontent %}
 
     <ul class="nav nav-tabs">
-        <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">{% trans 'Inbox' %}</a></li>
-        <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">{% trans 'Archive' context 'noun' %}</a></li>
+        <li class="nav-item">
+            <a href="{% url 'customer:notifications-inbox' %}" class="nav-link{% if list_type == 'inbox' %} active{% endif %}">{% trans 'Inbox' %}</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'customer:notifications-archive' %}" class="nav-link{% if list_type == 'archive' %} active{% endif %}">{% trans 'Archive' context 'noun' %}</a>
+        </li>
     </ul>
 
     {% if notifications %}
@@ -23,14 +27,14 @@
                             </td>
                             <td>
                                 {% if notification.is_read %}
-                                    <i class="icon-inbox"></i>
+                                    <i class="fas fa-inbox"></i>
                                 {% else %}
-                                    <i class="icon-envelope"></i>
+                                    <i class="fas fa-envelope"></i>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if notification.is_read %}
-                                    {{ notification.subject|safe }} 
+                                    {{ notification.subject|safe }}
                                 {% else %}
                                     <strong>{{ notification.subject|safe }}</strong>
                                 {% endif %}
@@ -42,7 +46,7 @@
                                 {% if list_type == 'inbox' %}
                                     <a class="btn btn-success btn-sm" href="#" data-behaviours="archive">{% trans 'Archive' context 'verb' %}</a>
                                 {% endif %}
-                                <a class="btn btn-danger btn-sm "href="#" data-behaviours="delete">{% trans 'Delete' %}</a>
+                                <a class="btn btn-danger btn-sm" href="#" data-behaviours="delete">{% trans 'Delete' %}</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -58,7 +62,7 @@
         {% include "oscar/partials/pagination.html" %}
 
     {% else %}
-        <p>{% trans "There are no notifications to display." %}</p>
+        <p class="mt-3">{% trans "There are no notifications to display." %}</p>
     {% endif %}
 
 {% endblock tabcontent %}

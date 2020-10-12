@@ -2,11 +2,11 @@
 
 <div class="row">
     <div class="col-sm-2">
-        <div class="image_container">
+        <div class="image_container w-100">
             {% with image=product.primary_image %}
                 {% oscar_thumbnail image.original "x155" upscale=False as thumb %}
                 <a href="{{ product.get_absolute_url }}">
-                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail">
+                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="img-thumbnail w-auto mx-auto my-0">
                 </a>
             {% endwith %}
         </div>

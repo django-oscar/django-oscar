@@ -9,22 +9,24 @@
 {% block body_class %}account-profile{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-        </li>
-        {% block extra_breadcrumbs %}{% endblock %}
-        <li class="active">{{ page_title }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            </li>
+            {% block extra_breadcrumbs %}{% endblock %}
+            <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ page_title }}{% endblock %}
 
 {% block column_left %}
-    <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills flex-column">
         {% block standard_tabs %}
             {% include 'oscar/customer/partials/standard_tabs.html' %}
         {% endblock %}

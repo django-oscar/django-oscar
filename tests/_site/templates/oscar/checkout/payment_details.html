@@ -4,13 +4,15 @@
 {% block payment_details %}
     {{ block.super }}
 
-    <div class="well">
-        <div class="sub-header">
+    <div class="card">
+        <div class="card-body">
             <h3>{% trans "PayTest" %}</h3>
         </div>
-        <form method="post" action="{% url 'checkout:preview' %}" id="sensible_data">
-            {% csrf_token %}
-         <button type="submit" class="btn btn-large btn-primary">Submit</button>
-        </form>
+        <div class="card-body">
+            <form method="post" action="{% url 'checkout:preview' %}" id="sensible_data">
+                {% csrf_token %}
+             <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+            </form>
+        </div>
     </div>
 {% endblock %}

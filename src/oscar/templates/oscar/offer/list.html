@@ -9,12 +9,14 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-    </li>
-    <li class="active">{% trans "Offers" %}</li>
-</ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Offers" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -31,13 +33,13 @@
             <p>{{ offer.description|safe }}</p>
         {% endif %}
         {% if offer.has_products %}
-            <ul class="row">
+            <ul class="row list-unstyled mx-0">
                 {% for product in offer.products|slice:":12" %}
-                <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+                <li class="col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
                 {% endfor %}
             </ul>
             <p>
-                <a class="btn btn-default" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse products in offer" %}</a>
+                <a class="btn btn-secondary" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse products in offer" %}</a>
             </p>
         {% endif %}
         <hr/>

@@ -2,74 +2,54 @@
 {% load category_tags %}
 {% load i18n %}
 
-<div class="navbar primary navbar-static-top navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header pull-right">
-            {# This is used in mobile view #}
-            <a class="btn btn-default navbar-toggle collapsed" data-toggle="collapse" data-target=".primary-collapse">
-                <span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </span>
-            </a>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <a class="btn btn-default navbar-btn btn-cart navbar-right visible-xs-inline-block" href="{% url 'basket:summary' %}">
-            <i class="icon-shopping-cart"></i>
-            {% trans "Basket" %}
-            {% if not request.basket.is_empty %}
-                {% if request.basket.is_tax_known %}
-                    {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
-                        Total: {{ total }}
-                    {% endblocktrans %}
-                {% else %}
-                    {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
-                        Total: {{ total }}
-                    {% endblocktrans %}
-                {% endif %}
+    <a class="btn btn-secondary float-right btn-cart ml-auto d-inline d-sm-none" href="{% url 'basket:summary' %}">
+        <i class="fas fa-shopping-cart"></i>
+        {% trans "Basket" %}
+        {% if not request.basket.is_empty %}
+            {% if request.basket.is_tax_known %}
+                {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
+                    Total: {{ total }}
+                {% endblocktrans %}
+            {% else %}
+                {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
+                    Total: {{ total }}
+                {% endblocktrans %}
             {% endif %}
-        </a>
+        {% endif %}
+    </a>
 
-
-        <div class="navbar-collapse primary-collapse collapse">
-            {% block nav_dropdown %}
-                <ul id="browse" class="nav navbar-nav">
-                    <li class="dropdown active {% if expand_dropdown %}open{% endif %}">
-                        <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
-                            {% trans "Browse store" %}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu" data-navigation="dropdown-menu">
-                            {% category_tree depth=2 as tree_categories %}
-                            <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
-                            {% if tree_categories %}
-                                <li class="divider"></li>
-                                {% for tree_category in tree_categories %}
-                                    {% if tree_category.has_children %}
-                                        <li class="dropdown-submenu">
-                                            <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                                            <ul class="dropdown-menu">
-                                            {% else %}
-                                                <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
-                                            {% endif %}
-
-                                            {% for close in tree_category.num_to_close %}
-                                                </ul></li>
-                                            {% endfor %}
-                                {% endfor %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% trans "Browse store" %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% category_tree depth=2 as tree_categories %}
+                    <a class="dropdown-item" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a>
+                    {% if tree_categories %}
+                        <div class="dropdown-divider"></div>
+                        {% for tree_category in tree_categories %}
+                            {% if tree_category.has_children %}
+                                <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                            {% else %}
+                                <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
                             {% endif %}
-                            <li class="divider"></li>
-                            {% block nav_dropdown_extra_items %}
-                                <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
-                            {% endblock %}
-                        </ul>
-                    </li>
-                    {% block nav_extra %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    {% block nav_dropdown_extra_items %}
+                        <a class="dropdown-item" href="{% url 'offer:list' %}">{% trans "Offers" %}</a>
                     {% endblock %}
-                </ul>
-            {% endblock %}
-            {% include "oscar/partials/search.html" %}
-        </div><!-- /navbar-collapse -->
+                </div>
+            </li>
+        </ul>
+
+        {% include "oscar/partials/search.html" %}
     </div>
-</div><!-- /navbar -->
+</nav>
