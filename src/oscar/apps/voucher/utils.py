@@ -1,8 +1,9 @@
 from itertools import zip_longest
 
-from django.db import connection
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
+
+from oscar.core.loading import get_model
 
 
 def generate_code(length, chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
@@ -21,18 +22,17 @@ def get_unused_code(length=12, group_length=4, separator='-'):
     i.e. ASDA-QWEE-DFDF-KFGG
 
     :param int length: the number of characters in the code
-    :param int group_length: length of character groups separated by dash '-'
+    :param int group_length: length of character groups separated by separator kwarg ('-' by default)
+    :param str separator: separator string for voucher code
     :return: voucher code
     :rtype: str
 
     """
-    cursor = connection.cursor()
+    Voucher = get_model('voucher', 'Voucher')
     while True:
         code = generate_code(length, group_length=group_length,
                              separator=separator)
-        cursor.execute(
-            "SELECT 1 FROM voucher_voucher WHERE code=%s", [code])
-        if not cursor.fetchall():
+        if not Voucher.objects.filter(code=code).exists():
             return code
 
 
