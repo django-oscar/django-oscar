@@ -16,7 +16,7 @@ Overview
 ========
 
 Oscar ships with a set of HTML templates and a collection of static files
-(e.g. images and Javascript).  Oscar's default CSS is generated from LESS
+(e.g. images and Javascript).  Oscar's default CSS is generated from SASS
 files.
 
 Templates
@@ -32,24 +32,21 @@ Frontend vs. Dashboard
 
 The frontend and dashboard are intentionally kept very separate. They
 incidentally both use Bootstrap, but may be updated individually.
-The frontend is based on Bootstrap's LESS files and ties it together with
-Oscar-specific styling in ``styles.less``.
+The frontend is based on Bootstrap's SASS files and ties it together with
+Oscar-specific styling in ``styles.scss``.
 
-On the other hand, ``dashboard.less`` just contains a few customisations that
+On the other hand, ``dashboard.scss`` just contains a few customisations that
 are included alongside a copy of stock Bootstrap CSS - and at the time of
 writing, using a different Bootstrap version.
 
-.. _less-css:
-
-LESS/CSS
+SCSS/CSS
 --------
 
-By default, CSS files compiled from their LESS sources are used rather than the
-LESS ones.  To use Less directly, set ``OSCAR_USE_LESS = True`` in your settings file.
-This will enable browser LESS pre-processor which lets you trial changes with
-a page reload. If you want to commit your changes, use the :command:`make css`
-command, which uses Gulp for compiling into CSS. A few other CSS files are
-used to provide styles for Javascript libraries.
+CSS files served to the browser are compiled from their SASS sources. For
+local development, :command:`npm run watch` will watch for local changes to SASS files and
+automatically rebuild the compiled CSS.
+
+Use the command :command:`make css` to compile assets manually.
 
 Javascript
 ----------
@@ -105,12 +102,13 @@ This is the recommended approach for non-trivial projects.
 
 Another option is simply to ignore all of Oscar's CSS and write your own from
 scratch.  To do this, you simply need to adjust the layout templates to include
-your own CSS instead of Oscar's.  For instance, you might override ``base.html``
-and replace the 'less' block::
+your own CSS instead of Oscar's.  For instance, you might override ``oscar/layout.html``
+and replace the ``styles`` block::
 
-    # project/base.html
+    # project/oscar/layout.html
+    {% extends "oscar/layout.html" %}
+    {% load static %}
 
-    {% block less %}
-        <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}myproject/less/styles.less" />
+    {% block styles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'myproject/styles.css' %}" />
     {% endblock %}
-

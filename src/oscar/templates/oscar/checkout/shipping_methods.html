@@ -21,8 +21,8 @@
 {% block shipping_method %}
     <div class="basket-title">
         <div class="row">
-            <h4 class="col-sm-8">{% trans "Method" %}</h4>
-            <h4 class="col-sm-3">{% trans "Cost" %}</h4>
+            <h4 class="col-sm-8 m-0">{% trans "Method" %}</h4>
+            <h4 class="col-sm-3 m-0">{% trans "Cost" %}</h4>
         </div>
     </div>
     {% for method in methods %}
@@ -55,9 +55,9 @@
                     <form method="post" action="{% url 'checkout:shipping-method' %}">
                         {% csrf_token %}
                         <input type="hidden" name="method_code" value="{{ method.code }}" />
-                        <button type="submit" class="btn btn-lg btn-primary pull-right" data-loading-text="{% trans 'Submitting...' %}">{% trans "Select option" %}</button>
+                        <button type="submit" class="btn btn-lg btn-primary float-right" data-loading-text="{% trans 'Submitting...' %}">{% trans "Select option" %}</button>
                     </form>
-                </div>    
+                </div>
             </div>
         </div>
     {% endfor %}

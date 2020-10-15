@@ -5,11 +5,11 @@
     <header>
         <h3 class="star-rating {{ review.score|as_stars }}">
             <span>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
             </span>
             <a href="{{ review.get_absolute_url }}">{{ review.title }}</a>
         </h3>
@@ -37,16 +37,16 @@
         <form action="{% url 'catalogue:reviews-vote' product_slug=product.slug product_pk=product.pk pk=review.pk %}" method="post" class="vote_agree" >
             {% csrf_token %}
             <input type="hidden" name="delta" value="1"/>
-            <button type="submit" class="btn btn-success btn-xs" data-loading-text="{% trans 'Submitting...' %}">{% trans "Yes" %}</button>
+            <button type="submit" class="btn btn-success btn-sm" data-loading-text="{% trans 'Submitting...' %}">{% trans "Yes" %}</button>
         </form>
         <form  action="{% url 'catalogue:reviews-vote' product_slug=product.slug product_pk=product.pk pk=review.pk %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="delta" value="-1"/>
-            <button type="submit" class="btn btn-danger btn-xs" data-loading-text="{% trans 'Submitting...' %}">{% trans "No" %}</button>
+            <button type="submit" class="btn btn-danger btn-sm" data-loading-text="{% trans 'Submitting...' %}">{% trans "No" %}</button>
         </form>
     {% endif %}
-             
-    <p>   
+
+    <p>
         <small>
         {% if review.has_votes %}
             {% blocktrans with num_up_votes=review.num_up_votes count num_votes=review.total_votes %}

@@ -9,15 +9,17 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        </li>
-        <li>
-            {% trans "Search" %}
-        </li>
-        <li class="active">"{{ query }}"</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+            </li>
+            <li class="breadcrumb-item">
+                {% trans "Search" %}
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">"{{ query }}"</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block column_left %}
@@ -40,7 +42,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="get" class="form-horizontal">
+    <form method="get">
         {# Render other search params as hidden inputs #}
         {% for value in selected_facets %}
             <input type="hidden" name="selected_facets" value="{{ value }}" />
@@ -59,7 +61,7 @@
                     Found <strong>{{ num_results }}</strong> results.
                 {% endblocktrans %}
             {% endif %}
-            <div class="pull-right">
+            <div class="float-right">
                 {% include "oscar/partials/form_field.html" with field=search_form.sort_by %}
             </div>
         {% else %}
@@ -78,9 +80,9 @@
     {% if page.object_list %}
         <section>
             <div>
-                <ol class="row">
+                <ol class="row list-unstyled ml-0 pl-0">
                     {% for result in page.object_list %}
-                        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product result.object %}</li>
+                        <li class="col-sm-4 col-md-3 col-lg-3">{% render_product result.object %}</li>
                     {% endfor %}
                 </ol>
                 {% include "oscar/partials/pagination.html" with page_obj=page %}

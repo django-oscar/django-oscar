@@ -12,22 +12,22 @@
 {% block headertext %}{{ summary }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        </li>
-        <li class="active">{{ summary }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ homepage_url }}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ summary }}</li>
+        </ol>
+    </nav>
 {% endblock breadcrumbs %}
 
 {% block column_left %}
     {% category_tree as tree_categories %}
     {% if tree_categories %}
         <h4>{% trans "Show results for" %}</h4>
-        <div class="side_categories">
+        <div class="side_categories card card-body bg-light">
             <ul class="nav nav-list">
                 {% for tree_category in tree_categories %}
-                    <li>
+                    <li class="mt-2">
                         <a href="{{ tree_category.url }}">
                             {% if tree_category.pk == category.pk %}
                                 <strong>{{ tree_category.name }}</strong>
@@ -46,7 +46,7 @@
     {% endif %}
     {% if has_facets %}
         <h4>{% trans "Refine by" %}</h4>
-        <div class="side_categories">
+        <div class="side_categories card card-body bg-light">
             {% for field, data in facet_data.items %}
                 {% if data.results %}
                     {% include 'oscar/search/partials/facet.html' with name=data.name items=data.results %}
@@ -58,7 +58,7 @@
 
 {% block content %}
 
-    <form method="get" class="form-horizontal">
+    <form method="get">
         {# Render other search params as hidden inputs #}
         {% for value in selected_facets %}
             <input type="hidden" name="selected_facets" value="{{ value }}" />
@@ -80,8 +80,8 @@
                 {% endblocktrans %}
             {% endif %}
             {% if form %}
-                <div class="pull-right">
-                    {% include "oscar/partials/form_field.html" with field=form.sort_by %}
+                <div class="float-right">
+                    {% include "oscar/partials/form_field.html" with field=form.sort_by style='horizontal' %}
                 </div>
             {% endif %}
         {% else %}
@@ -94,9 +94,9 @@
     {% if products %}
         <section>
             <div>
-                <ol class="row">
+                <ol class="row list-unstyled ml-0 pl-0">
                     {% for product in products %}
-                        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+                        <li class="col-sm-6 col-md-4 col-lg-3">{% render_product product %}</li>
                     {% endfor %}
                 </ol>
                 {% include "oscar/partials/pagination.html" %}

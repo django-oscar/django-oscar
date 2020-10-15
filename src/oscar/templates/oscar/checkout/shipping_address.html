@@ -25,8 +25,8 @@
                 <div class="row">
                     {% for address in addresses %}
                         {% block select_address_form %}
-                            <div class="col-sm-6">
-                                <div class="well">
+                            <div class="col-sm-6 d-flex">
+                                <div class="card card-body bg-light">
                                     <address>
                                         {% block select_address_fields %}
                                             {% for field in address.active_address_fields %}
@@ -34,23 +34,21 @@
                                             {% endfor %}
                                         {% endblock %}
                                     </address>
-                                    <form action="{% url 'checkout:shipping-address' %}" method="post" id="select_shipping_address_{{ address.id }}">
+                                    <form action="{% url 'checkout:shipping-address' %}" method="post" id="select_shipping_address_{{ address.id }}" class="mb-0">
                                         {% csrf_token %}
                                         <input type="hidden" name="action" value="ship_to" />
                                         <input type="hidden" name="address_id" value="{{ address.id }}" />
                                         {% if address.is_default_for_shipping %}
-                                            <button type="submit" class="btn btn-success btn-large ship-address" data-loading-text="{% trans 'Submitting...' %}"><i class="icon-ok"></i> {% trans "Ship to your default shipping address" %}</button>
+                                            <button type="submit" class="btn btn-success btn-large ship-address" data-loading-text="{% trans 'Saving...' %}"><i class="fas fa-check-circle"></i> {% trans "Ship to your default shipping address" %}</button>
                                         {% else %}
-                                            <button type="submit" class="btn btn-primary btn-large ship-address" data-loading-text="{% trans 'Submitting...' %}">{% trans "Ship to this address" %}</button>
+                                            <button type="submit" class="btn btn-primary btn-large ship-address" data-loading-text="{% trans 'Saving...' %}">{% trans "Ship to this address" %}</button>
                                         {% endif %}
 
                                         <div class="btn-group address-controls">
-                                            <a href="{% url 'checkout:user-address-update' pk=address.id %}" class="btn btn-default btn-sm">{% trans "Edit address" %}</a>
-                                            <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                            </button>
+                                            <a href="{% url 'checkout:user-address-update' pk=address.id %}" class="btn btn-secondary">{% trans "Edit address" %}</a>
+                                            <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"></button>
                                             <ul class="dropdown-menu">
-                                                <li><a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn-remove-address">{% trans "Delete" %}</a></li>
+                                                <a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn-remove-address nav-link">{% trans "Delete" %}</a>
                                             </ul>
                                         </div>
                                     </form>
@@ -68,12 +66,12 @@
     {% endif %}
 
     {% block new_address_form %}
-        <div class="well">
-            <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
+        <div class="card card-body bg-light">
+            <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address">
                 {% csrf_token %}
                 {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
-                <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-8">
+                <div class="form-group row">
+                    <div class="offset-sm-4 col-sm-8">
                         <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
                         {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
                     </div>

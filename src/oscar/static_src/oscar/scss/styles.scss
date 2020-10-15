@@ -1,0 +1,21 @@
+@import "page/variables";
+
+// Bootstrap (all dependencies)
+@import "../../../../../node_modules/bootstrap/scss/bootstrap";
+
+// Components: Icons / Fonts
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+
+// Oscar public side pages styles
+@import "alerts";
+@import "page/checkout";
+@import "page/forms";
+@import "page/header";
+@import "page/layout";
+@import "page/plugins";
+@import "page/product_lists";
+@import "page/product_page";
+@import "page/reviews";
+@import "page/type";

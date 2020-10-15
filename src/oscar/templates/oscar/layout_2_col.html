@@ -1,11 +1,11 @@
 {% extends "oscar/layout.html" %}
 
 {% comment %}
-Keep the same header and footer as the standard layout template but override the 
+Keep the same header and footer as the standard layout template but override the
 main content area to split it into a sidebar and a content block
 {% endcomment %}
 {% block content_wrapper %}
-<div class="container-fluid page">
+<div class="container page">
     <div class="page_inner">
         {% block breadcrumbs %}{% endblock %}
         <div class="row">
@@ -16,7 +16,7 @@ main content area to split it into a sidebar and a content block
 
             <div class="col-sm-8 col-md-9">
                 {% block header %}
-                <div class="page-header action">
+                <div class="page-header">
                     <h1>{% block headertext %}{% endblock %}</h1>
                 </div>
                 {% endblock %}
@@ -28,5 +28,5 @@ main content area to split it into a sidebar and a content block
 
         </div><!-- /row -->
     </div><!-- /page_inner -->
-</div><!-- /container-fluid -->
+</div><!-- /container -->
 {% endblock %}

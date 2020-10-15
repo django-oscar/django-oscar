@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li class="active"><a href=".">{% trans "Emails" %}</a></li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Emails" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block header %}
@@ -24,7 +24,7 @@
 
 {% block dashboard_content %}
     <table class="table table-striped table-bordered table-hover">
-        <caption><i class="icon-envelope icon-large"></i>{% trans "Emails" %}</caption>
+        <caption><i class="fas fa-envelope"></i> {% trans "Emails" %}</caption>
         {% if commtypes %}
             <thead>
                 <tr>

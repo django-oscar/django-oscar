@@ -1,0 +1,25 @@
+// Overridden Bootstrap4 variables
+// -------------------------------
+
+$font-size-base:              1rem; // The value copied from Bootstrap (assumes the browser default, typically `16px`)
+
+$h1-font-size:                $font-size-base * 2.125;  // 34px
+$h2-font-size:                $font-size-base * 1.75;   // 28px
+$h3-font-size:                $font-size-base * 1.25;   // 20px
+$h4-font-size:                $font-size-base * 1.125;  // 18px
+$h5-font-size:                $font-size-base;          // 16px
+
+
+// Custom variables
+// ----------------
+
+$image-container-height:      165px; // Image height
+
+$form-actions-bg-color:       #f8f9fa; // Bootstrap's `$gray-100`
+$form-actions-border-color:   #e9ecef; // Bootstrap's `$gray-200`
+
+$base-margin-bottom:          1rem !default;
+
+$rated-star-color:            #ffc107; // Bootstrap's `$yellow`
+
+$font-size-small:             $font-size-base * 0.75;   // 12px

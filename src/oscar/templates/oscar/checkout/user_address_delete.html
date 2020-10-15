@@ -19,7 +19,7 @@
 {% block shipping_address %}
     <form method="post" id="delete_address_{{ object.id }}">
         {% csrf_token %}
-        <div class="well">
+        <div class="card card-body bg-light">
             <address>
                 {% for field in object.active_address_fields %}
                     {{ field }}<br/>

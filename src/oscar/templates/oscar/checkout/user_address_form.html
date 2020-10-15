@@ -17,12 +17,12 @@
 {% block checkout_title %}{% trans "Edit address" %}{% endblock %}
 
 {% block shipping_address %}
-    <div class="well">
-        <form id="update_user_address" method="post" class="form form-horizontal">
+    <div class="card card-body bg-light">
+        <form id="update_user_address" method="post">
             {% csrf_token %}
             {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
-            <div class="form-group">
-                <div class="col-sm-offset-4 col-sm-8">
+            <div class="form-group row">
+                <div class="offset-sm-4 col-sm-8">
                     <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                     {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.
                 </div>

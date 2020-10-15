@@ -74,11 +74,23 @@ var oscar = (function(o, $) {
         init: function(options) {
             // Run initialisation that should take place on every page of the dashboard.
             var defaults = {
-                'languageCode': 'en',
-                'dateFormat': 'yy-mm-dd',
-                'timeFormat': 'hh:ii',
-                'datetimeFormat': 'yy-mm-dd hh:ii',
+                'dateFormat': 'DD/MM/YYYY',
+                'timeFormat': 'HH:mm',
+                'datetimeFormat': 'DD/MM/YYYY HH:mm',
                 'stepMinute': 15,
+                'datetimePickerConfig': {
+                    icons: {
+                        time: 'fas fa-clock',
+                        date: 'fas fa-calendar',
+                        up: 'fas fa-arrow-up',
+                        down: 'fas fa-arrow-down',
+                        previous: 'fas fa-chevron-left',
+                        next: 'fas fa-chevron-right',
+                        today: 'fas fa-calendar-check-o',
+                        clear: 'fas fa-trash',
+                        close: 'fas fa-times'
+                    }
+                },
                 'initialDate': new Date(new Date().setSeconds(0)),
                 'tinyConfig': {
                     entity_encoding: 'raw',
@@ -110,9 +122,9 @@ var oscar = (function(o, $) {
             });
 
             // Adds error icon if there are errors in the product update form
-            $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
+            $('[data-behaviour="tab-nav-errors"] .tab-pane').each(function(){
                 var productErrorListener = $(this).find('[class*="error"]:not(:empty)').closest('.tab-pane').attr('id');
-                $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
+                $('.tab-nav a[href="#' + productErrorListener + '"]').append('<i class="fas fa-info-circle float-right"></i>');
             });
 
             o.dashboard.filereader.init();
@@ -205,11 +217,14 @@ var oscar = (function(o, $) {
         },
         initDatePickers: function(el) {
             if ($.fn.datetimepicker) {
+
+                // Set "Tempus Dominus Bootstrap 4" datetime picker's global options.
+                $.fn.datetimepicker.Constructor.Default = $.extend(
+                    {}, $.fn.datetimepicker.Constructor.Default, o.dashboard.options.datetimePickerConfig
+                );
+
                 var defaultDatepickerConfig = {
                     'format': o.dashboard.options.dateFormat,
-                    'autoclose': true,
-                    'language': o.dashboard.options.languageCode,
-                    'minView': 2
                 };
                 var $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *');
                 $dates.each(function(ind, ele) {
@@ -222,37 +237,31 @@ var oscar = (function(o, $) {
 
                 var defaultDatetimepickerConfig = {
                     'format': o.dashboard.options.datetimeFormat,
-                    'minuteStep': o.dashboard.options.stepMinute,
-                    'autoclose': true,
-                    'language': o.dashboard.options.languageCode,
-                    'initialDate': o.dashboard.options.initialDate
+                    'stepping': o.dashboard.options.stepMinute,
+                    'defaultDate': o.dashboard.options.initialDate
                 };
                 var $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
                 $datetimes.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
                             'format': $ele.data('datetimeformat'),
-                            'minuteStep': $ele.data('stepminute')
+                            'stepping': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
                 });
 
                 var defaultTimepickerConfig = {
                     'format': o.dashboard.options.timeFormat,
-                    'minuteStep': o.dashboard.options.stepMinute,
-                    'autoclose': true,
-                    'language': o.dashboard.options.languageCode,
-                    'initialDate': o.dashboard.options.initialDate
+                    'stepping': o.dashboard.options.stepMinute,
+                    'defaultDate': o.dashboard.options.initialDate
                 };
                 var $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *');
                 $times.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
                             'format': $ele.data('timeformat'),
-                            'minuteStep': $ele.data('stepminute'),
-                            'startView': 1,
-                            'maxView': 1,
-                            'formatViewType': 'time'
+                            'stepping': $ele.data('stepminute'),
+                            'viewMode': 'times'
                         });
                     $ele.datetimepicker(config);
                 });
@@ -315,7 +324,7 @@ var oscar = (function(o, $) {
             },
             adjustBenefitForm: function() {
                 var type = $('#id_type').val(),
-                    $valueContainer = $('#id_value').parents('.control-group');
+                    $valueContainer = $('#id_value').parents('.form-group');
                 if (type == 'Multibuy') {
                     $('#id_value').val('');
                     $valueContainer.hide();
@@ -423,24 +432,6 @@ var oscar = (function(o, $) {
                 saveOrder: saveOrder
             };
         }()),
-        search: {
-            init: function() {
-                var searchForm = $(".orders_search"),
-                    searchLink = $('.pull_out'),
-                    doc = $('document');
-                searchForm.each(function() {
-                    doc.css('height', doc.height());
-                });
-                searchLink.on('click', function() {
-                    searchForm.parent()
-                        .find('.pull-left')
-                        .toggleClass('no-float')
-                        .end().end()
-                        .slideToggle("fast");
-                }
-                );
-            }
-        },
         filereader: {
             init: function () {
                 // Add local file loader to update image files on change in

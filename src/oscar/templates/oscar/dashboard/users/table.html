@@ -2,18 +2,23 @@
 {% load i18n %}
 
 {% block table.caption %}
-  {{ block.super }}
-  <div class="pull-right">
-      <div class="form-inline">
-          <i class="icon-refresh"></i> {% trans "Bulk Actions" %}
-          <label for="inlineCheckboxes">{% trans "With selected customers:" %}</label>
-          <label>
-              <input type="radio" name="action" value="make_active" /> {% trans "Make active" %}
-          </label>
-          <label>
-              <input type="radio" name="action" value="make_inactive" /> {% trans "Make inactive" %}
-          </label>
-          <input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
-      </div>
-  </div>
+    {{ block.super }}
+    <div class="float-right">
+        <div class="form-inline">
+            <i class="fas fa-sync-alt mr-1"></i> <span class="mr-2">{% trans "Bulk Actions" %}</span>
+            <label class="mr-3">{% trans "With selected customers:" %}</label>
+
+            <div class="form-check mr-2">
+                <input id="make_active_check" class="form-check-input" type="radio" name="action" value="make_active" />
+                <label class="form-check-label" for="make_active_check">{% trans "Make active" %}</label>
+            </div>
+
+            <div class="form-check mr-2">
+                <input id="make_inactive_check" class="form-check-input" type="radio" name="action" value="make_inactive" />
+                <label class="form-check-label" for="make_inactive_check"> {% trans "Make inactive" %}</label>
+            </div>
+
+            <input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
+        </div>
+    </div>
 {% endblock %}

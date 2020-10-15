@@ -16,7 +16,7 @@ class Command(BaseCommand):
     help = "Copy Oscar's static files"
 
     def add_arguments(self, parser):
-        parser.add_argument('target_path', nargs='?', default='static')
+        parser.add_argument('target_path', nargs='?', default='static_src')
 
     def handle(self, *args, **options):
         # Determine where to copy to
@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 "The folder %s already exists - aborting!" % destination)
 
         source = os.path.realpath(
-            os.path.join(os.path.dirname(__file__), '../../static'))
+            os.path.join(os.path.dirname(__file__), '../../static_src'))
         print("Copying Oscar's static files to %s" % (destination,))
         shutil.copytree(source, destination)
 

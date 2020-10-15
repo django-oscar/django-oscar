@@ -3,16 +3,16 @@
     {{ rendered_widget }}
     {% block links %}
         {% spaceless %}
-        <div class="hidden">
+        <div class="d-none">
             <a class="related-widget-wrapper-link change-related" id="change_id_{{ name }}"
                 data-href-template="{{ change_related_template_url }}?{{ url_params }}"
                 title="{% blocktrans %}Change selected {{ model }}{% endblocktrans %}">
-                <i class="icon-pencil" aria-hidden="true"></i>
+                <i class="fas fa-pencil-alt"></i>
             </a>
             <a class="related-widget-wrapper-link delete-related" id="delete_id_{{ name }}"
                 data-href-template="{{ delete_related_template_url }}?{{ url_params }}"
                 title="{% blocktrans %}Delete selected {{ model }}{% endblocktrans %}">
-                <i class="icon-remove" aria-hidden="true"></i>
+                <i class="fas fa-trash-alt"></i>
             </a>
         </div>
         <a class="related-widget-wrapper-link add-related" id="create_id_{{ name }}"

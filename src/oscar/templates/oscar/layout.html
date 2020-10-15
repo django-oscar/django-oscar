@@ -2,16 +2,7 @@
 {% load static %}
 
 {% block styles %}
-    {% comment %}
-        If you are developing Oscar's CSS, or overriding Oscar's CSS
-        files in your project, then set OSCAR_USE_LESS = True in your
-        settings file. This will enable the on-the-fly less compiler.
-    {% endcomment %}
-    {% if use_less %}
-        <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/styles.less" %}" />
-    {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
-    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
 {% endblock %}
 
 {% block layout %}
@@ -19,9 +10,9 @@
     {% include "oscar/partials/nav_accounts.html" %}
 
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
-    <header class="header container-fluid">
+    <header class="header container">
         <div class="page_inner">
-            <div class="row">
+            <div class="row justify-content-between">
                 {% include "oscar/partials/brand.html" %}
                 {# Mini-basket wrapped in a block so some templates can now display it #}
                 {% block mini_basket %}{% include "oscar/partials/mini_basket.html" %}{% endblock %}
@@ -34,11 +25,11 @@
 
     {# Main content of page - other layout templates may override this block #}
     {% block content_wrapper %}
-        <div class="container-fluid page">
+        <div class="container page">
             <div class="page_inner">
                 {% block breadcrumbs %}{% endblock %}
                 {% block header %}
-                    <div class="page-header action">
+                    <div class="page-header">
                         <h1>{% block headertext %}{% endblock %}</h1>
                     </div>
                 {% endblock %}
@@ -57,19 +48,11 @@
     {% include "oscar/partials/footer.html" %}
 {% endblock %}
 
-{% block cdn_scripts %}
-  {{ block.super }}
-  {% if use_less and debug %}
-    {# Load the on-the-fly less compiler. Never do this in production. #}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
-  {% endif %}
-{% endblock %}
-
 {# Local scripts #}
 {% block scripts %}
     {{ block.super }}
     <!-- Twitter Bootstrap -->
-    <script src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4/bootstrap.bundle.js" %}"></script>
     <!-- Oscar -->
     <script src="{% static "oscar/js/oscar/ui.js" %}"></script>
 {% endblock %}

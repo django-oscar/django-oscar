@@ -2,7 +2,7 @@
 Statics
 =======
 
-Oscar ships with a set of static files (js/css/less/images).  These are used on
+Oscar ships with a set of static files (js/css/scss/images).  These are used on
 the sandbox site.
 
 When building your own project, it is not recommended to use these files
@@ -11,7 +11,7 @@ straight from the package.  Rather, you should take a static copy of the
 
 
 Compiling assets
---------------
+----------------
 
 You can compile the static assets from the root of the project using a make target::
 

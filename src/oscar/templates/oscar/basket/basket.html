@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        </li>
-        <li class="active">{% trans "Basket" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ homepage_url }}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Basket" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {# Hide mini-basket so we don't have two baskets to keep in sync #}
