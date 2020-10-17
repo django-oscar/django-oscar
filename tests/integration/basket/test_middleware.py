@@ -14,7 +14,7 @@ class TestBasketMiddleware(TestCase):
 
     def setUp(self):
         self.middleware = middleware.BasketMiddleware(self.get_response_for_test)
-        self.request = RequestFactory().get('/')
+        self.request = RequestFactory().get('/catalogue/')
         self.request.user = AnonymousUser()
         self.middleware(self.request)
 
