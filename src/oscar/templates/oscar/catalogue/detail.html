@@ -9,11 +9,11 @@
 {% load purchase_info_tags %}
 
 {% block title %}
-    {{ product.get_title }} | {{ block.super }}
+    {{ product.get_meta_title }} | {{ block.super }}
 {% endblock %}
 
 {% block description %}
-    {{ product.description|default:""|striptags }}
+    {{ product.get_meta_description }}
 {% endblock %}
 
 {% block breadcrumbs %}
