@@ -7,12 +7,14 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-        </li>
-        <li class="active">{% trans 'Register' %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans 'Register' %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -22,7 +24,7 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-6 register_form">
-            <form id="register_form" method="post" class="form-stacked">
+            <form id="register_form" method="post">
                 {% csrf_token %}
                 {% include "oscar/partials/form_fields.html"  %}
                 <button name="registration_submit" type="submit" value="Register" class="btn btn-primary btn-lg" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>

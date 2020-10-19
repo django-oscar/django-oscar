@@ -9,10 +9,10 @@ register = template.Library()
 
 DEFAULT_SORT_UP = getattr(
     settings, 'DEFAULT_SORT_UP',
-    '<i class="icon-chevron-up"></i>')
+    '<i class="fas fa-chevron-up"></i>')
 DEFAULT_SORT_DOWN = getattr(
     settings, 'DEFAULT_SORT_DOWN',
-    '<i class="icon-chevron-down"></i>')
+    '<i class="fas fa-chevron-down"></i>')
 
 sort_directions = {
     'asc': {'icon': DEFAULT_SORT_UP, 'inverse': 'desc'},

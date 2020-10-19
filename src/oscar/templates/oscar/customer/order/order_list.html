@@ -5,40 +5,41 @@
 
 {% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" %}" />
-    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/datetimepicker.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/js/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css" %}" />
 {% endblock %}
 
 {% block scripts %}
     {{ block.super }}
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" %}"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4-datetimepicker/moment-with-locales.min.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.js" %}"></script>
 {% endblock %}
 
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-        </li>
-        <li class="active">{% trans 'Order history' %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans 'Order history' %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block tabcontent %}
 
     {% if orders or form.is_bound %}
-        <div class="well">
+        <div class="card card-body bg-light">
             <h2>{% trans "Filter" %}</h2>
-            <form method="get" class="form-horizontal">
+            <form method="get">
                 {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
-                <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-8">
+                <div class="form-group row">
+                    <div class="offset-sm-4 col-sm-8">
                         <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans 'Filter results' %}</button>
-                        <a href="{% url 'customer:order-list' %}" class="btn btn-default">{% trans 'Reset' %}</a>
+                        <a href="{% url 'customer:order-list' %}" class="btn btn-secondary">{% trans 'Reset' %}</a>
                     </div>
                 </div>
             </form>

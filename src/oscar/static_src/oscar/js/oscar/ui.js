@@ -4,7 +4,7 @@ var oscar = (function(o, $) {
     // Replicate Django's flash messages so they can be used by AJAX callbacks.
     o.messages = {
         addMessage: function(tag, msg) {
-            var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+            var msgHTML = '<div class="alert alert-dismissible fade show alert-' + tag + '">' +
                 '<a href="#" class="close" data-dismiss="alert">&times;</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
@@ -267,18 +267,32 @@ var oscar = (function(o, $) {
         },
         options: {
             'languageCode': 'en',
-            'dateFormat': 'yy-mm-dd',
-            'timeFormat': 'hh:ii',
-            'datetimeFormat': 'yy-mm-dd hh:ii',
+            'dateFormat': 'DD/MM/YYYY',
+            'timeFormat': 'HH:mm',
+            'datetimeFormat': 'DD/MM/YYYY HH:mm',
             'stepMinute': 15,
+            'datetimePickerConfig': {
+                icons: {
+                    time: 'fas fa-clock',
+                    date: 'fas fa-calendar',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down',
+                    previous: 'fas fa-chevron-left',
+                    next: 'fas fa-chevron-right',
+                    today: 'fas fa-calendar-check-o',
+                    clear: 'fas fa-trash',
+                    close: 'fas fa-times'
+                }
+            },
         },
         initDatePickers: function(el) {
             if ($.fn.datetimepicker) {
+                $.fn.datetimepicker.Constructor.Default = $.extend(
+                    {}, $.fn.datetimepicker.Constructor.Default, o.datetimepickers.options.datetimePickerConfig
+                );
+
                 var defaultDatepickerConfig = {
                     'format': o.datetimepickers.options.dateFormat,
-                    'autoclose': true,
-                    'language': o.datetimepickers.options.languageCode,
-                    'minView': 2
                 };
                 var $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *');
                 $dates.each(function(ind, ele) {
@@ -291,35 +305,29 @@ var oscar = (function(o, $) {
 
                 var defaultDatetimepickerConfig = {
                     'format': o.datetimepickers.options.datetimeFormat,
-                    'minuteStep': o.datetimepickers.options.stepMinute,
-                    'autoclose': true,
-                    'language': o.datetimepickers.options.languageCode
+                    'stepping': o.datetimepickers.options.stepMinute,
                 };
                 var $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
                 $datetimes.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
                             'format': $ele.data('datetimeformat'),
-                            'minuteStep': $ele.data('stepminute')
+                            'stepping': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
                 });
 
                 var defaultTimepickerConfig = {
                     'format': o.datetimepickers.options.timeFormat,
-                    'minuteStep': o.datetimepickers.options.stepMinute,
-                    'autoclose': true,
-                    'language': o.datetimepickers.options.languageCode
+                    'stepping': o.datetimepickers.options.stepMinute,
+                    'viewMode': 'times'
                 };
                 var $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *');
                 $times.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
                             'format': $ele.data('timeformat'),
-                            'minuteStep': $ele.data('stepminute'),
-                            'startView': 1,
-                            'maxView': 1,
-                            'formatViewType': 'time'
+                            'stepping': $ele.data('stepminute'),
                         });
                     $ele.datetimepicker(config);
                 });

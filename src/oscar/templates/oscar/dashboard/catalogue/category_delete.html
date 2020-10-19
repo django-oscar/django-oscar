@@ -4,15 +4,17 @@
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-        <a href="{% if parent %}{% url 'dashboard:catalogue-category-detail-list' pk=parent.pk %}{% else %}{% url 'dashboard:catalogue-category-list' %}{% endif %}">{% trans "Categories" %}</a>
-    </li>
-    <li class="active">{% trans "Delete category?" %}</li>
-</ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% if parent %}{% url 'dashboard:catalogue-category-detail-list' pk=parent.pk %}{% else %}{% url 'dashboard:catalogue-category-list' %}{% endif %}">
+                    {% trans "Categories" %}
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Delete category?" %}}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -23,7 +25,7 @@
     <div class="table-header">
         <h2>{% trans "Delete category" %}</h2>
     </div>
-    <form method="post" class="well">
+    <form method="post" class="card card-body bg-light">
         {% csrf_token %}
         {{ form }}
         {% blocktrans with name=object.name %}

@@ -15,7 +15,7 @@
 
 {% block content %}
 
-    <form method="post" class="form-stacked well">
+    <form method="post" class="card card-body bg-light">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -35,7 +35,7 @@
                 <div class="radio">
                     {{ form.options.2 }}
                     <div class="form-inline">
-                        {% render_field form.password class+="form-control" %}
+                        {% render_field form.password class+="form-control mr-sm-2" %}
                         <small><a href="{% url 'password-reset' %}" tabindex="-1">{% trans "Get a password reminder" %}</a></small>
                         {% for error in form.password.errors %}
                             <span class="error-block">{{ error }}</span>

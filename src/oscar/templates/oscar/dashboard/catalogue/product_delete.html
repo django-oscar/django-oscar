@@ -9,18 +9,14 @@
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.get_title }}</a>
-        </li>
-        <li class="active">{{ title }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.get_title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ title }}{% endblock %}
@@ -29,7 +25,7 @@
     <div class="table-header">
         <h2>{{ title }}</h2>
     </div>
-    <form method="post" class="well">
+    <form method="post" class="card card-body bg-light">
         {% csrf_token %}
 
         <p>

@@ -1,0 +1,64 @@
+// Review styles
+// -------------
+
+.review {
+  margin-bottom: $base-margin-bottom;
+  @include clearfix;
+
+  h3 {
+    margin-bottom: $base-margin-bottom;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // Vote forms inline with "Is this review helpful?"
+  form {
+    display: inline-block;
+    zoom: 1;
+    margin-bottom: 0;
+  }
+}
+
+// Star Rating using font icons for 5 stars
+.star-rating {
+  color: $gray-400;
+
+  i {
+    letter-spacing: -1px;
+    width: auto;
+  }
+
+  a {
+    margin-left: 10px;
+  }
+}
+
+.star-rating.One {
+  i:first-child {
+    color: $rated-star-color;
+  }
+}
+
+.star-rating.Two {
+  i:first-child, i:first-child + i {
+    color: $rated-star-color;
+  }
+}
+
+.star-rating.Three {
+  i:first-child, i:first-child + i, i:first-child + i + i {
+    color: $rated-star-color;
+  }
+}
+
+.star-rating.Four {
+  i:first-child, i:first-child + i, i:first-child + i + i, i:first-child + i + i + i {
+    color: $rated-star-color;
+  }
+}
+
+.star-rating.Five {
+  i {
+    color: $rated-star-color;
+  }
+}

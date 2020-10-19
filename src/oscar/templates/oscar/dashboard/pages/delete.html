@@ -9,15 +9,15 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:page-list' %}">{% trans "Pages" %}</a>
-        </li>
-        <li class="active">{% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:page-list' %}">{% trans "Pages" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}
+            </li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -28,7 +28,7 @@
     <div class="table-header">
         <h2>{% trans "Delete page" %}</h2>
     </div>
-    <form method="post" class="well">
+    <form method="post" class="card card-body">
         {% csrf_token %}
         {{ form }}
         <p>{% blocktrans with title=object.title %}Delete page <strong>{{ title }}</strong> - are you sure?{% endblocktrans %}</p>

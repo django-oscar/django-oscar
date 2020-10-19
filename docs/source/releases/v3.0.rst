@@ -21,6 +21,14 @@ Compatibility
 What's new in Oscar 3.0?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+- Oscar 3.0 features a major upgrade of Oscar's default templates and styles to use Bootstrap version 4.
+  Both the front-end and dashboard templates have been refactored to work with Bootstrap 4. This is a major,
+  non-backward compatible change for projects that rely on or extend the default Oscar templates.
+
+- As with Bootstrap 4 itself, Oscar's default styles are now defined using SASS instead of LESS.
+
+- To replace Bootstrap 3's Glyphicons, Oscar's default templates now rely on Font Awesome.
+
 - Support has been added to the ``catalogue.Option`` model to define the
   type of option. This is used by the ``AddToBasketForm`` to determine the appropriate form field to display for that
   option in the add-to-cart form. Currently supported types are: text, integer, float, boolean, and date.

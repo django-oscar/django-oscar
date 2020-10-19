@@ -20,17 +20,17 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-{% if not is_popup %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-        <a href="{% url 'dashboard:catalogue-attribute-option-group-list' %}">{% trans "Attribute Option Group" %}</a>
-    </li>
-    <li class="active">{% trans "Delete Attribute Option Group?" %}</li>
-</ul>
-{% endif %}
+    {% if not is_popup %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard:catalogue-attribute-option-group-list' %}">{% trans "Attribute Option Group" %}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "Delete Attribute Option Group?" %}</li>
+            </ol>
+        </nav>
+    {% endif %}
 {% endblock %}
 
 {% block headertext %}
@@ -44,7 +44,7 @@
         <div class="table-header">
             <h2>{% trans "Delete Attribute Option Group" %}</h2>
         </div>
-        <form method="post" class="well">
+        <form method="post" class="card card-body">
             {% csrf_token %}
             {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1" />{% endif %}
             {% if not is_popup %}

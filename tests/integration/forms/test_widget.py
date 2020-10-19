@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import datetime
 
 from django import forms
@@ -35,13 +34,13 @@ class TimePickerInputTestCase(TestCase):
         ctx = i.get_context('test_input', None, {})
         self.assertEqual(ctx['div_attrs'], {
             'data-oscarWidget': 'time',
-            'data-timeFormat': 'hh:ii',
+            'data-timeFormat': 'HH:mm',
         })
 
     def test_icon_classes_context(self):
         i = widgets.TimePickerInput(format='%H:%M')
         ctx = i.get_context('test_input', None, {})
-        self.assertEqual(ctx['icon_classes'], 'icon-time glyphicon-time')
+        self.assertEqual(ctx['icon_classes'], 'far fa-clock')
 
     def test_input_format_unicode(self):
         # Check that the widget can handle unicode formats
@@ -58,13 +57,13 @@ class DatePickerInputTestCase(TestCase):
         ctx = i.get_context('test_input', None, {})
         self.assertEqual(ctx['div_attrs'], {
             'data-oscarWidget': 'date',
-            'data-dateFormat': 'dd/mm/yyyy',
+            'data-dateFormat': 'DD/MM/YYYY',
         })
 
     def test_icon_classes_context(self):
         i = widgets.DatePickerInput(format='%H:%M')
         ctx = i.get_context('test_input', None, {})
-        self.assertEqual(ctx['icon_classes'], 'icon-calendar glyphicon-calendar')
+        self.assertEqual(ctx['icon_classes'], 'far fa-calendar-alt')
 
     def test_datepickerinput_format_unicode(self):
         # Check that the widget can handle unicode formats
@@ -81,13 +80,13 @@ class DateTimePickerInputTestCase(TestCase):
         ctx = i.get_context('test_input', None, {})
         self.assertEqual(ctx['div_attrs'], {
             'data-oscarWidget': 'datetime',
-            'data-datetimeFormat': 'dd/mm/yyyy hh:ii',
+            'data-datetimeFormat': 'DD/MM/YYYY HH:mm',
         })
 
     def test_icon_classes_context(self):
         i = widgets.DateTimePickerInput(format='%d/%m/%Y %H:%M')
         ctx = i.get_context('test_input', None, {})
-        self.assertEqual(ctx['icon_classes'], 'icon-calendar glyphicon-calendar')
+        self.assertEqual(ctx['icon_classes'], 'far fa-calendar-alt')
 
     def test_datetimepickerinput_format_unicode(self):
         # Check that the widget can handle unicode formats
@@ -101,16 +100,16 @@ class TestWidgetsDatetimeFormat(TestCase):
 
     def test_datetime_to_date_format_conversion(self):
         format_testcases = (
-            ('%Y-%m-%d', 'yyyy-mm-dd'),
-            ('%Y-%m-%d %H:%M', 'yyyy-mm-dd'),
+            ('%Y-%m-%d', 'YYYY-MM-DD'),
+            ('%Y-%m-%d %H:%M', 'YYYY-MM-DD'),
         )
         for format_, expected in format_testcases:
             self.assertEqual(widgets.datetime_format_to_js_date_format(format_), expected)
 
     def test_datetime_to_time_format_conversion(self):
         format_testcases = (
-            ('%Y-%m-%d %H:%M', 'hh:ii'),
-            ('%H:%M', 'hh:ii'),
+            ('%Y-%m-%d %H:%M', 'HH:mm'),
+            ('%H:%M', 'HH:mm'),
         )
         for format_, expected in format_testcases:
             self.assertEqual(widgets.datetime_format_to_js_time_format(format_), expected)

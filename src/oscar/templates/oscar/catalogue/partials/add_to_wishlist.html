@@ -7,26 +7,30 @@
         {% wishlists_containing_product wishlists product as product_wishlists %}
         {% if wishlists %}
 
-            <div class="btn-group btn-wishlist">
-                <a class="btn btn-lg dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Add to wish list" %} <span class="caret"></span></a>
-                <ul class="dropdown-menu pull-right">
+            <div class="btn-group btn-wishlist align-bottom">
+                <a class="btn btn-lg dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Add to wish list" %}</a>
+                <ul class="dropdown-menu dropdown-menu-right">
                     {% for wishlist in wishlists %}
                         {% if wishlist not in product_wishlists %}
                             <li>
-                                    <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
-                                        {% blocktrans with name=wishlist.name %}
-                                            Add to '{{ name }}' wish list
-                                        {% endblocktrans %}
-                                    </a>
+                                <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}" class="dropdown-item">
+                                    {% blocktrans with name=wishlist.name %}
+                                        Add to '{{ name }}' wish list
+                                    {% endblocktrans %}
+                                </a>
                             </li>
                         {% endif %}
                     {% endfor %}
-                    <li><a href="{% url 'customer:wishlists-create-with-product' product_pk=product.pk %}">{% trans 'Create a new wishlist' %}</a></li>
+                    <li>
+                        <a href="{% url 'customer:wishlists-create-with-product' product_pk=product.pk %}" class="dropdown-item">
+                            {% trans 'Create a new wishlist' %}
+                        </a>
+                    </li>
                 </ul>
             </div>
         {% else %}
             {# 1 or no existing wishlists - show a simple button #}
-            <form id="add_to_wishlist_form" action="{% url 'customer:wishlists-add-product' product_pk=product.pk %}" method="post" class="btn-wishlist">
+            <form id="add_to_wishlist_form" action="{% url 'customer:wishlists-add-product' product_pk=product.pk %}" method="post" class="btn-wishlist align-bottom">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-lg" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to wish list" %}</button>
             </form>
@@ -36,12 +40,12 @@
             <form action="{% url 'customer:wishlists-remove-product' key=wishlist.key product_pk=product.id %}" method="post">
                 {% csrf_token %}
                 {% blocktrans with name=wishlist.name url=wishlist.get_absolute_url %}
-                    <span class="pull-left">Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.</span>
+                    <span class="float-left">Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.</span>
                 {% endblocktrans %}
-                <button type="submit" class="btn btn-sm pull-right" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove" %}</button>
+                <button type="submit" class="btn btn-sm float-right" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove" %}</button>
             </form>
         {% endfor %}
     {% endwith %}
 {% else %}
-    <button class="btn btn-lg btn-wishlist" disabled="disabled" title="{% trans 'Please login to add products to a wish list.' %}">{% trans 'Add to wish list' %}</button><br/>
+    <button class="btn btn-lg btn-wishlist align-bottom" disabled="disabled" title="{% trans 'Please login to add products to a wish list.' %}">{% trans 'Add to wish list' %}</button><br/>
 {% endif %}

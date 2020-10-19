@@ -8,15 +8,13 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>
-        </li>
-        <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -25,13 +23,13 @@
 
 {% block dashboard_content %}
     <div class="table-header">
-        <h2 class="pull-left">{% blocktrans with id=alert.id %}Product alert #{{ id }}{% endblocktrans %}</h2>
-        <div class="pull-right">
+        <h2 class="float-left">{% blocktrans with id=alert.id %}Product alert #{{ id }}{% endblocktrans %}</h2>
+        <div class="float-right">
             <form method="post" class="form-inline">
                 {% csrf_token %}
                 {% include 'oscar/dashboard/partials/form_fields_inline.html' %}
                 <button type='submit' class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
-                <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-default">{% trans "cancel" %}</a>
+                <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-secondary">{% trans "cancel" %}</a>
             </form>
         </div>
     </div>

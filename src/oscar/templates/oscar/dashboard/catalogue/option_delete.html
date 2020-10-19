@@ -21,15 +21,13 @@
 
 {% block breadcrumbs %}
     {% if not is_popup %}
-        <ul class="breadcrumb">
-            <li>
-                <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            </li>
-            <li>
-                <a href="{% url 'dashboard:catalogue-option-list' %}">{% trans "Options" %}</a>
-            </li>
-            <li class="active">{% trans "Delete Option?" %}</li>
-        </ul>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:catalogue-option-list' %}">{% trans "Options" %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "Delete Option?" %}</li>
+            </ol>
+        </nav>
     {% endif %}
 {% endblock %}
 
@@ -44,7 +42,7 @@
         <div class="table-header">
             <h2>{% trans "Delete Option" %}</h2>
         </div>
-        <form action="." method="post" class="well">
+        <form action="." method="post" class="card card-body bg-light">
             {% csrf_token %}
             {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1" />{% endif %}
             {% if not is_popup %}

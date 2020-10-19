@@ -3,9 +3,9 @@
 
 {% block tabcontent %}
     <p>{% trans "Please confirm your password to delete your profile." %}</p>
-    <form id="delete_profile_form" method="post" class="form-horizontal">
+    <form id="delete_profile_form" method="post">
         {% csrf_token %}
-        {% include "oscar/partials/form_fields.html" %}
+        {% include "oscar/partials/form_fields.html" with style='horizontal' %}
         <div class="alert alert-warning">
             <h3>{% trans "Warning" %}</h3>
             {% blocktrans %}

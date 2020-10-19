@@ -1,13 +1,13 @@
 {% load i18n %}
 
-<form {% if form_id %}id="{{ form_id }}"{% endif %} class="form-{{ style|default:"stacked" }} {{ class }}" method="{{ method|default:"post" }}"
+<form {% if form_id %}id="{{ form_id }}"{% endif %} class="{{ class }}" method="{{ method|default:"post" }}"
     {% if action %}action="{{ action }}"{% endif %}
     {% if includes_files %}enctype="multipart/form-data"{% endif %}>
 
     {% if not method == "get" %}{% csrf_token %}{% endif %}
     {% include 'oscar/partials/form_fields.html' %}
-    <div class="form-group">
-        <div class="{% if style == 'horizontal' %}col-sm-offset-4 col-sm-8{% endif %}">
+    <div class="form-group{% if style == 'horizontal' %} row{% endif %}">
+        <div class="{% if style == 'horizontal' %}offset-sm-4 col-sm-8{% endif %}">
             <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
             {% trans "or" %} <a href="#" onclick="window.history.go(-1);return false" >{% trans "cancel" %}</a>.
         </div>

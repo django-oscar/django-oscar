@@ -22,7 +22,7 @@ class UserTable(DashboardTable):
         template_name='oscar/dashboard/users/user_row_actions.html',
         verbose_name=' ')
 
-    icon = "group"
+    icon = 'fas fa-users'
 
     class Meta(DashboardTable.Meta):
         template_name = 'oscar/dashboard/users/table.html'

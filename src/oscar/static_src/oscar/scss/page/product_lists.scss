@@ -1,0 +1,61 @@
+// Products listed container
+// Space between products in a list is determined by the Grid and therefore the
+// gutter width: 20px
+.product_pod {
+  height: 380px;
+  overflow: hidden;
+  text-align: center;
+  margin: $base-margin-bottom 0;
+  position: relative;
+
+  p, h3, h2, form {
+    margin-bottom: 0;
+  }
+
+  h3 {
+    @extend .h5;
+  }
+
+  .price_color {
+    @extend .h4;
+    color: $success;
+  }
+
+  .availability,
+  .price_color {
+    min-height: 30px;
+    white-space: nowrap;
+  }
+
+  .image_container,
+  .availability,
+  .price_color {
+    margin-bottom: $base-margin-bottom / 2;
+  }
+
+  .product_price {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+// Product list image container sets a height so images don't breakout
+// This can be used to vertically align the image with same line-height
+// Alternatively if you are cropping images and have a specific W & H this isn't neccessary
+.image_container {
+  min-height: $image-container-height;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+
+  img {
+    max-height: $image-container-height - 10px;
+    max-width: 100%;
+  }
+}
+
+// Add a hover state for thumbnail
+a:hover .thumbnail {
+  border-color: $link-color;
+  @include box-shadow(0 1px 4px rgba(0, 105, 214, .25));
+}

@@ -27,13 +27,14 @@
                     <h2>{% trans "Shipping" %}</h2>
                 </div>
                 {% if shipping_address %}
-                    <div class="well well-info">
-                        {% block shipping_address_actions %}
-                            <a href="{% url 'checkout:shipping-address' %}" class="pull-right">
+                    <div class="card card-body bg-light">
+                        <h3>
+                          {% trans "Address" %}
+                          {% block shipping_address_actions %}
+                            <a href="{% url 'checkout:shipping-address' %}" class="float-right">
                                 {% trans "Change" %}
                             </a>
-                        {% endblock %}
-                        <h3>{% trans "Address" %}</h3>
+                        {% endblock %}</h3>
                         <address>
                             {% for field in shipping_address.active_address_fields %}
                                 {{ field }}<br/>
@@ -58,13 +59,15 @@
                 {% endif %}
 
                 {% if shipping_method %}
-                    <div class="well well-info">
-                        {% block shipping_method_actions %}
-                            <a href="{% url 'checkout:shipping-method' %}" class="pull-right">
+                    <div class="card card-body bg-light card card-body bg-light-info">
+                        <h3>
+                          {% trans "Shipping method" %}
+                          {% block shipping_method_actions %}
+                            <a href="{% url 'checkout:shipping-method' %}" class="float-right">
                                 {% trans "Change" %}
                             </a>
-                        {% endblock %}
-                        <h3>{% trans "Shipping method" %}</h3>
+                          {% endblock %}
+                        </h3>
                         <p>{{ shipping_method.name }}
                             {% if shipping_method.description %}
                                 - {{ shipping_method.description|safe }}
@@ -82,11 +85,13 @@
                 <div class="sub-header">
                     <h2>{% trans "Payment" %}</h2>
                 </div>
-                <div class="well well-success">
-                    <a href="{% url 'checkout:payment-details' %}" class="pull-right">
+                <div class="card card-body bg-light card card-body bg-light-success">
+                    <h3>
+                      {% trans "Payment" %}
+                      <a href="{% url 'checkout:payment-details' %}" class="float-right">
                         {% trans "Change" %}
-                    </a>
-                    <h3>{% trans "Payment" %}</h3>
+                      </a>
+                    </h3>
                     <p>{% trans "Payment details to go here" %}</p>
                 </div>
             </div>
@@ -96,7 +101,7 @@
     {% block order_contents %}
         <div class="sub-header">
             {% block order_contents_actions %}
-                <a href="{% url 'basket:summary' %}" class="pull-right">
+                <a href="{% url 'basket:summary' %}" class="float-right">
                     {% trans "Edit order contents" %}
                 </a>
             {% endblock %}
@@ -106,8 +111,8 @@
         <div class="basket-title">
             <div class="row">
                 <p class="col-sm-9 h4">{% trans "Item" %}</p>
-                <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
-                <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
+                <p class="col-sm-1 h4 text-center">{% trans "Quantity" %}</p>
+                <p class="col-sm-2 h4 text-right">{% trans "Total" %}</p>
             </div>
         </div>
         {% for line in basket.all_lines %}
@@ -115,11 +120,11 @@
             <div class="basket-items">
                 <div class="row">
                     <div class="col-sm-2">
-                        <div class="image_container">
+                        <div class="image_container w-100">
                             {% with image=line.product.primary_image %}
                                 {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                 <a href="{{ form.instance.product.get_absolute_url }}">
-                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}">
+                                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="img-thumbnail w-auto mx-auto my-0">
                                 </a>
                             {% endwith %}
                         </div>
@@ -128,10 +133,10 @@
                         <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
                         <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
                     </div>
-                    <div class="col-sm-1 align-center">
+                    <div class="col-sm-1 text-center">
                         {{ line.quantity }}
                     </div>
-                    <div class="col-sm-2 align-right">
+                    <div class="col-sm-2 text-right">
                         <p class="price_color">
                             {% if not show_tax_separately and line.is_tax_known %}
                                 {{ line.line_price_incl_tax|currency:basket.currency }}
