@@ -630,7 +630,7 @@ class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
         messages.info(self.request, _("Category updated successfully"))
         action = self.request.POST.get('action')
         if action == 'continue':
-            return reverse('dashboard:catalogue-category-update', kwargs={"pk":self.object.id})
+            return reverse('dashboard:catalogue-category-update', kwargs={"pk": self.object.id})
         return super().get_success_url()
 
 
