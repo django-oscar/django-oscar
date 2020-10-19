@@ -48,6 +48,11 @@ What's new in Oscar 3.0?
   You can also override queryset in the ``get_queryset`` method. Filtering by date range is now properly applied
   during CSV export as well.
 
+- New fields ``meta_title`` and ``meta_description`` have been added to both the ``Product`` and ``Category`` models,
+  which can be used to override the HTML title and meta description content for product and category pages. These
+  are editable from the search engine optimisation tab in the dashboard edit views for products and categories
+  respectively. A database migration is required for this change.
+
 Backwards incompatible changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
