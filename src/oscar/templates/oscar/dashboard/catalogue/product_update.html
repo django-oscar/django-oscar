@@ -278,6 +278,7 @@
                                                     <th>{% trans "Title" %}</th>
                                                     <th>{% trans "Attributes" %}</th>
                                                     <th>{% trans "Stock records" %}</th>
+                                                    <th>{% trans "Is public?" %}</th>
                                                     <th>&nbsp;</th>
                                                 </tr>
                                                 {% for child in children %}
@@ -285,6 +286,7 @@
                                                         <td>{{ child.get_title }}</td>
                                                         <td>{{ child.attribute_summary }}</td>
                                                         <td>{{ child.stockrecords.count }}</td>
+                                                        <td>{% if child.is_public %}<span class="true">✔</span>{% else %}<span class="false">✘</span>{% endif %}</td>
                                                         <td>
                                                             <a href="{% url 'dashboard:catalogue-product' pk=child.id %}" class="btn btn-primary">
                                                                 {% trans "Edit" %}
@@ -297,7 +299,7 @@
                                                 {% endfor %}
                                             {% else %}
                                                 <tr>
-                                                    <td colspan="3">
+                                                    <td colspan="5">
                                                         {% if product.can_be_parent %}
                                                             {% trans 'This product does not have any variants.' %}
                                                         {% else %}
