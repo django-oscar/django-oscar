@@ -66,14 +66,22 @@ var oscar = (function(o, $) {
             $('form[data-behaviours~="lock"]').submit(o.forms.submitIfNotLocked);
 
             // Disable buttons when they are clicked and show a "loading" message taken from the
-            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
+            // data-loading-text attribute.
             // Do not disable if button is inside a form with invalid fields.
             // This uses a delegated event so that it keeps working for forms that are reloaded
             // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
-            $(document.body).on('submit', 'form', function(){
-                var form = $(this);
-                if ($(":invalid", form).length == 0)
-                    $(this).find('button[data-loading-text]').button('loading');
+            $(document.body).on('click', '[data-loading-text]', function(){
+                var $btn_or_input = $(this),
+                    form = $btn_or_input.parents("form");
+                if (!form || $(":invalid", form).length == 0) {
+                    var d = 'disabled',
+                        val = $btn_or_input.is('input') ? 'val' : 'html';
+                    // push to event loop so as not to delay form submission
+                    setTimeout(function() {
+                        $btn_or_input[val]($btn_or_input.data('loading-text'));
+                        $btn_or_input.addClass(d).attr(d, d).prop(d, true);
+                    });
+                }
             });
             // stuff for star rating on review page
             // show clickable stars instead of a select dropdown for product rating
