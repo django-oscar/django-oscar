@@ -49,12 +49,10 @@
                         <div class="table-header">
                             <h3>{% trans "Sections" %}</h3>
                         </div>
-                        <ul class="nav nav-list bs-docs-sidenav" id="attribute_option_group_update_tabs">
-
+                        <ul class="nav flex-column bs-docs-sidenav" id="attribute_option_group_update_tabs">
                             {% block tabs %}
-                                <li class="active"><a href="#attribute_option_group_details" data-toggle="tab">{% trans 'Attribute Option Group details' %}</a></li>
-                                <li><a href="#attribute_options" data-toggle="tab">{% trans 'Attribute Options' %}</a></li>
-
+                                <li class="nav-item"><a class="nav-link active" href="#attribute_option_group_details" data-toggle="tab">{% trans 'Attribute Option Group details' %}</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#attribute_options" data-toggle="tab">{% trans 'Attribute Options' %}</a></li>
                             {% endblock tabs %}
                         </ul>
                     </div>
@@ -140,7 +138,7 @@
                             {% trans "Cancel" %}
                         </a>
                         {% trans "or" %}
-                        <button class="btn btn-lg btn-primary" type="submit">
+                        <button class="btn btn-primary" type="submit">
                             {% trans "Save" %}
                         </button>
                     </div>

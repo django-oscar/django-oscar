@@ -1,19 +1,17 @@
 // Overridden Bootstrap4 variables
 // -------------------------------
 
-$font-size-base:              1rem; // The value copied from Bootstrap (assumes the browser default, typically `16px`)
+$font-size-base:              0.8rem;
 
-$h1-font-size:                $font-size-base * 1.875;  // 30px
-$h2-font-size:                $font-size-base * 1.125;  // 18px
-$h3-font-size:                $font-size-base * 1.25;   // 20px
+$h1-font-size:                $font-size-base * 1.875;
+$h2-font-size:                $font-size-base * 1.25;
+$h3-font-size:                $font-size-base * 1.125;
 
 
 // Custom variables
 // ----------------
 
 $font-family-icons:           "Font Awesome 5 Free";
-
-$body-font-size:              $font-size-base * 0.75;   // 12px
 
 $navbar-padding-vertical:     14px;
 

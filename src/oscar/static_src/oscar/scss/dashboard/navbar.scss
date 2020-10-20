@@ -1,13 +1,6 @@
 // Navigation bar
 
 .navbar {
-  margin-bottom: 0;
-
-  .nav > li span {
-    display: block;
-    padding: $navbar-brand-padding-y;
-  }
-
   &.navbar-accounts,
   &.navbar-primary {
     padding: 0;
@@ -53,10 +46,6 @@
       border-top: 1px solid $gray-700;
     }
 
-    .navbar-brand {
-      margin-right: 0;
-    }
-
     .navbar-nav {
       .nav-link {
         padding: 0.75rem 1rem;
@@ -73,8 +62,4 @@
       }
     }
   }
-}
-
-.dropdown-menu {
-  font-size: $body-font-size;
 }

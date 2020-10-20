@@ -26,8 +26,6 @@
 
 
 {% block dashboard_content %}
-
-
     <form method="post" class="form-stacked">
         <div class="tabbable dashboard">
             {% if preview %}
@@ -75,7 +73,7 @@
                         <p>{% trans "View a preview of this email using order:" %}</p>
                         {% include 'oscar/dashboard/partials/form_field.html' with field=form.preview_order_number %}
                     {% endif %}
-                    <button type="submit" class="btn btn-primary btn-lg" name="show_preview" data-loading-text="{% trans 'Submitting...' %}">{% trans "View preview" %}</button>
+                    <button type="submit" class="btn btn-primary" name="show_preview" data-loading-text="{% trans 'Submitting...' %}">{% trans "View preview" %}</button>
                     <p>{% trans "or send a preview to:" %}</p>
                     {% include 'oscar/dashboard/partials/form_field.html' with field=form.preview_email %}
                     <button type="submit" class="btn btn-secondary" name="send_preview" data-loading-text="{% trans 'Sending...' %}">{% trans "Send preview email" %}</button>
@@ -100,7 +98,7 @@
                     </table>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                     {% trans "or" %} <a href="{% url 'dashboard:comms-list' %}">{% trans "cancel" %}</a>.
                 </div>
             </div>

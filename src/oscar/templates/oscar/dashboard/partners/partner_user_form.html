@@ -30,7 +30,7 @@
         {% csrf_token %}
         {% include 'oscar/dashboard/partials/form_fields.html' with form=form %}
         <div class="form-actions">
-            <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+            <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{% trans "cancel" %}</a>.
         </div>
     </form>
