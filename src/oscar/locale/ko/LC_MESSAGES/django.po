@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-15 15:09+0300\n"
+"POT-Creation-Date: 2020-10-21 11:07+0300\n"
 "PO-Revision-Date: 2020-05-20 08:05+0000\n"
 "Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/codeinthehole/django-oscar/"
@@ -157,7 +157,7 @@ msgstr "국가명"
 msgid "Official name"
 msgstr "공식 명칭"
 
-#: apps/address/abstract_models.py:421 apps/catalogue/abstract_models.py:1294
+#: apps/address/abstract_models.py:421 apps/catalogue/abstract_models.py:1319
 msgid "Display order"
 msgstr "출력 순서"
 
@@ -273,7 +273,7 @@ msgstr "청구지 주소"
 
 #: apps/address/abstract_models.py:606 apps/order/abstract_models.py:491
 #: apps/partner/abstract_models.py:99 apps/partner/apps.py:9
-#: templates/oscar/dashboard/catalogue/product_update.html:220
+#: templates/oscar/dashboard/catalogue/product_update.html:221
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:48
 #: templates/oscar/dashboard/orders/line_detail.html:75
 msgid "Partner"
@@ -289,9 +289,9 @@ msgstr "파트너 주소들"
 
 #: apps/analytics/abstract_models.py:18 apps/analytics/abstract_models.py:83
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:625
-#: apps/catalogue/abstract_models.py:299 apps/catalogue/abstract_models.py:433
-#: apps/catalogue/abstract_models.py:1014
-#: apps/catalogue/abstract_models.py:1287 apps/order/abstract_models.py:518
+#: apps/catalogue/abstract_models.py:308 apps/catalogue/abstract_models.py:444
+#: apps/catalogue/abstract_models.py:1039
+#: apps/catalogue/abstract_models.py:1312 apps/order/abstract_models.py:518
 #: apps/partner/abstract_models.py:95 apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
@@ -431,11 +431,11 @@ msgid "Product analytics"
 msgstr "상품 분석"
 
 #: apps/analytics/reports.py:58 apps/basket/reports.py:19
-#: apps/catalogue/abstract_models.py:82 apps/catalogue/abstract_models.py:129
-#: apps/catalogue/abstract_models.py:790 apps/catalogue/abstract_models.py:1143
-#: apps/catalogue/abstract_models.py:1215 apps/catalogue/reviews/forms.py:11
+#: apps/catalogue/abstract_models.py:83 apps/catalogue/abstract_models.py:130
+#: apps/catalogue/abstract_models.py:815 apps/catalogue/abstract_models.py:1168
+#: apps/catalogue/abstract_models.py:1240 apps/catalogue/reviews/forms.py:11
 #: apps/communication/abstract_models.py:66
-#: apps/dashboard/catalogue/tables.py:79 apps/dashboard/catalogue/tables.py:103
+#: apps/dashboard/catalogue/tables.py:80 apps/dashboard/catalogue/tables.py:104
 #: apps/dashboard/users/forms.py:44 apps/dashboard/vouchers/forms.py:18
 #: apps/dashboard/vouchers/forms.py:86 apps/offer/abstract_models.py:87
 #: apps/offer/abstract_models.py:789 apps/order/abstract_models.py:870
@@ -530,7 +530,7 @@ msgstr "Submitted - 주문이 완료됨"
 
 #: apps/basket/abstract_models.py:50
 #: apps/catalogue/reviews/abstract_models.py:60
-#: apps/customer/abstract_models.py:153 apps/dashboard/catalogue/forms.py:299
+#: apps/customer/abstract_models.py:153 apps/dashboard/catalogue/forms.py:317
 #: apps/dashboard/orders/forms.py:77 apps/dashboard/reviews/forms.py:15
 #: apps/dashboard/reviews/forms.py:28 apps/dashboard/users/forms.py:43
 #: apps/offer/abstract_models.py:133 apps/offer/abstract_models.py:1011
@@ -573,7 +573,7 @@ msgid "Vouchers"
 msgstr "쿠폰"
 
 #: apps/basket/abstract_models.py:58 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:407 apps/catalogue/abstract_models.py:1297
+#: apps/catalogue/abstract_models.py:418 apps/catalogue/abstract_models.py:1322
 #: apps/customer/abstract_models.py:156 apps/order/abstract_models.py:920
 #: apps/partner/abstract_models.py:137 apps/wishlists/abstract_models.py:50
 #: templates/oscar/customer/alerts/alert_list.html:14
@@ -649,7 +649,7 @@ msgstr "양"
 
 #: apps/basket/abstract_models.py:639 apps/order/abstract_models.py:59
 #: apps/partner/abstract_models.py:110 apps/payment/abstract_models.py:80
-#: templates/oscar/dashboard/catalogue/product_update.html:227
+#: templates/oscar/dashboard/catalogue/product_update.html:228
 msgid "Currency"
 msgstr "통화"
 
@@ -708,9 +708,9 @@ msgstr ""
 msgid "Line"
 msgstr "항목"
 
-#: apps/basket/abstract_models.py:933 apps/catalogue/abstract_models.py:823
-#: apps/catalogue/abstract_models.py:1170
-#: apps/catalogue/abstract_models.py:1224 apps/order/abstract_models.py:805
+#: apps/basket/abstract_models.py:933 apps/catalogue/abstract_models.py:848
+#: apps/catalogue/abstract_models.py:1195
+#: apps/catalogue/abstract_models.py:1249 apps/order/abstract_models.py:805
 #: apps/order/abstract_models.py:831
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:112
 #: templates/oscar/dashboard/catalogue/option_list.html:21
@@ -738,8 +738,8 @@ msgstr "저장"
 msgid "Move to Basket"
 msgstr "장바구니로 옮기기"
 
-#: apps/basket/forms.py:135 apps/catalogue/abstract_models.py:792
-#: apps/catalogue/abstract_models.py:1216
+#: apps/basket/forms.py:135 apps/catalogue/abstract_models.py:817
+#: apps/catalogue/abstract_models.py:1241
 #: apps/communication/abstract_models.py:55 apps/dashboard/vouchers/forms.py:19
 #: apps/dashboard/vouchers/forms.py:87 apps/dashboard/vouchers/forms.py:131
 #: apps/order/abstract_models.py:871 apps/order/abstract_models.py:1051
@@ -907,21 +907,21 @@ msgstr ""
 msgid "Voucher '%s' removed from basket"
 msgstr "'%s' 쿠폰이 장바구니에서 제거되었습니다."
 
-#: apps/catalogue/abstract_models.py:83 apps/catalogue/abstract_models.py:133
-#: apps/catalogue/abstract_models.py:370 apps/offer/abstract_models.py:90
+#: apps/catalogue/abstract_models.py:84 apps/catalogue/abstract_models.py:136
+#: apps/catalogue/abstract_models.py:379 apps/offer/abstract_models.py:90
 #: apps/offer/abstract_models.py:791 apps/shipping/abstract_models.py:18
 msgid "Slug"
 msgstr "슬러그"
 
-#: apps/catalogue/abstract_models.py:88
+#: apps/catalogue/abstract_models.py:89
 msgid "Requires shipping?"
 msgstr "배송이 필요합니까?"
 
-#: apps/catalogue/abstract_models.py:93
+#: apps/catalogue/abstract_models.py:94
 msgid "Track stock levels?"
 msgstr "재고량 체크?"
 
-#: apps/catalogue/abstract_models.py:100 apps/catalogue/abstract_models.py:1225
+#: apps/catalogue/abstract_models.py:101 apps/catalogue/abstract_models.py:1250
 #: defaults.py:121 templates/oscar/dashboard/catalogue/option_delete.html:27
 #: templates/oscar/dashboard/catalogue/option_form.html:28
 #: templates/oscar/dashboard/catalogue/option_list.html:6
@@ -929,15 +929,15 @@ msgstr "재고량 체크?"
 msgid "Options"
 msgstr "옵션"
 
-#: apps/catalogue/abstract_models.py:106 apps/catalogue/abstract_models.py:624
+#: apps/catalogue/abstract_models.py:107 apps/catalogue/abstract_models.py:649
 msgid "Product class"
 msgstr "상품 분류"
 
-#: apps/catalogue/abstract_models.py:107
+#: apps/catalogue/abstract_models.py:108
 msgid "Product classes"
 msgstr "상품 분류들"
 
-#: apps/catalogue/abstract_models.py:130 apps/catalogue/abstract_models.py:371
+#: apps/catalogue/abstract_models.py:131 apps/catalogue/abstract_models.py:380
 #: apps/offer/abstract_models.py:91 apps/shipping/abstract_models.py:21
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/offers/offer_detail.html:65
@@ -947,36 +947,48 @@ msgstr "상품 분류들"
 msgid "Description"
 msgstr "설명"
 
-#: apps/catalogue/abstract_models.py:131 apps/catalogue/abstract_models.py:827
+#: apps/catalogue/abstract_models.py:132 apps/catalogue/abstract_models.py:381
+#, fuzzy
+#| msgid "Product title"
+msgid "Meta title"
+msgstr "상품명"
+
+#: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:382
+#, fuzzy
+#| msgid "Name and description"
+msgid "Meta description"
+msgstr "이름과 설명"
+
+#: apps/catalogue/abstract_models.py:134 apps/catalogue/abstract_models.py:852
 #: apps/dashboard/catalogue/tables.py:22
 msgid "Image"
 msgstr "이미지"
 
-#: apps/catalogue/abstract_models.py:136 apps/catalogue/abstract_models.py:343
+#: apps/catalogue/abstract_models.py:139 apps/catalogue/abstract_models.py:352
 msgid "Is public"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:139
+#: apps/catalogue/abstract_models.py:142
 msgid "Show this category in search results and catalogue listings."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:142
+#: apps/catalogue/abstract_models.py:145
 msgid "Ancestor categories are public"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:145
+#: apps/catalogue/abstract_models.py:148
 msgid "The ancestors of this category are public"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:282 apps/catalogue/abstract_models.py:303
+#: apps/catalogue/abstract_models.py:291 apps/catalogue/abstract_models.py:312
 #: apps/communication/abstract_models.py:78
-#: templates/oscar/dashboard/catalogue/product_update.html:150
+#: templates/oscar/dashboard/catalogue/product_update.html:151
 #: templates/oscar/dashboard/comms/list.html:33
 msgid "Category"
 msgstr "카테고리"
 
-#: apps/catalogue/abstract_models.py:283 apps/catalogue/abstract_models.py:415
-#: apps/catalogue/abstract_models.py:644 defaults.py:109
+#: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:426
+#: apps/catalogue/abstract_models.py:669 defaults.py:109
 #: templates/oscar/dashboard/catalogue/category_delete.html:12
 #: templates/oscar/dashboard/catalogue/category_form.html:8
 #: templates/oscar/dashboard/catalogue/category_form.html:18
@@ -987,35 +999,35 @@ msgstr "카테고리"
 msgid "Categories"
 msgstr "카테고리"
 
-#: apps/catalogue/abstract_models.py:310
+#: apps/catalogue/abstract_models.py:319
 msgid "Product category"
 msgstr "상품 카테고리"
 
-#: apps/catalogue/abstract_models.py:311
+#: apps/catalogue/abstract_models.py:320
 msgid "Product categories"
 msgstr "상품 카테고리"
 
-#: apps/catalogue/abstract_models.py:334
+#: apps/catalogue/abstract_models.py:343
 msgid "Stand-alone product"
 msgstr "단일 상품"
 
-#: apps/catalogue/abstract_models.py:335 apps/catalogue/abstract_models.py:360
+#: apps/catalogue/abstract_models.py:344 apps/catalogue/abstract_models.py:369
 msgid "Parent product"
 msgstr "부모 상품"
 
-#: apps/catalogue/abstract_models.py:336
+#: apps/catalogue/abstract_models.py:345
 msgid "Child product"
 msgstr "자식 상품"
 
-#: apps/catalogue/abstract_models.py:339
+#: apps/catalogue/abstract_models.py:348
 msgid "Product structure"
 msgstr "상품 구조"
 
-#: apps/catalogue/abstract_models.py:346
+#: apps/catalogue/abstract_models.py:355
 msgid "Show this product in search results and catalogue listings."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:349 apps/dashboard/catalogue/forms.py:64
+#: apps/catalogue/abstract_models.py:358 apps/dashboard/catalogue/forms.py:77
 #: apps/dashboard/orders/forms.py:71 apps/order/abstract_models.py:523
 #: templates/oscar/catalogue/detail.html:117
 #: templates/oscar/dashboard/orders/line_detail.html:48
@@ -1024,13 +1036,13 @@ msgstr ""
 msgid "UPC"
 msgstr "상품 코드"
 
-#: apps/catalogue/abstract_models.py:350
+#: apps/catalogue/abstract_models.py:359
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
 msgstr "상품 코드는 상품에 대한 식별자입니다."
 
-#: apps/catalogue/abstract_models.py:361
+#: apps/catalogue/abstract_models.py:370
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
 "example if this is a size 4 of a particular t-shirt.  Leave blank if this is "
@@ -1040,7 +1052,7 @@ msgstr ""
 "의 사이즈 4인 상품일 경우. 독립 상품일 경우 빈칸으로 남겨 주세요.(예를 들어 "
 "이 상품이 한 유형만 있을 때)"
 
-#: apps/catalogue/abstract_models.py:368 apps/catalogue/abstract_models.py:614
+#: apps/catalogue/abstract_models.py:377 apps/catalogue/abstract_models.py:625
 #: apps/order/abstract_models.py:520 apps/wishlists/abstract_models.py:121
 #: templates/oscar/dashboard/orders/line_detail.html:35
 #: templates/oscar/dashboard/ranges/range_product_list.html:97
@@ -1048,24 +1060,24 @@ msgctxt "Product title"
 msgid "Title"
 msgstr "제목"
 
-#: apps/catalogue/abstract_models.py:380 apps/catalogue/abstract_models.py:789
+#: apps/catalogue/abstract_models.py:391 apps/catalogue/abstract_models.py:814
 #: apps/dashboard/catalogue/tables.py:26
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:10
 msgid "Product type"
 msgstr "상품 종류"
 
-#: apps/catalogue/abstract_models.py:381
+#: apps/catalogue/abstract_models.py:392
 msgid "Choose what type of product this is"
 msgstr "상품의 종류를 선택하세요"
 
-#: apps/catalogue/abstract_models.py:385
+#: apps/catalogue/abstract_models.py:396
 #: templates/oscar/dashboard/catalogue/product_update.html:85
-#: templates/oscar/dashboard/catalogue/product_update.html:170
-#: templates/oscar/dashboard/catalogue/product_update.html:279
+#: templates/oscar/dashboard/catalogue/product_update.html:171
+#: templates/oscar/dashboard/catalogue/product_update.html:280
 msgid "Attributes"
 msgstr "속성"
 
-#: apps/catalogue/abstract_models.py:386
+#: apps/catalogue/abstract_models.py:397
 msgid ""
 "A product attribute is something that this product may have, such as a size, "
 "as specified by its class"
@@ -1073,11 +1085,11 @@ msgstr ""
 "상품의 속성이라 함은 이 제품이 가질 수도 있는 무언가. 이를테면 크기 같은, 것"
 "을 뜻합니다. 이것은 제품의 클래스에서 지정해둔 것입니다."
 
-#: apps/catalogue/abstract_models.py:390
+#: apps/catalogue/abstract_models.py:401
 msgid "Product options"
 msgstr "상품 옵션"
 
-#: apps/catalogue/abstract_models.py:391
+#: apps/catalogue/abstract_models.py:402
 msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
@@ -1086,32 +1098,32 @@ msgstr ""
 "옵션은 장바구니에 추가될 때 아이템과 연결될 수 있는 값입니다. 이 값은 티셔츠 "
 "위에 새겨지는 개인 문구 같은 것입니다."
 
-#: apps/catalogue/abstract_models.py:398
-#: templates/oscar/dashboard/catalogue/product_update.html:324
+#: apps/catalogue/abstract_models.py:409
+#: templates/oscar/dashboard/catalogue/product_update.html:327
 msgid "Recommended products"
 msgstr "추천 상품"
 
-#: apps/catalogue/abstract_models.py:399
+#: apps/catalogue/abstract_models.py:410
 msgid "These are products that are recommended to accompany the main product."
 msgstr "이 상품들은 주요 상품과 같이 나오도록 권장되는 상품들입니다."
 
-#: apps/catalogue/abstract_models.py:404 defaults.py:217
+#: apps/catalogue/abstract_models.py:415 defaults.py:217
 msgid "Rating"
 msgstr "평가"
 
-#: apps/catalogue/abstract_models.py:411 apps/partner/abstract_models.py:138
+#: apps/catalogue/abstract_models.py:422 apps/partner/abstract_models.py:138
 msgid "Date updated"
 msgstr "수정일"
 
-#: apps/catalogue/abstract_models.py:423
+#: apps/catalogue/abstract_models.py:434
 msgid "Is discountable?"
 msgstr "할인 가능합니까?"
 
-#: apps/catalogue/abstract_models.py:424
+#: apps/catalogue/abstract_models.py:435
 msgid "This flag indicates if this product can be used in an offer or not"
 msgstr "이 항목은 이 상품이 행사에 사용 될 수 있는지 묻는 항목입니다."
 
-#: apps/catalogue/abstract_models.py:434 apps/dashboard/catalogue/views.py:103
+#: apps/catalogue/abstract_models.py:445 apps/dashboard/catalogue/views.py:103
 #: defaults.py:101 templates/oscar/dashboard/catalogue/product_delete.html:15
 #: templates/oscar/dashboard/catalogue/product_list.html:9
 #: templates/oscar/dashboard/catalogue/product_list.html:19
@@ -1122,78 +1134,92 @@ msgstr "이 항목은 이 상품이 행사에 사용 될 수 있는지 묻는 �
 msgid "Products"
 msgstr "상품"
 
-#: apps/catalogue/abstract_models.py:491
+#: apps/catalogue/abstract_models.py:502
 msgid "Your product must have a title."
 msgstr "상품 제목이 필요합니다."
 
-#: apps/catalogue/abstract_models.py:493
+#: apps/catalogue/abstract_models.py:504
 msgid "Your product must have a product class."
 msgstr "상품 클래스가 필요합니다."
 
-#: apps/catalogue/abstract_models.py:495
+#: apps/catalogue/abstract_models.py:506
 msgid "Only child products can have a parent."
 msgstr "자식 상품만 부모를 가질 수 있습니다."
 
-#: apps/catalogue/abstract_models.py:502
+#: apps/catalogue/abstract_models.py:513
 msgid "A child product needs a parent."
 msgstr "자식 상품은 부모가 필요합니다."
 
-#: apps/catalogue/abstract_models.py:505
+#: apps/catalogue/abstract_models.py:516
 msgid "You can only assign child products to parent products."
 msgstr "자식 상품은 부모 상품에만 연결할 수 있습니다."
 
-#: apps/catalogue/abstract_models.py:508
+#: apps/catalogue/abstract_models.py:519
 msgid "A child product can't have a product class."
 msgstr "자식 상품은 상품 분류를 가질 수 없습니다."
 
-#: apps/catalogue/abstract_models.py:511
+#: apps/catalogue/abstract_models.py:522
 msgid "A child product can't have a category assigned."
 msgstr "자식 상품은 카테고리를 부여받을 수 없습니다."
 
-#: apps/catalogue/abstract_models.py:515
+#: apps/catalogue/abstract_models.py:526
 msgid "A child product can't have options."
 msgstr "자식 상품은 옵션을 가질 수 없습니다."
 
-#: apps/catalogue/abstract_models.py:524
+#: apps/catalogue/abstract_models.py:535
 msgid "A parent product can't have stockrecords."
 msgstr "부모 상품은 재고 기록을 가질 수 없습니다."
 
-#: apps/catalogue/abstract_models.py:552
+#: apps/catalogue/abstract_models.py:563
 msgid "The specified parent product is a child product."
 msgstr "지정된 부모 제품은 자식 제품이 됩니다."
 
-#: apps/catalogue/abstract_models.py:555
+#: apps/catalogue/abstract_models.py:566
 msgid "One can't add a child product to a product with stock records."
 msgstr "재고 기록을 가지고 있는 상품에는 자식 상품을 붙일 수 없습니다."
 
-#: apps/catalogue/abstract_models.py:759
+#: apps/catalogue/abstract_models.py:632
+#, fuzzy
+#| msgid "Product title"
+msgctxt "Product meta title"
+msgid "Meta title"
+msgstr "상품명"
+
+#: apps/catalogue/abstract_models.py:639
+#, fuzzy
+#| msgid "Name and description"
+msgctxt "Product meta description"
+msgid "Meta description"
+msgstr "이름과 설명"
+
+#: apps/catalogue/abstract_models.py:784
 msgid "Primary product"
 msgstr "주요 상품"
 
-#: apps/catalogue/abstract_models.py:763
+#: apps/catalogue/abstract_models.py:788
 msgid "Recommended product"
 msgstr "추천 상품"
 
-#: apps/catalogue/abstract_models.py:765
+#: apps/catalogue/abstract_models.py:790
 msgid "Ranking"
 msgstr "순위"
 
-#: apps/catalogue/abstract_models.py:766
+#: apps/catalogue/abstract_models.py:791
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
 msgstr ""
 "상품 나열 순서를 결정합니다. 높은 숫자를 가진 상품 순서대로 나열됩니다."
 
-#: apps/catalogue/abstract_models.py:774
+#: apps/catalogue/abstract_models.py:799
 msgid "Product recommendation"
 msgstr "상품 추천"
 
-#: apps/catalogue/abstract_models.py:775
+#: apps/catalogue/abstract_models.py:800
 msgid "Product recomendations"
 msgstr "상품 추천"
 
-#: apps/catalogue/abstract_models.py:797
+#: apps/catalogue/abstract_models.py:822
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, and underscores, and "
 "can't start with a digit."
@@ -1201,31 +1227,31 @@ msgstr ""
 "코드는 알파벳 대문자, 소문자, 숫자 그리고 _ 표시만 가능하며, 숫자로 시작할 "
 "수 없습니다."
 
-#: apps/catalogue/abstract_models.py:816 apps/catalogue/abstract_models.py:1016
-#: apps/catalogue/abstract_models.py:1208
+#: apps/catalogue/abstract_models.py:841 apps/catalogue/abstract_models.py:1041
+#: apps/catalogue/abstract_models.py:1233
 msgid "Text"
 msgstr "문자열"
 
-#: apps/catalogue/abstract_models.py:817 apps/catalogue/abstract_models.py:1017
-#: apps/catalogue/abstract_models.py:1209
+#: apps/catalogue/abstract_models.py:842 apps/catalogue/abstract_models.py:1042
+#: apps/catalogue/abstract_models.py:1234
 msgid "Integer"
 msgstr "정수"
 
-#: apps/catalogue/abstract_models.py:818 apps/catalogue/abstract_models.py:1210
+#: apps/catalogue/abstract_models.py:843 apps/catalogue/abstract_models.py:1235
 msgid "True / False"
 msgstr "참 / 거짓"
 
-#: apps/catalogue/abstract_models.py:819 apps/catalogue/abstract_models.py:1019
-#: apps/catalogue/abstract_models.py:1211
+#: apps/catalogue/abstract_models.py:844 apps/catalogue/abstract_models.py:1044
+#: apps/catalogue/abstract_models.py:1236
 msgid "Float"
 msgstr "실수"
 
-#: apps/catalogue/abstract_models.py:820
+#: apps/catalogue/abstract_models.py:845
 msgid "Rich Text"
 msgstr "리치 텍스트"
 
-#: apps/catalogue/abstract_models.py:821 apps/catalogue/abstract_models.py:1021
-#: apps/catalogue/abstract_models.py:1212 apps/order/abstract_models.py:455
+#: apps/catalogue/abstract_models.py:846 apps/catalogue/abstract_models.py:1046
+#: apps/catalogue/abstract_models.py:1237 apps/order/abstract_models.py:455
 #: templates/oscar/dashboard/orders/line_detail.html:133
 #: templates/oscar/dashboard/orders/line_detail.html:163
 #: templates/oscar/dashboard/orders/order_detail.html:385
@@ -1236,23 +1262,23 @@ msgstr "리치 텍스트"
 msgid "Date"
 msgstr "날짜"
 
-#: apps/catalogue/abstract_models.py:822
+#: apps/catalogue/abstract_models.py:847
 msgid "Datetime"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:824
+#: apps/catalogue/abstract_models.py:849
 msgid "Multi Option"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:825
+#: apps/catalogue/abstract_models.py:850
 msgid "Entity"
 msgstr "개체"
 
-#: apps/catalogue/abstract_models.py:826
+#: apps/catalogue/abstract_models.py:851
 msgid "File"
 msgstr "파일"
 
-#: apps/catalogue/abstract_models.py:831 apps/catalogue/abstract_models.py:1217
+#: apps/catalogue/abstract_models.py:856 apps/catalogue/abstract_models.py:1242
 #: apps/offer/abstract_models.py:115 apps/offer/abstract_models.py:488
 #: apps/offer/abstract_models.py:706 apps/order/abstract_models.py:806
 #: apps/payment/abstract_models.py:37 defaults.py:216
@@ -1262,158 +1288,158 @@ msgstr "파일"
 msgid "Type"
 msgstr "종류"
 
-#: apps/catalogue/abstract_models.py:839
+#: apps/catalogue/abstract_models.py:864
 msgid "Option Group"
 msgstr "옵션 그룹"
 
-#: apps/catalogue/abstract_models.py:840
+#: apps/catalogue/abstract_models.py:865
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:841
+#: apps/catalogue/abstract_models.py:866
 #: templates/oscar/dashboard/catalogue/product_class_form.html:104
 msgid "Required"
 msgstr "필요함"
 
-#: apps/catalogue/abstract_models.py:847
+#: apps/catalogue/abstract_models.py:872
 msgid "Product attribute"
 msgstr "상품 속성"
 
-#: apps/catalogue/abstract_models.py:848
+#: apps/catalogue/abstract_models.py:873
 #: templates/oscar/dashboard/catalogue/product_class_form.html:43
 #: templates/oscar/dashboard/catalogue/product_class_form.html:90
 msgid "Product attributes"
 msgstr "상품 속성"
 
-#: apps/catalogue/abstract_models.py:867
+#: apps/catalogue/abstract_models.py:892
 msgid "Boolean attribute should not be required."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:934
+#: apps/catalogue/abstract_models.py:959
 msgid "Must be str"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:941
+#: apps/catalogue/abstract_models.py:966
 msgid "Must be a float"
 msgstr "float 형식이어야 합니다."
 
-#: apps/catalogue/abstract_models.py:947
+#: apps/catalogue/abstract_models.py:972
 msgid "Must be an integer"
 msgstr "integer 형식이어야 합니다."
 
-#: apps/catalogue/abstract_models.py:951
+#: apps/catalogue/abstract_models.py:976
 msgid "Must be a date or datetime"
 msgstr "date 또는 datetime 형식이어야 합니다."
 
-#: apps/catalogue/abstract_models.py:955
+#: apps/catalogue/abstract_models.py:980
 msgid "Must be a datetime"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:959
+#: apps/catalogue/abstract_models.py:984
 msgid "Must be a boolean"
 msgstr "boolean 형식이어야 합니다."
 
-#: apps/catalogue/abstract_models.py:963
+#: apps/catalogue/abstract_models.py:988
 msgid "Must be a model instance"
 msgstr "모델 인스턴스여야 합니다."
 
-#: apps/catalogue/abstract_models.py:970
+#: apps/catalogue/abstract_models.py:995
 msgid "Must be a list or AttributeOption queryset"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:981
+#: apps/catalogue/abstract_models.py:1006
 msgid "Must be an AttributeOption model object instance"
 msgstr "AttributeOption 모델 개체 인스턴스여야 합니다."
 
-#: apps/catalogue/abstract_models.py:983
+#: apps/catalogue/abstract_models.py:1008
 msgid "AttributeOption has not been saved yet"
 msgstr "아직 AttributeOption이 저장되지 않았습니다."
 
-#: apps/catalogue/abstract_models.py:989
+#: apps/catalogue/abstract_models.py:1014
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
 msgstr "%(attr)s에 대해 %(enum)s은(는) 유효하지 않은 선택입니다."
 
-#: apps/catalogue/abstract_models.py:994
+#: apps/catalogue/abstract_models.py:1019
 msgid "Must be a file field"
 msgstr "파일 필드이어야 합니다."
 
-#: apps/catalogue/abstract_models.py:1009
+#: apps/catalogue/abstract_models.py:1034
 msgid "Attribute"
 msgstr "속성"
 
-#: apps/catalogue/abstract_models.py:1018
+#: apps/catalogue/abstract_models.py:1043
 msgid "Boolean"
 msgstr "Boolean"
 
-#: apps/catalogue/abstract_models.py:1020
+#: apps/catalogue/abstract_models.py:1045
 msgid "Richtext"
 msgstr "리치텍스트"
 
-#: apps/catalogue/abstract_models.py:1022
+#: apps/catalogue/abstract_models.py:1047
 msgid "DateTime"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1026
+#: apps/catalogue/abstract_models.py:1051
 msgid "Value multi option"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1032
+#: apps/catalogue/abstract_models.py:1057
 msgid "Value option"
 msgstr "값 옵션"
 
-#: apps/catalogue/abstract_models.py:1077
+#: apps/catalogue/abstract_models.py:1102
 msgid "Product attribute value"
 msgstr "상품 속성값"
 
-#: apps/catalogue/abstract_models.py:1078
+#: apps/catalogue/abstract_models.py:1103
 msgid "Product attribute values"
 msgstr "상품 속성값"
 
-#: apps/catalogue/abstract_models.py:1151
+#: apps/catalogue/abstract_models.py:1176
 msgid "Attribute option group"
 msgstr "속성 옵션 그룹"
 
-#: apps/catalogue/abstract_models.py:1152
+#: apps/catalogue/abstract_models.py:1177
 msgid "Attribute option groups"
 msgstr "속성 옵션 그룹"
 
-#: apps/catalogue/abstract_models.py:1169
+#: apps/catalogue/abstract_models.py:1194
 msgid "Group"
 msgstr "그룹"
 
-#: apps/catalogue/abstract_models.py:1179
+#: apps/catalogue/abstract_models.py:1204
 msgid "Attribute option"
 msgstr "속성 옵션"
 
-#: apps/catalogue/abstract_models.py:1180
+#: apps/catalogue/abstract_models.py:1205
 msgid "Attribute options"
 msgstr "속성 옵션"
 
-#: apps/catalogue/abstract_models.py:1218
+#: apps/catalogue/abstract_models.py:1243
 #, fuzzy
 #| msgid "No shipping required"
 msgid "Is this option required?"
 msgstr "배송 필요 없음"
 
-#: apps/catalogue/abstract_models.py:1289
+#: apps/catalogue/abstract_models.py:1314
 msgid "Original"
 msgstr "원본"
 
-#: apps/catalogue/abstract_models.py:1290
+#: apps/catalogue/abstract_models.py:1315
 msgid "Caption"
 msgstr "캡션"
 
-#: apps/catalogue/abstract_models.py:1295
+#: apps/catalogue/abstract_models.py:1320
 msgid ""
 "An image with a display order of zero will be the primary image for a product"
 msgstr "주문하지 않았을 때 출력되는 이미지는 상품에 대한 초기 이미지입니다."
 
-#: apps/catalogue/abstract_models.py:1305
+#: apps/catalogue/abstract_models.py:1330
 msgid "Product image"
 msgstr "상품 이미지"
 
-#: apps/catalogue/abstract_models.py:1306
+#: apps/catalogue/abstract_models.py:1331
 msgid "Product images"
 msgstr "상품 이미지"
 
@@ -2348,23 +2374,27 @@ msgstr "'%(title)s' 상품이 '%(name)s' 위시리스트로 이동되었습니�
 msgid "Dashboard"
 msgstr "대시보드"
 
-#: apps/dashboard/catalogue/forms.py:40
+#: apps/dashboard/catalogue/forms.py:53
 msgid "Leave blank to generate from category name"
 msgstr ""
 
-#: apps/dashboard/catalogue/forms.py:49
+#: apps/dashboard/catalogue/forms.py:62
 msgid "Create a new product of type"
 msgstr "새 상품 종류 선택"
 
-#: apps/dashboard/catalogue/forms.py:50
+#: apps/dashboard/catalogue/forms.py:63
 msgid "-- Choose type --"
 msgstr "--종류 선택--"
 
-#: apps/dashboard/catalogue/forms.py:66
+#: apps/dashboard/catalogue/forms.py:79
 msgid "Product title"
 msgstr "상품명"
 
-#: apps/dashboard/catalogue/forms.py:367
+#: apps/dashboard/catalogue/forms.py:240
+msgid "Leave blank to generate from product title"
+msgstr ""
+
+#: apps/dashboard/catalogue/forms.py:385
 msgid "Select an option group"
 msgstr "옵션 그룹 선택"
 
@@ -2383,24 +2413,24 @@ msgid "A child product should not have categories"
 msgstr "자식 상품은 카테고리를 가질 수 없습니다."
 
 #: apps/dashboard/catalogue/tables.py:18
-#: templates/oscar/dashboard/catalogue/product_update.html:278
+#: templates/oscar/dashboard/catalogue/product_update.html:279
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:44
 msgid "Title"
 msgstr "제목"
 
 #: apps/dashboard/catalogue/tables.py:30
 #: templates/oscar/dashboard/catalogue/product_update.html:104
-#: templates/oscar/dashboard/catalogue/product_update.html:271
+#: templates/oscar/dashboard/catalogue/product_update.html:272
 msgid "Variants"
 msgstr "세부옵션"
 
 #: apps/dashboard/catalogue/tables.py:35 apps/partner/abstract_models.py:153
-#: templates/oscar/dashboard/catalogue/product_update.html:280
+#: templates/oscar/dashboard/catalogue/product_update.html:281
 msgid "Stock records"
 msgstr "재고 기록"
 
-#: apps/dashboard/catalogue/tables.py:39 apps/dashboard/catalogue/tables.py:87
-#: apps/dashboard/catalogue/tables.py:107
+#: apps/dashboard/catalogue/tables.py:39 apps/dashboard/catalogue/tables.py:88
+#: apps/dashboard/catalogue/tables.py:108
 #: templates/oscar/customer/wishlists/wishlists_detail.html:79
 #: templates/oscar/dashboard/catalogue/attribute_option_group_row_actions.html:6
 #: templates/oscar/dashboard/catalogue/category_row_actions.html:6
@@ -2431,17 +2461,17 @@ msgid "%s Category"
 msgid_plural "%s Categories"
 msgstr[0] "%s 카테고리"
 
-#: apps/dashboard/catalogue/tables.py:83
+#: apps/dashboard/catalogue/tables.py:84
 msgid "Option summary"
 msgstr ""
 
-#: apps/dashboard/catalogue/tables.py:92
+#: apps/dashboard/catalogue/tables.py:93
 #, python-format
 msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
 msgstr[0] ""
 
-#: apps/dashboard/catalogue/tables.py:112
+#: apps/dashboard/catalogue/tables.py:113
 #, python-format
 msgid "%s Option"
 msgid_plural "%s Options"
@@ -2470,8 +2500,8 @@ msgstr "%(parent_product)s의 새로운 상품 변형 만들기"
 msgid "Editing variant of %(parent_product)s"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:409 apps/dashboard/catalogue/views.py:694
-#: apps/dashboard/catalogue/views.py:824 apps/dashboard/catalogue/views.py:967
+#: apps/dashboard/catalogue/views.py:409 apps/dashboard/catalogue/views.py:697
+#: apps/dashboard/catalogue/views.py:827 apps/dashboard/catalogue/views.py:970
 msgid "Your submitted data was not valid - please correct the errors below"
 msgstr "등록된 데이터는 유효하지 않습니다 - 아래 오류를 정정해주세요."
 
@@ -2519,117 +2549,117 @@ msgstr "'%s' 카테고리 업데이트"
 msgid "Category updated successfully"
 msgstr "카테고리를 성공적으로 업데이트 했습니다."
 
-#: apps/dashboard/catalogue/views.py:644
+#: apps/dashboard/catalogue/views.py:647
 msgid "Category deleted successfully"
 msgstr "카테고리를 성공적으로 삭제하였습니다."
 
-#: apps/dashboard/catalogue/views.py:730
+#: apps/dashboard/catalogue/views.py:733
 msgid "Add a new product type"
 msgstr "새 상품 종류 만들기"
 
-#: apps/dashboard/catalogue/views.py:733
+#: apps/dashboard/catalogue/views.py:736
 msgid "Product type created successfully"
 msgstr "상품 종류를 성공적으로 생성했습니다."
 
-#: apps/dashboard/catalogue/views.py:742
+#: apps/dashboard/catalogue/views.py:745
 #, python-format
 msgid "Update product type '%s'"
 msgstr "상품 종류 '%s' 갱신하기"
 
-#: apps/dashboard/catalogue/views.py:745
+#: apps/dashboard/catalogue/views.py:748
 msgid "Product type updated successfully"
 msgstr "상품 유형이 성공적으로 업데이트되었습니다."
 
-#: apps/dashboard/catalogue/views.py:760 apps/offer/abstract_models.py:811
+#: apps/dashboard/catalogue/views.py:763 apps/offer/abstract_models.py:811
 #: defaults.py:105
 #: templates/oscar/dashboard/catalogue/product_class_list.html:24
 msgid "Product Types"
 msgstr "상품 종류"
 
-#: apps/dashboard/catalogue/views.py:771
+#: apps/dashboard/catalogue/views.py:774
 #, python-format
 msgid "Delete product type '%s'"
 msgstr "'%s' 상품 종류 삭제"
 
-#: apps/dashboard/catalogue/views.py:776 apps/dashboard/catalogue/views.py:912
-#: apps/dashboard/catalogue/views.py:1017
+#: apps/dashboard/catalogue/views.py:779 apps/dashboard/catalogue/views.py:915
+#: apps/dashboard/catalogue/views.py:1020
 #, python-format
 msgid "Unable to delete '%s'"
 msgstr "'%s'를 삭제할 수 없습니다."
 
-#: apps/dashboard/catalogue/views.py:778
+#: apps/dashboard/catalogue/views.py:781
 #, python-format
 msgid "%i products are still assigned to this type"
 msgstr "%i 상품들이 여전히 이 유형에 할당되어 있습니다."
 
-#: apps/dashboard/catalogue/views.py:783
+#: apps/dashboard/catalogue/views.py:786
 msgid "Product type deleted successfully"
 msgstr "상품 종류가 성공적으로 삭제되었습니다."
 
-#: apps/dashboard/catalogue/views.py:860
+#: apps/dashboard/catalogue/views.py:863
 msgid "Add a new Attribute Option Group"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:863
+#: apps/dashboard/catalogue/views.py:866
 msgid "Attribute Option Group created successfully"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:877
+#: apps/dashboard/catalogue/views.py:880
 #, python-format
 msgid "Update Attribute Option Group '%s'"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:880
+#: apps/dashboard/catalogue/views.py:883
 msgid "Attribute Option Group updated successfully"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:907
+#: apps/dashboard/catalogue/views.py:910
 #, python-format
 msgid "Delete Attribute Option Group '%s'"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:914
+#: apps/dashboard/catalogue/views.py:917
 #, python-format
 msgid "%i product attributes are still assigned to this attribute option group"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:933
+#: apps/dashboard/catalogue/views.py:936
 msgid "Attribute Option Group deleted successfully"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:980
+#: apps/dashboard/catalogue/views.py:983
 msgid "Add a new Option"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:983
+#: apps/dashboard/catalogue/views.py:986
 msgid "Option created successfully"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:996
+#: apps/dashboard/catalogue/views.py:999
 #, python-format
 msgid "Update Option '%s'"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:999
+#: apps/dashboard/catalogue/views.py:1002
 msgid "Option updated successfully"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:1011
+#: apps/dashboard/catalogue/views.py:1014
 #, python-format
 msgid "Delete Option '%s'"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:1021
+#: apps/dashboard/catalogue/views.py:1024
 #, python-format
 msgid "%i products are still assigned to this option"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:1026
+#: apps/dashboard/catalogue/views.py:1029
 #, python-format
 msgid "%i product classes are still assigned to this option"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:1032
+#: apps/dashboard/catalogue/views.py:1035
 msgid "Option deleted successfully"
 msgstr ""
 
@@ -3902,6 +3932,7 @@ msgid "Conditions"
 msgstr "조건"
 
 #: apps/offer/abstract_models.py:797
+#: templates/oscar/dashboard/catalogue/product_update.html:282
 #: templates/oscar/dashboard/ranges/range_list.html:33
 msgid "Is public?"
 msgstr "공개합니까?"
@@ -4558,7 +4589,7 @@ msgstr "재고관리 파트너"
 #: templates/oscar/basket/partials/basket_content.html:31
 #: templates/oscar/basket/partials/basket_content.html:92
 #: templates/oscar/basket/partials/basket_content.html:183
-#: templates/oscar/dashboard/catalogue/product_update.html:228
+#: templates/oscar/dashboard/catalogue/product_update.html:229
 msgid "Price"
 msgstr "가격"
 
@@ -5467,7 +5498,7 @@ msgstr "쿠폰 코드가 있습니다."
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:13
 #: templates/oscar/catalogue/partials/add_to_basket_form_compact.html:12
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:35
-#: templates/oscar/dashboard/catalogue/product_update.html:272
+#: templates/oscar/dashboard/catalogue/product_update.html:273
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:91
 msgid "Adding..."
 msgstr "추가 중..."
@@ -5489,11 +5520,12 @@ msgstr "쿠폰 추가"
 #: templates/oscar/customer/wishlists/wishlists_form.html:43
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:143
 #: templates/oscar/dashboard/catalogue/category_delete.html:36
+#: templates/oscar/dashboard/catalogue/category_form.html:110
 #: templates/oscar/dashboard/catalogue/option_form.html:89
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:35
 #: templates/oscar/dashboard/catalogue/product_class_form.html:142
 #: templates/oscar/dashboard/catalogue/product_delete.html:56
-#: templates/oscar/dashboard/catalogue/product_update.html:350
+#: templates/oscar/dashboard/catalogue/product_update.html:371
 #: templates/oscar/dashboard/comms/detail.html:104
 #: templates/oscar/dashboard/offers/offer_delete.html:30
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:32
@@ -5975,9 +6007,11 @@ msgstr "상품평 남기기"
 #: templates/oscar/checkout/shipping_address.html:44
 #: templates/oscar/checkout/user_address_form.html:26
 #: templates/oscar/customer/wishlists/wishlists_form.html:42
-#: templates/oscar/dashboard/catalogue/product_update.html:352
-#: templates/oscar/dashboard/catalogue/product_update.html:356
-#: templates/oscar/dashboard/catalogue/product_update.html:359
+#: templates/oscar/dashboard/catalogue/category_form.html:111
+#: templates/oscar/dashboard/catalogue/category_form.html:114
+#: templates/oscar/dashboard/catalogue/product_update.html:373
+#: templates/oscar/dashboard/catalogue/product_update.html:377
+#: templates/oscar/dashboard/catalogue/product_update.html:380
 #: templates/oscar/dashboard/comms/detail.html:103
 #: templates/oscar/dashboard/offers/restrictions_form.html:13
 #: templates/oscar/dashboard/offers/step_form.html:72
@@ -6150,7 +6184,7 @@ msgstr "이 주소로 배송하기"
 #: templates/oscar/dashboard/catalogue/product_class_list.html:50
 #: templates/oscar/dashboard/catalogue/product_delete.html:55
 #: templates/oscar/dashboard/catalogue/product_row_actions.html:16
-#: templates/oscar/dashboard/catalogue/product_update.html:293
+#: templates/oscar/dashboard/catalogue/product_update.html:296
 #: templates/oscar/dashboard/offers/offer_delete.html:30
 #: templates/oscar/dashboard/offers/offer_list.html:102
 #: templates/oscar/dashboard/orders/order_detail.html:703
@@ -6294,9 +6328,10 @@ msgstr "네!"
 #: templates/oscar/checkout/user_address_form.html:26
 #: templates/oscar/customer/wishlists/wishlists_form.html:42
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:145
+#: templates/oscar/dashboard/catalogue/category_form.html:115
 #: templates/oscar/dashboard/catalogue/option_form.html:91
 #: templates/oscar/dashboard/catalogue/product_class_form.html:144
-#: templates/oscar/dashboard/catalogue/product_update.html:360
+#: templates/oscar/dashboard/catalogue/product_update.html:381
 #: templates/oscar/dashboard/comms/detail.html:103
 #: templates/oscar/dashboard/pages/update.html:33
 #: templates/oscar/dashboard/partials/form.html:10
@@ -6716,7 +6751,7 @@ msgstr "기본 영수증 발행 주소"
 
 #: templates/oscar/customer/address/address_list.html:30
 #: templates/oscar/dashboard/catalogue/product_row_actions.html:10
-#: templates/oscar/dashboard/catalogue/product_update.html:290
+#: templates/oscar/dashboard/catalogue/product_update.html:293
 #: templates/oscar/dashboard/comms/detail.html:35
 #: templates/oscar/dashboard/comms/list.html:44
 #: templates/oscar/dashboard/offers/offer_detail.html:62
@@ -6763,10 +6798,11 @@ msgstr "재고가 없는 상품에 대한 활성화 된 알림이 없습니다."
 #: templates/oscar/customer/alerts/alert_list.html:33
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:60
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:141
+#: templates/oscar/dashboard/catalogue/category_form.html:108
 #: templates/oscar/dashboard/catalogue/option_delete.html:58
 #: templates/oscar/dashboard/catalogue/option_form.html:87
 #: templates/oscar/dashboard/catalogue/product_class_form.html:140
-#: templates/oscar/dashboard/catalogue/product_update.html:348
+#: templates/oscar/dashboard/catalogue/product_update.html:369
 msgid "Cancel"
 msgstr "취소"
 
@@ -6995,7 +7031,7 @@ msgstr ""
 #: templates/oscar/customer/wishlists/wishlists_delete.html:19
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:113
 #: templates/oscar/dashboard/catalogue/product_class_form.html:105
-#: templates/oscar/dashboard/catalogue/product_update.html:229
+#: templates/oscar/dashboard/catalogue/product_update.html:230
 #: templates/oscar/dashboard/offers/offer_delete.html:16
 #: templates/oscar/dashboard/partners/partner_delete.html:16
 #: templates/oscar/dashboard/ranges/range_delete.html:16
@@ -7120,6 +7156,7 @@ msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
+#: templates/oscar/dashboard/catalogue/category_form.html:37
 #: templates/oscar/dashboard/catalogue/product_class_form.html:32
 #: templates/oscar/dashboard/catalogue/product_update.html:58
 msgid "Sections"
@@ -7171,6 +7208,36 @@ msgstr ""
 "\n"
 "<p><strong>%(name)s</strong> 카테고리를 삭제하시겠습니까?</p>"
 
+#: templates/oscar/dashboard/catalogue/category_form.html:43
+#: templates/oscar/dashboard/catalogue/category_form.html:62
+#, fuzzy
+#| msgid "Partner details"
+msgid "Category details"
+msgstr "파트너 상세"
+
+#: templates/oscar/dashboard/catalogue/category_form.html:48
+#: templates/oscar/dashboard/catalogue/category_form.html:82
+#: templates/oscar/dashboard/catalogue/product_update.html:115
+#: templates/oscar/dashboard/catalogue/product_update.html:345
+msgid "Search engine optimisation"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/category_form.html:112
+#: templates/oscar/dashboard/catalogue/product_update.html:378
+msgid "Save and continue editing"
+msgstr "저장하고 수정을 계속합니다."
+
+#: templates/oscar/dashboard/catalogue/category_form.html:119
+#: templates/oscar/dashboard/catalogue/category_row_actions.html:20
+#: templates/oscar/dashboard/catalogue/product_row_actions.html:13
+#: templates/oscar/dashboard/catalogue/product_update.html:385
+#: templates/oscar/dashboard/pages/index.html:63
+#: templates/oscar/dashboard/pages/messages/saved.html:9
+#: templates/oscar/dashboard/ranges/range_list.html:79
+#: templates/oscar/dashboard/reviews/review_list.html:109
+msgid "View on site"
+msgstr "사이트에서 보기"
+
 #: templates/oscar/dashboard/catalogue/category_list.html:27
 msgid "Create new category"
 msgstr "새 카테고리 생성"
@@ -7194,16 +7261,6 @@ msgstr "하위 카테고리 추가하기"
 #: templates/oscar/dashboard/catalogue/category_row_actions.html:17
 msgid "Edit children"
 msgstr "하위 카테고리 수정"
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:20
-#: templates/oscar/dashboard/catalogue/product_row_actions.html:13
-#: templates/oscar/dashboard/catalogue/product_update.html:364
-#: templates/oscar/dashboard/pages/index.html:63
-#: templates/oscar/dashboard/pages/messages/saved.html:9
-#: templates/oscar/dashboard/ranges/range_list.html:79
-#: templates/oscar/dashboard/reviews/review_list.html:109
-msgid "View on site"
-msgstr "사이트에서 보기"
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:10
 #, python-format
@@ -7430,7 +7487,7 @@ msgstr ""
 "현재 <a href=\"%(parent_url)s\">%(title)s</a>상품을 수정하고 있습니다."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:72
-#: templates/oscar/dashboard/catalogue/product_update.html:127
+#: templates/oscar/dashboard/catalogue/product_update.html:128
 #: templates/oscar/dashboard/orders/line_detail.html:31
 msgid "Product details"
 msgstr "상품 상세"
@@ -7440,7 +7497,7 @@ msgid "Images"
 msgstr "이미지"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:97
-#: templates/oscar/dashboard/catalogue/product_update.html:215
+#: templates/oscar/dashboard/catalogue/product_update.html:216
 msgid "Stock and pricing"
 msgstr "재고와 가격"
 
@@ -7448,64 +7505,60 @@ msgstr "재고와 가격"
 msgid "Upselling"
 msgstr ""
 
-#: templates/oscar/dashboard/catalogue/product_update.html:172
+#: templates/oscar/dashboard/catalogue/product_update.html:173
 msgid "Product Type:"
 msgstr "상품 종류:"
 
-#: templates/oscar/dashboard/catalogue/product_update.html:193
+#: templates/oscar/dashboard/catalogue/product_update.html:194
 msgid "Upload, change or remove images"
 msgstr "이미지 올리기, 변경하기, 혹은 제거하기"
 
-#: templates/oscar/dashboard/catalogue/product_update.html:204
+#: templates/oscar/dashboard/catalogue/product_update.html:205
 msgid ""
 "Drag images to re-order them. Space for additional images will appear when "
 "images are added."
 msgstr ""
 
-#: templates/oscar/dashboard/catalogue/product_update.html:221
+#: templates/oscar/dashboard/catalogue/product_update.html:222
 msgid "SKU"
 msgstr "제품 관리 번호"
 
-#: templates/oscar/dashboard/catalogue/product_update.html:223
+#: templates/oscar/dashboard/catalogue/product_update.html:224
 msgid "Num in stock"
 msgstr "재고량"
 
-#: templates/oscar/dashboard/catalogue/product_update.html:224
+#: templates/oscar/dashboard/catalogue/product_update.html:225
 msgid "Num allocated"
 msgstr "할당된 번호"
 
-#: templates/oscar/dashboard/catalogue/product_update.html:225
+#: templates/oscar/dashboard/catalogue/product_update.html:226
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:49
 msgid "Low stock threshold"
 msgstr "재고 부족 한계치"
 
-#: templates/oscar/dashboard/catalogue/product_update.html:273
+#: templates/oscar/dashboard/catalogue/product_update.html:274
 msgid "Add variant"
 msgstr ""
 
-#: templates/oscar/dashboard/catalogue/product_update.html:302
+#: templates/oscar/dashboard/catalogue/product_update.html:305
 msgid "This product does not have any variants."
 msgstr ""
 
-#: templates/oscar/dashboard/catalogue/product_update.html:304
+#: templates/oscar/dashboard/catalogue/product_update.html:307
 msgid "One can't add variants to this product at this point."
 msgstr ""
 
-#: templates/oscar/dashboard/catalogue/product_update.html:306
+#: templates/oscar/dashboard/catalogue/product_update.html:309
 msgid "Please save the product before trying to add variants."
 msgstr ""
 
-#: templates/oscar/dashboard/catalogue/product_update.html:308
+#: templates/oscar/dashboard/catalogue/product_update.html:311
 msgid "This is likely because this product still has stock records."
 msgstr "이 상품이 아직도 재고 기록이 있어서 그런 것 같습니다."
 
-#: templates/oscar/dashboard/catalogue/product_update.html:353
+#: templates/oscar/dashboard/catalogue/product_update.html:374
 msgid "Save and add another variant"
 msgstr "저장하고 또다른 변형을 추가"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:357
-msgid "Save and continue editing"
-msgstr "저장하고 수정을 계속합니다."
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:36
 #: templates/oscar/dashboard/ranges/range_list.html:49
