@@ -307,8 +307,8 @@ class AbstractBasket(models.Model):
         if apps.is_installed('oscar.apps.voucher'):
             # Ensure all vouchers are moved to the new basket
             for voucher in basket.vouchers.all():
-                voucher.basket = basket
-                voucher.save()
+                voucher.baskets.remove(basket)
+                voucher.baskets.add(self)
     merge.alters_data = True
 
     def freeze(self):
