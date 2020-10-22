@@ -156,6 +156,10 @@ class AbstractVoucher(models.Model):
         on_delete=models.CASCADE
     )
 
+    baskets = models.ManyToManyField(
+        'basket.Basket', verbose_name=_("Baskets"), related_name='vouchers', blank=True,
+    )
+
     date_created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
