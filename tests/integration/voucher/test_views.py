@@ -106,11 +106,11 @@ class TestVoucherViews(CheckoutMixin, WebTestCase):
         """
         self.add_product_to_basket()
 
-        assert self.voucher.basket_set.count() == 0
+        assert self.voucher.baskets.count() == 0
 
         response = self.post(reverse('voucher:vouchers-add'), params={'code': self.voucher.code})
         self.assertRedirectsTo(response, 'basket:summary')
-        assert self.voucher.basket_set.count() == 1
+        assert self.voucher.baskets.count() == 1
 
     def test_remove_voucher(self):
         """
@@ -119,8 +119,8 @@ class TestVoucherViews(CheckoutMixin, WebTestCase):
         self.add_product_to_basket()
         self.add_voucher_to_basket(voucher=self.voucher)
 
-        assert self.voucher.basket_set.count() == 1
+        assert self.voucher.baskets.count() == 1
 
         response = self.post(reverse('voucher:vouchers-remove', kwargs={'pk': self.voucher.id}))
         self.assertRedirectsTo(response, 'basket:summary')
-        assert self.voucher.basket_set.count() == 0
+        assert self.voucher.baskets.count() == 0
