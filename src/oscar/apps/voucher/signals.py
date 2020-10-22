@@ -1,5 +1,5 @@
 from django.db.models.signals import post_delete
-from django.dispatch import receiver, Signal
+from django.dispatch import Signal, receiver
 
 from oscar.apps.voucher.utils import get_offer_name
 from oscar.core.loading import get_model
