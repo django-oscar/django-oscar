@@ -2,6 +2,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.urls import reverse
 
 from oscar.apps.basket import middleware
 from oscar.test.factories.customer import UserFactory
@@ -18,7 +19,7 @@ class TestBasketMiddleware(BasketMiddlewareMixin, TestCase):
 
     def setUp(self):
         self.middleware = middleware.BasketMiddleware(self.get_response_for_test)
-        self.request = RequestFactory().get('/catalogue/')
+        self.request = RequestFactory().get(reverse('catalogue:index'))
         self.request.user = AnonymousUser()
         self.middleware(self.request)
 
@@ -45,8 +46,12 @@ class TestBasketMiddleware(BasketMiddlewareMixin, TestCase):
 
 class TestBasketMiddlewareWithNoBasket(BasketMiddlewareMixin, TestCase):
 
-    def test_basket_is_disabled_for_dashboard_and_admin(self):
-        for url in ['/dashboard/catalogue/', '/admin/']:
+    def test_basket_is_disabled_for_dashboard_admin_and_selected_views(self):
+        for url in [
+            reverse('dashboard:index'),
+            reverse('admin:index'),
+            reverse('checkout:thank-you'),  # See `_site.apps.checkout.apps`.
+        ]:
             basket_middleware = middleware.BasketMiddleware(self.get_response_for_test)
             request = RequestFactory().get(url)
             request.user = UserFactory(is_superuser=True)

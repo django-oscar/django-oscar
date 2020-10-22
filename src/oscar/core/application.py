@@ -29,6 +29,7 @@ class OscarConfigMixin(object):
     default_permissions = None
 
     is_basket_enabled = False
+    views_with_disabled_basket = []
 
     def __init__(self, app_name, app_module, namespace=None, **kwargs):
         """
@@ -95,7 +96,7 @@ class OscarConfigMixin(object):
                 if decorator:
                     pattern.callback = decorator(pattern.callback)
 
-                if self.is_basket_enabled:
+                if self.is_basket_enabled and pattern.name not in self.views_with_disabled_basket:
                     pattern.callback.is_basket_enabled = True
 
         return urlpatterns
