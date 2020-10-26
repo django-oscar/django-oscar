@@ -143,7 +143,7 @@ class LineOfferConsumer(object):
     def consumers(self):
         return [x for x in self._offers.values() if self.consumed(x)]
 
-    def available(self, offer=None) -> int:
+    def available(self, offer=None) -> int: # noqa (too complex (11))
         """
         check how many items are available for offer
 
@@ -158,13 +158,26 @@ class LineOfferConsumer(object):
 
             applied = [x for x in self.consumers if x != offer]
 
-            # find any *other* exclusive offers
-            if any([x.exclusive for x in applied]):
-                return 0
+            if offer.exclusive:
+                for a in applied:
+                    if a.exclusive:
+                        if any([
+                            a.priority > offer.priority,
+                            a.priority == offer.priority and a.id < offer.id
+                        ]):
+                            # Exclusive offers cannot be applied if any other exclusive
+                            # offer with higher priority is active already.
+                            max_affected_items = max_affected_items - self.consumed(a)
+                            if max_affected_items == 0:
+                                return 0
 
-            # exclusive offers cannot be applied if any other
-            # offers are active already
-            if offer.exclusive and len(applied):
+                    else:
+                        # Exclusive offers cannot be applied if any other offers are
+                        # active already.
+                        return 0
+
+            # find any *other* exclusive offers
+            elif any([x.exclusive for x in applied]):
                 return 0
 
             # check for applied offers allowing restricted combinations
