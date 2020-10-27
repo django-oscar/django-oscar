@@ -11,9 +11,9 @@
                 {% trans "1. Name and description" %}
             </a>
             {% else %}
-            <span class="{% if step == 1 %}active{% else %}disabled{% endif %}">
+            <a class="nav-link {% if step == 1 %}active{% else %}disabled text-reset{% endif %}">
                 {% trans "1. Name and description" %}
-            </span>
+            </a>
             {% endif %}
         </li>
         <li class="nav-item step2">
@@ -22,9 +22,9 @@
                 {% trans "2. Incentive" %}
             </a>
             {% else %}
-            <span class="{% if step == 2 %}active{% else %}disabled{% endif %}">
+            <a class="nav-link {% if step == 2 %}active{% else %}disabled text-reset{% endif %}">
                 {% trans "2. Incentive" %}
-            </span>
+            </a>
             {% endif %}
         </li>
         <li class="nav-item step3">
@@ -33,15 +33,15 @@
                 {% trans "3. Condition" %}
             </a>
             {% else %}
-            <span class="{% if step == 3 %}active{% else %}disabled{% endif %}">
+            <a class="nav-link {% if step == 3 %}active{% else %}disabled text-reset{% endif %}">
                 {% trans "3. Condition" %}
-            </span>
+            </a>
             {% endif %}
         </li>
         <li class="nav-item step4">
-            <span class="{% if step == 4 %}active{% else %}disabled{% endif %}">
+            <a class="nav-link {% if step == 4 %}active{% else %}disabled text-reset{% endif %}">
                 {% trans "4. Restrictions" %}
-            </span>
+            </a>
         </li>
     </ul>
 </div>

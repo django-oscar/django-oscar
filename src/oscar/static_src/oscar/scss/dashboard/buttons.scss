@@ -1,16 +1,5 @@
 // BUTTONS
 // -------
-.btn-group > .btn,
-.btn-group > .dropdown-menu,
-.btn {
-  font-size: $body-font-size;
-  font-family: inherit;
-}
-
-td .btn-toolbar {
-  margin: 0;
-}
-
 .float-left.btn {
   margin-left: 20px;
 }
@@ -38,11 +27,5 @@ td .btn-toolbar {
 
   .form-group {
     margin: 0;
-  }
-}
-
-@media (max-width: 1300px) {
-  table .btn {
-    font-size: $body-font-size;
   }
 }

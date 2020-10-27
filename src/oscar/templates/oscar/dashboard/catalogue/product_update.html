@@ -18,7 +18,7 @@
                 <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
             </li>
             {% if parent %}
-                <li>
+                <li class="breadcrumb-item">
                     <a href="{% url 'dashboard:catalogue-product' parent.id %}">{{ parent.title }}</a>
                 </li>
             {% endif %}
@@ -111,7 +111,11 @@
                                         </a>
                                     </li>
                                 {% endif %}
-                                <li><a href="#seo" data-toggle="tab">{% trans 'Search engine optimisation' %}</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#seo" data-toggle="tab">
+                                        {% trans 'Search engine optimisation' %}
+                                    </a>
+                                </li>
                             {% endblock tabs %}
                         </ul>
                     </div>
@@ -345,7 +349,6 @@
                                 </div>
                                 <div class="card card-body">
                                     {% block seo_content %}
-                                        <span class="error-block">{{ form.non_field_errors }}</span>
                                         {% for field in form.seo_form_fields %}
                                             {% if 'attr' not in field.id_for_label %}
                                                 {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
@@ -369,19 +372,19 @@
                         </a>
                         {% trans "or" %}
                         {% if parent %}
-                            <button class="btn btn-secondary btn-lg" name="action" type="submit" value="create-another-child" data-loading-text="{% trans 'Saving...' %}">
+                            <button class="btn btn-secondary" name="action" type="submit" value="create-another-child" data-loading-text="{% trans 'Saving...' %}">
                                 {% trans "Save and add another variant" %}
                             </button>
                         {% endif %}
-                        <button class="btn btn-secondary btn-lg" name="action" type="submit" value="continue" data-loading-text="{% trans 'Saving...' %}">
+                        <button class="btn btn-secondary" name="action" type="submit" value="continue" data-loading-text="{% trans 'Saving...' %}">
                             {% trans "Save and continue editing" %}
                         </button>
-                        <button class="btn btn-primary btn-lg" name="action" type="submit" value="save" data-loading-text="{% trans 'Saving...' %}">
+                        <button class="btn btn-primary" name="action" type="submit" value="save" data-loading-text="{% trans 'Saving...' %}">
                             {% trans "Save" %}
                         </button>
                     </div>
                     {% if product %}
-                        <a class="btn btn-success btn-lg" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+                        <a class="btn btn-success" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
                     {% endif %}
                 </div>
             </div>

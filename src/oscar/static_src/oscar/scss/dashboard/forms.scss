@@ -1,6 +1,12 @@
 // FORM CHANGES
 // ------------
 
+.col-form-label.required:after {
+  color: $red;
+  content: "*";
+  display: inline-block;
+}
+
 .form-inline {
   select {
     min-width: 200px;

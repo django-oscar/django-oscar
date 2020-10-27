@@ -86,7 +86,7 @@
                             <td>
                                 <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
+                                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
                                 </form>
                             </td>
                         </tr>

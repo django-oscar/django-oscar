@@ -9,8 +9,7 @@
     text-align: center;
     top: 0;
 
-    h1 {
-      font-size: $h2-font-size;
+    h2 {
       color: $gray-900;
       font-weight: bold;
       text-transform: uppercase;
@@ -103,15 +102,12 @@
     display: block;
     margin-bottom: 15px;
     padding: 12px;
-    color: $gray-500;
-    font-size: $body-font-size;
+    color: $gray-900;
 
     span {
       display: inline-block;
       font-weight: bold;
       width: 30%;
-      font-size: $font-size-base;
-      color: $gray-900;
     }
 
     i {
@@ -121,4 +117,3 @@
     }
   }
 }
-

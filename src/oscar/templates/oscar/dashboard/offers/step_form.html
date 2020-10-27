@@ -54,7 +54,6 @@
                 </div>
                 <div class="card card-body">
                     {% csrf_token %}
-                    <p>{% trans "Fields marked with * are mandatory." %}</p>
                     {% block form_fields %}
                         {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
                     {% endblock %}
