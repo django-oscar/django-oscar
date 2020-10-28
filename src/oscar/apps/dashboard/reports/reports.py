@@ -1,8 +1,7 @@
-from datetime import datetime, time
+from datetime import time
 
 from django.http import HttpResponse
 from django.template.defaultfilters import date
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core import utils
@@ -74,25 +73,17 @@ class ReportGenerator(object):
 
         # After the start date
         if self.start_date:
-            start_datetime = timezone.make_aware(
-                datetime.combine(self.start_date, time(0, 0)),
-                timezone.get_default_timezone())
-
+            start_datetime = utils.datetime_combine(self.start_date, time.min)
             filter_kwargs = {
-                "%s__gt" % self.date_range_field_name: start_datetime,
+                "%s__gte" % self.date_range_field_name: start_datetime,
             }
             queryset = queryset.filter(**filter_kwargs)
 
         # Before the end of the end date
         if self.end_date:
-            end_of_end_date = datetime.combine(
-                self.end_date,
-                time(hour=23, minute=59, second=59)
-            )
-            end_datetime = timezone.make_aware(end_of_end_date,
-                                               timezone.get_default_timezone())
+            end_datetime = utils.datetime_combine(self.end_date, time.max)
             filter_kwargs = {
-                "%s__lt" % self.date_range_field_name: end_datetime,
+                "%s__lte" % self.date_range_field_name: end_datetime,
             }
             queryset = queryset.filter(**filter_kwargs)
 
