@@ -39,8 +39,8 @@ Further reading:
 
 Continuous integration status:
 
-.. image:: https://travis-ci.org/django-oscar/django-oscar.svg?branch=master
-    :target: https://travis-ci.org/django-oscar/django-oscar
+.. image:: https://travis-ci.com/django-oscar/django-oscar.svg?branch=master
+    :target: https://travis-ci.com/django-oscar/django-oscar
 
 .. image:: http://codecov.io/github/django-oscar/django-oscar/coverage.svg?branch=master
     :alt: Coverage
