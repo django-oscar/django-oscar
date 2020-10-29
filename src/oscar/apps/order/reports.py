@@ -1,5 +1,3 @@
-import datetime
-
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
@@ -45,20 +43,12 @@ class OrderReportGenerator(ReportGenerator):
     code = 'order_report'
     description = _("Orders placed")
     date_range_field_name = 'date_placed'
+    model_class = Order
 
     formatters = {
         'CSV_formatter': OrderReportCSVFormatter,
         'HTML_formatter': OrderReportHTMLFormatter,
     }
-
-    def get_queryset(self):
-        qs = Order._default_manager.all()
-        if self.start_date:
-            qs = qs.filter(date_placed__gte=self.start_date)
-        if self.end_date:
-            qs = qs.filter(
-                date_placed__lt=self.end_date + datetime.timedelta(days=1))
-        return qs
 
     def generate(self):
         additional_data = {

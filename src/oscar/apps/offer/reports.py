@@ -1,4 +1,3 @@
-import datetime
 from decimal import Decimal as D
 
 from django.utils.translation import gettext_lazy as _
@@ -36,19 +35,12 @@ class OfferReportHTMLFormatter(ReportHTMLFormatter):
 class OfferReportGenerator(ReportGenerator):
     code = 'conditional-offers'
     description = _('Offer performance')
+    model_class = OrderDiscount
 
     formatters = {
         'CSV_formatter': OfferReportCSVFormatter,
         'HTML_formatter': OfferReportHTMLFormatter,
     }
-
-    def get_queryset(self):
-        qs = OrderDiscount._default_manager.all()
-        if self.start_date:
-            qs = qs.filter(order__date_placed__gte=self.start_date)
-        if self.end_date:
-            qs = qs.filter(order__date_placed__lt=self.end_date + datetime.timedelta(days=1))
-        return qs
 
     def generate(self):
         offer_discounts = {}
