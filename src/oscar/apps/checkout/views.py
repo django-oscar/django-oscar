@@ -671,17 +671,17 @@ class ThankYouView(generic.DetailView):
         # We allow superusers to force an order thank-you page for testing
         order = None
         if self.request.user.is_superuser:
+            kwargs = {}
             if 'order_number' in self.request.GET:
-                order = Order._default_manager.get(
-                    number=self.request.GET['order_number'])
+                kwargs['number'] = self.request.GET['order_number']
             elif 'order_id' in self.request.GET:
-                order = Order._default_manager.get(
-                    id=self.request.GET['order_id'])
+                kwargs['id'] = self.request.GET['order_id']
+            order = Order._default_manager.filter(**kwargs).first()
 
         if not order:
             if 'checkout_order_id' in self.request.session:
-                order = Order._default_manager.get(
-                    pk=self.request.session['checkout_order_id'])
+                order = Order._default_manager.filter(
+                    pk=self.request.session['checkout_order_id']).first()
         return order
 
     def get_context_data(self, *args, **kwargs):
