@@ -14,13 +14,18 @@ Selector = get_class('partner.strategy', 'Selector')
 selector = Selector()
 
 
+def is_basket_enabled(request):
+    view_func = resolve(request.path_info).func
+    return getattr(view_func, 'is_basket_enabled', False)
+
+
 class BasketMiddleware:
 
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        if self.is_basket_enabled(request):
+        if is_basket_enabled(request):
             # Keep track of cookies that need to be deleted (which can only be done
             # when we're processing the response instance).
             request.cookies_to_delete = []
@@ -63,13 +68,8 @@ class BasketMiddleware:
         response = self.get_response(request)
         return self.process_response(request, response)
 
-    @staticmethod
-    def is_basket_enabled(request):
-        view_func = resolve(request.path_info).func
-        return getattr(view_func, 'is_basket_enabled', False)
-
     def process_response(self, request, response):
-        if self.is_basket_enabled(request):
+        if is_basket_enabled(request):
             # Delete any surplus cookies
             cookies_to_delete = getattr(request, 'cookies_to_delete', [])
             for cookie_key in cookies_to_delete:
@@ -112,7 +112,7 @@ class BasketMiddleware:
         return settings.OSCAR_BASKET_COOKIE_OPEN
 
     def process_template_response(self, request, response):
-        if self.is_basket_enabled(request) and hasattr(response, 'context_data'):
+        if is_basket_enabled(request) and hasattr(response, 'context_data'):
             if response.context_data is None:
                 response.context_data = {}
             if 'basket' not in response.context_data:
