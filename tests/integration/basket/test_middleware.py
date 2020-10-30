@@ -50,12 +50,12 @@ class TestBasketMiddlewareWithNoBasket(BasketMiddlewareMixin, TestCase):
         for url in [
             reverse('dashboard:index'),
             reverse('admin:index'),
-            reverse('checkout:thank-you'),  # See `_site.apps.checkout.apps`.
+            reverse('checkout:thank-you'),  # See `_site.apps.checkout.views`.
         ]:
             basket_middleware = middleware.BasketMiddleware(self.get_response_for_test)
             request = RequestFactory().get(url)
             request.user = UserFactory(is_superuser=True)
             basket_middleware(request)
 
-            self.assertFalse(hasattr(request, 'basket'))
-            self.assertFalse(hasattr(request, 'strategy'))
+            self.assertFalse(hasattr(request, 'basket'), msg=url)
+            self.assertFalse(hasattr(request, 'strategy'), msg=url)

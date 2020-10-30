@@ -96,8 +96,13 @@ class OscarConfigMixin(object):
                 if decorator:
                     pattern.callback = decorator(pattern.callback)
 
-                if self.is_basket_enabled and pattern.name not in self.views_with_disabled_basket:
-                    pattern.callback.is_basket_enabled = True
+                if self.is_basket_enabled:
+                    callback = pattern.callback
+                    if not any([
+                        hasattr(callback, 'is_basket_enabled'),
+                        hasattr(callback, 'view_class') and hasattr(callback.view_class, 'is_basket_enabled'),
+                    ]):
+                        pattern.callback.is_basket_enabled = True
 
         return urlpatterns
 
