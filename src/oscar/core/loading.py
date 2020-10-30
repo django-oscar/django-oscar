@@ -12,16 +12,12 @@ from django.utils.module_loading import import_string
 
 from oscar.core.exceptions import (
     AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
-from oscar.utils.deprecation import RemovedInOscar22Warning
+from oscar.utils.deprecation import RemovedInOscar31Warning
 
 # To preserve backwards compatibility of loading classes which moved
 # from one Oscar module to another, we look into the dictionary below
 # for the moved items during loading.
-MOVED_MODELS = {
-    'customer': (
-        'communication', ('communicationeventtype', 'email', 'notification')
-    )
-}
+MOVED_MODELS = {}
 
 
 def get_class(module_label, classname, module_prefix='oscar.apps'):
@@ -243,7 +239,7 @@ def get_model(app_label, model_name):
             warnings.warn(
                 'Model %s has recently moved from %s to the application %s, '
                 'please update your imports.' % (model_name, original_app_label, app_label),
-                RemovedInOscar22Warning, stacklevel=2)
+                RemovedInOscar31Warning, stacklevel=2)
     try:
         return apps.get_model(app_label, model_name)
     except AppRegistryNotReady:

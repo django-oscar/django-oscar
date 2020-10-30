@@ -6,6 +6,10 @@ Oscar 3.0 release notes (in development)
 
 Welcome to Oscar 3.0!
 
+This is a significant release, in which all of Oscar's core templates and styles have
+been ported to Bootstrap 4. Support for Bootstrap 3 has been dropped, and projects that upgrade to Oscar 3 will
+also need to upgrade their frontend and dashboard templates to use Bootstrap 4.
+
 .. contents::
     :local:
     :depth: 1
@@ -15,21 +19,27 @@ Welcome to Oscar 3.0!
 Compatibility
 ~~~~~~~~~~~~~
 
+Oscar 3.0 is compatible with Django 2.2, Django 3.0 and Django 3.1 as well as Python 3.6, 3.7 and 3.8.
+
+Support for Django 1.11 and Django 2.1 has been dropped. Support for Python 3.5 has been dropped.
 
 .. _new_in_3.0:
 
 What's new in Oscar 3.0?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Oscar 3.0 features a major upgrade of Oscar's default templates and styles to use Bootstrap version 4.
+- Oscar 3.0 features a major upgrade of Oscar's default templates and styles to use Bootstrap version 4.5.
   Both the front-end and dashboard templates have been refactored to work with Bootstrap 4. This is a major,
   non-backward compatible change for projects that rely on or extend the default Oscar templates.
 
+  The Bootstrap 4 `migration guide <https://getbootstrap.com/docs/4.5/migration/>`_ is a helpful resource for
+  migration from version 3.
+
 - As with Bootstrap 4 itself, Oscar's default styles are now defined using SASS instead of LESS.
 
-- To replace Bootstrap 3's Glyphicons, Oscar's default templates now rely on Font Awesome.
+- To replace Bootstrap 3's Glyphicons, Oscar's default templates now rely on `Font Awesome <https://fontawesome.com/>`_.
 
-- Support has been added to the ``catalogue.Option`` model to define the
+- Support was added to the ``catalogue.Option`` model to define the
   type of option. This is used by the ``AddToBasketForm`` to determine the appropriate form field to display for that
   option in the add-to-cart form. Currently supported types are: text, integer, float, boolean, and date.
 
@@ -44,9 +54,11 @@ What's new in Oscar 3.0?
   administrators can now define a restricted set of other offers that offer can be used in combination with.
   This changes introduces a new ``combinations`` field on the ``Offer`` model which requires a database migration.
 
-- Report generator classes now can define ``model_class`` or ``queryset``, similar to Django class based views.
-  You can also override queryset in the ``get_queryset`` method. Filtering by date range is now properly applied
-  during CSV export as well.
+- The base ``ReportGenerator`` class has been refactored to make it easier to use. Subclasses must now define
+  either a ``model_class`` or ``queryset`` to indicate which model/queryset the report generator should use, or
+  alternatively override the ``get_queryset()`` method. Failure to do one of these will result in an exception.
+
+- Filtering by date range is now properly applied during CSV export of reports.
 
 - New fields ``meta_title`` and ``meta_description`` have been added to both the ``Product`` and ``Category`` models,
   which can be used to override the HTML title and meta description content for product and category pages. These
@@ -60,10 +72,10 @@ Backwards incompatible changes
   Projects that have forked the ``partner`` app will need to generate their own migration
   to rename this field.
 
-- The ``annotate_form_field`` template tag will now set the ``widget_type`` in `the format of Django 3.1`_: so no longer
-  ``CheckboxField``, but just ``checkbox``.
+- The ``annotate_form_field`` template tag will now set the ``widget_type`` in `the format used by Django 3.1`_: so no longer
+  ``CheckboxInput``, but just ``checkbox``.
 
-.. _`the format of Django 3.1`: https://docs.djangoproject.com/en/3.1/ref/forms/api/#django.forms.BoundField.widget_type
+.. _`the format used by Django 3.1`: https://docs.djangoproject.com/en/3.1/ref/forms/api/#django.forms.BoundField.widget_type
 
 Bug fixes
 ~~~~~~~~~
@@ -89,12 +101,50 @@ Removal of deprecated features
   that have forked the ``order`` and ``partner`` apps will need to generate their own
   migrations to remove these fields.
 
+- ``customer.notifications.services.notify_user`` and ``customer.notifications.services.notify_users``
+  have been removed. Use ``communication.utils.Dispatcher.notify_user`` and
+  Use ``communication.utils.Dispatcher.notify_users`` respectively instead.
+
+- ``customer.alerts.utils.send_alerts``,  ``customer.alerts.utils.send_alert_confirmation`` and
+  ``customer.alerts.utils.send_product_alerts`` have been removed.
+  Use ``customer.alerts.utils.AlertsDispatcher.send_alerts``,
+  ``customer.alerts.utils.AlertsDispatcher.send_product_alert_confirmation_email_for_user`` and
+  ``customer.alerts.utils.AlertsDispatcher.send_product_alert_email_for_user``
+  respectively instead.
+
+- The ``CommunicationEventType``, ``Email`` and ``Notification`` models that moved from the ``customer`` app to the ``communication`` app in Oscar 2.1 can no longer be dynamically loaded from their old paths.
+
 
 Minor changes
 ~~~~~~~~~~~~~
 
 - Several models were updated to define a default ordering, to avoid issues with inconsistent ordering of
-  items in the dashboard and elsewhere. Database migrations are required for these changes.
+  items in the dashboard and elsewhere. Database migrations are required for these changes. Models affected are:
+
+    - ``analytics.UserProductView``
+    - ``analytics.UserSearch``
+    - ``catalogue.Option``
+    - ``communication.CommunicationEventType``
+    - ``communication.Email``
+    - ``customer.ProductAlert``
+    - ``offer.Range``
+    - ``order.OrderDiscount``
+    - ``order.OrderNote``
+    - ``payment.Source``
+    - ``payment.SourceType``
+    - ``voucher.VoucherSet``
+    - ``voucher.Voucher``
+    - ``voucher.VoucherApplication``
+
+- Database indexes were added to several model fields to improve query efficiency. Affected fields are:
+
+    - ``catalogue.Option.name``
+    - ``communication.CommunicationEventType.name``
+    - ``customer.ProductAlert.date_created``
+    - ``payment.SourceType.name``
+    - ``voucher.VoucherSet.date_created``
+    - ``voucher.Voucher.date_created``
+    - ``voucher.VoucherApplication.date_created``
 
 - Category slugs can now be edited via the dashboard.
 
@@ -109,11 +159,17 @@ Dependency changes
 
 Python package dependencies:
 
+- Upgraded ``django-tables2`` to version 2.3.
 
-Javascript dependencies:
+Javascript and CSS dependencies:
 
+- Upgraded ``bootstrap`` to version 4.5.3.
+- Added ``tempusdominus-bootstrap-4`` version 5.1, use for Bootstrap 4 datepicker inputs.
+- Upgraded ``tinymce`` to version 5.5.
 
-.. _deprecated_features_in_2.0:
+.. _deprecated_features_in_3.0:
 
 Deprecated features
 ~~~~~~~~~~~~~~~~~~~
+
+- The ``catalogue.Option.is_required`` is deprecated. Check ``Option.required`` instead.
