@@ -205,6 +205,17 @@ class TestThankYouView(CheckoutMixin, WebTestCase):
         self.assertIsRedirect(response)
         self.assertRedirectsTo(response, 'catalogue:index')
 
+    def tests_gets_a_302_when_the_order_id_in_the_session_is_for_a_non_existent_order(self):
+        session = self.client.session
+        # Put the order ID in the session, mimicking an order that no longer
+        # exists, so that we can be redirected to the home page.
+        session['checkout_order_id'] = 0
+        session.save()
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('checkout:thank-you'))
+        self.assertRedirects(response, reverse('catalogue:index'))
+
     def tests_custumers_can_reach_the_thank_you_page(self):
         self.add_product_to_basket()
         self.enter_shipping_address()
@@ -228,6 +239,21 @@ class TestThankYouView(CheckoutMixin, WebTestCase):
         test_url = '%s?order_id=%s' % (reverse('checkout:thank-you'), order.pk)
         response = self.get(test_url, status='*', user=user)
         self.assertIsOk(response)
+
+    def test_superusers_cannot_force_a_non_existent_order(self):
+        user = self.create_user('admin', 'admin@admin.com')
+        user.is_superuser = True
+        user.save()
+
+        test_url = '%s?order_number=%s' % (reverse('checkout:thank-you'), 'non-existent')
+        response = self.get(test_url, status='*', user=user)
+        self.assertIsRedirect(response)
+        self.assertRedirectsTo(response, 'catalogue:index')
+
+        test_url = '%s?order_id=%s' % (reverse('checkout:thank-you'), 0)
+        response = self.get(test_url, status='*', user=user)
+        self.assertIsRedirect(response)
+        self.assertRedirectsTo(response, 'catalogue:index')
 
     def test_users_cannot_force_an_other_customer_order(self):
         self.add_product_to_basket()

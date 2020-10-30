@@ -5,7 +5,7 @@ from oscar.test.testcases import WebTestCase
 
 
 class ThankYouViewTestCase(WebTestCase):
-    is_anonymous = False
+    is_anonymous = True
 
     def test_analytics_event_triggered_only_on_first_view(self):
         with self.settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
@@ -30,3 +30,14 @@ class ThankYouViewTestCase(WebTestCase):
             response = self.app.get(url)
             self.assertIsRedirect(response)
             self.assertRedirectsTo(response, 'catalogue:index')
+
+    def test_order_id_in_the_session_is_for_a_non_existent_order(self):
+        with self.settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
+            session = self.client.session
+            # Put the order ID in the session, mimicking an order that no longer
+            # exists, so that we can be redirected to the home page.
+            session['checkout_order_id'] = 0
+            session.save()
+
+            response = self.client.get(reverse('checkout:thank-you'))
+            self.assertRedirects(response, reverse('catalogue:index'))
