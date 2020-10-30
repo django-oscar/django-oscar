@@ -30,16 +30,12 @@
                     {% trans "Browse store" %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% category_tree depth=2 as tree_categories %}
+                    {% category_tree depth=1 as tree_categories %}
                     <a class="dropdown-item" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a>
                     {% if tree_categories %}
                         <div class="dropdown-divider"></div>
                         {% for tree_category in tree_categories %}
-                            {% if tree_category.has_children %}
-                                <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                            {% else %}
-                                <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                            {% endif %}
+                            <a class="dropdown-item" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
                         {% endfor %}
                     {% endif %}
                     <div class="dropdown-divider"></div>
