@@ -54,9 +54,11 @@ What's new in Oscar 3.0?
   administrators can now define a restricted set of other offers that offer can be used in combination with.
   This changes introduces a new ``combinations`` field on the ``Offer`` model which requires a database migration.
 
-- Report generator classes now can define ``model_class`` or ``queryset``, similar to Django class based views.
-  You can also override queryset in the ``get_queryset`` method. Filtering by date range is now properly applied
-  during CSV export as well.
+- The base ``ReportGenerator`` class has been refactored to make it easier to use. Subclasses must now define
+  either a ``model_class`` or ``queryset`` to indicate which model/queryset the report generator should use, or
+  alternatively override the ``get_queryset()`` method. Failure to do one of these will result in an exception.
+
+- Filtering by date range is now properly applied during CSV export of reports.
 
 - New fields ``meta_title`` and ``meta_description`` have been added to both the ``Product`` and ``Category`` models,
   which can be used to override the HTML title and meta description content for product and category pages. These
@@ -71,7 +73,7 @@ Backwards incompatible changes
   to rename this field.
 
 - The ``annotate_form_field`` template tag will now set the ``widget_type`` in `the format used by Django 3.1`_: so no longer
-  ``CheckboxField``, but just ``checkbox``.
+  ``CheckboxInput``, but just ``checkbox``.
 
 .. _`the format used by Django 3.1`: https://docs.djangoproject.com/en/3.1/ref/forms/api/#django.forms.BoundField.widget_type
 
@@ -117,7 +119,32 @@ Minor changes
 ~~~~~~~~~~~~~
 
 - Several models were updated to define a default ordering, to avoid issues with inconsistent ordering of
-  items in the dashboard and elsewhere. Database migrations are required for these changes.
+  items in the dashboard and elsewhere. Database migrations are required for these changes. Models affected are:
+
+    - ``analytics.UserProductView``
+    - ``analytics.UserSearch``
+    - ``catalogue.Option``
+    - ``communication.CommunicationEventType``
+    - ``communication.Email``
+    - ``customer.ProductAlert``
+    - ``offer.Range``
+    - ``order.OrderDiscount``
+    - ``order.OrderNote``
+    - ``payment.Source``
+    - ``payment.SourceType``
+    - ``voucher.VoucherSet``
+    - ``voucher.Voucher``
+    - ``voucher.VoucherApplication``
+
+- Database indexes were added to several model fields to improve query efficiency. Affected fields are:
+
+    - ``catalogue.Option.name``
+    - ``communication.CommunicationEventType.name``
+    - ``customer.ProductAlert.date_created``
+    - ``payment.SourceType.name``
+    - ``voucher.VoucherSet.date_created``
+    - ``voucher.Voucher.date_created``
+    - ``voucher.VoucherApplication.date_created``
 
 - Category slugs can now be edited via the dashboard.
 
