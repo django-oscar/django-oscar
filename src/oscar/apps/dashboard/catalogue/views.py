@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
-from oscar.core.loading import get_classes, get_model
+from oscar.core.decorators import deprecated
 from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
@@ -65,6 +65,7 @@ AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 Option = get_model('catalogue', 'Option')
 
 
+@deprecated
 def filter_products(queryset, user):
     """
     Restrict the queryset to products the given user has access to.
