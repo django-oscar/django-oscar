@@ -43,9 +43,6 @@ branches:
 
 env:
   global:
-    # $TRANSIFEX_PASSWORD - Transifex API key (used in transifex.sh)
-    - secure: fFOuN7cZxN74zVN6tkxwr9Kby4qxC0AxV+jvcT5HVaQ1sSl0L5SxRA7EzgCSTbkz3QjCVFrQfEvGflqTWCFqtF4ou2S9ip7Nhhs+TjsDqErhyAOodqwacp0DSzjlvPBx7AVyajdzV9iHtHrcLHyS9v5aaeCGQ4RXIqRntcM4l/c=
-
     # These two environment variables could be set by Travis itself, or Travis
     # could configure itself in /etc/, ~/, or inside of the virtual
     # environments. In any case if these two values get configured then end
