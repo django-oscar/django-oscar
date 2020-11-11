@@ -1,7 +1,10 @@
 from decimal import Decimal as D
 
+from django.test.client import RequestFactory
+from django.urls import reverse
 from django.utils.timezone import now
 
+from oscar.apps.basket.views import BasketView
 from oscar.apps.offer.applicator import Applicator
 from oscar.core.loading import get_class
 from oscar.test import factories
@@ -67,10 +70,30 @@ class TestUpsellMessages(WebTestCase):
             name='Test offer #3',
         )
 
+        # Prepare `BasketView` to use `get_upsell_messages` method in tests.
+        self.view = BasketView()
+        self.view.request = RequestFactory().get(reverse('basket:summary'))
+        self.view.request.user = factories.UserFactory()
+        self.view.args = []
+        self.view.kwargs = {}
+
     def add_product(self):
         self.basket.add_product(self.product)
         self.basket.strategy = Selector().strategy()
         Applicator().apply(self.basket)
+
+        self.assertBasketUpsellMessagesAreNotNone()
+
+    def assertBasketUpsellMessagesAreNotNone(self):
+        messages = self.view.get_upsell_messages(self.basket)
+        for message_data in messages:
+            # E.g. message data:
+            # {
+            #     'message': 'Buy 1 more product from All products',
+            #     'offer': <ConditionalOffer: Test offer #1>
+            # }.
+            self.assertIsNotNone(message_data['message'])
+            self.assertIsNotNone(message_data['offer'])
 
     def assertOffersApplied(self, offers):
         applied_offers = self.basket.applied_offers()
