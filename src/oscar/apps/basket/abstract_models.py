@@ -903,8 +903,8 @@ class AbstractLine(models.Model):
         if current_price_incl_tax != self.price_incl_tax:
             product_prices = {
                 'product': self.product.get_title(),
-                'old_price': currency(self.price_incl_tax),
-                'new_price': currency(current_price_incl_tax)
+                'old_price': currency(self.price_incl_tax, self.price_currency),
+                'new_price': currency(current_price_incl_tax, self.price_currency)
             }
             if current_price_incl_tax > self.price_incl_tax:
                 warning = _("The price of '%(product)s' has increased from"

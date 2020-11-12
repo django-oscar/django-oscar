@@ -214,13 +214,13 @@ class ValueCondition(Condition):
     @property
     def name(self):
         return self._description % {
-            'amount': currency(self.value),
+            'amount': currency(self.value, self.currency),
             'range': str(self.range).lower()}
 
     @property
     def description(self):
         return self._description % {
-            'amount': currency(self.value),
+            'amount': currency(self.value, self.currency),
             'range': range_anchor(self.range)}
 
     class Meta:
@@ -266,7 +266,7 @@ class ValueCondition(Condition):
     def get_upsell_message(self, offer, basket):
         value_of_matches = self._get_value_of_matches(offer, basket)
         return _('Spend %(value)s more from %(range)s') % {
-            'value': currency(self.value - value_of_matches),
+            'value': currency(self.value - value_of_matches, basket.currency),
             'range': self.range}
 
     def consume_items(self, offer, basket, affected_lines):
