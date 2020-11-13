@@ -66,6 +66,7 @@ class PercentageDiscountBenefit(Benefit):
         affected_items = 0
         max_affected_items = self._effective_max_affected_items()
         for price, line in line_tuples:
+            affected_items += line.quantity_with_offer_discount(offer)
             if affected_items >= max_affected_items:
                 break
             if discount_amount_available == 0:

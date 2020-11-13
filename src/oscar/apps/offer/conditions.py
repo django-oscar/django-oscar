@@ -47,7 +47,7 @@ class CountCondition(Condition):
         num_matches = 0
         for line in basket.all_lines():
             if self.can_apply_condition(line):
-                num_matches += line.quantity_without_offer_discount(None)
+                num_matches += line.quantity_without_offer_discount(offer)
             if num_matches >= self.value:
                 return True
         return False
