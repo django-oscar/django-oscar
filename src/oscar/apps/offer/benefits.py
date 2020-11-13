@@ -104,13 +104,13 @@ class AbsoluteDiscountBenefit(Benefit):
     @property
     def name(self):
         return self._description % {
-            'value': currency(self.value, self.currency),
+            'value': currency(self.value),
             'range': self.range.name.lower()}
 
     @property
     def description(self):
         return self._description % {
-            'value': currency(self.value, self.currency),
+            'value': currency(self.value),
             'range': range_anchor(self.range)}
 
     class Meta:
@@ -193,7 +193,7 @@ class FixedPriceBenefit(Benefit):
     @property
     def name(self):
         return self._description % {
-            'amount': currency(self.value, self.currency)}
+            'amount': currency(self.value)}
 
     class Meta:
         app_label = 'offer'
@@ -308,7 +308,7 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
     @property
     def name(self):
         return self._description % {
-            'amount': currency(self.value, self.currency)}
+            'amount': currency(self.value)}
 
     class Meta:
         app_label = 'offer'
@@ -326,7 +326,7 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
     @property
     def name(self):
         return self._description % {
-            'amount': currency(self.value, self.currency)}
+            'amount': currency(self.value)}
 
     class Meta:
         app_label = 'offer'

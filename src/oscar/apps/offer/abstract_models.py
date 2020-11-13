@@ -18,7 +18,7 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import (
     cached_import_string, get_class, get_classes, get_model)
 from oscar.models import fields
-from oscar.templatetags.currency_filters import currency as format_currency
+from oscar.templatetags.currency_filters import currency
 
 ActiveOfferManager, RangeManager, BrowsableRangeManager \
     = get_classes('offer.managers', ['ActiveOfferManager', 'RangeManager', 'BrowsableRangeManager'])
@@ -27,14 +27,8 @@ load_proxy, unit_price = get_classes('offer.utils', ['load_proxy', 'unit_price']
 
 
 class BaseOfferMixin(models.Model):
-    basket = None
-
     class Meta:
         abstract = True
-
-    @property
-    def currency(self):
-        return self.basket.currency if self.basket else None
 
     def proxy(self):
         """
@@ -256,10 +250,6 @@ class AbstractConditionalOffer(models.Model):
                 _('End date should be later than start date'))
 
     @property
-    def currency(self):
-        return self.benefit.currency or self.condition.currency
-
-    @property
     def is_open(self):
         return self.status == self.OPEN
 
@@ -437,7 +427,7 @@ class AbstractConditionalOffer(models.Model):
 
         if self.max_discount:
             desc = _("Limited to a cost of %(max)s") % {
-                'max': format_currency(self.max_discount, self.currency)}
+                'max': currency(self.max_discount)}
             restrictions.append({
                 'description': desc,
                 'is_satisfied': self.total_discount < self.max_discount})

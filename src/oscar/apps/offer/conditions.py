@@ -214,13 +214,13 @@ class ValueCondition(Condition):
     @property
     def name(self):
         return self._description % {
-            'amount': currency(self.value, self.currency),
+            'amount': currency(self.value),
             'range': str(self.range).lower()}
 
     @property
     def description(self):
         return self._description % {
-            'amount': currency(self.value, self.currency),
+            'amount': currency(self.value),
             'range': range_anchor(self.range)}
 
     class Meta:
