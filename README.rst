@@ -74,7 +74,7 @@ Docs status:
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
-.. _`Slack`: https://slack.oscarcommerce.com/
+.. _`Slack`: https://django-oscar.slack.com
 
 Core team:
 
