@@ -630,14 +630,14 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         if errors:
             raise exceptions.ValidationError(errors)
 
-    def round(self, amount):
+    def round(self, amount, currency=None):
         """
         Apply rounding to discount amount
         """
         rounding_function_path = getattr(settings, 'OSCAR_OFFER_ROUNDING_FUNCTION', None)
         if rounding_function_path:
             rounding_function = cached_import_string(rounding_function_path)
-            return rounding_function(amount)
+            return rounding_function(amount, currency)
 
         return amount.quantize(D('.01'), ROUND_DOWN)
 
