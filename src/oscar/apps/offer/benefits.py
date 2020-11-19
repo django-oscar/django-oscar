@@ -80,7 +80,7 @@ class PercentageDiscountBenefit(Benefit):
                 break
 
             line_discount = self.round(discount_percent / D('100.0') * price
-                                       * int(quantity_affected))
+                                       * int(quantity_affected), basket.currency)
 
             if discount_amount_available is not None:
                 line_discount = min(line_discount, discount_amount_available)
@@ -168,7 +168,7 @@ class AbsoluteDiscountBenefit(Benefit):
             else:
                 # Calculate a weighted discount for the line
                 line_discount = self.round(
-                    ((price * qty) / affected_items_total) * discount)
+                    ((price * qty) / affected_items_total) * discount, basket.currency)
             apply_discount(line, line_discount, qty, offer)
             affected_lines.append((line, line_discount, qty))
             applied_discount += line_discount
@@ -243,7 +243,7 @@ class FixedPriceBenefit(Benefit):
                 line_discount = discount - discount_applied
             else:
                 line_discount = self.round(
-                    discount * (price * quantity) / value_affected)
+                    discount * (price * quantity) / value_affected, basket.currency)
             apply_discount(line, line_discount, quantity, offer)
             discount_applied += line_discount
         return BasketDiscount(discount)
