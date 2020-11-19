@@ -772,6 +772,9 @@ class AbstractLine(models.Model):
     def is_available_for_offer_discount(self, offer):
         return self.consumer.available(offer) > 0
 
+    def quantity_available_for_offer(self, offer):
+        return self.quantity_without_offer_discount(offer) + self.quantity_with_offer_discount(offer)
+
     # ==========
     # Properties
     # ==========

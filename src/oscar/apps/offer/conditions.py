@@ -57,9 +57,8 @@ class CountCondition(Condition):
             return getattr(self, '_num_matches')
         num_matches = 0
         for line in basket.all_lines():
-            if (self.can_apply_condition(line)
-                    and line.quantity_without_offer_discount(offer) > 0):
-                num_matches += line.quantity_without_offer_discount(offer)
+            if self.can_apply_condition(line):
+                num_matches += line.quantity_available_for_offer(offer)
         self._num_matches = num_matches
         return num_matches
 
@@ -70,9 +69,12 @@ class CountCondition(Condition):
     def get_upsell_message(self, offer, basket):
         num_matches = self._get_num_matches(basket, offer)
         delta = self.value - num_matches
-        return ngettext('Buy %(delta)d more product from %(range)s',
-                        'Buy %(delta)d more products from %(range)s', delta) \
-            % {'delta': delta, 'range': self.range}
+        if delta > 0:
+            return ngettext(
+                'Buy %(delta)d more product from %(range)s',
+                'Buy %(delta)d more products from %(range)s',
+                delta
+            ) % {'delta': delta, 'range': self.range}
 
     def consume_items(self, offer, basket, affected_lines):
         """
@@ -142,21 +144,21 @@ class CoverageCondition(Condition):
         return False
 
     def _get_num_covered_products(self, basket, offer):
-        covered_ids = []
+        covered_ids = set()
         for line in basket.all_lines():
-            if not line.is_available_for_offer_discount(offer):
-                continue
             product = line.product
-            if (self.can_apply_condition(line) and product.id not in
-                    covered_ids):
-                covered_ids.append(product.id)
+            if self.can_apply_condition(line) and line.quantity_available_for_offer(offer) > 0:
+                covered_ids.add(product.id)
         return len(covered_ids)
 
     def get_upsell_message(self, offer, basket):
         delta = self.value - self._get_num_covered_products(basket, offer)
-        return ngettext('Buy %(delta)d more product from %(range)s',
-                        'Buy %(delta)d more products from %(range)s', delta) \
-            % {'delta': delta, 'range': self.range}
+        if delta > 0:
+            return ngettext(
+                'Buy %(delta)d more product from %(range)s',
+                'Buy %(delta)d more products from %(range)s',
+                delta
+            ) % {'delta': delta, 'range': self.range}
 
     def is_partially_satisfied(self, offer, basket):
         return 0 < self._get_num_covered_products(basket, offer) < self.value
@@ -250,12 +252,9 @@ class ValueCondition(Condition):
             return getattr(self, '_value_of_matches')
         value_of_matches = D('0.00')
         for line in basket.all_lines():
-            if (self.can_apply_condition(line)
-                    and line.quantity_without_offer_discount(offer) > 0):
+            if self.can_apply_condition(line):
                 price = unit_price(offer, line)
-                value_of_matches += price * int(
-                    line.quantity_without_offer_discount(offer)
-                )
+                value_of_matches += price * int(line.quantity_available_for_offer(offer))
         self._value_of_matches = value_of_matches
         return value_of_matches
 
@@ -265,9 +264,12 @@ class ValueCondition(Condition):
 
     def get_upsell_message(self, offer, basket):
         value_of_matches = self._get_value_of_matches(offer, basket)
-        return _('Spend %(value)s more from %(range)s') % {
-            'value': currency(self.value - value_of_matches, basket.currency),
-            'range': self.range}
+        delta = self.value - value_of_matches
+        if delta > 0:
+            return _('Spend %(value)s more from %(range)s') % {
+                'value': currency(delta, basket.currency),
+                'range': self.range,
+            }
 
     def consume_items(self, offer, basket, affected_lines):
         """
