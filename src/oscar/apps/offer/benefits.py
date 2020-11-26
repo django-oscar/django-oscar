@@ -316,7 +316,7 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
         verbose_name = _("Shipping absolute discount benefit")
         verbose_name_plural = _("Shipping absolute discount benefits")
 
-    def shipping_discount(self, charge):
+    def shipping_discount(self, charge, currency=None):
         return min(charge, self.value)
 
 
@@ -334,7 +334,7 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
         verbose_name = _("Fixed price shipping benefit")
         verbose_name_plural = _("Fixed price shipping benefits")
 
-    def shipping_discount(self, charge):
+    def shipping_discount(self, charge, currency=None):
         if charge < self.value:
             return D('0.00')
         return charge - self.value
@@ -354,6 +354,6 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
         verbose_name = _("Shipping percentage discount benefit")
         verbose_name_plural = _("Shipping percentage discount benefits")
 
-    def shipping_discount(self, charge):
+    def shipping_discount(self, charge, currency=None):
         discount = charge * self.value / D('100.0')
         return discount.quantize(D('0.01'))

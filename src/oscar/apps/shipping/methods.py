@@ -151,7 +151,7 @@ class TaxExclusiveOfferDiscount(OfferDiscount):
 
     def calculate(self, basket):
         base_charge = self.method.calculate(basket)
-        discount = self.offer.shipping_discount(base_charge.excl_tax)
+        discount = self.offer.shipping_discount(base_charge.excl_tax, base_charge.currency)
         excl_tax = base_charge.excl_tax - discount
         return prices.Price(
             currency=base_charge.currency,
@@ -159,7 +159,7 @@ class TaxExclusiveOfferDiscount(OfferDiscount):
 
     def discount(self, basket):
         base_charge = self.method.calculate(basket)
-        return self.offer.shipping_discount(base_charge.excl_tax)
+        return self.offer.shipping_discount(base_charge.excl_tax, base_charge.currency)
 
 
 class TaxInclusiveOfferDiscount(OfferDiscount):
@@ -169,7 +169,7 @@ class TaxInclusiveOfferDiscount(OfferDiscount):
 
     def calculate(self, basket):
         base_charge = self.method.calculate(basket)
-        discount = self.offer.shipping_discount(base_charge.incl_tax)
+        discount = self.offer.shipping_discount(base_charge.incl_tax, base_charge.currency)
         incl_tax = base_charge.incl_tax - discount
         excl_tax = self.calculate_excl_tax(base_charge, incl_tax)
         return prices.Price(
@@ -190,4 +190,4 @@ class TaxInclusiveOfferDiscount(OfferDiscount):
 
     def discount(self, basket):
         base_charge = self.method.calculate(basket)
-        return self.offer.shipping_discount(base_charge.incl_tax)
+        return self.offer.shipping_discount(base_charge.incl_tax, base_charge.currency)

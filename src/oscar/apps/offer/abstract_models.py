@@ -343,8 +343,8 @@ class AbstractConditionalOffer(models.Model):
             .aggregate(total=models.Sum('frequency'))
         return aggregates['total'] if aggregates['total'] is not None else 0
 
-    def shipping_discount(self, charge):
-        return self.benefit.proxy().shipping_discount(charge)
+    def shipping_discount(self, charge, currency=None):
+        return self.benefit.proxy().shipping_discount(charge, currency)
 
     def record_usage(self, discount):
         self.num_applications += discount['freq']
@@ -680,7 +680,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         # We sort lines to be cheapest first to ensure consistent applications
         return sorted(line_tuples, key=operator.itemgetter(0))
 
-    def shipping_discount(self, charge):
+    def shipping_discount(self, charge, currency=None):
         return D('0.00')
 
 
