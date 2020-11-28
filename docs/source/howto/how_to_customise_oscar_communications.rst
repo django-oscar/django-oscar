@@ -40,7 +40,7 @@ What's happening here is:
 So, your first step when customising the emails sent out is to work out what
 communication type code is being used to send out the email. The easiest way to
 work this out is usually to look through  the email templates in
-``templates/oscar/communications/emails``: if the email template is called, say,
+``templates/oscar/communication/emails``: if the email template is called, say,
 ``commtype_order_placed_body.html``, then the code will be ``'ORDER_PLACED'``.
 See 'Customising through code' below.
 
