@@ -40,7 +40,7 @@ What's happening here is:
 So, your first step when customising the emails sent out is to work out what
 communication type code is being used to send out the email. The easiest way to
 work this out is usually to look through  the email templates in
-``templates/oscar/customer/emails``: if the email template is called, say,
+``templates/oscar/communications/emails``: if the email template is called, say,
 ``commtype_order_placed_body.html``, then the code will be ``'ORDER_PLACED'``.
 See 'Customising through code' below.
 
@@ -50,11 +50,11 @@ Customising through code
 Customising emails through code uses Django's standard template inheritance.
 
 The first step is to locate the template for the particular email, which is
-usually in templates/oscar/customer/emails.  Then, in a template directory that
+usually in templates/oscar/communication/emails.  Then, in a template directory that
 takes precedence over the oscar templates directory, copy the file and customise
 it.  For example, to override the
-``templates/oscar/customer/emails/commtype_order_placed_body.html`` template,
-create the file ``customer/emails/commtype_order_placed_body.html`` in your
+``templates/oscar/communication/emails/commtype_order_placed_body.html`` template,
+create the file ``communication/emails/commtype_order_placed_body.html`` in your
 template directory.
 
 Note that usually emails have three template files associated with them: the
