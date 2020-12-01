@@ -3,7 +3,7 @@
 # development
 Werkzeug>=1.0,<1.1
 django-debug-toolbar>=2.2,<3.2
-django-extensions>=2.2,<3.1
+django-extensions>=2.2,<3.2
 psycopg2-binary>=2.8,<2.9
 
 # Sandbox
