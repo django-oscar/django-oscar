@@ -1,0 +1,145 @@
+body {
+  background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 $white;
+}
+
+// TYPES CHANGES
+// -------------
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: $line-height-base / 2;
+  margin-top: 0;
+  font-weight: normal;
+}
+
+h3.app-ico:before {
+  display: none;
+}
+
+.breadcrumb {
+  margin-top: ($spacer * 1.25);
+}
+
+.page-header {
+  padding: 0 0 10px 0;
+  margin: 20px 0 0 0;
+}
+
+.content-block {
+  border: 1px solid $gray-400;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: $white;
+}
+
+.tabbable.dashboard {
+  margin-bottom: $paragraph-margin-bottom;
+
+  .tab-content {
+    border: 1px solid $gray-200;
+    border-top-width: 0;
+    padding: 30px;
+    background: $white;
+  }
+}
+
+
+// CARDS
+// -----
+.card.card-body {
+  margin-bottom: 1rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+
+// SIDE NAV CREATE PAGES
+// ---------------------
+.bs-docs-sidenav {
+  background-color: $white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
+}
+
+.bs-docs-sidenav .nav-link {
+  padding: 8px 14px;
+  border: 1px solid $gray-200;
+  border-top-width: 0;
+  color: $link-color;
+
+  &:hover {
+    background: $gray-200;
+  }
+
+  i.fas, i.far {
+    color: $red;
+    font-size: 16px;
+  }
+}
+
+.bs-docs-sidenav .nav-link.active {
+  font-weight: bold;
+  position: relative;
+  background: $gray-200;
+  z-index: 2;
+  padding: 9px 15px;
+
+  &:after {
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid $gray-200;
+    border-top: 10px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -9px;
+    top: 9px;
+  }
+
+  &:before {
+    border-bottom: 11px solid transparent;
+    border-left: 11px solid $gray-400;
+    border-top: 11px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -10px;
+    top: 8px;
+  }
+}
+
+
+// Select2
+// -------
+// Needed to make Select2 fields look similar to Bootstrap 4 fields
+.select2-container {
+  .select2-selection--single {
+    height: $select2-height !important;
+    outline: none;
+  }
+}
+
+.select2-container--default .select2-selection--single {
+  border: 1px solid $gray-400 !important;
+
+  .select2-selection__rendered {
+    line-height: $select2-height !important;
+  }
+
+  .select2-selection__arrow {
+    height: $select2-height !important;
+  }
+}
+
+
+// RESPONSIVE
+// ----------
+@media (max-width: 1300px) {
+  .navbar-primary .nav {
+    > li a:before {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 979px) {
+  .tab-nav {
+    margin-bottom: $paragraph-margin-bottom;
+  }
+}

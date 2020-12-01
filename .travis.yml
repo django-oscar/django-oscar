@@ -10,8 +10,6 @@ addons:
 matrix:
   fast_finish: true
   include:
-    - python: 3.5
-      env: TOXENV=py35-django22
     - python: 3.6
       env: TOXENV=py36-django22
     - python: 3.7
@@ -24,6 +22,12 @@ matrix:
       env: TOXENV=py37-django30
     - python: 3.8
       env: TOXENV=py38-django30
+    - python: 3.6
+      env: TOXENV=py36-django31
+    - python: 3.7
+      env: TOXENV=py37-django31
+    - python: 3.8
+      env: TOXENV=py38-django31
 
     - python: 3.7
       env: TOXENV=lint
@@ -39,9 +43,6 @@ branches:
 
 env:
   global:
-    # $TRANSIFEX_PASSWORD - Transifex API key (used in transifex.sh)
-    - secure: fFOuN7cZxN74zVN6tkxwr9Kby4qxC0AxV+jvcT5HVaQ1sSl0L5SxRA7EzgCSTbkz3QjCVFrQfEvGflqTWCFqtF4ou2S9ip7Nhhs+TjsDqErhyAOodqwacp0DSzjlvPBx7AVyajdzV9iHtHrcLHyS9v5aaeCGQ4RXIqRntcM4l/c=
-
     # These two environment variables could be set by Travis itself, or Travis
     # could configure itself in /etc/, ~/, or inside of the virtual
     # environments. In any case if these two values get configured then end

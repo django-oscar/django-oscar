@@ -9,35 +9,39 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li class="active">{% trans "Pages" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Pages" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:page-create' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new page" %}</a>
+        <a href="{% url 'dashboard:page-create' %}" class="btn btn-primary float-right">
+            <i class="fas fa-plus-circle"></i> {% trans "Create new page" %}
+        </a>
         <h1>{% trans "Pages" %}</h1>
     </div>
 {% endblock header %}
 
 {% block dashboard_content %}
     <div class="table-header">
-        <h3><i class="icon-search icon-large"></i>{% trans "Search" %}</h3>
+        <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
     </div>
-    <div class="well">
+    <div class="card card-body">
         <form method="get" class="form-inline">
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
-            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
-            <a href="{% url 'dashboard:page-list' %}" class="btn btn-default">{% trans "Reset" %}</a>
+            <button type="submit" class="btn btn-primary mr-2" data-loading-text="{% trans 'Searching...' %}">
+                {% trans "Search" %}
+            </button>
+            <a href="{% url 'dashboard:page-list' %}" class="btn btn-secondary">{% trans "Reset" %}</a>
         </form>
     </div>
 
     <div class="table-header">
-        <h2><i class="icon-file icon-large"></i>{{ queryset_description }}</h2>
+        <h2><i class="fas fa-file"></i> {{ queryset_description }}</h2>
     </div>
 
 
@@ -59,16 +63,15 @@
                             <td><a title="{% trans "View on site" %}" href="{{ page.get_absolute_url }}">{{ page.url }}</a></td>
                             <td>
                                 <div class="btn-toolbar">
-                                    <div class="btn-group">
-                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             {% trans "Actions" %}
-                                            <span class="caret"></span>
                                         </button>
-                                        <ul class="dropdown-menu pull-right">
-                                            <li><a href="{{ page.get_absolute_url }}">{% trans "View" %}</a></li>
-                                            <li><a id="edit_page_{{ page.id }}" href="{% url 'dashboard:page-update' pk=page.id %}">{% trans "Edit" %}</a></li>
-                                            <li><a id="delete_page_{{ page.id }}" href="{% url 'dashboard:page-delete' pk=page.id %}">{% trans "Delete" %}</a></li>
-                                        </ul>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="{{ page.get_absolute_url }}">{% trans "View" %}</a>
+                                            <a class="dropdown-item" id="edit_page_{{ page.id }}" href="{% url 'dashboard:page-update' pk=page.id %}">{% trans "Edit" %}</a>
+                                            <a class="dropdown-item" id="delete_page_{{ page.id }}" href="{% url 'dashboard:page-delete' pk=page.id %}">{% trans "Delete" %}</a>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -85,8 +88,3 @@
     {% endif %}
 
 {% endblock dashboard_content %}
-
-{% block onbodyload %}
-    {{ block.super }}
-    oscar.dashboard.search.init();
-{% endblock onbodyload %}

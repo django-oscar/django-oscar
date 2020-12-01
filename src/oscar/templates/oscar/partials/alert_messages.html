@@ -11,27 +11,27 @@ Use message tags to control these alerts.  Available tags include:
 <div id="messages">
 {% if messages %}
     {% for message in messages %}
-    <div class="alert {% for tag in message.tags|split %}alert-{% if tag == 'error' %}danger{% else %}{{ tag }}{% endif %} {% endfor %} fade in">
+    <div class="alert alert-dismissible {% for tag in message.tags|split %}alert-{% if tag == 'error' %}danger{% else %}{{ tag }}{% endif %} {% endfor %} fade show">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             <div class="alertinner {% if 'noicon' not in message.tags %}wicon{% endif %}">
+                {% if 'noicon' not in message.tags %}
+                    {# Include an icon by default #}
+                    {% if 'success' in message.tags %}
+                        <i class="fas fa-check-circle"></i>
+                    {% elif 'info' in message.tags %}
+                        <i class="fas fa-info-circle"></i>
+                    {% elif 'warning' in message.tags %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                    {% elif 'danger' in message.tags or 'error' in message.tags %}
+                        <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}
+                {% endif %}
+
                 {# Allow HTML to be embedded in messages #}
                 {% if 'safe' in message.tags %}
                     {{ message|safe }}
                 {% else %}
                     {{ message }}
-                {% endif %}
-
-                {% if 'noicon' not in message.tags %}
-                    {# Include an icon by default #}
-                    {% if 'success' in message.tags %}
-                        <i class="icon-ok-sign"></i>
-                    {% elif 'info' in message.tags %}
-                        <i class="icon-info-sign"></i>
-                    {% elif 'warning' in message.tags %}
-                        <i class="icon-warning-sign"></i>
-                    {% elif 'danger' in message.tags or 'error' in message.tags %}
-                        <i class="icon-exclamation-sign"></i>
-                    {% endif %}
                 {% endif %}
             </div>
         </div>

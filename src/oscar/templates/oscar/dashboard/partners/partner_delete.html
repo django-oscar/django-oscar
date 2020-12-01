@@ -8,18 +8,14 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{{ partner.name }}</a>
-        </li>
-        <li class="active">{% trans "Delete?" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{{ partner.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Delete?" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -31,7 +27,7 @@
         {% csrf_token %}
         <p>{% trans "Are you sure you want to delete this partner?" %}</p>
         <div class="form-actions">
-            <button class="btn btn-lg btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+            <button class="btn btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
             <a href="{% url 'dashboard:partner-list' %}">{% trans "cancel" %}</a>
         </div>
     </form>

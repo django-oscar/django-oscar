@@ -27,7 +27,7 @@
                     <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>
-                        <a class="btn btn-info" href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "View" %}</a>
+                        <a class="btn btn-secondary" href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "View" %}</a>
                     </td>
                 </tr>
             {% endfor %}

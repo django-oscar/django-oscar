@@ -6,19 +6,14 @@
 {% load static %}
 
 {% block styles %}
-    {% if use_less %}
-        <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/dashboard.less" %}" />
-    {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
 {% endblock %}
 
 {% block extrastyles %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static "oscar/js/select2/select2.min.css" %}" />
     <link rel="stylesheet" href="{% static "oscar/css/select2-bootstrap.min.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/css/datetimepicker.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/js/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css" %}" />
 {% endblock %}
 
 {% block title %}
@@ -27,87 +22,85 @@
 
 {% block layout %}
     {% block navbar %}
-    <nav class="navbar navbar-static-top navbar-inverse navbar-accounts">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-accounts">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="navbar-brand">{{ shop_name }}</span>
-            </div>
-            <div class="collapse navbar-collapse nav-accounts">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><span>{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span></li>
-                    <li><a href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
-                    <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-                    <li><a href="{% url 'dashboard:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-accounts">
+            <a class="navbar-brand" href="#">{{ shop_name }}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top_nav_bar" aria-controls="top_nav_bar" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="top_nav_bar">
+                <ul class="navbar-nav mr-auto"></ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">
+                            {% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ homepage_url }}"><i class="fas fa-home"></i> {% trans "Return to site" %}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customer:summary' %}"><i class="fas fa-user"></i> {% trans "Account" %}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard:logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans "Log out" %}</a>
+                  </li>
                 </ul>
-            </div>
-        </div><!-- /navbar-inner -->
-    </nav><!-- /navbar -->
+          </div>
+        </nav>
     {% endblock navbar %}
 
     {% block dashboard_nav %}
         {% dashboard_navigation user as nav_items %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-primary">
+            <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#bottom_nav_bar" aria-controls="bottom_nav_bar" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
 
-        <nav class="navbar navbar-static-top navbar-inverse navbar-primary">
-            <div class="container-fluid dashboard">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-
-                <div class="collapse navbar-collapse nav-primary">
-                    <ul class="nav navbar-nav dashboard">
-                        {% for item in nav_items %}
-                        <li class="dropdown">
-                            {% if item.is_heading %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }} <b class="caret"></b>
-                            </a>
-                            {% else %}
-                            <a href="{{ item.url }}">
+            <div class="collapse navbar-collapse" id="bottom_nav_bar">
+                <ul class="navbar-nav">
+                    {% for item in nav_items %}
+                        <li class="nav-item {% if item.has_children %}dropdown{% endif %}">
+                            <a class="nav-link {% if item.has_children %}dropdown-toggle{% endif %}"
+                               href="{% if item.is_heading %}#{% else %}{{ item.url }}{% endif %}"
+                               {% if item.has_children %}id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
+                            >
                                 {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
                                 {{ item.label }}
                             </a>
-                            {% endif %}
+
                             {% if item.has_children %}
-                            <ul class="dropdown-menu">
-                                {% for subitem in item.children %}
-                                <li>
-                                    <a href="{{ subitem.url }}">
-                                    {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
-                                    {{ subitem.label }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    {% for subitem in item.children %}
+                                        <a class="dropdown-item" href="{{ subitem.url }}">
+                                            {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
+                                            {{ subitem.label }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
                             {% endif %}
                         </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                    {% endfor %}
+                </ul>
             </div>
         </nav>
     {% endblock %}
 
-    <div class="container-fluid dashboard">
+    <div class="container-fluid">
         {% block breadcrumbs %}
-        <ul class="breadcrumb">
-            <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
-        </ul>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+                    </li>
+                </ol>
+            </nav>
         {% endblock %}
 
         <div class="content">
             {% include 'oscar/dashboard/partials/alert_messages.html' %}
             {% block header %}
-            <div class="page-header action">
+            <div class="page-header">
                 <h1>{% block headertext %}{% endblock %}</h1>
             </div>
             {% endblock %}
@@ -121,18 +114,10 @@
 
 {% endblock %}
 
-{% block cdn_scripts %}
-  {{ block.super }}
-  {% if use_less and debug %}
-    {# Load the on-the-fly less compiler. Never do this in production. #}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
-  {% endif %}
-{% endblock %}
-
 {# Local scripts #}
 {% block scripts %}
     <!-- Twitter Bootstrap -->
-    <script src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4/bootstrap.bundle.js" %}"></script>
     <!-- Oscar -->
     <script src="{% static "oscar/js/oscar/ui.js" %}"></script>
 {% endblock %}
@@ -142,8 +127,8 @@
 
     {# jQuery plugins #}
     <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.js" %}"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" %}"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4-datetimepicker/moment-with-locales.min.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.js" %}"></script>
     <script src="{% static "oscar/js/inputmask/jquery.inputmask.min.js" %}"></script>
     <script src="{% static "oscar/js/select2/select2.min.js" %}"></script>
     <script src="{% static "oscar/js/jquery-sortable/jquery-sortable-min.js" %}"></script>

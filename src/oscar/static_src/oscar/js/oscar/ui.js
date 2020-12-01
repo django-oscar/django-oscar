@@ -4,7 +4,7 @@ var oscar = (function(o, $) {
     // Replicate Django's flash messages so they can be used by AJAX callbacks.
     o.messages = {
         addMessage: function(tag, msg) {
-            var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+            var msgHTML = '<div class="alert alert-dismissible fade show alert-' + tag + '">' +
                 '<a href="#" class="close" data-dismiss="alert">&times;</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
@@ -66,14 +66,22 @@ var oscar = (function(o, $) {
             $('form[data-behaviours~="lock"]').submit(o.forms.submitIfNotLocked);
 
             // Disable buttons when they are clicked and show a "loading" message taken from the
-            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
+            // data-loading-text attribute.
             // Do not disable if button is inside a form with invalid fields.
             // This uses a delegated event so that it keeps working for forms that are reloaded
             // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
-            $(document.body).on('submit', 'form', function(){
-                var form = $(this);
-                if ($(":invalid", form).length == 0)
-                    $(this).find('button[data-loading-text]').button('loading');
+            $(document.body).on('click', '[data-loading-text]', function(){
+                var $btn_or_input = $(this),
+                    form = $btn_or_input.parents("form");
+                if (!form || $(":invalid", form).length == 0) {
+                    var d = 'disabled',
+                        val = $btn_or_input.is('input') ? 'val' : 'html';
+                    // push to event loop so as not to delay form submission
+                    setTimeout(function() {
+                        $btn_or_input[val]($btn_or_input.data('loading-text'));
+                        $btn_or_input.addClass(d).attr(d, d).prop(d, true);
+                    });
+                }
             });
             // stuff for star rating on review page
             // show clickable stars instead of a select dropdown for product rating
@@ -267,18 +275,32 @@ var oscar = (function(o, $) {
         },
         options: {
             'languageCode': 'en',
-            'dateFormat': 'yy-mm-dd',
-            'timeFormat': 'hh:ii',
-            'datetimeFormat': 'yy-mm-dd hh:ii',
+            'dateFormat': 'DD/MM/YYYY',
+            'timeFormat': 'HH:mm',
+            'datetimeFormat': 'DD/MM/YYYY HH:mm',
             'stepMinute': 15,
+            'datetimePickerConfig': {
+                icons: {
+                    time: 'fas fa-clock',
+                    date: 'fas fa-calendar',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down',
+                    previous: 'fas fa-chevron-left',
+                    next: 'fas fa-chevron-right',
+                    today: 'fas fa-calendar-check-o',
+                    clear: 'fas fa-trash',
+                    close: 'fas fa-times'
+                }
+            },
         },
         initDatePickers: function(el) {
             if ($.fn.datetimepicker) {
+                $.fn.datetimepicker.Constructor.Default = $.extend(
+                    {}, $.fn.datetimepicker.Constructor.Default, o.datetimepickers.options.datetimePickerConfig
+                );
+
                 var defaultDatepickerConfig = {
                     'format': o.datetimepickers.options.dateFormat,
-                    'autoclose': true,
-                    'language': o.datetimepickers.options.languageCode,
-                    'minView': 2
                 };
                 var $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *');
                 $dates.each(function(ind, ele) {
@@ -291,35 +313,29 @@ var oscar = (function(o, $) {
 
                 var defaultDatetimepickerConfig = {
                     'format': o.datetimepickers.options.datetimeFormat,
-                    'minuteStep': o.datetimepickers.options.stepMinute,
-                    'autoclose': true,
-                    'language': o.datetimepickers.options.languageCode
+                    'stepping': o.datetimepickers.options.stepMinute,
                 };
                 var $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
                 $datetimes.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
                             'format': $ele.data('datetimeformat'),
-                            'minuteStep': $ele.data('stepminute')
+                            'stepping': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
                 });
 
                 var defaultTimepickerConfig = {
                     'format': o.datetimepickers.options.timeFormat,
-                    'minuteStep': o.datetimepickers.options.stepMinute,
-                    'autoclose': true,
-                    'language': o.datetimepickers.options.languageCode
+                    'stepping': o.datetimepickers.options.stepMinute,
+                    'viewMode': 'times'
                 };
                 var $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *');
                 $times.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
                             'format': $ele.data('timeformat'),
-                            'minuteStep': $ele.data('stepminute'),
-                            'startView': 1,
-                            'maxView': 1,
-                            'formatViewType': 'time'
+                            'stepping': $ele.data('stepminute'),
                         });
                     $ele.datetimepicker(config);
                 });

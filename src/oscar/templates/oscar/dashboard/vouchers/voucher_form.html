@@ -9,27 +9,23 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
-        </li>
-        {% if voucher %}
-        <li>
-            <a href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">{{ voucher }}</a>
-        </li>
-    {% endif %}
-    <li class="active">{% trans "Edit" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a></li>
+            {% if voucher %}
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">{{ voucher }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
     <div class="table-header">
-        <h2><i class="icon-money icon-large"></i>
+        <h2><i class="fas fa-money-bill"></i>
             {% if voucher %}
                 {% trans "Edit voucher" %}
             {% else %}
@@ -37,12 +33,12 @@
             {% endif %}
         </h2>
     </div>
-    <form method="post" class="well form-stacked">
+    <form method="post" class="card card-body form-stacked">
         {% csrf_token %}
         {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
         {% block form_actions %}
             <div class="form-actions">
-                <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
+                <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
                 <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
             </div>
         {% endblock form_actions %}

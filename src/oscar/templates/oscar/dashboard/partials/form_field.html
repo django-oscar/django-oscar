@@ -6,34 +6,31 @@
 {% else %}
     {% comment %}
         Make the field widget type available to templates so we can mark-up
-        checkboxes differently to other widgets.
+        checkbox and radio inputs differently to other widgets.
     {% endcomment %}
     {% annotate_form_field field %}
 
     {% block control_group %}
-        <div class="form-group {% if field.errors %}error{% endif %}">
+        <div class="form-group{% if style == 'horizontal' %} row{% endif %}{% if field.errors %} error{% endif %}">
 
             {% block label %}
-                {% if not nolabel and field.widget_type != 'CheckboxInput' %}
-                    <label for="{{ field.auto_id }}" class="{% if style|default:"stacked" != 'stacked' %}col-sm-4{% endif%} control-label{% if field.field.required %} required{% endif %}">
+                {% if not nolabel and field.widget_type != 'checkbox' %}
+                    <label for="{{ field.auto_id }}" class="{% if style|default:"stacked" != 'stacked' %}col-sm-4{% endif %} col-form-label{% if field.field.required %} required{% endif %}">
                         {{ field.label|safe }}
-                        {% if field.field.required %} <span>*</span>{% endif %}
                     </label>
                 {% endif %}
             {% endblock %}
 
             {% block controls %}
-                <div class="{% if style|default:"stacked" != 'stacked' %}col-sm-8{% endif %}{% if field.widget_type == 'CheckboxInput' %} checkbox{% endif %}">
+                <div class="{% if style|default:"stacked" != 'stacked' %}col-sm-8{% endif %}{% if field.widget_type == 'checkbox' or field.widget_type == 'radioselect' %} form-check{% endif %}">
                     {% block widget %}
-                        {% if field.widget_type == 'CheckboxInput' %}
-                            <label for="{{ field.auto_id }}" class="checkbox {% if field.field.required %}required{% endif %}">
-                                {% render_field field %}
-                                {{ field.label|safe }}{% if field.field.required %} <span>*</span>{% endif %}
+                        {% if field.widget_type == 'checkbox' %}
+                            {% render_field field class+="form-check-input" %}
+                            <label for="{{ field.auto_id }}" class="form-check-label mt-2{% if field.field.required %} required{% endif %}">
+                                {{ field.label|safe }}
                             </label>
-                        {% elif field.widget_type == 'RadioSelect' %}
-                            <label for="{{ field.auto_id }}" class="controls {% if field.field.required %}required{% endif %}">
-                            {% render_field field %}
-                            </label>
+                        {% elif field.widget_type == 'radioselect' %}
+                            {% render_field field class+="form-check-input position-static controls mt-2" %}
                         {% else %}
                             {% render_field field class+="form-control" %}
                         {% endif %}
@@ -41,13 +38,13 @@
 
                     {% block errors %}
                         {% for error in field.errors %}
-                            <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                            <span class="error-block"><i class="fas fa-exclamation"></i> {{ error }}</span>
                         {% endfor %}
                     {% endblock %}
 
                     {% block help_text %}
                         {% if field.help_text %}
-                            <span class='help-block'>
+                            <span class='form-text'>
                                 {# We allow HTML within form help fields #}
                                 {{ field.help_text|safe }}
                             </span>

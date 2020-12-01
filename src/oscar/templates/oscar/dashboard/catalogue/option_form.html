@@ -21,22 +21,22 @@
 
 {% block breadcrumbs %}
 {% if not is_popup %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:catalogue-option-list' %}">{% trans "Options" %}</a>
-        </li>
-        <li class="active">{{ title }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:catalogue-option-list' %}">{% trans "Options" %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
 {% endif %}
 {% endblock %}
 
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form class="form-stacked wysiwyg fixed-actions" method="post" data-behaviour="affix-nav-errors">
+    <form class="form-stacked wysiwyg fixed-actions" method="post" data-behaviour="tab-nav-errors">
         {% csrf_token %}
 
         <div class="row">
@@ -49,7 +49,7 @@
                             <div class="table-header">
                                 <h3>{% trans "Option details" %}</h3>
                             </div>
-                            <div class="well option-details">
+                            <div class="card card-body bg-light option-details">
 
                                 {% comment %}
                                     If the Option form has field_errors, partials/form_fields.html
@@ -62,8 +62,8 @@
 
                                 {% if form.non_field_errors %}
                                     {% for error in form.non_field_errors %}
-                                        <div class="alert alert-error control-group error">
-                                            <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                        <div class="alert alert-danger">
+                                            <span class="error-block"><i class="fas fa-exclamation"></i> {{ error }}</span>
                                         </div>
                                     {% endfor %}
                                 {% endif %}
@@ -81,12 +81,12 @@
         {% block fixed_actions_group %}
             <div class="fixed-actions-group">
                 <div class="form-actions">
-                    <div class="pull-right">
+                    <div class="float-right">
                         <a href="#" {% if not is_popup %}onclick="window.history.go(-1);return false"{% else %}onclick="window.close();return false;"{% endif %}>
                             {% trans "Cancel" %}
                         </a>
                         {% trans "or" %}
-                        <button class="btn btn-large btn-primary" type="submit">
+                        <button class="btn btn-primary" type="submit">
                             {% trans "Save" %}
                         </button>
                     </div>

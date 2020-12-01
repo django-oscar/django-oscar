@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-    </li>
-    <li class="active">{% trans "Stock alerts" %}</li>
-</ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Stock alerts" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block header %}
@@ -25,19 +25,18 @@
 
 {% block dashboard_content %}
 <div class="table-header">
-    <h2 class="pull-left"><i class="icon-sitemap icon-large"></i>{{ description }}</h2>
+    <h2 class="float-left"><i class="fas fa-sitemap"></i> {{ description }}</h2>
 
-    <div class="pull-right">
-        <div class="btn-group pull-right">
-            <button class="btn btn-primary dropdown-toggle" type="submit" data-toggle="dropdown" aria-expanded="true">
+    <div class="float-right">
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {% trans "Filter" %}
-                <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
-                <li><a href="{% url 'dashboard:stock-alert-list' %}">{% trans "All" %}</a></li>
-                <li><a href="{% url 'dashboard:stock-alert-list' %}?status=Open">{% trans "Open" %}</a></li>
-                <li><a href="{% url 'dashboard:stock-alert-list' %}?status=Closed">{% trans "Closed" %}</a></li>
-            </ul>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'dashboard:stock-alert-list' %}">{% trans "All" %}</a>
+                <a class="dropdown-item" href="{% url 'dashboard:stock-alert-list' %}?status=Open">{% trans "Open" %}</a>
+                <a class="dropdown-item" href="{% url 'dashboard:stock-alert-list' %}?status=Closed">{% trans "Closed" %}</a>
+            </div>
         </div>
     </div>
 </div>

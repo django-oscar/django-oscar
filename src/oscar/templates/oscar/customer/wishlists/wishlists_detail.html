@@ -4,25 +4,27 @@
 {% load widget_tweaks %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
-        </li>
-        <li class="active">
-            {{ wishlist.name }}
-        </li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {{ wishlist.name }}
+            </li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block tabcontent %}
     {% if form.total_form_count %}
-        <form class="stacked" method="post">
+        <form method="post">
             {{ form.management_form }}
             {% csrf_token %}
             <table class="table table-striped table-bordered">
@@ -42,10 +44,10 @@
                                             {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                             {% if product.is_public %}
                                                 <a href="{{ product.get_absolute_url }}">
-                                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                                    <img class="img-thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
                                                 </a>
                                             {% else %}
-                                                <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                                <img class="img-thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
                                             {% endif %}
                                         {% endwith %}
                                     {% endif %}
@@ -70,26 +72,27 @@
                                 <td>
                                     <div class="btn-group">
                                         {% if product %}
-                                            <a class="btn btn-default" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
-                                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                            </button>
+                                            <a class="btn btn-secondary" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
+                                            <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"></button>
                                         {% else %}
-                                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <a class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" href="#">
                                                 {% trans 'Actions' %}
-                                                <span class="caret"></span>
                                             </a>
                                         {% endif %}
-                                        <ul class="dropdown-menu">
-                                            <li><a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}">
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}" class="dropdown-item">
                                                     {% trans 'Remove' %}
-                                            </a></li>
+                                                </a>
+                                            </li>
                                             {% for other_wishlist in other_wishlists %}
-                                                <li><a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}">
+                                                <li>
+                                                    <a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}" class="dropdown-item">
                                                         {% blocktrans with name=other_wishlist.name %}
                                                             Move to '{{ name }}' wish list
                                                         {% endblocktrans %}
-                                                </a></li>
+                                                    </a>
+                                                </li>
                                             {% endfor %}
                                         </ul>
                                     </div>

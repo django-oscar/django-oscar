@@ -9,15 +9,13 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:comms-list' %}">{% trans "Emails" %}</a>
-        </li>
-        <li class="active"><a href=".">{{ commtype.name }}</a></li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:comms-list' %}">{% trans "Emails" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ commtype.name }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block header %}
@@ -28,29 +26,27 @@
 
 
 {% block dashboard_content %}
-
-
     <form method="post" class="form-stacked">
         <div class="tabbable dashboard">
             {% if preview %}
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs mb-0">
                     <li><a href="#email_form" data-toggle="tab">{% trans "Edit" %}</a></li>
                     <li class="active"><a href="#email_preview" data-toggle="tab">{% trans "Preview" %}</a></li>
                 </ul>
             {% else %}
                 <div class="table-header">
-                    <h2><i class="icon-envelope icon-large"></i>{% trans "Edit email" %}</h2>
+                    <h2><i class="fas fa-envelope"></i> {% trans "Edit email" %}</h2>
                 </div>
             {% endif %}
 
-        <div class="{% if preview %}tab-content{% else %}well{% endif %}">
+        <div class="{% if preview %}tab-content{% else %}card card-body{% endif %}">
             <div class="tab-pane {% if not preview %}active{% endif %}" id="email_form">
                 {% csrf_token %}
                 {% include 'oscar/dashboard/partials/form_field.html' with field=form.name %}
                 <div class="table-header">
                     <h3>{% trans "Email content" %}</h3>
                 </div>
-                <div class="well">
+                <div class="card card-body">
                     <p>{% trans "These fields are rendered using Django's template system." %}</p>
                     <p>{% trans "You can use the following variables:" %}</p>
                     <dl>
@@ -72,15 +68,15 @@
                 <div class="table-header">
                     <h3>{% trans "Preview" %}</h3>
                 </div>
-                <div class="well">
+                <div class="card card-body">
                     {% if commtype.is_order_related %}
                         <p>{% trans "View a preview of this email using order:" %}</p>
                         {% include 'oscar/dashboard/partials/form_field.html' with field=form.preview_order_number %}
                     {% endif %}
-                    <button type="submit" class="btn btn-primary btn-lg" name="show_preview" data-loading-text="{% trans 'Submitting...' %}">{% trans "View preview" %}</button>
+                    <button type="submit" class="btn btn-primary" name="show_preview" data-loading-text="{% trans 'Submitting...' %}">{% trans "View preview" %}</button>
                     <p>{% trans "or send a preview to:" %}</p>
                     {% include 'oscar/dashboard/partials/form_field.html' with field=form.preview_email %}
-                    <button type="submit" class="btn btn-default" name="send_preview" data-loading-text="{% trans 'Sending...' %}">{% trans "Send preview email" %}</button>
+                    <button type="submit" class="btn btn-secondary" name="send_preview" data-loading-text="{% trans 'Sending...' %}">{% trans "Send preview email" %}</button>
                 </div>
             </div>
             <div class="tab-pane {% if preview %}active{% endif %}" id="email_preview">
@@ -102,7 +98,7 @@
                     </table>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                     {% trans "or" %} <a href="{% url 'dashboard:comms-list' %}">{% trans "cancel" %}</a>.
                 </div>
             </div>

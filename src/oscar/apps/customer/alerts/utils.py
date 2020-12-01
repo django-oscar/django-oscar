@@ -1,11 +1,9 @@
 import logging
-import warnings
 
 from django.db.models import Max
 from django.template import loader
 
 from oscar.core.loading import get_class, get_model
-from oscar.utils.deprecation import RemovedInOscar22Warning
 
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
@@ -126,38 +124,3 @@ class AlertsDispatcher:
             subj_tpl.render(context).strip(),
             body=message_tpl.render(context).strip()
         )
-
-
-def send_alerts():
-    warnings.warn(
-        'Use of `send_alerts` is deprecated. Please use `send_alerts` '
-        'method of `AlertsDispatcher`.',
-        RemovedInOscar22Warning,
-        stacklevel=2,
-    )
-
-    AlertsDispatcher().send_alerts()
-
-
-def send_alert_confirmation(alert):
-    warnings.warn(
-        'Use of `send_alert_confirmation` is deprecated. Please use '
-        '`send_product_alert_confirmation_email_for_user` method of '
-        '`AlertsDispatcher`.',
-        RemovedInOscar22Warning,
-        stacklevel=2,
-    )
-
-    AlertsDispatcher().send_product_alert_confirmation_email_for_user(alert)
-
-
-def send_product_alerts(product):
-    warnings.warn(
-        'Use of `send_product_alerts` is deprecated. '
-        'Please use `send_product_alert_email_for_user` '
-        'method of `AlertsDispatcher`.',
-        RemovedInOscar22Warning,
-        stacklevel=2,
-    )
-
-    AlertsDispatcher().send_product_alert_email_for_user(product)

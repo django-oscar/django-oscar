@@ -714,7 +714,7 @@ class AbstractLine(models.Model):
 
         Consumed items are no longer available to be used in offers.
         """
-        self.consumer.consume(quantity, offer=offer)
+        return self.consumer.consume(quantity, offer=offer)
 
     def get_price_breakdown(self):
         """
@@ -771,6 +771,9 @@ class AbstractLine(models.Model):
 
     def is_available_for_offer_discount(self, offer):
         return self.consumer.available(offer) > 0
+
+    def quantity_available_for_offer(self, offer):
+        return self.quantity_without_offer_discount(offer) + self.quantity_with_offer_discount(offer)
 
     # ==========
     # Properties
@@ -903,8 +906,8 @@ class AbstractLine(models.Model):
         if current_price_incl_tax != self.price_incl_tax:
             product_prices = {
                 'product': self.product.get_title(),
-                'old_price': currency(self.price_incl_tax),
-                'new_price': currency(current_price_incl_tax)
+                'old_price': currency(self.price_incl_tax, self.price_currency),
+                'new_price': currency(current_price_incl_tax, self.price_currency)
             }
             if current_price_incl_tax > self.price_incl_tax:
                 warning = _("The price of '%(product)s' has increased from"

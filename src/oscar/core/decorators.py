@@ -1,6 +1,6 @@
 import warnings
 
-from oscar.utils.deprecation import RemovedInOscar22Warning
+from oscar.utils.deprecation import RemovedInOscar31Warning
 
 
 def deprecated(obj):
@@ -10,7 +10,7 @@ def deprecated(obj):
         return _deprecated_func(f=obj)
 
 
-def _deprecated_func(f, warn_cls=RemovedInOscar22Warning):
+def _deprecated_func(f, warn_cls=RemovedInOscar31Warning):
     def _deprecated(*args, **kwargs):
         message = "Method '%s' is deprecated and will be " \
             "removed in the next version of django-oscar" \
@@ -20,7 +20,7 @@ def _deprecated_func(f, warn_cls=RemovedInOscar22Warning):
     return _deprecated
 
 
-def _deprecated_cls(cls, warn_cls=RemovedInOscar22Warning):
+def _deprecated_cls(cls, warn_cls=RemovedInOscar31Warning):
     class Deprecated(cls):
         def __init__(self, *args, **kwargs):
             message = "Class '%s' is deprecated and will be " \

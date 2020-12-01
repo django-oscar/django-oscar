@@ -1,0 +1,74 @@
+.catalogue .tab-content {
+  overflow: visible;
+}
+
+.upload-image {
+  @include clearfix();
+  margin: 0;
+  z-index: 1;
+  position: relative;
+
+  li {
+    display: block;
+    width: 200px;
+    margin: 0 1% 2%;
+    float: left;
+    text-align: center;
+
+    > div {
+      padding: 4px;
+      background: $gray-400;
+      margin-bottom: 10px;
+
+      + label,
+      + label + input {
+        display: none;
+      }
+    }
+  }
+
+  div {
+    background: $white;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    z-index: 200;
+  }
+
+  img {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    max-height: 200px;
+    max-width: 200px;
+    width: auto;
+    height: auto;
+    left: 0;
+  }
+
+  .image-input {
+    z-index: 800;
+  }
+
+  .image-input button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    @include border-radius(0);
+  }
+
+  .input-field {
+    position: relative;
+    z-index: 1000;
+    opacity: 0;
+  }
+
+  .input-field input {
+    border-width: 0;
+    direction: ltr;
+    cursor: pointer;
+    width: 200px;
+    height: 200px;
+  }
+}

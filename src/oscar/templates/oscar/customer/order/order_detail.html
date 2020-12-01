@@ -5,7 +5,7 @@
 {% load reviews_tags %}
 
 {% block extra_breadcrumbs %}
-    <li>
+    <li class="breadcrumb-item">
         <a href="{% url 'customer:order-list' %}">{% trans 'Order history' %}</a>
     </li>
 {% endblock %}
@@ -44,7 +44,7 @@
 
                                 {% iffeature "reviews" %}
                                     {% if product|is_review_permitted:user %}
-                                        <a class="btn btn-default" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans 'Write a review' %}</a>
+                                        <a class="btn btn-secondary" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans 'Write a review' %}</a>
                                     {% endif %}
                                 {% endiffeature %}
                             {% else %}
@@ -81,7 +81,7 @@
                         {% for discount in discounts %}
                         <tr>
                             <td colspan="4">
-                                <span class="label label-success">{% trans "Discount" %}</span>
+                                <span class="badge badge-success">{% trans "Discount" %}</span>
                                 {{ discount.offer_name }}
                             </td>
                             <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>
@@ -114,7 +114,7 @@
                     {% for discount in order.shipping_discounts %}
                     <tr>
                         <td colspan="4">
-                            <span class="label label-success">{% trans "Discount" %}</span>
+                            <span class="badge badge-success">{% trans "Discount" %}</span>
                             {{ discount.offer_name }}
                         </td>
                         <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>

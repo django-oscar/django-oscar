@@ -56,6 +56,7 @@ class OpenBasketReportGenerator(ReportGenerator):
     code = 'open_baskets'
     description = _('Open baskets')
     date_range_field_name = 'date_created'
+    queryset = Basket._default_manager.filter(status=Basket.OPEN)
 
     formatters = {
         'CSV_formatter': OpenBasketReportCSVFormatter,
@@ -65,8 +66,7 @@ class OpenBasketReportGenerator(ReportGenerator):
         additional_data = {
             'start_date': self.start_date,
             'end_date': self.end_date}
-        baskets = Basket._default_manager.filter(status=Basket.OPEN)
-        return self.formatter.generate_response(baskets, **additional_data)
+        return self.formatter.generate_response(self.queryset, **additional_data)
 
 
 class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
@@ -110,6 +110,7 @@ class SubmittedBasketReportGenerator(ReportGenerator):
     code = 'submitted_baskets'
     description = _('Submitted baskets')
     date_range_field_name = 'date_submitted'
+    queryset = Basket._default_manager.filter(status=Basket.SUBMITTED)
 
     formatters = {
         'CSV_formatter': SubmittedBasketReportCSVFormatter,
@@ -119,5 +120,4 @@ class SubmittedBasketReportGenerator(ReportGenerator):
         additional_data = {
             'start_date': self.start_date,
             'end_date': self.end_date}
-        baskets = Basket._default_manager.filter(status=Basket.SUBMITTED)
-        return self.formatter.generate_response(baskets, **additional_data)
+        return self.formatter.generate_response(self.queryset, **additional_data)

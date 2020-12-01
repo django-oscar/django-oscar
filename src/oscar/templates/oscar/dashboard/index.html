@@ -19,20 +19,20 @@
 {% block dashboard_content %}
 
 <div class="table-header">
-    <i class="icon-signal icon-large"></i>{% trans "Your Store Statistics" %}
+    <i class="fas fa-signal"></i> {% trans "Your Store Statistics" %}
 </div>
 
 <div class="content-block">
     <div class="row">
         <aside class="col-md-3 order-graph-details">
-            <label><span><i class="icon-shopping-cart"></i>{{ total_orders_last_day }}</span>{% trans "Total Orders" %}</label>
-            <label><span><i class="icon-hand-right"></i>{{ total_customers_last_day }}</span>{% trans "New Customers" %}</label>
-            <label><span><i class="icon-group"></i>{{ total_customers }}</span>{% trans "Total Customers" %}</label>
-            <label><span><i class="icon-briefcase"></i>{{ total_products }}</span>{% trans "Total Products" %}</label>
+            <label><span><i class="fas fa-shopping-cart"></i>{{ total_orders_last_day }}</span>{% trans "Total Orders" %}</label>
+            <label><span><i class="fas fa-hand-point-right"></i>{{ total_customers_last_day }}</span>{% trans "New Customers" %}</label>
+            <label><span><i class="fas fa-users"></i>{{ total_customers }}</span>{% trans "Total Customers" %}</label>
+            <label><span><i class="fas fa-briefcase"></i>{{ total_products }}</span>{% trans "Total Products" %}</label>
         </aside>
         <div class="col-md-9">
             <div id="order_graph">
-                <div class="bar-caption"><h1>{% trans "Latest Orders (last 24 hours)" %}</h1></div>
+                <div class="bar-caption"><h2>{% trans "Latest Orders (last 24 hours)" %}</h2></div>
                 <div class="bar-y-axis">
                     <ul>
                     {% for y_value in hourly_report_dict.y_range %}
@@ -59,7 +59,7 @@
 <div class="row">
     <div class="col-md-4">
         <table class="table table-striped table-bordered table-hover">
-            <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Orders - Last 24 Hours" %}</caption>
+            <caption><i class="fas fa-shopping-cart"></i> {% trans "Orders - Last 24 Hours" %}</caption>
             <tr>
                 <th class="col-md-10">{% trans "Total orders" %}</th>
                 <td class="col-md-2" >{{ total_orders_last_day }}</td>
@@ -82,10 +82,10 @@
     <div class="col-md-4">
         <table class="table table-striped table-bordered table-hover">
             <caption>
-                <a href="{% url 'dashboard:order-list' %}" class="btn btn-default pull-right">
-                    <i class="icon-shopping-cart"></i> {% trans "Manage" %}
+                <a href="{% url 'dashboard:order-list' %}" class="btn btn-secondary float-right">
+                    <i class="fas fa-shopping-cart"></i> {% trans "Manage" %}
                 </a>
-                <i class="icon-shopping-cart icon-large"></i>{% trans "Orders - All Time" %}
+                <i class="fas fa-shopping-cart"></i> {% trans "Orders - All Time" %}
             </caption>
             <tr>
                 <th class="col-md-10">{% trans "Total orders" %}</th>
@@ -108,7 +108,7 @@
 
     <div class="col-md-4">
         <table class="table table-striped table-bordered table-hover">
-            <caption><i class="icon-group icon-large"></i>{% trans "Customers" %}</caption>
+            <caption><i class="fas fa-users"></i> {% trans "Customers" %}</caption>
             <tr>
                 <th class="col-md-10">{% trans "Total customers" %}</th>
                 <td class="col-md-2" >{{ total_customers }}</td>
@@ -129,19 +129,19 @@
     <div class="col-md-6">
         <table class="table table-striped table-bordered table-hover">
             <caption>
-                <div class="btn-toolbar pull-right">
-                  <div class="btn-group">
-                    <a href="{% url 'dashboard:catalogue-product-list' %}" class="btn btn-default">
-                        <i class="icon-sitemap"></i> {% trans "Manage" %}
-                    </a>
-                  </div>
-                  <div class="btn-group">
-                    <a href="{% url 'dashboard:stock-alert-list' %}" class="btn btn-default">
-                        <i class="icon-sitemap"></i> {% trans "View Stock Alerts" %}
-                    </a>
-                  </div>
+                <div class="btn-toolbar float-right">
+                    <div class="btn-group">
+                        <a href="{% url 'dashboard:catalogue-product-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-sitemap"></i> {% trans "Manage" %}
+                        </a>
+                    </div>
+                    <div class="btn-group ml-2">
+                        <a href="{% url 'dashboard:stock-alert-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-sitemap"></i> {% trans "View Stock Alerts" %}
+                        </a>
+                    </div>
                 </div>
-                <i class="icon-sitemap icon-large"></i>{% trans "Catalogue and stock" %}
+                <i class="fas fa-sitemap"></i> {% trans "Catalogue and stock" %}
             </caption>
             <tr>
                 <th class="col-md-10">{% trans "Total products" %}</th>
@@ -160,7 +160,7 @@
     <div class="col-md-6">
         {% if user.is_staff %}
         <table class="table table-striped table-bordered table-hover">
-            <caption><i class="icon-gift icon-large"></i>{% trans "Offers, vouchers" %}</caption>
+            <caption><i class="fas fa-gift"></i> {% trans "Offers, vouchers" %}</caption>
             <tr>
                 <th class="col-md-10">{% trans "Active <em>Site</em> Offers" %}</th>
                 <td class="col-md-2" >{{ total_site_offers }}</td>

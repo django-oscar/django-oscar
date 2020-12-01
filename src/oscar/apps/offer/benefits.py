@@ -80,7 +80,7 @@ class PercentageDiscountBenefit(Benefit):
                 break
 
             line_discount = self.round(discount_percent / D('100.0') * price
-                                       * int(quantity_affected))
+                                       * int(quantity_affected), basket.currency)
 
             if discount_amount_available is not None:
                 line_discount = min(line_discount, discount_amount_available)
@@ -168,7 +168,7 @@ class AbsoluteDiscountBenefit(Benefit):
             else:
                 # Calculate a weighted discount for the line
                 line_discount = self.round(
-                    ((price * qty) / affected_items_total) * discount)
+                    ((price * qty) / affected_items_total) * discount, basket.currency)
             apply_discount(line, line_discount, qty, offer)
             affected_lines.append((line, line_discount, qty))
             applied_discount += line_discount
@@ -243,7 +243,7 @@ class FixedPriceBenefit(Benefit):
                 line_discount = discount - discount_applied
             else:
                 line_discount = self.round(
-                    discount * (price * quantity) / value_affected)
+                    discount * (price * quantity) / value_affected, basket.currency)
             apply_discount(line, line_discount, quantity, offer)
             discount_applied += line_discount
         return BasketDiscount(discount)
@@ -316,7 +316,7 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
         verbose_name = _("Shipping absolute discount benefit")
         verbose_name_plural = _("Shipping absolute discount benefits")
 
-    def shipping_discount(self, charge):
+    def shipping_discount(self, charge, currency=None):
         return min(charge, self.value)
 
 
@@ -334,7 +334,7 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
         verbose_name = _("Fixed price shipping benefit")
         verbose_name_plural = _("Fixed price shipping benefits")
 
-    def shipping_discount(self, charge):
+    def shipping_discount(self, charge, currency=None):
         if charge < self.value:
             return D('0.00')
         return charge - self.value
@@ -354,6 +354,6 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
         verbose_name = _("Shipping percentage discount benefit")
         verbose_name_plural = _("Shipping percentage discount benefits")
 
-    def shipping_discount(self, charge):
+    def shipping_discount(self, charge, currency=None):
         discount = charge * self.value / D('100.0')
         return discount.quantize(D('0.01'))

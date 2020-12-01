@@ -9,30 +9,28 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-        </li>
-        {% if partner %}
-            <li>
-                <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
-            </li>
-        {% endif %}
-        <li class="active">{{ title }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a></li>
+            {% if partner %}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
+                </li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
+    <form method="post" class="card card-body form-stacked wysiwyg" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'oscar/dashboard/partials/form_fields.html' with form=form %}
         <div class="form-actions">
-            <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+            <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{% trans "cancel" %}</a>.
         </div>
     </form>

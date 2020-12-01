@@ -82,18 +82,19 @@ class LineOfferConsumer(object):
     """
 
     def __init__(self, line):
-        self.__line = line
-        self.__offers = dict()
-        self.__affected_quantity = 0
-        self.__consumptions = defaultdict(int)
+        self._line = line
+        self._offers = dict()
+        self._affected_quantity = 0
+        self._consumptions = defaultdict(int)
 
-    # private
-    def __cache(self, offer):
-        self.__offers[offer.pk] = offer
+    def _cache(self, offer):
+        self._offers[offer.pk] = offer
 
-    def __update_affected_quantity(self, quantity):
-        available = int(self.__line.quantity - self.__affected_quantity)
-        self.__affected_quantity += min(available, quantity)
+    def _update_affected_quantity(self, quantity):
+        available = int(self._line.quantity - self._affected_quantity)
+        num_consumed = min(available, quantity)
+        self._affected_quantity += num_consumed
+        return num_consumed
 
     # public
     def consume(self, quantity: int, offer=None):
@@ -103,16 +104,22 @@ class LineOfferConsumer(object):
         :param int quantity: the number of items on the line affected
         :param offer: the offer to mark the line
         :type offer: ConditionalOffer or None
+        :return: the number of items actually consumed
+        :rtype: int
 
         if offer is None, the specified quantity of items on this
         basket line is consumed for *any* offer, else only for the
         specified offer.
         """
-        self.__update_affected_quantity(quantity)
         if offer:
-            self.__cache(offer)
+            self._cache(offer)
             available = self.available(offer)
-            self.__consumptions[offer.pk] += min(available, quantity)
+
+        num_consumed = self._update_affected_quantity(quantity)
+        if offer:
+            num_consumed = min(available, quantity)
+            self._consumptions[offer.pk] += num_consumed
+        return num_consumed
 
     def consumed(self, offer=None):
         """
@@ -129,14 +136,14 @@ class LineOfferConsumer(object):
 
         """
         if not offer:
-            return self.__affected_quantity
-        return int(self.__consumptions[offer.pk])
+            return self._affected_quantity
+        return int(self._consumptions[offer.pk])
 
     @property
     def consumers(self):
-        return [x for x in self.__offers.values() if self.consumed(x)]
+        return [x for x in self._offers.values() if self.consumed(x)]
 
-    def available(self, offer=None) -> int:
+    def available(self, offer=None) -> int: # noqa (too complex (11))
         """
         check how many items are available for offer
 
@@ -145,20 +152,39 @@ class LineOfferConsumer(object):
         :return: the number of items available for offer
         :rtype: int
         """
-        max_affected_items = self.__line.quantity
+        max_affected_items = self._line.quantity
 
         if offer and isinstance(offer, ConditionalOffer):
 
             applied = [x for x in self.consumers if x != offer]
 
+            if offer.exclusive:
+                for a in applied:
+                    if a.exclusive:
+                        if any([
+                            a.priority > offer.priority,
+                            a.priority == offer.priority and a.id < offer.id
+                        ]):
+                            # Exclusive offers cannot be applied if any other exclusive
+                            # offer with higher priority is active already.
+                            max_affected_items = max_affected_items - self.consumed(a)
+                            if max_affected_items == 0:
+                                return 0
+
+                    else:
+                        # Exclusive offers cannot be applied if any other offers are
+                        # active already.
+                        return 0
+
             # find any *other* exclusive offers
-            if any([x.exclusive for x in applied]):
+            elif any([x.exclusive for x in applied]):
                 return 0
 
-            # exclusive offers cannot be applied if any other
-            # offers are active already
-            if offer.exclusive and len(applied):
-                return 0
+            # check for applied offers allowing restricted combinations
+            for x in applied:
+                check = offer.combinations.count() or x.combinations.count()
+                if check and offer not in x.combined_offers:
+                    return 0
 
             # respect max_affected_items
             if offer.benefit.max_affected_items:

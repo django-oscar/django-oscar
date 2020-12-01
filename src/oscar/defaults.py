@@ -90,12 +90,12 @@ OSCAR_HIDDEN_FEATURES = []
 OSCAR_DASHBOARD_NAVIGATION = [
     {
         'label': _('Dashboard'),
-        'icon': 'icon-th-list',
+        'icon': 'fas fa-list',
         'url_name': 'dashboard:index',
     },
     {
         'label': _('Catalogue'),
-        'icon': 'icon-sitemap',
+        'icon': 'fas fa-sitemap',
         'children': [
             {
                 'label': _('Products'),
@@ -125,7 +125,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Fulfilment'),
-        'icon': 'icon-shopping-cart',
+        'icon': 'fas fa-shopping-cart',
         'children': [
             {
                 'label': _('Orders'),
@@ -151,7 +151,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Customers'),
-        'icon': 'icon-group',
+        'icon': 'fas fa-users',
         'children': [
             {
                 'label': _('Customers'),
@@ -165,7 +165,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Offers'),
-        'icon': 'icon-bullhorn',
+        'icon': 'fas fa-bullhorn',
         'children': [
             {
                 'label': _('Offers'),
@@ -184,7 +184,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Content'),
-        'icon': 'icon-folder-close',
+        'icon': 'fas fa-folder',
         'children': [
             {
                 'label': _('Pages'),
@@ -202,7 +202,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Reports'),
-        'icon': 'icon-bar-chart',
+        'icon': 'fas fa-chart-bar',
         'url_name': 'dashboard:reports-index',
     },
 ]

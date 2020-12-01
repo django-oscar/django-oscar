@@ -111,9 +111,15 @@ class OfferWizardStepView(FormView):
 
         # Adjust kwargs to avoid trying to save the range instance
         form_data = form.cleaned_data.copy()
-        range = form_data.get('range', None)
-        if range is not None:
-            form_data['range'] = range.id
+        product_range = form_data.get('range')
+        if product_range is not None:
+            form_data['range'] = product_range.id
+
+        combinations = form_data.get('combinations')
+        if combinations is not None:
+            form_data['combination_ids'] = [x.id for x in combinations]
+            del form_data['combinations']
+
         form_kwargs = {'data': form_data}
         json_data = json.dumps(form_kwargs, cls=DjangoJSONEncoder)
 
@@ -136,7 +142,17 @@ class OfferWizardStepView(FormView):
         # We don't store the object instance as that is not JSON serialisable.
         # Instead, we save an alternative form
         instance = form.save(commit=False)
-        json_qs = serializers.serialize('json', [instance])
+        fields = form.fields.keys()
+        safe_fields = ['custom_benefit', 'custom_condition']
+        # remove fields that do not exist (yet) on the uncommitted instance, i.e. m2m fields
+        # unless they are 'virtual' fields as listed in 'safe_fields'
+        cleanfields = {x: hasattr(instance, x) for x in fields}
+        cleanfields.update({x: True for x in fields if x in safe_fields})
+        cleanfields = [
+            x[0] for x in cleanfields.items() if x[1]
+        ]
+
+        json_qs = serializers.serialize('json', [instance], fields=tuple(cleanfields))
 
         session_data[self._key(is_object=True)] = json_qs
         self.request.session.save()
@@ -152,10 +168,10 @@ class OfferWizardStepView(FormView):
             return deserialised_obj[0].object
 
     def _fetch_session_offer(self):
-        """
-        Return the offer instance loaded with the data stored in the
-        session.  When updating an offer, the updated fields are used with the
-        existing offer data.
+        """Return the offer instance loaded with the data stored in the session.
+
+        When updating an offer, the updated fields are used with the existing
+        offer data.
         """
         offer = self._fetch_object('metadata')
         if offer is None and self.update:

@@ -7,15 +7,13 @@
 {% block title %}{{ customer.email }} | {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a>
-        </li>
-        <li class="active">{{ customer.email }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ customer.email }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ customer.email }}{% endblock %}
@@ -86,9 +84,9 @@
                         <tr>
                             <th>{% trans "Actions" %}</th>
                             <td>
-                                <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
+                                <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
+                                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
                                 </form>
                             </td>
                         </tr>
@@ -101,16 +99,22 @@
         {% block user_additional_info %}
             <div class="tabbable dashboard col-md-12">
                 {% block tab_nav %}
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#user_orders" data-toggle="tab">{% trans "Orders" %}</a></li>
-                        <li><a href="#user_addresses" data-toggle="tab">{% trans "Addresses" %}</a></li>
-                        <li><a href="#user_reviews" data-toggle="tab">{% trans "Reviews" %}</a></li>
+                    <ul class="nav nav-tabs mb-0" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#user_orders" data-toggle="tab">{% trans "Orders" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#user_addresses" data-toggle="tab">{% trans "Addresses" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#user_reviews" data-toggle="tab">{% trans "Reviews" %}</a>
+                        </li>
                     </ul>
                 {% endblock %}
 
                 <div class="tab-content">
                     {% block user_orders %}
-                        <div id="user_orders" class="tab-pane active">
+                        <div id="user_orders" class="tab-pane fade show active" role="tabpanel">
                             <table class="table table-striped table-bordered table-hover">
                                 <caption>{% trans "Orders" %}</caption>
                                 {% with orders=customer.orders.all %}
@@ -143,13 +147,13 @@
                     {% endblock %}
 
                     {% block user_addresses %}
-                        <div id="user_addresses" class="tab-pane">
+                        <div id="user_addresses" class="tab-pane fade" role="tabpanel">
                             <h2>{% trans "Addresses" %}</h2>
                             <div class="row">
                                 {% for address in customer.addresses.all %}
 
                                     <div class="col-md-3">
-                                        <div class="well well-info">
+                                        <div class="card card-body bg-info">
                                             {% for field in address.active_address_fields %}
                                                 {{ field }}<br/>
                                             {% endfor %}
@@ -167,7 +171,7 @@
                     {% endblock %}
 
                     {% block user_reviews %}
-                        <div id="user_reviews" class="tab-pane">
+                        <div id="user_reviews" class="tab-pane fade" role="tabpanel">
                             <table class="table table-striped table-bordered table-hover">
                                 <caption>{% trans "Reviews" %}</caption>
                                 {% if customer.reviews.count %}

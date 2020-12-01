@@ -10,24 +10,28 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li class="active">{% trans "Categories" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {% trans "Categories" %}
+            </li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:catalogue-category-create' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new category" %}</a>
+        <a href="{% url 'dashboard:catalogue-category-create' %}" class="btn btn-primary float-right"><i class="fas fa-plus-circle"></i> {% trans "Create new category" %}</a>
         <h1>{% trans "Categories" %}</h1>
     </div>
 {% endblock header %}
 
 {% block dashboard_content %}
     <div class="alert alert-info">
-        <p>{% trans "You are editing:" %}
+        <div>{% trans "You are editing:" %}
             <strong><a href="{% url 'dashboard:catalogue-category-list' %}">{% trans "Home" %}</a></strong>
             {% if ancestors %}
                 &gt;
@@ -35,7 +39,7 @@
                     <strong><a href="{% url 'dashboard:catalogue-category-detail-list' pk=ancestor.pk %}">{{ ancestor.name }}</a></strong>{% if not forloop.last %} > {% endif %}
                 {% endfor %}
             {% endif %}
-        </p>
+        </div>
     </div>
 
     {% render_table categories %}

@@ -6,21 +6,23 @@
 {% endblock %}
 
 {% block header%}
-    <div class="page-header action">
+    <div class="page-header">
         {% if user.is_staff %}
-            <a class="pull-right hidden-xs" href="{% url 'dashboard:page-update' pk=flatpage.id %}"><small><i class="icon-edit"></i> {% trans "Edit this page" %}</small></a>
+            <a class="float-right d-sm-none" href="{% url 'dashboard:page-update' pk=flatpage.id %}"><small><i class="fas fa-pencil-alt"></i> {% trans "Edit this page" %}</small></a>
         {% endif %}
         <h1>{{ flatpage.title }}</h1>
     </div>
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        </li>
-        <li class="active">{{ flatpage.title }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ flatpage.title }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block content %}

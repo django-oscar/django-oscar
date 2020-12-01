@@ -60,6 +60,6 @@ Deploying custom ranges
 -----------------------
 
 To avoid manual steps in each of your test/stage/production environments, use
-South's `data migrations`_ to create ranges.
+Django's `data migrations`_ to create ranges.
 
-.. _`data migrations`: https://south.readthedocs.io/en/latest/tutorial/part3.html#data-migrations
+.. _`data migrations`: https://docs.djangoproject.com/en/stable/topics/migrations/#data-migrations

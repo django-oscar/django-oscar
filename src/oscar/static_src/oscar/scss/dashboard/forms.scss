@@ -1,0 +1,74 @@
+// FORM CHANGES
+// ------------
+
+.col-form-label.required:after {
+  color: $red;
+  content: "*";
+  display: inline-block;
+}
+
+.form-inline {
+  select {
+    min-width: 200px;
+  }
+
+  .select2-container.form-control {
+    display: inline-block;
+  }
+
+  .form-group .form-inline {
+    display: inline-block;
+  }
+}
+
+.form-inline {
+  .form-text:first-child, .error-block:first-child {
+    display: none;
+  }
+
+  label {
+    margin-right: 5px;
+  }
+
+  .product-select {
+    width: 270px;
+  }
+}
+
+.form-stacked {
+  .error-block {
+    display: block;
+    color: $red;
+  }
+}
+
+// ADDITIONAL ERRORS
+.errorlist {
+  margin: 0 0 0 20px;
+  padding: 0 0 10px 0;
+  color: $red;
+
+  li {
+    padding: 0 0 5px 0;
+    list-style: none;
+  }
+}
+
+.form-inline {
+  .form-text, .error-block {
+    display: inline-block;
+    margin: 0 20px 0 10px;
+
+    li {
+      list-style: none;
+      color: $red;
+    }
+  }
+
+  input[type=number],
+  input[type=email],
+  input[type=url],
+  input[type=text] {
+    width: 140px;
+  }
+}

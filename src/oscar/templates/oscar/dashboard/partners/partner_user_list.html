@@ -7,26 +7,22 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-        </li>
-        <li class="active">{{ partner.name }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ partner.name }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <div class="btn-group pull-right">
-            <a class="btn btn-lg btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-plus"></i>
+        <div class="btn-group float-right">
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fas fa-plus-circle"></i>
                 {% trans 'Link a user' %}
-                <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu dropdown-menu-right">
                 <li><a href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}" >{% trans "Link a new user" %}</a></li>
                 <li><a href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}" >{% trans "Link an existing user" %}</a></li>
             </ul>

@@ -9,15 +9,13 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>
-        </li>
-        <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -28,13 +26,13 @@
     <div class="table-header">
         <h2>{% blocktrans with id=alert.id %}Product alert #{{ id }}{% endblocktrans %}</h2>
     </div>
-    <div class="well">
+    <div class="card card-body bg-light">
         {% include 'oscar/dashboard/users/alerts/partials/alert.html' %}
         <form method="post">
             {% csrf_token %}
             <div class="form-actions">
                 <p>{% trans "Are you sure that you want to delete this alert?" %}</p>
-                <button type='submit' class="btn btn-lg btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+                <button type='submit' class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
                 <a href="{% url 'dashboard:user-alert-list' %}">{% trans "cancel" %}</a>
             </div>
         </form>

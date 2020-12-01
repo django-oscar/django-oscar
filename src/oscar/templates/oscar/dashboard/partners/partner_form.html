@@ -9,21 +9,19 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-        </li>
-        <li class="active">{{ title }}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="well">
+    <div class="card card-body">
         {% include 'oscar/dashboard/partials/form.html' with form=form %}
     </div>
 {% endblock dashboard_content %}

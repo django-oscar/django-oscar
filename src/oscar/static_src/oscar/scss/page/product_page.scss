@@ -1,0 +1,67 @@
+// OSCAR PRODUCTS UNIQUE STYLES
+// ----------------------------
+.availability {
+  &.outofstock {
+    color: $danger;
+  }
+
+  &.instock {
+    color: $success;
+  }
+}
+
+// PRICE SIZE/COLOR
+// ----------------
+
+.price_color {
+  display: block;
+  color: $success;
+  font-weight: bold;
+}
+
+.product_main .price_color {
+  font-size: $h2-font-size;
+}
+
+.product_pod .price_color {
+  margin-top: 0;
+}
+
+.es-carousel .price_color {
+  font-size: $h3-font-size;
+}
+
+.review_add,
+.side_categories {
+  li {
+    ul,
+    ol {
+      padding-left: 18px;
+    }
+  }
+}
+
+// Wish lists
+// Align wish list button with add to basket button
+.add-to-basket {
+  //Width of default input/select/textarea
+  width: 220px;
+  margin-right: 10px;
+}
+
+.add-to-basket,
+.btn-wishlist {
+  display: inline-block;
+  zoom: 1;
+}
+
+.add-to-basket .btn,
+.btn-wishlist {
+  margin-bottom: $base-margin-bottom;
+}
+
+#add_review_form {
+  #id_title, #id_body {
+    max-width: 500px;
+  }
+}

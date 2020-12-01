@@ -1,0 +1,19 @@
+@import "dashboard/variables";
+
+// Bootstrap (all dependencies)
+@import "../../../../../node_modules/bootstrap/scss/bootstrap";
+
+// Components: Icons / Fonts
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+
+// Oscar dashboard styles
+@import "alerts";
+@import "dashboard/base";
+@import "dashboard/buttons";
+@import "dashboard/catalogue";
+@import "dashboard/navbar";
+@import "dashboard/forms";
+@import "dashboard/tables";
+@import "dashboard/index";

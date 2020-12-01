@@ -18,6 +18,7 @@ class DashboardConfig(OscarDashboardConfig):
 
     def ready(self):
         self.index_view = get_class('dashboard.views', 'IndexView')
+        self.login_view = get_class('dashboard.views', 'LoginView')
 
         self.catalogue_app = apps.get_app_config('catalogue_dashboard')
         self.reports_app = apps.get_app_config('reports_dashboard')
@@ -34,7 +35,6 @@ class DashboardConfig(OscarDashboardConfig):
 
     def get_urls(self):
         from django.contrib.auth import views as auth_views
-        from django.contrib.auth.forms import AuthenticationForm
 
         urls = [
             path('', self.index_view.as_view(), name='index'),
@@ -50,12 +50,7 @@ class DashboardConfig(OscarDashboardConfig):
             path('vouchers/', include(self.vouchers_app.urls[0])),
             path('comms/', include(self.comms_app.urls[0])),
             path('shipping/', include(self.shipping_app.urls[0])),
-
-            path(
-                'login/',
-                auth_views.LoginView.as_view(template_name='oscar/dashboard/login.html',
-                                             authentication_form=AuthenticationForm),
-                name='login'),
+            path('login/', self.login_view.as_view(), name='login'),
             path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
         ]
         return self.post_process_urls(urls)

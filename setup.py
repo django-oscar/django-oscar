@@ -18,7 +18,7 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=2.2,<3.1',
+    'django>=2.2,<3.2',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=6.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
@@ -37,7 +37,7 @@ install_requires = [
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
-    'django-tables2>=2.2,<2.3',
+    'django-tables2>=2.3,<2.4',
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
@@ -105,7 +105,6 @@ setup(
         'Operating System :: Unix',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Application Frameworks']

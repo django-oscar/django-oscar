@@ -1,33 +1,47 @@
 {% load i18n %}
 
-<div data-spy="affix" class="affix-top" data-offset-top="200">
+<div class="tab-nav sticky-top">
     <div class="table-header">
         <h3>{% trans "Steps" %}</h3>
     </div>
-    <ul class="nav nav-list bs-docs-sidenav">
-        <li class="step1 {% if step == 1 %}active{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}">
+    <ul class="nav flex-column bs-docs-sidenav">
+        <li class="nav-item step1">
             {% if step == 2 or step == 3 or step == 4 %}
-            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-metadata' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-metadata' %}{% endif %}">{% trans "1. Name and description" %}</a>
+            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-metadata' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-metadata' %}{% endif %}" class="nav-link visited">
+                {% trans "1. Name and description" %}
+            </a>
             {% else %}
-                <span>{% trans "1. Name and description" %}</span>
+            <a class="nav-link {% if step == 1 %}active{% else %}disabled text-reset{% endif %}">
+                {% trans "1. Name and description" %}
+            </a>
             {% endif %}
         </li>
-        <li class="step2 {% if step == 2 %}active{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}">
+        <li class="nav-item step2">
             {% if step == 3 or step == 4 %}
-            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-benefit' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-benefit' %}{% endif %}">{% trans "2. Incentive" %}</a>
+            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-benefit' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-benefit' %}{% endif %}" class="nav-link visited">
+                {% trans "2. Incentive" %}
+            </a>
             {% else %}
-            <span>{% trans "2. Incentive" %}</span>
+            <a class="nav-link {% if step == 2 %}active{% else %}disabled text-reset{% endif %}">
+                {% trans "2. Incentive" %}
+            </a>
             {% endif %}
         </li>
-        <li class="step3 {% if step == 3 %}active{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %}">
+        <li class="nav-item step3">
             {% if step == 4 %}
-            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-condition' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-condition' %}{% endif %}">{% trans "3. Condition" %}</a>
+            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-condition' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-condition' %}{% endif %}" class="nav-link visited">
+                {% trans "3. Condition" %}
+            </a>
             {% else %}
-            <span>{% trans "3. Condition" %}</span>
+            <a class="nav-link {% if step == 3 %}active{% else %}disabled text-reset{% endif %}">
+                {% trans "3. Condition" %}
+            </a>
             {% endif %}
         </li>
-        <li class="step4 {% if step == 4 %}active{% else %}disabled{% endif %}">
-            <span>{% trans "4. Restrictions" %}</span>
+        <li class="nav-item step4">
+            <a class="nav-link {% if step == 4 %}active{% else %}disabled text-reset{% endif %}">
+                {% trans "4. Restrictions" %}
+            </a>
         </li>
     </ul>
 </div>

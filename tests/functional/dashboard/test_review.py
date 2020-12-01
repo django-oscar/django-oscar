@@ -76,15 +76,7 @@ class ReviewsDashboardTests(WebTestCase):
         self.assertEqual(response.context['review_list'][0], review2)
 
         response = self.get(url, params={'keyword': 'review'})
-        self.assertQuerysetContains(response.context['review_list'],
-                                    [review1, review2])
-
-    def assertQuerysetContains(self, qs, items):
-        qs_ids = [obj.id for obj in qs]
-        item_ids = [item.id for item in items]
-        self.assertEqual(len(qs_ids), len(item_ids))
-        for i, j in zip(qs_ids, item_ids):
-            self.assertEqual(i, j)
+        assert list(response.context['review_list']) == [review2, review1]
 
     def test_filter_reviews_by_date(self):
         def n_days_ago(days):
@@ -106,19 +98,16 @@ class ReviewsDashboardTests(WebTestCase):
 
         url = reverse('dashboard:reviews-list')
         response = self.get(url, params={'date_from': n_days_ago(5)})
-        self.assertQuerysetContains(response.context['review_list'],
-                                    [review1, review2])
+        assert list(response.context['review_list']) == [review1, review2]
 
         response = self.get(url, params={'date_to': n_days_ago(5)})
-        self.assertQuerysetContains(response.context['review_list'],
-                                    [review3])
+        assert list(response.context['review_list']) == [review3]
 
         response = self.get(url, params={
             'date_from': n_days_ago(12),
             'date_to': n_days_ago(9),
         })
-        self.assertQuerysetContains(response.context['review_list'],
-                                    [review3])
+        assert list(response.context['review_list']) == [review3]
 
     def test_filter_reviews_by_status(self):
         url = reverse('dashboard:reviews-list')

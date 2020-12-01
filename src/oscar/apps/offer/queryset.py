@@ -8,7 +8,7 @@ def product_class_as_queryset(product):
     return ProductClass.objects.filter(
         pk__in=product.__class__.objects.filter(pk=product.pk)
         .annotate(
-            product_class_id=models.Case(
+            _product_class_id=models.Case(
                 models.When(
                     structure=product.CHILD, then=models.F("parent__product_class")
                 ),
@@ -18,7 +18,7 @@ def product_class_as_queryset(product):
                 ),
             )
         )
-        .values("product_class_id")
+        .values("_product_class_id")
     )
 
 

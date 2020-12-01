@@ -25,7 +25,5 @@ def metadata(request):
             'homepage_url': settings.OSCAR_HOMEPAGE,
             'language_neutral_url_path': strip_language_code(request),
             # Fallback to old settings name for backwards compatibility
-            'use_less': (getattr(settings, 'OSCAR_USE_LESS', None)
-                         or getattr(settings, 'USE_LESS', False)),
             'google_analytics_id': (getattr(settings, 'OSCAR_GOOGLE_ANALYTICS_ID', None)
                                     or getattr(settings, 'GOOGLE_ANALYTICS_ID', None))}

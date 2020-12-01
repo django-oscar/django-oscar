@@ -40,13 +40,13 @@ class ProductTable(DashboardTable):
         template_name='oscar/dashboard/catalogue/product_row_actions.html',
         orderable=False)
 
-    icon = "sitemap"
+    icon = 'fas fa-sitemap'
 
     class Meta(DashboardTable.Meta):
         model = Product
-        fields = ('upc', 'date_updated')
+        fields = ('upc', 'is_public', 'date_updated')
         sequence = ('title', 'upc', 'image', 'product_class', 'variants',
-                    'stock_records', '...', 'date_updated', 'actions')
+                    'stock_records', '...', 'is_public', 'date_updated', 'actions')
         order_by = '-date_updated'
 
 
@@ -71,7 +71,8 @@ class CategoryTable(DashboardTable):
 
     class Meta(DashboardTable.Meta):
         model = Category
-        fields = ('name', 'description')
+        fields = ('name', 'description', 'is_public')
+        sequence = ('name', 'description', '...', 'is_public', 'actions')
 
 
 class AttributeOptionGroupTable(DashboardTable):

@@ -9,18 +9,14 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        </li>
-        <li>
-            <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
-        </li>
-        <li>
-            {{ band.method.name }}
-        </li>
-        <li class="active">{% trans "Delete weight band?" %}</li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a></li>
+            <li class="breadcrumb-item">{{ band.method.name }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Delete weight band?" %}</li>
+        </ol>
+    </nav>
 {% endblock %}
 
 {% block headertext %}
@@ -42,7 +38,7 @@
             </tr>
         </tbody>
     </table>
-    <form method="post" class="well">
+    <form method="post" class="card card-body bg-light">
         <p>{% trans "Are you sure you want to delete this weight band method?" %}</p>
         {% csrf_token %}
         <div class="form-actions">

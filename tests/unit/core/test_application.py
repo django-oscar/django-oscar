@@ -30,8 +30,11 @@ class OscarConfigTestCase(TestCase):
         mock_permissions_required.assert_called_once_with('is_staff', login_url=None)
 
     def test_post_process_urls_adds_decorator(self):
+        def fake_callback():
+            pass
+
         fake_decorator = mock.Mock()
-        fake_decorator.return_value = 'fake_callback'
+        fake_decorator.return_value = fake_callback
 
         self.myapp.get_url_decorator = mock.Mock()
         self.myapp.get_url_decorator.return_value = fake_decorator
@@ -40,4 +43,4 @@ class OscarConfigTestCase(TestCase):
         processed_patterns = self.myapp.post_process_urls([pattern])
 
         self.myapp.get_url_decorator.assert_called_once_with(pattern)
-        self.assertEqual(processed_patterns[0].callback, 'fake_callback')
+        self.assertEqual(processed_patterns[0].callback, fake_callback)
