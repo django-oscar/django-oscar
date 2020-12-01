@@ -8,7 +8,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "bootstrap": "^4.5.3",
     "bootstrap-datetime-picker": "^2.4.4",
-    "eslint": "^7.13.0",
+    "eslint": "^7.14.0",
     "extend": ">=3.0.2",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
