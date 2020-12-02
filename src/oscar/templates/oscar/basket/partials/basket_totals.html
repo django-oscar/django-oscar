@@ -5,9 +5,12 @@
 <div id="basket_totals">
     <table class="table table-sm">
         <tbody>
-            <tr>
-                <th colspan="2"><h3>{% trans "Basket" %}</h3></th>
-            </tr>
+            {% block basket_header %}
+                <tr>
+                    <th colspan="2"><h3>{% trans "Basket" %}</h3></th>
+                </tr>
+            {% endblock %}
+
             {% with offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts %}
                 {% block discount_totals %}
                     {% if offer_discounts or voucher_discounts %}
