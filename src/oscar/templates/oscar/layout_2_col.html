@@ -5,13 +5,14 @@ Keep the same header and footer as the standard layout template but override the
 main content area to split it into a sidebar and a content block
 {% endcomment %}
 {% block content_wrapper %}
-<div class="container page">
+<div class="{% block content_wrapper_classes %}container page{% endblock %}">
     <div class="page_inner">
         {% block breadcrumbs %}{% endblock %}
         <div class="row">
 
             <aside class="sidebar col-sm-4 col-md-3">
                 {% block column_left %}{% endblock %}
+                {% block column_left_extra %}{% endblock %}
             </aside>
 
             <div class="col-sm-8 col-md-9">
@@ -23,6 +24,7 @@ main content area to split it into a sidebar and a content block
 
                 {% include "oscar/partials/alert_messages.html" %}
 
+                {% block pre_content %}{% endblock %}
                 {% block content %}{% endblock %}
             </div>
 
