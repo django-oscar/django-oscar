@@ -1,0 +1,98 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+        django-version: [2.2, 3.0, 3.1]
+    services:
+      postgres:
+        image: postgres:10
+        ports:
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        pip install -e .[test]
+        pip install -r requirements.txt
+        pip install "django~=${{ matrix.django-version }}.0"
+    - name: Run tests
+      env:
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: postgres
+        DATABASE_HOST: localhost
+        DATABASE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+      run: |
+        coverage run --parallel -m pytest -x
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true
+  lint_python:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run linters
+      run: |
+        flake8 src tests setup.py
+        isort -c -q --diff src/ tests/
+  lint_js:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up NodeJS
+      uses: actions/setup-node@v1
+    - name: Install dependencies
+      run: |
+        npm ci
+    - name: Run linters
+      run: |
+        npm run eslint
+  sandbox:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Build sandbox
+      run: |
+        python -m pip install --upgrade pip
+        make sandbox
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Build docs
+      run: |
+        make docs

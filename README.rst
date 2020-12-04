@@ -29,7 +29,6 @@ Further reading:
 * `Documentation`_ on the excellent `readthedocs.org`_
 * `Docker image`_ on http://hub.docker.com/
 * `django-oscar group`_ - mailing list for questions and announcements
-* `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
 * `Slack`_
 * `PyPI page`_
@@ -39,8 +38,7 @@ Further reading:
 
 Continuous integration status:
 
-.. image:: https://travis-ci.com/django-oscar/django-oscar.svg?branch=master
-    :target: https://travis-ci.com/django-oscar/django-oscar
+.. image:: https://github.com/django-oscar/django-oscar/workflows/Tests/badge.svg
 
 .. image:: http://codecov.io/github/django-oscar/django-oscar/coverage.svg?branch=master
     :alt: Coverage
@@ -68,8 +66,6 @@ Docs status:
 .. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
 .. _`Documentation`: https://django-oscar.readthedocs.io/en/stable/
 .. _`readthedocs.org`: http://readthedocs.org
-.. _`Continuous integration homepage`: http://travis-ci.org/#!/django-oscar/django-oscar
-.. _`travis-ci.org`: http://travis-ci.org/
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
