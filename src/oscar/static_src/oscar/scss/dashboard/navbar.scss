@@ -1,6 +1,10 @@
 // Navigation bar
 
 .navbar {
+  .dropdown-menu {
+    z-index: 2000;
+  }
+
   &.navbar-accounts,
   &.navbar-primary {
     padding: 0;

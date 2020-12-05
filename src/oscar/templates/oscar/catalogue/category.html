@@ -13,7 +13,7 @@
 {% block header%}
     <div class="page-header">
         {% if user.is_staff %}
-            <a class="float-right d-sm-none" href="{% url 'dashboard:catalogue-category-update' pk=category.id %}">
+            <a class="float-right d-none d-md-block" href="{% url 'dashboard:catalogue-category-update' pk=category.id %}">
               <small><i class="fas fa-pencil-alt"></i> {% trans "Edit this category" %}</small></a>
         {% endif %}
         <h1>{% block headertext %}{{ category.name }}{% endblock %}</h1>

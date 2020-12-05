@@ -10,7 +10,7 @@
     {% endblock %}
 
     {% block navbar_basket %}
-        <a class="btn btn-secondary float-right btn-cart ml-auto d-inline d-sm-none" href="{% url 'basket:summary' %}">
+        <a class="btn btn-secondary float-right btn-cart ml-auto d-inline-block d-md-none" href="{% url 'basket:summary' %}">
             <i class="fas fa-shopping-cart"></i>
             {% trans "Basket" %}
             {% if not request.basket.is_empty %}

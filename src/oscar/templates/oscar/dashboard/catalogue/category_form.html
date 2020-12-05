@@ -27,7 +27,7 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
+    <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="tab-nav-errors" autocomplete="off">
         {% csrf_token %}
         <div class="row">
             {% block tab_nav %}
@@ -83,10 +83,6 @@
                                 </div>
                                 <div class="card card-body">
                                     {% block seo_content %}
-                                        <span class="error-block">{{ form.non_field_errors }}</span>
-                                        {% for field in form.hidden_fields %}
-                                            {{ field }}
-                                        {% endfor %}
                                         {% for field in form.seo_form_fields %}
                                             {% if 'attr' not in field.id_for_label %}
                                                 {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
