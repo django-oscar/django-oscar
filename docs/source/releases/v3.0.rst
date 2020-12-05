@@ -154,6 +154,11 @@ Minor changes
 - The behaviour of ``checkout.views.ThankYouView`` when no order is found in the session has changed,
   to redirect the user to the URL defined by ``settings.OSCAR_HOMEPAGE`` instead of returning a page not found error.
 
+- The Javascript that initialises the widget for ``oscar.forms.widgets.DateTimePickerInput`` in dashboard forms
+  no longer sets a default value on the field if no initial value has been supplied for the form field. The
+  ``oscar.dashboard.options.initialDate`` Javascript utility function which was previously used to set this has been
+  removed. This change only affects date-time inputs in the dashboard.
+
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
 
