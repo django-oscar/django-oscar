@@ -91,7 +91,6 @@ var oscar = (function(o, $) {
                         close: 'fas fa-times'
                     }
                 },
-                'initialDate': new Date(new Date().setSeconds(0)),
                 'tinyConfig': {
                     entity_encoding: 'raw',
                     statusbar: false,
@@ -237,8 +236,7 @@ var oscar = (function(o, $) {
 
                 var defaultDatetimepickerConfig = {
                     'format': o.dashboard.options.datetimeFormat,
-                    'stepping': o.dashboard.options.stepMinute,
-                    'defaultDate': o.dashboard.options.initialDate
+                    'stepping': o.dashboard.options.stepMinute
                 };
                 var $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
                 $datetimes.each(function(ind, ele) {
@@ -252,8 +250,7 @@ var oscar = (function(o, $) {
 
                 var defaultTimepickerConfig = {
                     'format': o.dashboard.options.timeFormat,
-                    'stepping': o.dashboard.options.stepMinute,
-                    'defaultDate': o.dashboard.options.initialDate
+                    'stepping': o.dashboard.options.stepMinute
                 };
                 var $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *');
                 $times.each(function(ind, ele) {
