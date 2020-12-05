@@ -178,10 +178,10 @@
             <div class="sub-header">
                 <h2>{% trans "Items to buy later" %}</h2>
             </div>
-            <div class="row basket-title d-sm-none">
-                <p class="col-sm-8 h4">{% trans "Items" %}</p>
-                <p class="col-sm-2 h4 text-center">{% trans "Price" %}</p>
-                <div class="col-sm-2">&nbsp;</div>
+            <div class="row basket-title d-none d-md-flex">
+                <div class="col-md-8 h4">{% trans "Items" %}</div>
+                <div class="col-md-2 h4 text-center">{% trans "Price" %}</div>
+                <div class="col-md-2">&nbsp;</div>
             </div>
             <form action="{% url 'basket:saved' %}" method="post" id="saved_basket_formset">
                 {% csrf_token %}
@@ -190,7 +190,7 @@
                     {% purchase_info_for_product request form.instance.product as session %}
                     <div class="basket-items">
                         <div class="row">
-                            <div class="col-sm-2">
+                            <div class="col-md-2">
                                 {{ form.id }}
                                 {% with image=form.instance.product.primary_image %}
                                     {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
@@ -199,7 +199,7 @@
                                     </a>
                                 {% endwith %}
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
                                 <h3><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h3>
                                 <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                             {% purchase_info_for_product request form.instance.product as saved %}
-                            <div class="col-sm-2 text-center">
+                            <div class="col-md-2 text-center">
                                 <p class="price_color">
                                     {% if saved.price.is_tax_known %}
                                         {{ saved.price.incl_tax|currency:saved.price.currency }}
@@ -218,7 +218,7 @@
                                     {% endif %}
                                 </p>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-md-2">
                                 <a href="#" data-id="{{ forloop.counter0 }}" class="btn float-right btn-block" data-behaviours="move">{% trans "Move to basket" %}</a>
                             </div>
                         </div>
