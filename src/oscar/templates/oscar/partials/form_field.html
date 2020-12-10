@@ -42,10 +42,10 @@
 
                     {% block help_text %}
                         {% if field.help_text %}
-                            <span class='form-text'>
+                            <small class="form-text text-muted">
                                 {# We allow HTML within form help fields #}
                                 {{ field.help_text|safe }}
-                            </span>
+                            </small>
                         {% endif %}
                     {% endblock %}
                 </div>
