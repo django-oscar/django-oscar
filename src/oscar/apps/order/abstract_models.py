@@ -167,7 +167,7 @@ class AbstractOrder(models.Model):
         Return basket total including tax but before discounts are applied
         """
         result = self.lines.aggregate(total=Sum('line_price_before_discounts_incl_tax'))
-        return result['total']
+        return result['total'] or D('0.00')
 
     @property
     def basket_total_before_discounts_excl_tax(self):
@@ -175,7 +175,7 @@ class AbstractOrder(models.Model):
         Return basket total excluding tax but before discounts are applied
         """
         result = self.lines.aggregate(total=Sum('line_price_before_discounts_excl_tax'))
-        return result['total']
+        return result['total'] or D('0.00')
 
     @property
     def basket_total_incl_tax(self):
