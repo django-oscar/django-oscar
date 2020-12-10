@@ -75,6 +75,14 @@ Backwards incompatible changes
 - The ``annotate_form_field`` template tag will now set the ``widget_type`` in `the format used by Django 3.1`_: so no longer
   ``CheckboxInput``, but just ``checkbox``.
 
+- The signature of the ``shipping_discount`` methods on ``Offer`` and ``Benefit`` has changed to accept an optional
+  ``currency`` argument, which is now supplied when calling those methods. This allows currency-aware determination
+  of shipping discounts.
+
+- The signature of the ``Benefit.round`` method has changed to accept an optional ``currency`` argument, which is now
+  supplied when calling those methods. The currency is also passed to any custom rounding function
+  that is defined using ``OSCAR_OFFER_ROUNDING_FUNCTION``. This allows currency-aware rounding.
+
 .. _`the format used by Django 3.1`: https://docs.djangoproject.com/en/3.1/ref/forms/api/#django.forms.BoundField.widget_type
 
 Bug fixes
@@ -153,11 +161,6 @@ Minor changes
 
 - The behaviour of ``checkout.views.ThankYouView`` when no order is found in the session has changed,
   to redirect the user to the URL defined by ``settings.OSCAR_HOMEPAGE`` instead of returning a page not found error.
-
-- The Javascript that initialises the widget for ``oscar.forms.widgets.DateTimePickerInput`` in dashboard forms
-  no longer sets a default value on the field if no initial value has been supplied for the form field. The
-  ``oscar.dashboard.options.initialDate`` Javascript utility function which was previously used to set this has been
-  removed. This change only affects date-time inputs in the dashboard.
 
 Dependency changes
 ~~~~~~~~~~~~~~~~~~
