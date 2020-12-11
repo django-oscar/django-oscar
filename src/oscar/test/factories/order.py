@@ -3,9 +3,12 @@ from decimal import Decimal as D
 import factory
 from django.conf import settings
 
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
+from oscar.test import factories
 from oscar.test.factories.utils import tax_add, tax_subtract
+
+OrderCreator = get_class('order.utils', 'OrderCreator')
 
 __all__ = [
     'BillingAddressFactory', 'ShippingAddressFactory', 'OrderDiscountFactory',
@@ -52,7 +55,6 @@ class OrderDiscountFactory(factory.DjangoModelFactory):
 class OrderFactory(factory.DjangoModelFactory):
     class Meta:
         model = get_model('order', 'Order')
-        exclude = ('basket',)
 
     if hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
         status = settings.OSCAR_INITIAL_ORDER_STATUS
@@ -89,6 +91,18 @@ class OrderFactory(factory.DjangoModelFactory):
         if date_placed:
             instance.date_placed = date_placed
         return instance
+
+    @factory.post_generation
+    def create_line_models(obj, create, extracted, **kwargs):
+        if not create:
+            return
+        if extracted:
+            if not obj.basket.all_lines().exists():
+                product = factories.ProductFactory(stockrecords=None)
+                factories.StockRecordFactory(product=product, price_currency=settings.OSCAR_DEFAULT_CURRENCY)
+                obj.basket.add_product(product)
+            for line in obj.basket.all_lines():
+                OrderCreator().create_line_models(obj, line)
 
 
 class OrderLineFactory(factory.DjangoModelFactory):
