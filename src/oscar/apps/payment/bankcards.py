@@ -7,6 +7,7 @@ JCB = 'JCB'
 LASER = 'Laser'
 SOLO = 'Solo'
 SWITCH = 'Switch'
+MIR = 'MIR'
 
 # List of (type, lengths, prefixes) tuples
 # See http://en.wikipedia.org/wiki/Bank_card_number
@@ -32,6 +33,7 @@ CARD_TYPES = [
     (VISA, (13, 16), ('4',)),
     (VISA_ELECTRON, (16,), ('4026', '417500', '4405', '4508',
                             '4844', '4913', '4917')),
+    (MIR, (16), ('2')),
 ]
 
 
