@@ -6,7 +6,6 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.core import exceptions
 from django.db import models
-from django.db.models import Exists, OuterRef
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
@@ -929,8 +928,6 @@ class AbstractRange(models.Model):
 
         if self.included_categories.exists():
             # build query to select all category subtrees.
-            Category = self.included_categories.model
-
             category_filter = Q()
             for path, depth in self.included_categories.values_list("path", "depth"):
                 category_filter |= Q(
@@ -946,11 +943,11 @@ class AbstractRange(models.Model):
             ).filter(
                 Q(product_class_id__in=self.classes.values("id"))
                 | Q(selected_categories__isnull=False)
-            )|self.included_products.all()
+            ) | self.included_products.all()
         else:
             selected_parents = Product.objects.filter(
                 product_class_id__in=self.classes.values("id")
-            )|self.included_products.all()
+            ) | self.included_products.all()
 
         # select parents and their children
         selected_products = selected_parents | Product.objects.filter(
