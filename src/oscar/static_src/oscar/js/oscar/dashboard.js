@@ -354,7 +354,13 @@ var oscar = (function(o, $) {
             toggleOptionGroup: function(type_select){
                 var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
                 var v = type_select.val();
-                option_group_select.parent().parent().toggle(v === 'option' || v === 'multi_option');
+                var showOptionGroup = v === 'option' || v === 'multi_option';
+                option_group_select.parent().parent().toggle(showOptionGroup);
+                if(showOptionGroup){
+                    option_group_select.attr('required', 'required');
+                }else{
+                    option_group_select.attr('required', null);
+                }
             }
         },
         ranges: {

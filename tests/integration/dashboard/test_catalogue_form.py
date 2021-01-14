@@ -39,3 +39,18 @@ class TestCreateProductAttributeForm(TestCase):
 
         # check that code is not None or empty string
         self.assertTrue(product_attribute.code)
+
+    def test_option_group_required_if_attribute_is_option_or_multi_option(self):
+        option_form = forms.ProductAttributesForm(data={
+            "name": "Attr",
+            "type": "option"
+        })
+        self.assertFalse(option_form.is_valid())
+        self.assertEqual(option_form.errors, {'option_group': ['An option group is required']})
+
+        multi_option_form = forms.ProductAttributesForm(data={
+            "name": "Attr",
+            "type": "option"
+        })
+        self.assertFalse(multi_option_form.is_valid())
+        self.assertEqual(multi_option_form.errors, {'option_group': ['An option group is required']})
