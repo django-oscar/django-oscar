@@ -289,7 +289,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             # We don't care that much if we can't resolve the URL
             pass
         else:
-            site = Site.objects.get_current()
+            site = Site.objects.get_current(self.request)
             ctx['status_url'] = 'http://%s%s' % (site.domain, path)
         return ctx
 
