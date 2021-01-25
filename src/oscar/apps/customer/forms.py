@@ -1,3 +1,4 @@
+import datetime
 import string
 
 from django import forms
@@ -15,6 +16,7 @@ from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.compat import (
     existing_user_fields, get_user_model, url_has_allowed_host_and_scheme)
 from oscar.core.loading import get_class, get_model, get_profile_class
+from oscar.core.utils import datetime_combine
 from oscar.forms import widgets
 
 CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
@@ -228,12 +230,10 @@ class OrderSearchForm(forms.Form):
         date_to = self.cleaned_data['date_to']
         order_number = self.cleaned_data['order_number']
         kwargs = {}
-        if date_from and date_to:
-            kwargs['date_placed__range'] = [date_from, date_to]
-        elif date_from and not date_to:
-            kwargs['date_placed__gt'] = date_from
-        elif not date_from and date_to:
-            kwargs['date_placed__lt'] = date_to
+        if date_from:
+            kwargs['date_placed__gte'] = datetime_combine(date_from, datetime.time.min)
+        if date_to:
+            kwargs['date_placed__lte'] = datetime_combine(date_to, datetime.time.max)
         if order_number:
             kwargs['number__contains'] = order_number
         return kwargs
