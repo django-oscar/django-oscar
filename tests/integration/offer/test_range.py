@@ -261,13 +261,13 @@ class TestRangeQuerySet(TestCase):
     def test_excluded_product(self):
         ranges = models.Range.objects.contains_product(self.excludedprod)
         self.assertEqual(
-            ranges.count(), 0, "No ranges shoudl contain the excluded product"
+            ranges.count(), 0, "No ranges should contain the excluded product"
         )
 
     def test_contains_child(self):
         ranges = models.Range.objects.contains_product(self.child1)
         self.assertEqual(
-            ranges.count(), 2, "Both ranges shoudl contain the child product"
+            ranges.count(), 2, "Both ranges should contain the child product"
         )
 
     def test_contains_parent(self):
@@ -280,4 +280,35 @@ class TestRangeQuerySet(TestCase):
         ranges = models.Range.objects.contains_product(self.child2)
         self.assertEqual(
             ranges.count(), 1, "Only 1 range should contain the second child"
+        )
+
+    def test_category(self):
+        parent_category = catalogue_models.Category.add_root(name="parent")
+        child_category = parent_category.add_child(name="child")
+        grand_child_category = child_category.add_child(name="grand-child")
+        catalogue_models.ProductCategory.objects.create(
+            product=self.parent, category=grand_child_category
+        )
+
+        cat_range = models.Range.objects.create(
+            name="categorie range", includes_all_products=False
+        )
+        cat_range.included_categories.add(parent_category)
+        ranges = models.Range.objects.contains_product(self.parent)
+        self.assertEqual(
+            ranges.count(),
+            2,
+            "Since the parent categorie is part of the range, There should be 2 ranges containing the parent product, which is in a subcategory",
+        )
+        self.assertIn(
+            cat_range,
+            ranges,
+            "The range containing the parent category of the parent product, should be selected",
+        )
+
+        ranges = models.Range.objects.contains_product(self.child1)
+        self.assertEqual(
+            ranges.count(),
+            3,
+            "Since the parent categorie is part of the range, There should be 3 ranges containing the child product, which is in a subcategory",
         )
