@@ -65,7 +65,6 @@ class PercentageDiscountBenefit(Benefit):
         discount = D('0.00')
         affected_items = 0
         max_affected_items = self._effective_max_affected_items()
-        affected_lines = []
         for price, line in line_tuples:
             if affected_items >= max_affected_items:
                 break
@@ -88,7 +87,6 @@ class PercentageDiscountBenefit(Benefit):
 
             apply_discount(line, line_discount, quantity_affected, offer)
 
-            affected_lines.append((line, line_discount, quantity_affected))
             affected_items += quantity_affected
             discount += line_discount
 
@@ -156,7 +154,6 @@ class AbsoluteDiscountBenefit(Benefit):
         # XXX: spreading the discount is a policy decision that may not apply
 
         # Apply discount equally amongst them
-        affected_lines = []
         applied_discount = D('0.00')
         last_line_idx = len(lines_to_discount) - 1
         for i, (line, price, qty) in enumerate(lines_to_discount):
@@ -170,7 +167,6 @@ class AbsoluteDiscountBenefit(Benefit):
                 line_discount = self.round(
                     ((price * qty) / affected_items_total) * discount, basket.currency)
             apply_discount(line, line_discount, qty, offer)
-            affected_lines.append((line, line_discount, qty))
             applied_discount += line_discount
 
         return BasketDiscount(discount)
