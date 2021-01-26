@@ -291,14 +291,15 @@ class TestRangeQuerySet(TestCase):
         )
 
         cat_range = models.Range.objects.create(
-            name="categorie range", includes_all_products=False
+            name="category range", includes_all_products=False
         )
         cat_range.included_categories.add(parent_category)
         ranges = models.Range.objects.contains_product(self.parent)
         self.assertEqual(
             ranges.count(),
             2,
-            "Since the parent categorie is part of the range, There should be 2 ranges containing the parent product, which is in a subcategory",
+            "Since the parent category is part of the range, There should be 2 "
+            "ranges containing the parent product, which is in a subcategory",
         )
         self.assertIn(
             cat_range,
@@ -310,5 +311,6 @@ class TestRangeQuerySet(TestCase):
         self.assertEqual(
             ranges.count(),
             3,
-            "Since the parent categorie is part of the range, There should be 3 ranges containing the child product, which is in a subcategory",
+            "Since the parent category is part of the range, There should be 3 "
+            "ranges containing the child product, which is in a subcategory",
         )
