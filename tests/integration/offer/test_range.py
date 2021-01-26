@@ -14,6 +14,7 @@ class TestWholeSiteRange(TestCase):
 
     def test_all_products_range(self):
         self.assertTrue(self.range.contains_product(self.prod))
+        self.assertIn(self.range, models.Range.objects.contains_product(self.prod))
 
     def test_all_products_includes_child_products(self):
         child_product = create_product(structure='child', parent=self.prod)
@@ -231,3 +232,85 @@ class TestRangeModel(TestCase):
         first_range.name = "Bar"
         first_range.save()
         models.Range.objects.create(name="Foo")
+
+
+class TestRangeQuerySet(TestCase):
+    def setUp(self):
+        self.prod = create_product()
+        self.excludedprod = create_product()
+        self.parent = create_product(structure="parent")
+        self.child1 = create_product(structure="child", parent=self.parent)
+        self.child2 = create_product(structure="child", parent=self.parent)
+
+        self.range = models.Range.objects.create(
+            name="All products", includes_all_products=True
+        )
+        self.range.excluded_products.add(self.excludedprod)
+        self.range.excluded_products.add(self.child2)
+
+        self.childrange = models.Range.objects.create(
+            name="Child-specific range", includes_all_products=False
+        )
+        self.childrange.add_product(self.child1)
+        self.childrange.add_product(self.prod)
+
+    def test_contains_product(self):
+        ranges = models.Range.objects.contains_product(self.prod)
+        self.assertEqual(ranges.count(), 2, "Both ranges should contain the product")
+
+    def test_excluded_product(self):
+        ranges = models.Range.objects.contains_product(self.excludedprod)
+        self.assertEqual(
+            ranges.count(), 0, "No ranges should contain the excluded product"
+        )
+
+    def test_contains_child(self):
+        ranges = models.Range.objects.contains_product(self.child1)
+        self.assertEqual(
+            ranges.count(), 2, "Both ranges should contain the child product"
+        )
+
+    def test_contains_parent(self):
+        ranges = models.Range.objects.contains_product(self.parent)
+        self.assertEqual(
+            ranges.count(), 1, "Both ranges should contain the parent product"
+        )
+
+    def test_exclude_child(self):
+        ranges = models.Range.objects.contains_product(self.child2)
+        self.assertEqual(
+            ranges.count(), 1, "Only 1 range should contain the second child"
+        )
+
+    def test_category(self):
+        parent_category = catalogue_models.Category.add_root(name="parent")
+        child_category = parent_category.add_child(name="child")
+        grand_child_category = child_category.add_child(name="grand-child")
+        catalogue_models.ProductCategory.objects.create(
+            product=self.parent, category=grand_child_category
+        )
+
+        cat_range = models.Range.objects.create(
+            name="category range", includes_all_products=False
+        )
+        cat_range.included_categories.add(parent_category)
+        ranges = models.Range.objects.contains_product(self.parent)
+        self.assertEqual(
+            ranges.count(),
+            2,
+            "Since the parent category is part of the range, There should be 2 "
+            "ranges containing the parent product, which is in a subcategory",
+        )
+        self.assertIn(
+            cat_range,
+            ranges,
+            "The range containing the parent category of the parent product, should be selected",
+        )
+
+        ranges = models.Range.objects.contains_product(self.child1)
+        self.assertEqual(
+            ranges.count(),
+            3,
+            "Since the parent category is part of the range, There should be 3 "
+            "ranges containing the child product, which is in a subcategory",
+        )
