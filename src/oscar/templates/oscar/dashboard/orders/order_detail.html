@@ -258,7 +258,7 @@
                                     {% for charge in surcharges %}
                                         <tr>
                                             <td colspan="8"></td>
-                                            <th>{% blocktrans with name=charge.name %}Surcharge (name){% endblocktrans %}</th>
+                                            <th>{% blocktrans with name=charge.name %}Surcharge {{ name }}{% endblocktrans %}</th>
                                             <th class="text-right">{{ charge.excl_tax|currency:order.currency }}</th>
                                             <th class="text-right">{{ charge.incl_tax|currency:order.currency }}</th>
                                             <td></td>
