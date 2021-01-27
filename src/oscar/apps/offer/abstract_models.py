@@ -6,7 +6,6 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.core import exceptions
 from django.db import models
-from django.db.models import Exists, OuterRef
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
@@ -927,29 +926,32 @@ class AbstractRange(models.Model):
                 id__in=self.excluded_products.values("id")
             )
 
-        Category = self.included_categories.model
+        if self.included_categories.exists():
+            # build query to select all category subtrees.
+            category_filter = Q()
+            for path, depth in self.included_categories.values_list("path", "depth"):
+                category_filter |= Q(
+                    categories__depth__gte=depth, categories__path__startswith=path
+                )
 
-        # build query to select all category subtrees.
-        included_in_subtree = self.included_categories.filter(
-            path__rstartswith=OuterRef("path"), depth__lte=OuterRef("depth")
-        )
-        category_tree = Category.objects.annotate(
-            is_included_in_subtree=Exists(included_in_subtree.values("id"))
-        ).filter(is_included_in_subtree=True)
-
-        # select all those product that are selected either by product class,
-        # category, or explicitly by included_products.
-        selected_parents = (
-            Product.objects.filter(
+            # select all those product that are selected either by product class,
+            # category, or explicitly by included_products.
+            selected_parents = Product.objects.annotate(
+                selected_categories=models.FilteredRelation(
+                    "categories", condition=category_filter
+                )
+            ).filter(
                 Q(product_class_id__in=self.classes.values("id"))
-                | Q(categories__in=category_tree)
-            )
-            | self.included_products.all()
-        )
+                | Q(selected_categories__isnull=False)
+            ) | self.included_products.all()
+        else:
+            selected_parents = Product.objects.filter(
+                product_class_id__in=self.classes.values("id")
+            ) | self.included_products.all()
 
         # select parents and their children
-        selected_products = (
-            selected_parents | Product.objects.filter(parent__in=selected_parents)
+        selected_products = selected_parents | Product.objects.filter(
+            parent__in=selected_parents
         )
 
         # now go and exclude all explicitly excluded products

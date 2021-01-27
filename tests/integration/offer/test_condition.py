@@ -3,12 +3,16 @@ from unittest import mock
 
 import pytest
 from django.test import TestCase
+from django.utils.timezone import now
 
 from oscar.apps.basket.models import Basket
-from oscar.apps.offer import custom, models
+from oscar.apps.offer import applicator, custom, models
+from oscar.core.loading import get_class
 from oscar.test import factories
 from oscar.test.basket import add_product
 from tests._site.model_tests_app.models import BasketOwnerCalledBarry
+
+Selector = get_class('partner.strategy', 'Selector')
 
 
 @pytest.fixture
@@ -329,3 +333,47 @@ class TestCustomCondition(TestCase):
     def test_is_satisfied_by_match(self):
         self.basket.owner = factories.UserFactory(first_name="Barry")
         assert self.offer.is_condition_satisfied(self.basket)
+
+
+class TestOffersWithCountCondition(TestCase):
+
+    def setUp(self):
+        super().setUp()
+
+        self.basket = factories.create_basket(empty=True)
+
+        # Create range and add one product to it.
+        rng = factories.RangeFactory(name='All products', includes_all_products=True)
+        self.product = factories.ProductFactory()
+        rng.add_product(self.product)
+
+        # Create a non-exclusive offer #1.
+        condition1 = factories.ConditionFactory(range=rng, value=D('1'))
+        benefit1 = factories.BenefitFactory(range=rng, value=D('10'))
+        self.offer1 = factories.ConditionalOfferFactory(
+            condition=condition1, benefit=benefit1, start_datetime=now(),
+            name='Test offer #1', exclusive=False,
+        )
+
+        # Create a non-exclusive offer #2.
+        condition2 = factories.ConditionFactory(range=rng, value=D('1'))
+        benefit2 = factories.BenefitFactory(range=rng, value=D('5'))
+        self.offer2 = factories.ConditionalOfferFactory(
+            condition=condition2, benefit=benefit2, start_datetime=now(),
+            name='Test offer #2', exclusive=False,
+        )
+
+    def add_product(self):
+        self.basket.add_product(self.product)
+        self.basket.strategy = Selector().strategy()
+        applicator.Applicator().apply(self.basket)
+
+    def assertOffersApplied(self, offers):
+        applied_offers = self.basket.applied_offers()
+        self.assertEqual(len(offers), len(applied_offers))
+        for offer in offers:
+            self.assertIn(offer.id, applied_offers, msg=offer)
+
+    def test_both_non_exclusive_offers_are_applied(self):
+        self.add_product()
+        self.assertOffersApplied([self.offer1, self.offer2])

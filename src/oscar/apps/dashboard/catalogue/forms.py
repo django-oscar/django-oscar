@@ -397,6 +397,12 @@ class ProductAttributesForm(forms.ModelForm):
 
         return code
 
+    def clean(self):
+        attr_type = self.cleaned_data.get('type')
+        option_group = self.cleaned_data.get('option_group')
+        if attr_type in [ProductAttribute.OPTION, ProductAttribute.MULTI_OPTION] and not option_group:
+            self.add_error('option_group', _('An option group is required'))
+
     class Meta:
         model = ProductAttribute
         fields = ["name", "code", "type", "option_group", "required"]

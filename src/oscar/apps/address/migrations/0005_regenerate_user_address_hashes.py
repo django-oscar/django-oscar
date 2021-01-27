@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(regenerate_user_address_hashes)
+        migrations.RunPython(regenerate_user_address_hashes, migrations.RunPython.noop)
     ]

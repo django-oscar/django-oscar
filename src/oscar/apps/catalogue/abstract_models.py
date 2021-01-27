@@ -1292,13 +1292,11 @@ class MissingProductImage(object):
                     "Please copy/symlink the "
                     "'missing image' image at %s into your MEDIA_ROOT at %s. "
                     "This exception was raised because Oscar was unable to "
-                    "symlink it for you.") % (media_file_path,
-                                              settings.MEDIA_ROOT))
+                    "symlink it for you.") % (static_file_path, settings.MEDIA_ROOT))
             else:
                 logging.info((
                     "Symlinked the 'missing image' image at %s into your "
-                    "MEDIA_ROOT at %s") % (media_file_path,
-                                           settings.MEDIA_ROOT))
+                    "MEDIA_ROOT at %s") % (static_file_path, settings.MEDIA_ROOT))
 
 
 class AbstractProductImage(models.Model):

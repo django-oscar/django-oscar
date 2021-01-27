@@ -1,8 +1,8 @@
-========================================
-Oscar 3.0 release notes (in development)
-========================================
+=======================
+Oscar 3.0 release notes
+=======================
 
-:release: TBD
+:release: 2021-01-27
 
 Welcome to Oscar 3.0!
 
@@ -93,6 +93,8 @@ Bug fixes
   ``SimpleLazyObject`` when assigned to ``Product.attr``. ``ProductAttributesContainer.initiate_attributes()``
   was removed as the database query now happens on instantiation.
 
+- Fixed the handling of multiple non-exclusive offers with a count condition (:issue:`3162`).
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -173,7 +175,7 @@ Javascript and CSS dependencies:
 
 - Upgraded ``bootstrap`` to version 4.5.3.
 - Added ``tempusdominus-bootstrap-4`` version 5.1, use for Bootstrap 4 datepicker inputs.
-- Upgraded ``tinymce`` to version 5.5.
+- Upgraded ``tinymce`` to version 5.6.
 
 .. _deprecated_features_in_3.0:
 

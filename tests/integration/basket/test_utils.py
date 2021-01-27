@@ -76,7 +76,7 @@ class TestLineOfferConsumer:
         offer1 = ConditionalOfferFactory(name='offer1', benefit=benefit)
         lines = basket.all_lines()
         assert lines[0].consumer.available(offer1) == 1
-        assert lines[1].consumer.available(offer1) == 5
+        assert lines[1].consumer.available(offer1) == 10
 
     def test_consumed_with_offer(self, filled_basket):
         offer1 = ConditionalOfferFactory(name='offer1')
