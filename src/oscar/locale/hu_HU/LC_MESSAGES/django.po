@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Csaba Saransky <stackiflowi@gmail.com>, 2019
 # Karoly Kalapacs <mail@tinkersense.com>, 2019
@@ -10,14 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 13:37+0300\n"
+"POT-Creation-Date: 2021-01-27 09:56+0300\n"
 "PO-Revision-Date: 2020-12-11 10:39+0000\n"
 "Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
-"Language-Team: Hungarian (Hungary) (http://www.transifex.com/codeinthehole/django-oscar/language/hu_HU/)\n"
+"Language-Team: Hungarian (Hungary) (http://www.transifex.com/codeinthehole/"
+"django-oscar/language/hu_HU/)\n"
+"Language: hu_HU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/address/abstract_models.py:24
@@ -116,7 +117,8 @@ msgstr "A %(country)s címhez érvényes irányítószám szükséges"
 #: apps/address/abstract_models.py:290
 #, python-format
 msgid "The postcode '%(postcode)s' is not valid for %(country)s"
-msgstr "A megadott '%(postcode)s' irányítószám nem érvényes a %(country)s címhez"
+msgstr ""
+"A megadott '%(postcode)s' irányítószám nem érvényes a %(country)s címhez"
 
 #: apps/address/abstract_models.py:408
 msgid "ISO 3166-1 alpha-2"
@@ -138,7 +140,7 @@ msgstr "Országnév"
 msgid "Official name"
 msgstr "Hivatalos név"
 
-#: apps/address/abstract_models.py:421 apps/catalogue/abstract_models.py:1319
+#: apps/address/abstract_models.py:421 apps/catalogue/abstract_models.py:1317
 msgid "Display order"
 msgstr "Megjelenítési sorrend"
 
@@ -171,7 +173,8 @@ msgstr "Tudnivalók"
 
 #: apps/address/abstract_models.py:478
 msgid "Tell us anything we should know when delivering your order."
-msgstr "Kérjük, írja meg, ha még bármit tudnunk kell a sikeres kézbesítés érdekében!"
+msgstr ""
+"Kérjük, írja meg, ha még bármit tudnunk kell a sikeres kézbesítés érdekében!"
 
 #: apps/address/abstract_models.py:485
 #: templates/oscar/checkout/shipping_address.html:5
@@ -222,8 +225,8 @@ msgstr ""
 
 #: apps/address/abstract_models.py:535 apps/analytics/abstract_models.py:84
 #: apps/analytics/abstract_models.py:105 apps/basket/abstract_models.py:647
-#: apps/communication/abstract_models.py:98 apps/offer/abstract_models.py:214
-#: apps/offer/abstract_models.py:820 apps/order/abstract_models.py:391
+#: apps/communication/abstract_models.py:98 apps/offer/abstract_models.py:213
+#: apps/offer/abstract_models.py:819 apps/order/abstract_models.py:391
 #: apps/order/abstract_models.py:423 apps/order/abstract_models.py:979
 #: apps/partner/abstract_models.py:273 apps/payment/abstract_models.py:42
 msgid "Date Created"
@@ -272,7 +275,7 @@ msgstr "Partner címek"
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:625
 #: apps/catalogue/abstract_models.py:308 apps/catalogue/abstract_models.py:444
 #: apps/catalogue/abstract_models.py:1039
-#: apps/catalogue/abstract_models.py:1312 apps/order/abstract_models.py:514
+#: apps/catalogue/abstract_models.py:1310 apps/order/abstract_models.py:514
 #: apps/partner/abstract_models.py:95 apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
 #: templates/oscar/customer/anon_order.html:58
@@ -413,19 +416,17 @@ msgstr ""
 
 #: apps/analytics/reports.py:58 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:83 apps/catalogue/abstract_models.py:130
-#: apps/catalogue/abstract_models.py:815
-#: apps/catalogue/abstract_models.py:1168
+#: apps/catalogue/abstract_models.py:815 apps/catalogue/abstract_models.py:1168
 #: apps/catalogue/abstract_models.py:1240 apps/catalogue/reviews/forms.py:11
 #: apps/communication/abstract_models.py:66
-#: apps/dashboard/catalogue/tables.py:80
-#: apps/dashboard/catalogue/tables.py:104 apps/dashboard/users/forms.py:44
-#: apps/dashboard/vouchers/forms.py:18 apps/dashboard/vouchers/forms.py:86
-#: apps/offer/abstract_models.py:87 apps/offer/abstract_models.py:789
-#: apps/order/abstract_models.py:866 apps/order/abstract_models.py:1045
-#: apps/order/reports.py:19 apps/payment/abstract_models.py:209
-#: apps/payment/abstract_models.py:252 apps/shipping/abstract_models.py:20
-#: apps/voucher/abstract_models.py:31 apps/voucher/abstract_models.py:122
-#: apps/wishlists/abstract_models.py:23
+#: apps/dashboard/catalogue/tables.py:80 apps/dashboard/catalogue/tables.py:104
+#: apps/dashboard/users/forms.py:44 apps/dashboard/vouchers/forms.py:18
+#: apps/dashboard/vouchers/forms.py:86 apps/offer/abstract_models.py:86
+#: apps/offer/abstract_models.py:788 apps/order/abstract_models.py:866
+#: apps/order/abstract_models.py:1045 apps/order/reports.py:19
+#: apps/payment/abstract_models.py:209 apps/payment/abstract_models.py:252
+#: apps/shipping/abstract_models.py:20 apps/voucher/abstract_models.py:31
+#: apps/voucher/abstract_models.py:122 apps/wishlists/abstract_models.py:23
 #: templates/oscar/customer/profile/profile.html:9
 #: templates/oscar/customer/wishlists/wishlists_list.html:9
 #: templates/oscar/dashboard/catalogue/product_class_form.html:101
@@ -516,7 +517,7 @@ msgstr "Megrendelés elküldve -- megrendelve a kasszánál"
 #: apps/customer/abstract_models.py:153 apps/dashboard/catalogue/forms.py:317
 #: apps/dashboard/orders/forms.py:77 apps/dashboard/reviews/forms.py:15
 #: apps/dashboard/reviews/forms.py:28 apps/dashboard/users/forms.py:43
-#: apps/offer/abstract_models.py:133 apps/offer/abstract_models.py:1011
+#: apps/offer/abstract_models.py:132 apps/offer/abstract_models.py:1013
 #: apps/order/abstract_models.py:86 apps/order/abstract_models.py:553
 #: apps/partner/abstract_models.py:271 apps/payment/abstract_models.py:41
 #: templates/oscar/customer/alerts/alert_list.html:13
@@ -556,10 +557,9 @@ msgid "Vouchers"
 msgstr "Kuponok"
 
 #: apps/basket/abstract_models.py:58 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:418
-#: apps/catalogue/abstract_models.py:1322 apps/customer/abstract_models.py:156
-#: apps/order/abstract_models.py:916 apps/partner/abstract_models.py:137
-#: apps/wishlists/abstract_models.py:50
+#: apps/catalogue/abstract_models.py:418 apps/catalogue/abstract_models.py:1320
+#: apps/customer/abstract_models.py:156 apps/order/abstract_models.py:916
+#: apps/partner/abstract_models.py:137 apps/wishlists/abstract_models.py:50
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/ranges/range_list.html:34
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
@@ -606,9 +606,11 @@ msgstr ""
 #: apps/basket/abstract_models.py:158
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d"
-" items in one order."
-msgstr "Technikai okokból nem tudunk több, mint%(threshold)dterméket küldeni rendelésenként."
+"Due to technical limitations we are not able to ship more than %(threshold)d "
+"items in one order."
+msgstr ""
+"Technikai okokból nem tudunk több, mint%(threshold)dterméket küldeni "
+"rendelésenként."
 
 #: apps/basket/abstract_models.py:619
 msgid "Line Reference"
@@ -671,16 +673,20 @@ msgstr "Nem változtat a %s kosár tartalmán"
 #: apps/basket/abstract_models.py:913
 #, python-format
 msgid ""
-"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
-" since you added it to your basket"
-msgstr "A '%(product)s' termék ára %(old_price)s árról %(new_price)s árra emelkedett, mióta a kosárba tetted"
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s "
+"since you added it to your basket"
+msgstr ""
+"A '%(product)s' termék ára %(old_price)s árról %(new_price)s árra "
+"emelkedett, mióta a kosárba tetted"
 
 #: apps/basket/abstract_models.py:918
 #, python-format
 msgid ""
-"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
-" since you added it to your basket"
-msgstr "A '%(product)s' termék ára %(old_price)s árról %(new_price)s árra csökkent, mióta a kosárba tetted"
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s "
+"since you added it to your basket"
+msgstr ""
+"A '%(product)s' termék ára %(old_price)s árról %(new_price)s árra csökkent, "
+"mióta a kosárba tetted"
 
 #: apps/basket/abstract_models.py:932 apps/order/abstract_models.py:798
 #: apps/order/abstract_models.py:832 apps/order/abstract_models.py:945
@@ -697,8 +703,8 @@ msgstr "Sor"
 msgid "Option"
 msgstr "Opció"
 
-#: apps/basket/abstract_models.py:937 apps/offer/abstract_models.py:494
-#: apps/offer/abstract_models.py:709 apps/order/abstract_models.py:803
+#: apps/basket/abstract_models.py:937 apps/offer/abstract_models.py:493
+#: apps/offer/abstract_models.py:708 apps/order/abstract_models.py:803
 msgid "Value"
 msgstr "Érték"
 
@@ -720,12 +726,11 @@ msgstr "A kosárba teszem"
 
 #: apps/basket/forms.py:135 apps/catalogue/abstract_models.py:817
 #: apps/catalogue/abstract_models.py:1241
-#: apps/communication/abstract_models.py:55
-#: apps/dashboard/vouchers/forms.py:19 apps/dashboard/vouchers/forms.py:87
-#: apps/dashboard/vouchers/forms.py:131 apps/order/abstract_models.py:867
-#: apps/order/abstract_models.py:1047 apps/order/abstract_models.py:1100
-#: apps/partner/abstract_models.py:24 apps/payment/abstract_models.py:211
-#: apps/voucher/abstract_models.py:126
+#: apps/communication/abstract_models.py:55 apps/dashboard/vouchers/forms.py:19
+#: apps/dashboard/vouchers/forms.py:87 apps/dashboard/vouchers/forms.py:131
+#: apps/order/abstract_models.py:867 apps/order/abstract_models.py:1047
+#: apps/order/abstract_models.py:1100 apps/partner/abstract_models.py:24
+#: apps/payment/abstract_models.py:211 apps/voucher/abstract_models.py:126
 #: templates/oscar/dashboard/catalogue/product_class_form.html:102
 #: templates/oscar/dashboard/comms/list.html:31
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:34
@@ -746,27 +751,35 @@ msgstr "Kérlek, válassz egy érvényes terméket"
 #: apps/basket/forms.py:244
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d"
-" items in one order. Your basket currently has %(basket)d items."
-msgstr "Technikai okokból nem tudunk több, mint %(threshold)d terméket küldeni rendelésenként. Jelenleg a kosaradban %(basket)d termék van."
+"Due to technical limitations we are not able to ship more than %(threshold)d "
+"items in one order. Your basket currently has %(basket)d items."
+msgstr ""
+"Technikai okokból nem tudunk több, mint %(threshold)d terméket küldeni "
+"rendelésenként. Jelenleg a kosaradban %(basket)d termék van."
 
 #: apps/basket/forms.py:266
 msgid ""
 "This product cannot be added to the basket because a price could not be "
 "determined for it."
-msgstr "Ezt a terméket nem tudjuk a kosárba tenni, mert nem tudunk árat rendelni hozzá."
+msgstr ""
+"Ezt a terméket nem tudjuk a kosárba tenni, mert nem tudunk árat rendelni "
+"hozzá."
 
 #: apps/basket/forms.py:273
 msgid ""
-"This product cannot be added to the basket as its currency isn't the same as"
-" other products in your basket"
-msgstr "Ezt a terméket nem tudjuk a kosárba tenni, mivel a megadott ár más valutában van, mint a kosarában levő többi termék"
+"This product cannot be added to the basket as its currency isn't the same as "
+"other products in your basket"
+msgstr ""
+"Ezt a terméket nem tudjuk a kosárba tenni, mivel a megadott ár más valutában "
+"van, mint a kosarában levő többi termék"
 
 #: apps/basket/middleware.py:174
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr "Összeolvasztottuk a kosarad tartalmát egy korábbi vásárlásoddal. A kosár tartalma változhat."
+msgstr ""
+"Összeolvasztottuk a kosarad tartalmát egy korábbi vásárlásoddal. A kosár "
+"tartalma változhat."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -883,8 +896,8 @@ msgid "Voucher '%s' removed from basket"
 msgstr "A '%s' kupont eltávolítottuk a kosaradból"
 
 #: apps/catalogue/abstract_models.py:84 apps/catalogue/abstract_models.py:136
-#: apps/catalogue/abstract_models.py:379 apps/offer/abstract_models.py:90
-#: apps/offer/abstract_models.py:791 apps/shipping/abstract_models.py:18
+#: apps/catalogue/abstract_models.py:379 apps/offer/abstract_models.py:89
+#: apps/offer/abstract_models.py:790 apps/shipping/abstract_models.py:18
 msgid "Slug"
 msgstr ""
 
@@ -896,9 +909,8 @@ msgstr "Postázás szükséges?"
 msgid "Track stock levels?"
 msgstr "Készlet szint figyelése?"
 
-#: apps/catalogue/abstract_models.py:101
-#: apps/catalogue/abstract_models.py:1250 defaults.py:121
-#: templates/oscar/dashboard/catalogue/option_delete.html:27
+#: apps/catalogue/abstract_models.py:101 apps/catalogue/abstract_models.py:1250
+#: defaults.py:121 templates/oscar/dashboard/catalogue/option_delete.html:27
 #: templates/oscar/dashboard/catalogue/option_form.html:28
 #: templates/oscar/dashboard/catalogue/option_list.html:6
 #: templates/oscar/dashboard/catalogue/option_list.html:13
@@ -914,7 +926,7 @@ msgid "Product classes"
 msgstr "Termékosztályok"
 
 #: apps/catalogue/abstract_models.py:131 apps/catalogue/abstract_models.py:380
-#: apps/offer/abstract_models.py:91 apps/shipping/abstract_models.py:21
+#: apps/offer/abstract_models.py:90 apps/shipping/abstract_models.py:21
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/offers/offer_detail.html:65
 #: templates/oscar/dashboard/offers/summary.html:14
@@ -997,7 +1009,8 @@ msgstr "Termékstruktúra"
 
 #: apps/catalogue/abstract_models.py:355
 msgid "Show this product in search results and catalogue listings."
-msgstr "Ezt a terméket mutasd a keresési eredményekben és katalógus listázásokban"
+msgstr ""
+"Ezt a terméket mutasd a keresési eredményekben és katalógus listázásokban"
 
 #: apps/catalogue/abstract_models.py:358 apps/dashboard/catalogue/forms.py:77
 #: apps/dashboard/orders/forms.py:71 apps/order/abstract_models.py:519
@@ -1012,13 +1025,15 @@ msgstr "UPC"
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
-msgstr "Universal Product Code (UPC) egy olyan azonosító, ami független a terjesztőtől. Pl. egy könyv ISBN száma."
+msgstr ""
+"Universal Product Code (UPC) egy olyan azonosító, ami független a "
+"terjesztőtől. Pl. egy könyv ISBN száma."
 
 #: apps/catalogue/abstract_models.py:370
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
-"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
-" a stand-alone product (i.e. there is only one version of this product)."
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is "
+"a stand-alone product (i.e. there is only one version of this product)."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:377 apps/catalogue/abstract_models.py:625
@@ -1048,9 +1063,11 @@ msgstr "Tulajdonságok"
 
 #: apps/catalogue/abstract_models.py:397
 msgid ""
-"A product attribute is something that this product may have, such as a size,"
-" as specified by its class"
-msgstr "A termék tulajdonsá valami olyan, ami a terméknek van, mint például mérete, abban a formában, ahogy az osztályában meghatározott."
+"A product attribute is something that this product may have, such as a size, "
+"as specified by its class"
+msgstr ""
+"A termék tulajdonsá valami olyan, ami a terméknek van, mint például mérete, "
+"abban a formában, ahogy az osztályában meghatározott."
 
 #: apps/catalogue/abstract_models.py:401
 msgid "Product options"
@@ -1061,7 +1078,10 @@ msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
-msgstr "Az opciók olyan értékek, amik egy adott termékkel kapcsolatosak, amikor az bekerül az ügyfél kosarába. Ez olyasmi lehet, mint például egy személyes üzenet pólóra nyomtatása."
+msgstr ""
+"Az opciók olyan értékek, amik egy adott termékkel kapcsolatosak, amikor az "
+"bekerül az ügyfél kosarába. Ez olyasmi lehet, mint például egy személyes "
+"üzenet pólóra nyomtatása."
 
 #: apps/catalogue/abstract_models.py:409
 #: templates/oscar/dashboard/catalogue/product_update.html:331
@@ -1169,7 +1189,9 @@ msgstr "Értékelés"
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
-msgstr "Meghatározza a termékek sorrendjét. Egy magasabb értékkel rendelkező termék egy alacsonyabb értékekkel rendelkező előtt fog megjelenni."
+msgstr ""
+"Meghatározza a termékek sorrendjét. Egy magasabb értékkel rendelkező termék "
+"egy alacsonyabb értékekkel rendelkező előtt fog megjelenni."
 
 #: apps/catalogue/abstract_models.py:799
 msgid "Product recommendation"
@@ -1183,27 +1205,25 @@ msgstr "Termék ajánlások"
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, and underscores, and "
 "can't start with a digit."
-msgstr "A kód csak kis- és nagybetűt, számot és alulvonást tartalmazhat és nem kezdődhet számmal."
+msgstr ""
+"A kód csak kis- és nagybetűt, számot és alulvonást tartalmazhat és nem "
+"kezdődhet számmal."
 
-#: apps/catalogue/abstract_models.py:841
-#: apps/catalogue/abstract_models.py:1041
+#: apps/catalogue/abstract_models.py:841 apps/catalogue/abstract_models.py:1041
 #: apps/catalogue/abstract_models.py:1233
 msgid "Text"
 msgstr "Szöveg"
 
-#: apps/catalogue/abstract_models.py:842
-#: apps/catalogue/abstract_models.py:1042
+#: apps/catalogue/abstract_models.py:842 apps/catalogue/abstract_models.py:1042
 #: apps/catalogue/abstract_models.py:1234
 msgid "Integer"
 msgstr "Egész szám"
 
-#: apps/catalogue/abstract_models.py:843
-#: apps/catalogue/abstract_models.py:1235
+#: apps/catalogue/abstract_models.py:843 apps/catalogue/abstract_models.py:1235
 msgid "True / False"
 msgstr "Igaz / Hamis"
 
-#: apps/catalogue/abstract_models.py:844
-#: apps/catalogue/abstract_models.py:1044
+#: apps/catalogue/abstract_models.py:844 apps/catalogue/abstract_models.py:1044
 #: apps/catalogue/abstract_models.py:1236
 msgid "Float"
 msgstr "Lebegőpontos szám"
@@ -1212,8 +1232,7 @@ msgstr "Lebegőpontos szám"
 msgid "Rich Text"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:846
-#: apps/catalogue/abstract_models.py:1046
+#: apps/catalogue/abstract_models.py:846 apps/catalogue/abstract_models.py:1046
 #: apps/catalogue/abstract_models.py:1237 apps/order/abstract_models.py:451
 #: templates/oscar/dashboard/orders/line_detail.html:133
 #: templates/oscar/dashboard/orders/line_detail.html:163
@@ -1241,11 +1260,10 @@ msgstr ""
 msgid "File"
 msgstr "Fájl"
 
-#: apps/catalogue/abstract_models.py:856
-#: apps/catalogue/abstract_models.py:1242 apps/offer/abstract_models.py:115
-#: apps/offer/abstract_models.py:488 apps/offer/abstract_models.py:706
-#: apps/order/abstract_models.py:802 apps/payment/abstract_models.py:37
-#: defaults.py:216
+#: apps/catalogue/abstract_models.py:856 apps/catalogue/abstract_models.py:1242
+#: apps/offer/abstract_models.py:114 apps/offer/abstract_models.py:487
+#: apps/offer/abstract_models.py:705 apps/order/abstract_models.py:802
+#: apps/payment/abstract_models.py:37 defaults.py:216
 #: templates/oscar/dashboard/catalogue/product_class_form.html:103
 #: templates/oscar/dashboard/orders/order_detail.html:636
 #: templates/oscar/dashboard/orders/order_detail.html:686
@@ -1258,7 +1276,9 @@ msgstr "Opció csoport"
 
 #: apps/catalogue/abstract_models.py:865
 msgid "Select an option group if using type \"Option\" or \"Multi Option\""
-msgstr "Válassz egy opció csoportot, ha \"Opció\" vagy \"Multi Opció\" típust választasz"
+msgstr ""
+"Válassz egy opció csoportot, ha \"Opció\" vagy \"Multi Opció\" típust "
+"választasz"
 
 #: apps/catalogue/abstract_models.py:866
 #: templates/oscar/dashboard/catalogue/product_class_form.html:104
@@ -1384,25 +1404,24 @@ msgstr "Tulajdonság opciók"
 msgid "Is this option required?"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1314
+#: apps/catalogue/abstract_models.py:1312
 msgid "Original"
 msgstr "Eredeti"
 
-#: apps/catalogue/abstract_models.py:1315
+#: apps/catalogue/abstract_models.py:1313
 msgid "Caption"
 msgstr "Felirat"
 
-#: apps/catalogue/abstract_models.py:1320
+#: apps/catalogue/abstract_models.py:1318
 msgid ""
-"An image with a display order of zero will be the primary image for a "
-"product"
+"An image with a display order of zero will be the primary image for a product"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1330
+#: apps/catalogue/abstract_models.py:1328
 msgid "Product image"
 msgstr "Termék kép"
 
-#: apps/catalogue/abstract_models.py:1331
+#: apps/catalogue/abstract_models.py:1329
 msgid "Product images"
 msgstr "Termék képek"
 
@@ -1595,7 +1614,7 @@ msgstr "Új ügyfél vagyok és szeretnék regisztrálni, mielőtt fizetnék"
 msgid "I am a returning customer, and my password is"
 msgstr "Visszatérő ügyfél vagyok és a jelszavam"
 
-#: apps/checkout/forms.py:73 apps/customer/forms.py:137
+#: apps/checkout/forms.py:73 apps/customer/forms.py:139
 msgid "A user with that email address already exists"
 msgstr "Már van felhasználó ezzel az email-címmel"
 
@@ -1608,7 +1627,9 @@ msgstr "Fizetés előtt néhány árucikket a kosárba kell raknod"
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr "'%(title)s' termék többé nem elérhető (%(reason)s). Kérjük, hogy ennek megfelelően módosítsd a kosár tartalmát a folytatáshoz"
+msgstr ""
+"'%(title)s' termék többé nem elérhető (%(reason)s). Kérjük, hogy ennek "
+"megfelelően módosítsd a kosár tartalmát a folytatáshoz"
 
 #: apps/checkout/session.py:150
 msgid "Please either sign in or enter your email address"
@@ -1622,7 +1643,9 @@ msgstr "Kérlek, válassz egy szállítási címet"
 msgid ""
 "Your previously chosen shipping address is no longer valid.  Please choose "
 "another one"
-msgstr "Az előzőleg választott szállítási cím érvénytelen. Kérlek, válassz egy másikat"
+msgstr ""
+"Az előzőleg választott szállítási cím érvénytelen. Kérlek, válassz egy "
+"másikat"
 
 #: apps/checkout/session.py:193
 msgid "Please choose a shipping method"
@@ -1632,7 +1655,9 @@ msgstr "Kérlek, válassz egy szállítási módot"
 msgid ""
 "Your previously chosen shipping method is no longer valid.  Please choose "
 "another one"
-msgstr "Az előzőleg választott szállítási mód érvénytelen. Kérlek, válassz egy másikat"
+msgstr ""
+"Az előzőleg választott szállítási mód érvénytelen. Kérlek, válassz egy "
+"másikat"
 
 #: apps/checkout/surcharges.py:23
 msgid "Percentage surcharge"
@@ -1657,9 +1682,9 @@ msgid "Address deleted"
 msgstr "Cím törölve"
 
 #: apps/checkout/views.py:276
-msgid ""
-"Shipping is unavailable for your chosen address - please choose another"
-msgstr "A szállítás nem elérhető a választott címre - kérlek, válassz egy másikat"
+msgid "Shipping is unavailable for your chosen address - please choose another"
+msgstr ""
+"A szállítás nem elérhető a választott címre - kérlek, válassz egy másikat"
 
 #: apps/checkout/views.py:319
 msgid "Your submitted shipping method is not permitted"
@@ -1669,7 +1694,10 @@ msgstr "Az általad megadott szállítási mód nem engedélyezett"
 msgid ""
 "A problem occurred while processing payment for this order - no payment has "
 "been taken.  Please contact customer services if this problem persists"
-msgstr "Probléma merült fel a rendelés fizetése közben -- a rendelés kifizetése nem történt meg. Kérlek, vedd fel a kapcsolatot az ügyfélszolgálattal, ha a probléma tartósan fennáll"
+msgstr ""
+"Probléma merült fel a rendelés fizetése közben -- a rendelés kifizetése nem "
+"történt meg. Kérlek, vedd fel a kapcsolatot az ügyfélszolgálattal, ha a "
+"probléma tartósan fennáll"
 
 #: apps/checkout/views.py:642
 msgid ""
@@ -1833,7 +1861,9 @@ msgstr "Aktív"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr "Azt jelzi, hogy a felhasználót aktívként kezelendő-e. Inkább ezt kapcsold ki, mint töröld a felhasználói fiókját."
+msgstr ""
+"Azt jelzi, hogy a felhasználót aktívként kezelendő-e. Inkább ezt kapcsold "
+"ki, mint töröld a felhasználói fiókját."
 
 #: apps/customer/abstract_models.py:62
 msgid "date joined"
@@ -1924,7 +1954,7 @@ msgstr "A termékfigyelés nem törölhető"
 msgid "Customer"
 msgstr "Vevő"
 
-#: apps/customer/forms.py:67 apps/customer/forms.py:102
+#: apps/customer/forms.py:69 apps/customer/forms.py:104
 #: apps/dashboard/partners/forms.py:128
 #: templates/oscar/customer/profile/profile.html:13
 #: templates/oscar/dashboard/orders/order_detail.html:32
@@ -1932,34 +1962,34 @@ msgstr "Vevő"
 msgid "Email address"
 msgstr "Email-cím"
 
-#: apps/customer/forms.py:87 apps/customer/forms.py:104
+#: apps/customer/forms.py:89 apps/customer/forms.py:106
 #: apps/dashboard/partners/forms.py:77
 msgid "Password"
 msgstr "Jelszó"
 
-#: apps/customer/forms.py:97
+#: apps/customer/forms.py:99
 msgid "The entered password is not valid!"
 msgstr "A megadott jelszó érvénytelen!"
 
-#: apps/customer/forms.py:106
+#: apps/customer/forms.py:108
 msgid "Confirm password"
 msgstr "Jelszó megerősítése"
 
-#: apps/customer/forms.py:145 apps/dashboard/partners/forms.py:91
+#: apps/customer/forms.py:147 apps/dashboard/partners/forms.py:91
 msgid "The two password fields didn't match."
 msgstr "A két jelszómező nem egyezik."
 
-#: apps/customer/forms.py:167 apps/dashboard/orders/forms.py:21
+#: apps/customer/forms.py:169 apps/dashboard/orders/forms.py:21
 msgctxt "start date"
 msgid "From"
 msgstr "Honnan"
 
-#: apps/customer/forms.py:170 apps/dashboard/orders/forms.py:24
+#: apps/customer/forms.py:172 apps/dashboard/orders/forms.py:24
 msgctxt "end date"
 msgid "To"
 msgstr "Hova"
 
-#: apps/customer/forms.py:172 apps/dashboard/communications/forms.py:23
+#: apps/customer/forms.py:174 apps/dashboard/communications/forms.py:23
 #: apps/dashboard/offers/reports.py:14 apps/dashboard/orders/forms.py:68
 #: apps/dashboard/orders/views.py:365 apps/order/abstract_models.py:32
 #: apps/order/reports.py:18 templates/oscar/customer/order/order_list.html:53
@@ -1971,51 +2001,57 @@ msgstr "Hova"
 msgid "Order number"
 msgstr "Rendelésszám"
 
-#: apps/customer/forms.py:178
+#: apps/customer/forms.py:180
 msgid "At least one field is required."
 msgstr "Legalább egy mező szükséges."
 
-#: apps/customer/forms.py:187 apps/dashboard/orders/forms.py:31
+#: apps/customer/forms.py:189 apps/dashboard/orders/forms.py:31
 #: apps/dashboard/orders/forms.py:54
 msgid "All orders"
 msgstr "Összes rendelés"
 
-#: apps/customer/forms.py:197
+#: apps/customer/forms.py:199
 #, python-format
 msgid ""
 "Orders placed between %(date_from)s and %(date_to)s and order number "
 "containing %(order_number)s"
-msgstr "Leadott rendelések  %(date_from)s és %(date_to)s között, és a rendelési szám %(order_number)s számsort tartalmazza"
+msgstr ""
+"Leadott rendelések  %(date_from)s és %(date_to)s között, és a rendelési szám "
+"%(order_number)s számsort tartalmazza"
 
-#: apps/customer/forms.py:201 apps/dashboard/orders/forms.py:42
+#: apps/customer/forms.py:203 apps/dashboard/orders/forms.py:42
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
 msgstr "Leadott rendelések %(date_from)s és %(date_to)s között"
 
-#: apps/customer/forms.py:205
+#: apps/customer/forms.py:207
 #, python-format
 msgid ""
 "Orders placed since %(date_from)s and order number containing "
 "%(order_number)s"
-msgstr "%(date_from)s óta leadott rendelések, amelyek rendelési száma tartalmazza a következő számsort: %(order_number)s"
+msgstr ""
+"%(date_from)s óta leadott rendelések, amelyek rendelési száma tartalmazza a "
+"következő számsort: %(order_number)s"
 
-#: apps/customer/forms.py:208
+#: apps/customer/forms.py:210
 #, python-format
 msgid "Orders placed since %(date_from)s"
 msgstr "%(date_from)s óta leadott rendelések"
 
-#: apps/customer/forms.py:211
+#: apps/customer/forms.py:213
 #, python-format
 msgid ""
 "Orders placed until %(date_to)s and order number containing %(order_number)s"
-msgstr "%(date_to)s dátumig leadott rendelések, amelyek rendelés száma tartalmazza a következő számsort: %(order_number)s"
+msgstr ""
+"%(date_to)s dátumig leadott rendelések, amelyek rendelés száma tartalmazza a "
+"következő számsort: %(order_number)s"
 
-#: apps/customer/forms.py:214
+#: apps/customer/forms.py:216
 #, python-format
 msgid "Orders placed until %(date_to)s"
 msgstr "%(date_to)s dátumig leadott rendelések"
 
-#: apps/customer/forms.py:216
+#: apps/customer/forms.py:218
 #, python-format
 msgid "Orders with order number containing %(order_number)s"
 msgstr "%(order_number)s számsort tartalmazó rendelésszámú rendelések"
@@ -2043,7 +2079,9 @@ msgid ""
 "%s has been sent a confirmation email for another product alert on this "
 "site. Please confirm or cancel that request before signing up for more "
 "alerts."
-msgstr "%s küldött visszaigazoló emailt egy másik termékünkről. Kérlek, erősítsd meg vagy töröld a kérést, mielőtt új terméfigyelést állítanál be!"
+msgstr ""
+"%s küldött visszaigazoló emailt egy másik termékünkről. Kérlek, erősítsd meg "
+"vagy töröld a kérést, mielőtt új terméfigyelést állítanál be!"
 
 #: apps/customer/forms.py:401
 msgid "You already have an active alert for this product"
@@ -2076,7 +2114,8 @@ msgstr "Profil törlése"
 
 #: apps/customer/views.py:363
 msgid "Your profile has now been deleted. Thanks for using the site."
-msgstr "A profilod törlésre került. Köszönjük, hogy használtad a szolgáltatásunkat."
+msgstr ""
+"A profilod törlésre került. Köszönjük, hogy használtad a szolgáltatásunkat."
 
 #: apps/customer/views.py:370
 msgid "Change Password"
@@ -2341,6 +2380,12 @@ msgstr ""
 msgid "Select an option group"
 msgstr "Válassz egy opciócsoportot"
 
+#: apps/dashboard/catalogue/forms.py:404
+#, fuzzy
+#| msgid "A discount value is required"
+msgid "An option group is required"
+msgstr "Kedvezmény mértékét meg kell adni"
+
 #: apps/dashboard/catalogue/formsets.py:96
 msgid ""
 "At least one stock record must be set to a partner that you're associated "
@@ -2516,7 +2561,7 @@ msgstr "'%s' terméktípus módosítása"
 msgid "Product type updated successfully"
 msgstr "Terméktípus sikeresen módosítva"
 
-#: apps/dashboard/catalogue/views.py:760 apps/offer/abstract_models.py:811
+#: apps/dashboard/catalogue/views.py:760 apps/offer/abstract_models.py:810
 #: defaults.py:105
 #: templates/oscar/dashboard/catalogue/product_class_list.html:24
 msgid "Product Types"
@@ -2566,9 +2611,10 @@ msgstr "'%s' Tulajdonság Opció Csoport törlése"
 
 #: apps/dashboard/catalogue/views.py:914
 #, python-format
-msgid ""
-"%i product attributes are still assigned to this attribute option group"
-msgstr "%i termék tulajdonságok még mindig hozzá tartoznak a tulajdonság opció csoporthoz"
+msgid "%i product attributes are still assigned to this attribute option group"
+msgstr ""
+"%i termék tulajdonságok még mindig hozzá tartoznak a tulajdonság opció "
+"csoporthoz"
 
 #: apps/dashboard/catalogue/views.py:933
 msgid "Attribute Option Group deleted successfully"
@@ -2641,7 +2687,8 @@ msgstr "Kérlek, adj meg egy email-címet"
 #: apps/dashboard/communications/views.py:31
 msgid ""
 "The submitted form was not valid, please correct the errors and resubmit"
-msgstr "Az elküldött űrlap hibákat tartalmaz. Kérlek javítsd ki, majd küldd újra"
+msgstr ""
+"Az elküldött űrlap hibákat tartalmaz. Kérlek javítsd ki, majd küldd újra"
 
 #: apps/dashboard/communications/views.py:40
 msgid "Email saved"
@@ -2656,12 +2703,12 @@ msgstr "Email előnézetet küldtünk neki: %s"
 msgid "Offers dashboard"
 msgstr ""
 
-#: apps/dashboard/offers/forms.py:24 apps/offer/abstract_models.py:157
+#: apps/dashboard/offers/forms.py:24 apps/offer/abstract_models.py:156
 #: templates/oscar/dashboard/offers/offer_list.html:47
 msgid "Start date"
 msgstr "Kezdés dátuma"
 
-#: apps/dashboard/offers/forms.py:27 apps/offer/abstract_models.py:161
+#: apps/dashboard/offers/forms.py:27 apps/offer/abstract_models.py:160
 #: templates/oscar/dashboard/offers/offer_list.html:48
 msgid "End date"
 msgstr "Zárás dátuma"
@@ -2985,7 +3032,8 @@ msgstr "Nem lehet megváltoztatni a rendelés állapotát fizetési hiba miatt: 
 #: apps/dashboard/orders/views.py:422 apps/dashboard/orders/views.py:600
 #, python-format
 msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
-msgstr "A rendelés állapota '%(old_status)s' állapotról '%(new_status)s' állapotra"
+msgstr ""
+"A rendelés állapota '%(old_status)s' állapotról '%(new_status)s' állapotra"
 
 #: apps/dashboard/orders/views.py:471
 msgid "No valid action submitted"
@@ -3034,7 +3082,9 @@ msgstr "Érvénytelen űrlap elküldés"
 
 #: apps/dashboard/orders/views.py:614
 msgid "Unable to change order status as the requested new status is not valid"
-msgstr "Nem lehet megváltoztatni a rendelés állapotát, mivel a kért új állapot nem érvényes"
+msgstr ""
+"Nem lehet megváltoztatni a rendelés állapotát, mivel a kért új állapot nem "
+"érvényes"
 
 #: apps/dashboard/orders/views.py:628 apps/dashboard/orders/views.py:704
 msgid "Please choose a valid amount"
@@ -3048,8 +3098,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:652
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to "
-"'%(new_status)s'"
+"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
 msgstr ""
 
 #: apps/dashboard/orders/views.py:669 apps/dashboard/orders/views.py:717
@@ -3304,7 +3353,9 @@ msgstr "Riport jellege"
 
 #: apps/dashboard/reports/forms.py:20
 msgid "Only the offer and order reports use the selected date range"
-msgstr "Csak az ajánlatok és rendelések riportjai használják a kijelölt időintervallumot"
+msgstr ""
+"Csak az ajánlatok és rendelések riportjai használják a kijelölt "
+"időintervallumot"
 
 #: apps/dashboard/reports/forms.py:27
 msgid "The report is inclusive of this date"
@@ -3345,7 +3396,9 @@ msgstr ""
 msgid ""
 "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
 "%(name_filter)s"
-msgstr "%(main_filter)s %(date_filter)s %(status_filter)s %(kw_filter)s %(name_filter)s"
+msgstr ""
+"%(main_filter)s %(date_filter)s %(status_filter)s %(kw_filter)s "
+"%(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:52
 #, python-format
@@ -3403,7 +3456,7 @@ msgctxt "User's name"
 msgid "Name"
 msgstr "Név"
 
-#: apps/dashboard/users/tables.py:20 apps/offer/abstract_models.py:210
+#: apps/dashboard/users/tables.py:20 apps/offer/abstract_models.py:209
 msgid "Number of Orders"
 msgstr "Rendelések száma"
 
@@ -3487,7 +3540,7 @@ msgstr "Akció jellege"
 msgid "Discount value"
 msgstr "Akció mértéke"
 
-#: apps/dashboard/vouchers/forms.py:43 apps/offer/abstract_models.py:119
+#: apps/dashboard/vouchers/forms.py:43 apps/offer/abstract_models.py:118
 msgid "Exclusive offers cannot be combined on the same items"
 msgstr "Kiemelt ajánlatok nem vonhatóak össze ugyanazon termékeknél"
 
@@ -3571,327 +3624,343 @@ msgstr "Kupon kollekció létrehozva"
 msgid "Voucher sets"
 msgstr "Kupon kollekciók"
 
-#: apps/offer/abstract_models.py:88
+#: apps/offer/abstract_models.py:87
 msgid "This is displayed within the customer's basket"
 msgstr "Ez megjelenik az ügyfél kosarában"
 
-#: apps/offer/abstract_models.py:92
+#: apps/offer/abstract_models.py:91
 msgid "This is displayed on the offer browsing page"
 msgstr "Ez megjelenik az ajánlat kereső oldalán"
 
-#: apps/offer/abstract_models.py:107
+#: apps/offer/abstract_models.py:106
 msgid "Site offer - available to all users"
 msgstr "Shop ajánlat - minden felhasználó számára elérhető"
 
-#: apps/offer/abstract_models.py:108
+#: apps/offer/abstract_models.py:107
 msgid ""
 "Voucher offer - only available after entering the appropriate voucher code"
 msgstr "Kupon ajánlat - csak a megfelelő kupon kód beütésével elérhető"
 
-#: apps/offer/abstract_models.py:110
+#: apps/offer/abstract_models.py:109
 msgid "User offer - available to certain types of user"
-msgstr "Felhasználói ajánlat - csak a felhasználók bizonyos csoportjának elérhető"
+msgstr ""
+"Felhasználói ajánlat - csak a felhasználók bizonyos csoportjának elérhető"
 
-#: apps/offer/abstract_models.py:111
+#: apps/offer/abstract_models.py:110
 msgid ""
 "Session offer - temporary offer, available for a user for the duration of "
 "their session"
-msgstr "Alkalmi ajánlat - időszakos ajánlat, a felhasználó csak egy bizonyos időtartamon belül használhatja fel"
+msgstr ""
+"Alkalmi ajánlat - időszakos ajánlat, a felhasználó csak egy bizonyos "
+"időtartamon belül használhatja fel"
 
-#: apps/offer/abstract_models.py:118
+#: apps/offer/abstract_models.py:117
 msgid "Exclusive offer"
 msgstr "Kiemelt ajánlat"
 
-#: apps/offer/abstract_models.py:124
+#: apps/offer/abstract_models.py:123
 msgid ""
 "Select other non-exclusive offers that this offer can be combined with on "
 "the same items"
 msgstr ""
 
-#: apps/offer/abstract_models.py:139 apps/offer/abstract_models.py:717
+#: apps/offer/abstract_models.py:138 apps/offer/abstract_models.py:716
 #: templates/oscar/dashboard/offers/offer_detail.html:74
 #: templates/oscar/dashboard/offers/offer_list.html:51
 #: templates/oscar/dashboard/offers/summary.html:31
 msgid "Condition"
 msgstr "Állapot"
 
-#: apps/offer/abstract_models.py:144 apps/offer/abstract_models.py:511
+#: apps/offer/abstract_models.py:143 apps/offer/abstract_models.py:510
 msgid "Benefit"
 msgstr "Haszon"
 
-#: apps/offer/abstract_models.py:148
+#: apps/offer/abstract_models.py:147
 #: templates/oscar/dashboard/offers/offer_list.html:49
 msgid "Priority"
 msgstr "Prioritás"
 
-#: apps/offer/abstract_models.py:149
+#: apps/offer/abstract_models.py:148
 msgid "The highest priority offers are applied first"
 msgstr "A legmagasabb prioritású ajánlatokat alkalmazzuk először"
 
-#: apps/offer/abstract_models.py:158
+#: apps/offer/abstract_models.py:157
 msgid ""
 "Offers are active from the start date. Leave this empty if the offer has no "
 "start date."
-msgstr "Az ajánlatok a kezdő dátumtól aktívak. Hagyd üresen, ha az ajánlatnak nincs kezdő időpontja."
+msgstr ""
+"Az ajánlatok a kezdő dátumtól aktívak. Hagyd üresen, ha az ajánlatnak nincs "
+"kezdő időpontja."
 
-#: apps/offer/abstract_models.py:162
+#: apps/offer/abstract_models.py:161
 msgid ""
 "Offers are active until the end date. Leave this empty if the offer has no "
 "expiry date."
-msgstr "Az ajánlatok a zárás dátumáig érvényesek. Hagyd üresen, ha az ajánlatnak nincs lejárati ideje."
+msgstr ""
+"Az ajánlatok a zárás dátumáig érvényesek. Hagyd üresen, ha az ajánlatnak "
+"nincs lejárati ideje."
 
-#: apps/offer/abstract_models.py:170
+#: apps/offer/abstract_models.py:169
 msgid "Max global applications"
 msgstr "Max összesített felhasználás"
 
-#: apps/offer/abstract_models.py:171
+#: apps/offer/abstract_models.py:170
 msgid "The number of times this offer can be used before it is unavailable"
-msgstr "Az ajánlat felhasználásának lehetséges száma, mielőtt érvénytelenné válik"
+msgstr ""
+"Az ajánlat felhasználásának lehetséges száma, mielőtt érvénytelenné válik"
 
-#: apps/offer/abstract_models.py:178
+#: apps/offer/abstract_models.py:177
 msgid "Max user applications"
 msgstr "Max felhasználói hasznosítás"
 
-#: apps/offer/abstract_models.py:179
+#: apps/offer/abstract_models.py:178
 msgid "The number of times a single user can use this offer"
 msgstr "Ennyiszer használhatja egy adott felhasználó ezt az ajánlatot"
 
-#: apps/offer/abstract_models.py:186
+#: apps/offer/abstract_models.py:185
 msgid "Max basket applications"
 msgstr "Max kosár hasznosítás"
 
-#: apps/offer/abstract_models.py:188
+#: apps/offer/abstract_models.py:187
 msgid "The number of times this offer can be applied to a basket (and order)"
 msgstr "Ennyiszer alkalmazható ez az ajánlat egy adott kosárra (és rendelésre)"
 
-#: apps/offer/abstract_models.py:194
+#: apps/offer/abstract_models.py:193
 msgid "Max discount"
 msgstr "Maximális árengedmény"
 
-#: apps/offer/abstract_models.py:196
+#: apps/offer/abstract_models.py:195
 msgid ""
 "When an offer has given more discount to orders than this threshold, then "
 "the offer becomes unavailable"
-msgstr "Ha egy ajánlat ennél nagyobb kedvezményt eredményez, az ajánlat elérhetetlenné válik"
+msgstr ""
+"Ha egy ajánlat ennél nagyobb kedvezményt eredményez, az ajánlat "
+"elérhetetlenné válik"
 
-#: apps/offer/abstract_models.py:205
+#: apps/offer/abstract_models.py:204
 msgid "Total Discount"
 msgstr "Kedvezmény teljes összege"
 
-#: apps/offer/abstract_models.py:208
+#: apps/offer/abstract_models.py:207
 msgid "Number of applications"
 msgstr "Felhasználások száma"
 
-#: apps/offer/abstract_models.py:213
+#: apps/offer/abstract_models.py:212
 msgid "URL redirect (optional)"
 msgstr "URL átirányítás (választható)"
 
-#: apps/offer/abstract_models.py:227
+#: apps/offer/abstract_models.py:226
 msgid "Conditional offer"
 msgstr "Feltételes ajánlat"
 
-#: apps/offer/abstract_models.py:228
+#: apps/offer/abstract_models.py:227
 msgid "Conditional offers"
 msgstr "Feltételes ajánlatok"
 
-#: apps/offer/abstract_models.py:250 apps/voucher/abstract_models.py:176
+#: apps/offer/abstract_models.py:249 apps/voucher/abstract_models.py:176
 msgid "End date should be later than start date"
 msgstr "A zárás dátumának később kell lennie, mint a kezdő dátum"
 
-#: apps/offer/abstract_models.py:368
+#: apps/offer/abstract_models.py:367
 msgid "Offer is suspended"
 msgstr "Az ajánlat felfüggesztve"
 
-#: apps/offer/abstract_models.py:373
+#: apps/offer/abstract_models.py:372
 #, python-format
 msgid "Limited to %(total)d uses (%(remainder)d remaining)"
-msgstr "%(total)d alkalmas felhasználásra korlátozott (%(remainder)d alkalom maradt)"
+msgstr ""
+"%(total)d alkalmas felhasználásra korlátozott (%(remainder)d alkalom maradt)"
 
-#: apps/offer/abstract_models.py:381
+#: apps/offer/abstract_models.py:380
 msgid "Limited to 1 use per user"
 msgstr "Felhasználónként 1-szer felhasználható"
 
-#: apps/offer/abstract_models.py:383
+#: apps/offer/abstract_models.py:382
 #, python-format
 msgid "Limited to %(total)d uses per user"
 msgstr "Felhasználónknént %(total)d alkalommal felhasználható"
 
-#: apps/offer/abstract_models.py:390
+#: apps/offer/abstract_models.py:389
 msgid "Limited to 1 use per basket"
 msgstr "Kosaranként 1-szer felhasználható"
 
-#: apps/offer/abstract_models.py:392
+#: apps/offer/abstract_models.py:391
 #, python-format
 msgid "Limited to %(total)d uses per basket"
 msgstr "Kosaranként %(total)d alkalommal felhasználható"
 
-#: apps/offer/abstract_models.py:411
+#: apps/offer/abstract_models.py:410
 #, python-format
 msgid "Available between %(start)s and %(end)s"
 msgstr "%(start)s és %(end)s között elérhető"
 
-#: apps/offer/abstract_models.py:417
+#: apps/offer/abstract_models.py:416
 #, python-format
 msgid "Available from %(start)s"
 msgstr "%(start)s naptól elérhető"
 
-#: apps/offer/abstract_models.py:421
+#: apps/offer/abstract_models.py:420
 #, python-format
 msgid "Available until %(end)s"
 msgstr "%(end)s napjáig elérhető"
 
-#: apps/offer/abstract_models.py:429
+#: apps/offer/abstract_models.py:428
 #, python-format
 msgid "Limited to a cost of %(max)s"
 msgstr "%(max)s költségre korlátozott"
 
-#: apps/offer/abstract_models.py:468 apps/offer/abstract_models.py:705
-#: apps/offer/abstract_models.py:829 apps/offer/abstract_models.py:996
+#: apps/offer/abstract_models.py:467 apps/offer/abstract_models.py:704
+#: apps/offer/abstract_models.py:828 apps/offer/abstract_models.py:998
 msgid "Range"
 msgstr "Tartomány"
 
-#: apps/offer/abstract_models.py:476
+#: apps/offer/abstract_models.py:475
 msgid "Discount is a percentage off of the product's value"
 msgstr "A kedvezmény a termék értékének adott százalékkal való csökkentése"
 
-#: apps/offer/abstract_models.py:477
+#: apps/offer/abstract_models.py:476
 msgid "Discount is a fixed amount off of the product's value"
 msgstr "A kedvezmény a termék árának adott összeggel való csökkentése"
 
-#: apps/offer/abstract_models.py:478
+#: apps/offer/abstract_models.py:477
 msgid "Discount is to give the cheapest product for free"
 msgstr "A kedvezmény a legolcsóbb termék ingyenes elérhetősége"
 
-#: apps/offer/abstract_models.py:480
+#: apps/offer/abstract_models.py:479
 msgid "Get the products that meet the condition for a fixed price"
 msgstr "Válaszd a terméket, ami megfelel a fix áras feltételnek"
 
-#: apps/offer/abstract_models.py:482
+#: apps/offer/abstract_models.py:481
 msgid "Discount is a fixed amount of the shipping cost"
-msgstr "A kedvezmény a megrendelési összeg szállítási költséggel való csökkentése"
+msgstr ""
+"A kedvezmény a megrendelési összeg szállítási költséggel való csökkentése"
 
-#: apps/offer/abstract_models.py:483
+#: apps/offer/abstract_models.py:482
 msgid "Get shipping for a fixed price"
 msgstr "Fix áras kiszállítás"
 
-#: apps/offer/abstract_models.py:484
+#: apps/offer/abstract_models.py:483
 msgid "Discount is a percentage off of the shipping cost"
 msgstr "A kedvezmény a szállítási költség adott százalékkal való csökkentése"
 
-#: apps/offer/abstract_models.py:499
+#: apps/offer/abstract_models.py:498
 msgid "Max Affected Items"
 msgstr "Az érintett termékek számának maximuma"
 
-#: apps/offer/abstract_models.py:500
+#: apps/offer/abstract_models.py:499
 msgid ""
 "Set this to prevent the discount consuming all items within the range that "
 "are in the basket."
-msgstr "Ezt állítsd be, hogy megakadályozd, hogy a kosár tartalmának minden tartományba eső termékét érintse a kedvezmény."
+msgstr ""
+"Ezt állítsd be, hogy megakadályozd, hogy a kosár tartalmának minden "
+"tartományba eső termékét érintse a kedvezmény."
 
-#: apps/offer/abstract_models.py:506 apps/offer/abstract_models.py:712
-#: apps/offer/abstract_models.py:818
+#: apps/offer/abstract_models.py:505 apps/offer/abstract_models.py:711
+#: apps/offer/abstract_models.py:817
 msgid "Custom class"
 msgstr ""
 
-#: apps/offer/abstract_models.py:512
+#: apps/offer/abstract_models.py:511
 msgid "Benefits"
 msgstr "Előnyök"
 
-#: apps/offer/abstract_models.py:550
+#: apps/offer/abstract_models.py:549
 msgid "Multibuy benefits require a product range"
 msgstr "Multibuy kedvezmény termék tartományt igényel"
 
-#: apps/offer/abstract_models.py:552
+#: apps/offer/abstract_models.py:551
 msgid "Multibuy benefits don't require a value"
 msgstr "Multibuy kedvezmény nem igényel értéket"
 
-#: apps/offer/abstract_models.py:554
+#: apps/offer/abstract_models.py:553
 msgid "Multibuy benefits don't require a 'max affected items' attribute"
 msgstr "Multibuy kedvezményhez nem kell 'max érintett termék' tulajdonság"
 
-#: apps/offer/abstract_models.py:564
+#: apps/offer/abstract_models.py:563
 msgid "Percentage benefits require a product range"
 msgstr "Százalékos kedvezmények termék tartományt igényelnek"
 
-#: apps/offer/abstract_models.py:567 apps/offer/abstract_models.py:592
+#: apps/offer/abstract_models.py:566 apps/offer/abstract_models.py:591
 msgid "Percentage discount benefits require a value"
 msgstr "A százalékos kedvezmény értéktartományt igényel"
 
-#: apps/offer/abstract_models.py:569 apps/offer/abstract_models.py:594
+#: apps/offer/abstract_models.py:568 apps/offer/abstract_models.py:593
 msgid "Percentage discount cannot be greater than 100"
 msgstr "A kedvezmény mértéke nem lehet több, mint 100"
 
-#: apps/offer/abstract_models.py:577
+#: apps/offer/abstract_models.py:576
 msgid "A discount value is required"
 msgstr "Kedvezmény mértékét meg kell adni"
 
-#: apps/offer/abstract_models.py:579 apps/offer/abstract_models.py:597
-#: apps/offer/abstract_models.py:608
+#: apps/offer/abstract_models.py:578 apps/offer/abstract_models.py:596
+#: apps/offer/abstract_models.py:607
 msgid "No range should be selected as this benefit does not apply to products"
 msgstr ""
 
-#: apps/offer/abstract_models.py:582 apps/offer/abstract_models.py:600
-#: apps/offer/abstract_models.py:611
+#: apps/offer/abstract_models.py:581 apps/offer/abstract_models.py:599
+#: apps/offer/abstract_models.py:610
 msgid "Shipping discounts don't require a 'max affected items' attribute"
-msgstr "A szállítással kapcsolatos kedvezményekhez nem kell megadni \"Az érintett termékek számának maximumát\""
+msgstr ""
+"A szállítással kapcsolatos kedvezményekhez nem kell megadni \"Az érintett "
+"termékek számának maximumát\""
 
-#: apps/offer/abstract_models.py:620
+#: apps/offer/abstract_models.py:619
 msgid ""
 "No range should be selected as the condition range will be used instead."
 msgstr ""
 
-#: apps/offer/abstract_models.py:626
+#: apps/offer/abstract_models.py:625
 msgid "Fixed discount benefits require a product range"
 msgstr "Fix áras kedvezményhez meg kell adj termék tartományt"
 
-#: apps/offer/abstract_models.py:628
+#: apps/offer/abstract_models.py:627
 msgid "Fixed discount benefits require a value"
 msgstr "Meg kell határozni a fix kedvezmény mértékét"
 
-#: apps/offer/abstract_models.py:694
+#: apps/offer/abstract_models.py:693
 msgid "Depends on number of items in basket that are in condition range"
 msgstr ""
 
-#: apps/offer/abstract_models.py:696
+#: apps/offer/abstract_models.py:695
 msgid "Depends on value of items in basket that are in condition range"
 msgstr ""
 
-#: apps/offer/abstract_models.py:698
+#: apps/offer/abstract_models.py:697
 msgid ""
 "Needs to contain a set number of DISTINCT items from the condition range"
 msgstr ""
 
-#: apps/offer/abstract_models.py:718
+#: apps/offer/abstract_models.py:717
 msgid "Conditions"
 msgstr "Feltételek"
 
-#: apps/offer/abstract_models.py:797
+#: apps/offer/abstract_models.py:796
 #: templates/oscar/dashboard/catalogue/product_update.html:286
 #: templates/oscar/dashboard/ranges/range_list.html:33
 msgid "Is public?"
 msgstr "Nyilvános?"
 
-#: apps/offer/abstract_models.py:798
+#: apps/offer/abstract_models.py:797
 msgid "Public ranges have a customer-facing page"
 msgstr ""
 
-#: apps/offer/abstract_models.py:801
+#: apps/offer/abstract_models.py:800
 msgid "Includes all products?"
 msgstr "Az összes termékre érvényes?"
 
-#: apps/offer/abstract_models.py:805
+#: apps/offer/abstract_models.py:804
 msgid "Included Products"
 msgstr "Érintett termékek"
 
-#: apps/offer/abstract_models.py:808
+#: apps/offer/abstract_models.py:807
 msgid "Excluded Products"
 msgstr "Kizárt termékek"
 
-#: apps/offer/abstract_models.py:814
+#: apps/offer/abstract_models.py:813
 msgid "Included Categories"
 msgstr "Érintett kategóriák"
 
-#: apps/offer/abstract_models.py:830 defaults.py:113
+#: apps/offer/abstract_models.py:829 defaults.py:113
 #: templates/oscar/dashboard/ranges/range_delete.html:7
 #: templates/oscar/dashboard/ranges/range_delete.html:14
 #: templates/oscar/dashboard/ranges/range_form.html:7
@@ -3904,47 +3973,47 @@ msgstr "Érintett kategóriák"
 msgid "Ranges"
 msgstr ""
 
-#: apps/offer/abstract_models.py:997
+#: apps/offer/abstract_models.py:999
 msgid "File Path"
 msgstr "Fájl útvonal"
 
-#: apps/offer/abstract_models.py:998
+#: apps/offer/abstract_models.py:1000
 msgid "Size"
 msgstr "Méret"
 
-#: apps/offer/abstract_models.py:1002
+#: apps/offer/abstract_models.py:1004
 msgid "Uploaded By"
 msgstr "Feltöltötte"
 
-#: apps/offer/abstract_models.py:1003
+#: apps/offer/abstract_models.py:1005
 msgid "Date Uploaded"
 msgstr "A feltöltés ideje"
 
-#: apps/offer/abstract_models.py:1013
+#: apps/offer/abstract_models.py:1015
 msgid "Error Message"
 msgstr "Hibaüzenet"
 
-#: apps/offer/abstract_models.py:1017
+#: apps/offer/abstract_models.py:1019
 msgid "Date Processed"
 msgstr "Feldolgozás dátuma"
 
-#: apps/offer/abstract_models.py:1018
+#: apps/offer/abstract_models.py:1020
 msgid "Number of New SKUs"
 msgstr "Új SKU-k száma"
 
-#: apps/offer/abstract_models.py:1020
+#: apps/offer/abstract_models.py:1022
 msgid "Number of Unknown SKUs"
 msgstr "Ismeretlen SKU-k száma"
 
-#: apps/offer/abstract_models.py:1023
+#: apps/offer/abstract_models.py:1025
 msgid "Number of Duplicate SKUs"
 msgstr "Ismételt SKU-k száma"
 
-#: apps/offer/abstract_models.py:1029
+#: apps/offer/abstract_models.py:1031
 msgid "Range Product Uploaded File"
 msgstr ""
 
-#: apps/offer/abstract_models.py:1030
+#: apps/offer/abstract_models.py:1032
 msgid "Range Product Uploaded Files"
 msgstr ""
 
@@ -3967,81 +4036,82 @@ msgstr "Százalékos árengedmény mértéke"
 msgid "Percentage discount benefits"
 msgstr "Százalékos árengedmény mértéke"
 
-#: apps/offer/benefits.py:102
+#: apps/offer/benefits.py:101
 #, python-format
 msgid "%(value)s discount on %(range)s"
 msgstr ""
 
-#: apps/offer/benefits.py:119
+#: apps/offer/benefits.py:118
 msgid "Absolute discount benefit"
 msgstr "Abszolút árengedmény mértéke"
 
-#: apps/offer/benefits.py:120
+#: apps/offer/benefits.py:119
 msgid "Absolute discount benefits"
 msgstr "Abszolút árengedmény mértéke"
 
-#: apps/offer/benefits.py:190
+#: apps/offer/benefits.py:187
 #, python-format
 msgid "The products that meet the condition are sold for %(amount)s"
-msgstr "Termékek, amelyek megfelelnek a feltételeknek, %(amount)s áron keltek el"
+msgstr ""
+"Termékek, amelyek megfelelnek a feltételeknek, %(amount)s áron keltek el"
 
-#: apps/offer/benefits.py:201
+#: apps/offer/benefits.py:198
 msgid "Fixed price benefit"
 msgstr "Fix árengedmény mértéke"
 
-#: apps/offer/benefits.py:202
+#: apps/offer/benefits.py:199
 msgid "Fixed price benefits"
 msgstr "Fix árengedmény mértéke"
 
-#: apps/offer/benefits.py:253
+#: apps/offer/benefits.py:250
 #, python-format
 msgid "Cheapest product from %(range)s is free"
 msgstr ""
 
-#: apps/offer/benefits.py:268
+#: apps/offer/benefits.py:265
 msgid "Multibuy discount benefit"
 msgstr "Multibuy árengedmény mértéke"
 
-#: apps/offer/benefits.py:269
+#: apps/offer/benefits.py:266
 msgid "Multibuy discount benefits"
 msgstr "Multibuy árengedmény mértéke"
 
-#: apps/offer/benefits.py:306
+#: apps/offer/benefits.py:303
 #, python-format
 msgid "%(amount)s off shipping cost"
 msgstr "%(amount)s engedmény a szállítási költségből"
 
-#: apps/offer/benefits.py:316
+#: apps/offer/benefits.py:313
 msgid "Shipping absolute discount benefit"
 msgstr "Szállítási költségre vonatkozó abszolút kedvezmény mértéke"
 
-#: apps/offer/benefits.py:317
+#: apps/offer/benefits.py:314
 msgid "Shipping absolute discount benefits"
 msgstr "Szállítási költségre vonatkozó abszolút kedvezmények mértéke"
 
-#: apps/offer/benefits.py:324
+#: apps/offer/benefits.py:321
 #, python-format
 msgid "Get shipping for %(amount)s"
 msgstr "Szállítási költség %(amount)s"
 
-#: apps/offer/benefits.py:334
+#: apps/offer/benefits.py:331
 msgid "Fixed price shipping benefit"
 msgstr "Fix szállítási árengedmény mértéke"
 
-#: apps/offer/benefits.py:335
+#: apps/offer/benefits.py:332
 msgid "Fixed price shipping benefits"
 msgstr "Fix szállítási árengedmény mértéke"
 
-#: apps/offer/benefits.py:344
+#: apps/offer/benefits.py:341
 #, python-format
 msgid "%(value)s%% off of shipping cost"
 msgstr ""
 
-#: apps/offer/benefits.py:354
+#: apps/offer/benefits.py:351
 msgid "Shipping percentage discount benefit"
 msgstr "Szállítási költség százalékos árengedményének mértéke"
 
-#: apps/offer/benefits.py:355
+#: apps/offer/benefits.py:352
 msgid "Shipping percentage discount benefits"
 msgstr "Szállítási költség százalékos árengedményének mértéke"
 
@@ -4157,9 +4227,11 @@ msgstr "Vendég email címe"
 #: apps/order/abstract_models.py:130
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status:"
-" '%(status)s')"
-msgstr "'%(new_status)s' nem valódi állapota a %(number)s rendelésnek (jelenlegi állapot: '%(status)s')"
+"'%(new_status)s' is not a valid status for order %(number)s (current status: "
+"'%(status)s')"
+msgstr ""
+"'%(new_status)s' nem valódi állapota a %(number)s rendelésnek (jelenlegi "
+"állapot: '%(status)s')"
 
 #: apps/order/abstract_models.py:271
 msgid "In progress"
@@ -4284,7 +4356,8 @@ msgstr "'%(name)s' termék, '%(qty)s' mennyiség"
 #: apps/order/abstract_models.py:603
 #, python-format
 msgid "'%(new_status)s' is not a valid status (current status: '%(status)s')"
-msgstr "'%(new_status)s' nem érvényes állapot (jelenlegi állapot: '%(status)s')"
+msgstr ""
+"'%(new_status)s' nem érvényes állapot (jelenlegi állapot: '%(status)s')"
 
 #: apps/order/abstract_models.py:772
 #, python-format
@@ -4888,7 +4961,9 @@ msgstr "Felső határ"
 msgid ""
 "Enter upper limit of this weight band in kg. The lower limit will be "
 "determined by the other weight bands."
-msgstr "Add meg ennek a súlykategóriának a felső határát kg-ban. Az alsó határa a többi súlykategória alapján lesz meghatározva."
+msgstr ""
+"Add meg ennek a súlykategóriának a felső határát kg-ban. Az alsó határa a "
+"többi súlykategória alapján lesz meghatározva."
 
 #: apps/shipping/abstract_models.py:195
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:31
@@ -5064,7 +5139,9 @@ msgstr "Privát - Csak a tulajdonos láthatja a kívánságlistát"
 msgid ""
 "Shared - Only the owner and people with access to the obfuscated link can "
 "see the wish list"
-msgstr "Megosztott - Csak a tulajdonos és a titkosított kódhoz hozzájutók láthatják a kívánságlistát"
+msgstr ""
+"Megosztott - Csak a tulajdonos és a titkosított kódhoz hozzájutók láthatják "
+"a kívánságlistát"
 
 #: apps/wishlists/abstract_models.py:38
 msgid "Public - Everybody can see the wish list"
@@ -5217,7 +5294,8 @@ msgstr "Ez nem érvényes helyi vagy nemzetközi hívószám formátum."
 
 #: management/commands/oscar_send_alerts.py:16
 msgid "Check for products that are back in stock and send out alerts"
-msgstr "Ellenőrizd a termékeket, amik újra elérhetőek, és küldj ki értesítéseket!"
+msgstr ""
+"Ellenőrizd a termékeket, amik újra elérhetőek, és küldj ki értesítéseket!"
 
 #: templates/flatpages/default.html:11
 msgid "Edit this page"
@@ -5274,7 +5352,9 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr "\n<strong>%(title)s</strong> a kosaradba került."
+msgstr ""
+"\n"
+"<strong>%(title)s</strong> a kosaradba került."
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5283,21 +5363,30 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr "\n<strong>%(quantity)s</strong> darab <strong>%(title)s</strong> a kosaradba került."
+msgstr ""
+"\n"
+"<strong>%(quantity)s</strong> darab <strong>%(title)s</strong> a kosaradba "
+"került."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr "\n<strong>%(title)s</strong> visszakerült a kosaradba.\n\n\n"
+msgstr ""
+"\n"
+"<strong>%(title)s</strong> visszakerült a kosaradba.\n"
+"\n"
+"\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr "\n<strong>%(title)s</strong> elmentve későbbi vásárláshoz.\n"
+msgstr ""
+"\n"
+"<strong>%(title)s</strong> elmentve későbbi vásárláshoz.\n"
 
 #: templates/oscar/basket/messages/new_total.html:5
 msgid "Your basket is now empty"
@@ -5328,7 +5417,10 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr "\nA kosarad tartalma most alkalmas <strong>%(name)s</strong> ajánlat felhasználására.\n"
+msgstr ""
+"\n"
+"A kosarad tartalma most alkalmas <strong>%(name)s</strong> ajánlat "
+"felhasználására.\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5336,7 +5428,10 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr "\nA kosarad tartalma már nem alkalmas <strong>%(name)s</strong> ajánlat felhasználására.\n"
+msgstr ""
+"\n"
+"A kosarad tartalma már nem alkalmas <strong>%(name)s</strong> ajánlat "
+"felhasználására.\n"
 
 #: templates/oscar/basket/partials/basket_content.html:8
 msgid "Important messages about items in your basket"
@@ -5350,9 +5445,13 @@ msgstr "Ne hagyd ki a kedvezményes ajánlatokat!"
 #, python-format
 msgid ""
 "\n"
-"                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"                <div class=\"warning\">%(message)s to qualify for the <a "
+"href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr "\n<div class=\"warning\">%(message)s a <a href=\"%(url)s\">%(offer_name)s</a> kiemelt ajánlat felhasználásához"
+msgstr ""
+"\n"
+"<div class=\"warning\">%(message)s a <a href=\"%(url)s\">%(offer_name)s</a> "
+"kiemelt ajánlat felhasználásához"
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5619,11 +5718,13 @@ msgstr "Finomítás"
 #, python-format
 msgid ""
 "\n"
-"                    <strong>%(num_results)s</strong> result - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> result - showing "
+"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgid_plural ""
 "\n"
-"                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> results - showing "
+"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgstr[0] ""
 msgstr[1] ""
@@ -5703,9 +5804,12 @@ msgstr "Ügyfél vélemények"
 #, python-format
 msgid ""
 "This product does not have any reviews yet -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
+"                            <a href=\"%(add_review_url)s#addreview\">be the "
+"first to write one</a>.\n"
 "                        "
-msgstr "Erről a termékről még nem érkezett vélemény - <a href=\"%(add_review_url)s#addreview\">légy az első, aki ír!</a>"
+msgstr ""
+"Erről a termékről még nem érkezett vélemény - <a href="
+"\"%(add_review_url)s#addreview\">légy az első, aki ír!</a>"
 
 #: templates/oscar/catalogue/detail.html:175
 msgid "This product does not have any reviews yet"
@@ -5769,7 +5873,8 @@ msgstr "Új kívánságlista készítése"
 #, python-format
 msgid ""
 "\n"
-"                    <span class=\"float-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
+"                    <span class=\"float-left\">Product is in <a href="
+"\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
 msgstr ""
 
@@ -5797,15 +5902,20 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr "\nVéleményt írtál a termékről ekkor %(review_date)s"
+msgstr ""
+"\n"
+"Véleményt írtál a termékről ekkor %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
 msgid ""
 "\n"
-"                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
+"                    Reviewed by <strong>%(name)s</strong> on "
+"%(review_date)s\n"
 "                "
-msgstr "\n<strong>%(name)s</strong> véleményt írt ekkor: %(review_date)s"
+msgstr ""
+"\n"
+"<strong>%(name)s</strong> véleményt írt ekkor: %(review_date)s"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -5833,14 +5943,22 @@ msgstr "Nem"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer "
+"found this useful\n"
 "            "
 msgid_plural ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers "
+"found this useful\n"
 "            "
-msgstr[0] "\n<strong>%(num_up_votes)s</strong> felhasználóból %(num_votes)s találta hasznosnak"
-msgstr[1] "\n<strong>%(num_up_votes)s</strong> felhasználóból %(num_votes)s találta hasznosnak"
+msgstr[0] ""
+"\n"
+"<strong>%(num_up_votes)s</strong> felhasználóból %(num_votes)s találta "
+"hasznosnak"
+msgstr[1] ""
+"\n"
+"<strong>%(num_up_votes)s</strong> felhasználóból %(num_votes)s találta "
+"hasznosnak"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5860,8 +5978,12 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] "\n                    %(num_reviews)s felhasználói vélemény"
-msgstr[1] "\n                      %(num_reviews)s felhasználói vélemények"
+msgstr[0] ""
+"\n"
+"                    %(num_reviews)s felhasználói vélemény"
+msgstr[1] ""
+"\n"
+"                      %(num_reviews)s felhasználói vélemények"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:83
@@ -6095,8 +6217,10 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                                This includes a discount of <strong>%(amount)s</strong> as\n"
-"                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
+"                                This includes a discount of <strong>"
+"%(amount)s</strong> as\n"
+"                                your basket qualifies for the <strong>"
+"%(name)s</strong> offer.\n"
 "                            "
 msgstr ""
 
@@ -6117,7 +6241,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        Your order has been placed and a confirmation email has been sent - your order number is\n"
+"        Your order has been placed and a confirmation email has been sent - "
+"your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
 msgstr ""
@@ -6136,7 +6261,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
+"                                Allocation of %(amount)s from type %(type)s "
+"(reference: %(reference)s)\n"
 "                            "
 msgstr ""
 
@@ -6244,8 +6370,7 @@ msgstr ""
 
 #: templates/oscar/communication/emails/commtype_email_changed_body.html:26
 #: templates/oscar/communication/emails/commtype_email_changed_body.txt:10
-msgid ""
-"If it was you who changed the email address, you can ignore this email."
+msgid "If it was you who changed the email address, you can ignore this email."
 msgstr ""
 
 #: templates/oscar/communication/emails/commtype_email_changed_body.txt:5
@@ -6302,9 +6427,11 @@ msgstr "Szállítási cím"
 #: templates/oscar/communication/emails/commtype_order_placed_body.html:60
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\""
-" title=\"order status\">here</a>"
-msgstr "A rendelés állapotát <a href=\"%(status_url)s\" title=\"order status\">ide</a> kattintva nézheti meg."
+"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
+"title=\"order status\">here</a>"
+msgstr ""
+"A rendelés állapotát <a href=\"%(status_url)s\" title=\"order status\">ide</"
+"a> kattintva nézheti meg."
 
 #: templates/oscar/communication/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -6313,7 +6440,11 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr "Hello,\n\nÖrömmel megerősítjük, hogy a %(order_number)s számú rendelésedet megkaptuk, és hamarosan feldolgozzuk."
+msgstr ""
+"Hello,\n"
+"\n"
+"Örömmel megerősítjük, hogy a %(order_number)s számú rendelésedet megkaptuk, "
+"és hamarosan feldolgozzuk."
 
 #: templates/oscar/communication/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
@@ -6328,7 +6459,9 @@ msgstr "ár:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr "A rendelés állapotát az alábbi URL-en tekintheted meg:\n%(status_url)s"
+msgstr ""
+"A rendelés állapotát az alábbi URL-en tekintheted meg:\n"
+"%(status_url)s"
 
 #: templates/oscar/communication/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6344,7 +6477,9 @@ msgstr "A %(number)s számú rendelés megerősítése"
 msgid ""
 "You're receiving this e-mail because your password has been changed at "
 "%(name)s."
-msgstr "Ezt az emailt azért kaptad, mert a %(name)s névhez tartozó jelszavad megváltozott."
+msgstr ""
+"Ezt az emailt azért kaptad, mert a %(name)s névhez tartozó jelszavad "
+"megváltozott."
 
 #: templates/oscar/communication/emails/commtype_password_changed_body.html:14
 #: templates/oscar/communication/emails/commtype_password_changed_body.txt:9
@@ -6361,8 +6496,12 @@ msgstr "Ha Te voltál, tekintsd ezt az emailt tárgytalannak."
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your password has been changed at %(name)s.\n"
-msgstr "\nAzért kapod ezt az emailt, mert a %(name)s névhez tartozó jelszó megváltozott.\n"
+"You're receiving this email because your password has been changed at "
+"%(name)s.\n"
+msgstr ""
+"\n"
+"Azért kapod ezt az emailt, mert a %(name)s névhez tartozó jelszó "
+"megváltozott.\n"
 
 #: templates/oscar/communication/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6373,9 +6512,11 @@ msgstr "A %(site_name)s oldalhoz tartozó jelszavad megváltozott."
 #: templates/oscar/communication/emails/commtype_password_reset_body.txt:6
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your"
-" user account at %(name)s."
-msgstr "Azért kaptad ezt az emailt, mert a %(name)s felhasználónévhez jelszó törlést kértél."
+"You're receiving this e-mail because you requested a password reset for your "
+"user account at %(name)s."
+msgstr ""
+"Azért kaptad ezt az emailt, mert a %(name)s felhasználónévhez jelszó törlést "
+"kértél."
 
 #: templates/oscar/communication/emails/commtype_password_reset_body.html:14
 #: templates/oscar/communication/emails/commtype_password_reset_body.txt:8
@@ -6397,7 +6538,8 @@ msgstr "Kedves %(name)s!"
 #, python-format
 msgid ""
 "\n"
-"            We are happy to inform you that our product '%(title)s' is back in stock:\n"
+"            We are happy to inform you that our product '%(title)s' is back "
+"in stock:\n"
 "            %(url)s\n"
 "        "
 msgstr ""
@@ -6405,17 +6547,25 @@ msgstr ""
 #: templates/oscar/communication/emails/commtype_product_alert_body.html:24
 msgid ""
 "\n"
-"                Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
+"                Beware that the amount of items in stock is limited. Be "
+"quick or someone might get there first.\n"
 "            "
-msgstr "\nKérlek, vedd figyelembe, hogy az adott termék korlátozott mennyiségben van készleten. Gyorsan rendeld meg vagy valaki megelőz!"
+msgstr ""
+"\n"
+"Kérlek, vedd figyelembe, hogy az adott termék korlátozott mennyiségben van "
+"készleten. Gyorsan rendeld meg vagy valaki megelőz!"
 
 #: templates/oscar/communication/emails/commtype_product_alert_body.html:31
 msgid ""
 "\n"
-"            With this email we have disabled your alert automatically and you will not\n"
+"            With this email we have disabled your alert automatically and "
+"you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
-msgstr "\nEzzel az emaillel automatikusan kikapcsoltuk a készletértesítőt, ezért ezzel a termékkel kapcsolatban nem kapsz több emailt."
+msgstr ""
+"\n"
+"Ezzel az emaillel automatikusan kikapcsoltuk a készletértesítőt, ezért ezzel "
+"a termékkel kapcsolatban nem kapsz több emailt."
 
 #: templates/oscar/communication/emails/commtype_product_alert_body.txt:3
 #, python-format
@@ -6428,8 +6578,12 @@ msgstr ""
 #: templates/oscar/communication/emails/commtype_product_alert_body.txt:6
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
-msgstr "\nKérlek, vedd figyelembe, hogy az adott termék korlátozott mennyiségben van készleten. Gyorsan rendeld meg vagy valaki megelőz!\n"
+"Beware that the amount of items in stock is limited. Be quick or someone "
+"might get there first.\n"
+msgstr ""
+"\n"
+"Kérlek, vedd figyelembe, hogy az adott termék korlátozott mennyiségben van "
+"készleten. Gyorsan rendeld meg vagy valaki megelőz!\n"
 
 #: templates/oscar/communication/emails/commtype_product_alert_body.txt:8
 #, python-format
@@ -6440,7 +6594,13 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr "\nEzzel az emaillel automatikusan kikapcsoltuk a készletértesítőt, ezért ezzel a termékkel kapcsolatban nem kapsz több emailt. \n\nKöszönjük az érdeklődésedet! \nA %(site_name)s csapata\n"
+msgstr ""
+"\n"
+"Ezzel az emaillel automatikusan kikapcsoltuk a készletértesítőt, ezért ezzel "
+"a termékkel kapcsolatban nem kapsz több emailt. \n"
+"\n"
+"Köszönjük az érdeklődésedet! \n"
+"A %(site_name)s csapata\n"
 
 #: templates/oscar/communication/emails/commtype_product_alert_confirmation_body.html:8
 #, python-format
@@ -6448,11 +6608,13 @@ msgid ""
 "\n"
 "        Hello,\n"
 "        <p>\n"
-"            Somebody (hopefully you) has requested an email alert when '%(title)s' is back in stock.\n"
+"            Somebody (hopefully you) has requested an email alert when "
+"'%(title)s' is back in stock.\n"
 "            Please click the following link to confirm: %(confirm_url)s\n"
 "        </p>\n"
 "        <p>\n"
-"            You can cancel this alert at any time by clicking the following link: %(cancel_url)s\n"
+"            You can cancel this alert at any time by clicking the following "
+"link: %(cancel_url)s\n"
 "        </p>\n"
 "\n"
 "        <p>\n"
@@ -6844,10 +7006,14 @@ msgstr "Figyelmeztetés!"
 #: templates/oscar/customer/profile/profile_delete.html:11
 msgid ""
 "\n"
-"                This will delete all information about you from the site.  Deleting your profile cannot be\n"
+"                This will delete all information about you from the site.  "
+"Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr "\nEz minden Veled kapcsolatos információt töröl az oldalról. Kitörölt profilt nem lehet visszaállítani."
+msgstr ""
+"\n"
+"Ez minden Veled kapcsolatos információt töröl az oldalról. Kitörölt profilt "
+"nem lehet visszaállítani."
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:19
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:111
@@ -6867,7 +7033,9 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr "\nBiztosan törölni akarod %(name)s felhasználót?"
+msgstr ""
+"\n"
+"Biztosan törölni akarod %(name)s felhasználót?"
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:19
 msgid "Remove product"
@@ -6877,9 +7045,13 @@ msgstr "Termék eltávolítása"
 #, python-format
 msgid ""
 "\n"
-"                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
+"                Are you sure you want to delete %(product_name)s from wish "
+"list %(wishlist_name)s?\n"
 "            "
-msgstr "\nBiztos, hogy el akarod távolítani %(product_name)s terméket a %(wishlist_name)s nevű kívánságlistáról?"
+msgstr ""
+"\n"
+"Biztos, hogy el akarod távolítani %(product_name)s terméket a "
+"%(wishlist_name)s nevű kívánságlistáról?"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:35
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -6894,9 +7066,12 @@ msgstr "Termék megtekintése"
 #, python-format
 msgid ""
 "\n"
-"                                                            Move to '%(name)s' wish list\n"
+"                                                            Move to "
+"'%(name)s' wish list\n"
 "                                                        "
-msgstr "\nA '%(name)s' kívánságlistához adom"
+msgstr ""
+"\n"
+"A '%(name)s' kívánságlistához adom"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:106
 msgid "Update quantities"
@@ -6918,9 +7093,13 @@ msgstr "Hogy szeretnéd hívni az új kívánságlistádat?"
 #, python-format
 msgid ""
 "\n"
-"                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
+"                    After your wishlist is created, <strong>%(title)s</"
+"strong> will be added.\n"
 "                "
-msgstr "\nMiután létrehoztuk a kívánságlistádat, <strong>%(title)s</strong> nevet adunk neki."
+msgstr ""
+"\n"
+"Miután létrehoztuk a kívánságlistádat, <strong>%(title)s</strong> nevet "
+"adunk neki."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -6954,7 +7133,9 @@ msgstr "Törlöd ezt a Tulajdonság Opció Csoportot?"
 msgid ""
 "Please make sure all Product Attributes are assigned to another Attribute "
 "Option Group before deletion."
-msgstr "Bizonyosodj meg róla, hogy minden Termék Tulajdonságot másik Tulajdonság Opció Csoportba soroltál a törlés előtt!"
+msgstr ""
+"Bizonyosodj meg róla, hogy minden Termék Tulajdonságot másik Tulajdonság "
+"Opció Csoportba soroltál a törlés előtt!"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:45
 msgid "Delete Attribute Option Group"
@@ -6962,9 +7143,10 @@ msgstr "Tulajdonság Opció Csoport törlése"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:56
 #, python-format
-msgid ""
-"Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
-msgstr "<strong>%(name)s</strong> Tulajdonság Opció Csoport törlése - biztos vagy benne?"
+msgid "Delete Attribute Option Group <strong>%(name)s</strong> - are you sure?"
+msgstr ""
+"<strong>%(name)s</strong> Tulajdonság Opció Csoport törlése - biztos vagy "
+"benne?"
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:50
 #: templates/oscar/dashboard/catalogue/category_form.html:37
@@ -7012,9 +7194,12 @@ msgstr "Kategória törlése"
 #, python-format
 msgid ""
 "\n"
-"            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
+"            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
+"p>\n"
 "        "
-msgstr "\n<p><strong>%(name)s</strong> kategória törlése - biztos vagy benne?"
+msgstr ""
+"\n"
+"<p><strong>%(name)s</strong> kategória törlése - biztos vagy benne?"
 
 #: templates/oscar/dashboard/catalogue/category_form.html:43
 #: templates/oscar/dashboard/catalogue/category_form.html:62
@@ -7074,7 +7259,9 @@ msgid ""
 "\n"
 "                    Created product variant '%(name)s'.\n"
 "                "
-msgstr "\nTermék variáns '%(name)s' létrehozása"
+msgstr ""
+"\n"
+"Termék variáns '%(name)s' létrehozása"
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
 #, python-format
@@ -7082,7 +7269,9 @@ msgid ""
 "\n"
 "                    Created variant of '%(parent_name)s'.\n"
 "                "
-msgstr "\nVariáns létrehozása ehhez: '%(parent_name)s'."
+msgstr ""
+"\n"
+"Variáns létrehozása ehhez: '%(parent_name)s'."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
 #, python-format
@@ -7090,7 +7279,9 @@ msgid ""
 "\n"
 "                    Updated product variant '%(name)s'.\n"
 "                "
-msgstr "\n'%(name)s' termék variáns frissült."
+msgstr ""
+"\n"
+"'%(name)s' termék variáns frissült."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
 #, python-format
@@ -7098,7 +7289,9 @@ msgid ""
 "\n"
 "                    Updated a variant of '%(parent_name)s'.\n"
 "                "
-msgstr "\n'%(parent_name)s' variánsa frissült."
+msgstr ""
+"\n"
+"'%(parent_name)s' variánsa frissült."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
 #, python-format
@@ -7106,7 +7299,9 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr "\n'%(name)s' termék létrejött."
+msgstr ""
+"\n"
+"'%(name)s' termék létrejött."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -7114,7 +7309,9 @@ msgid ""
 "\n"
 "                Updated product '%(name)s'.\n"
 "            "
-msgstr "\n'%(name)s' termék frissült."
+msgstr ""
+"\n"
+"'%(name)s' termék frissült."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
 #: templates/oscar/dashboard/pages/messages/saved.html:10
@@ -7138,7 +7335,9 @@ msgstr "Törlöd az opciót?"
 msgid ""
 "Please make sure option is not assigned to Products or Product Classes "
 "before deletion."
-msgstr "Kérlek, bizonyosodj meg róla a törlés előtt, hogy az opció nincs hozzárendelve a Termékekhez vagy Termék Osztályokhoz!"
+msgstr ""
+"Kérlek, bizonyosodj meg róla a törlés előtt, hogy az opció nincs "
+"hozzárendelve a Termékekhez vagy Termék Osztályokhoz!"
 
 #: templates/oscar/dashboard/catalogue/option_delete.html:43
 msgid "Delete Option"
@@ -7172,7 +7371,9 @@ msgstr "Töröljük ezt a termék típust?"
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:22
 msgid ""
 "Please make sure all products are assigned to another type before deletion."
-msgstr "Bizonyosodj meg róla, hogy minden terméket másik típusba soroltál a törlés előtt!"
+msgstr ""
+"Bizonyosodj meg róla, hogy minden terméket másik típusba soroltál a törlés "
+"előtt!"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:25
 msgid "Delete product type"
@@ -7220,17 +7421,23 @@ msgstr "Nincsenek termék típusok."
 #, python-format
 msgid ""
 "\n"
-"                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
+"                    Delete product variant <strong>%(title)s</strong> - are "
+"you sure?\n"
 "                "
-msgstr "\n<strong>%(title)s</strong> termék variáns törlése - biztos vagy benne?"
+msgstr ""
+"\n"
+"<strong>%(title)s</strong> termék variáns törlése - biztos vagy benne?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:37
 #, python-format
 msgid ""
 "\n"
-"                    Delete product <strong>%(title)s</strong> - are you sure?\n"
+"                    Delete product <strong>%(title)s</strong> - are you "
+"sure?\n"
 "                "
-msgstr "\n<strong>%(title)s</strong> termék törlése - biztos vagy benne?"
+msgstr ""
+"\n"
+"<strong>%(title)s</strong> termék törlése - biztos vagy benne?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:45
 msgid "This will also delete the following child products:"
@@ -7268,7 +7475,10 @@ msgid ""
 "                            You are currently editing a product variant of\n"
 "                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
 "                        "
-msgstr "\nJelenleg <a href=\"%(parent_url)s\">%(title)s</a> termék variánsát szerkeszted."
+msgstr ""
+"\n"
+"Jelenleg <a href=\"%(parent_url)s\">%(title)s</a> termék variánsát "
+"szerkeszted."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:72
 #: templates/oscar/dashboard/catalogue/product_update.html:132
@@ -7301,7 +7511,9 @@ msgstr "Tölts fel, válatoztass vagy törölj képeket"
 msgid ""
 "Drag images to re-order them. Space for additional images will appear when "
 "images are added."
-msgstr "Húzd a képeket az újrarendelésükhöz. Szóköz adódik hozzájuk, amikor további képeket adsz hozzá."
+msgstr ""
+"Húzd a képeket az újrarendelésükhöz. Szóköz adódik hozzájuk, amikor további "
+"képeket adsz hozzá."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:226
 msgid "SKU"
@@ -7338,7 +7550,9 @@ msgstr "Kérlek, mentsd el a terméket, mielőtt variánst addsz hozzá!"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:315
 msgid "This is likely because this product still has stock records."
-msgstr "Ez valószínűleg azért van, mert ennek a terméknek még mindig vannak készlet adatai."
+msgstr ""
+"Ez valószínűleg azért van, mert ennek a terméknek még mindig vannak készlet "
+"adatai."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:377
 msgid "Save and add another variant"
@@ -7544,7 +7758,9 @@ msgstr "Kilépés"
 msgid ""
 "Please enter a correct username and password. Note that both fields may be "
 "case-sensitive."
-msgstr "Kérlek, add meg a helyes felhasználói neved és jelszavad! Figyelj rá, hogy mindkét mező figyeli a kis- és nagybetűket!"
+msgstr ""
+"Kérlek, add meg a helyes felhasználói neved és jelszavad! Figyelj rá, hogy "
+"mindkét mező figyeli a kis- és nagybetűket!"
 
 #: templates/oscar/dashboard/login.html:33
 msgid "Login"
@@ -7559,7 +7775,8 @@ msgstr "Új ösztönzés létrehozása"
 #, python-format
 msgid ""
 "\n"
-"        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\" target=\"_blank\">range dashboard</a>.\n"
+"        Ranges can be created and edited from within the <a href="
+"\"%(range_list_url)s\" target=\"_blank\">range dashboard</a>.\n"
 "        "
 msgstr ""
 
@@ -7599,7 +7816,9 @@ msgid ""
 "\n"
 "        %(name)s | Offers\n"
 "    "
-msgstr "\n%(name)s | Ajánlatok"
+msgstr ""
+"\n"
+"%(name)s | Ajánlatok"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:26
 msgid "Reinstating..."
@@ -7844,8 +8063,10 @@ msgid "Price inc tax (before discounts)"
 msgstr "Bruttó ár (engedmény előtt)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:261
-msgid "Surcharge (name)"
-msgstr ""
+#, fuzzy, python-format
+#| msgid "Dear %(name)s,"
+msgid "Surcharge %(name)s"
+msgstr "Kedves %(name)s!"
 
 #: templates/oscar/dashboard/orders/order_detail.html:289
 msgid "With selected lines"
@@ -7925,9 +8146,12 @@ msgstr "Nincs állapotváltozás."
 #, python-format
 msgid ""
 "\n"
-"                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
+"                                                                %(title)s "
+"(quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr "\n%(title)s (mennyiség %(event_qty)s/%(total_qty)s)"
+msgstr ""
+"\n"
+"%(title)s (mennyiség %(event_qty)s/%(total_qty)s)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:446
 msgid "No shipping events."
@@ -8096,7 +8320,9 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr "\n<strong>%(title)s</strong> lap elmentve!"
+msgstr ""
+"\n"
+"<strong>%(title)s</strong> lap elmentve!"
 
 #: templates/oscar/dashboard/partials/form_fields.html:5
 #: templates/oscar/partials/form_fields.html:5
@@ -8138,7 +8364,10 @@ msgstr "Újrarendelés"
 msgid ""
 "\n"
 "User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr "\n%(user_name)s felhasználó és %(partner_name)s felhasználó közötti link törölve.\n"
+msgstr ""
+"\n"
+"%(user_name)s felhasználó és %(partner_name)s felhasználó közötti link "
+"törölve.\n"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
@@ -8217,17 +8446,21 @@ msgstr "Adatok frissítése"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:33
 msgid ""
-"A partial email address can be entered (eg '@example.com') to match multiple"
-" addresses."
-msgstr "Megadható email cím részlete (pl. '@pelda.com') a több találat érdekében."
+"A partial email address can be entered (eg '@example.com') to match multiple "
+"addresses."
+msgstr ""
+"Megadható email cím részlete (pl. '@pelda.com') a több találat érdekében."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:61
 #, python-format
 msgid ""
 "\n"
-"                                                User is already linked to %(name)s.\n"
+"                                                User is already linked to "
+"%(name)s.\n"
 "                                            "
-msgstr "\nA felhasználó már %(name)s nevű felhasználóhoz linkelt."
+msgstr ""
+"\n"
+"A felhasználó már %(name)s nevű felhasználóhoz linkelt."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:67
 msgid "Linking..."
@@ -8246,7 +8479,9 @@ msgstr "Nincs ilyen felhasználó."
 msgid ""
 "\n"
 "    <p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr "\n<p>A <strong>%(filename)s</strong> fájlok elkészültek.</p>\n"
+msgstr ""
+"\n"
+"<p>A <strong>%(filename)s</strong> fájlok elkészültek.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:9
 #, python-format
@@ -8258,18 +8493,24 @@ msgid_plural ""
 "\n"
 "                <strong>%(n)s</strong> products added\n"
 "            "
-msgstr[0] "\n<strong>%(n)s</strong> termék hozzáadva"
-msgstr[1] "\n<strong>%(n)s</strong> termék hozzáadva"
+msgstr[0] ""
+"\n"
+"<strong>%(n)s</strong> termék hozzáadva"
+msgstr[1] ""
+"\n"
+"<strong>%(n)s</strong> termék hozzáadva"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> duplicate product in the file\n"
+"                There was <strong>%(n)s</strong> duplicate product in the "
+"file\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> duplicate products in the file\n"
+"                There were <strong>%(n)s</strong> duplicate products in the "
+"file\n"
 "            "
 msgstr[0] ""
 msgstr[1] ""
@@ -8278,11 +8519,13 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"                There was <strong>%(n)s</strong> product in the file that couldn't be found in the catalogue\n"
+"                There was <strong>%(n)s</strong> product in the file that "
+"couldn't be found in the catalogue\n"
 "            "
 msgid_plural ""
 "\n"
-"                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
+"                There were <strong>%(n)s</strong> products in the file that "
+"couldn't be found in the catalogue\n"
 "            "
 msgstr[0] ""
 msgstr[1] ""
@@ -8487,14 +8730,16 @@ msgstr "Információ a véleményről"
 #, python-format
 msgid ""
 "\n"
-"    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
+"    <p>A weight band has been added to the <strong>%(name)s</strong> "
+"shipping method.</p>\n"
 msgstr ""
 
 #: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
 #, python-format
 msgid ""
 "\n"
-"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
+"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping "
+"method \n"
 msgstr ""
 
 #: templates/oscar/dashboard/shipping/messages/band_updated.html:3
@@ -9020,14 +9265,16 @@ msgstr ""
 #: templates/oscar/registration/password_reset_done.html:24
 msgid ""
 "\n"
-"        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
+"        We've e-mailed you instructions for resetting your password. You "
+"should be receiving it shortly.\n"
 "    "
 msgstr ""
 
 #: templates/oscar/registration/password_reset_done.html:29
 msgid ""
 "\n"
-"        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
+"        If you don't receive an email, please make sure you've entered the "
+"address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
 msgstr ""
@@ -9058,7 +9305,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    Found <strong>%(num_results)s</strong> results, showing "
+"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgstr ""
 
@@ -9083,7 +9331,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
+"                        Did you mean <a href=\"%(search_url)s?q="
+"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
 msgstr ""
 
