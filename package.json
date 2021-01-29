@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
+    "@fortawesome/fontawesome-free": "^5.15.2",
     "bootstrap": "^4.5.3",
     "eslint": "^7.16.0",
     "extend": ">=3.0.2",
