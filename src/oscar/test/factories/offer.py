@@ -2,6 +2,8 @@ import factory
 
 from oscar.core.loading import get_model
 
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
+
 __all__ = [
     'RangeFactory', 'ConditionFactory', 'BenefitFactory',
     'ConditionalOfferFactory',
@@ -47,6 +49,7 @@ class ConditionFactory(factory.django.DjangoModelFactory):
 
 class ConditionalOfferFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Test offer %d' % n)
+    offer_type = ConditionalOffer.SITE
     benefit = factory.SubFactory(BenefitFactory)
     condition = factory.SubFactory(ConditionFactory)
 

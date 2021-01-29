@@ -312,6 +312,7 @@ A dotted path to a function responsible for rounding decimal amounts
 when offer discount calculations don't lead to legitimate currency values.
 
 ``OSCAR_OFFERS_INCL_TAX``
+-------------------------
 
 Default: ``False``
 
@@ -322,6 +323,22 @@ absolute prices in offers. So a flat discount of 10 pounds in an offer will
 be treated as 10 pounds before taxes if ``OSCAR_OFFERS_INCL_TAX`` remains
 ``False`` and 10 pounds after taxes if ``OSCAR_OFFERS_INCL_TAX`` is set to
 ``True``.
+
+``OSCAR_OFFERS_IMPLEMENTED_TYPES``
+----------------------------------
+
+Default::
+
+    [
+        'SITE',
+        'VOUCHER',
+    ]
+
+A list of values from among those in the ``offer.ConditionalOffer.TYPE_CHOICES``
+model attribute. The names of the model constants are used, instead of the
+values themselves. This setting is used to restrict the selectable offer types
+in the dashboard offers forms (``MetaDataForm`` and ``OfferSearchForm``), to
+ones that Oscar currently implements.
 
 Basket settings
 ===============

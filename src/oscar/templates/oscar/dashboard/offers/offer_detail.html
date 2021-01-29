@@ -27,7 +27,9 @@
             {% else %}
                 <button type="submit" class="btn btn-secondary" name="suspend" data-loading-text="{% trans 'Suspending...' %}">{% trans "Suspend offer" %}</button>
             {% endif %}
+            {% if not offer.vouchers.exists %}
             <a class="btn btn-danger" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">{% trans "Delete offer" %}</a>
+            {% endif %}
         </form>
         <h1>{{ offer.name }}</h1>
     </div>
@@ -59,11 +61,15 @@
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ offer.name }}</td>
-                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn btn-secondary">{% trans "Edit" %}</a></td>
+                <td rowspan="3"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn btn-secondary">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Description" %}</th>
                 <td>{{ offer.description|safe|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Type" %}</th>
+                <td>{{ offer.get_offer_type_display }}</td>
             </tr>
             <tr>
                 <th>{% trans "Incentive" %}</th>
@@ -90,8 +96,54 @@
                 </td>
                 <td><a href="{% url 'dashboard:offer-restrictions' pk=offer.pk %}" class="btn btn-secondary">{% trans "Edit" %}</a></td>
             </tr>
+            {% if offer.is_voucher_offer_type %}
+            <tr>
+                <th>{% trans "Num of vouchers" %}</th>
+                <td>{{ offer.vouchers.count }}</td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>
+
+    {% if offer.is_voucher_offer_type %}
+    <div class="table-header">
+        <h2>{% trans "Attached vouchers" %}</h2>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        {% if offer.vouchers.exists %}
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Code" %}</th>
+                <th>{% trans "Status" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for voucher in offer.vouchers.all %}
+            <tr>
+                <td>
+                    <a href="{% url 'dashboard:voucher-stats' voucher.id %}">{{ voucher.name }}</a>
+                </td>
+                <td>
+                    <span class="badge badge-secondary">{{ voucher.code }}</span>
+                </td>
+                <td>
+                    {% if voucher.is_active %}
+                    <span class="badge badge-success">{% trans "Active" %}</span>
+                    {% else %}
+                    <span class="badge badge-secondary">{% trans "Inactive" %}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+        <tr>
+            <td>{% trans "No vouchers are attached to this offer." %}</td>
+        </tr>
+        {% endif %}
+    </table>
+    {% endif %}
 
     {% if order_discounts %}
         <div class="table-header">

@@ -20,6 +20,7 @@ class TestAnAdmin(testcases.WebTestCase):
         metadata_page = list_page.click('Create new offer')
         metadata_form = metadata_page.form
         metadata_form['name'] = "Test offer"
+        metadata_form['offer_type'] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
         benefit_form = benefit_page.form
@@ -56,7 +57,7 @@ class TestAnAdmin(testcases.WebTestCase):
         res = form.submit()
         self.assertFalse("No offers found" in res.text)
 
-        form['is_active'] = True
+        form['is_active'] = "true"
         res = form.submit()
         self.assertFalse("No offers found" in res.text)
 
@@ -64,7 +65,19 @@ class TestAnAdmin(testcases.WebTestCase):
         offer.end_datetime = yesterday
         offer.save()
 
-        form['is_active'] = True
+        form['is_active'] = "true"
+        res = form.submit()
+        self.assertTrue("No offers found" in res.text)
+
+        tomorrow = timezone.now() + timezone.timedelta(days=1)
+        offer.end_datetime = tomorrow
+        offer.save()
+
+        form['offer_type'] = "Site"
+        res = form.submit()
+        self.assertFalse("No offers found" in res.text)
+
+        form['offer_type'] = "Voucher"
         res = form.submit()
         self.assertTrue("No offers found" in res.text)
 
@@ -77,6 +90,7 @@ class TestAnAdmin(testcases.WebTestCase):
         metadata_page = detail_page.click(linkid="edit_metadata")
         metadata_form = metadata_page.form
         metadata_form['name'] = "Offer A+"
+        metadata_form['offer_type'] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
         benefit_form = benefit_page.form
@@ -153,6 +167,7 @@ class TestAnAdmin(testcases.WebTestCase):
         metadata_page = list_page.click('Create new offer')
         metadata_form = metadata_page.form
         metadata_form['name'] = "Test offer"
+        metadata_form['offer_type'] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
         benefit_form = benefit_page.form
@@ -174,6 +189,7 @@ class TestAnAdmin(testcases.WebTestCase):
         metadata_page = list_page.click('Create new offer')
         metadata_form = metadata_page.form
         metadata_form['name'] = "Test offer"
+        metadata_form['offer_type'] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
         benefit_form = benefit_page.form
@@ -210,3 +226,66 @@ class TestAnAdmin(testcases.WebTestCase):
 
         self.assertFalse('range' in condition_page.errors)
         self.assertEqual(len(condition_page.errors), 0)
+
+
+class TestOfferListSearch(testcases.WebTestCase):
+    is_staff = True
+
+    TEST_CASES = [
+        ({}, []),
+        (
+            {'name': 'Bob Smith'},
+            ['Name matches "Bob Smith"']
+        ),
+        (
+            {'is_active': True},
+            ['Is active']
+        ),
+        (
+            {'is_active': False},
+            ['Is inactive']
+        ),
+        (
+            {'offer_type': 'Site'},
+            ['Is of type "Site offer - available to all users"']
+        ),
+        (
+            {'has_vouchers': True},
+            ['Has vouchers']
+        ),
+        (
+            {'has_vouchers': False},
+            ['Has no vouchers']
+        ),
+        (
+            {'voucher_code': 'abcd1234'},
+            ['Voucher code matches "abcd1234"']
+        ),
+        (
+            {
+                'name': 'Bob Smith',
+                'is_active': True,
+                'offer_type': 'Site',
+                'has_vouchers': True,
+                'voucher_code': 'abcd1234',
+            },
+            [
+                'Name matches "Bob Smith"',
+                'Is active',
+                'Is of type "Site offer - available to all users"',
+                'Has vouchers',
+                'Voucher code matches "abcd1234"',
+            ]
+        ),
+    ]
+
+    def test_search_filter_descriptions(self):
+        url = reverse('dashboard:offer-list')
+        for params, expected_filters in self.TEST_CASES:
+            response = self.get(url, params=params)
+            self.assertEqual(response.status_code, 200)
+            applied_filters = [
+                el.text.strip() for el in
+                response.html.select('.search-filter-list .badge')
+            ]
+            self.assertEqual(applied_filters, expected_filters)

@@ -1,0 +1,53 @@
+{% load i18n %}
+
+<table class="table table-striped table-bordered">
+    <caption>
+        <h3>
+            {% trans "Voucher set" %}
+        </h3>
+    </caption>
+    <tbody>
+        <tr>
+            <th>{% trans "Title" %}</th>
+            <td>{{ voucher_set.name }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Start" %}</th>
+            <td>{{ voucher_set.start_datetime }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "End" %}</th>
+            <td>{{ voucher_set.end_datetime }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Description" %}</th>
+            <td>{{ voucher_set.description }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Number of vouchers" %}</th>
+            <td>{{ voucher_set.count }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Number of offers" %}</th>
+            <td>{{ voucher_set.vouchers.first.offers.count|default:0 }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Status" %}</th>
+            <td>
+                {% if voucher_set.is_active %}
+                    <span class="badge badge-success">{% trans "Active" %}</span>
+                {% else %}
+                    <span class="badge badge-secondary">{% trans "Inactive" %}</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{% trans "Created" %}</th>
+            <td>{{ voucher_set.date_created }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Usage" %}</th>
+            <td>{{ voucher_set.vouchers.first.get_usage_display }}</td>
+        </tr>
+    </tbody>
+</table>

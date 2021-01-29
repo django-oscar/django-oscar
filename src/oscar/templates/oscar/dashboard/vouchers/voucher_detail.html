@@ -25,15 +25,61 @@
     <div class="table-header">
         <h2>{% trans "Voucher details" %}</h2>
     </div>
+    {% include "oscar/dashboard/vouchers/partials/voucher_details_table.html" %}
+
+    <div class="table-header">
+        <h2>{% trans "Attached offers" %}</h2>
+    </div>
     <table class="table table-striped table-bordered table-hover">
+        {% if voucher.offers.exists %}
+        <thead>
+            <tr>
+                <th>{% trans "Offer name" %}</th>
+                <th>{% trans "Start date" %}</th>
+                <th>{% trans "End date" %}</th>
+                <th>{% trans "Is available?" %}</th>
+                <th>{% trans "Priority" %}</th>
+                <th>{% trans "Incentive" %}</th>
+                <th>{% trans "Condition" %}</th>
+                <th>{% trans "Restrictions" %}</th>
+            </tr>
+        </thead>
         <tbody>
-            <tr><th>{% trans "Name" %}</th><td>{{ voucher.name }}</td></tr>
-            <tr><th>{% trans "Code" %}</th><td>{{ voucher.code }}</td></tr>
-            <tr><th>{% trans "Start datetime" %}</th><td>{{ voucher.start_datetime }}</td></tr>
-            <tr><th>{% trans "End datetime" %}</th><td>{{ voucher.end_datetime }}</td></tr>
-            <tr><th>{% trans "Usage" %}</th><td>{{ voucher.get_usage_display }}</td></tr>
-            <tr><th>{% trans "Discount" %}</th><td>{{ voucher.benefit.description|safe }}</td></tr>
+            {% for offer in voucher.offers.all %}
+            <tr>
+                <td>
+                    <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
+                </td>
+                <td>{{ offer.start_datetime|default:"-" }}</td>
+                <td>{{ offer.end_datetime|default:"-" }}</td>
+                <td>{% if offer.is_available %}
+                    <span class="badge badge-success">{% trans "Yes" %}</span>
+                    {% else %}
+                    <span class="badge badge-danger">{% trans "No" %}</span>
+                    {% endif %}
+                </td>
+                <td>{{ offer.priority }}</td>
+                <td>{{ offer.benefit.description|safe }}</td>
+                <td>{{ offer.condition.description|safe }}</td>
+                <td>
+                    {% for restriction in offer.availability_restrictions %}
+                    {% if not restriction.is_satisfied %}
+                    <label class="badge badge-danger">
+                        {{ restriction.description }}
+                    </label>
+                    {% else %}
+                    {{ restriction.description }}<br/>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
+        {% else %}
+        <tr>
+            <td>{% trans "No offers are attached to this voucher." %}</td>
+        </tr>
+        {% endif %}
     </table>
 
     <div class="table-header">
@@ -79,9 +125,19 @@
     </table>
 
     <div class="form-actions">
+        {% if not voucher.voucher_set %}
         <a class="btn btn-primary" href="{% url 'dashboard:voucher-update' pk=voucher.id %}">{% trans "Edit" %}</a> {% trans "or" %}
-        <a class="btn btn-danger" href="{% url 'dashboard:voucher-delete' pk=voucher.id %}">{% trans "Delete" %}</a> {% trans "or" %}
-        <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
+        {% else %}
+        <a class="btn btn-primary" href="{% url 'dashboard:voucher-set-update' pk=voucher.voucher_set.pk %}">{% trans "Edit set" %}</a> {% trans "or" %}
+        {% endif %}
+        <a class="btn btn-danger" href="{% url 'dashboard:voucher-delete' pk=voucher.id %}">
+        {% if not voucher.voucher_set %}
+        {% trans "Delete" %}
+        {% else %}
+        {% trans "Delete from set" %}
+        {% endif %}
+        </a> {% trans "or" %}
+        <a href="{% if not voucher.voucher_set %}{% url 'dashboard:voucher-list' %}{% else %}{% url 'dashboard:voucher-set-detail' pk=voucher.voucher_set.pk %}{% endif %}">{% trans "cancel" %}</a>
     </div>
 
 {% endblock dashboard_content %}
