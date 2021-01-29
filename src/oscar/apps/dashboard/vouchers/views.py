@@ -3,14 +3,13 @@ import csv
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
-from oscar.apps.voucher.utils import get_offer_name
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
 from oscar.views import sort_queryset
@@ -21,9 +20,6 @@ VoucherSetSearchForm = get_class('dashboard.vouchers.forms', 'VoucherSetSearchFo
 VoucherSearchForm = get_class('dashboard.vouchers.forms', 'VoucherSearchForm')
 Voucher = get_model('voucher', 'Voucher')
 VoucherSet = get_model('voucher', 'VoucherSet')
-ConditionalOffer = get_model('offer', 'ConditionalOffer')
-Benefit = get_model('offer', 'Benefit')
-Condition = get_model('offer', 'Condition')
 OrderDiscount = get_model('order', 'OrderDiscount')
 
 
@@ -32,62 +28,80 @@ class VoucherListView(generic.ListView):
     context_object_name = 'vouchers'
     template_name = 'oscar/dashboard/vouchers/voucher_list.html'
     form_class = VoucherSearchForm
-    description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get_queryset(self):
-        qs = self.model.objects.all().order_by('-date_created')
+        self.search_filters = []
+        qs = self.model._default_manager.all()
         qs = sort_queryset(qs, self.request,
                            ['num_basket_additions', 'num_orders',
                             'date_created'],
                            '-date_created')
-        self.description_ctx = {'main_filter': _('All vouchers'),
-                                'name_filter': '',
-                                'code_filter': ''}
 
-        # If form not submitted, return early
-        is_form_submitted = 'name' in self.request.GET
-        if not is_form_submitted:
-            self.form = self.form_class()
+        # If form is not submitted, perform a default filter, and return early
+        if not self.request.GET:
+            self.form = self.form_class(initial={'in_set': False})
+            # This form is exactly the same as the other one, apart from having
+            # fields with different IDs, so that they are unique within the page
+            # (non-unique field IDs also break Select2)
+            self.advanced_form = self.form_class(initial={'in_set': False}, auto_id='id_advanced_%s')
+            self.search_filters.append(_("Not in a set"))
             return qs.filter(voucher_set__isnull=True)
 
         self.form = self.form_class(self.request.GET)
-        if not self.form.is_valid():
+        # This form is exactly the same as the other one, apart from having
+        # fields with different IDs, so that they are unique within the page
+        # (non-unique field IDs also break Select2)
+        self.advanced_form = self.form_class(self.request.GET, auto_id='id_advanced_%s')
+        if not all([self.form.is_valid(), self.advanced_form.is_valid()]):
             return qs
 
-        data = self.form.cleaned_data
-        if data['name']:
-            qs = qs.filter(name__icontains=data['name'])
-            self.description_ctx['name_filter'] \
-                = _("with name matching '%s'") % data['name']
-        if data['code']:
-            qs = qs.filter(code=data['code'])
-            self.description_ctx['code_filter'] \
-                = _("with code '%s'") % data['code']
-        if data['is_active']:
+        name = self.form.cleaned_data['name']
+        code = self.form.cleaned_data['code']
+        offer_name = self.form.cleaned_data['offer_name']
+        is_active = self.form.cleaned_data['is_active']
+        in_set = self.form.cleaned_data['in_set']
+        has_offers = self.form.cleaned_data['has_offers']
+
+        if name:
+            qs = qs.filter(name__icontains=name)
+            self.search_filters.append(_('Name matches "%s"') % name)
+        if code:
+            qs = qs.filter(code=code)
+            self.search_filters.append(_('Code is "%s"') % code)
+        if offer_name:
+            qs = qs.filter(offers__name__icontains=offer_name)
+            self.search_filters.append(_('Offer name matches "%s"') % offer_name)
+        if is_active is not None:
             now = timezone.now()
-            qs = qs.filter(start_datetime__lte=now, end_datetime__gte=now)
-            self.description_ctx['main_filter'] = _('Active vouchers')
-        if not data['in_set']:
-            qs = qs.filter(voucher_set__isnull=True)
+            if is_active:
+                qs = qs.filter(start_datetime__lte=now, end_datetime__gte=now)
+                self.search_filters.append(_("Is active"))
+            else:
+                qs = qs.filter(end_datetime__lt=now)
+                self.search_filters.append(_("Is inactive"))
+        if in_set is not None:
+            qs = qs.filter(voucher_set__isnull=not in_set)
+            self.search_filters.append(_("In a set") if in_set else _("Not in a set"))
+        if has_offers is not None:
+            qs = qs.filter(offers__isnull=not has_offers).distinct()
+            self.search_filters.append(_("Has offers") if has_offers else _("Has no offers"))
 
         return qs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        if self.form.is_bound:
-            description = self.description_template % self.description_ctx
-        else:
-            description = _("Vouchers")
-        ctx['description'] = description
         ctx['form'] = self.form
+        ctx['advanced_form'] = self.advanced_form
+        ctx['search_filters'] = self.search_filters
         return ctx
 
 
-class VoucherCreateView(generic.FormView):
+class VoucherCreateView(generic.CreateView):
     model = Voucher
     template_name = 'oscar/dashboard/vouchers/voucher_form.html'
     form_class = VoucherForm
+    success_url = reverse_lazy('dashboard:voucher-list')
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -95,44 +109,19 @@ class VoucherCreateView(generic.FormView):
         return ctx
 
     def get_initial(self):
-        return dict(
-            exclusive=True
-        )
+        initial = super().get_initial()
+        initial['start_datetime'] = timezone.now()
+        return initial
 
     @transaction.atomic()
     def form_valid(self, form):
-        # Create offer and benefit
-        condition = Condition.objects.create(
-            range=form.cleaned_data['benefit_range'],
-            type=Condition.COUNT,
-            value=1
-        )
-        benefit = Benefit.objects.create(
-            range=form.cleaned_data['benefit_range'],
-            type=form.cleaned_data['benefit_type'],
-            value=form.cleaned_data['benefit_value']
-        )
-        name = form.cleaned_data['name']
-        offer = ConditionalOffer.objects.create(
-            name=get_offer_name(name),
-            offer_type=ConditionalOffer.VOUCHER,
-            benefit=benefit,
-            condition=condition,
-            exclusive=form.cleaned_data['exclusive'],
-        )
-        voucher = Voucher.objects.create(
-            name=name,
-            code=form.cleaned_data['code'],
-            usage=form.cleaned_data['usage'],
-            start_datetime=form.cleaned_data['start_datetime'],
-            end_datetime=form.cleaned_data['end_datetime'],
-        )
-        voucher.offers.add(offer)
-        return HttpResponseRedirect(self.get_success_url())
+        response = super().form_valid(form)
+        self.object.offers.add(*form.cleaned_data['offers'])
+        return response
 
     def get_success_url(self):
         messages.success(self.request, _("Voucher created"))
-        return reverse('dashboard:voucher-list')
+        return super().get_success_url()
 
 
 class VoucherStatsView(generic.DetailView):
@@ -148,72 +137,39 @@ class VoucherStatsView(generic.DetailView):
         return ctx
 
 
-class VoucherUpdateView(generic.FormView):
+class VoucherUpdateView(generic.UpdateView):
     template_name = 'oscar/dashboard/vouchers/voucher_form.html'
+    context_object_name = 'voucher'
     model = Voucher
     form_class = VoucherForm
+    success_url = reverse_lazy('dashboard:voucher-list')
 
-    def get_voucher(self):
-        if not hasattr(self, 'voucher'):
-            self.voucher = Voucher.objects.get(id=self.kwargs['pk'])
-        return self.voucher
+    def dispatch(self, request, *args, **kwargs):
+        voucher_set = self.get_object().voucher_set
+        if voucher_set is not None:
+            messages.warning(request, _("The voucher can only be edited as part of its set"))
+            return redirect('dashboard:voucher-set-update', pk=voucher_set.pk)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['title'] = self.voucher.name
-        ctx['voucher'] = self.voucher
+        ctx['title'] = self.object.name
         return ctx
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['voucher'] = self.get_voucher()
-        return kwargs
-
     def get_initial(self):
-        voucher = self.get_voucher()
-        offer = voucher.offers.first()
-        benefit = offer.benefit
-        return {
-            'name': voucher.name,
-            'code': voucher.code,
-            'start_datetime': voucher.start_datetime,
-            'end_datetime': voucher.end_datetime,
-            'usage': voucher.usage,
-            'benefit_type': benefit.type,
-            'benefit_range': benefit.range,
-            'benefit_value': benefit.value,
-            'exclusive': offer.exclusive,
-        }
+        initial = super().get_initial()
+        initial['offers'] = self.object.offers.all()
+        return initial
 
     @transaction.atomic()
     def form_valid(self, form):
-        voucher = self.get_voucher()
-        voucher.name = form.cleaned_data['name']
-        voucher.code = form.cleaned_data['code']
-        voucher.usage = form.cleaned_data['usage']
-        voucher.start_datetime = form.cleaned_data['start_datetime']
-        voucher.end_datetime = form.cleaned_data['end_datetime']
-        voucher.save()
-
-        offer = voucher.offers.first()
-        offer.condition.range = form.cleaned_data['benefit_range']
-        offer.condition.save()
-
-        offer.exclusive = form.cleaned_data['exclusive']
-        offer.name = get_offer_name(voucher.name)
-        offer.save()
-
-        benefit = voucher.benefit
-        benefit.range = form.cleaned_data['benefit_range']
-        benefit.type = form.cleaned_data['benefit_type']
-        benefit.value = form.cleaned_data['benefit_value']
-        benefit.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+        response = super().form_valid(form)
+        self.object.offers.set(form.cleaned_data['offers'])
+        return response
 
     def get_success_url(self):
         messages.success(self.request, _("Voucher updated"))
-        return reverse('dashboard:voucher-list')
+        return super().get_success_url()
 
 
 class VoucherDeleteView(generic.DeleteView):
@@ -221,9 +177,19 @@ class VoucherDeleteView(generic.DeleteView):
     template_name = 'oscar/dashboard/vouchers/voucher_delete.html'
     context_object_name = 'voucher'
 
+    @transaction.atomic
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        if self.object.voucher_set is not None:
+            self.object.voucher_set.update_count()
+        return response
+
     def get_success_url(self):
         messages.warning(self.request, _("Voucher deleted"))
-        return reverse('dashboard:voucher-list')
+        if self.object.voucher_set is not None:
+            return reverse('dashboard:voucher-set-detail', kwargs={'pk': self.object.voucher_set.pk})
+        else:
+            return reverse('dashboard:voucher-list')
 
 
 class VoucherSetCreateView(generic.CreateView):
@@ -237,40 +203,9 @@ class VoucherSetCreateView(generic.CreateView):
         return ctx
 
     def get_initial(self):
-        return {
-            'start_datetime': timezone.now(),
-            'end_datetime': timezone.now()
-        }
-
-    def form_valid(self, form):
-        condition = Condition.objects.create(
-            range=form.cleaned_data['benefit_range'],
-            type=Condition.COUNT,
-            value=1
-        )
-        benefit = Benefit.objects.create(
-            range=form.cleaned_data['benefit_range'],
-            type=form.cleaned_data['benefit_type'],
-            value=form.cleaned_data['benefit_value']
-        )
-        name = form.cleaned_data['name']
-        offer = ConditionalOffer.objects.create(
-            name=get_offer_name(name),
-            offer_type=ConditionalOffer.VOUCHER,
-            benefit=benefit,
-            condition=condition,
-        )
-
-        VoucherSet.objects.create(
-            name=name,
-            count=form.cleaned_data['count'],
-            code_length=form.cleaned_data['code_length'],
-            description=form.cleaned_data['description'],
-            start_datetime=form.cleaned_data['start_datetime'],
-            end_datetime=form.cleaned_data['end_datetime'],
-            offer=offer,
-        )
-        return HttpResponseRedirect(self.get_success_url())
+        initial = super().get_initial()
+        initial['start_datetime'] = timezone.now()
+        return initial
 
     def get_success_url(self):
         messages.success(self.request, _("Voucher set created"))
@@ -280,78 +215,27 @@ class VoucherSetCreateView(generic.CreateView):
 class VoucherSetUpdateView(generic.UpdateView):
     template_name = 'oscar/dashboard/vouchers/voucher_set_form.html'
     model = VoucherSet
+    context_object_name = 'voucher_set'
     form_class = VoucherSetForm
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['title'] = self.object.name
-        ctx['voucher'] = self.object
         return ctx
 
-    def get_voucherset(self):
-        if not hasattr(self, 'voucherset'):
-            self.voucherset = VoucherSet.objects.get(id=self.kwargs['pk'])
-        return self.voucherset
-
     def get_initial(self):
-        voucherset = self.get_voucherset()
-        offer = voucherset.offer
-        benefit = offer.benefit
-        return {
-            'name': voucherset.name,
-            'count': voucherset.count,
-            'code_length': voucherset.code_length,
-            'start_datetime': voucherset.start_datetime,
-            'end_datetime': voucherset.end_datetime,
-            'description': voucherset.description,
-            'benefit_type': benefit.type,
-            'benefit_range': benefit.range,
-            'benefit_value': benefit.value,
-        }
-
-    def form_valid(self, form):
-        voucherset = form.save()
-        if not voucherset.offer:
-            condition = Condition.objects.create(
-                range=form.cleaned_data['benefit_range'],
-                type=Condition.COUNT,
-                value=1
-            )
-            benefit = Benefit.objects.create(
-                range=form.cleaned_data['benefit_range'],
-                type=form.cleaned_data['benefit_type'],
-                value=form.cleaned_data['benefit_value']
-            )
-            name = form.cleaned_data['name']
-            offer, __ = ConditionalOffer.objects.update_or_create(
-                name=get_offer_name(name),
-                defaults=dict(
-                    offer_type=ConditionalOffer.VOUCHER,
-                    benefit=benefit,
-                    condition=condition,
-                )
-            )
-            voucherset.offer = offer
-            for voucher in voucherset.vouchers.all():
-                if offer not in voucher.offers.all():
-                    voucher.offers.add(offer)
-
-        else:
-            benefit = voucherset.offer.benefit
-            benefit.range = form.cleaned_data['benefit_range']
-            benefit.type = form.cleaned_data['benefit_type']
-            benefit.value = form.cleaned_data['benefit_value']
-            benefit.save()
-            condition = voucherset.offer.condition
-            condition.range = form.cleaned_data['benefit_range']
-            condition.save()
-        voucherset.save()
-
-        return HttpResponseRedirect(self.get_success_url())
+        initial = super().get_initial()
+        # All vouchers in the set have the same "usage" and "offers", so we use
+        # the first one
+        voucher = self.object.vouchers.first()
+        if voucher is not None:
+            initial['usage'] = voucher.usage
+            initial['offers'] = voucher.offers.all()
+        return initial
 
     def get_success_url(self):
         messages.success(self.request, _("Voucher updated"))
-        return reverse('dashboard:voucher-set', kwargs={'pk': self.object.pk})
+        return reverse('dashboard:voucher-set-detail', kwargs={'pk': self.object.pk})
 
 
 class VoucherSetDetailView(generic.ListView):
@@ -360,7 +244,6 @@ class VoucherSetDetailView(generic.ListView):
     context_object_name = 'vouchers'
     template_name = 'oscar/dashboard/vouchers/voucher_set_detail.html'
     form_class = VoucherSetSearchForm
-    description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
     paginate_by = 50
 
     def dispatch(self, request, *args, **kwargs):
@@ -368,6 +251,7 @@ class VoucherSetDetailView(generic.ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+        self.search_filters = []
         qs = (
             self.model.objects
             .filter(voucher_set=self.voucher_set)
@@ -377,9 +261,6 @@ class VoucherSetDetailView(generic.ListView):
                            ['num_basket_additions', 'num_orders',
                             'date_created'],
                            '-date_created')
-        self.description_ctx = {'main_filter': _('All vouchers'),
-                                'name_filter': '',
-                                'code_filter': ''}
 
         # If form not submitted, return early
         is_form_submitted = (
@@ -396,28 +277,22 @@ class VoucherSetDetailView(generic.ListView):
         data = self.form.cleaned_data
         if data['code']:
             qs = qs.filter(code__icontains=data['code'])
-            self.description_ctx['code_filter'] \
-                = _("with code '%s'") % data['code']
-        if data['is_active']:
-            now = timezone.now()
-            qs = qs.filter(start_datetime__lte=now, end_datetime__gt=now)
-            self.description_ctx['main_filter'] = _('Active vouchers')
+            self.search_filters.append(_('Code matches "%s"') % data['code'])
 
         return qs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['voucher_set'] = self.voucher_set
-        ctx['description'] = self.voucher_set.name
         ctx['form'] = self.form
+        ctx['search_filters'] = self.search_filters
         return ctx
 
 
 class VoucherSetListView(generic.ListView):
     model = VoucherSet
-    context_object_name = 'vouchers'
+    context_object_name = 'voucher_sets'
     template_name = 'oscar/dashboard/vouchers/voucher_set_list.html'
-    description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get_queryset(self):
@@ -451,3 +326,13 @@ class VoucherSetDownloadView(generic.DetailView):
             writer.writerow([code])
 
         return response
+
+
+class VoucherSetDeleteView(generic.DeleteView):
+    model = VoucherSet
+    template_name = 'oscar/dashboard/vouchers/voucher_set_delete.html'
+    context_object_name = 'voucher_set'
+
+    def get_success_url(self):
+        messages.warning(self.request, _("Voucher set deleted"))
+        return reverse('dashboard:voucher-set-list')

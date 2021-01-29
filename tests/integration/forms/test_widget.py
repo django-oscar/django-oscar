@@ -193,3 +193,9 @@ class RemoteSelectTestCase(TestCase):
         field = self._get_multiselect_form_field()
         attrs = field.widget.get_context(name='my_field', value=None, attrs={})['widget']['attrs']
         self.assertEqual(attrs['data-multiple'], 'multiple')
+
+
+class NullBooleanSelectTestCase(TestCase):
+
+    def test_unknown_choice_label(self):
+        self.assertEqual(dict(widgets.NullBooleanSelect().choices)['unknown'], '---------')

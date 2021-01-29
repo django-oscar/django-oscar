@@ -2,9 +2,10 @@
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block title %}
-    {{ description }} | {{ block.super }}
+    {% trans "Vouchers" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -14,7 +15,7 @@
             {% if form.is_bound %}
                 <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a></li>
             {% endif %}
-            <li class="breadcrumb-item active" aria-current="page">{{ description }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Vouchers" %}</li>
         </ol>
     </nav>
 {% endblock %}
@@ -32,27 +33,70 @@
         <div class="table-header">
             <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
         </div>
-        <div class="card card-body">
+        <div class="card card-body bg-light">
             <form method="get" class="form-inline">
-                {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
+                {% for field in form %}
+                    {% if field.name in form.basic_fields %}
+                        {% if field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <div class="form-group mr-2{% if field.errors %} error{% endif %}">
+                                {{ field.label_tag }}
+                                {% render_field field class+='form-control' %}
+                                {% for error in field.errors %}
+                                    <ul class="error-block">
+                                        <li>{{ error }}</li>
+                                    </ul>
+                                {% endfor %}
+                                {# No help text as it wraps #}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <input type="hidden" name="{{ field.name }}" value="{{ field.value|default_if_none:'' }}">
+                    {% endif %}
+                {% endfor %}
                 <button type="submit" class="btn btn-primary mr-2" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+                <a data-toggle="modal" data-target="#SearchModal" href="#" class="mr-2">{% trans "Advanced Search" %}</a>
                 <a href="{% url 'dashboard:voucher-list' %}" class="btn btn-secondary">{% trans "Reset" %}</a>
             </form>
+
+            {# Search modal, if there are form errors the form is automatically openend #}
+            {% include "oscar/dashboard/partials/advanced_search_modal.html" with form=advanced_form style='horizontal' %}
+
+            {% if search_filters %}
+            <div class="search-filter-list">
+                <label>Filters:</label>
+                {% for filter in search_filters %}
+                <span class="badge badge-success">{{ filter }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
     {% endblock page_head %}
 
     {% block voucher_table %}
         <table class="table table-striped table-bordered table-hover">
-            <caption><i class="fas fa-money-bill"></i> {{ description }}</caption>
+            <caption>
+                <i class="fas fa-money-bill"></i>
+                {% if search_filters %}
+                {% trans "Voucher Search Results" %}
+                {% else %}
+                {% trans "All Vouchers" %}
+                {% endif %}
+            </caption>
             {% if vouchers %}
                 {% block table_head %}
                     <tr>
                         <th>{% trans "Name" %}</th>
                         <th>{% trans "Code" %}</th>
                         <th>{% trans "Status" %}</th>
+                        <th>{% trans "Num offers" %}</th>
                         <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
                         <th>{% anchor 'num_orders' _("Num orders") %}</th>
                         <th>{% anchor 'date_created' _("Date created") %}</th>
+                        {% if form.is_bound and form.cleaned_data.in_set is not False %}
+                        <th>{% trans "Set" %}</th>
+                        {% endif %}
                         <th></th>
                     </tr>
                 {% endblock table_head %}
@@ -70,9 +114,19 @@
                                     <span class="badge badge-secondary">{% trans "Inactive" %}</span>
                                 {% endif %}
                             </td>
+                            <td>{{ voucher.offers.count }}</td>
                             <td>{{ voucher.num_basket_additions }}</td>
                             <td>{{ voucher.num_orders }}</td>
                             <td>{{ voucher.date_created }}</td>
+                            {% if form.is_bound and form.cleaned_data.in_set is not False %}
+                            <td>
+                                {% if voucher.voucher_set.pk %}
+                                <a href="{% url 'dashboard:voucher-set-detail' pk=voucher.voucher_set.pk %}">{{ voucher.voucher_set.name }}</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            {% endif %}
                             <td>
                                 {% block row_actions %}
                                     <div class="btn-toolbar">
@@ -84,11 +138,21 @@
                                                 <a class="dropdown-item" href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">
                                                     {% trans "Stats" %}
                                                 </a>
+                                                {% if not voucher.voucher_set %}
                                                 <a class="dropdown-item" href="{% url 'dashboard:voucher-update' pk=voucher.id %}">
                                                     {% trans "Edit" %}
                                                 </a>
+                                                {% else %}
+                                                <a class="dropdown-item" href="{% url 'dashboard:voucher-set-update' pk=voucher.voucher_set.pk %}">
+                                                    {% trans "Edit set" %}
+                                                </a>
+                                                {% endif %}
                                                 <a class="dropdown-item" href="{% url 'dashboard:voucher-delete' pk=voucher.id %}">
+                                                    {% if not voucher.voucher_set %}
                                                     {% trans "Delete" %}
+                                                    {% else %}
+                                                    {% trans "Delete from set" %}
+                                                    {% endif %}
                                                 </a>
                                             </div>
                                         </div>
@@ -105,3 +169,10 @@
     {% endblock voucher_table %}
 {% include "oscar/dashboard/partials/pagination.html" %}
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    {% if advanced_form.errors %}
+    $('#SearchModal').modal('show');
+    {% endif %}
+{% endblock onbodyload %}

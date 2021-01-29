@@ -364,12 +364,14 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
             value=D('10'))
         models.ConditionalOffer.objects.create(
             name='offer1',
+            offer_type=models.ConditionalOffer.SITE,
             benefit=benefit1,
             condition=condition,
             exclusive=False
         )
         models.ConditionalOffer.objects.create(
             name='offer2',
+            offer_type=models.ConditionalOffer.SITE,
             benefit=benefit2,
             condition=condition,
             exclusive=False

@@ -1,0 +1,53 @@
+=======================
+Oscar 3.1 release notes
+=======================
+
+What's new in Oscar 3.1?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Improvements have been made to the dashboard interface for creating and editing offers, vouchers, and voucher sets.
+
+  These better expose the flexible implementation of offer and voucher functionality, allowing:
+  - creation of offers of all types
+  - creation of vouchers with multiple offers
+  - creation of voucher sets of all usages, and with multiple offers
+
+  Details of these changes can be found in the :ref:`Changes to "dashboard.offers" and "dashboard.vouchers" apps
+  <changes_to_dashboard_offers_and_dashboard_vouchers_apps>` section below.
+
+.. _changes_to_dashboard_offers_and_dashboard_vouchers_apps:
+
+Changes to ``dashboard.offers`` and ``dashboard.vouchers`` apps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``dashboard.offers`` and ``dashboard.vouchers`` apps have been reworked significantly. There have also been changes
+to the related models, signals, and utility functions in the ``offer`` and ``voucher`` apps.
+
+You should review these changes [we'll insert a link to the commit here once it is merged], especially if you have made customisations that depends on these apps, as some are backwards incompatible. The functional changes are summarised below.
+
+- The dashboard offer list view now displays all types of offer (previously voucher offers were hidden), with the
+  ability to filter the list based on type.
+
+- The dashboard offer creation and update views now allow creation of offers of all types (previously only site-wide
+  offers could be created). This exposes the full flexibility of Oscar's offer types in the dashboard. Note that a new
+  setting (``OSCAR_OFFERS_IMPLEMENTED_TYPES``) has been added, which restricts the selectable types to ones that Oscar
+  currently implements.
+
+- The dashboard voucher creation and edit views have been signficiantly refactored. Previously, a conditional offer
+  (and associated benefit/condition) was created automatically when creating a new voucher. This is no longer the case 
+  and instead the offers must be created separately in advance of assigning them to a voucher. These views now allow
+  assigning multiple offers to a voucher, exposing the full flexibility of this app.
+
+- The create view for voucher sets has been changed to no longer create a conditional offer on the fly. As with
+  vouchers, the offer has to be created separately before being assigned to the voucher set.
+
+- The logic for generating vouchers for voucher sets has been moved from the ``save`` method of the ``VoucherSet`` into
+  the form logic for the dashboard form. This removes a potentially unsafe and unexpected generation of new vouchers
+  when a voucher set is saved from outside the dashboard.
+
+- ``offer.signals`` has been renamed to ``offer.receivers`` for consistency with other apps.
+
+- ``voucher.signals.delete_unused_related_conditional_offer`` has been removed.
+
+- ``voucher.utils.get_offer_name`` has been removed, as voucher-type offers are no longer automatically created,
+  updated, and deleted.

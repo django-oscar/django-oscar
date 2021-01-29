@@ -13,7 +13,7 @@ class OfferConfig(OscarConfig):
     namespace = 'offer'
 
     def ready(self):
-        from . import signals  # noqa
+        from . import receivers  # noqa
 
         self.detail_view = get_class('offer.views', 'OfferDetailView')
         self.list_view = get_class('offer.views', 'OfferListView')

@@ -161,10 +161,12 @@
         {% if user.is_staff %}
         <table class="table table-striped table-bordered table-hover">
             <caption><i class="fas fa-gift"></i> {% trans "Offers, vouchers" %}</caption>
+            {% for offer_map in offer_maps %}
             <tr>
-                <th class="col-md-10">{% trans "Active <em>Site</em> Offers" %}</th>
-                <td class="col-md-2" >{{ total_site_offers }}</td>
+                <th class="col-md-10">{% blocktrans with offer_type=offer_map.offer_type %}Active <em>{{ offer_type }}</em> Offers{% endblocktrans %}</th>
+                <td class="col-md-2" >{{ offer_map.count }}</td>
             </tr>
+            {% endfor %}
             <tr>
                 <th class="col-md-10">{% trans "Active <em>Vouchers</em>" %}</th>
                 <td class="col-md-2" >{{ total_vouchers }}</td>

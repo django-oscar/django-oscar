@@ -29,6 +29,8 @@ class VouchersDashboardConfig(OscarDashboardConfig):
             'dashboard.vouchers.views', 'VoucherSetDetailView')
         self.set_download_view = get_class(
             'dashboard.vouchers.views', 'VoucherSetDownloadView')
+        self.set_delete_view = get_class(
+            'dashboard.vouchers.views', 'VoucherSetDeleteView')
 
     def get_urls(self):
         urls = [
@@ -41,7 +43,8 @@ class VouchersDashboardConfig(OscarDashboardConfig):
             path('sets/', self.set_list_view.as_view(), name='voucher-set-list'),
             path('sets/create/', self.set_create_view.as_view(), name='voucher-set-create'),
             path('sets/update/<int:pk>/', self.set_update_view.as_view(), name='voucher-set-update'),
-            path('sets/<int:pk>/', self.set_detail_view.as_view(), name='voucher-set'),
-            path('sets/<int:pk>/download/', self.set_download_view.as_view(), name='voucher-set-download'),
+            path('sets/detail/<int:pk>/', self.set_detail_view.as_view(), name='voucher-set-detail'),
+            path('sets/download/<int:pk>/', self.set_download_view.as_view(), name='voucher-set-download'),
+            path('sets/delete/<int:pk>/', self.set_delete_view.as_view(), name='voucher-set-delete'),
         ]
         return self.post_process_urls(urls)

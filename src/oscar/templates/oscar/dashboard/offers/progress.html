@@ -8,11 +8,11 @@
         <li class="nav-item step1">
             {% if step == 2 or step == 3 or step == 4 %}
             <a href="{% if session_offer.pk %}{% url 'dashboard:offer-metadata' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-metadata' %}{% endif %}" class="nav-link visited">
-                {% trans "1. Name and description" %}
+                {% trans "1. Name, description and type" %}
             </a>
             {% else %}
             <a class="nav-link {% if step == 1 %}active{% else %}disabled text-reset{% endif %}">
-                {% trans "1. Name and description" %}
+                {% trans "1. Name, description and type" %}
             </a>
             {% endif %}
         </li>
