@@ -46,20 +46,25 @@ usual.  You will have to adapt paths, but something akin to this will work::
 Migrating customised apps (models changed)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-At this point, you have essentially forked away from Oscar's migrations. Read
-the release notes carefully and see if it includes data migrations. If not,
-it's as easy as::
+At this point, you have essentially forked away from Oscar's migrations. You will
+need to review all migrations that the Oscar release ships. Please also carefully
+read the release notes; tricky migrations will usually be mentioned.
+
+If there are data migrations, you will need to look into what they do, and
+likely will have to imitate what they're doing. You can copy across the
+`RunPython` part of data migration, but you have to mind the migration dependencies
+to ensure your data migration is executed in the right order.
+
+For schema migrations, it can sometimes be as easy as::
 
     ./manage.py makemigrations shipping
 
-to create the appropriate migration.
+to mirror the changes Oscar did.
 
-But if there is data migrations, you will need to look into what they do, and
-likely will have to imitate what they're doing. You can copy across the
-data migration, but you have to manually update the dependencies.
-
-If there's no schema migrations, you should set the data migration to depend
-on your last migration for that app. If there is a schema migration, you
-will have to imitate the dependency order of Oscar.
+But other times, you will get dependency errors because new Oscar migrations
+reference a migration you don't have. One can get around this by creating
+an empty migration with the same name. See `this thread`_ on the mailing list.
 
 Feel free to get in touch on the mailing list if you run into any problems.
+
+.. _`this thread`: https://groups.google.com/g/django-oscar/c/2GL2XGHRcwM
