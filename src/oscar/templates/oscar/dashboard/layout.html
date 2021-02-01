@@ -62,7 +62,7 @@
                     {% for item in nav_items %}
                         <li class="nav-item {% if item.has_children %}dropdown{% endif %}">
                             <a class="nav-link {% if item.has_children %}dropdown-toggle{% endif %}"
-                               href="{% if item.is_heading %}#{% else %}{{ item.url }}{% endif %}"
+                               href="{% if item.is_separator %}#{% elif item.is_heading %}#{% else %}{{ item.url }}{% endif %}"
                                {% if item.has_children %}id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
                             >
                                 {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
@@ -72,7 +72,7 @@
                             {% if item.has_children %}
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     {% for subitem in item.children %}
-                                        <a class="dropdown-item" href="{{ subitem.url }}">
+                                        <a class="dropdown-item" href="{% if subitem.is_separator %}#{% else %}{{ subitem.url }}{% endif %}">
                                             {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
                                             {{ subitem.label }}
                                         </a>

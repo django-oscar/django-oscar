@@ -110,6 +110,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'url_name': 'dashboard:catalogue-category-list',
             },
             {
+                'label': '----',
+                'url_name': '',  # Example separator
+            },
+            {
                 'label': _('Ranges'),
                 'url_name': 'dashboard:range-list',
             },

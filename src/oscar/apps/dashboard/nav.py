@@ -31,6 +31,10 @@ class Node(object):
         return self.url_name is None
 
     @property
+    def is_separator(self):
+        return (self.url_name is not None) and (self.url_name == "")
+
+    @property
     def url(self):
         return reverse(self.url_name, args=self.url_args,
                        kwargs=self.url_kwargs)
@@ -95,6 +99,9 @@ def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
     by the dashboard decorator is evaluated
     """
     if url_name is None:  # it's a heading
+        return True
+
+    if url_name == "":  # it's a separator
         return True
 
     url = reverse(url_name, args=url_args, kwargs=url_kwargs)
