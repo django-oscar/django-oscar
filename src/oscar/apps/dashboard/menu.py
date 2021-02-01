@@ -16,9 +16,10 @@ def get_nodes(user):
     for node in all_nodes:
         filtered_node = node.filter(user)
         # don't append headings without children
+        # and don't add separators
         if filtered_node and (filtered_node.has_children()
-                              or not filtered_node.is_heading
-                              or not filtered_node.is_separator):
+                              or not filtered_node.is_heading) \
+                and not filtered_node.is_separator:
             visible_nodes.append(filtered_node)
     return visible_nodes
 
