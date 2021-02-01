@@ -102,7 +102,7 @@ def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
         return True
 
     if url_name == "":  # it's a separator
-        return False
+        return True
 
     url = reverse(url_name, args=url_args, kwargs=url_kwargs)
     url_match = resolve(url)
