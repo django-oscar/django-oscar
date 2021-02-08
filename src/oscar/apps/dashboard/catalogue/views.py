@@ -146,7 +146,7 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
             # that contain the UPC.
 
             # Look up all matches (child products, products not allowed to access) ...
-            matches_upc = Product.objects.filter(upc__iexact=data['upc'])
+            matches_upc = Product.objects.filter(Q(upc__iexact=data['upc']) | Q(children__upc__iexact=data['upc']))
 
             # ... and use that to pick all standalone or parent products that the user is
             # allowed to access.
@@ -163,7 +163,7 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
                     Q(id__in=matches_upc.values('id')) | Q(id__in=matches_upc.values('parent_id')))
 
         if data.get('title'):
-            queryset = queryset.filter(title__icontains=data['title'])
+            queryset = queryset.filter(Q(title__icontains=data['title']) | Q(children__title__icontains=data['title']))
 
         return queryset
 
