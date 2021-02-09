@@ -147,7 +147,7 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
             # that contain the UPC.
 
             # Look up all matches (child products, products not allowed to access) ...
-            matches_upc = Product.objects.filter(Q(upc__iexact=upc) | Q(children__upc__iexact=upc)).distinct()
+            matches_upc = Product.objects.filter(Q(upc__iexact=upc) | Q(children__upc__iexact=upc))
 
             # ... and use that to pick all standalone or parent products that the user is
             # allowed to access.
@@ -168,7 +168,7 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
         if title:
             queryset = queryset.filter(Q(title__icontains=title) | Q(children__title__icontains=title))
 
-        return queryset
+        return queryset.distinct()
 
 
 class ProductCreateRedirectView(generic.RedirectView):
