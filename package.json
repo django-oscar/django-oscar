@@ -6,7 +6,7 @@
   "dependencies": {},
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^4.6.0",
     "eslint": "^7.19.0",
     "extend": ">=3.0.2",
     "gulp": "^4.0.2",
