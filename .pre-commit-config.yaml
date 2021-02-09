@@ -10,3 +10,7 @@ repos:
     -   id: flake8
         language_version: python3
         exclude: migrations
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.7.0
+    hooks:
+    -   id: isort
