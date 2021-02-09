@@ -159,8 +159,7 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
                 queryset = qs_match
             else:
                 # No direct UPC match. Let's try the same with an icontains search.
-                matches_upc = Product.objects.filter(Q(upc__icontains=upc) | Q(children__upc__icontains=upc))\
-                    .distinct()
+                matches_upc = Product.objects.filter(Q(upc__icontains=upc) | Q(children__upc__icontains=upc))
                 queryset = queryset.filter(
                     Q(id__in=matches_upc.values('id')) | Q(id__in=matches_upc.values('parent_id')))
 
