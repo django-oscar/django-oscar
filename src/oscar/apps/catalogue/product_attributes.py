@@ -9,6 +9,10 @@ class ProductAttributesContainer:
     To set attributes on a product, use the `attr` attribute:
 
         product.attr.weight = 125
+
+    To refetch the attribute values from the database:
+
+        product.attr.refresh()
     """
 
     def __setstate__(self, state):
@@ -16,6 +20,9 @@ class ProductAttributesContainer:
 
     def __init__(self, product):
         self.product = product
+        self.refresh()
+
+    def refresh(self):
         values = self.get_values().select_related('attribute')
         for v in values:
             setattr(self, v.attribute.code, v.value)
