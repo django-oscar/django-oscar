@@ -17,7 +17,7 @@ __all__ = [
 ]
 
 
-class BillingAddressFactory(factory.DjangoModelFactory):
+class BillingAddressFactory(factory.django.DjangoModelFactory):
     country = factory.SubFactory('oscar.test.factories.CountryFactory')
 
     first_name = 'John'
@@ -31,7 +31,7 @@ class BillingAddressFactory(factory.DjangoModelFactory):
         model = get_model('order', 'BillingAddress')
 
 
-class ShippingAddressFactory(factory.DjangoModelFactory):
+class ShippingAddressFactory(factory.django.DjangoModelFactory):
     country = factory.SubFactory('oscar.test.factories.CountryFactory')
 
     first_name = 'John'
@@ -46,13 +46,13 @@ class ShippingAddressFactory(factory.DjangoModelFactory):
         model = get_model('order', 'ShippingAddress')
 
 
-class OrderDiscountFactory(factory.DjangoModelFactory):
+class OrderDiscountFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = get_model('order', 'OrderDiscount')
 
 
-class OrderFactory(factory.DjangoModelFactory):
+class OrderFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = get_model('order', 'Order')
 
@@ -105,7 +105,7 @@ class OrderFactory(factory.DjangoModelFactory):
                 OrderCreator().create_line_models(obj, line)
 
 
-class OrderLineFactory(factory.DjangoModelFactory):
+class OrderLineFactory(factory.django.DjangoModelFactory):
     order = factory.SubFactory(OrderFactory)
     product = factory.SubFactory(
         'oscar.test.factories.ProductFactory')
@@ -129,7 +129,7 @@ class OrderLineFactory(factory.DjangoModelFactory):
         model = get_model('order', 'Line')
 
 
-class ShippingEventTypeFactory(factory.DjangoModelFactory):
+class ShippingEventTypeFactory(factory.django.DjangoModelFactory):
     name = 'Test event'
     code = factory.LazyAttribute(lambda o: slugify(o.name).replace('-', '_'))
 
@@ -138,7 +138,7 @@ class ShippingEventTypeFactory(factory.DjangoModelFactory):
         django_get_or_create = ('code', )
 
 
-class ShippingEventFactory(factory.DjangoModelFactory):
+class ShippingEventFactory(factory.django.DjangoModelFactory):
 
     order = factory.SubFactory(OrderFactory)
     event_type = factory.SubFactory(ShippingEventTypeFactory)

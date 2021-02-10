@@ -6,7 +6,7 @@ from oscar.core.loading import get_model
 __all__ = ['ProductAlertFactory', 'UserFactory']
 
 
-class ProductAlertFactory(factory.DjangoModelFactory):
+class ProductAlertFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = get_model('customer', 'ProductAlert')
 
@@ -15,7 +15,7 @@ class ProductAlertFactory(factory.DjangoModelFactory):
     status = Meta.model.ACTIVE
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(factory.django.DjangoModelFactory):
     username = factory.Sequence(lambda n: 'the_j_meister nummer %d' % n)
     email = factory.Sequence(lambda n: 'example_%s@example.com' % n)
     first_name = 'joseph'

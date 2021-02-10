@@ -9,7 +9,7 @@ from oscar.test.factories import ConditionalOfferFactory
 __all__ = ['VoucherFactory', 'VoucherSetFactory']
 
 
-class VoucherFactory(factory.DjangoModelFactory):
+class VoucherFactory(factory.django.DjangoModelFactory):
     name = "My voucher"
     code = "MYVOUCHER"
 
@@ -20,7 +20,7 @@ class VoucherFactory(factory.DjangoModelFactory):
         model = get_model('voucher', 'Voucher')
 
 
-class VoucherSetFactory(factory.DjangoModelFactory):
+class VoucherSetFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Voucher Set %d' % n)
     count = 100
     code_length = 12

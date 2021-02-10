@@ -8,7 +8,7 @@ __all__ = [
 ]
 
 
-class CountryFactory(factory.DjangoModelFactory):
+class CountryFactory(factory.django.DjangoModelFactory):
     iso_3166_1_a2 = 'GB'
     printable_name = "UNITED KINGDOM"
 
@@ -17,7 +17,7 @@ class CountryFactory(factory.DjangoModelFactory):
         django_get_or_create = ('iso_3166_1_a2',)
 
 
-class UserAddressFactory(factory.DjangoModelFactory):
+class UserAddressFactory(factory.django.DjangoModelFactory):
     title = "Dr"
     first_name = "Barry"
     last_name = 'Barrington'
