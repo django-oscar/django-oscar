@@ -8,54 +8,89 @@ How to setup Solr with Oscar
 
 `Apache Solr`_ is Oscar's recommended production-grade search backend. This
 how-to describes how to get Solr running, and integrated with Oscar. The
-instructions below are tested on an Ubuntu machine, but should be applicable
-for similar environments. A working Java or OpenJDK installation are necessary.
+instructions below are tested on an Debian/Ubuntu machine, but should be applicable
+for similar environments. A working Java or OpenJDK version 8 installation are
+necessary.
 
 .. _`Apache Solr`: https://lucene.apache.org/solr/
+
+Python Package
+==============
+
+You will need to install the ``pysolr`` Python package. Or add it to your
+`requirements.txt`:
+
+.. code-block:: bash
+
+    $ pip install pysolr
 
 Installing Solr
 ===============
 
 You first need to fetch and extract Solr. The schema included with Oscar
-is tested with Solr 4.7.2:
+is tested with Solr 6.6.6:
 
 .. code-block:: bash
 
-    $ wget http://archive.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz
-    $ tar xzf solr-4.7.2.tgz
+    $ wget -O ${HOME}/solr-6.6.6.tgz https://archive.apache.org/dist/lucene/solr/6.6.6/solr-6.6.6.tgz
+    $ tar xzf ${HOME}/solr-6.6.6.tgz --directory=${HOME}
+    $ ln -s ${HOME}/solr-6.6.6 ${HOME}/solr
+
+.. note::
+    For development this will presume the solr directory is in
+    the users ``HOME`` directory. (For an actual deployment this may be better
+    placed in ``/opt``).
+
+Start Solr and Create a Core
+======================================
+
+Next start up Solr and create a core named ``sandbox`` this name will be used
+through out this howto, change ``sandbox`` to something that suits your installation.
+This step also sets up up the directory structure and a basic configuration.
+
+.. code-block:: bash
+
+    $ cd ${HOME}/solr
+    $ ./bin/solr start
+    $ ./bin/solr create -c sandbox -n basic_config
 
 Integrating with Haystack
 =========================
 
 Haystack provides an abstraction layer on top of different search backends and
-integrates with Django. Your Haystack connection settings in your
-``settings.py`` for the config above should look like this:
+integrates with Django. The Haystack connection settings in your
+``settings.py`` for the config above will look like this:
 
 .. code-block:: python
 
+    # Solr 6.x
     HAYSTACK_CONNECTIONS = {
         'default': {
             'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-            'URL': 'http://127.0.0.1:8983/solr',
+            'URL': 'http://127.0.0.1:8983/solr/sandbox',
+            'ADMIN_URL': 'http://127.0.0.1:8983/solr/admin/cores',
             'INCLUDE_SPELLING': True,
         },
     }
 
+To use Solr with the Sandbox locally comment out the ``HAYSTACK_CONNECTIONS``
+section using the WhooshEngine and uncomment the Solr 6.x section like this one.
+
 Build Solr schema
 =================
 
-Next, replace the example configuration with Oscar's.
+Next, get Oscar to generate the ``schema.xml`` and ``solrconfig.xml`` for Solr.
 
 .. code-block:: bash
 
-    $ ./manage.py build_solr_schema > solr-4.7.2/example/solr/collection1/conf/schema.xml
+    $ ./manage.py build_solr_schema --configure-directory=${HOME}/solr/server/solr/sandbox/conf
+    $ ./manage.py build_solr_schema --reload-core sandbox
 
-You should then be able to start Solr by running:
-
-.. code-block:: bash
-
-    $ cd solr-4.7.2/example
-    $ java -jar start.jar
+.. note::
+    If using this Solr install with the Sandbox locally ensure the steps up to
+    this point have been done prior to running ``make sandbox`` in the
+    `Run the sandbox locally <https://django-oscar.readthedocs.io/en/latest/internals/sandbox.html#run-the-sandbox-locally>`_
+    instructions.
 
 Rebuild search index
 ====================
@@ -68,9 +103,6 @@ If all is well, you should now be able to rebuild the search index.
     Removing all documents from your index because you said so.
     All documents removed.
     Indexing 201 Products
-    Indexing 201 Products
 
-The products being indexed twice is caused by a low-priority bug in Oscar and
-can be safely ignored.  If the indexing succeeded, search in Oscar will be
-working. Search for any term in the search box on your Oscar site, and you
-should get results.
+If the indexing succeeded, search in Oscar will be working. Search for any term
+in the search box on your Oscar site, and you should get results.
