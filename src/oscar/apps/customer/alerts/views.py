@@ -5,13 +5,13 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
-from oscar.apps.customer.alerts.utils import AlertsDispatcher
 from oscar.core.loading import get_class, get_model
 
 Product = get_model('catalogue', 'Product')
 ProductAlert = get_model('customer', 'ProductAlert')
 PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
+AlertsDispatcher = get_class('customer.alerts.utils', 'AlertsDispatcher')
 
 
 class ProductAlertListView(PageTitleMixin, generic.ListView):
