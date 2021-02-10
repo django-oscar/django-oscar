@@ -5,7 +5,7 @@ from django.contrib.sites import models as sites_models
 __all__ = ['PermissionFactory', 'SiteFactory']
 
 
-class PermissionFactory(factory.DjangoModelFactory):
+class PermissionFactory(factory.django.DjangoModelFactory):
     name = 'Dummy permission'
     codename = 'dummy'
 
@@ -14,7 +14,7 @@ class PermissionFactory(factory.DjangoModelFactory):
         django_get_or_create = ('content_type', 'codename')
 
 
-class SiteFactory(factory.DjangoModelFactory):
+class SiteFactory(factory.django.DjangoModelFactory):
     domain = factory.Sequence(lambda n: 'site-%d.oscarcommerce.com' % n)
 
     class Meta:

@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-class BasketFactory(factory.DjangoModelFactory):
+class BasketFactory(factory.django.DjangoModelFactory):
 
     @factory.post_generation
     def set_strategy(self, create, extracted, **kwargs):
@@ -21,7 +21,7 @@ class BasketFactory(factory.DjangoModelFactory):
         model = get_model('basket', 'Basket')
 
 
-class BasketLineAttributeFactory(factory.DjangoModelFactory):
+class BasketLineAttributeFactory(factory.django.DjangoModelFactory):
     option = factory.SubFactory('oscar.test.factories.OptionFactory')
 
     class Meta:

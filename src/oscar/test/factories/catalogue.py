@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-class ProductClassFactory(factory.DjangoModelFactory):
+class ProductClassFactory(factory.django.DjangoModelFactory):
     name = "Books"
     requires_shipping = True
     track_stock = True
@@ -22,7 +22,7 @@ class ProductClassFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'ProductClass')
 
 
-class ProductFactory(factory.DjangoModelFactory):
+class ProductFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = get_model('catalogue', 'Product')
 
@@ -37,7 +37,7 @@ class ProductFactory(factory.DjangoModelFactory):
         'oscar.test.factories.ProductCategoryFactory', 'product')
 
 
-class CategoryFactory(factory.DjangoModelFactory):
+class CategoryFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Category %d' % n)
 
     # Very naive handling of treebeard node fields. Works though!
@@ -48,14 +48,14 @@ class CategoryFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'Category')
 
 
-class ProductCategoryFactory(factory.DjangoModelFactory):
+class ProductCategoryFactory(factory.django.DjangoModelFactory):
     category = factory.SubFactory(CategoryFactory)
 
     class Meta:
         model = get_model('catalogue', 'ProductCategory')
 
 
-class ProductAttributeFactory(factory.DjangoModelFactory):
+class ProductAttributeFactory(factory.django.DjangoModelFactory):
     code = name = 'weight'
     product_class = factory.SubFactory(ProductClassFactory)
     type = "float"
@@ -64,7 +64,7 @@ class ProductAttributeFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'ProductAttribute')
 
 
-class OptionFactory(factory.DjangoModelFactory):
+class OptionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = get_model('catalogue', 'Option')
 
@@ -74,7 +74,7 @@ class OptionFactory(factory.DjangoModelFactory):
     required = False
 
 
-class AttributeOptionFactory(factory.DjangoModelFactory):
+class AttributeOptionFactory(factory.django.DjangoModelFactory):
     # Ideally we'd get_or_create a AttributeOptionGroup here, but I'm not
     # aware of how to not create a unique option group for each call of the
     # factory
@@ -85,14 +85,14 @@ class AttributeOptionFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'AttributeOption')
 
 
-class AttributeOptionGroupFactory(factory.DjangoModelFactory):
+class AttributeOptionGroupFactory(factory.django.DjangoModelFactory):
     name = 'Grüppchen'
 
     class Meta:
         model = get_model('catalogue', 'AttributeOptionGroup')
 
 
-class ProductAttributeValueFactory(factory.DjangoModelFactory):
+class ProductAttributeValueFactory(factory.django.DjangoModelFactory):
     attribute = factory.SubFactory(ProductAttributeFactory)
     product = factory.SubFactory(ProductFactory)
 
@@ -100,7 +100,7 @@ class ProductAttributeValueFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'ProductAttributeValue')
 
 
-class ProductReviewFactory(factory.DjangoModelFactory):
+class ProductReviewFactory(factory.django.DjangoModelFactory):
     score = 5
     product = factory.SubFactory(ProductFactory, stockrecords=[])
 
@@ -108,7 +108,7 @@ class ProductReviewFactory(factory.DjangoModelFactory):
         model = get_model('reviews', 'ProductReview')
 
 
-class ProductImageFactory(factory.DjangoModelFactory):
+class ProductImageFactory(factory.django.DjangoModelFactory):
     product = factory.SubFactory(ProductFactory, stockrecords=[])
     original = factory.django.ImageField(width=100, height=200, filename='test_image.jpg')
 
