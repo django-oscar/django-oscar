@@ -540,3 +540,12 @@ CSV readers, Microsoft Excel in particular.
 Default: ``http``
 
 The schema that will be used to build absolute url in ``absolute_url`` template tag.
+
+
+
+``OSCAR_SRCSETS``
+----------------------------------
+
+Default: ``oscar.utils.default_SRCSETS``
+
+A dictionary of image sizes to create for html srcsets. 

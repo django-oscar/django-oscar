@@ -31,6 +31,7 @@ from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
 from oscar.utils.models import get_image_upload_path
+from oscar.utils.srcsets import SrcSetDescriptor
 
 CategoryQuerySet, ProductQuerySet = get_classes(
     'catalogue.managers', ['CategoryQuerySet', 'ProductQuerySet'])
@@ -1318,6 +1319,7 @@ class AbstractProductImage(models.Model):
         help_text=_("An image with a display order of zero will be the primary"
                     " image for a product"))
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    srcset = SrcSetDescriptor('original')
 
     class Meta:
         abstract = True

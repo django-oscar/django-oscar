@@ -19,3 +19,8 @@ Views
 -----
 .. automodule:: oscar.apps.catalogue.views
     :members:
+
+Srcsets
+-------
+.. automodule:: oscar.apps.catalogue.srcsets
+    :members:
