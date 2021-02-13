@@ -1,6 +1,7 @@
 import zlib
 from decimal import Decimal as D
 
+from django.apps import apps
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import models
@@ -48,12 +49,6 @@ class AbstractBasket(models.Model):
     )
     status = models.CharField(
         _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
-
-    # A basket can have many vouchers attached to it.  However, it is common
-    # for sites to only allow one voucher per basket - this will need to be
-    # enforced in the project's codebase.
-    vouchers = models.ManyToManyField(
-        'voucher.Voucher', verbose_name=_("Vouchers"), blank=True)
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
@@ -309,10 +304,11 @@ class AbstractBasket(models.Model):
         basket.date_merged = now()
         basket._lines = None
         basket.save()
-        # Ensure all vouchers are moved to the new basket
-        for voucher in basket.vouchers.all():
-            basket.vouchers.remove(voucher)
-            self.vouchers.add(voucher)
+        if apps.is_installed('oscar.apps.voucher'):
+            # Ensure all vouchers are moved to the new basket
+            for voucher in basket.vouchers.all():
+                voucher.baskets.remove(basket)
+                voucher.baskets.add(self)
     merge.alters_data = True
 
     def freeze(self):
@@ -523,7 +519,7 @@ class AbstractBasket(models.Model):
 
     @property
     def contains_a_voucher(self):
-        if not self.id:
+        if not self.id or not apps.is_installed('oscar.apps.voucher'):
             return False
         return self.vouchers.exists()
 
@@ -553,7 +549,7 @@ class AbstractBasket(models.Model):
         """
         Test whether the basket contains a voucher with a given code
         """
-        if self.id is None:
+        if self.id is None or not apps.is_installed('oscar.apps.voucher'):
             return False
         try:
             self.vouchers.get(code=code)

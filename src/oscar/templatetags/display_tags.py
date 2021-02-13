@@ -1,6 +1,5 @@
 from django import template
-
-from oscar.core.loading import feature_hidden
+from django.apps import apps
 
 register = template.Library()
 
@@ -63,7 +62,13 @@ class ConditionalOutputNode(template.Node):
         self.feature_name = feature_name
 
     def render(self, context):
-        if not feature_hidden(self.feature_name):
+        if self.feature_name == 'reviews':
+            app_name = 'oscar.apps.catalogue.reviews'
+        elif 'oscar.apps' not in self.feature_name:
+            app_name = f'oscar.apps.{self.feature_name}'
+        else:
+            app_name = self.feature_name
+        if apps.is_installed(app_name):
             output = self.nodelist.render(context)
             return output
         else:

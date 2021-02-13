@@ -1,5 +1,5 @@
 from django.db.models.signals import post_delete
-from django.dispatch import receiver
+from django.dispatch import Signal, receiver
 
 from oscar.apps.voucher.utils import get_offer_name
 from oscar.core.loading import get_model
@@ -23,3 +23,7 @@ def delete_unused_related_conditional_offer(instance, **kwargs):
         # Only delete if not used by other vouchers
         if not conditional_offer.vouchers.exists():
             conditional_offer.delete()
+
+
+voucher_addition = Signal(providing_args=["basket", "voucher"])
+voucher_removal = Signal(providing_args=["basket", "voucher"])
