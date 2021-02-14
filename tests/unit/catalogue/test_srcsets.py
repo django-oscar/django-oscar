@@ -1,8 +1,8 @@
 import unittest
+import oscar.utils.srcsets as srcsets
 from unittest.mock import Mock
 from django.test import TestCase
 from apps.catalogue.models import Product, ProductImage
-from oscar.utils.srcsets as srcsets
 from django.core.files.storage import get_storage_class
 
 def get_mocks():
@@ -33,9 +33,12 @@ def get_mocks():
 class test_functions(TestCase):
 
     def setUpClass(cls):
+        #copy test image to sites media storage
         storage = get_storage_class()
         return
     def tearDownClass(cls):
+        # remove test images from sites media storage
+        # if it wasn't removed by the tests.
         storage = get_storage_class()
         return
 
