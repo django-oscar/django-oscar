@@ -2,7 +2,7 @@ import unittest
 import oscar.utils.srcsets as srcsets
 from unittest.mock import Mock
 from django.test import TestCase
-from apps.catalogue.models import Product, ProductImage
+from oscar.apps.catalogue.models import Product, ProductImage
 from django.core.files.storage import get_storage_class
 
 def get_mocks():
