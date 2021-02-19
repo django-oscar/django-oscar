@@ -26,7 +26,7 @@ install_requires = [
     # Search support
     'django-haystack>=3.0b1',
     # Treebeard is used for categories
-    'django-treebeard>=4.3.0',
+    'django-treebeard>=4.3,<4.5',
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
     # For manipulating search URLs
