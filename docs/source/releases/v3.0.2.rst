@@ -1,0 +1,12 @@
+=========================
+Oscar 3.0.2 release notes
+=========================
+
+:release: 2021-02-22
+
+This is Oscar 3.0.2, a bugfix release.
+
+Bug fixes
+=========
+
+- Fix static assets missing from PyPi package.
