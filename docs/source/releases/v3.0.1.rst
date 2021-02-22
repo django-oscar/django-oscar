@@ -1,0 +1,19 @@
+=========================
+Oscar 3.0.1 release notes
+=========================
+
+:release: 2021-02-22
+
+This is Oscar 3.0.1, a bugfix release.
+
+Bug fixes
+=========
+
+- Pinned the dependency of django-treebeard to version 4.4.x, because of a breaking
+  change introduced in version 4.5 that requires database migrations. It is likely
+
+-  Fix static imports of ``AlertsDispatcher`` that should be dynamic, and move alert queryset generation
+   into an overridable class.
+
+- Add a method to ``ProductAttributesContainer`` to allow refresh of product attribute values from the database
+  without reloading the whole product instance.
