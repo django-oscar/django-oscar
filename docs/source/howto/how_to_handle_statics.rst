@@ -46,7 +46,7 @@ CSS files served to the browser are compiled from their SASS sources. For
 local development, :command:`npm run watch` will watch for local changes to SASS files and
 automatically rebuild the compiled CSS.
 
-Use the command :command:`make css` to compile assets manually.
+Use the command :command:`make assets` to compile assets manually.
 
 Javascript
 ----------
