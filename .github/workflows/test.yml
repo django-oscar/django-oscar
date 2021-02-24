@@ -10,6 +10,7 @@ on:
 
 jobs:
   test:
+    name: Python ${{ matrix.python-version }}, Django ${{ matrix.django-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
