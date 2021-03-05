@@ -104,52 +104,6 @@ var oscar = (function(o, $) {
         }
     };
 
-
-    o.page = {
-        init: function() {
-            // Scroll to sections
-            $('.top_page a').click(function(e) {
-                var href = $(this).attr('href');
-                $('html, body').animate({
-                    scrollTop: $(href).offset().top
-                }, 500);
-                e.preventDefault();
-            });
-            // Tooltips
-            $('[rel="tooltip"]').tooltip();
-        }
-    };
-
-    o.responsive = {
-        init: function() {
-            if (o.responsive.isDesktop()) {
-                o.responsive.initNav();
-            }
-        },
-        isDesktop: function() {
-            return document.body.clientWidth > 767;
-        },
-        initNav: function() {
-            // Initial navigation for desktop
-            var $sidebar = $('aside.col-sm-3'),
-                $browse = $('[data-navigation="dropdown-menu"]'),
-                $browseOpen = $browse.parent().find('> a[data-toggle]');
-            // Set width of nav dropdown to be same as sidebar
-            $browse.css('width', $sidebar.outerWidth());
-            // Remove click on browse button if menu is currently open
-            if (!$browseOpen.length) {
-                $browse.parent().find('> a').off('click');
-                // Set margin top of aside allow space for open navigation
-                $sidebar.css({ marginTop: $browse.outerHeight() });
-            }
-        },
-        initSlider: function() {
-            $('.carousel').carousel({
-                interval: 20000
-            });
-        }
-    };
-
     o.basket = {
         is_form_being_submitted: false,
         init: function(options) {
@@ -327,9 +281,6 @@ var oscar = (function(o, $) {
     o.init = function() {
         o.forms.init();
         o.datetimepickers.init();
-        o.page.init();
-        o.responsive.init();
-        o.responsive.initSlider();
     };
 
     return o;
