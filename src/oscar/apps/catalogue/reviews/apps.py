@@ -10,6 +10,7 @@ class CatalogueReviewsConfig(OscarConfig):
     label = 'reviews'
     name = 'oscar.apps.catalogue.reviews'
     verbose_name = _('Catalogue reviews')
+    include_urls_in_parent = True
 
     hidable_feature_name = 'reviews'
 
