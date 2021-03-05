@@ -170,10 +170,8 @@ class AbstractVoucher(models.Model):
         return self.name
 
     def clean(self):
-        if all([self.start_datetime, self.end_datetime,
-                self.start_datetime > self.end_datetime]):
-            raise exceptions.ValidationError(
-                _('End date should be later than start date'))
+        if self.start_datetime and self.end_datetime and self.start_datetime > self.end_datetime:
+            raise exceptions.ValidationError(_('End date should be later than start date'))
 
     def save(self, *args, **kwargs):
         self.code = self.code.upper()
