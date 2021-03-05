@@ -221,6 +221,13 @@ def feature_hidden(feature_name):
             and feature_name in settings.OSCAR_HIDDEN_FEATURES)
 
 
+def get_installed_app_config(app_label):
+    try:
+        return apps.get_app_config(app_label)
+    except LookupError:
+        pass
+
+
 def get_model(app_label, model_name):
     """
     Fetches a Django model using the app registry.
