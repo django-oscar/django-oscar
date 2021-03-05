@@ -150,26 +150,6 @@ var oscar = (function(o, $) {
         }
     };
 
-    // IE compabibility hacks
-    o.compatibility = {
-        init: function() {
-            if (!o.compatibility.isIE()) return;
-            // Set the width of a select in an overflow hidden container.
-            // This is for add-to-basket forms within browing pages
-            $('.product_pod select').on({
-                mousedown: function(){
-                    $(this).addClass("select-open");
-                },
-                change: function(){
-                    $(this).removeClass("select-open");
-                }
-            });
-        },
-        isIE: function() {
-            return navigator.userAgent.toLowerCase().indexOf("msie") > -1;
-        }
-    };
-
     o.basket = {
         is_form_being_submitted: false,
         init: function(options) {
@@ -350,7 +330,6 @@ var oscar = (function(o, $) {
         o.page.init();
         o.responsive.init();
         o.responsive.initSlider();
-        o.compatibility.init();
     };
 
     return o;
