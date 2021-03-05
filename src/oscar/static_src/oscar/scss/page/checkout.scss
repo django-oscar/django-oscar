@@ -1,28 +1,8 @@
 // OSCAR CHECKOUT UNIQUE STYLES
 // ----------------------------
 
-// Set max width of all quantity fields
-input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
-  max-width: 55px;
-}
-
 .checkout-quantity .input-group {
   max-width: 160px;
-
-  input[type="number"][id*="quantity"] {
-    max-width: 65px;
-  }
-
-  .input-group-btn {
-    min-width: 95px;
-  }
-}
-
-// Quantity on the basket
-.checkout-quantity {
-  input {
-    margin-bottom: 0;
-  }
 }
 
 // Basket items like table headers
@@ -78,7 +58,6 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
     span:first-child {
       display: block;
       font-weight: bold;
-      margin-bottom: $base-margin-bottom;
     }
   }
 }
@@ -89,28 +68,17 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
     width: auto;
   }
 
-  #id_line1, #id_line2, #id_line3 {
-    max-width: 300px;
-  }
-
   #id_postcode {
     max-width: 100px;
   }
 
   #id_notes {
-    max-width: 600px;
     height: 100px;
   }
 }
 
 // Checkout navigation - uses navbar
 .nav-checkout {
-  text-align: center;
-
-  &.navbar .nav {
-    margin: 0;
-  }
-
   .active {
     .navbar-text {
       color: $white;
@@ -129,7 +97,6 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
 
     h3 a {
       font-size: $font-size-base;
-      font-weight: $font-weight-normal;
     }
   }
 }
