@@ -47,24 +47,12 @@ dashboard URLs.
 How to disable Oscar feature
 ============================
 
-You can add feature name to the setting ``OSCAR_HIDDEN_FEATURES`` and its app
-config URLs would be excluded from the URLconf. Template code, wrapped with the
-``{% iffeature %}{% endiffeature %}`` block template tag, will not be rendered::
+You can remove the app from ``INSTALLED_APPS`` setting and its app configuration URLs would be excluded
+from the URLconf. Template code, wrapped with the ``{% if "<app_label>"|is_app_installed %}{% endif %}``
+block template tag, will not be rendered::
 
-    {% iffeature "reviews" %}
+    {% if "reviews"|is_app_installed %}
         {% include "catalogue/reviews/partials/review_stars.html" %}
-    {% endiffeature %}
+    {% endif %}
 
-Currently supported "reviews" and "wishlists" features. You can make your custom feature
-hidable by setting ``hidable_feature_name`` property of the ``OscarConfig`` class::
-
-    # myproject/apps/lottery/apps.py
-    from oscar.core.application import OscarConfig
-
-    class LotterConfig(OscarConfig):
-        hidable_feature_name = 'lottery'
-
-
-Then, it needs to be added to the corresponding setting: ``OSCAR_HIDDEN_FEATURES = ['lottery']``.
-Finally, you can wrap necessary template code with the ``{% iffeature "lottery" %}{% endiffeature %}``
-tag as in the example above.
+Currently supported "reviews" and "wishlists" features.
