@@ -1,8 +1,55 @@
 from django.apps import AppConfig
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import URLPattern, reverse_lazy
+from django.urls import URLPattern, include, path, re_path, reverse_lazy
 
-from oscar.core.loading import feature_hidden
+from oscar.core.loading import feature_hidden, get_installed_app_config
+
+
+class AutoLoadURLsConfigMixin:
+    include_urls_in_parent = False
+
+    def get_app_label_and_url_endpoint_mappings(self) -> dict:
+        """
+        Return dict with `app_label` as key and value as either:
+            1. String representing the endpoint of app's URL configurations. Example,
+                >>> {"reviews":"reviews/"}
+            2. Dict with configurations of how the app's URL endpoint(s) will be generated. Example,
+                >>> # Generate endpoint by processing it's kwargs using regex.
+                >>> {"reviews":{"endpoint":"^(?P<product_slug>[\\w-]*)_(?P<product_pk>\\d+)/reviews/","regex":True}}
+        """
+        return dict()
+
+    def _create_required_attributes(self):
+        for label in self.get_app_label_and_url_endpoint_mappings().keys():
+            setattr(self, f'{label}_app', get_installed_app_config(label))
+
+    def ready(self):
+        self._create_required_attributes()
+
+    def get_auto_loaded_urls(self):
+        urls, count = [], 0
+        for label, value in self.get_app_label_and_url_endpoint_mappings().items():
+            app_config_attribute_name = f'{label}_app'
+            if count == 0 and not hasattr(self, app_config_attribute_name):
+                # this method was probably called before calling `self._create_required_attributes()`
+                self._create_required_attributes()
+            count += 1
+
+            endpoint, regex = value, False
+            if isinstance(value, dict):
+                endpoint = value.get('endpoint') or ''
+                regex = value.get('regex', False)
+
+            app_config = getattr(self, app_config_attribute_name)
+            if app_config is None:
+                continue  # app with the label probably wasn't installed
+
+            _urls = app_config.urls
+            if app_config.include_urls_in_parent:
+                _urls = include((app_config.get_urls(), app_config.namespace))
+
+            urls.append(re_path(endpoint, _urls) if regex else path(endpoint, _urls))
+        return urls
 
 
 class OscarConfigMixin(object):
@@ -136,7 +183,7 @@ class OscarConfigMixin(object):
         return self.get_urls(), self.label, self.namespace
 
 
-class OscarConfig(OscarConfigMixin, AppConfig):
+class OscarConfig(AutoLoadURLsConfigMixin, OscarConfigMixin, AppConfig):
     """
     Base Oscar app configuration.
 
@@ -146,4 +193,5 @@ class OscarConfig(OscarConfigMixin, AppConfig):
 
 
 class OscarDashboardConfig(OscarConfig):
+    include_urls_in_parent = True
     login_url = reverse_lazy('dashboard:login')
