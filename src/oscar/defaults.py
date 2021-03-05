@@ -83,9 +83,6 @@ OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 # Offers
 OSCAR_OFFERS_INCL_TAX = False
 
-# Hidden Oscar features, e.g. wishlists or reviews
-OSCAR_HIDDEN_FEATURES = []
-
 # Menu structure of the dashboard navigation
 OSCAR_DASHBOARD_NAVIGATION = [
     {

@@ -2,7 +2,7 @@ from django.apps import AppConfig
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import URLPattern, include, path, re_path, reverse_lazy
 
-from oscar.core.loading import feature_hidden, get_installed_app_config
+from oscar.core.loading import get_installed_app_config
 
 
 class AutoLoadURLsConfigMixin:
@@ -60,9 +60,6 @@ class OscarConfigMixin(object):
     # Instance namespace for the URLs
     namespace = None
     login_url = None
-
-    #: A name that allows the functionality within this app to be disabled
-    hidable_feature_name = None
 
     #: Maps view names to lists of permissions. We expect tuples of
     #: lists as dictionary values. A list is a set of permissions that all
@@ -124,11 +121,6 @@ class OscarConfigMixin(object):
             urlpatterns (list): A list of URL patterns
 
         """
-        # Test if this the URLs in the Application instance should be
-        # available.  If the feature is hidden then we don't include the URLs.
-        if feature_hidden(self.hidable_feature_name):
-            return []
-
         for pattern in urlpatterns:
             if hasattr(pattern, 'url_patterns'):
                 self.post_process_urls(pattern.url_patterns)

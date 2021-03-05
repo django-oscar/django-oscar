@@ -1,6 +1,6 @@
 from django import template
 
-from oscar.core.loading import feature_hidden, get_installed_app_config
+from oscar.core.loading import get_installed_app_config
 
 register = template.Library()
 
@@ -45,31 +45,3 @@ get_parameters = register.tag(get_parameters)
 @register.filter
 def is_app_installed(app_label):
     return get_installed_app_config(app_label) is not None
-
-
-@register.tag()
-def iffeature(parser, token):
-    nodelist = parser.parse(('endiffeature',))
-    try:
-        tag_name, app_name, = token.split_contents()
-    except ValueError:
-        raise template.TemplateSyntaxError(
-            "%r tag requires a single argument" % token.contents.split()[0])
-    if not (app_name[0] == app_name[-1] and app_name[0] in ('"', "'")):
-        raise template.TemplateSyntaxError(
-            "%r tag's argument should be in quotes" % tag_name)
-    parser.delete_first_token()
-    return ConditionalOutputNode(nodelist, app_name[1:-1])
-
-
-class ConditionalOutputNode(template.Node):
-    def __init__(self, nodelist, feature_name):
-        self.nodelist = nodelist
-        self.feature_name = feature_name
-
-    def render(self, context):
-        if not feature_hidden(self.feature_name):
-            output = self.nodelist.render(context)
-            return output
-        else:
-            return ''

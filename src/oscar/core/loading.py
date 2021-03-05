@@ -213,14 +213,6 @@ def get_profile_class():
     return get_model(app_label, model_name)
 
 
-def feature_hidden(feature_name):
-    """
-    Test if a certain Oscar feature is disabled.
-    """
-    return (feature_name is not None
-            and feature_name in settings.OSCAR_HIDDEN_FEATURES)
-
-
 def get_installed_app_config(app_label):
     try:
         return apps.get_app_config(app_label)
