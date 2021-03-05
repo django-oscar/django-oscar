@@ -1,6 +1,6 @@
 from django import template
 
-from oscar.core.loading import feature_hidden
+from oscar.core.loading import feature_hidden, get_installed_app_config
 
 register = template.Library()
 
@@ -40,6 +40,11 @@ class GetParametersNode(template.Node):
 
 
 get_parameters = register.tag(get_parameters)
+
+
+@register.filter
+def is_app_installed(app_label):
+    return get_installed_app_config(app_label) is not None
 
 
 @register.tag()

@@ -71,9 +71,9 @@
                 {% include "oscar/catalogue/partials/stock_record.html" with verbose=1 %}
             {% endblock %}
 
-            {% iffeature "reviews" %}
+            {% if "reviews"|is_app_installed %}
                 {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
-            {% endiffeature %}
+            {% endif %}
 
             <hr/>
 
@@ -144,16 +144,16 @@
                 <td>{{ av.value_as_html }}</td>
             </tr>
         {% endfor %}
-        {% iffeature "reviews" %}
+        {% if "reviews"|is_app_installed %}
             <tr>
                 <th>{% trans "Number of reviews" %}</th>
                 <td>{{ product.num_approved_reviews }}</td>
             </tr>
-        {% endiffeature %}
+        {% endif %}
     </table>
     {% endblock %}
 
-    {% iffeature "reviews" %}
+    {% if "reviews"|is_app_installed %}
         {% block product_review %}
         <section>
             <div id="reviews" class="sub-header">
@@ -185,7 +185,7 @@
             {% endif %}
         </section>
         {% endblock product_review %}
-    {% endiffeature %}
+    {% endif %}
 
     {% with recommended_products=product.sorted_recommended_products|slice:":6" %}
         {% if recommended_products %}

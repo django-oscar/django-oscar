@@ -12,9 +12,9 @@
         {% include "oscar/partials/form_fields.html" with form=basket_form %}
         <button type="submit" class="btn btn-lg btn-primary w-100" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
     </form>
-    {% iffeature "wishlists" %}
+    {% if "wishlists"|is_app_installed %}
         {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
-    {% endiffeature %}
+    {% endif %}
 {% else %}
     {% if has_active_alert %}
         <p>{% trans "You have an active stock alert for this product." %}</p>
@@ -26,7 +26,7 @@
             <button type="submit" class="btn btn-lg btn-info w-100" data-loading-text="{% trans 'Submitting...' %}">{% trans "Notify me" %}</button>
         </form>
     {% endif %}
-    {% iffeature "wishlists" %}
+    {% if "wishlists"|is_app_installed %}
         {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
-    {% endiffeature %}
+    {% endif %}
 {% endif %}

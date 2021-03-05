@@ -19,8 +19,8 @@
 <li class="nav-item">
     <a href="{% url 'customer:notifications-inbox' %}" class="nav-link{% if active_tab == 'notifications' %} active{% endif %}">{% trans "Notifications" %}</a>
 </li>
-{% iffeature 'wishlists' %}
+{% if 'wishlists'|is_app_installed %}
     <li class="nav-item">
         <a href="{% url 'customer:wishlists-list' %}" class="nav-link{% if active_tab == 'wishlists' %} active{% endif %}">{% trans "Wish Lists" %}</a>
     </li>
-{% endiffeature %}
+{% endif %}
