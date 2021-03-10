@@ -152,7 +152,7 @@ var oscar = (function(o, $) {
         initSelects: function(el) {
             // Adds type/search for select fields
             var $selects = $(el).find('select').not('.no-widget-init select').not('.no-widget-init');
-            $selects.filter('.form-stacked select').css('width', '95%');
+            $selects.filter('.form-stacked select').css('width', '100%');
             $selects.filter('.form-inline select').css('width', '300px');
             $selects.not('.related-widget-wrapper select').select2({width: 'resolve'});
             $selects.filter('.related-widget-wrapper.single select').select2({
