@@ -42,6 +42,8 @@ class BasketLineForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.strategy = strategy
 
+        self.fields['quantity'].widget.attrs['required'] = True
+
         # Evaluate max allowed quantity check only if line still exists, in
         # order to avoid check run against missing instance -
         # https://github.com/django-oscar/django-oscar/issues/2873.

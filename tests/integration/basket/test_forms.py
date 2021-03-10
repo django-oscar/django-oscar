@@ -44,6 +44,12 @@ class TestBasketLineForm(TestCase):
             data={'quantity': quantity},
             instance=self.line)
 
+    def test_empty_quantity_field_raises_validation_error(self):
+        form = self.build_form(quantity="")
+
+        self.assertFalse(form.is_valid())
+        self.assertIn('required', form.errors['quantity'][0])
+
     def test_enforces_availability_policy_for_valid_quantities(self):
         self.mock_availability_return_value(True)
         form = self.build_form()
