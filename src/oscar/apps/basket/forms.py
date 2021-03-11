@@ -40,9 +40,9 @@ class BasketLineForm(forms.ModelForm):
 
     def __init__(self, strategy, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.data.get('quantity') == "":
+            self.data['quantity'] = 0
         self.instance.strategy = strategy
-
-        self.fields['quantity'].widget.attrs['required'] = True
 
         # Evaluate max allowed quantity check only if line still exists, in
         # order to avoid check run against missing instance -
