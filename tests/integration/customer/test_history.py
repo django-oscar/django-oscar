@@ -1,7 +1,9 @@
 from django import http
 from django.test import TestCase
 
-from oscar.apps.customer import history
+from oscar.core.loading import get_class
+
+CustomerHistoryManager = get_class('customer.history', 'CustomerHistoryManager')
 
 
 class TestProductHistory(TestCase):
@@ -11,5 +13,5 @@ class TestProductHistory(TestCase):
         self.response = http.HttpResponse()
 
     def test_starts_with_empty_list(self):
-        products = history.get(self.request)
+        products = CustomerHistoryManager.get(self.request)
         self.assertEqual([], products)
