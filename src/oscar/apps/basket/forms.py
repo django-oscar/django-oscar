@@ -34,14 +34,12 @@ def _option_date_field(option):
 
 
 class BasketLineForm(forms.ModelForm):
-
+    quantity = forms.IntegerField(label=_('Quantity'), min_value=0, required=False, initial=1)
     save_for_later = forms.BooleanField(
         initial=False, required=False, label=_('Save for Later'))
 
     def __init__(self, strategy, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.data.get('quantity') == "":
-            self.data['quantity'] = 0
         self.instance.strategy = strategy
 
         # Evaluate max allowed quantity check only if line still exists, in
@@ -71,7 +69,7 @@ class BasketLineForm(forms.ModelForm):
         return super().has_changed()
 
     def clean_quantity(self):
-        qty = self.cleaned_data['quantity']
+        qty = self.cleaned_data['quantity'] or 0
         if qty > 0:
             self.check_max_allowed_quantity(qty)
             self.check_permission(qty)
