@@ -1,8 +1,9 @@
 from django.dispatch import receiver
 
 from oscar.apps.catalogue.signals import product_viewed
+from oscar.core.loading import get_class
 
-from . import history
+CustomerHistoryManager = get_class('customer.history', 'CustomerHistoryManager')
 
 
 @receiver(product_viewed)
@@ -12,4 +13,4 @@ def receive_product_view(sender, product, user, request, response, **kwargs):
 
     Requires the request and response objects due to dependence on cookies
     """
-    return history.update(product, request, response)
+    return CustomerHistoryManager.update(product, request, response)

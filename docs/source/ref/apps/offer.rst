@@ -13,7 +13,8 @@ Structure
 
 A conditional offer is composed of several components:
 
-* Customer-facing information - this is the name and description of an offer.
+* Customer-facing information - this is the name, description and type of an
+  offer.
   These will be visible on offer-browsing pages as well as within the basket and
   checkout pages.
 

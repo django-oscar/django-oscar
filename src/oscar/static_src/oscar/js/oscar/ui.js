@@ -104,72 +104,6 @@ var oscar = (function(o, $) {
         }
     };
 
-
-    o.page = {
-        init: function() {
-            // Scroll to sections
-            $('.top_page a').click(function(e) {
-                var href = $(this).attr('href');
-                $('html, body').animate({
-                    scrollTop: $(href).offset().top
-                }, 500);
-                e.preventDefault();
-            });
-            // Tooltips
-            $('[rel="tooltip"]').tooltip();
-        }
-    };
-
-    o.responsive = {
-        init: function() {
-            if (o.responsive.isDesktop()) {
-                o.responsive.initNav();
-            }
-        },
-        isDesktop: function() {
-            return document.body.clientWidth > 767;
-        },
-        initNav: function() {
-            // Initial navigation for desktop
-            var $sidebar = $('aside.col-sm-3'),
-                $browse = $('[data-navigation="dropdown-menu"]'),
-                $browseOpen = $browse.parent().find('> a[data-toggle]');
-            // Set width of nav dropdown to be same as sidebar
-            $browse.css('width', $sidebar.outerWidth());
-            // Remove click on browse button if menu is currently open
-            if (!$browseOpen.length) {
-                $browse.parent().find('> a').off('click');
-                // Set margin top of aside allow space for open navigation
-                $sidebar.css({ marginTop: $browse.outerHeight() });
-            }
-        },
-        initSlider: function() {
-            $('.carousel').carousel({
-                interval: 20000
-            });
-        }
-    };
-
-    // IE compabibility hacks
-    o.compatibility = {
-        init: function() {
-            if (!o.compatibility.isIE()) return;
-            // Set the width of a select in an overflow hidden container.
-            // This is for add-to-basket forms within browing pages
-            $('.product_pod select').on({
-                mousedown: function(){
-                    $(this).addClass("select-open");
-                },
-                change: function(){
-                    $(this).removeClass("select-open");
-                }
-            });
-        },
-        isIE: function() {
-            return navigator.userAgent.toLowerCase().indexOf("msie") > -1;
-        }
-    };
-
     o.basket = {
         is_form_being_submitted: false,
         init: function(options) {
@@ -347,10 +281,6 @@ var oscar = (function(o, $) {
     o.init = function() {
         o.forms.init();
         o.datetimepickers.init();
-        o.page.init();
-        o.responsive.init();
-        o.responsive.initSlider();
-        o.compatibility.init();
     };
 
     return o;

@@ -5,11 +5,6 @@ form {
   @include clearfix;
 }
 
-// For IE: adds width for selects inside overflow hidden containers
-.select-open {
-  width: 300px !important;
-}
-
 // Additional errors
 .errorlist {
   margin: 0;

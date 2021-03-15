@@ -340,14 +340,16 @@ HAYSTACK_CONNECTIONS = {
         'PATH': location('whoosh_index'),
     },
 }
-# Here's a sample Haystack config if using Solr (which is recommended)
-#HAYSTACK_CONNECTIONS = {
-#    'default': {
-#        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-#        'URL': 'http://127.0.0.1:8983/solr/oscar_latest/',
-#        'INCLUDE_SPELLING': True
-#    },
-#}
+
+# Here's a sample Haystack config for Solr 6.x (which is recommended)
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+#         'URL': 'http://127.0.0.1:8983/solr/sandbox',
+#         'ADMIN_URL': 'http://127.0.0.1:8983/solr/admin/cores',
+#         'INCLUDE_SPELLING': True,
+#     }
+# }
 
 # =============
 # Debug Toolbar

@@ -3,6 +3,7 @@
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block title %}
     {% trans "Offers" %} | {{ block.super }}
@@ -25,25 +26,67 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-    <div class="card card-body">
+    <div class="table-header">
+        <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
+    </div>
+    <div class="card card-body bg-light">
         <form method="get" class="form-inline">
-            {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
-            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+            {% for field in form %}
+                {% if field.name in form.basic_fields %}
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+                        <div class="form-group mr-2{% if field.errors %} error{% endif %}">
+                            {{ field.label_tag }}
+                            {% render_field field class+='form-control' %}
+                            {% for error in field.errors %}
+                                <ul class="error-block">
+                                    <li>{{ error }}</li>
+                                </ul>
+                            {% endfor %}
+                            {# No help text as it wraps #}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <input type="hidden" name="{{ field.name }}" value="{{ field.value|default_if_none:'' }}">
+                {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary mr-2" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+            <a data-toggle="modal" data-target="#SearchModal" href="#" class="mr-2">{% trans "Advanced Search" %}</a>
+            <a href="{% url 'dashboard:offer-list' %}" class="btn btn-secondary">{% trans "Reset" %}</a>
         </form>
+
+        {# Search modal, if there are form errors the form is automatically openend #}
+        {% include "oscar/dashboard/partials/advanced_search_modal.html" with form=advanced_form style='horizontal' %}
+
+        {% if search_filters %}
+        <div class="search-filter-list">
+            <label>Filters:</label>
+            {% for filter in search_filters %}
+            <span class="badge badge-success">{{ filter }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 
     <form method="post" class="order_table">
         {% csrf_token %}
-        <table class="table table-striped table-bordered">
+        <table class="table table-striped table-bordered table-hover">
             <caption>
-                <i class="fas fa-gift"></i> {{ queryset_description }}
-                {% if is_filtered %}
-                    <a href="{% url 'dashboard:offer-list' %}" >{% trans "Reset" %}</a>
+                <i class="fas fa-gift"></i>
+                {% if search_filters %}
+                {% trans "Offer Search Results" %}
+                {% else %}
+                {% trans "All Offers" %}
                 {% endif %}
             </caption>
             {% if offers %}
                 <tr>
                     <th>{% anchor 'name' _('Offer name') %}</th>
+                    <th>{% anchor 'offer_type' _('Offer type') %}</th>
+                    {% if form.is_bound %}{% if form.is_voucher_offer_type or not form.cleaned_data.offer_type %}
+                    <th>{% trans "Num of vouchers" %}</th>
+                    {% endif %}{% endif %}
                     <th>{% anchor 'start_datetime' _('Start date') %}</th>
                     <th>{% anchor 'end_datetime' _('End date') %}</th>
                     <th>{% trans "Priority" %}</th>
@@ -58,6 +101,10 @@
                 {% for offer in offers %}
                     <tr>
                         <td><a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a></td>
+                        <td>{{ offer.offer_type }}</td>
+                        {% if form.is_bound %}{% if form.is_voucher_offer_type or not form.cleaned_data.offer_type %}
+                        <td>{{ offer.vouchers.count }}</td>
+                        {% endif %}{% endif %}
                         <td>{{ offer.start_datetime|default:"-" }}</td>
                         <td>{{ offer.end_datetime|default:"-" }}</td>
                         <td>{{ offer.priority }}</td>
@@ -98,9 +145,11 @@
                                         <a class="dropdown-item" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}">
                                             {% trans "Edit" %}
                                         </a>
+                                        {% if not offer.vouchers.exists %}
                                         <a class="dropdown-item" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">
                                             {% trans "Delete" %}
                                         </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -115,3 +164,10 @@
         {% include "oscar/dashboard/partials/pagination.html" %}
     </form>
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    {% if advanced_form.errors %}
+    $('#SearchModal').modal('show');
+    {% endif %}
+{% endblock onbodyload %}

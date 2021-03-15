@@ -29,13 +29,16 @@ class AlertsDispatcher:
             mail_connection=mail_connection,
         )
 
+    def get_queryset(self):
+        return Product.objects.browsable().filter(productalert__status=ProductAlert.ACTIVE).distinct()
+
     def send_alerts(self):
         """
         Check all products with active product alerts for
         availability and send out email alerts when a product is
         available to buy.
         """
-        products = Product.objects.browsable().filter(productalert__status=ProductAlert.ACTIVE).distinct()
+        products = self.get_queryset()
         self.dispatcher.logger.info("Found %d products with active alerts", products.count())
         for product in products:
             self.send_product_alert_email_for_user(product)

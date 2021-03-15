@@ -249,6 +249,10 @@ class AbstractConditionalOffer(models.Model):
                 _('End date should be later than start date'))
 
     @property
+    def is_voucher_offer_type(self):
+        return self.offer_type == self.VOUCHER
+
+    @property
     def is_open(self):
         return self.status == self.OPEN
 

@@ -53,29 +53,7 @@
         </form>
 
         {# Search modal, if there are form errors the form is automatically openend #}
-        <div class="modal fade" data-show="true" id="SearchModal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>{% trans "Advanced Search" %}</h3>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <form method="get">
-                        <div class="modal-body">
-                            <div class="container">
-                            {% csrf_token %}
-                            {% include "oscar/dashboard/partials/form_fields.html" with form=form style='horizontal' %}
-
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</a>
-                            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        {% include "oscar/dashboard/partials/advanced_search_modal.html" with form=form style='horizontal' %}
 
         {% if search_filters %}
         <div class="search-filter-list">

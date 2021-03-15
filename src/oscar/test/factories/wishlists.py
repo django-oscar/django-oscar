@@ -5,7 +5,7 @@ from oscar.core.loading import get_model
 __all__ = ['WishListFactory']
 
 
-class WishListFactory(factory.DjangoModelFactory):
+class WishListFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Wishlist %d' % n)
 
     class Meta:

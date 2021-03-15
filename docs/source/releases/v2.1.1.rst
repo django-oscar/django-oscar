@@ -1,0 +1,13 @@
+=========================
+Oscar 2.1.1 release notes
+=========================
+
+:release: 2021-02-22
+
+This is Oscar 2.1.1, a bugfix release.
+
+Bug fixes
+=========
+
+- Pinned the dependency of django-treebeard to version 4.4.x, because of a breaking
+  change introduced in version 4.5 that requires database migrations. It is likely

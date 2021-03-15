@@ -2,13 +2,15 @@ import factory
 
 from oscar.core.loading import get_model
 
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
+
 __all__ = [
     'RangeFactory', 'ConditionFactory', 'BenefitFactory',
     'ConditionalOfferFactory',
 ]
 
 
-class RangeFactory(factory.DjangoModelFactory):
+class RangeFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Range %d' % n)
     slug = factory.Sequence(lambda n: 'range-%d' % n)
 
@@ -26,7 +28,7 @@ class RangeFactory(factory.DjangoModelFactory):
             RangeProduct.objects.create(product=product, range=self)
 
 
-class BenefitFactory(factory.DjangoModelFactory):
+class BenefitFactory(factory.django.DjangoModelFactory):
     type = get_model('offer', 'Benefit').PERCENTAGE
     value = 10
     max_affected_items = None
@@ -36,7 +38,7 @@ class BenefitFactory(factory.DjangoModelFactory):
         model = get_model('offer', 'Benefit')
 
 
-class ConditionFactory(factory.DjangoModelFactory):
+class ConditionFactory(factory.django.DjangoModelFactory):
     type = get_model('offer', 'Condition').COUNT
     value = 10
     range = factory.SubFactory(RangeFactory)
@@ -45,8 +47,9 @@ class ConditionFactory(factory.DjangoModelFactory):
         model = get_model('offer', 'Condition')
 
 
-class ConditionalOfferFactory(factory.DjangoModelFactory):
+class ConditionalOfferFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Test offer %d' % n)
+    offer_type = ConditionalOffer.SITE
     benefit = factory.SubFactory(BenefitFactory)
     condition = factory.SubFactory(ConditionFactory)
 

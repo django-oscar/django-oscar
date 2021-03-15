@@ -139,14 +139,15 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
 
         data = self.form.cleaned_data
 
-        if data.get('upc'):
+        upc = data.get('upc')
+        if upc:
             # Filter the queryset by upc
             # For usability reasons, we first look at exact matches and only return
             # them if there are any. Otherwise we return all results
             # that contain the UPC.
 
             # Look up all matches (child products, products not allowed to access) ...
-            matches_upc = Product.objects.filter(upc__iexact=data['upc'])
+            matches_upc = Product.objects.filter(Q(upc__iexact=upc) | Q(children__upc__iexact=upc))
 
             # ... and use that to pick all standalone or parent products that the user is
             # allowed to access.
@@ -158,14 +159,15 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
                 queryset = qs_match
             else:
                 # No direct UPC match. Let's try the same with an icontains search.
-                matches_upc = Product.objects.filter(upc__icontains=data['upc'])
+                matches_upc = Product.objects.filter(Q(upc__icontains=upc) | Q(children__upc__icontains=upc))
                 queryset = queryset.filter(
                     Q(id__in=matches_upc.values('id')) | Q(id__in=matches_upc.values('parent_id')))
 
-        if data.get('title'):
-            queryset = queryset.filter(title__icontains=data['title'])
+        title = data.get('title')
+        if title:
+            queryset = queryset.filter(Q(title__icontains=title) | Q(children__title__icontains=title))
 
-        return queryset
+        return queryset.distinct()
 
 
 class ProductCreateRedirectView(generic.RedirectView):

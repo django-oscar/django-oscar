@@ -1,0 +1,16 @@
+repos:
+-   repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: trailing-whitespace
+        language_version: python3
+-   repo: https://gitlab.com/PyCQA/flake8
+    rev: 3.8.3
+    hooks:
+    -   id: flake8
+        language_version: python3
+        exclude: migrations
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.7.0
+    hooks:
+    -   id: isort

@@ -6,6 +6,7 @@ from django.forms.models import ModelChoiceIterator
 from django.forms.widgets import FileInput
 from django.utils import formats
 from django.utils.encoding import force_str
+from django.utils.translation import gettext as _
 
 
 class ImageInput(FileInput):
@@ -286,3 +287,18 @@ class RemoteSelect(forms.Select):
 
 class MultipleRemoteSelect(RemoteSelect):
     allow_multiple_selected = True
+
+
+class NullBooleanSelect(forms.NullBooleanSelect):
+    """
+    Customised NullBooleanSelect widget that gives the "unknown" choice a more
+    meaningful label than the default of "Unknown".
+    """
+
+    def __init__(self, attrs=None):
+        super().__init__(attrs)
+        self.choices = (
+            ('unknown', _('---------')),
+            ('true', _('Yes')),
+            ('false', _('No')),
+        )

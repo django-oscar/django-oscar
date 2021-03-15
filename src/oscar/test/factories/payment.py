@@ -7,7 +7,7 @@ __all__ = [
 ]
 
 
-class SourceTypeFactory(factory.DjangoModelFactory):
+class SourceTypeFactory(factory.django.DjangoModelFactory):
     name = 'Creditcard'
     code = 'creditcard'
 
@@ -15,7 +15,7 @@ class SourceTypeFactory(factory.DjangoModelFactory):
         model = get_model('payment', 'SourceType')
 
 
-class SourceFactory(factory.DjangoModelFactory):
+class SourceFactory(factory.django.DjangoModelFactory):
     order = factory.SubFactory(
         'oscar.test.factories.OrderFactory')
     source_type = factory.SubFactory(SourceTypeFactory)
@@ -24,7 +24,7 @@ class SourceFactory(factory.DjangoModelFactory):
         model = get_model('payment', 'Source')
 
 
-class TransactionFactory(factory.DjangoModelFactory):
+class TransactionFactory(factory.django.DjangoModelFactory):
     amount = factory.LazyAttribute(lambda obj: obj.source.order.total_incl_tax)
     reference = factory.LazyAttribute(lambda obj: obj.source.order.number)
     source = factory.SubFactory(SourceFactory)

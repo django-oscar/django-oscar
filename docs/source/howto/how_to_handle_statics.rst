@@ -30,14 +30,14 @@ is often preferable.
 Frontend vs. Dashboard
 ----------------------
 
-The frontend and dashboard are intentionally kept very separate. They
-incidentally both use Bootstrap, but may be updated individually.
-The frontend is based on Bootstrap's SASS files and ties it together with
-Oscar-specific styling in ``styles.scss``.
+The frontend and dashboard are intentionally kept separate. They incidentally
+both use Bootstrap and Font Awesome, but may be updated individually.
 
-On the other hand, ``dashboard.scss`` just contains a few customisations that
-are included alongside a copy of stock Bootstrap CSS - and at the time of
-writing, using a different Bootstrap version.
+For the frontend, ``styles.scss`` imports Bootstrap and Font Awesome SASS
+stylesheets, and ties them together with Oscar-specific styling.
+
+For the dashboard, ``dashboard.scss`` also imports Bootstrap and Font Awesome
+SASS stylesheets, and adds Oscar-specific customisations.
 
 SCSS/CSS
 --------
@@ -46,7 +46,7 @@ CSS files served to the browser are compiled from their SASS sources. For
 local development, :command:`npm run watch` will watch for local changes to SASS files and
 automatically rebuild the compiled CSS.
 
-Use the command :command:`make css` to compile assets manually.
+Use the command :command:`make assets` to compile assets manually.
 
 Javascript
 ----------
@@ -96,7 +96,13 @@ To make things easier, Oscar ships with a management command for creating a copy
 of all of its static files.  This breaks the link with Oscar's static files and
 means everything is within the control of the project.  Run it as follows::
 
+    # with default "target_path" of "static"
     ./manage.py oscar_fork_statics
+
+or
+
+    # with custom "target_path"
+    ./manage.py oscar_fork_statics /path/to/static/directory/
 
 This is the recommended approach for non-trivial projects.
 

@@ -1,14 +1,13 @@
 from decimal import Decimal
 
 from django.core import exceptions
-from django.db import models, transaction
+from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from oscar.apps.voucher.utils import get_unused_code
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_model
+from oscar.core.decorators import deprecated
 
 
 class AbstractVoucherSet(models.Model):
@@ -17,7 +16,7 @@ class AbstractVoucherSet(models.Model):
     a VoucherSet is a group of voucher that are generated
     automatically.
 
-    - count: the minimum number of vouchers in the set. If this is kept at
+    - count: the number of vouchers in the set. If this is kept at
     zero, vouchers are created when and as needed.
 
     - code_length: the length of the voucher code. Codes are by default created
@@ -28,7 +27,7 @@ class AbstractVoucherSet(models.Model):
       range for all vouchers in the set.
     """
 
-    name = models.CharField(verbose_name=_('Name'), max_length=100)
+    name = models.CharField(verbose_name=_('Name'), max_length=100, unique=True)
     count = models.PositiveIntegerField(verbose_name=_('Number of vouchers'))
     code_length = models.IntegerField(
         verbose_name=_('Length of Code'), default=12)
@@ -36,11 +35,6 @@ class AbstractVoucherSet(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, db_index=True)
     start_datetime = models.DateTimeField(_('Start datetime'))
     end_datetime = models.DateTimeField(_('End datetime'))
-
-    offer = models.OneToOneField(
-        'offer.ConditionalOffer', related_name='voucher_set',
-        verbose_name=_("Offer"), limit_choices_to={'offer_type': "Voucher"},
-        on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -53,43 +47,20 @@ class AbstractVoucherSet(models.Model):
     def __str__(self):
         return self.name
 
-    def generate_vouchers(self):
-        """Generate vouchers for this set"""
-        current_count = self.vouchers.count()
-        for i in range(current_count, self.count):
-            self.add_new()
+    def clean(self):
+        if self.start_datetime and self.end_datetime and (self.start_datetime > self.end_datetime):
+            raise exceptions.ValidationError(_('End date should be later than start date'))
 
-    def add_new(self):
-        """Add a new voucher to this set"""
-        Voucher = get_model('voucher', 'Voucher')
-        code = get_unused_code(length=self.code_length)
-        voucher = Voucher.objects.create(
-            name=self.name,
-            code=code,
-            voucher_set=self,
-            usage=Voucher.SINGLE_USE,
-            start_datetime=self.start_datetime,
-            end_datetime=self.end_datetime)
-
-        if self.offer:
-            voucher.offers.add(self.offer)
-
-        return voucher
+    def update_count(self):
+        vouchers_count = self.vouchers.count()
+        if self.count != vouchers_count:
+            self.count = vouchers_count
+            self.save()
 
     def is_active(self, test_datetime=None):
         """Test whether this voucher set is currently active. """
         test_datetime = test_datetime or timezone.now()
         return self.start_datetime <= test_datetime <= self.end_datetime
-
-    def save(self, *args, **kwargs):
-        self.count = max(self.count, self.vouchers.count())
-        with transaction.atomic():
-            super().save(*args, **kwargs)
-            self.generate_vouchers()
-            self.vouchers.update(
-                start_datetime=self.start_datetime,
-                end_datetime=self.end_datetime
-            )
 
     @property
     def num_basket_additions(self):
@@ -119,7 +90,7 @@ class AbstractVoucher(models.Model):
     Oscar enforces those modes by creating VoucherApplication
     instances when a voucher is used for an order.
     """
-    name = models.CharField(_("Name"), max_length=128,
+    name = models.CharField(_("Name"), max_length=128, unique=True,
                             help_text=_("This will be shown in the checkout"
                                         " and basket once the voucher is"
                                         " entered"))
@@ -170,8 +141,7 @@ class AbstractVoucher(models.Model):
         return self.name
 
     def clean(self):
-        if all([self.start_datetime, self.end_datetime,
-                self.start_datetime > self.end_datetime]):
+        if self.start_datetime and self.end_datetime and (self.start_datetime > self.end_datetime):
             raise exceptions.ValidationError(
                 _('End date should be later than start date'))
 
@@ -260,6 +230,7 @@ class AbstractVoucher(models.Model):
     record_discount.alters_data = True
 
     @property
+    @deprecated
     def benefit(self):
         """
         Returns the first offer's benefit instance.

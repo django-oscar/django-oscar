@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
-from oscar.apps.catalogue.models import Product
+from oscar.apps.catalogue.models import Product, ProductAttribute
 from oscar.test import factories
 
 
@@ -29,6 +29,20 @@ class TestContainer(TestCase):
         product = Product.objects.get(pk=product.pk)
         assert product.attr.a1 == "v2"
         assert product.attr.a3 == "v6"
+
+    def test_attributes_refresh(self):
+        product_class = factories.ProductClassFactory()
+        product_class.attributes.create(name='a1', code='a1', required=True)
+        product = factories.ProductFactory(product_class=product_class)
+        product.attr.a1 = "v1"
+        product.attr.save()
+
+        product_attr = ProductAttribute.objects.get(code="a1", product=product)
+        product_attr.save_value(product, "v2")
+        assert product.attr.a1 == "v1"
+
+        product.attr.refresh()
+        assert product.attr.a1 == "v2"
 
 
 class TestBooleanAttributes(TestCase):

@@ -10,11 +10,12 @@ on:
 
 jobs:
   test:
+    name: Python ${{ matrix.python-version }}, Django ${{ matrix.django-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         django-version: [2.2, 3.0, 3.1]
     services:
       postgres:

@@ -5,7 +5,6 @@ import pytest
 from django.core import exceptions
 from django.test import TestCase
 from django.utils.timezone import utc
-from django.utils.translation import gettext_lazy as _
 
 from oscar.apps.voucher.models import Voucher
 from oscar.core.compat import get_user_model
@@ -108,85 +107,6 @@ class TestVoucherDelete(TestCase):
         self.offer_range = RangeFactory(products=[product])
         self.offer_condition = ConditionFactory(range=self.offer_range, value=2)
 
-    def test_related_offer_deleted(self):
-        # Voucher with offer name corresponding to it as used in the dashboard
-        voucher_name = "Voucher"
-        voucher = VoucherFactory(name=voucher_name, code="VOUCHER")
-        voucher.offers.add(
-            create_offer(
-                name=_("Offer for voucher '%s'") % voucher_name,
-                offer_type='Voucher',
-                range=self.offer_range,
-                condition=self.offer_condition
-            )
-        )
-
-        voucher.delete()
-        self.assertFalse(
-            ConditionalOffer.objects.filter(
-                name=_("Offer for voucher '%s'") % voucher_name,
-                offer_type=ConditionalOffer.VOUCHER
-            ).exists())
-
-    def test_related_offer_different_name_not_deleted(self):
-        # Voucher with offer named differently
-        voucher = VoucherFactory(name="Voucher", code="VOUCHER")
-        voucher.offers.add(
-            create_offer(
-                name="Different name test",
-                offer_type='Voucher',
-                range=self.offer_range,
-                condition=self.offer_condition
-            )
-        )
-
-        offer_ids = list(voucher.offers.all().values_list('pk', flat=True))
-
-        voucher.delete()
-        count_offers = ConditionalOffer.objects.filter(id__in=offer_ids).count()
-        assert len(offer_ids) == count_offers
-
-    def test_related_offer_different_type_not_deleted(self):
-        # Voucher with offer not of type "Voucher"
-        voucher_name = "Voucher"
-        voucher = VoucherFactory(name=voucher_name, code="VOUCHER")
-        voucher.offers.add(
-            create_offer(
-                name=_("Offer for voucher '%s'") % voucher_name,
-                offer_type='Site',
-                range=self.offer_range,
-                condition=self.offer_condition
-            )
-        )
-
-        offer_ids = list(voucher.offers.all().values_list('pk', flat=True))
-
-        voucher.delete()
-        count_offers = ConditionalOffer.objects.filter(id__in=offer_ids).count()
-        assert len(offer_ids) == count_offers
-
-    def test_multiple_related_offers_not_deleted(self):
-        # Voucher with already used offer
-        voucher_name = "Voucher 1"
-        offer = create_offer(
-            name=_("Offer for voucher '%s'") % voucher_name,
-            offer_type='Voucher',
-            range=self.offer_range,
-            condition=self.offer_condition
-        )
-
-        voucher1 = VoucherFactory(name=voucher_name, code="VOUCHER1")
-        voucher1.offers.add(offer)
-
-        voucher2 = VoucherFactory(name="Voucher 2", code="VOUCHER2")
-        voucher2.offers.add(offer)
-
-        offer_ids = list(voucher1.offers.all().values_list('pk', flat=True))
-
-        voucher1.delete()
-        count_offers = ConditionalOffer.objects.filter(id__in=offer_ids).count()
-        assert len(offer_ids) == count_offers
-
 
 class TestAvailableForBasket(TestCase):
 
@@ -214,19 +134,21 @@ class TestVoucherSet(object):
     def test_factory(self):
         voucherset = VoucherSetFactory()
         assert voucherset.count == voucherset.vouchers.count()
-        code = voucherset.vouchers.first().code
-        assert len(code) == 14
-        assert code.count('-') == 2
         assert str(voucherset) == voucherset.name
-        assert voucherset.offer
+        offers = voucherset.vouchers.first().offers.all()
         for voucher in voucherset.vouchers.all():
-            assert voucherset.offer in voucher.offers.all()
+            assert len(voucher.code) == 14
+            assert voucher.code.count('-') == 2
+            list(voucher.offers.all()) == list(offers)
+            assert voucher.offers.count() == 1
+            assert voucher.offers.filter(offer_type=ConditionalOffer.VOUCHER).count() == 1
 
-    def test_min_count(self):
+    def test_update_count(self):
         voucherset = VoucherSetFactory(count=20)
         assert voucherset.count == 20
         voucherset.count = 10
         voucherset.save()
+        voucherset.update_count()
         voucherset.refresh_from_db()
         assert voucherset.count == 20
 
