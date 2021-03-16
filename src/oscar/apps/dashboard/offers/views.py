@@ -140,11 +140,9 @@ class OfferWizardStepView(FormView):
         session_data[self._key()] = json_data
         self.request.session.save()
 
-    def _fetch_form_kwargs(self, step_name=None):
-        if not step_name:
-            step_name = self.step_name
+    def _fetch_form_kwargs(self):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        json_data = session_data.get(self._key(step_name), None)
+        json_data = session_data.get(self._key(self.step_name), None)
         if json_data:
             return json.loads(json_data)
 
@@ -156,15 +154,8 @@ class OfferWizardStepView(FormView):
         # We don't store the object instance as that is not JSON serialisable.
         # Instead, we save an alternative form
         instance = form.save(commit=False)
-        fields = form.fields.keys()
-        safe_fields = ['custom_benefit', 'custom_condition']
         # remove fields that do not exist (yet) on the uncommitted instance, i.e. m2m fields
-        # unless they are 'virtual' fields as listed in 'safe_fields'
-        cleanfields = {x: hasattr(instance, x) for x in fields}
-        cleanfields.update({x: True for x in fields if x in safe_fields})
-        cleanfields = [
-            x[0] for x in cleanfields.items() if x[1]
-        ]
+        cleanfields = [field.name for field in instance._meta.local_fields]
 
         json_qs = serializers.serialize('json', [instance], fields=tuple(cleanfields))
 
