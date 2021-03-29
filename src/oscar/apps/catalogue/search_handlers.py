@@ -90,7 +90,7 @@ class SimpleProductSearchHandler(MultipleObjectMixin):
 
     def __init__(self, request_data, full_path, categories=None):
         self.categories = categories
-        self.kwargs = {'page': request_data.get('page', 1)}
+        self.kwargs = {'page': request_data.get('page') or 1}
         self.object_list = self.get_queryset()
 
     def get_queryset(self):
