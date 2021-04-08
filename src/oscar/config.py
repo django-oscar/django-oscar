@@ -11,7 +11,7 @@ from oscar.core.loading import get_class
 class Shop(OscarConfig):
     name = 'oscar'
 
-    def get_app_label_and_url_endpoint_mappings(self):
+    def get_app_label_url_endpoint_mapping(self):
         return {
             'catalogue': 'catalogue/',
             'customer': 'accounts/',

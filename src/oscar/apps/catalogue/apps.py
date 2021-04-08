@@ -42,7 +42,7 @@ class CatalogueReviewsOnlyConfig(OscarConfig):
     name = 'oscar.apps.catalogue'
     verbose_name = _('Catalogue')
 
-    def get_app_label_and_url_endpoint_mappings(self):
+    def get_app_label_url_endpoint_mapping(self):
         return {"reviews": {"endpoint": r"^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/", "regex": True}}
 
     def ready(self):

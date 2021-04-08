@@ -8,7 +8,7 @@ from oscar.core.loading import get_installed_app_config
 class AutoLoadURLsConfigMixin:
     include_urls_in_parent = False
 
-    def get_app_label_and_url_endpoint_mappings(self) -> dict:
+    def get_app_label_url_endpoint_mapping(self):
         """
         Return dict with `app_label` as key and value as either:
             1. String representing the endpoint of app's URL configurations. Example,
@@ -20,7 +20,7 @@ class AutoLoadURLsConfigMixin:
         return dict()
 
     def _create_required_attributes(self):
-        for label in self.get_app_label_and_url_endpoint_mappings().keys():
+        for label in self.get_app_label_url_endpoint_mapping().keys():
             setattr(self, f'{label}_app', get_installed_app_config(label))
 
     def ready(self):
@@ -28,7 +28,7 @@ class AutoLoadURLsConfigMixin:
 
     def get_auto_loaded_urls(self):
         urls, count = [], 0
-        for label, value in self.get_app_label_and_url_endpoint_mappings().items():
+        for label, value in self.get_app_label_url_endpoint_mapping().items():
             app_config_attribute_name = f'{label}_app'
             if count == 0 and not hasattr(self, app_config_attribute_name):
                 # this method was probably called before calling `self._create_required_attributes()`
@@ -44,11 +44,11 @@ class AutoLoadURLsConfigMixin:
             if app_config is None:
                 continue  # app with the label probably wasn't installed
 
-            _urls = app_config.urls
+            child_app_urls = app_config.urls
             if app_config.include_urls_in_parent:
-                _urls = include((app_config.get_urls(), app_config.namespace))
+                child_app_urls = include((app_config.get_urls(), app_config.namespace))
 
-            urls.append(re_path(endpoint, _urls) if regex else path(endpoint, _urls))
+            urls.append(re_path(endpoint, child_app_urls) if regex else path(endpoint, child_app_urls))
         return urls
 
 

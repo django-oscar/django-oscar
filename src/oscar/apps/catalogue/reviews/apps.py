@@ -12,8 +12,6 @@ class CatalogueReviewsConfig(OscarConfig):
     verbose_name = _('Catalogue reviews')
     include_urls_in_parent = True
 
-    hidable_feature_name = 'reviews'
-
     def ready(self):
         self.detail_view = get_class('catalogue.reviews.views', 'ProductReviewDetail')
         self.create_view = get_class('catalogue.reviews.views', 'CreateProductReview')

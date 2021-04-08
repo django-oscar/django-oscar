@@ -15,7 +15,7 @@ class DashboardConfig(OscarDashboardConfig):
         'index': (['is_staff'], ['partner.dashboard_access']),
     }
 
-    def get_app_label_and_url_endpoint_mappings(self):
+    def get_app_label_url_endpoint_mapping(self):
         return {
             'catalogue_dashboard': 'catalogue/',
             'reports_dashboard': 'reports/',
