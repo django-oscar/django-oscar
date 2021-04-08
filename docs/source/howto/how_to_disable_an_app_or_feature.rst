@@ -47,7 +47,7 @@ dashboard URLs.
 How to disable Oscar feature
 ============================
 
-You can remove the app from ``INSTALLED_APPS`` setting and its app configuration URLs would be excluded
+You can remove the app from the ``INSTALLED_APPS`` setting and its app configuration URLs would be excluded
 from the URLconf. Template code, wrapped with the ``{% if "<app_label>"|is_app_installed %}{% endif %}``
 block template tag, will not be rendered::
 
@@ -55,4 +55,4 @@ block template tag, will not be rendered::
         {% include "catalogue/reviews/partials/review_stars.html" %}
     {% endif %}
 
-Currently supported "reviews" and "wishlists" features.
+Oscar currently does this for the "reviews" and "wishlists" apps.
