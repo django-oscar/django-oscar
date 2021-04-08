@@ -14,7 +14,7 @@ class TestAutoLoadURLsConfigMixin:
     reviews_app_config = 'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig'
 
     @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin._create_required_attributes')
-    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_and_url_endpoint_mappings')
+    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_url_endpoint_mapping')
     def test_ready_is_called_once_if_get_auto_loaded_urls_is_called_before_it(self, mocked_mapping,
                                                                               mocked_create_required_attributes):
         mocked_mapping.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
@@ -25,18 +25,18 @@ class TestAutoLoadURLsConfigMixin:
             pass  # un-mocked `config.ready` method is required to create the missing attribute(s)
         mocked_create_required_attributes.assert_called_once()
 
-    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_and_url_endpoint_mappings')
-    def test_get_auto_loaded_urls_for_installed_app(self, mocked_mappings, settings):
-        mocked_mappings.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
+    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_url_endpoint_mapping')
+    def test_get_auto_loaded_urls_for_installed_app(self, mocked_mapping, settings):
+        mocked_mapping.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
         config = AutoLoadURLsConfigMixin()
 
         assert self.reviews_app_config in settings.INSTALLED_APPS
         assert self.wishlist_app_config in settings.INSTALLED_APPS
         assert len(config.get_auto_loaded_urls()) == 2
 
-    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_and_url_endpoint_mappings')
-    def test_get_auto_loaded_urls_for_un_installed_app(self, mocked_mappings, settings):
-        mocked_mappings.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
+    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_url_endpoint_mapping')
+    def test_get_auto_loaded_urls_for_un_installed_app(self, mocked_mapping, settings):
+        mocked_mapping.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
         installed_apps = settings.INSTALLED_APPS.copy()
         installed_apps.remove(self.reviews_app_config)
         installed_apps.remove(self.wishlist_app_config)

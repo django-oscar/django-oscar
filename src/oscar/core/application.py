@@ -6,7 +6,7 @@ from oscar.core.loading import get_installed_app_config
 
 
 class AutoLoadURLsConfigMixin:
-    include_urls_in_parent = False
+    include_urls_in_parent = True
 
     def get_app_label_url_endpoint_mapping(self):
         """
