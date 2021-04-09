@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core.application import AutoLoadURLsConfigMixin, OscarConfig
 from oscar.core.loading import get_class
 
 
@@ -37,7 +37,7 @@ class CatalogueOnlyConfig(OscarConfig):
         return self.post_process_urls(urls)
 
 
-class CatalogueReviewsOnlyConfig(OscarConfig):
+class CatalogueReviewsOnlyConfig(AutoLoadURLsConfigMixin, OscarConfig):
     label = 'catalogue'
     name = 'oscar.apps.catalogue'
     verbose_name = _('Catalogue')

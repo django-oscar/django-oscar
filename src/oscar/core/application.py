@@ -43,7 +43,7 @@ class AutoLoadURLsConfigMixin:
                 continue  # app with the label probably wasn't installed
 
             child_app_urls = app_config.urls
-            if app_config.include_urls_in_parent:
+            if getattr(app_config, "include_urls_in_parent", self.include_urls_in_parent):
                 child_app_urls = include((app_config.get_urls(), app_config.namespace))
 
             urls.append(re_path(endpoint, child_app_urls) if regex else path(endpoint, child_app_urls))
@@ -173,7 +173,7 @@ class OscarConfigMixin(object):
         return self.get_urls(), self.label, self.namespace
 
 
-class OscarConfig(AutoLoadURLsConfigMixin, OscarConfigMixin, AppConfig):
+class OscarConfig(OscarConfigMixin, AppConfig):
     """
     Base Oscar app configuration.
 

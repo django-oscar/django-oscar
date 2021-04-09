@@ -4,11 +4,11 @@ from django.conf import settings
 from django.urls import path, reverse_lazy
 from django.views.generic.base import RedirectView
 
-from oscar.core.application import OscarConfig
+from oscar.core.application import AutoLoadURLsConfigMixin, OscarConfig
 from oscar.core.loading import get_class
 
 
-class Shop(OscarConfig):
+class Shop(AutoLoadURLsConfigMixin, OscarConfig):
     name = 'oscar'
 
     def get_app_label_url_endpoint_mapping(self):
