@@ -1,6 +1,5 @@
 from django import template
-
-from oscar.core.loading import get_installed_app_config
+from django.apps import apps
 
 register = template.Library()
 
@@ -44,4 +43,8 @@ get_parameters = register.tag(get_parameters)
 
 @register.filter
 def is_app_installed(app_label):
-    return get_installed_app_config(app_label) is not None
+    try:
+        apps.get_app_config(app_label)
+        return True
+    except LookupError:
+        return False

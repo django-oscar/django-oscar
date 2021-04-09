@@ -213,13 +213,6 @@ def get_profile_class():
     return get_model(app_label, model_name)
 
 
-def get_installed_app_config(app_label):
-    try:
-        return apps.get_app_config(app_label)
-    except LookupError:
-        pass
-
-
 def get_model(app_label, model_name):
     """
     Fetches a Django model using the app registry.

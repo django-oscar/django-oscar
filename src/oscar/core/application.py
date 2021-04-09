@@ -1,8 +1,6 @@
-from django.apps import AppConfig
+from django.apps import AppConfig, apps
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import URLPattern, include, path, re_path, reverse_lazy
-
-from oscar.core.loading import get_installed_app_config
 
 
 class AutoLoadURLsConfigMixin:
@@ -17,11 +15,15 @@ class AutoLoadURLsConfigMixin:
                 >>> # Generate endpoint by processing it's kwargs using regex.
                 >>> {"reviews":{"endpoint":"^(?P<product_slug>[\\w-]*)_(?P<product_pk>\\d+)/reviews/","regex":True}}
         """
-        return dict()
+        return {}
 
     def _create_required_attributes(self):
-        for label in self.get_app_label_url_endpoint_mapping().keys():
-            setattr(self, f'{label}_app', get_installed_app_config(label))
+        for label in self.get_app_label_url_endpoint_mapping():
+            try:
+                app_config = apps.get_app_config(label)
+            except LookupError:
+                app_config = None
+            setattr(self, f'{label}_app', app_config)
 
     def ready(self):
         self._create_required_attributes()
@@ -185,5 +187,4 @@ class OscarConfig(AutoLoadURLsConfigMixin, OscarConfigMixin, AppConfig):
 
 
 class OscarDashboardConfig(OscarConfig):
-    include_urls_in_parent = True
     login_url = reverse_lazy('dashboard:login')
