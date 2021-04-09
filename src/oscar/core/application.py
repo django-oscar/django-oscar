@@ -29,13 +29,9 @@ class AutoLoadURLsConfigMixin:
         self._create_required_attributes()
 
     def get_auto_loaded_urls(self):
-        urls, count = [], 0
+        urls = []
         for label, value in self.get_app_label_url_endpoint_mapping().items():
             app_config_attribute_name = f'{label}_app'
-            if count == 0 and not hasattr(self, app_config_attribute_name):
-                # this method was probably called before calling `self._create_required_attributes()`
-                self._create_required_attributes()
-            count += 1
 
             endpoint, regex = value, False
             if isinstance(value, dict):

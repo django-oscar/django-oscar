@@ -9,6 +9,11 @@ from django.views.generic import View
 from oscar.core.application import AutoLoadURLsConfigMixin
 
 
+class AutoLoadURLsConfig(AutoLoadURLsConfigMixin):
+    def __init__(self):
+        self._create_required_attributes()
+
+
 class TestAutoLoadURLsConfigMixin:
     wishlist_app_config = 'oscar.apps.wishlists.apps.WishlistsConfig'
     reviews_app_config = 'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig'
@@ -18,7 +23,7 @@ class TestAutoLoadURLsConfigMixin:
     def test_ready_is_called_once_if_get_auto_loaded_urls_is_called_before_it(self, mocked_mapping,
                                                                               mocked_create_required_attributes):
         mocked_mapping.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
-        config = AutoLoadURLsConfigMixin()
+        config = AutoLoadURLsConfig()
         try:
             config.get_auto_loaded_urls()
         except AttributeError:
@@ -28,7 +33,7 @@ class TestAutoLoadURLsConfigMixin:
     @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_url_endpoint_mapping')
     def test_get_auto_loaded_urls_for_installed_app(self, mocked_mapping, settings):
         mocked_mapping.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
-        config = AutoLoadURLsConfigMixin()
+        config = AutoLoadURLsConfig()
 
         assert self.reviews_app_config in settings.INSTALLED_APPS
         assert self.wishlist_app_config in settings.INSTALLED_APPS
@@ -43,7 +48,7 @@ class TestAutoLoadURLsConfigMixin:
 
         settings.INSTALLED_APPS = installed_apps
 
-        config = AutoLoadURLsConfigMixin()
+        config = AutoLoadURLsConfig()
         assert len(config.get_auto_loaded_urls()) == 0
 
 
