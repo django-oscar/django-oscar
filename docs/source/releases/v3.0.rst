@@ -19,7 +19,7 @@ also need to upgrade their frontend and dashboard templates to use Bootstrap 4.
 Compatibility
 ~~~~~~~~~~~~~
 
-Oscar 3.0 is compatible with Django 2.2, Django 3.0 and Django 3.1 as well as Python 3.6, 3.7 and 3.8.
+Oscar 3.0 is compatible with Django 2.2, Django 3.0, 3.1 and 3.2 as well as Python 3.6, 3.7 and 3.8.
 
 Support for Django 1.11 and Django 2.1 has been dropped. Support for Python 3.5 has been dropped.
 
