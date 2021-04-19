@@ -41,10 +41,29 @@ class GetParametersNode(template.Node):
 get_parameters = register.tag(get_parameters)
 
 
-@register.filter
-def is_app_installed(app_label):
+@register.tag
+def if_app_installed(parser, token):
+    nodelist = parser.parse(('endif_app_installed',))
     try:
-        apps.get_app_config(app_label)
-        return True
-    except LookupError:
-        return False
+        tag_name, app_label, = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError(
+            "%r tag requires a single argument" % token.contents.split()[0])
+    if not (app_label[0] == app_label[-1] and app_label[0] in ('"', "'")):
+        raise template.TemplateSyntaxError(
+            "%r tag's argument should be in quotes" % tag_name)
+    parser.delete_first_token()
+    return ConditionalOutputNode(nodelist, app_label[1:-1])
+
+
+class ConditionalOutputNode(template.Node):
+    def __init__(self, nodelist, app_label):
+        self.nodelist = nodelist
+        self.app_label = app_label
+
+    def render(self, context):
+        try:
+            apps.get_app_config(self.app_label)
+        except LookupError:
+            return ''
+        return self.nodelist.render(context)

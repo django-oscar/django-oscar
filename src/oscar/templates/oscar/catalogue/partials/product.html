@@ -17,7 +17,7 @@
         {% endblock %}
 
         {% block product_review %}
-            {% if "reviews"|is_app_installed %}
+            {% if_app_installed "reviews" %}
                 <p class="star-rating {{ product.rating|as_stars }}">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -25,7 +25,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </p>
-            {% endif %}
+            {% endif_app_installed %}
         {% endblock %}
 
         {% block product_title %}
