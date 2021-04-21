@@ -10,6 +10,7 @@ from oscar.core.loading import get_class
 
 class Shop(AutoLoadURLsConfigMixin, OscarConfig):
     name = 'oscar'
+    add_auto_loaded_urls_as_include = False
 
     def get_app_label_url_endpoint_mapping(self):
         return {

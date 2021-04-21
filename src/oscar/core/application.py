@@ -4,7 +4,7 @@ from django.urls import URLPattern, include, path, re_path, reverse_lazy
 
 
 class AutoLoadURLsConfigMixin:
-    include_urls_in_parent = True
+    add_auto_loaded_urls_as_include = True
 
     def get_app_label_url_endpoint_mapping(self):
         """
@@ -42,11 +42,13 @@ class AutoLoadURLsConfigMixin:
             if app_config is None:
                 continue  # app with the label probably wasn't installed
 
-            child_app_urls = app_config.urls
-            if getattr(app_config, "include_urls_in_parent", self.include_urls_in_parent):
-                child_app_urls = include((app_config.get_urls(), app_config.namespace))
+            app_urls = include((app_config.get_urls(), app_config.namespace)) if getattr(
+                app_config,
+                "add_auto_loaded_urls_as_include",
+                self.add_auto_loaded_urls_as_include,
+            ) else app_config.urls
 
-            urls.append(re_path(endpoint, child_app_urls) if regex else path(endpoint, child_app_urls))
+            urls.append(re_path(endpoint, app_urls) if regex else path(endpoint, app_urls))
         return urls
 
 
