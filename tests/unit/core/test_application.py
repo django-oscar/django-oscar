@@ -18,18 +18,6 @@ class TestAutoLoadURLsConfigMixin:
     wishlist_app_config = 'oscar.apps.wishlists.apps.WishlistsConfig'
     reviews_app_config = 'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig'
 
-    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin._create_required_attributes')
-    @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_url_endpoint_mapping')
-    def test_ready_is_called_once_if_get_auto_loaded_urls_is_called_before_it(self, mocked_mapping,
-                                                                              mocked_create_required_attributes):
-        mocked_mapping.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
-        config = AutoLoadURLsConfig()
-        try:
-            config.get_auto_loaded_urls()
-        except AttributeError:
-            pass  # un-mocked `config.ready` method is required to create the missing attribute(s)
-        mocked_create_required_attributes.assert_called_once()
-
     @mock.patch('oscar.core.application.AutoLoadURLsConfigMixin.get_app_label_url_endpoint_mapping')
     def test_get_auto_loaded_urls_for_installed_app(self, mocked_mapping, settings):
         mocked_mapping.return_value = {"reviews": "reviews/", "wishlists": "wishlists/"}
