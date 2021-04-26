@@ -14,7 +14,7 @@
     </form>
     {% if_app_installed "wishlists" %}
         {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
-    {% endif_app_installed %}
+    {% end_if_app_installed %}
 {% else %}
     {% if has_active_alert %}
         <p>{% trans "You have an active stock alert for this product." %}</p>
@@ -28,5 +28,5 @@
     {% endif %}
     {% if_app_installed "wishlists" %}
         {% include "oscar/catalogue/partials/add_to_wishlist.html" %}
-    {% endif_app_installed %}
+    {% end_if_app_installed %}
 {% endif %}

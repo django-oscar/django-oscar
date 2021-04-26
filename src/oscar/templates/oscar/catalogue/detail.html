@@ -73,7 +73,7 @@
 
             {% if_app_installed "reviews" %}
                 {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
-            {% endif_app_installed %}
+            {% end_if_app_installed %}
 
             <hr/>
 
@@ -149,7 +149,7 @@
                 <th>{% trans "Number of reviews" %}</th>
                 <td>{{ product.num_approved_reviews }}</td>
             </tr>
-        {% endif_app_installed %}
+        {% end_if_app_installed %}
     </table>
     {% endblock %}
 
@@ -185,7 +185,7 @@
             {% endif %}
         </section>
         {% endblock product_review %}
-    {% endif_app_installed %}
+    {% end_if_app_installed %}
 
     {% with recommended_products=product.sorted_recommended_products|slice:":6" %}
         {% if recommended_products %}

@@ -48,11 +48,11 @@ How to disable Oscar feature
 ============================
 
 You can remove the app from the ``INSTALLED_APPS`` setting and its app configuration URLs would be excluded
-from the URLconf. Template code, wrapped with the ``{% if_app_installed "<app_label>" %}{% endif_app_installed %}``
+from the URLconf. Template code, wrapped with the ``{% if_app_installed "<app_label>" %}{% end_if_app_installed %}``
 block template tag, will not be rendered::
 
     {% if_app_installed "reviews" %}
         {% include "catalogue/reviews/partials/review_stars.html" %}
-    {% endif_app_installed %}
+    {% end_if_app_installed %}
 
 Oscar currently does this for the "reviews" and "wishlists" apps.

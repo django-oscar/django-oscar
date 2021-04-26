@@ -43,15 +43,13 @@ get_parameters = register.tag(get_parameters)
 
 @register.tag
 def if_app_installed(parser, token):
-    nodelist = parser.parse(('endif_app_installed',))
+    nodelist = parser.parse(("end_if_app_installed",))
     try:
-        tag_name, app_label, = token.split_contents()
+        tag_name, app_label = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError(
-            "%r tag requires a single argument" % token.contents.split()[0])
+        raise template.TemplateSyntaxError(f"{token.contents.split()[0]} tag requires a single argument")
     if not (app_label[0] == app_label[-1] and app_label[0] in ('"', "'")):
-        raise template.TemplateSyntaxError(
-            "%r tag's argument should be in quotes" % tag_name)
+        raise template.TemplateSyntaxError(f"{tag_name} tag's argument should be in quotes")
     parser.delete_first_token()
     return ConditionalOutputNode(nodelist, app_label[1:-1])
 
