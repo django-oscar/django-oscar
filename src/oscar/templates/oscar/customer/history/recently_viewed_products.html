@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load product_tags %}
 
-{% with products_sliced=products|slice:":6" %}
+{% with products_sliced=products %}
     {% if products_sliced %}
         <div class="sub-header">
             <h2>{% trans 'Products you recently viewed' %}</h2>
