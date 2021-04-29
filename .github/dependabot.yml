@@ -6,29 +6,9 @@ updates:
     interval: monthly
     time: "11:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: ipython
-    versions:
-    - ">= 7.10.a, < 7.11"
-  - dependency-name: pillow
-    versions:
-    - 8.1.2
-  - dependency-name: ipdb
-    versions:
-    - 0.13.6
-  - dependency-name: ipython
-    versions:
-    - 7.21.0
-  - dependency-name: flake8-blind-except
-    versions:
-    - 0.2.0
 - package-ecosystem: npm
   directory: "/"
   schedule:
     interval: monthly
     time: "11:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: less
-    versions:
-    - "> 3.11.3, < 4"
