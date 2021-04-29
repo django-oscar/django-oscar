@@ -899,7 +899,7 @@ class AbstractPaymentEvent(models.Model):
     reference = models.CharField(
         _("Reference"), max_length=128, blank=True)
     lines = models.ManyToManyField(
-        'order.Line', through='PaymentEventQuantity',
+        'order.Line', through='order.PaymentEventQuantity',
         verbose_name=_("Lines"))
     event_type = models.ForeignKey(
         'order.PaymentEventType',
@@ -929,7 +929,7 @@ class AbstractPaymentEvent(models.Model):
         return self.lines.all().count()
 
 
-class PaymentEventQuantity(models.Model):
+class AbstractPaymentEventQuantity(models.Model):
     """
     A "through" model linking lines to payment events
     """
@@ -946,6 +946,7 @@ class PaymentEventQuantity(models.Model):
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
+        abstract = True
         app_label = 'order'
         verbose_name = _("Payment Event Quantity")
         verbose_name_plural = _("Payment Event Quantities")
@@ -967,7 +968,7 @@ class AbstractShippingEvent(models.Model):
         verbose_name=_("Order"))
     lines = models.ManyToManyField(
         'order.Line', related_name='shipping_events',
-        through='ShippingEventQuantity', verbose_name=_("Lines"))
+        through='order.ShippingEventQuantity', verbose_name=_("Lines"))
     event_type = models.ForeignKey(
         'order.ShippingEventType',
         on_delete=models.CASCADE,
@@ -994,7 +995,7 @@ class AbstractShippingEvent(models.Model):
         return self.lines.count()
 
 
-class ShippingEventQuantity(models.Model):
+class AbstractShippingEventQuantity(models.Model):
     """
     A "through" model linking lines to shipping events.
 
@@ -1014,6 +1015,7 @@ class ShippingEventQuantity(models.Model):
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
+        abstract = True
         app_label = 'order'
         verbose_name = _("Shipping Event Quantity")
         verbose_name_plural = _("Shipping Event Quantities")
