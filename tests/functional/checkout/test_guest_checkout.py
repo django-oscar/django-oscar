@@ -1,7 +1,6 @@
 import sys
 from http import client as http_client
-from imp import reload
-from importlib import import_module
+from importlib import import_module, reload
 from unittest import mock
 from urllib.parse import quote
 

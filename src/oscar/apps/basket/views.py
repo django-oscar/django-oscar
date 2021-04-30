@@ -186,7 +186,7 @@ class BasketView(ModelFormSetView):
             response = super().formset_valid(formset)
 
         # If AJAX submission, don't redirect but reload the basket content HTML
-        if self.request.is_ajax():
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             # Reload basket and apply offers again
             self.request.basket = get_model('basket', 'Basket').objects.get(
                 id=self.request.basket.id)
@@ -247,7 +247,7 @@ class BasketView(ModelFormSetView):
             "Your basket has got some issues. "
             "Please correct any validation errors below."))
 
-        if self.request.is_ajax():
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             ctx = self.get_context_data(formset=formset,
                                         basket=self.request.basket)
             return self.json_response(ctx, flash_messages)
