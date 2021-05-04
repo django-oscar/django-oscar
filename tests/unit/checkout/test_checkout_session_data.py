@@ -2,16 +2,21 @@ from unittest.mock import Mock
 
 import pytest
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.http import HttpResponse
 
 from oscar.apps.checkout.forms import ShippingAddressForm
 from oscar.apps.checkout.utils import CheckoutSessionData
+
+
+def get_response_for_test(request):
+    return HttpResponse()
 
 
 @pytest.fixture
 def csdf(rf):
     """"""
     request = rf.get('/')
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(get_response_for_test)
     middleware.process_request(request)
     return CheckoutSessionData(request)
 

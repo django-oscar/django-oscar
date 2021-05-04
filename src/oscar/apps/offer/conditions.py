@@ -73,7 +73,7 @@ class CountCondition(Condition):
             return ngettext(
                 'Buy %(delta)d more product from %(range)s',
                 'Buy %(delta)d more products from %(range)s',
-                delta
+                int(delta)
             ) % {'delta': delta, 'range': self.range}
 
     def consume_items(self, offer, basket, affected_lines):
@@ -157,7 +157,7 @@ class CoverageCondition(Condition):
             return ngettext(
                 'Buy %(delta)d more product from %(range)s',
                 'Buy %(delta)d more products from %(range)s',
-                delta
+                int(delta)
             ) % {'delta': delta, 'range': self.range}
 
     def is_partially_satisfied(self, offer, basket):

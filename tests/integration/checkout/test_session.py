@@ -1,6 +1,7 @@
 from unittest import mock
 
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.http import HttpResponse
 from django.test import TestCase
 from django.test.client import RequestFactory
 
@@ -12,9 +13,13 @@ class TestCheckoutSession(TestCase):
     oscar.apps.checkout.utils.CheckoutSessionData
     """
 
+    @staticmethod
+    def get_response_for_test(request):
+        return HttpResponse()
+
     def setUp(self):
         request = RequestFactory().get('/')
-        SessionMiddleware().process_request(request)
+        SessionMiddleware(self.get_response_for_test).process_request(request)
         self.session_data = CheckoutSessionData(request)
 
     def test_allows_data_to_be_written_and_read_out(self):
