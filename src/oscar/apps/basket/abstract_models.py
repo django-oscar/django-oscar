@@ -794,11 +794,6 @@ class AbstractLine(models.Model):
         return self.consumer.available()
 
     @property
-    def is_available_for_discount(self):
-        # deprecated
-        return self.consumer.available() > 0
-
-    @property
     def discount_value(self):
         # Only one of the incl- and excl- discounts should be non-zero
         return max(self._discount_incl_tax, self._discount_excl_tax)

@@ -525,10 +525,8 @@ class AbstractLine(models.Model):
 
     # Price information (these fields are actually redundant as the information
     # can be calculated from the LinePrice models
-    # Deprecated - will be removed in Oscar 2.1
     line_price_incl_tax = models.DecimalField(
         _("Price (inc. tax)"), decimal_places=2, max_digits=12)
-    # Deprecated - will be removed in Oscar 2.1
     line_price_excl_tax = models.DecimalField(
         _("Price (excl. tax)"), decimal_places=2, max_digits=12)
 

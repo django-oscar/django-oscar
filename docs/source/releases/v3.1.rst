@@ -2,18 +2,38 @@
 Oscar 3.1 release notes
 =======================
 
+:release: TBD
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.1:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.1 is compatible with Django 2.2, Django 3.1 and Django 3.2 and Python versions 3.6 to 3.9.
+
+Support for Django 3.0 has been dropped.
+
+
+.. _new_in_3.1:
+
 What's new in Oscar 3.1?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Improvements have been made to the dashboard interface for creating and editing offers, vouchers, and voucher sets.
+Improvements have been made to the dashboard interface for creating and editing offers, vouchers, and voucher sets.
 
-  These better expose the flexible implementation of offer and voucher functionality, allowing:
-  - creation of offers of all types
-  - creation of vouchers with multiple offers
-  - creation of voucher sets of all usages, and with multiple offers
+These better expose the flexible implementation of offer and voucher functionality, allowing:
 
-  Details of these changes can be found in the :ref:`Changes to "dashboard.offers" and "dashboard.vouchers" apps
-  <changes_to_dashboard_offers_and_dashboard_vouchers_apps>` section below.
+- creation of offers of all types
+- creation of vouchers with multiple offers
+- creation of voucher sets of all usages, and with multiple offers
+
+Details of these changes can be found in the :ref:`Changes to "dashboard.offers" and "dashboard.vouchers" apps
+<changes_to_dashboard_offers_and_dashboard_vouchers_apps>` section below.
 
 .. _changes_to_dashboard_offers_and_dashboard_vouchers_apps:
 
@@ -34,7 +54,7 @@ You should review these changes [we'll insert a link to the commit here once it 
   currently implements.
 
 - The dashboard voucher creation and edit views have been signficiantly refactored. Previously, a conditional offer
-  (and associated benefit/condition) was created automatically when creating a new voucher. This is no longer the case 
+  (and associated benefit/condition) was created automatically when creating a new voucher. This is no longer the case
   and instead the offers must be created separately in advance of assigning them to a voucher. These views now allow
   assigning multiple offers to a voucher, exposing the full flexibility of this app.
 
@@ -51,3 +71,55 @@ You should review these changes [we'll insert a link to the commit here once it 
 
 - ``voucher.utils.get_offer_name`` has been removed, as voucher-type offers are no longer automatically created,
   updated, and deleted.
+
+
+.. _removal_of_deprecated_features_in_3.1:
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The ``catalogue.Option.is_required`` property is removed. Check ``Option.required`` instead.
+
+- The ``oscar.apps.dashboard.catalogue.views.filter_products`` utility function has been removed. Use the
+  methods provided by ``PartnerProductFilterMixin`` instead.
+
+- The ``basket.AbstractLine.is_available_for_discount`` property is removed. Use ``is_available_for_offer_discount()``
+  instead.
+
+.. _minor_changes_in_3.1:
+
+Minor changes
+~~~~~~~~~~~~~
+
+- ``AbstractProductAttributeValue.value_boolean`` has changed from a deprecated ``NullBooleanField`` to a
+  ``BooleanField``. This requires a database migration.
+
+- A ``refresh()`` method was added to ``ProductAttributesContainer`` to allow refreshing attribute information
+  from the database without reinitialising the ``Product`` object.
+
+- The deprecated ``providing_args`` argument has been removed from all of Oscar's signals.
+
+- ``oscar.apps.customer.alerts.utils.AlertsDispatcher`` is now imported dynamically to allow overriding.
+
+- The utility functions in ``oscar.apps.customer.history`` for reading to and writing from Oscar's recently
+  viewed products cookie have been refactored into a dynamically loaded ``CustomerHistoryManager`` class that
+  projects can override.
+
+- The dashboard catalogue search results now include products whose children match the searched parameters.
+
+
+.. _dependency_changes_in_3.1:
+
+Dependency changes
+~~~~~~~~~~~~~~~~~~
+
+Python package dependencies:
+
+- Upgraded ``django-phonenumber-field`` to version 3.0.
+- Upgraded ``factory-boy`` to version 3.0.
+
+Javascript and CSS dependencies:
+
+- Upgraded ``bootstrap`` to version 4.6.0.
+- Upgraded ``jquery`` to version 3.6.0.
+- Upgraded ``tinymce`` to version 5.7.
