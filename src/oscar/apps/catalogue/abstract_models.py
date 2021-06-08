@@ -24,7 +24,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -1251,11 +1250,6 @@ class AbstractOption(models.Model):
 
     def __str__(self):
         return self.name
-
-    @property
-    @deprecated
-    def is_required(self):
-        return self.required
 
 
 class MissingProductImage(object):

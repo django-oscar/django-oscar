@@ -4,12 +4,13 @@ from django.conf import settings
 from django.http import HttpRequest
 from django.urls import reverse
 
-from oscar.apps.customer import history
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_class
 from oscar.templatetags.history_tags import get_back_button
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
 
+CustomerHistoryManager = get_class('customer.history', 'CustomerHistoryManager')
 User = get_user_model()
 COOKIE_NAME = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
 
@@ -27,7 +28,7 @@ class HistoryHelpersTest(WebTestCase):
         response = self.app.get(self.product.get_absolute_url())
         request = HttpRequest()
         request.COOKIES[COOKIE_NAME] = _unquote(response.test_app.cookies[COOKIE_NAME])
-        self.assertTrue(self.product.id in history.extract(request))
+        self.assertTrue(self.product.id in CustomerHistoryManager.extract(request))
 
     def test_get_back_button(self):
         request = HttpRequest()

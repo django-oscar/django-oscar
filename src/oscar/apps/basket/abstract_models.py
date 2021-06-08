@@ -1,5 +1,6 @@
 import zlib
 from decimal import Decimal as D
+from operator import itemgetter
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -367,6 +368,7 @@ class AbstractBasket(models.Model):
             return base
         repr_options = [{'option': repr(option['option']),
                          'value': repr(option['value'])} for option in options]
+        repr_options.sort(key=itemgetter('option'))
         return "%s_%s" % (base, zlib.crc32(repr(repr_options).encode('utf8')))
 
     def _get_total(self, property):
@@ -790,11 +792,6 @@ class AbstractLine(models.Model):
     @property
     def quantity_without_discount(self):
         return self.consumer.available()
-
-    @property
-    def is_available_for_discount(self):
-        # deprecated
-        return self.consumer.available() > 0
 
     @property
     def discount_value(self):

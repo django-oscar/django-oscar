@@ -4,8 +4,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -36,39 +37,56 @@ class OfferListView(ListView):
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get_queryset(self):
-        qs = self.model._default_manager.exclude(
-            offer_type=ConditionalOffer.VOUCHER)
-        qs = sort_queryset(qs, self.request,
-                           ['name', 'start_datetime', 'end_datetime',
-                            'num_applications', 'total_discount'])
+        self.search_filters = []
+        qs = self.model._default_manager.all()
+        qs = sort_queryset(qs, self.request, ['name', 'offer_type', 'start_datetime', 'end_datetime',
+                                              'num_applications', 'total_discount'])
 
-        self.description = _("All offers")
-
-        # We track whether the queryset is filtered to determine whether we
-        # show the search form 'reset' button.
-        self.is_filtered = False
         self.form = self.form_class(self.request.GET)
-        if not self.form.is_valid():
+        # This form is exactly the same as the other one, apart from having
+        # fields with different IDs, so that they are unique within the page
+        # (non-unique field IDs also break Select2)
+        self.advanced_form = self.form_class(self.request.GET, auto_id='id_advanced_%s')
+        if not all([self.form.is_valid(), self.advanced_form.is_valid()]):
             return qs
 
-        data = self.form.cleaned_data
+        name = self.form.cleaned_data['name']
+        offer_type = self.form.cleaned_data['offer_type']
+        is_active = self.form.cleaned_data['is_active']
+        has_vouchers = self.form.cleaned_data['has_vouchers']
+        voucher_code = self.form.cleaned_data['voucher_code']
 
-        if data['name']:
-            qs = qs.filter(name__icontains=data['name'])
-            self.description = _("Offers matching '%s'") % data['name']
-            self.is_filtered = True
-        if data['is_active']:
-            self.is_filtered = True
-            today = timezone.now()
-            qs = qs.filter(start_datetime__lte=today, end_datetime__gte=today)
+        if name:
+            qs = qs.filter(name__icontains=name)
+            self.search_filters.append(_('Name matches "%s"') % name)
+        if is_active is not None:
+            now = timezone.now()
+            if is_active:
+                qs = qs.filter(
+                    (Q(start_datetime__lte=now) | Q(start_datetime__isnull=True))
+                    & (Q(end_datetime__gte=now) | Q(end_datetime__isnull=True))
+                )
+                self.search_filters.append(_("Is active"))
+            else:
+                qs = qs.filter(Q(end_datetime__lt=now) | Q(start_datetime__gt=now))
+                self.search_filters.append(_("Is inactive"))
+        if offer_type:
+            qs = qs.filter(offer_type=offer_type)
+            self.search_filters.append(_('Is of type "%s"') % dict(ConditionalOffer.TYPE_CHOICES)[offer_type])
+        if has_vouchers is not None:
+            qs = qs.filter(vouchers__isnull=not has_vouchers).distinct()
+            self.search_filters.append(_("Has vouchers") if has_vouchers else _("Has no vouchers"))
+        if voucher_code:
+            qs = qs.filter(vouchers__code__icontains=voucher_code).distinct()
+            self.search_filters.append(_('Voucher code matches "%s"') % voucher_code)
 
         return qs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['queryset_description'] = self.description
         ctx['form'] = self.form
-        ctx['is_filtered'] = self.is_filtered
+        ctx['advanced_form'] = self.advanced_form
+        ctx['search_filters'] = self.search_filters
         return ctx
 
 
@@ -126,11 +144,9 @@ class OfferWizardStepView(FormView):
         session_data[self._key()] = json_data
         self.request.session.save()
 
-    def _fetch_form_kwargs(self, step_name=None):
-        if not step_name:
-            step_name = self.step_name
+    def _fetch_form_kwargs(self):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        json_data = session_data.get(self._key(step_name), None)
+        json_data = session_data.get(self._key(self.step_name), None)
         if json_data:
             return json.loads(json_data)
 
@@ -142,15 +158,8 @@ class OfferWizardStepView(FormView):
         # We don't store the object instance as that is not JSON serialisable.
         # Instead, we save an alternative form
         instance = form.save(commit=False)
-        fields = form.fields.keys()
-        safe_fields = ['custom_benefit', 'custom_condition']
         # remove fields that do not exist (yet) on the uncommitted instance, i.e. m2m fields
-        # unless they are 'virtual' fields as listed in 'safe_fields'
-        cleanfields = {x: hasattr(instance, x) for x in fields}
-        cleanfields.update({x: True for x in fields if x in safe_fields})
-        cleanfields = [
-            x[0] for x in cleanfields.items() if x[1]
-        ]
+        cleanfields = [field.name for field in instance._meta.local_fields]
 
         json_qs = serializers.serialize('json', [instance], fields=tuple(cleanfields))
 
@@ -224,10 +233,11 @@ class OfferWizardStepView(FormView):
             return super().form_valid(form)
 
     def save_offer(self, offer):
-        # We update the offer with the name/description from step 1
+        # We update the offer with the name/description/offer_type from step 1
         session_offer = self._fetch_session_offer()
         offer.name = session_offer.name
         offer.description = session_offer.description
+        offer.offer_type = session_offer.offer_type
 
         # Save the related models, then save the offer.
         # Note than you can save already on the first page of the wizard,
@@ -279,7 +289,7 @@ class OfferMetaDataView(OfferWizardStepView):
         return self.offer
 
     def get_title(self):
-        return _("Name and description")
+        return _("Name, description and type")
 
 
 class OfferBenefitView(OfferWizardStepView):
@@ -332,6 +342,13 @@ class OfferDeleteView(DeleteView):
     model = ConditionalOffer
     template_name = 'oscar/dashboard/offers/offer_delete.html'
     context_object_name = 'offer'
+
+    def dispatch(self, request, *args, **kwargs):
+        offer = self.get_object()
+        if offer.vouchers.exists():
+            messages.warning(request, _("This offer can only be deleted if it has no vouchers attached to it"))
+            return redirect('dashboard:offer-detail', pk=offer.pk)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.success(self.request, _("Offer deleted!"))

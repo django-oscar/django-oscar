@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<table class="table table-striped table-bordered table-hover">
+    <tbody>
+        {% if voucher.voucher_set %}
+        <tr><th>{% trans "Voucher set" %}</th><td><a href="{% url 'dashboard:voucher-set-detail' pk=voucher.voucher_set.pk %}">{{ voucher.voucher_set.name }}</a></td></tr>
+        {% endif %}
+        <tr><th>{% trans "Name" %}</th><td>{{ voucher.name }}</td></tr>
+        <tr><th>{% trans "Code" %}</th><td>{{ voucher.code }}</td></tr>
+        <tr><th>{% trans "Start datetime" %}</th><td>{{ voucher.start_datetime }}</td></tr>
+        <tr><th>{% trans "End datetime" %}</th><td>{{ voucher.end_datetime }}</td></tr>
+        <tr><th>{% trans "Usage" %}</th><td>{{ voucher.get_usage_display }}</td></tr>
+        <tr><th>{% trans "Number of offers" %}</th><td>{{ voucher.offers.count }}</td></tr>
+    </tbody>
+</table>

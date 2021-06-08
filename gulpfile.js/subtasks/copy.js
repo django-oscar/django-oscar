@@ -9,8 +9,10 @@ module.exports = function(done) {
     gulp.src("node_modules/jquery/dist/jquery.min.js")
         .pipe(gulp.dest("src/oscar/static/oscar/js/jquery"));
 
-    gulp.src("node_modules/bootstrap/dist/js/bootstrap.bundle.js")
-        .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
+    gulp.src([
+        "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
+        "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+    ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
 
     gulp.src("node_modules/bootstrap/fonts/*")
         .pipe(gulp.dest("src/oscar/static/oscar/fonts/"));

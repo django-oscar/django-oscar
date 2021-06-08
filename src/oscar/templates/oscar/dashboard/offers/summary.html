@@ -13,6 +13,7 @@
             {% if session_offer.description %}
             <p><strong>{% trans "Description" %}:</strong><br /> {{ session_offer.description|safe|striptags|truncatewords:8 }}</p>
             {% endif %}
+            <p><strong>{% trans "Type" %}:</strong><br /> {{ session_offer.offer_type }}</p>
         </div>
     {% endif %}
     {% if session_offer.benefit %}

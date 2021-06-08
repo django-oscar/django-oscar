@@ -32,7 +32,7 @@ GENERIC_STATS_KEYS = (
     'order_status_breakdown',
 )
 STAFF_STATS_KEYS = (
-    'total_site_offers',
+    'offer_maps',
     'total_vouchers',
 )
 

@@ -3,6 +3,9 @@ from decimal import Decimal as D
 from http import client as http_client
 from http.cookies import _unquote
 
+import django
+from django.contrib.messages.storage import cookie
+from django.core import signing
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils.translation import gettext
@@ -105,13 +108,20 @@ class BasketThresholdTest(WebTestCase):
                        'action': 'add',
                        'quantity': 2}
         response = self.app.post(url, params=post_params)
-
         expected = gettext(
             "Due to technical limitations we are not able to ship more "
             "than %(threshold)d items in one order. Your basket currently "
             "has %(basket)d items."
         ) % ({'threshold': 3, 'basket': 2})
-        self.assertIn(expected, response.test_app.cookies['messages'])
+        if django.VERSION < (3, 2):
+            self.assertIn(expected, response.test_app.cookies['messages'])
+        else:
+            signer = signing.get_cookie_signer(salt='django.contrib.messages')
+            message_strings = [
+                m.message for m in signer.unsign_object(response.test_app.cookies['messages'],
+                                                        serializer=cookie.MessageSerializer)
+            ]
+            self.assertIn(expected, message_strings)
 
 
 class BasketReportTests(TestCase):

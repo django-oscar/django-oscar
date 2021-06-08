@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block title %}
-    {{ description }} | {{ block.super }}
+    {{ voucher_set.name }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,7 +12,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-set-list' %}">{% trans "Voucher sets" %}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ description }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ voucher_set.name }}</li>
         </ol>
     </nav>
 {% endblock %}
@@ -20,11 +20,8 @@
 {% block header %}
 <div class="page-header">
     <div class="float-right">
-        <a href="{% url 'dashboard:voucher-set-update' pk=voucher_set.pk %}" class="btn btn-primary">
-            <i class="fas fa-plus-circle"></i> {% trans "Update voucher set" %}
-        </a>
         <a href="{% url 'dashboard:voucher-set-download' pk=voucher_set.pk %}" class="btn btn-primary">
-            <i class="fas fa-plus-circle"></i> {% trans "Download CSV" %}
+            <i class="fas fa-download"></i> {% trans "Download CSV" %}
         </a>
     </div>
     <h1>{% trans "Voucher set" %} '{{ voucher_set.name }}'</h1>
@@ -33,59 +30,39 @@
 
 
 {% block dashboard_content %}
-<table class="table table-striped table-bordered">
-    <caption>
-        <h3>
-            {% trans "Voucher set" %}
-        </h3>
-    </caption>
-    <tbody>
-        <tr>
-            <th>{% trans "Title" %}</th>
-            <td>{{ voucher_set.name }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Start" %}</th>
-            <td>{{ voucher_set.start_datetime }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "End" %}</th>
-            <td>{{ voucher_set.end_datetime }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Description" %}</th>
-            <td>{{ voucher_set.description }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Number of vouchers" %}</th>
-            <td>{{ voucher_set.count }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Created" %}</th>
-            <td>{{ voucher_set.date_created }}</td>
-        </tr>
-    </tbody>
-</table>
+{% include "oscar/dashboard/vouchers/partials/voucher_set_details_table.html" %}
 
 <div class="table-header">
-    <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
+    <h3><i class="fas fa-search"></i> {% trans "Search vouchers" %}</h3>
 </div>
-<div class="card card-body">
+<div class="card card-body bg-light">
     <form method="get" class="form-inline">
 		{% include 'oscar/partials/form_fields_inline.html' with form=form %}
 		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
-		<a href="{% url 'dashboard:voucher-list' %}" class="btn">{% trans "Reset" %}</a>
+		<a href="{% url 'dashboard:voucher-set-detail' pk=voucher_set.pk %}" class="btn">{% trans "Reset" %}</a>
     </form>
+    {% if search_filters %}
+    <div class="search-filter-list">
+        <label>Filters:</label>
+        {% for filter in search_filters %}
+        <span class="badge badge-success">{{ filter }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 
 <table class="table table-striped table-bordered table-hover">
-    {% if description != "All vouchers" %}
-        <caption><i class="fas fa-money-bill"></i> {{ description }}</caption>
-    {% endif %}
+    <caption>
+        <i class="fas fa-money-bill"></i>
+        {% if search_filters %}
+        {% trans "Voucher Search Results" %}
+        {% else %}
+        {% trans "All Vouchers" %}
+        {% endif %}
+    </caption>
     {% if vouchers %}
     <tr>
         <th>{% trans "Code" %}</th>
-        <th>{% trans "Status" %}</th>
         <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
         <th>{% anchor 'num_orders' _("Num orders") %}</th>
         <th>{% anchor 'date_created' _("Date created") %}</th>
@@ -95,13 +72,6 @@
         <tr>
             <td>
                 <span class="badge badge-secondary">{{ voucher.code }}</span>
-            </td>
-            <td>
-                {% if voucher.is_active %}
-                    <span class="badge badge-success">{% trans "Active" %}</span>
-                {% else %}
-                    <span class="badge badge-danger">{% trans "Inactive" %}</span>
-                {% endif %}
             </td>
             <td>{{ voucher.num_basket_additions }}</td>
             <td>{{ voucher.num_orders }}</td>
@@ -130,4 +100,65 @@
     {% endif %}
 </table>
 {% include "oscar/partials/pagination.html" %}
+
+<div class="table-header">
+    <h2>{% trans "Attached offers" %}</h2>
+</div>
+<table class="table table-striped table-bordered table-hover">
+    {% if voucher_set.vouchers.first.offers.exists %}
+    <thead>
+        <tr>
+            <th>{% trans "Offer name" %}</th>
+            <th>{% trans "Start date" %}</th>
+            <th>{% trans "End date" %}</th>
+            <th>{% trans "Is available?" %}</th>
+            <th>{% trans "Priority" %}</th>
+            <th>{% trans "Incentive" %}</th>
+            <th>{% trans "Condition" %}</th>
+            <th>{% trans "Restrictions" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for offer in voucher_set.vouchers.first.offers.all %}
+        <tr>
+            <td>
+                <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
+            </td>
+            <td>{{ offer.start_datetime|default:"-" }}</td>
+            <td>{{ offer.end_datetime|default:"-" }}</td>
+            <td>{% if offer.is_available %}
+                <span class="badge badge-success">{% trans "Yes" %}</span>
+                {% else %}
+                <span class="badge badge-danger">{% trans "No" %}</span>
+                {% endif %}
+            </td>
+            <td>{{ offer.priority }}</td>
+            <td>{{ offer.benefit.description|safe }}</td>
+            <td>{{ offer.condition.description|safe }}</td>
+            <td>
+                {% for restriction in offer.availability_restrictions %}
+                {% if not restriction.is_satisfied %}
+                <label class="badge badge-danger">
+                    {{ restriction.description }}
+                </label>
+                {% else %}
+                {{ restriction.description }}<br/>
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% else %}
+    <tr>
+        <td>{% trans "No offers are attached to this voucher set." %}</td>
+    </tr>
+    {% endif %}
+</table>
+
+<div class="form-actions">
+    <a class="btn btn-primary" href="{% url 'dashboard:voucher-set-update' pk=voucher_set.pk %}">{% trans "Edit" %}</a> {% trans "or" %}
+    <a class="btn btn-danger" href="{% url 'dashboard:voucher-set-delete' pk=voucher_set.pk %}">{% trans "Delete" %}</a> {% trans "or" %}
+    <a href="{% url 'dashboard:voucher-set-list' %}">{% trans "cancel" %}</a>
+</div>
 {% endblock dashboard_content %}

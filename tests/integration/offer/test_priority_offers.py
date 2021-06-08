@@ -27,6 +27,7 @@ class TestPriorityOffers(TestCase):
         voucher = Voucher.objects.create(
             name="Test voucher",
             code="test",
+            usage=Voucher.MULTI_USE,
             start_datetime=timezone.now(),
             end_datetime=timezone.now() + datetime.timedelta(days=12))
 

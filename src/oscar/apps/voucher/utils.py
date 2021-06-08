@@ -1,7 +1,6 @@
 from itertools import zip_longest
 
 from django.utils.crypto import get_random_string
-from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_model
 
@@ -34,11 +33,3 @@ def get_unused_code(length=12, group_length=4, separator='-'):
                              separator=separator)
         if not Voucher.objects.filter(code=code).exists():
             return code
-
-
-def get_offer_name(voucher_name):
-    """
-    Return the name used for the auto-generated offer created
-    when a voucher is created through the dashboard.
-    """
-    return _("Offer for voucher '%s'") % voucher_name

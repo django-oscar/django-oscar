@@ -13,8 +13,8 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-list' %}">{% trans "Voucher sets" %}</a></li>
-            {% if voucher %}
-                <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-set' pk=voucher.id %}">{{ voucher }}</a></li>
+            {% if voucher_set %}
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:voucher-set-detail' pk=voucher_set.pk %}">{{ voucher_set }}</a></li>
             {% endif %}
             <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
         </ol>
@@ -26,10 +26,10 @@
 {% block dashboard_content %}
     <div class="table-header">
         <h2><i class="fas fa-money-bill"></i>
-            {% if voucher %}
-                {% trans "Edit voucher" %}
+            {% if voucher_set %}
+                {% trans "Edit voucher set" %}
             {% else %}
-                {% trans "Create voucher" %}
+                {% trans "Create voucher set" %}
             {% endif %}
         </h2>
     </div>

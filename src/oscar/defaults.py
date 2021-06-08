@@ -82,6 +82,12 @@ OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 
 # Offers
 OSCAR_OFFERS_INCL_TAX = False
+# Values (using the names of the model constants) from
+# "offer.ConditionalOffer.TYPE_CHOICES"
+OSCAR_OFFERS_IMPLEMENTED_TYPES = [
+    'SITE',
+    'VOUCHER',
+]
 
 # Menu structure of the dashboard navigation
 OSCAR_DASHBOARD_NAVIGATION = [
