@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -61,10 +62,13 @@ class OfferListView(ListView):
         if is_active is not None:
             now = timezone.now()
             if is_active:
-                qs = qs.filter(start_datetime__lte=now, end_datetime__gte=now)
+                qs = qs.filter(
+                    (Q(start_datetime__lte=now) | Q(start_datetime__isnull=True))
+                    & (Q(end_datetime__gte=now) | Q(end_datetime__isnull=True))
+                )
                 self.search_filters.append(_("Is active"))
             else:
-                qs = qs.filter(end_datetime__lt=now)
+                qs = qs.filter(Q(end_datetime__lt=now) | Q(start_datetime__gt=now))
                 self.search_filters.append(_("Is inactive"))
         if offer_type:
             qs = qs.filter(offer_type=offer_type)

@@ -169,7 +169,7 @@ OSCAR_INITIAL_LINE_STATUS = 'a'
 OSCAR_LINE_STATUS_PIPELINE = {'a': ('b', ), 'b': ()}
 
 SECRET_KEY = 'notverysecret'
-# Deprecated in Django 4.0, then we need to update the hashes to SHA-256 in tests/integration/order/test_models.py
+# Removed in Django 4.0, then we need to update the hashes to SHA-256 in tests/integration/order/test_models.py
 DEFAULT_HASHING_ALGORITHM = 'sha1'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 FIXTURE_DIRS = [location('unit/fixtures')]
