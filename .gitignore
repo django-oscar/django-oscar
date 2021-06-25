@@ -33,7 +33,8 @@ __pycache__
 
 # Docs
 /docs/build/*
-/src/oscar/static/
+#/src/oscar/static/
+/src/oscar/static/oscar/README.rst
 *.pdf
 TODO
 venv
