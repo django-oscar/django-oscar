@@ -193,10 +193,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'fas fa-folder',
         'children': [
             {
-                'label': _('Pages'),
-                'url_name': 'dashboard:page-list',
-            },
-            {
                 'label': _('Email templates'),
                 'url_name': 'dashboard:comms-list',
             },
