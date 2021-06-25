@@ -6,8 +6,7 @@ from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -45,11 +44,13 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         Generates a one-use only link for resetting password and sends to the
         user.
         """
-        site = get_current_site(request)
-        if domain_override is not None:
-            site.domain = site.name = domain_override
-        for user in self.get_users(self.cleaned_data['email']):
-            self.send_password_reset_email(site, user)
+        # fixme
+        raise ImproperlyConfigured("Please override this :)")
+        # site = get_current_site(request)
+        # if domain_override is not None:
+        #     site.domain = site.name = domain_override
+        # for user in self.get_users(self.cleaned_data['email']):
+        #     self.send_password_reset_email(site, user)
 
     def send_password_reset_email(self, site, user):
         extra_context = {

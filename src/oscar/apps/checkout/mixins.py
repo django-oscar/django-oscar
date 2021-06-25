@@ -1,7 +1,6 @@
 import logging
 
-from django.contrib.sites.models import Site
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 from django.http import HttpResponseRedirect
 from django.urls import NoReverseMatch, reverse
 
@@ -289,8 +288,10 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             # We don't care that much if we can't resolve the URL
             pass
         else:
-            site = Site.objects.get_current(self.request)
-            ctx['status_url'] = 'http://%s%s' % (site.domain, path)
+            # fixme
+            # site = Site.objects.get_current(self.request)
+            # ctx['status_url'] = 'http://%s%s' % (site.domain, path)
+            ctx['status_url'] = 'please override this :)'
         return ctx
 
     # Basket helpers

@@ -1,7 +1,6 @@
 from decimal import Decimal as D
 
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
@@ -129,8 +128,6 @@ class OrderCreator(object):
             order_data['status'] = status
         if extra_order_fields:
             order_data.update(extra_order_fields)
-        if 'site' not in order_data:
-            order_data['site'] = Site._default_manager.get_current(request)
         order = Order(**order_data)
         order.save()
         if surcharges is not None:

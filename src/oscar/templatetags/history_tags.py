@@ -1,12 +1,12 @@
 from urllib import parse
 
 from django import template
+from django.core.exceptions import ImproperlyConfigured
 from django.urls import Resolver404, resolve
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
 
-Site = get_model('sites', 'Site')
 CustomerHistoryManager = get_class('customer.history', 'CustomerHistoryManager')
 
 register = template.Library()
@@ -47,11 +47,8 @@ def get_back_button(context):
         return None
 
     if request.get_host() != url.netloc:
-        try:
-            Site.objects.get(domain=url.netloc)
-        except Site.DoesNotExist:
-            # Came from somewhere else, don't show back button:
-            return None
+        # fixme
+        return None
 
     try:
         match = resolve(url.path)

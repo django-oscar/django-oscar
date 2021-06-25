@@ -16,7 +16,6 @@ class Migration(migrations.Migration):
         ('address', '0001_initial'),
         ('basket', '0002_auto_20140827_1705'),
         ('catalogue', '0001_initial'),
-        ('sites', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -356,12 +355,6 @@ class Migration(migrations.Migration):
             model_name='order',
             name='shipping_address',
             field=models.ForeignKey(null=True, verbose_name='Shipping Address', on_delete=django.db.models.deletion.SET_NULL, to='order.ShippingAddress', blank=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='order',
-            name='site',
-            field=models.ForeignKey(verbose_name='Site', on_delete=django.db.models.deletion.SET_NULL, to='sites.Site', null=True),
             preserve_default=True,
         ),
         migrations.AddField(

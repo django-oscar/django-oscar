@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ImproperlyConfigured
 from django.template import TemplateSyntaxError
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
@@ -42,7 +42,8 @@ class UpdateView(generic.UpdateView):
 
     def get_messages_context(self, form):
         ctx = {'user': self.request.user,
-               'site': get_current_site(self.request)}
+               # 'site': get_current_site(self.request)
+               }
         ctx.update(form.get_preview_context())
         return ctx
 

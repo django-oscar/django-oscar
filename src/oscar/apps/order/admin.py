@@ -27,7 +27,7 @@ class LineInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     raw_id_fields = ['user', 'billing_address', 'shipping_address', ]
-    list_display = ('number', 'total_incl_tax', 'site', 'user',
+    list_display = ('number', 'total_incl_tax', 'user',
                     'billing_address', 'date_placed')
     readonly_fields = ('number', 'total_incl_tax', 'total_excl_tax',
                        'shipping_incl_tax', 'shipping_excl_tax')

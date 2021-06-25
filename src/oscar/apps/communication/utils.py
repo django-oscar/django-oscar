@@ -1,7 +1,7 @@
 import logging
 
 from django.conf import settings
-from django.contrib.sites.models import Site
+from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from oscar.core.loading import get_model
@@ -160,7 +160,7 @@ class Dispatcher(object):
         """
         Return context that is common to all emails
         """
-        return {'site': Site.objects.get_current()}
+        return {'site': 'please override this :)'}
 
     def get_messages(self, event_code, extra_context=None):
         """

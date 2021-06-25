@@ -153,7 +153,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
@@ -256,8 +255,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'django.contrib.flatpages',
 
     'oscar.config.Shop',
     'oscar.apps.analytics.apps.AnalyticsConfig',
@@ -283,7 +280,6 @@ INSTALLED_APPS = [
     'oscar.apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
     'oscar.apps.dashboard.offers.apps.OffersDashboardConfig',
     'oscar.apps.dashboard.partners.apps.PartnersDashboardConfig',
-    'oscar.apps.dashboard.pages.apps.PagesDashboardConfig',
     'oscar.apps.dashboard.ranges.apps.RangesDashboardConfig',
     'oscar.apps.dashboard.reviews.apps.ReviewsDashboardConfig',
     'oscar.apps.dashboard.vouchers.apps.VouchersDashboardConfig',

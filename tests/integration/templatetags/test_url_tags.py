@@ -1,5 +1,4 @@
 from django import template
-from django.contrib.sites.models import Site
 from django.test import TestCase
 
 
@@ -12,7 +11,7 @@ class TestUrlTags(TestCase):
             '{% absolute_url site.domain path %}.'
         )
         out = tmpl.render(template.Context({
-            'site': Site.objects.get_current(),
+            'site': 'example.com',
             'path': '/some/test/path',
         }))
         assert out == 'http://example.com/some/test/path.'
@@ -28,7 +27,7 @@ class TestUrlTags(TestCase):
             '{% endblocktrans %}'
         )
         out = tmpl.render(template.Context({
-            'site': Site.objects.get_current(),
+            'site': 'example.com',
             'path_1': '/some/test/path',
             'path_2': '/some/another/test/path',
         }))
