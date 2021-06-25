@@ -126,3 +126,9 @@ local-release: clean ## Creates release
 	rm -rf src/oscar/static/*
 	npm run build
 	python setup.py sdist bdist_wheel
+
+digitalandcode-release: clean
+    nvm use 14
+	rm -rf dist/*
+	rm -rf src/oscar/static/*
+	npm run build
