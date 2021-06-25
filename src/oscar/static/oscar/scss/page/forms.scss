@@ -1,0 +1,55 @@
+// OSCAR FORMS
+// -----------
+
+form {
+  @include clearfix;
+}
+
+// Additional errors
+.errorlist {
+  margin: 0;
+  padding: 0 0 10px 0;
+  color: $red;
+
+  li {
+    padding: 0 0 5px 0;
+    list-style: none;
+  }
+}
+
+.error-block {
+  color: $red;
+  margin-top: 6px;
+}
+
+.col-form-label.required:after {
+  color: $red;
+  content: "*";
+  display: inline-block;
+}
+
+// Star rating functionality for product review page
+.reviewrating {
+  select {
+    display: none;
+  }
+
+  .star-rating {
+    margin-bottom: 10px;
+    font-size: 200%;
+    @include media-breakpoint-up(sm) {
+      font-size: 250%;
+    }
+
+    i {
+      cursor: pointer;
+    }
+  }
+}
+
+.form-actions {
+  margin: $base-margin-bottom 0;
+  padding: $base-margin-bottom;
+  background-color: $form-actions-bg-color;
+  border-top: solid 1px $form-actions-border-color;
+}

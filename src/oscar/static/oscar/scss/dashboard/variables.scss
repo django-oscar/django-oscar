@@ -1,0 +1,22 @@
+// Overridden Bootstrap4 variables
+// -------------------------------
+
+$font-size-base:              0.8rem;
+
+$h1-font-size:                $font-size-base * 1.875;
+$h2-font-size:                $font-size-base * 1.25;
+$h3-font-size:                $font-size-base * 1.125;
+
+
+// Custom variables
+// ----------------
+
+$font-family-icons:           "Font Awesome 5 Free";
+
+$navbar-padding-vertical:     14px;
+
+$graph-height:                330px;
+$graph-segments-height:       33px;
+$bar-height:                  300px;
+$bar-width:                   8%;
+$select2-height:              38px;

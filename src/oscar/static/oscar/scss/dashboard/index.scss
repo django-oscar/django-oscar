@@ -1,0 +1,119 @@
+#order_graph {
+  position: relative;
+  margin-bottom: 5em;
+  width: 99%;
+  height: $graph-height;
+
+  .bar-caption {
+    position: relative;
+    text-align: center;
+    top: 0;
+
+    h2 {
+      color: $gray-900;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+
+  .bar-y-axis {
+    position: absolute;
+    top: 16px;
+    width: 5em;
+    margin: 0;
+    padding: 0;
+    float: left;
+    display: inline;
+  }
+
+  .bar-y-axis li {
+    list-style: none;
+    height: $graph-segments-height;
+    float: right;
+    color: $gray-500;
+  }
+
+  .bar-chart, .bar-chart dt, .bar-chart dd {
+    margin: 0;
+    padding: 0;
+  }
+
+  .bar-chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 98%;
+    height: $bar-height;
+  }
+
+  .bar-chart dd {
+    position: relative;
+    float: left;
+    width: $bar-width;
+    height: $graph-height;
+    margin-top: 22px;
+  }
+
+  .bar-chart dd em {
+    position: absolute;
+    bottom: -2em;
+    right: 0;
+    font-style: inherit;
+    color: $gray-500;
+  }
+
+  .bar-chart span {
+    position: absolute;
+    display: block;
+    width: 30%;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    color: $gray-700;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .bar-chart span p {
+    position: relative;
+    top: 1em;
+    display: none;
+    padding: 3px;
+    color: $gray-800;
+    z-index: 2;
+    background-color: $white;
+    font-weight: bold;
+    @include border-radius(3px);
+  }
+
+  .bar-chart span {
+    height: 50%;
+    @include gradient-y($cyan, $blue);
+  }
+}
+
+.order-graph-details {
+  label {
+    cursor: default;
+    background-color: $gray-100;
+    border: 1px solid $gray-400;
+    @include clearfix();
+    display: block;
+    margin-bottom: 15px;
+    padding: 12px;
+    color: $gray-900;
+
+    span {
+      display: inline-block;
+      font-weight: bold;
+      width: 30%;
+    }
+
+    i {
+      color: $cyan;
+      margin-right: 5px;
+      font-size: $h2-font-size;
+    }
+  }
+}

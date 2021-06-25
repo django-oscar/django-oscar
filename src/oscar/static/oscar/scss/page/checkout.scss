@@ -1,0 +1,102 @@
+// OSCAR CHECKOUT UNIQUE STYLES
+// ----------------------------
+
+.checkout-quantity .input-group {
+  max-width: 160px;
+}
+
+// Basket items like table headers
+.basket-title {
+  clear: both;
+  border-bottom: 1px solid $gray-200;
+  padding: 0 10px;
+}
+
+// Basket items
+.basket-items {
+  border-bottom: 1px solid $gray-400;
+  padding: 10px;
+  margin-bottom: 20px;
+
+  &:nth-child(even) {
+    background: $gray-200;
+  }
+
+  .price_color {
+    @extend .h4;
+    font-size: $font-size-base;
+    color: $success;
+    font-weight: bold;
+
+    .price-title {
+      color: $black;
+      font-weight: normal;
+    }
+  }
+
+  .basket-line-actions {
+    font-size: $font-size-small;
+  }
+}
+
+// Descriptions next to shipping prices - basket totals table
+#basket_totals {
+  th small {
+    font-weight: normal;
+  }
+}
+
+// Table background for totals
+.total {
+  background-color: $mark-bg !important;
+}
+
+
+// Choosing a shipping address
+.choose-block {
+  address {
+    span:first-child {
+      display: block;
+      font-weight: bold;
+    }
+  }
+}
+
+// Checkout shipping address form
+#new_shipping_address, #update_user_address {
+  #id_title {
+    width: auto;
+  }
+
+  #id_postcode {
+    max-width: 100px;
+  }
+
+  #id_notes {
+    height: 100px;
+  }
+}
+
+// Checkout navigation - uses navbar
+.nav-checkout {
+  .active {
+    .navbar-text {
+      color: $white;
+    }
+  }
+
+  .nav-item {
+    margin-left: $navbar-padding-x;
+    margin-right: $navbar-padding-x;
+  }
+}
+
+.shipping-payment {
+  .card {
+    margin-bottom: $base-margin-bottom;
+
+    h3 a {
+      font-size: $font-size-base;
+    }
+  }
+}

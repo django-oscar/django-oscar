@@ -1,0 +1,31 @@
+// BUTTONS
+// -------
+.float-left.btn {
+  margin-left: 20px;
+}
+
+.controls {
+  ul {
+    margin-left: 0;
+    list-style: none;
+  }
+}
+
+.fixed-actions {
+  margin-bottom: 180px;
+
+  .fixed-actions-group {
+    margin: 0;
+    z-index: 1025;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: $gray-900;
+  }
+
+  .form-group {
+    margin: 0;
+  }
+}

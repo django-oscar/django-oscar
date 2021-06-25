@@ -1,0 +1,69 @@
+// Navigation bar
+
+.navbar {
+  .dropdown-menu {
+    z-index: 2000;
+  }
+
+  &.navbar-accounts,
+  &.navbar-primary {
+    padding: 0;
+
+    .navbar-toggler {
+      border: none;
+      padding: 10px 1rem 10px 10px;
+      outline: none;
+      color: $gray-300;
+    }
+
+    .navbar-nav {
+      .nav-link {
+        color: $gray-300;
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        i {
+          padding-right: 5px;
+        }
+      }
+    }
+  }
+
+  &.navbar-accounts {
+    @include gradient-y($gray-800, $gray-900);
+
+    .navbar-brand {
+      background: url("../img/ui/dashboard/logo_oscar.png") no-repeat scroll 0 0 transparent;
+      text-indent: -9999px;
+      display: block;
+      width: 60px;
+      height: 38px;
+      padding: 0;
+      margin: 0.5rem;
+    }
+  }
+
+  &.navbar-primary {
+    border-top: 1px solid $black;
+
+    #bottom_nav_bar {
+      border-top: 1px solid $gray-700;
+    }
+
+    .navbar-nav {
+      .nav-link {
+        padding: 0.75rem 1rem;
+        border-left: 1px solid $gray-700;
+        border-right: 1px solid $gray-900;
+
+        i {
+          padding-right: 12px;
+        }
+      }
+
+      .nav-link:hover {
+        @include gradient-y($gray-900, $gray-800)
+      }
+    }
+  }
+}
