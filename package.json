@@ -23,7 +23,7 @@
     "select2": "4.0.13",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tempusdominus-bootstrap-4": "^5.39.0",
-    "tinymce": "^5.7.1"
+    "tinymce": "^5.8.2"
   },
   "scripts": {
     "build": "gulp copy && gulp scss",
