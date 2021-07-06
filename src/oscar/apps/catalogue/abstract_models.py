@@ -637,9 +637,9 @@ class AbstractProduct(models.Model):
         Return a product's categories or parent's if there is a parent product.
         """
         if self.is_child:
-            return self.parent.categories
+            return self.parent.categories.filter(is_public=True)
         else:
-            return self.categories
+            return self.categories.filter(is_public=True)
     get_categories.short_description = _("Categories")
 
     # Images
