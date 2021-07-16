@@ -210,8 +210,6 @@ class TestMultiSiteOrderCreation(TestCase):
     def setUp(self):
         self.creator = OrderCreator()
         self.basket = factories.create_basket(empty=True)
-        self.site1 = factories.SiteFactory()
-        self.site2 = factories.SiteFactory()
         self.surcharges = SurchargeApplicator().get_applicable_surcharges(self.basket)
 
     def test_default_site(self):
@@ -222,47 +220,6 @@ class TestMultiSiteOrderCreation(TestCase):
                     order_number='1234')
         order = Order.objects.get(number='1234')
         self.assertEqual(order.site_id, 1)
-
-    def test_multi_sites(self):
-        add_product(self.basket, D('12.00'))
-        place_order(self.creator,
-                    surcharges=self.surcharges,
-                    basket=self.basket,
-                    order_number='12345',
-                    site=self.site1)
-        order1 = Order.objects.get(number='12345')
-        self.assertEqual(order1.site, self.site1)
-        add_product(self.basket, D('12.00'))
-        place_order(self.creator,
-                    surcharges=self.surcharges,
-                    basket=self.basket,
-                    order_number='12346',
-                    site=self.site2)
-        order2 = Order.objects.get(number='12346')
-        self.assertEqual(order2.site, self.site2)
-
-    @override_settings(SITE_ID='')
-    def test_request(self):
-        request = HttpRequest()
-        request.META['SERVER_PORT'] = 80
-        request.META['SERVER_NAME'] = self.site1.domain
-        add_product(self.basket, D('12.00'))
-        place_order(self.creator,
-                    surcharges=self.surcharges,
-                    basket=self.basket,
-                    order_number='12345',
-                    request=request)
-        order1 = Order.objects.get(number='12345')
-        self.assertEqual(order1.site, self.site1)
-        add_product(self.basket, D('12.00'))
-        request.META['SERVER_NAME'] = self.site2.domain
-        place_order(self.creator,
-                    surcharges=self.surcharges,
-                    basket=self.basket,
-                    order_number='12346',
-                    request=request)
-        order2 = Order.objects.get(number='12346')
-        self.assertEqual(order2.site, self.site2)
 
 
 class TestPlaceOrderWithVoucher(TestCase):

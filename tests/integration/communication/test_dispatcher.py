@@ -4,7 +4,6 @@ from django.test import TestCase
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
-from oscar.test.factories import SiteFactory
 
 User = get_user_model()
 
@@ -36,7 +35,7 @@ class TestDispatcher(TestCase):
         )
         ctx = {
             'user': user,
-            'site': SiteFactory(name='Test Site'),
+            'site': {'name': 'test', 'domain': 'test.com'},
             'reset_url': get_password_reset_url(user),
             'new_email': 'newtestuser@example.com',
         }
@@ -52,8 +51,10 @@ class TestDispatcher(TestCase):
             name='Registration',
             category=CommunicationEventType.USER_RELATED,
         )
-        ctx = {'user': user,
-               'site': SiteFactory()}
+        ctx = {
+            'user': user,
+            'site': {'name': 'test', 'domain': 'test.com'},
+        }
         self._dispatch_user_messages(user, event_code, ctx, 'Thank you for registering.')
 
     def test_dispatcher_uses_email_connection(self):

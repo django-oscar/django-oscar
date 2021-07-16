@@ -92,52 +92,6 @@ class TestOrderPlacementMixin(TestCase):
         self.assertEqual(user_billing_address.num_orders_as_billing_address, 3)
         self.assertEqual(user_shipping_address.num_orders_as_shipping_address, 1)
 
-    @override_settings(SITE_ID='')
-    def test_multi_site(self):
-        basket = factories.create_basket(empty=True)
-        site1 = factories.SiteFactory()
-        site2 = factories.SiteFactory()
-        request = HttpRequest()
-        request.META['SERVER_PORT'] = 80
-        request.META['SERVER_NAME'] = site1.domain
-        user = factories.UserFactory()
-        add_product(basket, D('12.00'))
-        shipping_method = Free()
-        shipping_charge = shipping_method.calculate(basket)
-        applicator = SurchargeApplicator()
-        surcharges = applicator.get_applicable_surcharges(basket)
-        order_total = OrderTotalCalculator().calculate(basket, shipping_charge, surcharges)
-
-        billing_address = factories.BillingAddressFactory()
-        shipping_address = factories.ShippingAddressFactory()
-        order_submission_data = {'user': user,
-                                 'order_number': '12345',
-                                 'basket': basket,
-                                 'shipping_method': shipping_method,
-                                 'shipping_charge': shipping_charge,
-                                 'order_total': order_total,
-                                 'billing_address': billing_address,
-                                 'shipping_address': shipping_address,
-                                 'request': request}
-        OrderPlacementMixin().place_order(**order_submission_data)
-        order1 = Order.objects.get(number='12345')
-        for charge in surcharges:
-            Surcharge.objects.create(
-                order=order1,
-                name=charge.surcharge.name,
-                code=charge.surcharge.code,
-                excl_tax=charge.price.excl_tax,
-                incl_tax=charge.price.incl_tax)
-        self.assertEqual(order1.site, site1)
-
-        add_product(basket, D('12.00'))
-        request.META['SERVER_NAME'] = site2.domain
-        order_submission_data['order_number'] = '12346'
-        order_submission_data['request'] = request
-        OrderPlacementMixin().place_order(**order_submission_data)
-        order2 = Order.objects.get(number='12346')
-        self.assertEqual(order2.site, site2)
-
     def test_multiple_payment_events(self):
         basket = factories.create_basket(empty=True)
         user = factories.UserFactory()
