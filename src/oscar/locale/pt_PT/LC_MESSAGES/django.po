@@ -13,7 +13,7 @@
 # José Durães <jdmduraes@gmail.com>, 2014
 # José Durães <jdmduraes@gmail.com>, 2014
 # maloky <joky@maloky.com>, 2014
-# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Manuela Silva <mmsrs@sky.com>, 2020
 # Nuno Salgado <nuno.salgado@plugidea.pt>, 2013
 # Nuno Salgado <nuno.salgado@plugidea.pt>, 2013
 # Samir Shah <solaris.smoke@gmail.com>, 2019
