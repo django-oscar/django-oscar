@@ -921,8 +921,6 @@ class AbstractRange(models.Model):
 
         if self.included_categories.exists():
             # build query to select all category subtrees.
-            Category = self.included_categories.model
-
             category_filter = Q()
             for path, depth in self.included_categories.values_list("path", "depth"):
                 category_filter |= Q(
@@ -931,26 +929,22 @@ class AbstractRange(models.Model):
 
             # select all those product that are selected either by product class,
             # category, or explicitly by included_products.
-            selected_parents = (
-                Product.objects.annotate(
-                    selected_categories=models.FilteredRelation(
-                        "categories", condition=category_filter
-                    )
-                ).filter(
-                    Q(product_class_id__in=self.classes.values("id"))
-                    | Q(selected_categories__isnull=False)
+            selected_products = Product.objects.annotate(
+                selected_categories=models.FilteredRelation(
+                    "categories", condition=category_filter
                 )
-                | self.included_products.all()
-            )
+            ).filter(
+                Q(product_class_id__in=self.classes.values("id"))
+                | Q(selected_categories__isnull=False)
+            ) | self.included_products.all()
         else:
-            selected_parents = (
-                Product.objects.filter(product_class_id__in=self.classes.values("id"))
-                | self.included_products.all()
-            )
+            selected_products = Product.objects.filter(
+                product_class_id__in=self.classes.values("id")
+            ) | self.included_products.all()
 
-        # select parents and their children
-        selected_products = selected_parents | Product.objects.filter(
-            parent__in=selected_parents
+        # Include children of matching parents
+        selected_products = selected_products | Product.objects.filter(
+            parent__in=selected_products.filter(structure=Product.PARENT)
         )
 
         # now go and exclude all explicitly excluded products
