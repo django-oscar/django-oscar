@@ -2,7 +2,7 @@
 Oscar 3.1 release notes
 =======================
 
-:release: TBD
+:release: 2021-07-16
 
 .. contents::
     :local:

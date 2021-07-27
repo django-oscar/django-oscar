@@ -58,6 +58,28 @@ class TestChildRange(TestCase):
         self.assertFalse(self.range.contains_product(self.child1))
 
 
+class TestParentRange(TestCase):
+
+    def setUp(self):
+        self.range = models.Range.objects.create(
+            name='Parent-specific range', includes_all_products=False)
+        self.parent = create_product(structure='parent')
+        self.child1 = create_product(structure='child', parent=self.parent)
+        self.child2 = create_product(structure='child', parent=self.parent)
+
+    def test_includes_all_children_when_parent_in_included_products(self):
+        self.range.add_product(self.parent)
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertTrue(self.range.contains_product(self.child2))
+
+    def test_includes_all_children_when_parent_in_categories(self):
+        included_category = catalogue_models.Category.add_root(name="root")
+        self.range.included_categories.add(included_category)
+        self.parent.categories.add(included_category)
+        self.assertTrue(self.range.contains_product(self.child1))
+        self.assertTrue(self.range.contains_product(self.child2))
+
+
 class TestPartialRange(TestCase):
 
     def setUp(self):
