@@ -34,7 +34,8 @@ Removal of deprecated features
 Minor changes
 ~~~~~~~~~~~~~
 
-
+- Added a new helper ``core.utils.is_ajax`` which replicates the logic of Django's ``HttpRequest.is_ajax``
+  method that was deprecated in Django 3.1.
 
 .. _dependency_changes_in_3.2:
 
