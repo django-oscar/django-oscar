@@ -1,0 +1,47 @@
+========================================
+Oscar 3.2 release notes (in development)
+========================================
+
+:release: TBD
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2:
+
+Compatibility
+~~~~~~~~~~~~~
+
+
+.. _new_in_3.2:
+
+What's new in Oscar 3.2?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+.. _removal_of_deprecated_features_in_3.2:
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+.. _minor_changes_in_3.2:
+
+Minor changes
+~~~~~~~~~~~~~
+
+
+
+.. _dependency_changes_in_3.2:
+
+Dependency changes
+~~~~~~~~~~~~~~~~~~
+
+Python package dependencies:
+
+
+Javascript and CSS dependencies:
