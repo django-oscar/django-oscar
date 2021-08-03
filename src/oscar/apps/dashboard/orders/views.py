@@ -10,6 +10,7 @@ from django.db.models import Count, Q, Sum, fields
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
@@ -117,6 +118,16 @@ class OrderListView(BulkEditMixin, ListView):
     form_class = OrderSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     actions = ('download_selected_orders', 'change_order_statuses')
+    CSV_COLUMNS = (
+        ('number', _('Order number')),
+        ('value', _('Order value')),
+        ('date', _('Date of purchase')),
+        ('num_items', _('Number of items')),
+        ('status', _('Order status')),
+        ('customer', _('Customer email address')),
+        ('shipping_address_name', _('Deliver to name')),
+        ('billing_address_name', _('Bill to name')),
+    )
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
@@ -356,43 +367,40 @@ class OrderListView(BulkEditMixin, ListView):
     def get_download_filename(self, request):
         return 'orders.csv'
 
+    @cached_property
+    def sorted_csv_columns(self):
+        columns = OrderedDict()
+        for k, v in self.CSV_COLUMNS:
+            columns[k] = v
+        return columns
+
+    def get_row_values(self, order):
+        row = self.sorted_csv_columns.copy()
+        row['number'] = order.number
+        row['value'] = order.total_incl_tax
+        row['date'] = format_datetime(order.date_placed, 'DATETIME_FORMAT')
+        row['num_items'] = order.num_items
+        row['status'] = order.status
+        row['customer'] = order.email
+        if order.shipping_address:
+            row['shipping_address_name'] = order.shipping_address.name
+        else:
+            row['shipping_address_name'] = ''
+        if order.billing_address:
+            row['billing_address_name'] = order.billing_address.name
+        else:
+            row['billing_address_name'] = ''
+        return row
+
     def download_selected_orders(self, request, orders):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=%s' \
             % self.get_download_filename(request)
         writer = UnicodeCSVWriter(open_file=response)
 
-        meta_data = (('number', _('Order number')),
-                     ('value', _('Order value')),
-                     ('date', _('Date of purchase')),
-                     ('num_items', _('Number of items')),
-                     ('status', _('Order status')),
-                     ('customer', _('Customer email address')),
-                     ('shipping_address_name', _('Deliver to name')),
-                     ('billing_address_name', _('Bill to name')),
-                     )
-        columns = OrderedDict()
-        for k, v in meta_data:
-            columns[k] = v
-
-        writer.writerow(columns.values())
+        writer.writerow(self.sorted_csv_columns.values())
         for order in orders:
-            row = columns.copy()
-            row['number'] = order.number
-            row['value'] = order.total_incl_tax
-            row['date'] = format_datetime(order.date_placed, 'DATETIME_FORMAT')
-            row['num_items'] = order.num_items
-            row['status'] = order.status
-            row['customer'] = order.email
-            if order.shipping_address:
-                row['shipping_address_name'] = order.shipping_address.name
-            else:
-                row['shipping_address_name'] = ''
-            if order.billing_address:
-                row['billing_address_name'] = order.billing_address.name
-            else:
-                row['billing_address_name'] = ''
-            writer.writerow(row.values())
+            writer.writerow(self.get_row_values(order).values())
         return response
 
     def change_order_statuses(self, request, orders):
