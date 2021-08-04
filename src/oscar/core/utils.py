@@ -183,3 +183,15 @@ def round_half_up(money):
     Decimal('1.01')
     """
     return money.quantize(decimal.Decimal('0.01'), decimal.ROUND_HALF_UP)
+
+
+def is_ajax(request):
+    """
+    Django 3.1 deprecated the  HttpRequest.is_ajax method as it relies on
+    a jQuery-specific way of signifying AJAX calls.
+
+    https://docs.djangoproject.com/en/3.1/releases/3.1/#id2
+
+    For Oscar projects that's usually not a concern though.
+    """
+    return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
