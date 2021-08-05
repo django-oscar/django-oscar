@@ -10,7 +10,6 @@ from django.db.models import Count, Q, Sum, fields
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
@@ -367,29 +366,14 @@ class OrderListView(BulkEditMixin, ListView):
     def get_download_filename(self, request):
         return 'orders.csv'
 
-    @cached_property
-    def sorted_csv_columns(self):
-        columns = OrderedDict()
-        for k, v in self.CSV_COLUMNS:
-            columns[k] = v
-        return columns
-
     def get_row_values(self, order):
-        row = self.sorted_csv_columns.copy()
-        row['number'] = order.number
-        row['value'] = order.total_incl_tax
-        row['date'] = format_datetime(order.date_placed, 'DATETIME_FORMAT')
-        row['num_items'] = order.num_items
-        row['status'] = order.status
-        row['customer'] = order.email
+        row = {'number': order.number, 'customer': order.email, 'num_items': order.num_items,
+               'date': format_datetime(order.date_placed, 'DATETIME_FORMAT'), 'value': order.total_incl_tax,
+               'status': order.status}
         if order.shipping_address:
             row['shipping_address_name'] = order.shipping_address.name
-        else:
-            row['shipping_address_name'] = ''
         if order.billing_address:
             row['billing_address_name'] = order.billing_address.name
-        else:
-            row['billing_address_name'] = ''
         return row
 
     def download_selected_orders(self, request, orders):
@@ -398,9 +382,11 @@ class OrderListView(BulkEditMixin, ListView):
             % self.get_download_filename(request)
         writer = UnicodeCSVWriter(open_file=response)
 
-        writer.writerow(self.sorted_csv_columns.values())
+        ordered_columns = OrderedDict(self.CSV_COLUMNS)
+        writer.writerow(ordered_columns.values())
         for order in orders:
-            writer.writerow(self.get_row_values(order).values())
+            row_values = self.get_row_values(order)
+            writer.writerow([row_values.get(column, "") for column in ordered_columns])
         return response
 
     def change_order_statuses(self, request, orders):
