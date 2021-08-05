@@ -7,11 +7,11 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
     "bootstrap": "^4.6.0",
-    "eslint": "^7.29.0",
+    "eslint": "^7.32.0",
     "extend": ">=3.0.2",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
-    "gulp-sass": "^4.1.0",
+    "gulp-sass": "^5.0.0",
     "gulp-sourcemaps": "^3.0.0",
     "inputmask": "^5.0.6",
     "jquery": "^3.6.0",
@@ -20,10 +20,11 @@
     "node-sass": "^6.0.1",
     "popper.js": "^1.16.1",
     "pump": "^3.0.0",
+    "sass": "^1.37.5",
     "select2": "4.0.13",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tempusdominus-bootstrap-4": "^5.39.0",
-    "tinymce": "^5.7.1"
+    "tinymce": "^5.8.2"
   },
   "scripts": {
     "build": "gulp copy && gulp scss",

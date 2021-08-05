@@ -659,12 +659,12 @@ class AbstractProduct(models.Model):
 
     def get_categories(self):
         """
-        Return a product's categories or parent's if there is a parent product.
+        Return a product's public categories or parent's if there is a parent product.
         """
         if self.is_child:
-            return self.parent.categories
+            return self.parent.categories.browsable()
         else:
-            return self.categories
+            return self.categories.browsable()
     get_categories.short_description = _("Categories")
 
     def get_attribute_values(self):
