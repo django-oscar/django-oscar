@@ -5,6 +5,7 @@ from django.http import JsonResponse, QueryDict
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, View
 from extra_views import ModelFormSetView
@@ -12,7 +13,6 @@ from extra_views import ModelFormSetView
 from oscar.apps.basket.signals import (
     basket_addition, voucher_addition, voucher_removal)
 from oscar.core import ajax
-from oscar.core.compat import url_has_allowed_host_and_scheme
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import is_ajax, redirect_to_referrer, safe_referrer
 

@@ -14,6 +14,9 @@ Oscar 3.2 release notes (in development)
 Compatibility
 ~~~~~~~~~~~~~
 
+Oscar 3.2 is compatible with Django 3.1 and Django 3.2 and Python versions 3.7 to 3.9.
+
+Support for Django 2.2 has been dropped. Support for Python 3.6 has been dropped.
 
 .. _new_in_3.2:
 
@@ -46,3 +49,10 @@ Python package dependencies:
 
 
 Javascript and CSS dependencies:
+
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+- The ``annotate_form_field`` template tag is deprecated. It's functionality of annotating form fields with
+  their widget type is now built in to Django.

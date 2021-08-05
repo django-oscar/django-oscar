@@ -67,8 +67,8 @@ class CheapCategoryInfo(dict, metaclass=CategoryFieldPassThroughMetaClass):
         yield self
 
 
-@register.simple_tag(name="category_tree")   # noqa: C901 too complex
-def get_annotated_list(depth=None, parent=None):
+@register.simple_tag(name="category_tree")
+def get_annotated_list(depth=None, parent=None):    # noqa: C901 too complex
     """
     Gets an annotated list from a tree branch.
 
