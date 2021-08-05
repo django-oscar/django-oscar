@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
@@ -216,11 +214,11 @@ OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_acce
 
 # Search facets
 OSCAR_SEARCH_FACETS = {
-    'fields': OrderedDict([
+    'fields': {
         # The key for these dicts will be used when passing facet data
         # to the template. Same for the 'queries' dict below.
-        ('product_class', {'name': _('Type'), 'field': 'product_class'}),
-        ('rating', {'name': _('Rating'), 'field': 'rating'}),
+        'product_class': {'name': _('Type'), 'field': 'product_class'},
+        'rating': {'name': _('Rating'), 'field': 'rating'},
         # You can specify an 'options' element that will be passed to the
         # SearchQuerySet.facet() call.
         # For instance, with Elasticsearch backend, 'options': {'order': 'term'}
@@ -230,22 +228,21 @@ OSCAR_SEARCH_FACETS = {
         # items without a specific facet:
         # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method
         # 'options': {'missing': 'true'}
-    ]),
-    'queries': OrderedDict([
-        ('price_range',
-         {
-             'name': _('Price range'),
-             'field': 'price',
-             'queries': [
-                 # This is a list of (name, query) tuples where the name will
-                 # be displayed on the front-end.
-                 (_('0 to 20'), '[0 TO 20]'),
-                 (_('20 to 40'), '[20 TO 40]'),
-                 (_('40 to 60'), '[40 TO 60]'),
-                 (_('60+'), '[60 TO *]'),
-             ]
-         }),
-    ]),
+    },
+    'queries': {
+        'price_range': {
+            'name': _('Price range'),
+            'field': 'price',
+            'queries': [
+                # This is a list of (name, query) tuples where the name will
+                # be displayed on the front-end.
+                (_('0 to 20'), '[0 TO 20]'),
+                (_('20 to 40'), '[20 TO 40]'),
+                (_('40 to 60'), '[40 TO 60]'),
+                (_('60+'), '[60 TO *]'),
+            ]
+        },
+    },
 }
 
 OSCAR_PRODUCT_SEARCH_HANDLER = None

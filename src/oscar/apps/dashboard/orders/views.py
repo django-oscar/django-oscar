@@ -1,5 +1,4 @@
 import datetime
-from collections import OrderedDict
 from decimal import Decimal as D
 from decimal import InvalidOperation
 
@@ -117,16 +116,16 @@ class OrderListView(BulkEditMixin, ListView):
     form_class = OrderSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     actions = ('download_selected_orders', 'change_order_statuses')
-    CSV_COLUMNS = (
-        ('number', _('Order number')),
-        ('value', _('Order value')),
-        ('date', _('Date of purchase')),
-        ('num_items', _('Number of items')),
-        ('status', _('Order status')),
-        ('customer', _('Customer email address')),
-        ('shipping_address_name', _('Deliver to name')),
-        ('billing_address_name', _('Bill to name')),
-    )
+    CSV_COLUMNS = {
+        'number', _('Order number'),
+        'value', _('Order value'),
+        'date', _('Date of purchase'),
+        'num_items', _('Number of items'),
+        'status', _('Order status'),
+        'customer', _('Customer email address'),
+        'shipping_address_name', _('Deliver to name'),
+        'billing_address_name', _('Bill to name'),
+    }
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
@@ -382,11 +381,10 @@ class OrderListView(BulkEditMixin, ListView):
             % self.get_download_filename(request)
         writer = UnicodeCSVWriter(open_file=response)
 
-        ordered_columns = OrderedDict(self.CSV_COLUMNS)
-        writer.writerow(ordered_columns.values())
+        writer.writerow(self.CSV_COLUMNS.values())
         for order in orders:
             row_values = self.get_row_values(order)
-            writer.writerow([row_values.get(column, "") for column in ordered_columns])
+            writer.writerow([row_values.get(column, "") for column in self.CSV_COLUMNS])
         return response
 
     def change_order_statuses(self, request, orders):
