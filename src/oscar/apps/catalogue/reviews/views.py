@@ -26,7 +26,7 @@ class CreateProductReview(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.product = get_object_or_404(
-            self.product_model, pk=kwargs['product_pk'])
+            self.product_model, pk=kwargs['product_pk'], is_public=True)
         # check permission to leave review
         if not self.product.is_review_permitted(request.user):
             if self.product.has_review_by(request.user):
@@ -73,7 +73,7 @@ class ProductReviewDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['product'] = get_object_or_404(
-            Product, pk=self.kwargs['product_pk'])
+            Product, pk=self.kwargs['product_pk'], is_public=True)
         return context
 
 
@@ -86,7 +86,7 @@ class AddVoteView(View):
     """
 
     def post(self, request, *args, **kwargs):
-        product = get_object_or_404(Product, pk=self.kwargs['product_pk'])
+        product = get_object_or_404(Product, pk=self.kwargs['product_pk'], is_public=True)
         review = get_object_or_404(ProductReview, pk=self.kwargs['pk'])
 
         form = VoteForm(review, request.user, request.POST)
@@ -125,6 +125,6 @@ class ProductReviewList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['product'] = get_object_or_404(
-            self.product_model, pk=self.kwargs['product_pk'])
+            self.product_model, pk=self.kwargs['product_pk'], is_public=True)
         context['form'] = self.form
         return context
