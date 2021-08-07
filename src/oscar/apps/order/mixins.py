@@ -18,7 +18,7 @@ class EventHandlerMixin(object):
         """Return instance of handler"""
         handler_kwargs = self.get_handler_kwargs()
         handler_kwargs.update(**kwargs)
-        return self.get_handler_class()(user=None, **handler_kwargs)
+        return self.get_handler_class()(user, **handler_kwargs)
 
     def get_handler_kwargs(self):
         """Return kwargs arguments for instantiating handler"""
