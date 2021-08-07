@@ -15,6 +15,7 @@ class EventHandler(object):
 
     def __init__(self, user=None, **kwargs):
         self.user = user
+        self.kwargs = kwargs
 
     # Core API
     # --------
