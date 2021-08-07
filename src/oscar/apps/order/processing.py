@@ -13,7 +13,7 @@ class EventHandler(object):
     processing pipeline.
     """
 
-    def __init__(self, user=None):
+    def __init__(self, user=None, **kwargs):
         self.user = user
 
     # Core API
