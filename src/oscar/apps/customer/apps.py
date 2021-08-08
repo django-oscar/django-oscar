@@ -3,11 +3,11 @@ from django.urls import path, re_path
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 from oscar.core.loading import get_class
 
 
-class CustomerConfig(OscarConfig):
+class CustomerConfig(application.OscarConfig):
     label = 'customer'
     name = 'oscar.apps.customer'
     verbose_name = _('Customer')

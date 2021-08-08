@@ -1,5 +1,5 @@
-from oscar.core.application import OscarConfig
+from oscar.core import application
 
 
-class MyAppConfig(OscarConfig):
+class MyAppConfig(application.OscarConfig):
     name = 'thirdparty_package.apps.myapp'

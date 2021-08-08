@@ -2,11 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 from oscar.core.loading import get_class
 
 
-class CatalogueReviewsConfig(OscarConfig):
+class CatalogueReviewsConfig(application.OscarConfig):
     label = 'reviews'
     name = 'oscar.apps.catalogue.reviews'
     verbose_name = _('Catalogue reviews')

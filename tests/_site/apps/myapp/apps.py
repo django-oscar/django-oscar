@@ -1,7 +1,7 @@
-from oscar.core.application import OscarConfig
+from oscar.core import application
 
 
-class TestConfig(OscarConfig):
+class TestConfig(application.OscarConfig):
     name = 'tests._site.apps.myapp'
 
     namespace = 'testapp'

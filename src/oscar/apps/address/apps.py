@@ -1,9 +1,9 @@
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 
 
-class AddressConfig(OscarConfig):
+class AddressConfig(application.OscarConfig):
     label = 'address'
     name = 'oscar.apps.address'
     verbose_name = _('Address')

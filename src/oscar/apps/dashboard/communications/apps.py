@@ -1,11 +1,11 @@
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarDashboardConfig
+from oscar.core import application
 from oscar.core.loading import get_class
 
 
-class CommunicationsDashboardConfig(OscarDashboardConfig):
+class CommunicationsDashboardConfig(application.OscarDashboardConfig):
     label = 'communications_dashboard'
     name = 'oscar.apps.dashboard.communications'
     verbose_name = _('Communications dashboard')

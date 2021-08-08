@@ -25,7 +25,6 @@ the dashboard app::
 
     # myproject/config.py
     from oscar.config import Shop
-    from oscar.core.application import OscarConfig
 
     class MyShop(Shop):
 
@@ -59,9 +58,9 @@ Currently supported "reviews" and "wishlists" features. You can make your custom
 hidable by setting ``hidable_feature_name`` property of the ``OscarConfig`` class::
 
     # myproject/apps/lottery/apps.py
-    from oscar.core.application import OscarConfig
+    from oscar.core import application
 
-    class LotterConfig(OscarConfig):
+    class LotterConfig(application.OscarConfig):
         hidable_feature_name = 'lottery'
 
 

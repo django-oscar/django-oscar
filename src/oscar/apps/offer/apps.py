@@ -1,11 +1,11 @@
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 from oscar.core.loading import get_class
 
 
-class OfferConfig(OscarConfig):
+class OfferConfig(application.OscarConfig):
     label = 'offer'
     name = 'oscar.apps.offer'
     verbose_name = _('Offer')

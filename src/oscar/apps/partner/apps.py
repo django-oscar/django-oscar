@@ -1,9 +1,9 @@
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 
 
-class PartnerConfig(OscarConfig):
+class PartnerConfig(application.OscarConfig):
     label = 'partner'
     name = 'oscar.apps.partner'
     verbose_name = _('Partner')

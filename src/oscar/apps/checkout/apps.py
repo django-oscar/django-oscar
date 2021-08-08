@@ -3,11 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 from oscar.core.loading import get_class
 
 
-class CheckoutConfig(OscarConfig):
+class CheckoutConfig(application.OscarConfig):
     label = 'checkout'
     name = 'oscar.apps.checkout'
     verbose_name = _('Checkout')

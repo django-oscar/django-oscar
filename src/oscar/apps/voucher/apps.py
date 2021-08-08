@@ -1,9 +1,9 @@
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 
 
-class VoucherConfig(OscarConfig):
+class VoucherConfig(application.OscarConfig):
     label = 'voucher'
     name = 'oscar.apps.voucher'
     verbose_name = _('Voucher')

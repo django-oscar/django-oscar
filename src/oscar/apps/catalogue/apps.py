@@ -2,11 +2,11 @@ from django.apps import apps
 from django.urls import include, path, re_path
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core import application
 from oscar.core.loading import get_class
 
 
-class CatalogueOnlyConfig(OscarConfig):
+class CatalogueOnlyConfig(application.OscarConfig):
     label = 'catalogue'
     name = 'oscar.apps.catalogue'
     verbose_name = _('Catalogue')
@@ -38,7 +38,7 @@ class CatalogueOnlyConfig(OscarConfig):
         return self.post_process_urls(urls)
 
 
-class CatalogueReviewsOnlyConfig(OscarConfig):
+class CatalogueReviewsOnlyConfig(application.OscarConfig):
     label = 'catalogue'
     name = 'oscar.apps.catalogue'
     verbose_name = _('Catalogue')
@@ -62,3 +62,4 @@ class CatalogueConfig(CatalogueOnlyConfig, CatalogueReviewsOnlyConfig):
     """
     Composite class combining Products with Reviews
     """
+    default = True
