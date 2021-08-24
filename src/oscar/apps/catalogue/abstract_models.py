@@ -375,7 +375,7 @@ class AbstractProduct(models.Model):
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(pgettext_lazy('Product title', 'Title'),
                              max_length=255, blank=True)
-    slug = models.SlugField(_('Slug'), max_length=255, unique=False)
+    slug = SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
     meta_title = models.CharField(_('Meta title'), max_length=255, blank=True, null=True)
     meta_description = models.TextField(_('Meta description'), blank=True, null=True)
