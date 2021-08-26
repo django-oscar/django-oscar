@@ -8,7 +8,7 @@ from django.views.generic.base import View
 from oscar.core.utils import safe_referrer
 
 
-class PostActionMixin(object):
+class PostActionMixin:
     """
     Simple mixin to forward POST request that contain a key 'action'
     onto a method of form "do_{action}".
@@ -37,7 +37,7 @@ class PostActionMixin(object):
             return self.get(request, *args, **kwargs)
 
 
-class BulkEditMixin(object):
+class BulkEditMixin:
     """
     Mixin for views that have a bulk editing facility.  This is normally in the
     form of tabular data where each row has a checkbox.  The UI allows a number
@@ -85,7 +85,7 @@ class BulkEditMixin(object):
     def get_objects(self, ids):
         object_dict = self.get_object_dict(ids)
         # Rearrange back into the original order
-        return [object_dict[id] for id in ids]
+        return [object_dict[id] for id in ids if id in object_dict]
 
     def get_object_dict(self, ids):
         return self.get_queryset().in_bulk(ids)
