@@ -8,7 +8,7 @@ psycopg2-binary>=2.8,<2.10
 
 # Sandbox
 Whoosh>=2.7,<2.8
-django-environ>=0.4,<0.5
+django-environ>=0.4,<0.6
 django-redis>=4.12,<5.1
 pysolr>=3.9,<3.10
 redis>=3.5,<3.6
