@@ -3,11 +3,7 @@ from oscar.core.loading import get_class
 EventHandler = get_class('order.processing', 'EventHandler')
 
 
-class EventHandlerMixin(object):
-    """
-    Handle EventHandler Class
-    """
-
+class EventHandlerMixin:
     handler_class = EventHandler
 
     def get_handler_class(self):
@@ -22,5 +18,4 @@ class EventHandlerMixin(object):
 
     def get_handler_kwargs(self):
         """Return kwargs arguments for instantiating handler"""
-        kwargs = dict()
-        return kwargs
+        return {}
