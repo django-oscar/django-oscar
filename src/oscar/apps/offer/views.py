@@ -55,6 +55,7 @@ class OfferDetailView(ListView):
 class RangeDetailView(ListView):
     template_name = 'oscar/offer/range.html'
     context_object_name = 'products'
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
     def dispatch(self, request, *args, **kwargs):
         self.range = get_object_or_404(
