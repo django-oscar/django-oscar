@@ -82,16 +82,6 @@ class OrderFactory(factory.django.DjangoModelFactory):
     shipping_address = factory.SubFactory(ShippingAddressFactory)
     billing_address = factory.SubFactory(BillingAddressFactory)
 
-    @classmethod
-    def _create(cls, target_class, *args, **kwargs):
-        date_placed = kwargs.pop('date_placed', None)
-        instance = super(OrderFactory, cls)._create(
-            target_class, *args, **kwargs)
-
-        if date_placed:
-            instance.date_placed = date_placed
-        return instance
-
     @factory.post_generation
     def create_line_models(obj, create, extracted, **kwargs):
         if not create:

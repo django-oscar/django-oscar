@@ -39,6 +39,7 @@ Minor changes
 
 - Added a new helper ``core.utils.is_ajax`` which replicates the logic of Django's ``HttpRequest.is_ajax``
   method that was deprecated in Django 3.1.
+- Persisted ``OrderFactory.date_placed`` to the database when set, instead of just setting it on the object without saving it.
 
 .. _dependency_changes_in_3.2:
 
