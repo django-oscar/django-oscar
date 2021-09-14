@@ -29,7 +29,7 @@ ShippingAddress = get_model('order', 'ShippingAddress')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
-EventHandler = get_class('order.processing', 'EventHandler')
+EventHandlerMixin = get_class('order.mixins', 'EventHandlerMixin')
 OrderStatsForm = get_class('dashboard.orders.forms', 'OrderStatsForm')
 OrderSearchForm = get_class('dashboard.orders.forms', 'OrderSearchForm')
 OrderNoteForm = get_class('dashboard.orders.forms', 'OrderNoteForm')
@@ -105,7 +105,7 @@ class OrderStatsView(FormView):
         return stats
 
 
-class OrderListView(BulkEditMixin, ListView):
+class OrderListView(EventHandlerMixin, BulkEditMixin, ListView):
     """
     Dashboard view for a list of orders.
     Supports the permission-based dashboard.
@@ -403,7 +403,7 @@ class OrderListView(BulkEditMixin, ListView):
             messages.error(request, _("The new status '%s' is not valid for"
                                       " this order") % new_status)
         else:
-            handler = EventHandler(request.user)
+            handler = self.get_handler(user=request.user)
             old_status = order.status
             try:
                 handler.handle_order_status_change(order, new_status)
@@ -419,7 +419,7 @@ class OrderListView(BulkEditMixin, ListView):
                     user=request.user, message=msg, note_type=OrderNote.SYSTEM)
 
 
-class OrderDetailView(DetailView):
+class OrderDetailView(EventHandlerMixin, DetailView):
     """
     Dashboard view to display a single order.
 
@@ -586,7 +586,7 @@ class OrderDetailView(DetailView):
             return self.reload_page(error=_("Invalid form submission"))
 
         old_status, new_status = order.status, form.cleaned_data['new_status']
-        handler = EventHandler(request.user)
+        handler = self.get_handler(user=request.user)
 
         success_msg = _(
             "Order status changed from '%(old_status)s' to "
@@ -664,9 +664,9 @@ class OrderDetailView(DetailView):
 
         reference = request.POST.get('reference', None)
         try:
-            EventHandler().handle_shipping_event(order, event_type, lines,
-                                                 quantities,
-                                                 reference=reference)
+            self.get_handler().handle_shipping_event(order, event_type, lines,
+                                                     quantities,
+                                                     reference=reference)
         except order_exceptions.InvalidShippingEvent as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
@@ -709,7 +709,7 @@ class OrderDetailView(DetailView):
                 request, _("The event type '%s' is not valid") % code)
             return self.reload_page()
         try:
-            EventHandler().handle_payment_event(
+            self.get_handler().handle_payment_event(
                 order, event_type, amount, lines, quantities)
         except PaymentError as e:
             messages.error(request, _("Unable to create payment event due to"
