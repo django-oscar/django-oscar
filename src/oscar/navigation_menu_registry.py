@@ -67,6 +67,11 @@ class Menu:
 
         if self.children != other.children:
             other.add_children(self._children)
+
+        if other.position is None:
+            other.position = self.position
+            if self.is_auto_positioned:
+                setattr(other, "__auto_positioned", True)
         return other
 
     __add__ = merge
@@ -75,6 +80,14 @@ class Menu:
     def placeholder(cls, identifier):
         return cls(identifier=identifier, label="", url_name="", icon="")
 
+    def auto_position(self, seed: int):
+        self.position = (seed + 1) * settings.OSCAR_DEFAULT_NAVIGATION_MENU_POSITION_INCREMENTER
+        setattr(self, "__auto_positioned", True)
+
+    @property
+    def is_auto_positioned(self):
+        return hasattr(self, "__auto_positioned")
+
     @property
     def is_placeholder(self):
         return self.label == "" and self.url_name == "" and self.icon == ""
@@ -82,7 +95,12 @@ class Menu:
     @classmethod
     def from_dict(cls, _dict):
         """Should help ease migration process from menus declared through `settings.OSCAR_DASHBOARD_NAVIGATION`"""
-        children = [cls.from_dict(child_dict) for child_dict in _dict.pop("children", [])]
+        children = []
+        for index, child_dict in enumerate(_dict.pop("children", [])):
+            menu = cls.from_dict(child_dict)
+            if menu.position is None:
+                menu.auto_position(index)
+            children.append(menu)
         menu = cls(**_dict)
         menu._children += children
         return menu
@@ -102,6 +120,8 @@ class Menu:
                 self._children[index] = child + menu
                 break
         else:
+            if menu.position is None:
+                menu.auto_position(len(self._children))
             self._children.append(menu)
         return self
 

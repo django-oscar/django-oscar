@@ -122,3 +122,25 @@ class TestMenu:
                 menu1_child.as_navigation_dict(),
             ],
         }
+
+    def test_children_menu_from_dict_has_auto_generated_position_if_non_was_explicitly_set(self):
+        menu = Menu.from_dict(
+            {
+                "label": "Menu",
+                "url_name": None,
+                "children": [
+                    {"label": "Child 1", "url_name": None},
+                    {"label": "Child 2", "url_name": None},
+                    {"label": "Child 3", "url_name": None, "position": None},
+                    {"label": "Child 4", "url_name": None, "position": 5},
+                ],
+            },
+        )
+        assert menu.children[0].label == "Child 4" and menu.children[0].position == 5 and menu.children[
+            0].is_auto_positioned is False
+        assert menu.children[1].label == "Child 1" and menu.children[1].position == 10 and menu.children[
+            1].is_auto_positioned
+        assert menu.children[2].label == "Child 2" and menu.children[2].position == 20 and menu.children[
+            2].is_auto_positioned
+        assert menu.children[3].label == "Child 3" and menu.children[3].position == 30 and menu.children[
+            3].is_auto_positioned
