@@ -49,6 +49,8 @@ class Menu:
             return other.position is not None
         elif other.position is None:
             return True
+        elif self.position == other.position:
+            return other.is_auto_positioned
         return self.position < other.position
 
     def __eq__(self, other):

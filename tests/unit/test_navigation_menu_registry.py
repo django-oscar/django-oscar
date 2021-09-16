@@ -114,6 +114,10 @@ class TestMenu:
             ],
         }
 
+    def test_auto_positioned_has_lower_precedence_over_explicitly_positioned_menu_with_same_position(self):
+        parent = Menu("Menu").add_children([Menu("3rd"), Menu("1st", position=1), Menu("2nd", position=10)])
+        assert [(menu.label, menu.position) for menu in parent.children] == [("1st", 1), ("2nd", 10), ("3rd", 10)]
+
     def test_remove_child(self):
         parent_menu = Menu("Parent", "parent-url-name").add_child(Menu("Child", "child-url-name"))
         assert len(parent_menu.children) == 1
