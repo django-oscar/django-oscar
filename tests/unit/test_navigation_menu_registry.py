@@ -24,6 +24,25 @@ class TestMenu:
         child_d1_with_children = Menu(child_d1.label).add_child(Menu(f"Child of {child_d1.label}"))
         assert menu.add_child(child_d1_with_children).children == [child_d1_with_children, child_c1, child_c2]
 
+    def test_adding_duplicate_child_menu_retains_later_declared_menus_position_if_not_none(self):
+        parent = Menu("Parent").add_child(Menu("Merge this with auto-positioning", identifier="m1")).add_child(
+            Menu("Merge this without auto-positioning", identifier="m2", position=20))
+
+        assert parent.children[0].position == 10
+        assert parent.children[0].is_auto_positioned
+        assert parent.children[1].position == 20
+        assert parent.children[1].is_auto_positioned is False
+
+        parent.add_child(Menu("Merge M1 using auto-position", identifier="m1"))
+        assert parent.children[0].position == 10
+        assert parent.children[0].is_auto_positioned
+
+        parent.add_child(Menu("Merge M1", identifier="m1", position=1)).add_child(Menu("Merge M2", identifier="m2"))
+        assert parent.children[0].position == 1
+        assert parent.children[0].is_auto_positioned is False
+        assert parent.children[1].position == 20
+        assert parent.children[1].is_auto_positioned is False  # menu being merged was not auto-positioned
+
     def test_adding_non_duplicate_children(self):
         menu = Menu("Catalogue", "catalogue:index")
         assert len(menu.children) == 0
