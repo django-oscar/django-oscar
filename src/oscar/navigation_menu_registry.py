@@ -80,7 +80,9 @@ class Menu:
     def placeholder(cls, identifier):
         return cls(identifier=identifier, label="", url_name="", icon="")
 
-    def auto_position(self, seed: int):
+    def auto_position_if_applicable(self, seed: int):
+        if self.position is not None:
+            return
         self.position = (seed + 1) * settings.OSCAR_DEFAULT_NAVIGATION_MENU_POSITION_INCREMENTER
         setattr(self, "__auto_positioned", True)
 
@@ -98,8 +100,7 @@ class Menu:
         children = []
         for index, child_dict in enumerate(_dict.pop("children", [])):
             menu = cls.from_dict(child_dict)
-            if menu.position is None:
-                menu.auto_position(index)
+            menu.auto_position_if_applicable(index)
             children.append(menu)
         menu = cls(**_dict)
         menu._children += children
@@ -120,8 +121,7 @@ class Menu:
                 self._children[index] = child + menu
                 break
         else:
-            if menu.position is None:
-                menu.auto_position(len(self._children))
+            menu.auto_position_if_applicable(len(self._children))
             self._children.append(menu)
         return self
 
@@ -186,12 +186,13 @@ def register_dashboard_menu(menu_or_function=None, parent_id=None):
         except TypeError:
             # `defaultdict` tried to instantiate a default Menu object but could not because
             # 'label' positional argument is required
+            menu.auto_position_if_applicable(len(_dashboard_navigation_menu))
             _dashboard_navigation_menu[menu.identifier] = menu
-        return
-
-    # Placeholder instance will be used temporarily if child (menu) was registered ahead of
-    # its parent. It will be replaced (merged) into the actual parent once it's registered.
-    _dashboard_navigation_menu.setdefault(parent_id, Menu.placeholder(parent_id)).add_child(menu)
+    else:
+        # Placeholder instance will be used temporarily if child (menu) was registered ahead of
+        # its parent. It will be replaced (merged) into the actual parent once it's registered.
+        _dashboard_navigation_menu.setdefault(parent_id, Menu.placeholder(parent_id)).add_child(
+            menu).auto_position_if_applicable(len(_dashboard_navigation_menu))
 
 
 def unregister_dashboard_menu(parent_id, child_id=None):
