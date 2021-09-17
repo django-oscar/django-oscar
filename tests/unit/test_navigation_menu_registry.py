@@ -4,6 +4,22 @@ from oscar.navigation_menu_registry import Menu
 
 
 class TestMenu:
+    def test_passing_children_as_kwarg_raises_error(self):
+        with pytest.raises(ValueError):
+            Menu("Menu title", children=None)
+
+    def test_extra_kwargs_passed_to_menu_are_used_as_is_in_navigation_dict(self):
+        access_fn = lambda user, url_name, url_args, url_kwargs: user.is_staff
+        menu = Menu("Menu title", access_fn=access_fn)
+
+        assert menu.as_navigation_dict() == {
+            "label": "Menu title",
+            "icon": None,
+            "url_name": None,
+            "access_fn": access_fn,
+            "children": [],
+        }
+
     def test_is_placeholder(self):
         assert Menu.placeholder("id").is_placeholder is True
         assert Menu(label="").is_placeholder is False

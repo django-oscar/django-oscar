@@ -36,13 +36,16 @@ def _get_app_submodules(submodule_name):
 
 
 class Menu:
-    def __init__(self, label, url_name=None, icon=None, identifier=None, position=None):
+    def __init__(self, label, url_name=None, icon=None, identifier=None, position=None, **use_as_provided):
         self.label = label
         self.url_name = url_name
         self.icon = icon
         self.identifier = identifier or label.lower().replace(" ", "_")
         self.position = position
         self._children = []
+        if "children" in use_as_provided:
+            raise ValueError("Children can be added to menu using `.add_child(...)` or `.add_children(...)` method")
+        self._use_as_provided = use_as_provided
 
     def __lt__(self, other):
         if self.position is None:
@@ -145,6 +148,7 @@ class Menu:
             "url_name": self.url_name,
             "icon": self.icon,
             "children": [menu.as_navigation_dict() for menu in self.children],
+            **self._use_as_provided,
         }
 
 
