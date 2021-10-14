@@ -323,7 +323,7 @@ class AbstractAddress(models.Model):
         """
         return self.join_fields(
             ('title', 'first_name', 'last_name'),
-            separator=" ")
+            separator=" ").strip()
 
     @property
     def name(self):
