@@ -48,7 +48,7 @@ Continuous integration status:
      :target: https://requires.io/github/django-oscar/django-oscar/requirements/?branch=master
      :alt: Requirements Status
 
-PyPI status:
+Pypi status:
 
 .. image:: https://img.shields.io/pypi/v/django-oscar.svg
     :target: https://pypi.python.org/pypi/django-oscar/
@@ -274,7 +274,7 @@ Many more on the way.  If you use Oscar in production, please `let us know`_.
 
 .. _`let us know`: https://github.com/django-oscar/oscarcommerce.com/issues
 
-Looking for commercial support?
+Are you looking for commercial support?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are interested in having an Oscar project built for you, or for
