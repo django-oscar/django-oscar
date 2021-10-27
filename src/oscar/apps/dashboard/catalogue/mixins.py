@@ -1,3 +1,6 @@
+from django.db.models import Q
+
+
 class PartnerProductFilterMixin:
     def filter_queryset(self, queryset):
         """
@@ -10,4 +13,6 @@ class PartnerProductFilterMixin:
         if user.is_staff:
             return queryset
 
-        return queryset.filter(stockrecords__partner__users__pk=user.pk).distinct()
+        return queryset.filter(
+            Q(children__stockrecords__partner__users__pk=user.pk) | Q(stockrecords__partner__users__pk=user.pk)
+        ).distinct()
