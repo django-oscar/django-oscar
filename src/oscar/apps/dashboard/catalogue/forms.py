@@ -426,4 +426,4 @@ class OptionForm(forms.ModelForm):
 
     class Meta:
         model = Option
-        fields = ['name', 'type', 'required']
+        fields = ['name', 'type', 'required', 'order', 'help_text', 'option_group']

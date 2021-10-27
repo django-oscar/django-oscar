@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from datetime import date, datetime
@@ -9,6 +10,7 @@ from django.contrib.staticfiles.finders import find
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef, Sum
@@ -1228,23 +1230,88 @@ class AbstractOption(models.Model):
     BOOLEAN = "boolean"
     DATE = "date"
 
+    SELECT = "select"
+    RADIO = "radio"
+    MULTI_SELECT = "multi_select"
+    CHECKBOX = "checkbox"
+
     TYPE_CHOICES = (
         (TEXT, _("Text")),
         (INTEGER, _("Integer")),
         (BOOLEAN, _("True / False")),
         (FLOAT, _("Float")),
         (DATE, _("Date")),
+        (SELECT, _("Select")),
+        (RADIO, _("Radio")),
+        (MULTI_SELECT, _("Multi select")),
+        (CHECKBOX, _("Checkbox")),
     )
+
+    empty_label = "------"
+    empty_radio_label = _("Skip this option")
 
     name = models.CharField(_("Name"), max_length=128, db_index=True)
     code = AutoSlugField(_("Code"), max_length=128, unique=True, populate_from='name')
     type = models.CharField(_("Type"), max_length=255, default=TEXT, choices=TYPE_CHOICES)
     required = models.BooleanField(_("Is this option required?"), default=False)
+    option_group = models.ForeignKey(
+        "catalogue.AttributeOptionGroup",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="product_options",
+        verbose_name=_("Option Group"),
+        help_text=_('Select an option group if using type "Option" or "Multi Option"'),
+    )
+    help_text = models.CharField(
+        verbose_name=_("Help text"), blank=True, null=True, max_length=255
+    )
+    order = models.IntegerField(
+        _("Ordering"),
+        null=True,
+        blank=True,
+        help_text=_("Controls the ordering of product options on product detail pages"),
+        db_index=True,
+    )
+
+    @property
+    def is_option(self):
+        return self.type in [self.SELECT, self.RADIO]
+
+    @property
+    def is_multi_option(self):
+        return self.type in [self.MULTI_SELECT, self.CHECKBOX]
+
+    @property
+    def is_select(self):
+        return self.type in [self.SELECT, self.MULTI_SELECT]
+
+    @property
+    def is_radio(self):
+        return self.type in [self.RADIO]
+
+    def add_optional_choice(self, choices):
+        if self.is_select and not self.is_multi_option:
+            choices = [("", self.empty_label)] + choices
+        elif self.is_radio:
+            choices = [(None, self.empty_radio_label)] + choices
+        return choices
+
+    def get_choices(self):
+        choices = [(opt.option, opt.option) for opt in self.option_group.options.all()]
+
+        if not self.required:
+            choices = self.add_optional_choice(choices)
+
+        return choices
+
+    def clean_value(self, value):
+        return json.dumps(value, cls=DjangoJSONEncoder)
 
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        ordering = ['name']
+        ordering = ['order', 'name']
         verbose_name = _("Option")
         verbose_name_plural = _("Options")
 
