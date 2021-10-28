@@ -3,12 +3,15 @@ from django.test import TestCase
 from django.urls import reverse
 
 from oscar.apps.basket import views
+from oscar.core.loading import get_model
 from oscar.test import factories
 from oscar.test.factories import (
     AttributeOptionFactory, AttributeOptionGroupFactory, OptionFactory)
 from oscar.test.testcases import WebTestCase
 from tests.fixtures import RequestFactory
 from tests.functional.checkout import CheckoutMixin
+
+Option = get_model("catalogue", "Option")
 
 
 class TestVoucherAddView(TestCase):
@@ -148,21 +151,41 @@ class TestVoucherViews(CheckoutMixin, WebTestCase):
         assert self.voucher.basket_set.count() == 0
 
 
-class TestAddToBasketView(TestCase):
+class TestOptionAddToBasketView(TestCase):
     def setUp(self):
         super().setUp()
         self.product = factories.create_product(num_in_stock=1)
         group = AttributeOptionGroupFactory(name="minte")
         AttributeOptionFactory(option="henk", group=group)
         AttributeOptionFactory(option="klaas", group=group)
-        self.option = OptionFactory(required=True, code="something", type="checkbox", option_group=group)
-        self.product.product_class.options.add(self.option)
+        self.select = OptionFactory(required=True, code=Option.SELECT, type=Option.SELECT, option_group=group)
+        self.radio = OptionFactory(required=True, code=Option.RADIO, type=Option.RADIO, option_group=group)
+        self.multi_select = OptionFactory(
+            required=True, code=Option.MULTI_SELECT, type=Option.MULTI_SELECT, option_group=group)
+        self.checkbox = OptionFactory(required=True, code=Option.CHECKBOX, type=Option.CHECKBOX, option_group=group)
+
+        self.product.product_class.options.add(self.select)
+        self.product.product_class.options.add(self.radio)
+        self.product.product_class.options.add(self.multi_select)
+        self.product.product_class.options.add(self.checkbox)
+
+    def test_option_visible(self):
+        url = reverse('catalogue:detail', args=(self.product.slug, self.product.pk))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, Option.SELECT)
+        self.assertContains(response, Option.RADIO)
+        self.assertContains(response, Option.MULTI_SELECT)
+        self.assertContains(response, Option.CHECKBOX)
 
     def test_add_to_basket_with_options(self):
         url = reverse('basket:add', kwargs={'pk': self.product.pk})
         post_params = {
             'product_id': self.product.id,
-            'something': ['henk'],
+            Option.SELECT: 'klaas',
+            Option.RADIO: 'henk',
+            Option.MULTI_SELECT: ['henk', 'klaas'],
+            Option.CHECKBOX: ['henk'],
             'action': 'add',
             'quantity': 1
         }
@@ -172,11 +195,31 @@ class TestAddToBasketView(TestCase):
         self.assertEqual(basket.all_lines().count(), 1, "One line should have been added to the basket")
         line, = basket.all_lines()
 
-        self.assertEqual(line.attributes.count(), 1, "One lineattribute shoould have been added to the basket")
-        line_attribute, = line.attributes.all()
+        self.assertEqual(line.attributes.count(), 4, "One lineattribute shoould have been added to the basket")
+        checkbox, multi_select, radio, select = line.attributes.order_by("option__code")
 
-        self.assertEqual(line_attribute.value, '["henk"]', "The lineattribute should be saved as json")
+        print(checkbox.option.code, multi_select.option.code, radio.option.code, select.option.code)
+
+        self.assertEqual(checkbox.value, '["henk"]', "The lineattribute should be saved as json")
         self.assertEqual(
-            line_attribute.option, self.option,
+            checkbox.option, self.checkbox,
+            "The lineattribute's option should be the option created by the factory"
+        )
+
+        self.assertEqual(multi_select.value, '["henk", "klaas"]', "The lineattribute should be saved as json")
+        self.assertEqual(
+            multi_select.option, self.multi_select,
+            "The lineattribute's option should be the option created by the factory"
+        )
+
+        self.assertEqual(radio.value, '"henk"', "The lineattribute should be saved as json")
+        self.assertEqual(
+            radio.option, self.radio,
+            "The lineattribute's option should be the option created by the factory"
+        )
+
+        self.assertEqual(select.value, '"klaas"', "The lineattribute should be saved as json")
+        self.assertEqual(
+            select.option, self.select,
             "The lineattribute's option should be the option created by the factory"
         )
