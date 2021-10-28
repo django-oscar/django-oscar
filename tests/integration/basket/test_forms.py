@@ -10,8 +10,8 @@ from oscar.core.loading import get_model
 from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.factories import (
-    BenefitFactory, ConditionalOfferFactory, ConditionFactory,
-    OptionFactory, RangeFactory)
+    AttributeOptionFactory, AttributeOptionGroupFactory, BenefitFactory,
+    ConditionalOfferFactory, ConditionFactory, OptionFactory, RangeFactory)
 
 Line = get_model('basket', 'Line')
 Option = get_model('catalogue', 'Option')
@@ -258,7 +258,14 @@ class TestAddToBasketWithOptionForm(TestCase):
     def _test_add_to_basket_with_specific_option_type(
             self, option_type, invalid_value, valid_value
     ):
-        option = OptionFactory(required=True, type=option_type)
+        if option_type in [Option.SELECT, Option.RADIO, Option.MULTI_SELECT, Option.CHECKBOX]:
+            group = AttributeOptionGroupFactory(name="minte")
+            AttributeOptionFactory(option="henk", group=group)
+            AttributeOptionFactory(option="klaas", group=group)
+            option = OptionFactory(required=True, type=option_type, option_group=group)
+        else:
+            option = OptionFactory(required=True, type=option_type)
+
         self.product.product_class.options.add(option)
         data = {'quantity': 1, option.code: invalid_value}
         invalid_form = self._get_basket_form(
@@ -289,4 +296,24 @@ class TestAddToBasketWithOptionForm(TestCase):
     def test_add_to_basket_with_date_option(self):
         self._test_add_to_basket_with_specific_option_type(
             Option.DATE, 'invalid_date', '2019-03-03',
+        )
+
+    def test_add_to_basket_with_select_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.SELECT, 'invalid_select', 'henk',
+        )
+
+    def test_add_to_basket_with_radio_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.RADIO, 'invalid_radio', 'henk',
+        )
+
+    def test_add_to_basket_with_multi_select_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.MULTI_SELECT, ['invalid_multi_select'], ['henk', 'klaas'],
+        )
+
+    def test_add_to_basket_with_checkbox_option(self):
+        self._test_add_to_basket_with_specific_option_type(
+            Option.CHECKBOX, ['invalid_checkbox'], ['henk', 'klaas'],
         )

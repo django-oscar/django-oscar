@@ -1298,7 +1298,10 @@ class AbstractOption(models.Model):
         return choices
 
     def get_choices(self):
-        choices = [(opt.option, opt.option) for opt in self.option_group.options.all()]
+        if self.option_group:
+            choices = [(opt.option, opt.option) for opt in self.option_group.options.all()]
+        else:
+            choices = []
 
         if not self.required:
             choices = self.add_optional_choice(choices)
