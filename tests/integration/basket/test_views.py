@@ -4,6 +4,8 @@ from django.urls import reverse
 
 from oscar.apps.basket import views
 from oscar.test import factories
+from oscar.test.factories import (
+    AttributeOptionFactory, AttributeOptionGroupFactory, OptionFactory)
 from oscar.test.testcases import WebTestCase
 from tests.fixtures import RequestFactory
 from tests.functional.checkout import CheckoutMixin
@@ -144,3 +146,37 @@ class TestVoucherViews(CheckoutMixin, WebTestCase):
         response = self.post(reverse('basket:vouchers-remove', kwargs={'pk': self.voucher.id}))
         self.assertRedirectsTo(response, 'basket:summary')
         assert self.voucher.basket_set.count() == 0
+
+
+class TestAddToBasketView(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.product = factories.create_product(num_in_stock=1)
+        group = AttributeOptionGroupFactory(name="minte")
+        AttributeOptionFactory(option="henk", group=group)
+        AttributeOptionFactory(option="klaas", group=group)
+        self.option = OptionFactory(required=True, code="something", type="checkbox", option_group=group)
+        self.product.product_class.options.add(self.option)
+
+    def test_add_to_basket_with_options(self):
+        url = reverse('basket:add', kwargs={'pk': self.product.pk})
+        post_params = {
+            'product_id': self.product.id,
+            'something': ['henk'],
+            'action': 'add',
+            'quantity': 1
+        }
+        response = self.client.post(url, post_params, follow=True)
+        basket = response.context["basket"]
+
+        self.assertEqual(basket.all_lines().count(), 1, "One line should have been added to the basket")
+        line, = basket.all_lines()
+
+        self.assertEqual(line.attributes.count(), 1, "One lineattribute shoould have been added to the basket")
+        line_attribute, = line.attributes.all()
+
+        self.assertEqual(line_attribute.value, '["henk"]', "The lineattribute should be saved as json")
+        self.assertEqual(
+            line_attribute.option, self.option,
+            "The lineattribute's option should be the option created by the factory"
+        )

@@ -351,7 +351,7 @@ class AddToBasketForm(forms.Form):
         for option in self.parent_product.options:
             if option.code in self.cleaned_data:
                 value = self.cleaned_data[option.code]
-                if option.is_required or value not in EMPTY_VALUES:
+                if option.required or value not in EMPTY_VALUES:
                     options.append(
                         {"option": option, "value": option.clean_value(value)}
                     )
