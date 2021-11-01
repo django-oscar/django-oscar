@@ -14,38 +14,27 @@ __all__ = [
 ]
 
 
-def _get_app_modules():
-    """
-    Generator function that yields a module object for each installed app
-    yields tuples of (app_name, module)
-    Copied from https://github.com/wagtail/wagtail/blob/d949946434508fb4b118f5ab83966463ce510163/wagtail/utils/apps.py
-    """
-    for app in apps.get_app_configs():
-        yield app.name, app.module
-
-
 def _get_app_submodules(submodule_name):
     """
-    Searches each app module for the specified submodule
-    yields tuples of (app_name, module)
-    Copied from https://github.com/wagtail/wagtail/blob/d949946434508fb4b118f5ab83966463ce510163/wagtail/utils/apps.py
+    Searches each app module for the specified submodule yields tuples of (app_name, module)
     """
-    for name, module in _get_app_modules():
-        if module_has_submodule(module, submodule_name):
-            yield name, import_module('%s.%s' % (name, submodule_name))
+    for app in apps.get_app_configs():
+        if module_has_submodule(app.module, submodule_name):
+            yield app.name, import_module(f"{app.name}.{submodule_name}")
 
 
 class Menu:
-    def __init__(self, label, url_name=None, icon=None, identifier=None, position=None, **use_as_provided):
+    def __init__(self, label, url_name=None, icon=None, identifier=None, position=None, **kwargs):
         self.label = label
         self.url_name = url_name
         self.icon = icon
         self.identifier = identifier or label.lower().replace(" ", "_")
         self.position = position
         self._children = []
-        if "children" in use_as_provided:
+        if "children" in kwargs:
             raise ValueError("Children can be added to menu using `.add_child(...)` or `.add_children(...)` method")
-        self._use_as_provided = use_as_provided
+        self._kwargs = kwargs
+        self._auto_positioned = False
 
     def __lt__(self, other):
         if self.position is None:
@@ -76,7 +65,7 @@ class Menu:
         if other.position is None:
             other.position = self.position
             if self.is_auto_positioned:
-                setattr(other, "__auto_positioned", True)
+                other._auto_positioned = True
         return other
 
     __add__ = merge
@@ -89,11 +78,11 @@ class Menu:
         if self.position is not None:
             return
         self.position = (seed + 1) * settings.OSCAR_DEFAULT_NAVIGATION_MENU_POSITION_INCREMENTER
-        setattr(self, "__auto_positioned", True)
+        self._auto_positioned = True
 
     @property
     def is_auto_positioned(self):
-        return hasattr(self, "__auto_positioned")
+        return self._auto_positioned
 
     @property
     def is_placeholder(self):
@@ -121,7 +110,7 @@ class Menu:
          1. preserving the order of addition.
          2. merging `menu` to existing menu (with same identity).
         """
-        for index, child in enumerate(self._children.copy()):
+        for index, child in enumerate(self._children):
             if child == menu:
                 self._children[index] = child + menu
                 break
@@ -148,7 +137,7 @@ class Menu:
             "url_name": self.url_name,
             "icon": self.icon,
             "children": [menu.as_navigation_dict() for menu in self.children],
-            **self._use_as_provided,
+            **self._kwargs,
         }
 
 
