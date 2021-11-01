@@ -47,10 +47,10 @@ sorl_thumbnail_version = 'sorl-thumbnail>=12.6,<12.7'
 easy_thumbnails_version = 'easy-thumbnails>=2.7,<2.8'
 
 docs_requires = [
-    'Sphinx>=3.4,<3.5',
+    'Sphinx>=4.2,<4.3',
     'sphinxcontrib-napoleon==0.7',
-    'sphinxcontrib-spelling==7.1.0',
-    'sphinx_rtd_theme==0.5.1',
+    'sphinxcontrib-spelling==7.2.1',
+    'sphinx_rtd_theme==1.0.0',
     'sphinx-issues==1.2.0',
     sorl_thumbnail_version,
     easy_thumbnails_version,
