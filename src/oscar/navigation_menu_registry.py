@@ -45,7 +45,7 @@ class Menu:
             return other.is_auto_positioned
         return self.position < other.position
 
-    def __eq__(self, other):
+    def identifier_equal(self, other):
         return self.identifier == other.identifier
 
     def __repr__(self):
@@ -56,7 +56,7 @@ class Menu:
 
     def merge(self, other):
         """Assumes `other` should be overriding `self` hence it's given higher precedence"""
-        if self != other:
+        if not self.identifier_equal(other):
             raise ValueError("Cannot merge menus with different identifiers")
 
         if self.children != other.children:
@@ -111,7 +111,7 @@ class Menu:
          2. merging `menu` to existing menu (with same identity).
         """
         for index, child in enumerate(self._children):
-            if child == menu:
+            if child.identifier_equal(menu):
                 self._children[index] = child + menu
                 break
         else:
@@ -125,9 +125,11 @@ class Menu:
         return self
 
     def remove_child(self, identifier):
-        try:
-            self._children.remove(self.placeholder(identifier))
-        except ValueError:
+        for menu in self._children:
+            if menu.identifier == identifier:
+                self._children.remove(menu)
+                break
+        else:
             raise ValueError(f"Child menu with ID '{identifier}' not found for parent with ID '{self.identifier}'")
         return self
 
