@@ -14,7 +14,7 @@
         <div class="form-group {% if field.errors %}error{% endif %}">
 
             {% block label %}
-                {% if not nolabel and field.widget_type != 'CheckboxInput' %}
+                {% if not nolabel and field.widget_type != 'checkbox' %}
                     <label for="{{ field.auto_id }}" class="{% if style|default:"stacked" != 'stacked' %}col-sm-4{% endif%} control-label{% if field.field.required %} required{% endif %}">
                         {{ field.label|safe }}
                         {% if field.field.required %} <span>*</span>{% endif %}
@@ -23,14 +23,14 @@
             {% endblock %}
 
             {% block controls %}
-                <div class="{% if style|default:"stacked" != 'stacked' %}col-sm-8{% endif %}{% if field.widget_type == 'CheckboxInput' %} checkbox{% endif %}">
+                <div class="{% if style|default:"stacked" != 'stacked' %}col-sm-8{% endif %}{% if field.widget_type == 'checkbox' %} checkbox{% endif %}">
                     {% block widget %}
-                        {% if field.widget_type == 'CheckboxInput' %}
+                        {% if field.widget_type == 'checkbox' %}
                             <label for="{{ field.auto_id }}" class="checkbox {% if field.field.required %}required{% endif %}">
                                 {% render_field field %}
                                 {{ field.label|safe }}{% if field.field.required %} <span>*</span>{% endif %}
                             </label>
-                        {% elif field.widget_type == 'RadioSelect' %}
+                        {% elif field.widget_type == 'radioselect' %}
                             <label for="{{ field.auto_id }}" class="controls {% if field.field.required %}required{% endif %}">
                             {% render_field field %}
                             </label>
