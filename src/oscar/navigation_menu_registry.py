@@ -24,11 +24,11 @@ def _get_app_submodules(submodule_name):
 
 
 class Menu:
-    def __init__(self, label, url_name=None, icon=None, identifier=None, position=None, **kwargs):
+    def __init__(self, label, identifier, url_name=None, icon=None, position=None, **kwargs):
         self.label = label
         self.url_name = url_name
         self.icon = icon
-        self.identifier = identifier or label.lower().replace(" ", "_")
+        self.identifier = identifier
         self.position = position
         self._children = []
         if "children" in kwargs:
