@@ -21,6 +21,7 @@ you have to do is open up (create if not present) your
     register_dashboard_menu(
         Menu(
             label=_("Dashboard app's menu name"),
+            identifier="Arbitrary menu ID".
             url_name="dashboard:url-name",
             position=1,
         ),
@@ -38,6 +39,7 @@ item "Stores". The way you would do that is::
         Menu(label=_("Store manager")).add_child(
             Menu(
                 label=_("Stores"),
+                identifier="stores",
                 url_name="your-reverse-url-lookup-name",
             )
         ),
@@ -47,16 +49,13 @@ That's it. You should now have *Store manager > Stores* in you dashboard
 menu.
 
 Submenus can also be registered from other apps using their parent menu ID
-(which by default is the lowercase equivalent to the parent menu's label
-with spaces replaced by ``_`` e.g. ``Parent menu`` label will by default
-generate ``parent_menu`` as it's ID. An alternative ID can be specified
-using the ``identifier`` kwarg) as follows:
+as follows:
 
 ``path/to/app-with-parent-menu/navigation_menu.py``::
 
     from oscar.navigation_menu_registry import Menu, register_dashboard_menu
 
-    register_dashboard_menu(Menu(label=_("Store manager")))
+    register_dashboard_menu(Menu(label=_("Store manager"), identifier="store_manager"))
 
 ``path/to/another-app-with-child-menu/navigation_menu.py``::
 
@@ -65,6 +64,7 @@ using the ``identifier`` kwarg) as follows:
     register_dashboard_menu(
         Menu(
             label=_("Stores"),
+            identifier="stores",
             url_name="your-reverse-url-lookup-name",
         ),
         parent_id="store_manager",
@@ -76,12 +76,17 @@ resolve permissions to the current node::
 
     from oscar.navigation_menu_registry import Menu, register_dashboard_menu
 
+    def staff_only_access_fn(user, url_name, url_args, url_kwargs):
+    """access_fn is passed the user, url_name, urls_args and url_kwargs"""
+    return user.is_staff
+
     register_dashboard_menu(
         Menu(
             label=_("Admin site"),
+            identifier="menu_id",
             icon="fas fa-list",
             url_name="admin:index",
-            access_fn=lambda user, url_name, url_args, url_kwargs: user.is_staff,
+            access_fn=staff_only_access_fn,
         ),
     )
 
@@ -104,9 +109,10 @@ icon class for the icon to your menu heading::
     from oscar.navigation_menu_registry import Menu, register_dashboard_menu
 
     register_dashboard_menu(
-        Menu(label=_("Store manager"), icon="fas fa-map-marker").add_child(
+        Menu(label=_("Store manager"), identifier="store_manager", icon="fas fa-map-marker").add_child(
             Menu(
                 label=_("Stores"),
+                identifier="stores",
                 url_name="your-reverse-url-lookup-name",
             )
         ),
@@ -123,6 +129,17 @@ configuration of your dashboard navigation above.
 
 .. _`Font Awesome`: http://fortawesome.github.com/Font-Awesome/
 .. _`this icon list`: http://fortawesome.github.com/Font-Awesome/#all-icons
+
+Conditionally registering menu
+------------------------------
+
+To register menu(s) that should only be shown when a condition is met, do the following::
+
+    @register_dashboard_menu()
+    def register_conditional_menu():
+        if <condition>:
+            return Menu(label="Conditional", url_name="dashboard:conditional")
+
 
 Controlling menu positioning
 ----------------------------
@@ -151,10 +168,10 @@ with an explicitly set position as follows::
     # `4th menu` will have an auto-generated position value of `20` with the rest
     # keeping there explicitly set positions.
 
-    register_dashboard_menu(Menu(label=_("1st menu"), position=1))
-    register_dashboard_menu(Menu(label=_("3rd menu")))
-    register_dashboard_menu(Menu(label=_("4th menu")))
-    register_dashboard_menu(Menu(label=_("2nd menu"), position=2))
+    register_dashboard_menu(Menu(label=_("1st menu"), identifier="Arbitrary 1st menu's ID", position=1))
+    register_dashboard_menu(Menu(label=_("3rd menu"), identifier="Arbitrary 3rd menu's ID"))
+    register_dashboard_menu(Menu(label=_("4th menu"), identifier="Arbitrary 4th menu's ID"))
+    register_dashboard_menu(Menu(label=_("2nd menu"), identifier="Arbitrary 2nd menu's ID", position=2))
 
 Controlling visibility per user
 -------------------------------

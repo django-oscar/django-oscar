@@ -24,11 +24,11 @@ def _get_app_submodules(submodule_name):
 
 
 class Menu:
-    def __init__(self, label, url_name=None, icon=None, identifier=None, position=None, **kwargs):
+    def __init__(self, label, identifier, url_name=None, icon=None, position=None, **kwargs):
         self.label = label
         self.url_name = url_name
         self.icon = icon
-        self.identifier = identifier or label.lower().replace(" ", "_")
+        self.identifier = identifier
         self.position = position
         self._children = []
         if "children" in kwargs:
@@ -45,15 +45,12 @@ class Menu:
             return other.is_auto_positioned
         return self.position < other.position
 
-    def __eq__(self, other):
-        return self.identifier == other.identifier
-
     def __repr__(self):
         return f"Menu(id={self.identifier}, label={self.label})"
 
     def merge(self, other):
         """Assumes `other` should be overriding `self` hence it's given higher precedence"""
-        if self != other:
+        if self.identifier != other.identifier:
             raise ValueError("Cannot merge menus with different identifiers")
 
         if self.children != other.children:
@@ -108,7 +105,7 @@ class Menu:
          2. merging `menu` to existing menu (with same identity).
         """
         for index, child in enumerate(self._children):
-            if child == menu:
+            if child.identifier == menu.identifier:
                 self._children[index] = child + menu
                 break
         else:
@@ -122,9 +119,11 @@ class Menu:
         return self
 
     def remove_child(self, identifier):
-        try:
-            self._children.remove(self.placeholder(identifier))
-        except ValueError:
+        for menu in self._children:
+            if menu.identifier == identifier:
+                self._children.remove(menu)
+                break
+        else:
             raise ValueError(f"Child menu with ID '{identifier}' not found for parent with ID '{self.identifier}'")
         return self
 
@@ -181,14 +180,29 @@ def register_dashboard_menu(menu_or_function=None, parent_id=None):
             menu.auto_position_if_applicable(len(_dashboard_navigation_menu))
             _dashboard_navigation_menu[menu.identifier] = menu
     else:
-        # Placeholder instance will be used temporarily if child (menu) was registered ahead of
-        # its parent. It will be replaced (merged) into the actual parent once it's registered.
+        # Register a child menu to a parent (menu) referenced by `parent_id` then automatically
+        # assign a position to it if none was explicitly provided.
+        # Placeholder menu will be used temporarily as the child's parent menu if it was registered
+        # ahead of its parent. The placeholder menu will be merged into child's actual parent menu
+        # once it's registered.
         _dashboard_navigation_menu.setdefault(parent_id, Menu.placeholder(parent_id)).add_child(
             menu).auto_position_if_applicable(len(_dashboard_navigation_menu))
 
 
 def unregister_dashboard_menu(parent_id, child_id=None):
     _marked_for_deregistration.add((parent_id, child_id))
+
+
+def _deregister_menus_marked_for_deregistration():
+    for parent_id, child_id in _marked_for_deregistration:
+        if child_id is not None:
+            parent_menu = _dashboard_navigation_menu.get(parent_id)
+            if parent_menu:
+                _dashboard_navigation_menu[parent_id] = parent_menu.remove_child(child_id)
+            else:
+                raise ValueError(f"Parent menu with the ID '{parent_id}' does not exist")
+        else:
+            del _dashboard_navigation_menu[parent_id]
 
 
 _search_for_dashboard_navigation_menu = False
@@ -200,15 +214,7 @@ def get_dashboard_navigation_menu():
         list(_get_app_submodules("navigation_menu"))
         _search_for_dashboard_navigation_menu = True
 
-    for parent_id, child_id in _marked_for_deregistration:
-        if child_id is not None:
-            parent_menu = _dashboard_navigation_menu.get(parent_id)
-            if parent_menu:
-                _dashboard_navigation_menu[parent_id] = parent_menu.remove_child(child_id)
-            else:
-                raise ValueError(f"Parent menu with the ID '{parent_id}' does not exist")
-        else:
-            del _dashboard_navigation_menu[parent_id]
+    _deregister_menus_marked_for_deregistration()
 
     navigation_menu, placeholder_menu = [], set()
     for menu in sorted(_dashboard_navigation_menu.values()):
