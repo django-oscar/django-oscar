@@ -51,9 +51,6 @@ class Menu:
     def __repr__(self):
         return f"Menu(id={self.identifier}, label={self.label})"
 
-    def __hash__(self):
-        return hash(self.identifier)
-
     def merge(self, other):
         """Assumes `other` should be overriding `self` hence it's given higher precedence"""
         if self != other:
