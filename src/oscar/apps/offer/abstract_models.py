@@ -940,7 +940,7 @@ class AbstractRange(models.Model):
 
             # select all those product that are selected either by product class,
             # category, or explicitly by included_products.
-            selected_parents = Product.objects.annotate(
+            selected_products = Product.objects.annotate(
                 selected_categories=models.FilteredRelation(
                     "categories", condition=category_filter
                 )
@@ -949,13 +949,13 @@ class AbstractRange(models.Model):
                 | Q(selected_categories__isnull=False)
             ) | self.included_products.all()
         else:
-            selected_parents = Product.objects.filter(
+            selected_products = Product.objects.filter(
                 product_class_id__in=self.classes.values("id")
             ) | self.included_products.all()
 
-        # select parents and their children
-        selected_products = selected_parents | Product.objects.filter(
-            parent__in=selected_parents
+        # Include children of matching parents
+        selected_products = selected_products | Product.objects.filter(
+            parent__in=selected_products.filter(structure=Product.PARENT)
         )
 
         # now go and exclude all explicitly excluded products

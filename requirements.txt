@@ -4,22 +4,22 @@
 Werkzeug>=1.0,<2.1
 django-debug-toolbar>=2.2,<3.3
 django-extensions>=2.2,<3.2
-psycopg2-binary>=2.8,<2.9
+psycopg2-binary>=2.8,<2.10
 
 # Sandbox
 Whoosh>=2.7,<2.8
-django-environ>=0.4,<0.5
+django-environ>=0.4,<0.8
 django-redis>=4.12,<5.1
 pysolr>=3.9,<3.10
 redis>=3.5,<3.6
 requests>=2.25,<3
 uWSGI>=2.0.19,<2.1
-whitenoise>=5.2,<5.3
+whitenoise>=5.2,<5.4
 
 # Linting
 flake8==3.9.2
 flake8-debugger==4.0.0
-isort==5.8.0
+isort==5.9.3
 
 # Helpers
 pyprof2calltree>=1.4,<1.5

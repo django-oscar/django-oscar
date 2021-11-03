@@ -32,14 +32,3 @@ class TransactionFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = get_model('payment', 'Transaction')
-
-    @classmethod
-    def _create(cls, target_class, *args, **kwargs):
-        date_created = kwargs.pop('date_created', None)
-        instance = super(TransactionFactory, cls)._create(
-            target_class, *args, **kwargs)
-
-        if date_created:
-            instance.date_created = date_created
-            instance.save()
-        return instance

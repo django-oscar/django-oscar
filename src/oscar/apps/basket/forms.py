@@ -213,7 +213,7 @@ class AddToBasketForm(forms.Form):
         This is designed to be overridden so that specific widgets can be used
         for certain types of options.
         """
-        option_field = self.OPTION_FIELD_FACTORIES.get(option.type, Option.TEXT)(option)
+        option_field = self.OPTION_FIELD_FACTORIES.get(option.type, _option_text_field)(option)
         self.fields[option.code] = option_field
 
     # Cleaning

@@ -251,9 +251,9 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
         return super().post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        # These pre-conditions can't easily be factored out into the normal
-        # pre-conditions as they do more than run a test and then raise an
-        # exception on failure.
+        # These skip and pre conditions can't easily be factored out into the
+        # normal pre-conditions as they do more than run a test and then raise
+        # an exception on failure.
 
         # Check that shipping is required at all
         if not request.basket.is_shipping_required():

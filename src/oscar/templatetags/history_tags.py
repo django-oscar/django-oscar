@@ -26,8 +26,8 @@ def recently_viewed_products(context, current_product=None):
             'request': request}
 
 
-@register.simple_tag(takes_context=True)  # noqa (too complex (11))
-def get_back_button(context):
+@register.simple_tag(takes_context=True)
+def get_back_button(context):   # noqa (too complex (11))
     """
     Show back button, custom title available for different urls, for
     example 'Back to search results', no back button if user came from other

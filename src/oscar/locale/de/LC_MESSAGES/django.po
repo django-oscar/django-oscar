@@ -13,6 +13,7 @@
 # Maik Hoepfel <m@maikhoepfel.de>, 2013
 # Maik Hoepfel <m@maikhoepfel.de>, 2013
 # Marc Wienhold <marc.wienhold@gmail.com>, 2015
+# Max Wessendorf <m.wessendorf@ukd.de>, 2021
 # 3b88561c85fc32e4cc7b8e83215a03d9, 2013
 # Sebastian Vetter <sebastian.vetter@tangentsnowball.com.au>, 2012
 # Sören Schlömer <sos@anotherone.de>, 2013
@@ -29,8 +30,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2021-03-01 17:32+0000\n"
-"Last-Translator: Krzysztof Jeziorny <github@jeziorny.net>\n"
+"PO-Revision-Date: 2021-05-31 16:50+0000\n"
+"Last-Translator: Max Wessendorf <m.wessendorf@ukd.de>\n"
 "Language-Team: German (http://www.transifex.com/codeinthehole/django-oscar/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1299,7 +1300,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:959
 msgid "Must be str"
-msgstr ""
+msgstr "Muss str sein"
 
 #: apps/catalogue/abstract_models.py:966
 msgid "Must be a float"
@@ -1315,7 +1316,7 @@ msgstr "Muss ein Datum oder datetime sein"
 
 #: apps/catalogue/abstract_models.py:980
 msgid "Must be a datetime"
-msgstr ""
+msgstr "Muss datetime sein"
 
 #: apps/catalogue/abstract_models.py:984
 msgid "Must be a boolean"
@@ -1327,7 +1328,7 @@ msgstr "Muss Modellinstanz sein"
 
 #: apps/catalogue/abstract_models.py:995
 msgid "Must be a list or AttributeOption queryset"
-msgstr ""
+msgstr "Muss eine Liste oder AttributeOption queryset sein"
 
 #: apps/catalogue/abstract_models.py:1006
 msgid "Must be an AttributeOption model object instance"
@@ -1360,11 +1361,11 @@ msgstr "Rich Text"
 
 #: apps/catalogue/abstract_models.py:1047
 msgid "DateTime"
-msgstr ""
+msgstr "Datum und Zeit"
 
 #: apps/catalogue/abstract_models.py:1051
 msgid "Value multi option"
-msgstr ""
+msgstr "Mherfachwertauswahl"
 
 #: apps/catalogue/abstract_models.py:1057
 msgid "Value option"
@@ -1654,7 +1655,7 @@ msgstr "Ihre vormals gewählte Versandart ist nicht mehr gültig. Bitte wählen 
 
 #: apps/checkout/surcharges.py:23
 msgid "Percentage surcharge"
-msgstr ""
+msgstr "Prozentualer Aufschlag"
 
 #: apps/checkout/surcharges.py:54
 msgid "Flat surcharge"
@@ -1693,7 +1694,7 @@ msgstr "Bei der Zahlung ist ein Problem aufgetreten, die Zahlung wurde nicht aus
 msgid ""
 "A problem occurred while placing this order. Please contact customer "
 "services."
-msgstr ""
+msgstr "Bei der Aufgabe der Bestellung ist eine Problem aufgetreten. Bitte kontaktieren Sie den Kundenservice."
 
 #: apps/communication/abstract_models.py:24
 msgid "Email Address"
@@ -1737,7 +1738,7 @@ msgstr "E-Mail an %(user)s mit Betreff „%(subject)s“"
 #: apps/communication/abstract_models.py:42
 #, python-format
 msgid "Email to %(email)s with subject '%(subject)s'"
-msgstr ""
+msgstr "E-Mail an %(email)s mit Betreff '%(subject)s'"
 
 #: apps/communication/abstract_models.py:61
 msgid ""
