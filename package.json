@@ -20,7 +20,7 @@
     "node-sass": "^6.0.1",
     "popper.js": "^1.16.1",
     "pump": "^3.0.0",
-    "sass": "^1.42.1",
+    "sass": "^1.43.4",
     "select2": "4.0.13",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tempusdominus-bootstrap-4": "^5.39.0",
