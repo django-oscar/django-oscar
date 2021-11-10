@@ -121,6 +121,12 @@ class ProductQuerySet(models.query.QuerySet):
         """
         return self.filter(parent=None)
 
+    def browsable_dashboard_recommended(self):
+        """
+        Products that should be shown when adding recommended products in product detail.
+        """
+        return self.filter(is_public=True)
+
 
 class CategoryQuerySet(MP_NodeQuerySet):
 
