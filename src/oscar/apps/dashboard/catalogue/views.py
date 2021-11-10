@@ -636,7 +636,7 @@ class ProductLookupView(ObjectLookupView):
     model = Product
 
     def get_queryset(self):
-        return self.model.objects.browsable().all()
+        return self.model.objects.public()
 
     def lookup_filter(self, qs, term):
         return qs.filter(Q(title__icontains=term)
