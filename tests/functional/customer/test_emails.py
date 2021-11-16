@@ -1,6 +1,7 @@
 from django.contrib.sites.models import Site
 from django.core import mail
-from django.test import TestCase
+from django.core.exceptions import ImproperlyConfigured
+from django.test import TestCase, override_settings
 
 from oscar.core.loading import get_class
 from oscar.test.factories import (
@@ -17,54 +18,108 @@ class TestCustomerConcreteEmailsSending(EmailsMixin, TestCase):
         super().setUp()
         self.dispatcher = CustomerDispatcher()
 
-    def test_send_registration_email_for_user(self):
+    def test_send_registration_email_for_user(self, additional_context=None):
         extra_context = {'user': self.user}
+
+        if additional_context:
+            extra_context.update(additional_context)
+
         self.dispatcher.send_registration_email_for_user(self.user, extra_context)
 
         self._test_common_part()
         self.assertEqual('Thank you for registering.', mail.outbox[0].subject)
         self.assertIn('Thank you for registering.', mail.outbox[0].body)
 
-    def test_send_password_reset_email_for_user(self):
+    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com"])
+    def test_send_registration_email_for_user_multisite(self):
+        with self.assertRaises(ImproperlyConfigured, msg=self.DJANGO_IMPROPERLY_CONFIGURED_MSG):
+            self.test_send_registration_email_for_user()
+
+        additional_context = {"request": self.request}
+        self.test_send_registration_email_for_user(additional_context=additional_context)
+
+    def test_send_password_reset_email_for_user(self, additional_context=None):
         extra_context = {
             'user': self.user,
             'reset_url': '/django-oscar/django-oscar',
         }
+
+        request = None
+        if additional_context:
+            request = additional_context.get("request")
+            extra_context.update(additional_context)
+
         self.dispatcher.send_password_reset_email_for_user(self.user, extra_context)
 
         self._test_common_part()
-        expected_subject = 'Resetting your password at {}.'.format(Site.objects.get_current())
+        expected_subject = 'Resetting your password at {}.'.format(Site.objects.get_current(request))
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         self.assertIn('Please go to the following page and choose a new password:', mail.outbox[0].body)
         self.assertIn('http://example.com/django-oscar/django-oscar', mail.outbox[0].body)
 
-    def test_send_password_changed_email_for_user(self):
+    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com"])
+    def test_send_password_reset_email_for_user_multisite(self):
+        with self.assertRaises(ImproperlyConfigured, msg=self.DJANGO_IMPROPERLY_CONFIGURED_MSG):
+            self.test_send_password_reset_email_for_user()
+
+        additional_context = {"request": self.request}
+        self.test_send_password_reset_email_for_user(additional_context=additional_context)
+
+    def test_send_password_changed_email_for_user(self, additional_context=None):
         extra_context = {
             'user': self.user,
             'reset_url': '/django-oscar/django-oscar',
         }
+
+        request = None
+        if additional_context:
+            request = additional_context.get("request")
+            extra_context.update(additional_context)
+
         self.dispatcher.send_password_changed_email_for_user(self.user, extra_context)
 
         self._test_common_part()
-        expected_subject = 'Your password changed at {}.'.format(Site.objects.get_current())
+        expected_subject = 'Your password changed at {}.'.format(Site.objects.get_current(request))
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         self.assertIn('your password has been changed', mail.outbox[0].body)
         self.assertIn('http://example.com/django-oscar/django-oscar', mail.outbox[0].body)
 
-    def test_send_email_changed_email_for_user(self):
+    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com"])
+    def test_send_password_changed_email_for_user_multisite(self):
+        with self.assertRaises(ImproperlyConfigured, msg=self.DJANGO_IMPROPERLY_CONFIGURED_MSG):
+            self.test_send_password_changed_email_for_user()
+
+        additional_context = {"request": self.request}
+        self.test_send_password_changed_email_for_user(additional_context=additional_context)
+
+    def test_send_email_changed_email_for_user(self, additional_context=None):
         extra_context = {
             'user': self.user,
             'reset_url': '/django-oscar/django-oscar',
             'new_email': 'some_new@mail.com',
         }
+
+        request = None
+        if additional_context:
+            request = additional_context.get("request")
+            extra_context.update(additional_context)
+
         self.dispatcher.send_email_changed_email_for_user(self.user, extra_context)
 
         self._test_common_part()
-        expected_subject = 'Your email address has changed at {}.'.format(Site.objects.get_current())
+        expected_subject = 'Your email address has changed at {}.'.format(Site.objects.get_current(request))
         self.assertEqual(expected_subject, mail.outbox[0].subject)
         self.assertIn('your email address has been changed', mail.outbox[0].body)
         self.assertIn('http://example.com/django-oscar/django-oscar', mail.outbox[0].body)
         self.assertIn('some_new@mail.com', mail.outbox[0].body)
+
+    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com"])
+    def test_send_email_changed_email_for_user_multisite(self):
+        with self.assertRaises(ImproperlyConfigured, msg=self.DJANGO_IMPROPERLY_CONFIGURED_MSG):
+            self.test_send_email_changed_email_for_user()
+
+        additional_context = {"request": self.request}
+        self.test_send_email_changed_email_for_user(additional_context=additional_context)
 
 
 class TestAlertsConcreteEmailsSending(EmailsMixin, TestCase):

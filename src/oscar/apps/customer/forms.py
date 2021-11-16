@@ -49,13 +49,14 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         if domain_override is not None:
             site.domain = site.name = domain_override
         for user in self.get_users(self.cleaned_data['email']):
-            self.send_password_reset_email(site, user)
+            self.send_password_reset_email(site, user, request)
 
-    def send_password_reset_email(self, site, user):
+    def send_password_reset_email(self, site, user, request=None):
         extra_context = {
             'user': user,
             'site': site,
             'reset_url': get_password_reset_url(user),
+            'request': request,
         }
         CustomerDispatcher().send_password_reset_email_for_user(user, extra_context)
 
