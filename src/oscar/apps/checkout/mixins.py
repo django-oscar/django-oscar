@@ -273,7 +273,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         ctx = {
             'user': self.request.user,
             'order': order,
-            'lines': order.lines.all()
+            'lines': order.lines.all(),
+            'request': self.request,
         }
 
         # Attempt to add the order status URL to the email template ctx.

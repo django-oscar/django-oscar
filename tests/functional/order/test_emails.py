@@ -1,7 +1,8 @@
 import os
 
 from django.core import mail
-from django.test import TestCase
+from django.core.exceptions import ImproperlyConfigured
+from django.test import TestCase, override_settings
 
 from oscar.core.loading import get_class
 from oscar.test.factories import ProductImageFactory, create_order
@@ -16,14 +17,18 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
         super().setUp()
         self.dispatcher = OrderDispatcher()
 
-    def test_send_order_placed_email_for_user(self):
-        order_number = 'SOME-NUM00042'
-        order = create_order(number=order_number, user=self.user)
+    def test_send_order_placed_email_for_user(self, order_number=None, additional_context=None):
+        order_number = order_number if order_number else 'SOME-NUM00042'
+        order = create_order(number=order_number, user=self.user, request=self.request)
 
         extra_context = {
             'order': order,
             'lines': order.lines.all()
         }
+
+        if additional_context:
+            extra_context.update(additional_context)
+
         self.dispatcher.send_order_placed_email_for_user(order, extra_context)
 
         self._test_common_part()
@@ -33,16 +38,30 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
         product_title = order.lines.first().title
         assert product_title in mail.outbox[0].body
 
-    def test_send_order_placed_email_with_attachments_for_user(self):
+    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com"])
+    def test_send_order_placed_email_for_user_multisite(self):
+        with self.assertRaises(ImproperlyConfigured, msg=self.DJANGO_IMPROPERLY_CONFIGURED_MSG):
+            self.test_send_order_placed_email_for_user()
+
+        additional_context = {"request": self.request}
+        self.test_send_order_placed_email_for_user(
+            order_number="SOME-NUM00043", additional_context=additional_context
+        )
+
+    def test_send_order_placed_email_with_attachments_for_user(self, order_number=None, additional_context=None):
         remove_image_folders()
 
-        order_number = 'SOME-NUM00042'
-        order = create_order(number=order_number, user=self.user)
+        order_number = order_number if order_number else 'SOME-NUM00042'
+        order = create_order(number=order_number, user=self.user, request=self.request)
 
         extra_context = {
             'order': order,
             'lines': order.lines.all()
         }
+
+        if additional_context:
+            extra_context.update(additional_context)
+
         line = order.lines.first()
         product_image = ProductImageFactory(product=line.product)
         attachments = [
@@ -59,3 +78,13 @@ class TestConcreteEmailsSending(EmailsMixin, TestCase):
 
         # Remove test file
         os.remove(product_image.original.path)
+
+    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com"])
+    def test_send_order_placed_email_with_attachments_for_user_multisite(self):
+        with self.assertRaises(ImproperlyConfigured, msg=self.DJANGO_IMPROPERLY_CONFIGURED_MSG):
+            self.test_send_order_placed_email_with_attachments_for_user()
+
+        additional_context = {"request": self.request}
+        self.test_send_order_placed_email_with_attachments_for_user(
+            order_number="SOME-NUM00043", additional_context=additional_context
+        )

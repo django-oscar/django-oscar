@@ -340,6 +340,7 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
             'user': user,
             'reset_url': get_password_reset_url(old_user),
             'new_email': new_email,
+            'request': self.request,
         }
         CustomerDispatcher().send_email_changed_email_for_user(old_user, extra_context)
 
@@ -390,6 +391,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
         extra_context = {
             'user': user,
             'reset_url': get_password_reset_url(self.request.user),
+            'request': self.request,
         }
         CustomerDispatcher().send_password_changed_email_for_user(user, extra_context)
 
