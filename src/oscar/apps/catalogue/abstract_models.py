@@ -1290,7 +1290,7 @@ class AbstractOption(models.Model):
     def is_radio(self):
         return self.type in [self.RADIO]
 
-    def add_optional_choice(self, choices):
+    def add_empty_choice(self, choices):
         if self.is_select and not self.is_multi_option:
             choices = [("", self.empty_label)] + choices
         elif self.is_radio:
@@ -1304,7 +1304,7 @@ class AbstractOption(models.Model):
             choices = []
 
         if not self.required:
-            choices = self.add_optional_choice(choices)
+            choices = self.add_empty_choice(choices)
 
         return choices
 
