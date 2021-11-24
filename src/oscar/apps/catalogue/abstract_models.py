@@ -1264,7 +1264,8 @@ class AbstractOption(models.Model):
         help_text=_('Select an option group if using type "Option" or "Multi Option"'),
     )
     help_text = models.CharField(
-        verbose_name=_("Help text"), blank=True, null=True, max_length=255
+        verbose_name=_("Help text"), blank=True, null=True, max_length=255,
+        help_text=_("Help text shown to the user on the add to basket form")
     )
     order = models.IntegerField(
         _("Ordering"),
