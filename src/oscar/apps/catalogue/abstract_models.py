@@ -1311,6 +1311,18 @@ class AbstractOption(models.Model):
     def clean_value(self, value):
         return json.dumps(value, cls=DjangoJSONEncoder)
 
+    def clean(self):
+        if self.type in [self.DATE, self.SELECT, self.MULTI_SELECT, self.CHECKBOX]:
+            if self.option_group is None:
+                raise ValidationError(
+                    _("Option Group is required for type %s") % self.get_type_display()
+                )
+        elif self.option_group:
+            raise ValidationError(
+                _("Option Group can not be used with type %s") % self.get_type_display()
+            )
+        return super().clean()
+
     class Meta:
         abstract = True
         app_label = 'catalogue'
