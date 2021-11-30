@@ -93,8 +93,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         if is_solr_supported():
             prepared_data['title_s'] = prepared_data['title']
 
-        # Use title to for spelling suggestions
-        prepared_data['suggestions'] = prepared_data['text']
+        # Use title for spelling suggestions
+        prepared_data['suggestions'] = prepared_data['title']
 
         return prepared_data
 
