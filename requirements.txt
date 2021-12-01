@@ -19,7 +19,7 @@ whitenoise>=5.2,<5.4
 # Linting
 flake8==4.0.1
 flake8-debugger==4.0.0
-isort==5.9.3
+isort==5.10.1
 
 # Helpers
 pyprof2calltree>=1.4,<1.5
