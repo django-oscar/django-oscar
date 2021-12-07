@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
-from oscar.apps.catalogue.models import Product, ProductAttribute
+from oscar.apps.catalogue.models import Product, ProductAttribute, ProductClass
 from oscar.test import factories
 
 
@@ -43,6 +43,17 @@ class TestContainer(TestCase):
 
         product.attr.refresh()
         assert product.attr.a1 == "v2"
+
+    def test_attribute_code_uniquenesss(self):
+        product_class = factories.ProductClassFactory()
+        attribute1 = ProductAttribute.objects.create(name='a1', code='a1', product_class=product_class)
+        attribute1.full_clean()
+        attribute2 = ProductAttribute.objects.create(name='a1', code='a1', product_class=product_class)
+        with self.assertRaises(ValidationError):
+            attribute2.full_clean()
+        another_product_class = ProductClass.objects.create(name="another product class")
+        attribute3 = ProductAttribute.objects.create(name='a1', code='a1', product_class=another_product_class)
+        attribute3.full_clean()
 
 
 class TestBooleanAttributes(TestCase):
