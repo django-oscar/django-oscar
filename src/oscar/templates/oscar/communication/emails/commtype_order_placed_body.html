@@ -1,5 +1,5 @@
 {% extends "oscar/communication/emails/base.html" %}
-{% load currency_filters i18n %}
+{% load currency_filters i18n url_tags %}
 
 {% block tbody %}
 <tr>
@@ -57,7 +57,8 @@
 {% if status_url %}
     <tr>
         <td class="content-block">
-            {% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}
+            {% absolute_url site.domain status_path as absolute_status_url %}
+            {% blocktrans %}You can view the status of this order by clicking <a href="{{ absolute_status_url }}" title="order status">here</a>{% endblocktrans %}
         </td>
     </tr>
 {% endif %}
