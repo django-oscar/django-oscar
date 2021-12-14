@@ -57,3 +57,6 @@ Deprecated features
 
 - The ``annotate_form_field`` template tag is deprecated. It's functionality of annotating form fields with
   their widget type is now built in to Django.
+- In the ORDER_PLACED email templates, the variable ``status_url`` should not be used anymore. Please use
+  ``status_path`` in conjunction with the ``absolute_url`` template tag instead. It will be removed in a future
+  version of Oscar.
