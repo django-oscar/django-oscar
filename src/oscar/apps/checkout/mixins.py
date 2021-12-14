@@ -290,6 +290,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             # We don't care that much if we can't resolve the URL
             pass
         else:
+            ctx['status_path'] = path
+
+            # status_url is deprecated, see https://github.com/django-oscar/django-oscar/issues/3826
             site = Site.objects.get_current(self.request)
             ctx['status_url'] = 'http://%s%s' % (site.domain, path)
         return ctx
