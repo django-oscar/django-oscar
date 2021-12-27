@@ -1,20 +1,7 @@
 from django.db import models
-from django.db.models.expressions import Subquery
+from oscar.core.loading import get_class
 
-EXPAND_CATEGORY_QUERYSET = """
-(SELECT "CATALOGUE_CATEGORY_JOIN"."id" FROM "catalogue_category" AS "CATALOGUE_CATEGORY_BASE"
-LEFT JOIN "catalogue_category" AS "CATALOGUE_CATEGORY_JOIN" ON (
-    "CATALOGUE_CATEGORY_BASE"."path" LIKE "CATALOGUE_CATEGORY_JOIN"."path" || '%%%%'
-)
-WHERE "CATALOGUE_CATEGORY_BASE"."id" IN (%(subquery)s))
-"""
-
-
-class ExpandCategoryQueryset(Subquery):
-    template = EXPAND_CATEGORY_QUERYSET
-
-    def as_sqlite(self, compiler, connection):
-        return super().as_sql(compiler, connection, self.template[1:-1])
+ExpandUpwardsCategoryQueryset = get_class("catalogue.expressions", "ExpandUpwardsCategoryQueryset")
 
 
 class RangeQuerySet(models.query.QuerySet):
@@ -69,7 +56,7 @@ class RangeQuerySet(models.query.QuerySet):
         narrow = self.filter(
             self._excluded_products_clause(product),
             self._included_products_clause(product)
-            | models.Q(included_categories__in=ExpandCategoryQueryset(self._get_category_ids(product)))
+            | models.Q(included_categories__in=ExpandUpwardsCategoryQueryset(self._get_category_ids(product)))
             | self._productclasses_clause(product),
             includes_all_products=False,
         )
