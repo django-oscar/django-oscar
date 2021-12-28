@@ -1,4 +1,5 @@
 from django.db import models
+
 from oscar.core.loading import get_class
 
 ExpandUpwardsCategoryQueryset = get_class("catalogue.expressions", "ExpandUpwardsCategoryQueryset")

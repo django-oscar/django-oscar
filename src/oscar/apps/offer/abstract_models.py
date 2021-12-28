@@ -7,7 +7,6 @@ from django.conf import settings
 from django.core import exceptions
 from django.db import models
 from django.db.models.query import Q
-from django.db.models import OuterRef, Subquery, Exists
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -937,21 +936,21 @@ class AbstractRange(models.Model):
                 self.included_categories.values("id")
             )
             selected_products = Product.objects.filter(
-                Q(categories__in=expanded_range_categories)|
-                Q(product_class__classes=self)|
-                Q(includes=self)|
-                Q(parent__categories__in=expanded_range_categories)|
-                Q(parent__product_class__classes=self)|
-                Q(parent__includes=self),
+                Q(categories__in=expanded_range_categories)
+                | Q(product_class__classes=self)
+                | Q(includes=self)
+                | Q(parent__categories__in=expanded_range_categories)
+                | Q(parent__product_class__classes=self)
+                | Q(parent__includes=self),
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
         else:
             selected_products = Product.objects.filter(
-                Q(product_class__classes=self)|
-                Q(includes=self)|
-                Q(parent__product_class__classes=self)|
-                Q(parent__includes=self),
+                Q(product_class__classes=self)
+                | Q(includes=self)
+                | Q(parent__product_class__classes=self)
+                | Q(parent__includes=self),
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
