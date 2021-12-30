@@ -137,7 +137,8 @@ class BasketView(ModelFormSetView):
                                                prefix='saved')
                     context['saved_formset'] = formset
 
-        surcharges = SurchargeApplicator(context=context).get_applicable_surcharges(
+        surcharge_applicator = SurchargeApplicator(request=self.request, context=context)
+        surcharges = surcharge_applicator.get_applicable_surcharges(
             self.request.basket, shipping_charge=shipping_charge
         )
         context['surcharges'] = surcharges
