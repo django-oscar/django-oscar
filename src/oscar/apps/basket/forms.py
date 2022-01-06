@@ -14,27 +14,22 @@ Option = get_model('catalogue', 'option')
 Product = get_model('catalogue', 'product')
 
 
-# pylint: disable=unused-argument
 def _option_text_field(form, product, option):
     return forms.CharField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-# pylint: disable=unused-argument
 def _option_integer_field(form, product, option):
     return forms.IntegerField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-# pylint: disable=unused-argument
 def _option_boolean_field(form, product, option):
     return forms.BooleanField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-# pylint: disable=unused-argument
 def _option_float_field(form, product, option):
     return forms.FloatField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-# pylint: disable=unused-argument
 def _option_date_field(form, product, option):
     return forms.DateField(
         label=option.name,
@@ -44,7 +39,6 @@ def _option_date_field(form, product, option):
     )
 
 
-# pylint: disable=unused-argument
 def _option_select_field(form, product, option):
     return forms.ChoiceField(
         label=option.name,
@@ -54,7 +48,6 @@ def _option_select_field(form, product, option):
     )
 
 
-# pylint: disable=unused-argument
 def _option_radio_field(form, product, option):
     return forms.ChoiceField(
         label=option.name,
@@ -65,7 +58,6 @@ def _option_radio_field(form, product, option):
     )
 
 
-# pylint: disable=unused-argument
 def _option_multi_select_field(form, product, option):
     return forms.MultipleChoiceField(
         label=option.name,
@@ -75,7 +67,6 @@ def _option_multi_select_field(form, product, option):
     )
 
 
-# pylint: disable=unused-argument
 def _option_checkbox_field(form, product, option):
     return forms.MultipleChoiceField(
         label=option.name,
