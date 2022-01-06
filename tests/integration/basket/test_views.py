@@ -213,25 +213,25 @@ class TestOptionAddToBasketView(TestCase):
         self.assertEqual(line.attributes.count(), 4, "One lineattribute shoould have been added to the basket")
         checkbox, multi_select, radio, select = line.attributes.order_by("option__code")
 
-        self.assertEqual(checkbox.value, '["henk"]', "The lineattribute should be saved as json")
+        self.assertEqual(checkbox.value, ["henk"], "The lineattribute should be saved as json")
         self.assertEqual(
             checkbox.option, self.checkbox,
             "The lineattribute's option should be the option created by the factory"
         )
 
-        self.assertEqual(multi_select.value, '["henk", "klaas"]', "The lineattribute should be saved as json")
+        self.assertListEqual(multi_select.value, ["henk", "klaas"], "The lineattribute should be saved as json")
         self.assertEqual(
             multi_select.option, self.multi_select,
             "The lineattribute's option should be the option created by the factory"
         )
 
-        self.assertEqual(radio.value, '"henk"', "The lineattribute should be saved as json")
+        self.assertEqual(radio.value, "henk", "The lineattribute should be saved as json")
         self.assertEqual(
             radio.option, self.radio,
             "The lineattribute's option should be the option created by the factory"
         )
 
-        self.assertEqual(select.value, '"klaas"', "The lineattribute should be saved as json")
+        self.assertEqual(select.value, "klaas", "The lineattribute should be saved as json")
         self.assertEqual(
             select.option, self.select,
             "The lineattribute's option should be the option created by the factory"
@@ -258,19 +258,19 @@ class TestOptionAddToBasketView(TestCase):
         self.assertEqual(line.attributes.count(), 3, "One lineattribute shoould have been added to the basket")
         checkbox, radio, select = line.attributes.order_by("option__code")
 
-        self.assertEqual(checkbox.value, '["henk"]', "The lineattribute should be saved as json")
+        self.assertEqual(checkbox.value, ["henk"], "The lineattribute should be saved as json")
         self.assertEqual(
             checkbox.option, self.checkbox,
             "The lineattribute's option should be the option created by the factory"
         )
 
-        self.assertEqual(radio.value, '"henk"', "The lineattribute should be saved as json")
+        self.assertEqual(radio.value, "henk", "The lineattribute should be saved as json")
         self.assertEqual(
             radio.option, self.radio,
             "The lineattribute's option should be the option created by the factory"
         )
 
-        self.assertEqual(select.value, '"klaas"', "The lineattribute should be saved as json")
+        self.assertEqual(select.value, "klaas", "The lineattribute should be saved as json")
         self.assertEqual(
             select.option, self.select,
             "The lineattribute's option should be the option created by the factory"

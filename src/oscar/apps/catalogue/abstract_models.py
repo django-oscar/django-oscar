@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 from datetime import date, datetime
@@ -10,7 +9,6 @@ from django.contrib.staticfiles.finders import find
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
-from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef, Sum
@@ -1309,11 +1307,8 @@ class AbstractOption(models.Model):
 
         return choices
 
-    def clean_value(self, value):
-        return json.dumps(value, cls=DjangoJSONEncoder)
-
     def clean(self):
-        if self.type in [self.DATE, self.SELECT, self.MULTI_SELECT, self.CHECKBOX]:
+        if self.type in [self.RADIO, self.SELECT, self.MULTI_SELECT, self.CHECKBOX]:
             if self.option_group is None:
                 raise ValidationError(
                     _("Option Group is required for type %s") % self.get_type_display()

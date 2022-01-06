@@ -64,7 +64,7 @@ class TestBasketLine(TestCase):
         product = ProductFactory(title="A product")
         option = OptionFactory(name="product_option", code="product_option")
         option_product = ProductFactory(title='Asunción')
-        options = [{'option': option, 'value': option_product}]
+        options = [{'option': option, 'value': str(option_product)}]
         basket.add_product(product, options=options)
 
     def test_basket_lines_queryset_is_ordered(self):

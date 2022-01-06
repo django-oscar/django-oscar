@@ -4,6 +4,7 @@ from operator import itemgetter
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import Sum
 from django.utils.encoding import smart_str
@@ -931,7 +932,7 @@ class AbstractLineAttribute(models.Model):
         'catalogue.Option',
         on_delete=models.CASCADE,
         verbose_name=_("Option"))
-    value = models.CharField(_("Value"), max_length=255)
+    value = models.JSONField(_("Value"), encoder=DjangoJSONEncoder)
 
     class Meta:
         abstract = True

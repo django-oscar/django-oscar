@@ -353,7 +353,7 @@ class AddToBasketForm(forms.Form):
                 value = self.cleaned_data[option.code]
                 if option.required or value not in EMPTY_VALUES:
                     options.append(
-                        {"option": option, "value": option.clean_value(value)}
+                        {"option": option, "value": value}
                     )
         return options
 
