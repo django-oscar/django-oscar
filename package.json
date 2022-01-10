@@ -18,6 +18,7 @@
     "jquery-mousewheel": "^3.1.13",
     "jquery-sortable": "^0.9.13",
     "node-sass": "^7.0.1",
+    "nan": "^2.15.0",
     "popper.js": "^1.16.1",
     "pump": "^3.0.0",
     "sass": "^1.45.2",
