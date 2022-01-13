@@ -1227,6 +1227,7 @@ class AbstractOption(models.Model):
     FLOAT = "float"
     BOOLEAN = "boolean"
     DATE = "date"
+    CHOICE = "choice"
 
     TYPE_CHOICES = (
         (TEXT, _("Text")),
@@ -1234,17 +1235,24 @@ class AbstractOption(models.Model):
         (BOOLEAN, _("True / False")),
         (FLOAT, _("Float")),
         (DATE, _("Date")),
+        (CHOICE, _("Choice"))
     )
 
     name = models.CharField(_("Name"), max_length=128, db_index=True)
     code = AutoSlugField(_("Code"), max_length=128, unique=True, populate_from='name')
     type = models.CharField(_("Type"), max_length=255, default=TEXT, choices=TYPE_CHOICES)
     required = models.BooleanField(_("Is this option required?"), default=False)
+    default = models.CharField(_("Default initial data"), max_length=255, blank=True, null=True)
+    sequence = models.IntegerField(_("Sequence"), default=0, help_text='Compile show options in an ordered sequence' )
+    help_text = models.CharField(_("Help text"), max_length=255, blank=True, null=True)
+    choices = models.CharField( max_length=1024,
+        verbose_name=_('choices'),blank=True,help_text=_('Comma separated list of choices. Only applicable in checkboxes, radio and dropdown.')
+    )
 
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        ordering = ['name']
+        ordering = ['sequence', 'name']
         verbose_name = _("Option")
         verbose_name_plural = _("Options")
 

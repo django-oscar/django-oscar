@@ -14,23 +14,37 @@ Product = get_model('catalogue', 'product')
 
 
 def _option_text_field(option):
-    return forms.CharField(label=option.name, required=option.required)
+    return forms.CharField(label=option.name, required=option.required, help_text=option.help_text, initial=option.default)
 
 
 def _option_integer_field(option):
-    return forms.IntegerField(label=option.name, required=option.required)
+    return forms.IntegerField(label=option.name, required=option.required, help_text=option.help_text, initial=option.default)
 
 
 def _option_boolean_field(option):
-    return forms.BooleanField(label=option.name, required=option.required)
+    return forms.BooleanField(label=option.name, required=option.required, help_text=option.help_text, initial=option.default)
 
 
 def _option_float_field(option):
-    return forms.FloatField(label=option.name, required=option.required)
+    return forms.FloatField(label=option.name, required=option.required, help_text=option.help_text, initial=option.default)
 
 
 def _option_date_field(option):
-    return forms.DateField(label=option.name, required=option.required, widget=forms.widgets.DateInput)
+    return forms.DateField(label=option.name, required=option.required, widget=forms.widgets.DateInput, help_text=option.help_text, initial=option.default)
+
+
+def _option_choice_field(option):
+    """ should return option list:
+      choices=(
+            ('original', _("Original size")),
+        ),
+    """
+    choices = option.choices.split(',')
+    choices = [
+            (field, field)
+            for field in choices
+        ]
+    return forms.ChoiceField(label=option.name, required=option.required, help_text=option.help_text, choices=choices)
 
 
 class BasketLineForm(forms.ModelForm):
@@ -149,6 +163,7 @@ class AddToBasketForm(forms.Form):
         Option.BOOLEAN: _option_boolean_field,
         Option.FLOAT: _option_float_field,
         Option.DATE: _option_date_field,
+        Option.CHOICE: _option_choice_field,
     }
 
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
@@ -215,6 +230,7 @@ class AddToBasketForm(forms.Form):
         """
         option_field = self.OPTION_FIELD_FACTORIES.get(option.type, _option_text_field)(option)
         self.fields[option.code] = option_field
+        #breakpoint()
 
     # Cleaning
 

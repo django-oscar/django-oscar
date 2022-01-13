@@ -426,4 +426,4 @@ class OptionForm(forms.ModelForm):
 
     class Meta:
         model = Option
-        fields = ['name', 'type', 'required']
+        exclude =['pk']
