@@ -144,6 +144,7 @@ class CatalogueView(TemplateView):
         ctx['summary'] = _("All products")
         search_context = self.search_handler.get_search_context_data(
             self.context_object_name)
+        search_context['products'] = Product.objects.all()
         ctx.update(search_context)
         return ctx
 
@@ -206,5 +207,6 @@ class ProductCategoryView(TemplateView):
         context['category'] = self.category
         search_context = self.search_handler.get_search_context_data(
             self.context_object_name)
+        search_context['products'] = Product.objects.filter(categories=kwargs['pk'])
         context.update(search_context)
         return context
