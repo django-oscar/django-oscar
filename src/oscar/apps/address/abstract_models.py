@@ -235,10 +235,11 @@ class AbstractAddress(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Country"))
 
-    #: A field only used for searching addresses - this contains all the
-    #: relevant fields.  This is effectively a poor man's Solr text field.
+    # A field only used for searching addresses - this contains all the
+    # `search_fields`.  This is effectively a poor man's Solr text field.
     search_text = models.TextField(
         _("Search text - used only for searching addresses"), editable=False)
+    search_fields = ['first_name', 'last_name', 'line1', 'line2', 'line3', 'line4', 'state', 'postcode', 'country']
 
     # Fields, used for `summary` property definition and hash generation.
     base_fields = hash_fields = ['salutation', 'line1', 'line2', 'line3', 'line4', 'state', 'postcode', 'country']
@@ -295,11 +296,7 @@ class AbstractAddress(models.Model):
                     {'postcode': [msg]})
 
     def _update_search_text(self):
-        search_fields = filter(
-            bool, [self.first_name, self.last_name,
-                   self.line1, self.line2, self.line3, self.line4,
-                   self.state, self.postcode, self.country.name])
-        self.search_text = ' '.join(search_fields)
+        self.search_text = self.join_fields(self.search_fields, separator=' ')
 
     # Properties
 
