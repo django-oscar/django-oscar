@@ -210,6 +210,10 @@ class TestUserAddress(TestCase):
             "Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
             a.summary)
 
+    def test_search_text_value(self):
+        a = factories.UserAddressFactory()
+        self.assertEqual("Barry Barrington 1 King Road London SW1 9RE UNITED KINGDOM", a.search_text)
+
 
 VALID_POSTCODES = [
     ('GB', 'N1 9RT'),
