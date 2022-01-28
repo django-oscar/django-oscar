@@ -1,0 +1,19 @@
+version: "2.1"
+
+volumes:
+  oscardb_data:
+    driver: local
+services:
+
+  oscar:
+    build:
+      context: .
+      dockerfile: Dockerfile.sandbox
+    container_name: oscar
+    network_mode: host
+    restart: always
+    command: python /app/sandbox/manage.py runserver 0.0.0.0:8000
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./sandbox:/app/sandbox/

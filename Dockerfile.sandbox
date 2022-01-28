@@ -1,0 +1,21 @@
+FROM python:3.8
+ENV PYTHONUNBUFFERED 1
+
+COPY ./requirements.txt /requirements.txt
+
+RUN pip3 install -r /requirements.txt
+
+RUN groupadd -r django && useradd -r -g django django
+
+COPY . /app
+
+RUN chown -R django /app
+
+WORKDIR /app
+
+USER django
+
+#RUN cp --remove-destination /app/src/oscar/static/oscar/img/* /app/sandbox/public/media/
+
+WORKDIR /app/sandbox/
+CMD uwsgi --ini uwsgi.ini
