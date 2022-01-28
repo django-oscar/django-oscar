@@ -166,32 +166,6 @@ var oscar = (function(o, $) {
                 width: 'resolve'
             });
             $selects.filter('.related-widget-wrapper.multiple select').select2({
-                templateResult: function (data) {
-                    return $(data.element).text();
-                },
-                templateSelection: function (data) {
-                    var $this = $(data.element).closest('.related-widget-wrapper');
-                    var siblings = $this.find('.change-related, .delete-related');
-                    if (!siblings.length) {
-                        return;
-                    }
-                    var value = data.id;
-                    var label = $(data.element).text();
-                    if (value) {
-                        siblings.each(function() {
-                            var elm = $(this);
-                            elm.attr('href', elm.attr('data-href-template').replace('__fk__', value));
-                            label += ' ';
-                            label += elm[0].outerHTML;
-                        });
-                    } else {
-                        siblings.removeAttr('href');
-                    }
-                    return label;
-                },
-                escapeMarkup: function(markup) {
-                    return markup;
-                },
                 width: '95%'
             });
             $(el).find('select.select2').each(function(i, e) {
