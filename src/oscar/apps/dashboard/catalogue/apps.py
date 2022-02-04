@@ -1,0 +1,2 @@
+class CatalogueDashboardConfig:
+    pass

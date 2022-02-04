@@ -6,7 +6,7 @@ from django.apps import apps
 from django.apps.config import MODELS_MODULE_NAME
 from django.conf import settings
 from django.core.exceptions import AppRegistryNotReady
-from django.utils.lru_cache import lru_cache
+from functools import lru_cache
 from django.utils.module_loading import import_string
 
 from oscar.core.exceptions import (
