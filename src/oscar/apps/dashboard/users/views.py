@@ -26,7 +26,6 @@ User = get_user_model()
 
 class IndexView(BulkEditMixin, FormMixin, SingleTableView):
     template_name = 'dashboard/users/index.html'
-    table_pagination = True
     model = User
     actions = ('make_active', 'make_inactive', )
     form_class = UserSearchForm
