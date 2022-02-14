@@ -2,10 +2,11 @@ from django.conf import settings
 from django.utils.module_loading import import_string
 from django.views.generic.list import MultipleObjectMixin
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
-SearchHandler = get_class('search.search_handlers', 'SearchHandler')
+SearchResultsPaginationMixin, SearchHandler = get_classes(
+    'search.search_handlers', ('SearchHandler', 'SearchResultsPaginationMixin'))
 is_solr_supported = get_class('search.features', 'is_solr_supported')
 is_elasticsearch_supported = get_class('search.features', 'is_elasticsearch_supported')
 Product = get_model('catalogue', 'Product')
@@ -77,7 +78,7 @@ class ESProductSearchHandler(SearchHandler):
         return sqs
 
 
-class SimpleProductSearchHandler(MultipleObjectMixin):
+class SimpleProductSearchHandler(SearchResultsPaginationMixin, MultipleObjectMixin):
     """
     A basic implementation of the full-featured SearchHandler that has no
     faceting support, but doesn't require a Haystack backend. It only
@@ -89,6 +90,7 @@ class SimpleProductSearchHandler(MultipleObjectMixin):
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
     def __init__(self, request_data, full_path, categories=None):
+        self.request_data = request_data
         self.categories = categories
         self.kwargs = {'page': request_data.get('page') or 1}
         self.object_list = self.get_queryset()

@@ -103,6 +103,13 @@ class TestProductListView(WebTestCase):
         products_on_page = list(page.context['products'].all())
         self.assertEqual(products_on_page, [])
 
+    def test_invalid_page_redirects_to_index(self):
+        create_product()
+        products_list_url = reverse('catalogue:index')
+        response = self.app.get('%s?page=200' % products_list_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirectsTo(response, 'catalogue:index')
+
 
 class TestProductCategoryView(WebTestCase):
 
