@@ -32,7 +32,7 @@ class ProductOptionTests(TestCase):
         qs = Product.objects.browsable().base_queryset().filter(id=self.product.id)
         product = qs.first()
         self.assertTrue(product.has_options)
-        self.assertTrue(product.has_product_options, 1)
+        self.assertEqual(product.has_product_options, 1)
 
     def test_queryset_both(self):
         "The options attribute on a product should return a queryset containing "
