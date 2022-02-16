@@ -19,6 +19,7 @@ from oscar.core.loading import (
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
 
+ExpandDownwardsCategoryQueryset = get_class("catalogue.expressions", "ExpandDownwardsCategoryQueryset")
 ActiveOfferManager, RangeManager, BrowsableRangeManager \
     = get_classes('offer.managers', ['ActiveOfferManager', 'RangeManager', 'BrowsableRangeManager'])
 ZERO_DISCOUNT = get_class('offer.results', 'ZERO_DISCOUNT')
@@ -931,38 +932,30 @@ class AbstractRange(models.Model):
             )
 
         if self.included_categories.exists():
-            # build query to select all category subtrees.
-            category_filter = Q()
-            for path, depth in self.included_categories.values_list("path", "depth"):
-                category_filter |= Q(
-                    categories__depth__gte=depth, categories__path__startswith=path
-                )
-
-            # select all those product that are selected either by product class,
-            # category, or explicitly by included_products.
-            selected_products = Product.objects.annotate(
-                selected_categories=models.FilteredRelation(
-                    "categories", condition=category_filter
-                )
-            ).filter(
-                Q(product_class_id__in=self.classes.values("id"))
-                | Q(selected_categories__isnull=False)
-            ) | self.included_products.all()
+            expanded_range_categories = ExpandDownwardsCategoryQueryset(
+                self.included_categories.values("id")
+            )
+            selected_products = Product.objects.filter(
+                Q(categories__in=expanded_range_categories)
+                | Q(product_class__classes=self)
+                | Q(includes=self)
+                | Q(parent__categories__in=expanded_range_categories)
+                | Q(parent__product_class__classes=self)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            )
         else:
             selected_products = Product.objects.filter(
-                product_class_id__in=self.classes.values("id")
-            ) | self.included_products.all()
+                Q(product_class__classes=self)
+                | Q(includes=self)
+                | Q(parent__product_class__classes=self)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            )
 
-        # Include children of matching parents
-        selected_products = selected_products | Product.objects.filter(
-            parent__in=selected_products.filter(structure=Product.PARENT)
-        )
-
-        # now go and exclude all explicitly excluded products
-        excludes = self.excluded_products.values("id")
-        return selected_products.exclude(
-            Q(parent_id__in=excludes) | Q(id__in=excludes)
-        ).distinct()
+        return selected_products.distinct()
 
     @property
     def is_editable(self):

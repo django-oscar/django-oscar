@@ -295,13 +295,15 @@ class TestRangeQuerySet(TestCase):
     def test_contains_parent(self):
         ranges = models.Range.objects.contains_product(self.parent)
         self.assertEqual(
-            ranges.count(), 1, "Both ranges should contain the parent product"
+            ranges.count(), 1, "One range should contain the parent product"
         )
 
     def test_exclude_child(self):
         ranges = models.Range.objects.contains_product(self.child2)
         self.assertEqual(
-            ranges.count(), 1, "Only 1 range should contain the second child"
+            ranges.count(), 0,
+            "None of the ranges should contain the second child, because it"
+            " was excluded in the range that contains the parent."
         )
 
     def test_category(self):
@@ -329,10 +331,25 @@ class TestRangeQuerySet(TestCase):
             "The range containing the parent category of the parent product, should be selected",
         )
 
+        ranges = models.Range.objects.contains_product(self.child2)
+        self.assertEqual(
+            ranges.count(),
+            1,
+            "Since the parent category is part of the range, There should be 1 "
+            "range containing the child2 product, whose parent is in a subcategory",
+        )
+
         ranges = models.Range.objects.contains_product(self.child1)
         self.assertEqual(
             ranges.count(),
             3,
             "Since the parent category is part of the range, There should be 3 "
-            "ranges containing the child product, which is in a subcategory",
+            "ranges containing the child1 product, whose parent is in a subcategory",
+        )
+        cat_range.excluded_products.add(self.child2)
+        ranges = models.Range.objects.contains_product(self.child2)
+        self.assertEqual(
+            ranges.count(),
+            0,
+            "No ranges should contain child2 after explicitly removing it from the only range that contained it",
         )
