@@ -43,7 +43,11 @@ def remove_duplicate_attributes(apps, schema_editor):
         # If we found multiple attributes that have values linked to them,
         # we must move them to one attribute and then delete the others.
         # We can only do this if the value_types are all the same!
-        assert used_attributes.values("type").distinct().count() == 1, "Types must be same in order to move duplicate attributes."
+        ASSERTION_MESSAGE = """Duplicate attribute found with code: %s but different types!
+        You could fix this by renaming the duplicate codes or by matching all types to one
+        type and update the attribute values accordingly for their new type. After that you can
+        re-run the migration.""" % attribute_code
+        assert used_attributes.values("type").distinct().count() == 1, ASSERTION_MESSAGE
 
         # Choose one attribute that will be used to move to and others to be deleted.
         to_be_used_attribute = used_attributes.first()
