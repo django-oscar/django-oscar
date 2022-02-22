@@ -128,8 +128,8 @@ class AbstractCategory(MP_Node):
 
     name = models.CharField(_('Name'), max_length=255, db_index=True)
     description = models.TextField(_('Description'), blank=True)
-    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True, null=True)
-    meta_description = models.TextField(_('Meta description'), blank=True, null=True)
+    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True)
+    meta_description = models.TextField(_('Meta description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = SlugField(_('Slug'), max_length=255, db_index=True)
@@ -377,8 +377,8 @@ class AbstractProduct(models.Model):
                              max_length=255, blank=True)
     slug = SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
-    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True, null=True)
-    meta_description = models.TextField(_('Meta description'), blank=True, null=True)
+    meta_title = models.CharField(_('Meta title'), max_length=255, blank=True)
+    meta_description = models.TextField(_('Meta description'), blank=True)
 
     #: "Kind" of product, e.g. T-Shirt, Book, etc.
     #: None for child products, they inherit their parent's product class
@@ -1038,11 +1038,11 @@ class AbstractProductAttributeValue(models.Model):
         related_name='attribute_values',
         verbose_name=_("Product"))
 
-    value_text = models.TextField(_('Text'), blank=True, null=True)
+    value_text = models.TextField(_('Text'), blank=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True, db_index=True)
     value_boolean = models.BooleanField(_('Boolean'), blank=True, null=True, db_index=True)
     value_float = models.FloatField(_('Float'), blank=True, null=True, db_index=True)
-    value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
+    value_richtext = models.TextField(_('Richtext'), blank=True)
     value_date = models.DateField(_('Date'), blank=True, null=True, db_index=True)
     value_datetime = models.DateTimeField(_('DateTime'), blank=True, null=True, db_index=True)
     value_multi_option = models.ManyToManyField(
@@ -1263,7 +1263,7 @@ class AbstractOption(models.Model):
         help_text=_('Select an option group if using type "Option" or "Multi Option"'),
     )
     help_text = models.CharField(
-        verbose_name=_("Help text"), blank=True, null=True, max_length=255,
+        verbose_name=_("Help text"), blank=True, max_length=255,
         help_text=_("Help text shown to the user on the add to basket form")
     )
     order = models.IntegerField(
