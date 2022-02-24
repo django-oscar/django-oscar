@@ -622,7 +622,11 @@ class AbstractLine(models.Model):
         desc = self.title
         ops = []
         for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.type, attribute.value))
+            value = attribute.value
+            if isinstance(value, list):
+                ops.append("%s = '%s'" % (attribute.type, (", ".join([str(v) for v in value]))))
+            else:
+                ops.append("%s = '%s'" % (attribute.type, value))
         if ops:
             desc = "%s (%s)" % (desc, ", ".join(ops))
         return desc

@@ -879,7 +879,11 @@ class AbstractLine(models.Model):
         d = smart_str(self.product)
         ops = []
         for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+            value = attribute.value
+            if isinstance(value, list):
+                ops.append("%s = '%s'" % (attribute.option.name, (", ".join([str(v) for v in value]))))
+            else:
+                ops.append("%s = '%s'" % (attribute.option.name, value))
         if ops:
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
