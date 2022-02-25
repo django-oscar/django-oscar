@@ -870,6 +870,7 @@ class AbstractProductAttribute(models.Model):
         ordering = ['code']
         verbose_name = _('Product attribute')
         verbose_name_plural = _('Product attributes')
+        unique_together = ('code', 'product_class')
 
     @property
     def is_option(self):
