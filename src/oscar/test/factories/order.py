@@ -2,7 +2,6 @@ from decimal import Decimal as D
 
 import factory
 from django.conf import settings
-from django.contrib.sites.models import Site
 
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
@@ -60,9 +59,7 @@ class OrderFactory(factory.django.DjangoModelFactory):
     if hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
         status = settings.OSCAR_INITIAL_ORDER_STATUS
 
-    site_id = factory.LazyAttribute(
-        lambda o: settings.SITE_ID if hasattr(settings, "SITE_ID") else Site.objects.first()
-    )
+    site_id = getattr(settings, "SITE_ID", None)
     number = factory.LazyAttribute(lambda o: '%d' % (100000 + o.basket.pk))
     basket = factory.SubFactory(
         'oscar.test.factories.BasketFactory')
