@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from oscar.apps.catalogue.models import Product
 from oscar.apps.partner import strategy
 from oscar.test import factories
 
@@ -17,3 +18,12 @@ class TestUseFirstStockRecordMixin(TestCase):
 
     def test_returns_none_when_no_stock_records(self):
         self.assertIsNone(self.mixin.select_stockrecord(self.product))
+
+    def test_does_not_generate_additional_query_when_passed_product_from_base_queryset(self):
+        product = Product.objects.base_queryset().first()
+        # Regression test for https://github.com/django-oscar/django-oscar/issues/3875
+        # If passed a product from a queryset annotated by base_queryset, then
+        # the selector should not trigger any additional database queries because
+        # it should rely on the prefetched stock records.
+        with self.assertNumQueries(0):
+            self.mixin.select_stockrecord(product)
