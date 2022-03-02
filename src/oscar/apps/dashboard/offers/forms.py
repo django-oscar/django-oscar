@@ -123,10 +123,11 @@ class ConditionForm(forms.ModelForm):
 
         # Check that either a condition has been entered or a custom condition
         # has been chosen
-        if data.get('custom_condition'):
-            if not data.get('range', None):
+        if data['custom_condition']:
+            if data.get('range') or data.get('type') or data.get('value'):
                 raise forms.ValidationError(
-                    _("A range is required"))
+                    _("No other options can be set if you are using a "
+                      "custom condition"))
         elif not all([data.get('range'), data.get('type'), data.get('value')]):
             raise forms.ValidationError(
                 _("Please either choose a range, type and value OR "

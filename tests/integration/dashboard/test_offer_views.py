@@ -356,11 +356,9 @@ class TestCreateOfferWizardStepView(TestCase):
         }])
 
     def test_offer_condition_view_with_custom_condition_type(self):
-        range_ = RangeFactory()
         condition = create_condition(CustomConditionModel)
 
         request = RequestFactory().post('/', data={
-            'range': range_.pk,
             'custom_condition': condition.pk,
         })
         request.session['offer_wizard'] = {
@@ -379,7 +377,7 @@ class TestCreateOfferWizardStepView(TestCase):
         self.assertJSONEqual(request.session['offer_wizard']['benefit_obj'], self.benefit_obj_session_data)
         self.assertJSONEqual(request.session['offer_wizard']['condition'], {
             'data': {
-                'range': range_.pk,
+                'range': None,
                 'type': '',
                 'value': None,
                 'custom_condition': str(condition.pk),
@@ -669,11 +667,9 @@ class TestUpdateOfferWizardStepView(TestCase):
         }])
 
     def test_offer_condition_view_with_custom_condition_type(self):
-        range_ = RangeFactory()
         condition = create_condition(CustomConditionModel)
 
         request = RequestFactory().post('/', data={
-            'range': range_.pk,
             'custom_condition': condition.pk,
         })
         request.session['offer_wizard'] = {
@@ -694,7 +690,7 @@ class TestUpdateOfferWizardStepView(TestCase):
         self.assertJSONEqual(request.session['offer_wizard'][self.benefit_obj_key], self.benefit_obj_session_data)
         self.assertJSONEqual(request.session['offer_wizard'][self.condition_form_kwargs_key], {
             'data': {
-                'range': range_.pk,
+                'range': None,
                 'type': '',
                 'value': None,
                 'custom_condition': str(condition.pk),
