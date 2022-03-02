@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.core.validators import EMPTY_VALUES
 from django.db.models import Sum
 from django.forms.utils import ErrorDict
 from django.utils.translation import gettext_lazy as _
@@ -13,24 +14,67 @@ Option = get_model('catalogue', 'option')
 Product = get_model('catalogue', 'product')
 
 
-def _option_text_field(option):
-    return forms.CharField(label=option.name, required=option.required)
+def _option_text_field(form, product, option):
+    return forms.CharField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-def _option_integer_field(option):
-    return forms.IntegerField(label=option.name, required=option.required)
+def _option_integer_field(form, product, option):
+    return forms.IntegerField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-def _option_boolean_field(option):
-    return forms.BooleanField(label=option.name, required=option.required)
+def _option_boolean_field(form, product, option):
+    return forms.BooleanField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-def _option_float_field(option):
-    return forms.FloatField(label=option.name, required=option.required)
+def _option_float_field(form, product, option):
+    return forms.FloatField(label=option.name, required=option.required, help_text=option.help_text)
 
 
-def _option_date_field(option):
-    return forms.DateField(label=option.name, required=option.required, widget=forms.widgets.DateInput)
+def _option_date_field(form, product, option):
+    return forms.DateField(
+        label=option.name,
+        required=option.required,
+        widget=forms.widgets.SelectDateWidget,
+        help_text=option.help_text
+    )
+
+
+def _option_select_field(form, product, option):
+    return forms.ChoiceField(
+        label=option.name,
+        required=option.required,
+        choices=option.get_choices(),
+        help_text=option.help_text
+    )
+
+
+def _option_radio_field(form, product, option):
+    return forms.ChoiceField(
+        label=option.name,
+        required=option.required,
+        choices=option.get_choices(),
+        widget=forms.RadioSelect,
+        help_text=option.help_text
+    )
+
+
+def _option_multi_select_field(form, product, option):
+    return forms.MultipleChoiceField(
+        label=option.name,
+        required=option.required,
+        choices=option.get_choices(),
+        help_text=option.help_text
+    )
+
+
+def _option_checkbox_field(form, product, option):
+    return forms.MultipleChoiceField(
+        label=option.name,
+        required=option.required,
+        choices=option.get_choices(),
+        widget=forms.CheckboxSelectMultiple,
+        help_text=option.help_text
+    )
 
 
 class BasketLineForm(forms.ModelForm):
@@ -149,6 +193,10 @@ class AddToBasketForm(forms.Form):
         Option.BOOLEAN: _option_boolean_field,
         Option.FLOAT: _option_float_field,
         Option.DATE: _option_date_field,
+        Option.SELECT: _option_select_field,
+        Option.RADIO: _option_radio_field,
+        Option.MULTI_SELECT: _option_multi_select_field,
+        Option.CHECKBOX: _option_checkbox_field,
     }
 
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
@@ -213,7 +261,7 @@ class AddToBasketForm(forms.Form):
         This is designed to be overridden so that specific widgets can be used
         for certain types of options.
         """
-        option_field = self.OPTION_FIELD_FACTORIES.get(option.type, _option_text_field)(option)
+        option_field = self.OPTION_FIELD_FACTORIES.get(option.type, _option_text_field)(self, product, option)
         self.fields[option.code] = option_field
 
     # Cleaning
@@ -293,9 +341,11 @@ class AddToBasketForm(forms.Form):
         options = []
         for option in self.parent_product.options:
             if option.code in self.cleaned_data:
-                options.append({
-                    'option': option,
-                    'value': self.cleaned_data[option.code]})
+                value = self.cleaned_data[option.code]
+                if option.required or value not in EMPTY_VALUES:
+                    options.append(
+                        {"option": option, "value": value}
+                    )
         return options
 
 

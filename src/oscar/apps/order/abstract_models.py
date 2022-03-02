@@ -2,6 +2,7 @@ import logging
 from decimal import Decimal as D
 
 from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import BadSignature, Signer
 from django.db import models
 from django.db.models import Sum
@@ -621,7 +622,11 @@ class AbstractLine(models.Model):
         desc = self.title
         ops = []
         for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.type, attribute.value))
+            value = attribute.value
+            if isinstance(value, list):
+                ops.append("%s = '%s'" % (attribute.type, (", ".join([str(v) for v in value]))))
+            else:
+                ops.append("%s = '%s'" % (attribute.type, value))
         if ops:
             desc = "%s (%s)" % (desc, ", ".join(ops))
         return desc
@@ -797,7 +802,7 @@ class AbstractLineAttribute(models.Model):
         'catalogue.Option', null=True, on_delete=models.SET_NULL,
         related_name="line_attributes", verbose_name=_("Option"))
     type = models.CharField(_("Type"), max_length=128)
-    value = models.CharField(_("Value"), max_length=255)
+    value = models.JSONField(_("Value"), encoder=DjangoJSONEncoder)
 
     class Meta:
         abstract = True

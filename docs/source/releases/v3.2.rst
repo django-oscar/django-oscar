@@ -24,12 +24,19 @@ What's new in Oscar 3.2?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+.. _backwards_incompatible_in_3.2:
+
+Backwards incompatible changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The interface for the OPTION_FIELD_FACTORIES has changed and now receives the
+  form, the product and the option. Update your overrides as required.
+
 
 .. _removal_of_deprecated_features_in_3.2:
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 
 .. _minor_changes_in_3.2:

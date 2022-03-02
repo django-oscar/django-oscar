@@ -4,6 +4,7 @@ from operator import itemgetter
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import Sum
 from django.utils.encoding import smart_str
@@ -878,7 +879,11 @@ class AbstractLine(models.Model):
         d = smart_str(self.product)
         ops = []
         for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+            value = attribute.value
+            if isinstance(value, list):
+                ops.append("%s = '%s'" % (attribute.option.name, (", ".join([str(v) for v in value]))))
+            else:
+                ops.append("%s = '%s'" % (attribute.option.name, value))
         if ops:
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
@@ -931,7 +936,7 @@ class AbstractLineAttribute(models.Model):
         'catalogue.Option',
         on_delete=models.CASCADE,
         verbose_name=_("Option"))
-    value = models.CharField(_("Value"), max_length=255)
+    value = models.JSONField(_("Value"), encoder=DjangoJSONEncoder)
 
     class Meta:
         abstract = True
