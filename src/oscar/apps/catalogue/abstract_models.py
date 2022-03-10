@@ -1414,8 +1414,10 @@ class AbstractProductImage(models.Model):
         """
         Always keep the display_order as consecutive integers. This avoids
         issue #855.
+        After deletion refresh product from db to avoid #3890.
         """
         super().delete(*args, **kwargs)
+        self.product.refresh_from_db()
         for idx, image in enumerate(self.product.images.all()):
             image.display_order = idx
             image.save()
