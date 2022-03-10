@@ -75,6 +75,16 @@ Minor changes
 
 - Added ``search_fields`` to ``AbstractAddress`` model.
 
+- Added a uniqueness constraint across ``code`` and ``product_class`` for the ``ProductAttribute`` model to prevent duplicate attribute codes. This comes with a migration that will remove duplicate codes before applying the unique constraint migration.
+
+- Implemented a more efficient approach for range queries. This will make (for example) multiple offers in your site a lot faster.
+
+
+Backwards incompatible changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The ``value`` field on the ``BasketLineAttribute`` and ``OrderLineAttribute`` models is now a JSONField. If you have overidden the ``description`` property on the ``BasketLine`` and ``OrderLine`` models, you'll need to change this to make sure options/multi options are displayed normally in the basket and order.
+
 
 .. _dependency_changes_in_3.2:
 
