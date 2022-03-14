@@ -2,7 +2,6 @@ from datetime import date, datetime
 
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.db import IntegrityError, transaction
 from django.test import TestCase
 
 from oscar.apps.catalogue.models import Product, ProductAttribute, ProductClass
@@ -45,19 +44,16 @@ class TestContainer(TestCase):
         product.attr.refresh()
         assert product.attr.a1 == "v2"
 
-    def test_attribute_code_uniquenesss(self):
+    def test_attribute_code_uniqueness(self):
         product_class = factories.ProductClassFactory()
         attribute1 = ProductAttribute.objects.create(name='a1', code='a1', product_class=product_class)
         attribute1.full_clean()
 
-        # transaction.atomic() is required because each test runs in a transaction
-        # but it breaks the transaction if an exception occurs which would results
-        # in not being able to test the attribute3 creation with another product class.
-        with transaction.atomic(), self.assertRaises(IntegrityError):
-            ProductAttribute.objects.create(name='a1', code='a1', product_class=product_class)
+        with self.assertRaises(ValidationError):
+            ProductAttribute(name='a1', code='a1', product_class=product_class).full_clean()
+
         another_product_class = ProductClass.objects.create(name="another product class")
-        attribute3 = ProductAttribute.objects.create(name='a1', code='a1', product_class=another_product_class)
-        attribute3.full_clean()
+        ProductAttribute(name='a1', code='a1', product_class=another_product_class).full_clean()
 
 
 class TestBooleanAttributes(TestCase):
