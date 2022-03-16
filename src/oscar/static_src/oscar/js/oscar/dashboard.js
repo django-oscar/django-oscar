@@ -264,11 +264,16 @@ var oscar = (function(o, $) {
                 }
             });
 
+            // Add href to url, so when the page is reloaded this tab will be displayed.
+            $('.nav-tabs a').on('shown.bs.tab', function (e) {
+                window.location.hash = e.target.hash;
+            });
+
             // Display tabs that have invalid input fields
             $('input').on('invalid', function(){
                 var id = $(this).closest('.tab-pane').attr('id');
                 if (id) {
-                    $('.nav-list a[href="#' + id + '"]').tab('show');
+                    $('.bs-docs-sidenav a[href="#' + id + '"]').tab('show');
                 }
             });
         },
