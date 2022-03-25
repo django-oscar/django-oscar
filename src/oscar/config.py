@@ -22,6 +22,7 @@ class Shop(OscarConfig):
         self.search_app = apps.get_app_config('search')
         self.dashboard_app = apps.get_app_config('dashboard')
         self.offer_app = apps.get_app_config('offer')
+        self.wishlists_app = apps.get_app_config('wishlists')
 
         self.password_reset_form = get_class('customer.forms', 'PasswordResetForm')
         self.set_password_form = SetPasswordForm
@@ -40,6 +41,7 @@ class Shop(OscarConfig):
             path('search/', self.search_app.urls),
             path('dashboard/', self.dashboard_app.urls),
             path('offers/', self.offer_app.urls),
+            path('wishlists/', self.wishlists_app.urls),
 
             # Password reset - as we're using Django's default view functions,
             # we can't namespace these urls as that prevents
