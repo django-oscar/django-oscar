@@ -59,7 +59,7 @@ class OrderFactory(factory.django.DjangoModelFactory):
     if hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
         status = settings.OSCAR_INITIAL_ORDER_STATUS
 
-    site_id = settings.SITE_ID
+    site_id = getattr(settings, "SITE_ID", None)
     number = factory.LazyAttribute(lambda o: '%d' % (100000 + o.basket.pk))
     basket = factory.SubFactory(
         'oscar.test.factories.BasketFactory')
