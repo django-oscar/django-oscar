@@ -732,6 +732,50 @@ class AbstractCondition(BaseOfferMixin, models.Model):
                 'offer.conditions', 'CoverageCondition'),
         }
 
+    def clean(self):
+        # The form will validate whether this is ok or not.
+        if not self.type:
+            return
+        method_name = 'clean_%s' % self.type.lower()
+        if hasattr(self, method_name):
+            getattr(self, method_name)()
+
+    def clean_count(self):
+        errors = []
+
+        if not self.range:
+            errors.append(_("Count conditions require a product range"))
+
+        if not self.value:
+            errors.append(_("Count conditions require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+    def clean_value(self):
+        errors = []
+
+        if not self.range:
+            errors.append(_("Value conditions require a product range"))
+
+        if not self.value:
+            errors.append(_("Value conditions require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+    def clean_coverage(self):
+        errors = []
+
+        if not self.range:
+            errors.append(_("Coverage conditions require a product range"))
+
+        if not self.value:
+            errors.append(_("Coverage conditions require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
     def consume_items(self, offer, basket, affected_lines):
         pass
 
