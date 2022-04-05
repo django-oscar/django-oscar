@@ -103,7 +103,7 @@ class StockRecordForm(forms.ModelForm):
                 if field_name in self.fields:
                     del self.fields[field_name]
         else:
-            for field_name in ['price', 'num_in_stock']:
+            for field_name in ['num_in_stock']:
                 if field_name in self.fields:
                     self.fields[field_name].required = True
 
@@ -111,7 +111,6 @@ class StockRecordForm(forms.ModelForm):
         model = StockRecord
         fields = [
             'partner_sku',
-            'price_currency', 'price',
             'num_in_stock', 'low_stock_threshold',
         ]
 
