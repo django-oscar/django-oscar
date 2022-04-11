@@ -326,12 +326,7 @@ class BasketAddView(FormView):
         return kwargs
 
     def form_invalid(self, form):
-        msgs = []
-        for error in form.errors.values():
-            msgs.append(error.as_text())
-        clean_msgs = [m.replace('* ', '') for m in msgs if m.startswith('* ')]
-        messages.error(self.request, ",".join(clean_msgs))
-
+        self.request.session["add_to_basket_form_post_data"] = self.request.POST
         return redirect_to_referrer(self.request, 'basket:summary')
 
     def form_valid(self, form):
