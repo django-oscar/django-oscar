@@ -185,13 +185,9 @@ class AbstractStockRecord(models.Model):
         # Doesn't make sense to allocate if stock tracking is off.
         if not self.can_track_allocations:
             return
+            
         # Send the pre-save signal
-        signals.pre_save.send(
-            sender=self.__class__,
-            instance=self,
-            created=False,
-            raw=False,
-            using=router.db_for_write(self.__class__, instance=self))
+        self.pre_save_signal()
 
         # Atomic update
         (self.__class__.objects
@@ -205,12 +201,7 @@ class AbstractStockRecord(models.Model):
         self.num_allocated += quantity
 
         # Send the post-save signal
-        signals.post_save.send(
-            sender=self.__class__,
-            instance=self,
-            created=False,
-            raw=False,
-            using=router.db_for_write(self.__class__, instance=self))
+        self.post_save_signal()
 
     allocate.alters_data = True
 
@@ -234,14 +225,9 @@ class AbstractStockRecord(models.Model):
                 _('Invalid stock consumption request'))
 
         # send the pre save signal
-        signals.pre_save.send(
-            sender=self.__class__,
-            instance=self,
-            created=False,
-            raw=False,
-            using=router.db_for_write(self.__class__, instance=self))
+        self.pre_save_signal()
 
-        # Atomic consume allocations and stock
+        # Atomically consume allocations and stock
         (
             self.__class__.objects.filter(pk=self.pk).update(
                 num_allocated=(Coalesce(F("num_allocated"), Value(0)) - quantity),
@@ -259,23 +245,50 @@ class AbstractStockRecord(models.Model):
         self.num_in_stock -= quantity
 
         # Send the post-save signal
-        signals.post_save.send(
+        self.post_save_signal()
+        
+    consume_allocation.alters_data = True
+
+    def cancel_allocation(self, quantity):
+        if not self.can_track_allocations:
+            return
+
+        # We ignore requests that request a cancellation of more than the
+        # amount already allocated.
+
+        # send the pre save signal
+        self.pre_save_signal()
+
+        # Atomically consume allocations
+        (
+            self.__class__.objects.filter(pk=self.pk).update(
+                num_allocated=min(Coalesce(F("num_allocated"), Value(0)) - quantity),
+            )
+        )
+
+        # Make sure current object is up-to-date
+        self.num_allocated -= min(self.num_allocated, quantity)
+
+        # Send the post-save signal
+        self.post_save_signal()
+
+    cancel_allocation.alters_data = True
+    
+    def pre_save_signal(self):
+        signals.pre_save.send(
             sender=self.__class__,
             instance=self,
             created=False,
             raw=False,
             using=router.db_for_write(self.__class__, instance=self))
 
-    consume_allocation.alters_data = True
-
-    def cancel_allocation(self, quantity):
-        if not self.can_track_allocations:
-            return
-        # We ignore requests that request a cancellation of more than the
-        # amount already allocated.
-        self.num_allocated -= min(self.num_allocated, quantity)
-        self.save()
-    cancel_allocation.alters_data = True
+    def post_save_signal(self):
+        signals.post_save.send(
+            sender=self.__class__,
+            instance=self,
+            created=False,
+            raw=False,
+            using=router.db_for_write(self.__class__, instance=self))
 
     @property
     def is_below_threshold(self):
