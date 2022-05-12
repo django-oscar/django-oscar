@@ -185,7 +185,7 @@ class AbstractStockRecord(models.Model):
         # Doesn't make sense to allocate if stock tracking is off.
         if not self.can_track_allocations:
             return
-            
+
         # Send the pre-save signal
         self.pre_save_signal()
 
@@ -246,7 +246,7 @@ class AbstractStockRecord(models.Model):
 
         # Send the post-save signal
         self.post_save_signal()
-        
+
     consume_allocation.alters_data = True
 
     def cancel_allocation(self, quantity):
@@ -273,7 +273,7 @@ class AbstractStockRecord(models.Model):
         self.post_save_signal()
 
     cancel_allocation.alters_data = True
-    
+
     def pre_save_signal(self):
         signals.pre_save.send(
             sender=self.__class__,
