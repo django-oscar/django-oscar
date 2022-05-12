@@ -232,9 +232,40 @@ class AbstractStockRecord(models.Model):
         if not self.is_allocation_consumption_possible(quantity):
             raise InvalidStockAdjustment(
                 _('Invalid stock consumption request'))
+
+        # send the pre save signal
+        signals.pre_save.send(
+            sender=self.__class__,
+            instance=self,
+            created=False,
+            raw=False,
+            using=router.db_for_write(self.__class__, instance=self))
+
+        # Atomic consume allocations and stock
+        (
+            self.__class__.objects.filter(pk=self.pk).update(
+                num_allocated=(Coalesce(F("num_allocated"), Value(0)) - quantity),
+                num_in_stock=(Coalesce(F("num_in_stock"), Value(0)) - quantity),
+            )
+        )
+
+        # Make sure current object is up-to-date
+        if self.num_allocated is None:
+            self.num_allocated = 0
         self.num_allocated -= quantity
+
+        if self.num_in_stock is None:
+            self.num_in_stock = 0
         self.num_in_stock -= quantity
-        self.save()
+
+        # Send the post-save signal
+        signals.post_save.send(
+            sender=self.__class__,
+            instance=self,
+            created=False,
+            raw=False,
+            using=router.db_for_write(self.__class__, instance=self))
+
     consume_allocation.alters_data = True
 
     def cancel_allocation(self, quantity):
