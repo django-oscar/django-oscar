@@ -1952,7 +1952,7 @@ msgstr ""
 
 #: apps/customer/forms.py:106
 msgid "Confirm password"
-msgstr ""
+msgstr "Confirma contrasenya"
 
 #: apps/customer/forms.py:145 apps/dashboard/partners/forms.py:91
 msgid "The two password fields didn't match."
@@ -1961,12 +1961,12 @@ msgstr "Les dues contrasenyes no coincideixen."
 #: apps/customer/forms.py:167 apps/dashboard/orders/forms.py:21
 msgctxt "start date"
 msgid "From"
-msgstr ""
+msgstr "Des de"
 
 #: apps/customer/forms.py:170 apps/dashboard/orders/forms.py:24
 msgctxt "end date"
 msgid "To"
-msgstr ""
+msgstr "Fins"
 
 #: apps/customer/forms.py:172 apps/dashboard/communications/forms.py:23
 #: apps/dashboard/offers/reports.py:14 apps/dashboard/orders/forms.py:68
@@ -1987,7 +1987,7 @@ msgstr ""
 #: apps/customer/forms.py:187 apps/dashboard/orders/forms.py:31
 #: apps/dashboard/orders/forms.py:54
 msgid "All orders"
-msgstr "Todos los pedidos"
+msgstr "Totes les comandes"
 
 #: apps/customer/forms.py:197
 #, python-format
@@ -3132,7 +3132,7 @@ msgstr ""
 
 #: apps/dashboard/pages/views.py:37
 msgid "All pages"
-msgstr "Todas las paginas "
+msgstr "Totes les pàgines "
 
 #: apps/dashboard/pages/views.py:51
 #, python-format
@@ -3205,7 +3205,7 @@ msgstr ""
 
 #: apps/dashboard/partners/views.py:144
 msgid "Create user"
-msgstr "Crear usuario"
+msgstr "Crear usuari"
 
 #: apps/dashboard/partners/views.py:155
 #, python-format
