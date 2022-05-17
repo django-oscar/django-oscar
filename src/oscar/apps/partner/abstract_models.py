@@ -197,7 +197,7 @@ class AbstractStockRecord(models.Model):
         )
 
         # Make sure the current object is up-to-date
-        self.refresh_from_db(fields={"num_allocated"})
+        self.refresh_from_db(fields=["num_allocated"])
 
         # Send the post-save signal
         self.post_save_signal()
@@ -235,7 +235,7 @@ class AbstractStockRecord(models.Model):
         )
 
         # Make sure current object is up-to-date
-        self.refresh_from_db(fields={"num_allocated", "num_in_stock"})
+        self.refresh_from_db(fields=["num_allocated", "num_in_stock"])
 
         # Send the post-save signal
         self.post_save_signal()
@@ -258,8 +258,8 @@ class AbstractStockRecord(models.Model):
         )
 
         # Make sure current object is up-to-date
-        self.refresh_from_db(fields={"num_allocated"})
-        
+        self.refresh_from_db(fields=["num_allocated"])
+
         # Send the post-save signal
         self.post_save_signal()
 
