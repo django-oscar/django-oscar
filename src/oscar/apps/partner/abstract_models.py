@@ -255,22 +255,12 @@ class AbstractStockRecord(models.Model):
 
         # We ignore requests that request a cancellation of more than the
         # amount already allocated.
-
-        # send the pre save signal
-        self.pre_save_signal()
-
-        # Atomically consume allocations
-        (
-            self.__class__.objects.filter(pk=self.pk).update(
-                num_allocated=min(Coalesce(F("num_allocated"), Value(0)) - quantity),
-            )
-        )
+        self.num_allocated = F("num_allocated") - min(self.num_allocated, quantity)
+        self.save()
 
         # Make sure current object is up-to-date
-        self.num_allocated -= min(self.num_allocated, quantity)
-
-        # Send the post-save signal
-        self.post_save_signal()
+        saved_object = self.__class__.objects.get(pk=self.pk)
+        self.num_allocated = saved_object.num_allocated
 
     cancel_allocation.alters_data = True
 
