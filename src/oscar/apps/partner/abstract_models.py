@@ -1,6 +1,6 @@
 from django.db import models, router
 from django.db.models import F, Value, signals
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Least
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
@@ -190,15 +190,14 @@ class AbstractStockRecord(models.Model):
         self.pre_save_signal()
 
         # Atomic update
-        (self.__class__.objects
-            .filter(pk=self.pk)
-            .update(num_allocated=(
-                Coalesce(F('num_allocated'), Value(0)) + quantity)))
+        (
+            self.__class__.objects.filter(pk=self.pk).update(
+                num_allocated=(Coalesce(F("num_allocated"), Value(0)) + quantity)
+            )
+        )
 
         # Make sure the current object is up-to-date
-        if self.num_allocated is None:
-            self.num_allocated = 0
-        self.num_allocated += quantity
+        self.refresh_from_db(fields={"num_allocated"})
 
         # Send the post-save signal
         self.post_save_signal()
@@ -230,19 +229,13 @@ class AbstractStockRecord(models.Model):
         # Atomically consume allocations and stock
         (
             self.__class__.objects.filter(pk=self.pk).update(
-                num_allocated=(Coalesce(F("num_allocated"), Value(0)) - quantity),
-                num_in_stock=(Coalesce(F("num_in_stock"), Value(0)) - quantity),
+                num_allocated=(Coalesce(F("num_allocated"), 0) - quantity),
+                num_in_stock=(Coalesce(F("num_in_stock"), 0) - quantity),
             )
         )
 
         # Make sure current object is up-to-date
-        if self.num_allocated is None:
-            self.num_allocated = 0
-        self.num_allocated -= quantity
-
-        if self.num_in_stock is None:
-            self.num_in_stock = 0
-        self.num_in_stock -= quantity
+        self.refresh_from_db(fields={"num_allocated", "num_in_stock"})
 
         # Send the post-save signal
         self.post_save_signal()
@@ -253,14 +246,22 @@ class AbstractStockRecord(models.Model):
         if not self.can_track_allocations:
             return
 
-        # We ignore requests that request a cancellation of more than the
-        # amount already allocated.
-        self.num_allocated = F("num_allocated") - min(self.num_allocated, quantity)
-        self.save()
+        # send the pre save signal
+        self.pre_save_signal()
+
+        # Atomically consume allocations
+        (
+            self.__class__.objects.filter(pk=self.pk).update(
+                num_allocated=Coalesce(F("num_allocated"), 0)
+                - Coalesce(Least(F("num_allocated"), quantity), 0),
+            )
+        )
 
         # Make sure current object is up-to-date
-        saved_object = self.__class__.objects.get(pk=self.pk)
-        self.num_allocated = saved_object.num_allocated
+        self.refresh_from_db(fields={"num_allocated"})
+        
+        # Send the post-save signal
+        self.post_save_signal()
 
     cancel_allocation.alters_data = True
 
