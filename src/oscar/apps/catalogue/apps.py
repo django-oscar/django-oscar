@@ -1,8 +1,7 @@
-from django.apps import apps
-from django.urls import include, path, re_path
+from django.urls import path, re_path
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.application import OscarConfig
+from oscar.core.application import AutoLoadURLsConfigMixin, OscarConfig
 from oscar.core.loading import get_class
 
 
@@ -38,23 +37,21 @@ class CatalogueOnlyConfig(OscarConfig):
         return self.post_process_urls(urls)
 
 
-class CatalogueReviewsOnlyConfig(OscarConfig):
+class CatalogueReviewsOnlyConfig(AutoLoadURLsConfigMixin, OscarConfig):
     label = 'catalogue'
     name = 'oscar.apps.catalogue'
     verbose_name = _('Catalogue')
+
+    def get_app_label_url_endpoint_mapping(self):
+        return {"reviews": {"endpoint": r"^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/", "regex": True}}
 
     def ready(self):
         from . import receivers  # noqa
 
         super().ready()
 
-        self.reviews_app = apps.get_app_config('reviews')
-
     def get_urls(self):
-        urls = super().get_urls()
-        urls += [
-            re_path(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/', include(self.reviews_app.urls[0])),
-        ]
+        urls = super().get_urls() + self.get_auto_loaded_urls()
         return self.post_process_urls(urls)
 
 

@@ -1,3 +1,4 @@
+from django.test import modify_settings
 from django.urls import reverse
 
 from oscar.test.factories import create_product
@@ -16,10 +17,10 @@ class TestHiddenFeatures(WebTestCase):
         product_detail_page = self.get(self.product.get_absolute_url())
         self.assertContains(product_detail_page, 'Number of reviews')
 
+    @modify_settings(INSTALLED_APPS={"remove": ['oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig']})
     def test_reviews_disabled(self):
-        with self.settings(OSCAR_HIDDEN_FEATURES=['reviews']):
-            product_detail_page = self.get(self.product.get_absolute_url())
-            self.assertNotContains(product_detail_page, 'Number of reviews')
+        product_detail_page = self.get(self.product.get_absolute_url())
+        self.assertNotContains(product_detail_page, 'Number of reviews')
 
     def test_wishlists_enabled(self):
         account_page = self.get(reverse('customer:profile-view'))
@@ -27,10 +28,9 @@ class TestHiddenFeatures(WebTestCase):
         product_detail_page = self.get(self.product.get_absolute_url())
         self.assertContains(product_detail_page, 'Add to wish list')
 
+    @modify_settings(INSTALLED_APPS={"remove": ['oscar.apps.wishlists.apps.WishlistsConfig']})
     def test_wishlists_disabled(self):
-        with self.settings(OSCAR_HIDDEN_FEATURES=['wishlists']):
-            account_page = self.get(reverse('customer:profile-view'))
-
-            self.assertNotContains(account_page, self.wishlists_url)
-            product_detail_page = self.get(self.product.get_absolute_url())
-            self.assertNotContains(product_detail_page, 'Add to wish list')
+        account_page = self.get(reverse('customer:profile-view'))
+        self.assertNotContains(account_page, self.wishlists_url)
+        product_detail_page = self.get(self.product.get_absolute_url())
+        self.assertNotContains(product_detail_page, 'Add to wish list')

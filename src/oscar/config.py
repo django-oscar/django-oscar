@@ -1,27 +1,31 @@
 # flake8: noqa, because URL syntax is more readable with long lines
 
-from django.apps import apps
 from django.conf import settings
 from django.urls import path, reverse_lazy
 from django.views.generic.base import RedirectView
 
-from oscar.core.application import OscarConfig
+from oscar.core.application import AutoLoadURLsConfigMixin, OscarConfig
 from oscar.core.loading import get_class
 
 
-class Shop(OscarConfig):
+class Shop(AutoLoadURLsConfigMixin, OscarConfig):
     name = 'oscar'
+    add_auto_loaded_urls_as_include = False
+
+    def get_app_label_url_endpoint_mapping(self):
+        return {
+            'catalogue': 'catalogue/',
+            'customer': 'accounts/',
+            'basket': 'basket/',
+            'checkout': 'checkout/',
+            'search': 'search/',
+            'dashboard': 'dashboard/',
+            'offer': 'offers/',
+        }
 
     def ready(self):
+        super().ready()
         from django.contrib.auth.forms import SetPasswordForm
-
-        self.catalogue_app = apps.get_app_config('catalogue')
-        self.customer_app = apps.get_app_config('customer')
-        self.basket_app = apps.get_app_config('basket')
-        self.checkout_app = apps.get_app_config('checkout')
-        self.search_app = apps.get_app_config('search')
-        self.dashboard_app = apps.get_app_config('dashboard')
-        self.offer_app = apps.get_app_config('offer')
 
         self.password_reset_form = get_class('customer.forms', 'PasswordResetForm')
         self.set_password_form = SetPasswordForm
@@ -31,15 +35,9 @@ class Shop(OscarConfig):
 
         from oscar.views.decorators import login_forbidden
 
-        urls = [
-            path('', RedirectView.as_view(url=settings.OSCAR_HOMEPAGE), name='home'),
-            path('catalogue/', self.catalogue_app.urls),
-            path('basket/', self.basket_app.urls),
-            path('checkout/', self.checkout_app.urls),
-            path('accounts/', self.customer_app.urls),
-            path('search/', self.search_app.urls),
-            path('dashboard/', self.dashboard_app.urls),
-            path('offers/', self.offer_app.urls),
+        auto_loaded_urls = self.get_auto_loaded_urls()
+
+        urls = [path('', RedirectView.as_view(url=settings.OSCAR_HOMEPAGE), name='home')] + auto_loaded_urls + [
 
             # Password reset - as we're using Django's default view functions,
             # we can't namespace these urls as that prevents

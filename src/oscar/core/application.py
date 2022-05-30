@@ -1,8 +1,55 @@
-from django.apps import AppConfig
+from django.apps import AppConfig, apps
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import URLPattern, reverse_lazy
+from django.urls import URLPattern, include, path, re_path, reverse_lazy
 
-from oscar.core.loading import feature_hidden
+
+class AutoLoadURLsConfigMixin:
+    add_auto_loaded_urls_as_include = True
+
+    def get_app_label_url_endpoint_mapping(self):
+        """
+        Return dict with `app_label` as key and value as either:
+            1. String representing the endpoint of app's URL configurations. Example,
+                >>> {"reviews":"reviews/"}
+            2. Dict with configurations of how the app's URL endpoint(s) will be generated. Example,
+                >>> # Generate endpoint by processing it's kwargs using regex.
+                >>> {"reviews":{"endpoint":"^(?P<product_slug>[\\w-]*)_(?P<product_pk>\\d+)/reviews/","regex":True}}
+        """
+        return {}
+
+    def _create_required_attributes(self):
+        for label in self.get_app_label_url_endpoint_mapping():
+            try:
+                app_config = apps.get_app_config(label)
+            except LookupError:
+                app_config = None
+            setattr(self, f'{label}_app', app_config)
+
+    def ready(self):
+        self._create_required_attributes()
+
+    def get_auto_loaded_urls(self):
+        urls = []
+        for label, value in self.get_app_label_url_endpoint_mapping().items():
+            app_config_attribute_name = f'{label}_app'
+
+            endpoint, regex = value, False
+            if isinstance(value, dict):
+                endpoint = value.get('endpoint') or ''
+                regex = value.get('regex', False)
+
+            app_config = getattr(self, app_config_attribute_name)
+            if app_config is None:
+                continue  # app with the label probably wasn't installed
+
+            app_urls = include((app_config.get_urls(), app_config.namespace)) if getattr(
+                app_config,
+                "add_auto_loaded_urls_as_include",
+                self.add_auto_loaded_urls_as_include,
+            ) else app_config.urls
+
+            urls.append(re_path(endpoint, app_urls) if regex else path(endpoint, app_urls))
+        return urls
 
 
 class OscarConfigMixin(object):
@@ -13,9 +60,6 @@ class OscarConfigMixin(object):
     # Instance namespace for the URLs
     namespace = None
     login_url = None
-
-    #: A name that allows the functionality within this app to be disabled
-    hidable_feature_name = None
 
     #: Maps view names to lists of permissions. We expect tuples of
     #: lists as dictionary values. A list is a set of permissions that all
@@ -77,11 +121,6 @@ class OscarConfigMixin(object):
             urlpatterns (list): A list of URL patterns
 
         """
-        # Test if this the URLs in the Application instance should be
-        # available.  If the feature is hidden then we don't include the URLs.
-        if feature_hidden(self.hidable_feature_name):
-            return []
-
         for pattern in urlpatterns:
             if hasattr(pattern, 'url_patterns'):
                 self.post_process_urls(pattern.url_patterns)

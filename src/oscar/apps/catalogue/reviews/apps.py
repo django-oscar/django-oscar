@@ -11,8 +11,6 @@ class CatalogueReviewsConfig(OscarConfig):
     name = 'oscar.apps.catalogue.reviews'
     verbose_name = _('Catalogue reviews')
 
-    hidable_feature_name = 'reviews'
-
     def ready(self):
         self.detail_view = get_class('catalogue.reviews.views', 'ProductReviewDetail')
         self.create_view = get_class('catalogue.reviews.views', 'CreateProductReview')

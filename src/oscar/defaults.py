@@ -87,9 +87,6 @@ OSCAR_OFFERS_IMPLEMENTED_TYPES = [
     'VOUCHER',
 ]
 
-# Hidden Oscar features, e.g. wishlists or reviews
-OSCAR_HIDDEN_FEATURES = []
-
 # Menu structure of the dashboard navigation
 OSCAR_DASHBOARD_NAVIGATION = [
     {

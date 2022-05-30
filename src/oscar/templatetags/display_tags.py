@@ -1,6 +1,5 @@
 from django import template
-
-from oscar.core.loading import feature_hidden
+from django.apps import apps
 
 register = template.Library()
 
@@ -18,29 +17,27 @@ def get_parameters(context, except_field):
     return ''
 
 
-@register.tag()
-def iffeature(parser, token):
-    nodelist = parser.parse(('endiffeature',))
+@register.tag
+def if_app_installed(parser, token):
+    nodelist = parser.parse(("end_if_app_installed",))
     try:
-        tag_name, app_name, = token.split_contents()
+        tag_name, app_label = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError(
-            "%r tag requires a single argument" % token.contents.split()[0])
-    if not (app_name[0] == app_name[-1] and app_name[0] in ('"', "'")):
-        raise template.TemplateSyntaxError(
-            "%r tag's argument should be in quotes" % tag_name)
+        raise template.TemplateSyntaxError(f"{token.contents.split()[0]} tag requires a single argument")
+    if not (app_label[0] == app_label[-1] and app_label[0] in ('"', "'")):
+        raise template.TemplateSyntaxError(f"{tag_name} tag's argument should be in quotes")
     parser.delete_first_token()
-    return ConditionalOutputNode(nodelist, app_name[1:-1])
+    return ConditionalOutputNode(nodelist, app_label[1:-1])
 
 
 class ConditionalOutputNode(template.Node):
-    def __init__(self, nodelist, feature_name):
+    def __init__(self, nodelist, app_label):
         self.nodelist = nodelist
-        self.feature_name = feature_name
+        self.app_label = app_label
 
     def render(self, context):
-        if not feature_hidden(self.feature_name):
-            output = self.nodelist.render(context)
-            return output
-        else:
+        try:
+            apps.get_app_config(self.app_label)
+        except LookupError:
             return ''
+        return self.nodelist.render(context)
