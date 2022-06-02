@@ -27,6 +27,12 @@ What's new in Oscar 3.2?
 
 - ``oscar.order.mixins.EventHandlerMixin`` was created for easily using the EventHandler without manually create the handler every time.
 
+- Added more product option types:
+    - Select
+    - Radio
+    - Multi select
+    - Checkbox
+
 .. _backwards_incompatible_in_3.2:
 
 Backwards incompatible changes
@@ -34,7 +40,6 @@ Backwards incompatible changes
 
 - The interface for the OPTION_FIELD_FACTORIES has changed and now receives the
   form, the product and the option. Update your overrides as required.
-
 
 .. _removal_of_deprecated_features_in_3.2:
 
@@ -79,6 +84,19 @@ Minor changes
 
 - Implemented a more efficient approach for range queries. This will make (for example) multiple offers in your site a lot faster.
 
+- Made the attribute codes unique per product class
+
+- Changed the review form to as_stars filter instead of if statements
+
+- Prevent unnecessary database query in UseFirstStockRecord strategy
+
+- Fix the issue where html5 validation errors were not shown in the dashboard.
+
+- Changed the stock to be consumed and allocated in an atomic state.
+
+- Fixed not requiring a range when choosing a custom condition
+
+- Changed the basket to be readonly in the django-admin
 
 Backwards incompatible changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
