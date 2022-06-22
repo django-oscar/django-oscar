@@ -47,11 +47,10 @@ sorl_thumbnail_version = 'sorl-thumbnail>=12.6,<12.7'
 easy_thumbnails_version = 'easy-thumbnails>=2.7,<2.8'
 
 docs_requires = [
-    'Sphinx>=4.2,<4.3',
-    'sphinxcontrib-napoleon==0.7',
-    'sphinxcontrib-spelling==7.2.1',
+    'Sphinx>=5.0',
+    'sphinxcontrib-spelling==7.5.1',
     'sphinx_rtd_theme==1.0.0',
-    'sphinx-issues==1.2.0',
+    'sphinx-issues==3.0.1',
     sorl_thumbnail_version,
     easy_thumbnails_version,
 ]
@@ -109,6 +108,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Software Development :: Libraries :: Application Frameworks']
 )
 
