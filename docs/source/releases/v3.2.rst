@@ -23,8 +23,6 @@ Support for Django 2.2 has been dropped. Support for Python 3.6 has been dropped
 What's new in Oscar 3.2?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Pass request to all the messages so we can get the actual site to use in email messages.
-
 - ``oscar.order.mixins.EventHandlerMixin`` was created for easily using the EventHandler without manually create the handler every time.
 
 - Added more product option types:
@@ -33,6 +31,8 @@ What's new in Oscar 3.2?
     - Multi select
     - Checkbox
 
+- Wishlists are now shareable, inside your account you can make your wishlist private(default), public or shared. Public wishlists are available for everyone, shared wishlists only for the emails the user allowed access to.
+
 .. _backwards_incompatible_in_3.2:
 
 Backwards incompatible changes
@@ -40,6 +40,10 @@ Backwards incompatible changes
 
 - The interface for the OPTION_FIELD_FACTORIES has changed and now receives the
   form, the product and the option. Update your overrides as required.
+
+- The ``value`` field on the ``BasketLineAttribute`` and ``OrderLineAttribute`` models is a JSONField now. If you have overidden the ``description`` property on the ``BasketLine`` and ``OrderLine`` models, you'll need to change this to make sure options/multi options are displayed normally in the basket and order.
+
+- The wishlist create and update view now inherits from a new mixin that shares functionality. If you've overrides on those views, you should check to see if everything works as intended.
 
 .. _removal_of_deprecated_features_in_3.2:
 
@@ -98,10 +102,7 @@ Minor changes
 
 - Changed the basket to be readonly in the django-admin
 
-Backwards incompatible changes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- The ``value`` field on the ``BasketLineAttribute`` and ``OrderLineAttribute`` models is now a JSONField. If you have overidden the ``description`` property on the ``BasketLine`` and ``OrderLine`` models, you'll need to change this to make sure options/multi options are displayed normally in the basket and order.
+- The request is now passed to all the communication event type messages, so emails can be sent from the correct site in case of a multisite project.
 
 
 .. _dependency_changes_in_3.2:
@@ -111,13 +112,18 @@ Dependency changes
 
 Python package dependencies:
 
+- Upgraded ``django-debug-toolbar`` to version >=2.2,<3.5
+
 
 Javascript and CSS dependencies:
 
-- Upgraded ``@fortawesome/fontawesome-free`` to version 5.15.4.
+- Upgraded ``@fortawesome/fontawesome-free`` to version 6.1.1.
 - Upgraded ``bootstrap`` to version 4.6.1.
 - Upgraded ``inputmask`` to version 5.0.7.
-- Upgraded ``tinymce`` to version 5.10.2.
+- Upgraded ``tinymce`` to version 6.0.3.
+- Upgraded ``eslint`` to version 8.16.0.
+- Upgraded ``nan`` to version 2.16.0.
+- Upgraded ``sass`` to version 1.52.1.
 
 
 Deprecated features
