@@ -23,15 +23,15 @@ class WishListPrivateTestCase(TestCase):
 
     def test_private_wishlist_detail_logged_out_user(self):
         response = self.client.get(self.wishlist_shared_url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
     def test_private_wishlist_detail_shared_email(self):
         WishListSharedEmail.objects.create(wishlist=self.wishlist, email="test2@example.com")
         response = self.client.get(self.wishlist_shared_url)
         self.assertEqual(
             response.status_code,
-            404,
-            "The response should be 404 because the visibility is set to private."
+            403,
+            "The response should be 403 because the visibility is set to private."
         )
 
     def test_private_wishlist_is_sharable(self):
@@ -95,7 +95,7 @@ class WishListSharedTestCase(WebTestCase):
         )
         self.client.force_login(non_shared_user)
         response = self.client.get(self.wishlist_shared_url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
     @override_settings(LOGIN_URL=reverse("customer:login"))
     def test_shared_wishlist_detail_non_authenticated_user(self):
@@ -104,7 +104,7 @@ class WishListSharedTestCase(WebTestCase):
         user.save()
         WishListSharedEmail.objects.create(wishlist=self.wishlist, email="test2@example.com")
 
-        # Create and set a user that has no access to the wishlist
+        # Set user to None (non authenticated user)
         self.user = None
 
         response = self.get(self.wishlist_shared_url)

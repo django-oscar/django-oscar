@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
@@ -26,7 +26,7 @@ class WishListView(DetailView):
             or request.user.is_authenticated
             and not wishlist.is_allowed_to_see(request.user)
         ):
-            raise Http404
+            raise PermissionDenied
         else:
             messages.info(request, _("You must be logged in to view the wish list"))
             redirect_url = "%s?next=%s" % (settings.LOGIN_URL, request.path)
