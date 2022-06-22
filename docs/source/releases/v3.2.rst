@@ -112,8 +112,6 @@ Dependency changes
 
 Python package dependencies:
 
-- Upgraded ``django-debug-toolbar`` to version >=2.2,<3.5
-
 
 Javascript and CSS dependencies:
 
