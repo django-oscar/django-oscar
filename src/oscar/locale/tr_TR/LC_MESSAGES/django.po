@@ -3,6 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Ali Işıngör <ali@artistanbul.io>, 2022
+# Burhan Parmaksizoglu <salihburhan@gmail.com>, 2021
 # mazlum Güllü <mazlumgullu01@gmail.com>, 2020
 # Serdar Emirci <serdar@emirci.com>, 2019
 msgid ""
@@ -10,8 +12,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Ali Işıngör <ali@artistanbul.io>, 2022\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/codeinthehole/django-oscar/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
-msgstr "Sayın"
+msgstr "Bay"
 
 #: apps/address/abstract_models.py:25
 msgid "Miss"
@@ -29,11 +31,11 @@ msgstr "Bayan"
 
 #: apps/address/abstract_models.py:26
 msgid "Mrs"
-msgstr ""
+msgstr "Bayan"
 
 #: apps/address/abstract_models.py:27
 msgid "Ms"
-msgstr ""
+msgstr "Bayan"
 
 #: apps/address/abstract_models.py:28
 msgid "Dr"
@@ -42,7 +44,7 @@ msgstr "Dr"
 #: apps/address/abstract_models.py:217
 msgctxt "Treatment Pronouns for the customer"
 msgid "Title"
-msgstr "Başlık"
+msgstr "Ünvan"
 
 #: apps/address/abstract_models.py:219 apps/customer/abstract_models.py:51
 #: templates/oscar/dashboard/partners/partner_manage.html:40
@@ -60,15 +62,15 @@ msgstr "Soyad"
 
 #: apps/address/abstract_models.py:224
 msgid "First line of address"
-msgstr "Adres"
+msgstr "Adres ilk satırı"
 
 #: apps/address/abstract_models.py:226
 msgid "Second line of address"
-msgstr "Adres İkinci Satır"
+msgstr "Adres ikinci satır"
 
 #: apps/address/abstract_models.py:228
 msgid "Third line of address"
-msgstr "Adres Ucuncu Satir"
+msgstr "Adres üçüncü satır"
 
 #: apps/address/abstract_models.py:229
 msgid "City"
@@ -76,19 +78,19 @@ msgstr "Şehir"
 
 #: apps/address/abstract_models.py:230
 msgid "State/County"
-msgstr "sehir"
+msgstr "Şehir/Bölge"
 
 #: apps/address/abstract_models.py:232
 msgid "Post/Zip-code"
-msgstr "posta kodu"
+msgstr "Posta kodu"
 
 #: apps/address/abstract_models.py:236 apps/address/abstract_models.py:430
 msgid "Country"
-msgstr "Ulke"
+msgstr "Ülke"
 
 #: apps/address/abstract_models.py:241
 msgid "Search text - used only for searching addresses"
-msgstr ""
+msgstr "Metin araması - sadece adres aramasında kullanılır"
 
 #: apps/address/abstract_models.py:251 apps/address/apps.py:9
 #: templates/oscar/checkout/checkout.html:32
@@ -110,7 +112,7 @@ msgstr "Adresler"
 #: apps/address/abstract_models.py:278
 #, python-format
 msgid "Addresses in %(country)s require a valid postcode"
-msgstr ""
+msgstr "%(country)s adresleri gerçek bir posta kodu içermelidir"
 
 #: apps/address/abstract_models.py:290
 #, python-format
@@ -119,58 +121,58 @@ msgstr ""
 
 #: apps/address/abstract_models.py:408
 msgid "ISO 3166-1 alpha-2"
-msgstr ""
+msgstr "ISO 3166-1 alpha-2"
 
 #: apps/address/abstract_models.py:410
 msgid "ISO 3166-1 alpha-3"
-msgstr ""
+msgstr "ISO 3166-1 alpha-3"
 
 #: apps/address/abstract_models.py:412
 msgid "ISO 3166-1 numeric"
-msgstr ""
+msgstr "ISO 3166-1 nümerik"
 
 #: apps/address/abstract_models.py:415
 msgid "Country name"
-msgstr "Ulke adı"
+msgstr "Ülke adı"
 
 #: apps/address/abstract_models.py:418
 msgid "Official name"
-msgstr ""
+msgstr "Resmi ad"
 
 #: apps/address/abstract_models.py:421 apps/catalogue/abstract_models.py:1319
 msgid "Display order"
-msgstr ""
+msgstr "Siparişi görüntüle"
 
 #: apps/address/abstract_models.py:422
 msgid "Higher the number, higher the country in the list."
-msgstr ""
+msgstr "Yüksek rakama sahip ülkeler listede üstte çıkar."
 
 #: apps/address/abstract_models.py:425
 msgid "Is shipping country"
-msgstr ""
+msgstr "Gönderi yapılacak ülke"
 
 #: apps/address/abstract_models.py:431 apps/shipping/abstract_models.py:25
 msgid "Countries"
-msgstr ""
+msgstr "Ülkeler"
 
 #: apps/address/abstract_models.py:474 forms/mixins.py:27
 msgid "Phone number"
-msgstr "Telefon Numarası"
+msgstr "Telefon numarası"
 
 #: apps/address/abstract_models.py:475
 msgid "In case we need to call you about your order"
-msgstr ""
+msgstr "Sizi siparişinizle ilgili aramamız gerekirse"
 
 #: apps/address/abstract_models.py:477
 #: templates/oscar/checkout/checkout.html:55
 #: templates/oscar/checkout/thank_you.html:57
 #: templates/oscar/dashboard/orders/order_detail.html:536
 msgid "Instructions"
-msgstr ""
+msgstr "Talimatlar"
 
 #: apps/address/abstract_models.py:478
 msgid "Tell us anything we should know when delivering your order."
-msgstr ""
+msgstr "Siparişinizi teslim ederken bilmemiz gerekenleri bildiriniz."
 
 #: apps/address/abstract_models.py:485
 #: templates/oscar/checkout/shipping_address.html:5
@@ -179,11 +181,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:121
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "Teslimat adresi"
 
 #: apps/address/abstract_models.py:486
 msgid "Shipping addresses"
-msgstr ""
+msgstr "Teslimat adresleri"
 
 #: apps/address/abstract_models.py:511 apps/analytics/abstract_models.py:47
 #: apps/analytics/abstract_models.py:78 apps/analytics/abstract_models.py:103
@@ -201,23 +203,23 @@ msgstr "Kullanıcı"
 
 #: apps/address/abstract_models.py:515
 msgid "Default shipping address?"
-msgstr ""
+msgstr "Öntanımlı gönderi adresi?"
 
 #: apps/address/abstract_models.py:519
 msgid "Default billing address?"
-msgstr ""
+msgstr "Öntanımlı fatura adresi?"
 
 #: apps/address/abstract_models.py:525
 msgid "Number of Orders as Shipping Address"
-msgstr ""
+msgstr "Teslimat Adresine göre Sipariş Sayısı"
 
 #: apps/address/abstract_models.py:529
 msgid "Number of Orders as Billing Address"
-msgstr ""
+msgstr "Fatura Adresine göre Sipariş Sayısı"
 
 #: apps/address/abstract_models.py:533
 msgid "Address Hash"
-msgstr ""
+msgstr "Adres Doğruluk Kodu"
 
 #: apps/address/abstract_models.py:535 apps/analytics/abstract_models.py:84
 #: apps/analytics/abstract_models.py:105 apps/basket/abstract_models.py:647
@@ -226,30 +228,30 @@ msgstr ""
 #: apps/order/abstract_models.py:423 apps/order/abstract_models.py:979
 #: apps/partner/abstract_models.py:273 apps/payment/abstract_models.py:42
 msgid "Date Created"
-msgstr ""
+msgstr "Oluşturulma Tarihi"
 
 #: apps/address/abstract_models.py:563
 msgid "User address"
-msgstr ""
+msgstr "Kullanıcı Adresi"
 
 #: apps/address/abstract_models.py:564
 msgid "User addresses"
-msgstr ""
+msgstr "Kullanıcı adresleri"
 
 #: apps/address/abstract_models.py:577
 msgid "This address is already in your address book"
-msgstr ""
+msgstr "Bu adres zaten adres defterinizde kayıtlı"
 
 #: apps/address/abstract_models.py:586
 #: templates/oscar/checkout/thank_you.html:98
 #: templates/oscar/dashboard/orders/order_detail.html:549
 #: templates/oscar/dashboard/orders/order_list.html:122
 msgid "Billing address"
-msgstr ""
+msgstr "Fatura adresi"
 
 #: apps/address/abstract_models.py:587
 msgid "Billing addresses"
-msgstr ""
+msgstr "Fatura adresleri"
 
 #: apps/address/abstract_models.py:606 apps/order/abstract_models.py:487
 #: apps/partner/abstract_models.py:99 apps/partner/apps.py:9
@@ -257,15 +259,15 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:48
 #: templates/oscar/dashboard/orders/line_detail.html:75
 msgid "Partner"
-msgstr ""
+msgstr "Tedarikçi"
 
 #: apps/address/abstract_models.py:611
 msgid "Partner address"
-msgstr ""
+msgstr "Tedarikçi adresi"
 
 #: apps/address/abstract_models.py:612
 msgid "Partner addresses"
-msgstr ""
+msgstr "Tedarikçi adresleri"
 
 #: apps/analytics/abstract_models.py:18 apps/analytics/abstract_models.py:83
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:625
@@ -285,21 +287,21 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:44
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #: apps/analytics/abstract_models.py:22 apps/analytics/reports.py:20
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr ""
+msgstr "Görüntülenme"
 
 #: apps/analytics/abstract_models.py:24 apps/analytics/abstract_models.py:54
 msgid "Basket Additions"
-msgstr ""
+msgstr "Alışveriş Sepeti Eklemeleri"
 
 #: apps/analytics/abstract_models.py:26 apps/analytics/reports.py:22
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr ""
+msgstr "Satın almalar"
 
 #: apps/analytics/abstract_models.py:29
 #: apps/catalogue/reviews/abstract_models.py:29
@@ -308,15 +310,15 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:59
 #: templates/oscar/dashboard/users/detail.html:180
 msgid "Score"
-msgstr ""
+msgstr "Puan"
 
 #: apps/analytics/abstract_models.py:35
 msgid "Product record"
-msgstr ""
+msgstr "Ürün kaydı"
 
 #: apps/analytics/abstract_models.py:36
 msgid "Product records"
-msgstr ""
+msgstr "Ürün kayıtları"
 
 #: apps/analytics/abstract_models.py:39
 #, python-format
@@ -325,7 +327,7 @@ msgstr ""
 
 #: apps/analytics/abstract_models.py:52
 msgid "Product Views"
-msgstr ""
+msgstr "Ürün Görüntülemeleri"
 
 #: apps/analytics/abstract_models.py:58 apps/analytics/reports.py:62
 #: apps/order/abstract_models.py:308 defaults.py:131
@@ -340,48 +342,48 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:104
 #: templates/oscar/dashboard/users/detail.html:119
 msgid "Orders"
-msgstr ""
+msgstr "Siparişler"
 
 #: apps/analytics/abstract_models.py:60 apps/order/abstract_models.py:566
 msgid "Order Lines"
-msgstr ""
+msgstr "Sipariş Satırları"
 
 #: apps/analytics/abstract_models.py:62
 msgid "Order Items"
-msgstr ""
+msgstr "Sipariş Kalemleri"
 
 #: apps/analytics/abstract_models.py:63
 msgid "Total Spent"
-msgstr ""
+msgstr "Toplam Harcama"
 
 #: apps/analytics/abstract_models.py:66
 msgid "Last Order Date"
-msgstr ""
+msgstr "Son Sipariş Tarihi"
 
 #: apps/analytics/abstract_models.py:71
 msgid "User record"
-msgstr ""
+msgstr "Kullanıcı kaydı"
 
 #: apps/analytics/abstract_models.py:72
 msgid "User records"
-msgstr ""
+msgstr "Kullanıcı kayıtları"
 
 #: apps/analytics/abstract_models.py:90
 msgid "User product view"
-msgstr ""
+msgstr "Kullanıcı ürün görüntülemesi"
 
 #: apps/analytics/abstract_models.py:91
 msgid "User product views"
-msgstr ""
+msgstr "Kullanıcı ürün görüntülemeleri"
 
 #: apps/analytics/abstract_models.py:94
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
-msgstr ""
+msgstr "%(user)s kullanıcısı '%(product)s' ürününü görüntüledi"
 
 #: apps/analytics/abstract_models.py:104
 msgid "Search term"
-msgstr ""
+msgstr "Arama ifadesi"
 
 #: apps/analytics/abstract_models.py:111
 msgid "User search query"
@@ -398,7 +400,7 @@ msgstr ""
 
 #: apps/analytics/apps.py:9
 msgid "Analytics"
-msgstr "analiz"
+msgstr "Analitik"
 
 #: apps/analytics/reports.py:21 apps/analytics/reports.py:61
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
@@ -448,13 +450,13 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:50
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:35
 msgid "Name"
-msgstr ""
+msgstr "Ad"
 
 #: apps/analytics/reports.py:59
 #: templates/oscar/customer/profile/profile.html:25
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 msgid "Date registered"
-msgstr ""
+msgstr "Kayıt tarihi"
 
 #: apps/analytics/reports.py:60
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
@@ -591,11 +593,11 @@ msgstr ""
 #: templates/oscar/order/partials/basket_totals.html:7
 #: templates/oscar/partials/nav_primary.html:15
 msgid "Basket"
-msgstr ""
+msgstr "Alışveriş Sepeti"
 
 #: apps/basket/abstract_models.py:70
 msgid "Baskets"
-msgstr ""
+msgstr "Alışveriş Sepetleri"
 
 #: apps/basket/abstract_models.py:89
 #, python-format
@@ -638,16 +640,16 @@ msgstr ""
 
 #: apps/basket/abstract_models.py:641
 msgid "Price excl. Tax"
-msgstr ""
+msgstr "Vergi hariç Fiyat"
 
 #: apps/basket/abstract_models.py:644
 msgid "Price incl. Tax"
-msgstr ""
+msgstr "Vergi dahil Fiyat"
 
 #: apps/basket/abstract_models.py:648 apps/communication/abstract_models.py:99
 #: apps/order/abstract_models.py:392
 msgid "Date Updated"
-msgstr ""
+msgstr "Güncelleme Tarihi"
 
 #: apps/basket/abstract_models.py:663
 msgid "Basket line"
@@ -694,12 +696,12 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:110
 #: templates/oscar/dashboard/catalogue/option_list.html:21
 msgid "Option"
-msgstr ""
+msgstr "Seçenek"
 
 #: apps/basket/abstract_models.py:937 apps/offer/abstract_models.py:494
 #: apps/offer/abstract_models.py:709 apps/order/abstract_models.py:803
 msgid "Value"
-msgstr ""
+msgstr "Değer"
 
 #: apps/basket/abstract_models.py:942
 msgid "Line attribute"
@@ -732,11 +734,11 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:51
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:87
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #: apps/basket/forms.py:199
 msgid "Variant"
-msgstr ""
+msgstr "Varyant"
 
 #: apps/basket/forms.py:227
 msgid "Please select a valid product"
@@ -786,7 +788,7 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
 #: templates/oscar/dashboard/users/detail.html:34
 msgid "Email"
-msgstr ""
+msgstr "E-posta"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:79
 msgid "Basket status"
@@ -902,7 +904,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/option_list.html:6
 #: templates/oscar/dashboard/catalogue/option_list.html:13
 msgid "Options"
-msgstr ""
+msgstr "Seçenekler"
 
 #: apps/catalogue/abstract_models.py:107 apps/catalogue/abstract_models.py:649
 msgid "Product class"
@@ -933,11 +935,11 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:134 apps/catalogue/abstract_models.py:852
 #: apps/dashboard/catalogue/tables.py:22
 msgid "Image"
-msgstr ""
+msgstr "Görsel"
 
 #: apps/catalogue/abstract_models.py:139 apps/catalogue/abstract_models.py:352
 msgid "Is public"
-msgstr ""
+msgstr "Herkese açık"
 
 #: apps/catalogue/abstract_models.py:142
 msgid "Show this category in search results and catalogue listings."
@@ -956,7 +958,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_update.html:155
 #: templates/oscar/dashboard/comms/list.html:33
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:426
 #: apps/catalogue/abstract_models.py:669 defaults.py:109
@@ -968,15 +970,15 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/category_list.html:28
 #: templates/oscar/dashboard/catalogue/product_update.html:78
 msgid "Categories"
-msgstr ""
+msgstr "Kategoriler"
 
 #: apps/catalogue/abstract_models.py:319
 msgid "Product category"
-msgstr ""
+msgstr "Ürün kategorisi"
 
 #: apps/catalogue/abstract_models.py:320
 msgid "Product categories"
-msgstr ""
+msgstr "Ürün kategorileri"
 
 #: apps/catalogue/abstract_models.py:343
 msgid "Stand-alone product"

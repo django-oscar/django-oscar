@@ -12,7 +12,7 @@
 # a270031086f2a0d3514bc0cb507b48f6, 2019
 # Maxime Jourdan <raptorteak@gmail.com>, 2013
 # étienne FLORENT <efloti@gmail.com>, 2016
-# Julie Rymer <rymerjulie.pro@gmail.com>, 2021
+# Julie Rymer <rymerjulie.pro@gmail.com>, 2021-2022
 # Maxime Jourdan <raptorteak@gmail.com>, 2013
 # Max le Fou <buttbadger@gmail.com>, 2020
 # Michael van Tellingen <michaelvantellingen@gmail.com>, 2016
@@ -34,14 +34,14 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2021-03-23 16:14+0000\n"
-"Last-Translator: Julie Rymer <rymerjulie.pro@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Julie Rymer <rymerjulie.pro@gmail.com>, 2021-2022\n"
 "Language-Team: French (http://www.transifex.com/codeinthehole/django-oscar/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
@@ -163,7 +163,7 @@ msgstr "Dénomination officielle"
 
 #: apps/address/abstract_models.py:421 apps/catalogue/abstract_models.py:1319
 msgid "Display order"
-msgstr "Afficher commande"
+msgstr "Ordre d'affichage"
 
 #: apps/address/abstract_models.py:422
 msgid "Higher the number, higher the country in the list."
@@ -739,7 +739,7 @@ msgstr "Enregistrer pour plus tard"
 
 #: apps/basket/forms.py:103
 msgid "Move to Basket"
-msgstr "Ajouter au panier"
+msgstr "Ajouter au Panier"
 
 #: apps/basket/forms.py:135 apps/catalogue/abstract_models.py:817
 #: apps/catalogue/abstract_models.py:1241
@@ -1824,6 +1824,7 @@ msgid "%(count)d notification archived"
 msgid_plural "%(count)d notifications archived"
 msgstr[0] "%(count)d notification archivée"
 msgstr[1] "%(count)d notifications archivées"
+msgstr[2] "%(count)d notifications archivées"
 
 #: apps/communication/notifications/views.py:100
 #, python-format
@@ -1831,6 +1832,7 @@ msgid "%(count)d notification deleted"
 msgid_plural "%(count)d notifications deleted"
 msgstr[0] "%(count)d notification supprimée"
 msgstr[1] "%(count)d notifications supprimées"
+msgstr[2] "%(count)d notifications supprimées"
 
 #: apps/customer/abstract_models.py:49
 msgid "email address"
@@ -2427,6 +2429,7 @@ msgid "%s Category"
 msgid_plural "%s Categories"
 msgstr[0] "%s catégorie"
 msgstr[1] "%s catégories"
+msgstr[2] "%s catégories"
 
 #: apps/dashboard/catalogue/tables.py:84
 msgid "Option summary"
@@ -2438,6 +2441,7 @@ msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
 msgstr[0] "%sGroupe d'options d'attributs"
 msgstr[1] "%sGroupes d'options d'attributs"
+msgstr[2] "%sGroupes d'options d'attributs"
 
 #: apps/dashboard/catalogue/tables.py:113
 #, python-format
@@ -2445,6 +2449,7 @@ msgid "%s Option"
 msgid_plural "%s Options"
 msgstr[0] "%s Option"
 msgstr[1] "%s Options"
+msgstr[2] "%s Options"
 
 #: apps/dashboard/catalogue/views.py:105
 msgid "Product search results"
@@ -3299,6 +3304,7 @@ msgid "Removed %d product from range"
 msgid_plural "Removed %d products from range"
 msgstr[0] "%d produit retiré de la gamme"
 msgstr[1] "%d produits retirés de la gamme"
+msgstr[2] "%d produits retirés de la gamme"
 
 #: apps/dashboard/ranges/views.py:160
 #, python-format
@@ -3306,6 +3312,7 @@ msgid "%d product added to range"
 msgid_plural "%d products added to range"
 msgstr[0] "%d produit ajouté à la gamme"
 msgstr[1] "%d produits ajoutés à la gamme"
+msgstr[2] "%d produits ajoutés à la gamme"
 
 #: apps/dashboard/ranges/views.py:173
 #, python-format
@@ -3416,6 +3423,7 @@ msgid "%d Row"
 msgid_plural "%d Rows"
 msgstr[0] "%d ligne"
 msgstr[1] "%d lignes"
+msgstr[2] "%d lignes"
 
 #: apps/dashboard/users/apps.py:11
 msgid "Users dashboard"
@@ -4087,6 +4095,7 @@ msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] "Acheter %(delta)d produit en plus dans %(range)s"
 msgstr[1] "Acheter %(delta)d produits en plus dans %(range)s"
+msgstr[2] "Acheter %(delta)d produits en plus dans %(range)s"
 
 #: apps/offer/conditions.py:109
 #, python-format
@@ -4182,7 +4191,7 @@ msgstr "Adresse e-mail"
 msgid ""
 "'%(new_status)s' is not a valid status for order %(number)s (current status:"
 " '%(status)s')"
-msgstr "'%(new_status)s' n'est pas un état valide pour la commande %(number)s (état actue l: '%(status)s')"
+msgstr "'%(new_status)s' n'est pas un état valide pour la commande %(number)s (état actuel : '%(status)s')"
 
 #: apps/order/abstract_models.py:271
 msgid "In progress"
@@ -5556,7 +5565,7 @@ msgstr "Articles"
 
 #: templates/oscar/basket/partials/basket_content.html:222
 msgid "Move to basket"
-msgstr "Mettre dans le panier"
+msgstr "Ajouter au panier"
 
 #: templates/oscar/basket/partials/basket_quick.html:25
 #: templates/oscar/customer/order/order_detail.html:24
@@ -5650,6 +5659,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n<strong>%(num_results)s</strong> résultat - <strong>%(start)s</strong> à <strong>%(end)s</strong>."
 msgstr[1] "\n<strong>%(num_results)s</strong> résultats - <strong>%(start)s</strong> à <strong>%(end)s</strong>."
+msgstr[2] "\n<strong>%(num_results)s</strong> résultats - <strong>%(start)s</strong> à <strong>%(end)s</strong>."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5663,6 +5673,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n                    <strong>%(num_results)s</strong> résultat.\n                "
 msgstr[1] "\n                    <strong>%(num_results)s</strong> résultats.\n                "
+msgstr[2] "\n                    <strong>%(num_results)s</strong> résultats.\n                "
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5864,6 +5875,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n<strong>%(num_up_votes)s</strong> client sur %(num_votes)s a trouvé ceci utile"
 msgstr[1] "\n<strong>%(num_up_votes)s</strong> clients sur %(num_votes)s ont trouvé ceci utile"
+msgstr[2] "\n<strong>%(num_up_votes)s</strong> clients sur %(num_votes)s ont trouvé ceci utile"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5885,6 +5897,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n                    %(num_reviews)s avis de clients\n                "
 msgstr[1] "\n                    %(num_reviews)s avis de clients\n                "
+msgstr[2] "\n                    %(num_reviews)s avis de clients\n                "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:83
@@ -6256,7 +6269,7 @@ msgstr "L'équipe %(name)s"
 msgid ""
 "You're receiving this email because your email address has been changed to "
 "<strong>%(email)s</strong>."
-msgstr "Vous recevez cet email car votre adresse email a été changée en<strong>%(email)s</strong>."
+msgstr "Vous recevez cet email car votre adresse email a été changée en <strong>%(email)s</strong>."
 
 #: templates/oscar/communication/emails/commtype_email_changed_body.html:14
 #: templates/oscar/communication/emails/commtype_email_changed_body.txt:7
@@ -6438,7 +6451,7 @@ msgid ""
 "            With this email we have disabled your alert automatically and you will not\n"
 "            receive any further email regarding this product.\n"
 "        "
-msgstr "\nAvec cet email, nous avons désactivé votre alerte automatiquement et vous ne serez pas\nrecevoir tout autre email concernant ce produit."
+msgstr "\nCet e-mail vous informe que votre alerte a été désactivée automatiquement et que vous ne \nrecevrez aucun autre e-mail concernant ce produit."
 
 #: templates/oscar/communication/emails/commtype_product_alert_body.txt:3
 #, python-format
@@ -6463,7 +6476,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr "\nCet e-mail vous informe que nous avons désactivé votre alerte automatique et vous ne\nrecevrez plus aucun e-mail concernant ce produit.\n\nMerci pour votre intérêt,\nL'équipe %(site_name)s\n"
+msgstr "\nCet e-mail vous informe que votre alerte a été désactivée automatiquement et que vous ne\nrecevrez aucun autre e-mail concernant ce produit.\n\nMerci pour votre intérêt,\nL'équipe %(site_name)s\n"
 
 #: templates/oscar/communication/emails/commtype_product_alert_confirmation_body.html:8
 #, python-format
@@ -6509,7 +6522,7 @@ msgstr "Confirmation requise pour alerte de stock"
 #: templates/oscar/communication/emails/commtype_product_alert_subject.txt:1
 #, python-format
 msgid "%(title)s is back in stock"
-msgstr "%(title)sest de retour en stock"
+msgstr "%(title)s est de retour en stock"
 
 #: templates/oscar/communication/emails/commtype_registration_body.html:1
 #: templates/oscar/communication/emails/commtype_registration_body.txt:1
@@ -6667,7 +6680,7 @@ msgstr "\n<a href=\"%(url)s\">%(title)s</a> est à nouveau en stock\n"
 msgid ""
 "\n"
 "%(title)s is back in stock\n"
-msgstr "\n%(title)sest de retour en stock\n"
+msgstr "\n%(title)s est de retour en stock\n"
 
 #: templates/oscar/customer/anon_order.html:8
 #: templates/oscar/dashboard/orders/order_detail.html:22
@@ -8283,6 +8296,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n<strong>%(n)s</strong> produit ajouté"
 msgstr[1] "\n<strong>%(n)s</strong> produits ajoutés"
+msgstr[2] "\n<strong>%(n)s</strong> produits ajoutés"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8296,6 +8310,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\nIl y avait <strong>%(n)s</strong> produit dupliqué dans le fichier\n            "
 msgstr[1] "\nIl y avait <strong>%(n)s</strong> produits dupliqués dans le fichier"
+msgstr[2] "\nIl y avait <strong>%(n)s</strong> produits dupliqués dans le fichier"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8309,6 +8324,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\nIl y avait <strong>%(n)s</strong> produit dans le fichier qui n'a pas pu être trouvé dans le catalogue"
 msgstr[1] "\nIl y avait <strong>%(n)s</strong> produits dans le fichier qui n'ont pas pu être trouvés dans le catalogue"
+msgstr[2] "\nIl y avait <strong>%(n)s</strong> produits dans le fichier qui n'ont pas pu être trouvés dans le catalogue"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -9097,6 +9113,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\nTrouvés <strong>%(num_results)s</strong>Résultat"
 msgstr[1] "\nTrouvé <strong>%(num_results)s</strong> résultats."
+msgstr[2] "\nTrouvé <strong>%(num_results)s</strong> résultats."
 
 #: templates/oscar/search/results.html:69
 msgid "Found <strong>0</strong> results."

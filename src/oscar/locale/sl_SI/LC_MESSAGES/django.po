@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Kljuka Kljucavnicar, 2022
 # Simon Weiss <weiss.simon.1995@gmail.com>, 2017-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Kljuka Kljucavnicar, 2022\n"
 "Language-Team: Slovenian (Slovenia) (http://www.transifex.com/codeinthehole/django-oscar/language/sl_SI/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4600,7 +4601,7 @@ msgstr "Ni na voljo"
 
 #: apps/partner/availability.py:64
 msgid "Available"
-msgstr "Na zalogi"
+msgstr "Dobavljivo"
 
 #: apps/partner/availability.py:87
 msgid "no stock available"
@@ -5988,7 +5989,7 @@ msgstr "Kdo ste vi?"
 
 #: templates/oscar/checkout/gateway.html:39
 msgid "Get a password reminder"
-msgstr "Dobite opozorilo za geslo"
+msgstr "Pozabil sem geslo"
 
 #: templates/oscar/checkout/gateway.html:59
 #: templates/oscar/checkout/shipping_address.html:75
@@ -8144,7 +8145,7 @@ msgid ""
 "\n"
 "                        Page %(page_num)s of %(total_pages)s\n"
 "                    "
-msgstr ""
+msgstr "\n                        Stran %(page_num)s od %(total_pages)s\n                    "
 
 #: templates/oscar/dashboard/partials/pagination.html:24
 #: templates/oscar/partials/pagination.html:24
@@ -8951,7 +8952,7 @@ msgstr "Trenutno ni ponudb strani."
 
 #: templates/oscar/offer/list.html:42
 msgid "Browse products in offer"
-msgstr "Preiši izdelke v ponudbi"
+msgstr "Brskaj po izdelkih v ponudbi"
 
 #: templates/oscar/order/partials/basket_totals.html:60
 msgid "Shipping charge (before discounts)"
@@ -8984,7 +8985,7 @@ msgstr ""
 
 #: templates/oscar/partials/nav_primary.html:37
 msgid "Browse store"
-msgstr "Preišči trgovino"
+msgstr "Brskaj po trgovini"
 
 #: templates/oscar/registration/password_reset_complete.html:4
 #: templates/oscar/registration/password_reset_complete.html:20

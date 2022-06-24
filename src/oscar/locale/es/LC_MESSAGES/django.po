@@ -16,6 +16,7 @@
 # joaquinnunez <josejnv@gmail.com>, 2014
 # joel partida <caburet@gmail.com>, 2018
 # Jon Lazaro Aduna <lazaro.jon@gmail.com>, 2014
+# Jose Escobar, 2022
 # joaquinnunez <josejnv@gmail.com>, 2014
 # José Luis <alagunajs@gmail.com>, 2017
 # José Portela <jose.portela@teltek.es>, 2019
@@ -40,14 +41,14 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2021-04-16 10:45+0000\n"
-"Last-Translator: Ivan Garcia <ivaniclixx@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Jose Escobar, 2022\n"
 "Language-Team: Spanish (http://www.transifex.com/codeinthehole/django-oscar/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
@@ -958,7 +959,7 @@ msgstr "Título"
 
 #: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:382
 msgid "Meta description"
-msgstr ""
+msgstr "Meta descripción"
 
 #: apps/catalogue/abstract_models.py:134 apps/catalogue/abstract_models.py:852
 #: apps/dashboard/catalogue/tables.py:22
@@ -1306,7 +1307,7 @@ msgstr "Atributos de producto"
 
 #: apps/catalogue/abstract_models.py:892
 msgid "Boolean attribute should not be required."
-msgstr ""
+msgstr "El atributo booleano no debería ser obligatorio."
 
 #: apps/catalogue/abstract_models.py:959
 msgid "Must be str"
@@ -1665,11 +1666,11 @@ msgstr "El método de envío seleccionado anteriormente ya no es válido. Por fa
 
 #: apps/checkout/surcharges.py:23
 msgid "Percentage surcharge"
-msgstr ""
+msgstr "Recargo porcentual"
 
 #: apps/checkout/surcharges.py:54
 msgid "Flat surcharge"
-msgstr ""
+msgstr "Recargo fijo"
 
 #: apps/checkout/views.py:83
 msgid ""
@@ -1754,7 +1755,7 @@ msgstr "Mandar un email a %(email)s con el asunto '%(subject)s'"
 msgid ""
 "Code can only contain the uppercase letters (A-Z), digits, and underscores, "
 "and can't start with a digit."
-msgstr ""
+msgstr "El código solo puede contener mayúsculas (A-Z), dígitos y guion bajo y no puede empezar con un digito. "
 
 #: apps/communication/abstract_models.py:63
 msgid "Code used for looking up this event programmatically"
@@ -1830,6 +1831,7 @@ msgid "%(count)d notification archived"
 msgid_plural "%(count)d notifications archived"
 msgstr[0] "%(count)d notificaciones archivadas."
 msgstr[1] "%(count)d notificaciones archivadas"
+msgstr[2] "%(count)d notificaciones archivadas"
 
 #: apps/communication/notifications/views.py:100
 #, python-format
@@ -1837,6 +1839,7 @@ msgid "%(count)d notification deleted"
 msgid_plural "%(count)d notifications deleted"
 msgstr[0] "%(count)d notificaciones eliminadas."
 msgstr[1] "%(count)d notificaciones eliminadas"
+msgstr[2] "%(count)d notificaciones eliminadas"
 
 #: apps/customer/abstract_models.py:49
 msgid "email address"
@@ -2433,10 +2436,11 @@ msgid "%s Category"
 msgid_plural "%s Categories"
 msgstr[0] "%s Categoría"
 msgstr[1] "%s Categorías"
+msgstr[2] "%s Categorías"
 
 #: apps/dashboard/catalogue/tables.py:84
 msgid "Option summary"
-msgstr ""
+msgstr "Resumen de Opciones"
 
 #: apps/dashboard/catalogue/tables.py:93
 #, python-format
@@ -2444,6 +2448,7 @@ msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: apps/dashboard/catalogue/tables.py:113
 #, python-format
@@ -2451,6 +2456,7 @@ msgid "%s Option"
 msgid_plural "%s Options"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: apps/dashboard/catalogue/views.py:105
 msgid "Product search results"
@@ -2605,11 +2611,11 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:980
 msgid "Add a new Option"
-msgstr ""
+msgstr "Añadir una nueva opción"
 
 #: apps/dashboard/catalogue/views.py:983
 msgid "Option created successfully"
-msgstr ""
+msgstr "Opción creada satisfactoriamente"
 
 #: apps/dashboard/catalogue/views.py:996
 #, python-format
@@ -2618,7 +2624,7 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:999
 msgid "Option updated successfully"
-msgstr ""
+msgstr "Opción actualizada satisfactoriamente"
 
 #: apps/dashboard/catalogue/views.py:1011
 #, python-format
@@ -2637,7 +2643,7 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:1032
 msgid "Option deleted successfully"
-msgstr ""
+msgstr "Opción eliminada satisfactoriamente"
 
 #: apps/dashboard/communications/apps.py:11
 msgid "Communications dashboard"
@@ -2701,7 +2707,7 @@ msgstr "La fecha de finalización debe ser posterior a la fecha de inicio."
 
 #: apps/dashboard/offers/forms.py:51
 msgid "Exclusive offers cannot be combined"
-msgstr ""
+msgstr "Ofertas exclusivas no pueden ser combinadas"
 
 #: apps/dashboard/offers/forms.py:81
 msgid "Custom condition"
@@ -3305,6 +3311,7 @@ msgid "Removed %d product from range"
 msgid_plural "Removed %d products from range"
 msgstr[0] "Eliminado producto %d  del rango"
 msgstr[1] "Eliminado productos %d del rango"
+msgstr[2] "Eliminado productos %d del rango"
 
 #: apps/dashboard/ranges/views.py:160
 #, python-format
@@ -3312,6 +3319,7 @@ msgid "%d product added to range"
 msgid_plural "%d products added to range"
 msgstr[0] "%d producto añadidos al rango"
 msgstr[1] "%d productos añadidos al rango"
+msgstr[2] "%d productos añadidos al rango"
 
 #: apps/dashboard/ranges/views.py:173
 #, python-format
@@ -3422,6 +3430,7 @@ msgid "%d Row"
 msgid_plural "%d Rows"
 msgstr[0] "%d Fila"
 msgstr[1] "%d Filas"
+msgstr[2] "%d Filas"
 
 #: apps/dashboard/users/apps.py:11
 msgid "Users dashboard"
@@ -3586,11 +3595,11 @@ msgstr "Cupón eliminado "
 
 #: apps/dashboard/vouchers/views.py:236
 msgid "Create voucher set"
-msgstr ""
+msgstr "Crear conjunto de vales"
 
 #: apps/dashboard/vouchers/views.py:276
 msgid "Voucher set created"
-msgstr ""
+msgstr "Conjunto de vales creado"
 
 #: apps/dashboard/vouchers/views.py:432
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:14
@@ -3598,7 +3607,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:15
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:22
 msgid "Voucher sets"
-msgstr ""
+msgstr "Conjuntos de vales"
 
 #: apps/offer/abstract_models.py:88
 msgid "This is displayed within the customer's basket"
@@ -3629,7 +3638,7 @@ msgstr "Oferta de sesión - oferta temporal, disponible para el usuario solo por
 
 #: apps/offer/abstract_models.py:118
 msgid "Exclusive offer"
-msgstr ""
+msgstr "Oferta exclusiva"
 
 #: apps/offer/abstract_models.py:124
 msgid ""
@@ -4093,6 +4102,7 @@ msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] "Ha comprado %(delta)d producto que los que se permiten (%(range)s)."
 msgstr[1] "Compre %(delta)d productos más de %(range)s."
+msgstr[2] "Compre %(delta)d productos más de %(range)s."
 
 #: apps/offer/conditions.py:109
 #, python-format
@@ -5656,6 +5666,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n<strong>%(num_results)s</strong> resultado - mostrando <strong>%(start)s</strong> de <strong>%(end)s</strong>."
 msgstr[1] "\n<strong>%(num_results)s</strong> resultados - mostrando <strong>%(start)s</strong> de <strong>%(end)s</strong>."
+msgstr[2] "\n<strong>%(num_results)s</strong> resultados - mostrando <strong>%(start)s</strong> de <strong>%(end)s</strong>."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5669,6 +5680,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n<strong>%(num_results)s</strong> resultado."
 msgstr[1] "\n<strong>%(num_results)s</strong> resultados."
+msgstr[2] "\n<strong>%(num_results)s</strong> resultados."
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5870,6 +5882,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n<strong>%(num_up_votes)s</strong> de cada %(num_votes)s cliente encontró esto útil"
 msgstr[1] "\n<strong>%(num_up_votes)s</strong> de cada %(num_votes)s clientes encontraron esto útil"
+msgstr[2] "\n<strong>%(num_up_votes)s</strong> de cada %(num_votes)s clientes encontraron esto útil"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5891,6 +5904,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n%(num_reviews)s opinión del cliente"
 msgstr[1] "\n%(num_reviews)s opiniones de los clientes"
+msgstr[2] "\n%(num_reviews)s opiniones de los clientes"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:83
@@ -8289,6 +8303,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n<strong>%(n)s</strong> producto añadido"
 msgstr[1] "\n<strong>%(n)s</strong> productos añadidos"
+msgstr[2] "\n<strong>%(n)s</strong> productos añadidos"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8302,6 +8317,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\nHabía <strong>%(n)s</strong> producto duplicado en el archivo"
 msgstr[1] "\nHabía <strong>%(n)s</strong> productos duplicados en el archivo"
+msgstr[2] "\nHabía <strong>%(n)s</strong> productos duplicados en el archivo"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8315,6 +8331,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\nHabía <strong>%(n)s</strong> producto en el archivo que no se podía encontrar en el catálogo"
 msgstr[1] "\nHabía <strong>%(n)s</strong> productos en el archivo que no se podían encontrar en el catálogo"
+msgstr[2] "\nHabía <strong>%(n)s</strong> productos en el archivo que no se podían encontrar en el catálogo"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -8849,7 +8866,7 @@ msgstr "No hay cupones"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:24
 msgid "Update voucher set"
-msgstr ""
+msgstr "Actualizar conjunto de vales"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:27
 msgid "Download CSV"
@@ -8858,7 +8875,7 @@ msgstr "Descargar CSV"
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:30
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:39
 msgid "Voucher set"
-msgstr ""
+msgstr "Conjunto de vales"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:48
 msgid "Start"
@@ -8874,7 +8891,7 @@ msgstr "Creado"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
 msgid "Create new voucher set"
-msgstr ""
+msgstr "Crear nuevo conjunto de vales"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
 msgid "Num"
@@ -9103,6 +9120,7 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: templates/oscar/search/results.html:69
 msgid "Found <strong>0</strong> results."

@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Shamsuddin Ahmed, 2022
 # Tahmid Rafi <rafi.tahmid@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Shamsuddin Ahmed, 2022\n"
 "Language-Team: Bengali (Bangladesh) (http://www.transifex.com/codeinthehole/django-oscar/language/bn_BD/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,14 +49,14 @@ msgstr ""
 #: templates/oscar/dashboard/partners/partner_user_list.html:40
 #: templates/oscar/dashboard/partners/partner_user_select.html:46
 msgid "First name"
-msgstr ""
+msgstr "নাম প্রথম অংশ"
 
 #: apps/address/abstract_models.py:220 apps/customer/abstract_models.py:53
 #: templates/oscar/dashboard/partners/partner_manage.html:41
 #: templates/oscar/dashboard/partners/partner_user_list.html:41
 #: templates/oscar/dashboard/partners/partner_user_select.html:47
 msgid "Last name"
-msgstr ""
+msgstr "নাম শেষ অংশ"
 
 #: apps/address/abstract_models.py:224
 msgid "First line of address"
@@ -75,11 +76,11 @@ msgstr "শহর"
 
 #: apps/address/abstract_models.py:230
 msgid "State/County"
-msgstr ""
+msgstr "প্রদেশ/দেশ"
 
 #: apps/address/abstract_models.py:232
 msgid "Post/Zip-code"
-msgstr "পোস্ট ক‌োড/ZIP কোড"
+msgstr "পোস্ট কোড/ZIP কোড"
 
 #: apps/address/abstract_models.py:236 apps/address/abstract_models.py:430
 msgid "Country"
@@ -104,7 +105,7 @@ msgstr "ঠিকানা"
 #: templates/oscar/dashboard/users/detail.html:107
 #: templates/oscar/dashboard/users/detail.html:151
 msgid "Addresses"
-msgstr ""
+msgstr "ঠিকানা সমূহ"
 
 #: apps/address/abstract_models.py:278
 #, python-format
@@ -130,7 +131,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:415
 msgid "Country name"
-msgstr ""
+msgstr "দেশের নাম"
 
 #: apps/address/abstract_models.py:418
 msgid "Official name"
@@ -397,7 +398,7 @@ msgstr ""
 
 #: apps/analytics/apps.py:9
 msgid "Analytics"
-msgstr ""
+msgstr "বিশ্লেষণ"
 
 #: apps/analytics/reports.py:21 apps/analytics/reports.py:61
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
@@ -407,7 +408,7 @@ msgstr ""
 
 #: apps/analytics/reports.py:39
 msgid "Product analytics"
-msgstr ""
+msgstr "পণ্য বিশ্লেষণ"
 
 #: apps/analytics/reports.py:58 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:83 apps/catalogue/abstract_models.py:130
@@ -590,11 +591,11 @@ msgstr "জমাদানের তারিখ"
 #: templates/oscar/order/partials/basket_totals.html:7
 #: templates/oscar/partials/nav_primary.html:15
 msgid "Basket"
-msgstr ""
+msgstr "ঝুরি"
 
 #: apps/basket/abstract_models.py:70
 msgid "Baskets"
-msgstr ""
+msgstr "ঝুরি সমূহ"
 
 #: apps/basket/abstract_models.py:89
 #, python-format
@@ -1398,7 +1399,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1330
 msgid "Product image"
-msgstr ""
+msgstr "পণ্যর ছবি"
 
 #: apps/catalogue/abstract_models.py:1331
 msgid "Product images"
