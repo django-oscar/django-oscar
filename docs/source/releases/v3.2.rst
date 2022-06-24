@@ -104,6 +104,7 @@ Minor changes
 
 - The request is now passed to all the communication event type messages, so emails can be sent from the correct site in case of a multisite project.
 
+- Added basket post data back to the form when invalid
 
 .. _dependency_changes_in_3.2:
 
