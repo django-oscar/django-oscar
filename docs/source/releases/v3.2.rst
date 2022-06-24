@@ -124,6 +124,7 @@ Javascript and CSS dependencies:
 - Upgraded ``eslint`` to version 8.16.0.
 - Upgraded ``nan`` to version 2.16.0.
 - Upgraded ``sass`` to version 1.52.1.
+- Upgraded ``tempusdominus-bootstrap-4`` to version 5.39.2.
 
 
 Deprecated features
