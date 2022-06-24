@@ -1,5 +1,5 @@
 ========================================
-Oscar 3.2 release notes (in development)
+Oscar 3.2 release notes
 ========================================
 
 :release: TBD
