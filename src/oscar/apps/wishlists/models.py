@@ -18,3 +18,10 @@ if not is_model_registered('wishlists', 'Line'):
         pass
 
     __all__.append('Line')
+
+
+if not is_model_registered('wishlists', 'WishListSharedEmail'):
+    class WishListSharedEmail(AbstractWishListSharedEmail):
+        pass
+
+    __all__.append('WishListSharedEmail')
