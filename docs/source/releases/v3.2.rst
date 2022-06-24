@@ -112,6 +112,8 @@ Dependency changes
 
 Python package dependencies:
 
+- Upgraded ``django-treebeard`` to version >=4.3.0
+
 
 Javascript and CSS dependencies:
 
