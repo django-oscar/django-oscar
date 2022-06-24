@@ -28,14 +28,14 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Viktor Holovin <holovin@mail.com>, 2020\n"
 "Language-Team: Italian (http://www.transifex.com/codeinthehole/django-oscar/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
@@ -1818,6 +1818,7 @@ msgid "%(count)d notification archived"
 msgid_plural "%(count)d notifications archived"
 msgstr[0] "%(count)d notifica archiviata"
 msgstr[1] "%(count)d notifiche archiviate"
+msgstr[2] "%(count)d notifiche archiviate"
 
 #: apps/communication/notifications/views.py:100
 #, python-format
@@ -1825,6 +1826,7 @@ msgid "%(count)d notification deleted"
 msgid_plural "%(count)d notifications deleted"
 msgstr[0] "%(count)d notifica eliminata"
 msgstr[1] "%(count)d notifiche eliminate"
+msgstr[2] "%(count)d notifiche eliminate"
 
 #: apps/customer/abstract_models.py:49
 msgid "email address"
@@ -2421,6 +2423,7 @@ msgid "%s Category"
 msgid_plural "%s Categories"
 msgstr[0] "%s Categoria"
 msgstr[1] "%s Categorie"
+msgstr[2] "%s Categorie"
 
 #: apps/dashboard/catalogue/tables.py:84
 msgid "Option summary"
@@ -2432,6 +2435,7 @@ msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
 msgstr[0] "'1%s' Attributo Gruppo Opzioni"
 msgstr[1] "%s Attributo Gruppo Opzioni"
+msgstr[2] "%s Attributo Gruppo Opzioni"
 
 #: apps/dashboard/catalogue/tables.py:113
 #, python-format
@@ -2439,6 +2443,7 @@ msgid "%s Option"
 msgid_plural "%s Options"
 msgstr[0] "%s Opzione"
 msgstr[1] "%s Opzioni"
+msgstr[2] "%s Opzioni"
 
 #: apps/dashboard/catalogue/views.py:105
 msgid "Product search results"
@@ -3293,6 +3298,7 @@ msgid "Removed %d product from range"
 msgid_plural "Removed %d products from range"
 msgstr[0] "Rimosso %d prodotto dalla gamma"
 msgstr[1] "Rimossi %d prodotti dalla gamma"
+msgstr[2] "Rimossi %d prodotti dalla gamma"
 
 #: apps/dashboard/ranges/views.py:160
 #, python-format
@@ -3300,6 +3306,7 @@ msgid "%d product added to range"
 msgid_plural "%d products added to range"
 msgstr[0] "%d prodotto aggiunto alla gamma"
 msgstr[1] "%d prodotti aggiunti alla gamma"
+msgstr[2] "%d prodotti aggiunti alla gamma"
 
 #: apps/dashboard/ranges/views.py:173
 #, python-format
@@ -3410,6 +3417,7 @@ msgid "%d Row"
 msgid_plural "%d Rows"
 msgstr[0] "%d Rigo"
 msgstr[1] "%d Righe"
+msgstr[2] "%d Righe"
 
 #: apps/dashboard/users/apps.py:11
 msgid "Users dashboard"
@@ -4081,6 +4089,7 @@ msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] "Acquista ancora %(delta)d prodotto da %(range)s"
 msgstr[1] "Acquista ancora %(delta)d prodotti da %(range)s"
+msgstr[2] "Acquista ancora %(delta)d prodotti da %(range)s"
 
 #: apps/offer/conditions.py:109
 #, python-format
@@ -5644,6 +5653,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n<strong>%(num_results)s</strong> risultato - ora sono visualizzati quelli da <strong>%(start)s</strong> a <strong>%(end)s</strong>."
 msgstr[1] "\n<strong>%(num_results)s</strong> risultati - ora sono visualizzati quelli da <strong>%(start)s</strong> a <strong>%(end)s</strong>."
+msgstr[2] "\n<strong>%(num_results)s</strong> risultati - ora sono visualizzati quelli da <strong>%(start)s</strong> a <strong>%(end)s</strong>."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5657,6 +5667,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n                    <strong>%(num_results)s</strong> risultato.\n                "
 msgstr[1] "\n                    <strong>%(num_results)s</strong> risultati.\n                "
+msgstr[2] "\n                    <strong>%(num_results)s</strong> risultati.\n                "
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5858,6 +5869,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n            <strong>%(num_up_votes)s</strong> di %(num_votes)s cliente ha trovato questo utile\n            "
 msgstr[1] "\n            <strong>%(num_up_votes)s</strong> di %(num_votes)s clienti hanno trovato questo utile\n            "
+msgstr[2] "\n            <strong>%(num_up_votes)s</strong> di %(num_votes)s clienti hanno trovato questo utile\n            "
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5879,6 +5891,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n                    %(num_reviews)s recensione cliente\n                "
 msgstr[1] "\n                    %(num_reviews)s recensioni cliente\n                "
+msgstr[2] "\n                    %(num_reviews)s recensioni cliente\n                "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:83
@@ -8277,6 +8290,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n                <strong>%(n)s</strong> prodotto aggiunto\n            "
 msgstr[1] "\n                <strong>%(n)s</strong> prodotti aggiunti\n            "
+msgstr[2] "\n                <strong>%(n)s</strong> prodotti aggiunti\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8290,6 +8304,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n               C'è <strong>%(n)s</strong> prodotto duplicato nel file\n\n            "
 msgstr[1] "\n               C'erano <strong>%(n)s</strong> prodotti duplicati nel file\n\n            "
+msgstr[2] "\n               C'erano <strong>%(n)s</strong> prodotti duplicati nel file\n\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8303,6 +8318,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n               C'era <strong>%(n)s</strong> prodotto nel file che non poteva essere trovato nel catalogo"
 msgstr[1] "\n               C'erano <strong>%(n)s</strong> prodotti nel file che non potevano essere trovati nel catalogo\n\n            "
+msgstr[2] "\n               C'erano <strong>%(n)s</strong> prodotti nel file che non potevano essere trovati nel catalogo\n\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -9091,6 +9107,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\nTrovati <strong>%(num_results)s</strong> risultati"
 msgstr[1] "\nTrovati <strong>%(num_results)s</strong> risultati"
+msgstr[2] "\nTrovati <strong>%(num_results)s</strong> risultati"
 
 #: templates/oscar/search/results.html:69
 msgid "Found <strong>0</strong> results."

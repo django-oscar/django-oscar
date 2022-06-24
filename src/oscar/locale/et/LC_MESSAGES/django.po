@@ -6,6 +6,7 @@
 # Alan Kesselmann <alan.kesselmann@gmail.com>, 2014
 # Andres Kepler <kepsic@gmail.com>, 2017
 # Chris Laas <chris@magmatech.ee>, 2019-2020
+# Erlend Eelmets <debcf78e@opayq.com>, 2022
 # Keijo Laas <keijo@magmatech.ee>, 2020
 # Lauri Elias, 2017
 # Alan Kesselmann <alan.kesselmann@gmail.com>, 2014
@@ -17,8 +18,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-29 13:21+0000\n"
-"Last-Translator: Keijo Laas <keijo@magmatech.ee>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Erlend Eelmets <debcf78e@opayq.com>, 2022\n"
 "Language-Team: Estonian (http://www.transifex.com/codeinthehole/django-oscar/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -931,11 +932,11 @@ msgstr "Kirjeldus"
 
 #: apps/catalogue/abstract_models.py:132 apps/catalogue/abstract_models.py:381
 msgid "Meta title"
-msgstr ""
+msgstr "Meta pealkiri"
 
 #: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:382
 msgid "Meta description"
-msgstr ""
+msgstr "Meta kirjeldus"
 
 #: apps/catalogue/abstract_models.py:134 apps/catalogue/abstract_models.py:852
 #: apps/dashboard/catalogue/tables.py:22
@@ -1152,12 +1153,12 @@ msgstr "Tootele, millel on laoseis, ei saa lisada alamtooteid."
 #: apps/catalogue/abstract_models.py:632
 msgctxt "Product meta title"
 msgid "Meta title"
-msgstr ""
+msgstr "Meta pealkiri"
 
 #: apps/catalogue/abstract_models.py:639
 msgctxt "Product meta description"
 msgid "Meta description"
-msgstr ""
+msgstr "Meta kirjeldus"
 
 #: apps/catalogue/abstract_models.py:784
 msgid "Primary product"
@@ -1388,7 +1389,7 @@ msgstr "Omaduse valikud"
 
 #: apps/catalogue/abstract_models.py:1243
 msgid "Is this option required?"
-msgstr ""
+msgstr "Kas see valik on kohustuslik?"
 
 #: apps/catalogue/abstract_models.py:1314
 msgid "Original"
@@ -1681,7 +1682,7 @@ msgstr "Makse teostamisel tekkis viga - raha maha ei võetud. Kui uuesti proovim
 msgid ""
 "A problem occurred while placing this order. Please contact customer "
 "services."
-msgstr ""
+msgstr "Tellimuse pakkumisel tekkis viga. Palun kontakteeru kasutaja toega."
 
 #: apps/communication/abstract_models.py:24
 msgid "Email Address"
@@ -2325,7 +2326,7 @@ msgstr "Töölaud"
 
 #: apps/dashboard/catalogue/forms.py:53
 msgid "Leave blank to generate from category name"
-msgstr ""
+msgstr "Jäta tühjaks, et genereerida kategooria nimest"
 
 #: apps/dashboard/catalogue/forms.py:62
 msgid "Create a new product of type"
@@ -2341,7 +2342,7 @@ msgstr "Tootenimetus"
 
 #: apps/dashboard/catalogue/forms.py:240
 msgid "Leave blank to generate from product title"
-msgstr ""
+msgstr " match \nJäta tühjaks, et genereerida toote pealkirjast"
 
 #: apps/dashboard/catalogue/forms.py:385
 msgid "Select an option group"
@@ -2678,7 +2679,7 @@ msgstr "Lõppkuupäev peab olema pärast alguskuupäeva"
 
 #: apps/dashboard/offers/forms.py:51
 msgid "Exclusive offers cannot be combined"
-msgstr ""
+msgstr "Eksklusiivseid pakkumisi ei saa ühendada"
 
 #: apps/dashboard/offers/forms.py:81
 msgid "Custom condition"
@@ -3612,7 +3613,7 @@ msgstr "Eksklusiivne pakkumine"
 msgid ""
 "Select other non-exclusive offers that this offer can be combined with on "
 "the same items"
-msgstr ""
+msgstr "Valige teisi mitte eklusiivseid pakkumisi millega seda pakkumist võib kombineerida samal tootel"
 
 #: apps/offer/abstract_models.py:139 apps/offer/abstract_models.py:717
 #: templates/oscar/dashboard/offers/offer_detail.html:74
@@ -4209,7 +4210,7 @@ msgstr "Tellimuse staatuse muudatus"
 #: apps/order/abstract_models.py:433
 #, python-format
 msgid "%(order)s has changed status from %(old_status)s to %(new_status)s"
-msgstr ""
+msgstr "%(order)sstaatus on muudetud %(old_status)s ümber %(new_status)s"
 
 #: apps/order/abstract_models.py:450 apps/order/abstract_models.py:907
 #: apps/order/abstract_models.py:974
@@ -5316,7 +5317,7 @@ msgid ""
 "\n"
 "        Your basket total is now <strong>%(total)s</strong>\n"
 "        "
-msgstr ""
+msgstr "\nTeie korvi kogusumma on <strong>%(total)s</strong>"
 
 #: templates/oscar/basket/messages/new_total.html:20
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5765,7 +5766,7 @@ msgid ""
 "\n"
 "                                        Add to '%(name)s' wish list\n"
 "                                    "
-msgstr ""
+msgstr "\nLisa '%(name)s' soovinimekirjas"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:26
 msgid "Create a new wishlist"
@@ -5777,7 +5778,7 @@ msgid ""
 "\n"
 "                    <span class=\"float-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
+msgstr "\n                    <span class=\"float-left\">Toode on <a href=\"%(url)s\">'%(name)s'</a> soovnimekirjas.</span>\n                "
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:45
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:34
@@ -5791,11 +5792,11 @@ msgstr "Palun logige sisse, et lisada tooted soovinimekirja."
 
 #: templates/oscar/catalogue/partials/gallery.html:22
 msgid "Previous"
-msgstr ""
+msgstr "Eelmine"
 
 #: templates/oscar/catalogue/partials/gallery.html:26
 msgid "Next"
-msgstr ""
+msgstr "Järgmine"
 
 #: templates/oscar/catalogue/partials/review.html:23
 #, python-format
@@ -7025,14 +7026,14 @@ msgstr "\n<p>Kustuta kategooria <strong>%(name)s</strong> - olete kindel?</p>"
 #: templates/oscar/dashboard/catalogue/category_form.html:43
 #: templates/oscar/dashboard/catalogue/category_form.html:62
 msgid "Category details"
-msgstr ""
+msgstr "Kategooria detailid"
 
 #: templates/oscar/dashboard/catalogue/category_form.html:48
 #: templates/oscar/dashboard/catalogue/category_form.html:82
 #: templates/oscar/dashboard/catalogue/product_update.html:117
 #: templates/oscar/dashboard/catalogue/product_update.html:349
 msgid "Search engine optimisation"
-msgstr ""
+msgstr "Otsingumootori optimisatsioon"
 
 #: templates/oscar/dashboard/catalogue/category_form.html:108
 #: templates/oscar/dashboard/catalogue/product_update.html:381
@@ -8126,7 +8127,7 @@ msgid ""
 "\n"
 "                        Page %(page_num)s of %(total_pages)s\n"
 "                    "
-msgstr ""
+msgstr "\nLehekülg %(page_num)s/%(total_pages)s"
 
 #: templates/oscar/dashboard/partials/pagination.html:24
 #: templates/oscar/partials/pagination.html:24
@@ -8956,7 +8957,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
+msgstr "\nKokku:  %(total)s"
 
 #: templates/oscar/partials/nav_primary.html:37
 msgid "Browse store"

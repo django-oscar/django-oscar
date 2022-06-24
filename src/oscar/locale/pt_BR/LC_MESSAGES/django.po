@@ -23,6 +23,7 @@
 # Paulo Borges <pauloborgesfilho@gmail.com>, 2015
 # Raphael Suzuki <raphaelsuzuki@daijoubu.ws>, 2013
 # fortinbrax <rbsnkjmr@gmail.com>, 2014
+# Reginaldo Bertoluci Curtio <reginaldobertoluci@gmail.com>, 2021
 # Bruno Ribeiro <brunoribeiroinf@gmail.com>, 2013
 # Samir Shah <solaris.smoke@gmail.com>, 2020
 # wcreis <wesley.c.reis@gmail.com>, 2018
@@ -33,14 +34,14 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Reginaldo Bertoluci Curtio <reginaldobertoluci@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/codeinthehole/django-oscar/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
@@ -859,7 +860,7 @@ msgstr "Você não pode salvar um item para depois se você não estiver logado!
 #: apps/basket/views.py:247
 msgid ""
 "Your basket has got some issues. Please correct any validation errors below."
-msgstr ""
+msgstr "Sua cesta está com alguns problemas. Corrija todos os erros de validação abaixo."
 
 #: apps/basket/views.py:382
 #, python-format
@@ -947,11 +948,11 @@ msgstr "Descrição"
 
 #: apps/catalogue/abstract_models.py:132 apps/catalogue/abstract_models.py:381
 msgid "Meta title"
-msgstr ""
+msgstr "Título meta"
 
 #: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:382
 msgid "Meta description"
-msgstr ""
+msgstr "Descrição meta"
 
 #: apps/catalogue/abstract_models.py:134 apps/catalogue/abstract_models.py:852
 #: apps/dashboard/catalogue/tables.py:22
@@ -964,15 +965,15 @@ msgstr "É público"
 
 #: apps/catalogue/abstract_models.py:142
 msgid "Show this category in search results and catalogue listings."
-msgstr ""
+msgstr "Exibir esta categoria em resultados de pesquisa e listas de catálogos."
 
 #: apps/catalogue/abstract_models.py:145
 msgid "Ancestor categories are public"
-msgstr ""
+msgstr "Categorias ancestrais são públicas"
 
 #: apps/catalogue/abstract_models.py:148
 msgid "The ancestors of this category are public"
-msgstr ""
+msgstr "A ancestral desta categoria é pública"
 
 #: apps/catalogue/abstract_models.py:291 apps/catalogue/abstract_models.py:312
 #: apps/communication/abstract_models.py:78
@@ -1168,12 +1169,12 @@ msgstr "Você não pode adicionar um produto filho a um produto com registros de
 #: apps/catalogue/abstract_models.py:632
 msgctxt "Product meta title"
 msgid "Meta title"
-msgstr ""
+msgstr "Título meta"
 
 #: apps/catalogue/abstract_models.py:639
 msgctxt "Product meta description"
 msgid "Meta description"
-msgstr ""
+msgstr "Descrição meta"
 
 #: apps/catalogue/abstract_models.py:784
 msgid "Primary product"
@@ -1299,7 +1300,7 @@ msgstr "Atributos de produto"
 
 #: apps/catalogue/abstract_models.py:892
 msgid "Boolean attribute should not be required."
-msgstr ""
+msgstr "Atributo booleano não deve ser obrigatório."
 
 #: apps/catalogue/abstract_models.py:959
 msgid "Must be str"
@@ -1404,7 +1405,7 @@ msgstr "Opções de atributo"
 
 #: apps/catalogue/abstract_models.py:1243
 msgid "Is this option required?"
-msgstr ""
+msgstr "Esta opção é obrigatória?"
 
 #: apps/catalogue/abstract_models.py:1314
 msgid "Original"
@@ -1658,11 +1659,11 @@ msgstr "A forma de entrega que você escolheu não é mais válido. Por favor es
 
 #: apps/checkout/surcharges.py:23
 msgid "Percentage surcharge"
-msgstr ""
+msgstr "Sobretaxa de porcentagem"
 
 #: apps/checkout/surcharges.py:54
 msgid "Flat surcharge"
-msgstr ""
+msgstr "Sobretaxa plana"
 
 #: apps/checkout/views.py:83
 msgid ""
@@ -1697,7 +1698,7 @@ msgstr "Um problema ocorreu ao processar o pagamento do seu pedido, mas nenhum p
 msgid ""
 "A problem occurred while placing this order. Please contact customer "
 "services."
-msgstr ""
+msgstr "Ocorreu um problema ao fazer este pedido. Entre em contato com o atendimento ao cliente."
 
 #: apps/communication/abstract_models.py:24
 msgid "Email Address"
@@ -1741,13 +1742,13 @@ msgstr "E-mail para %(user)s com o assunto '%(subject)s'"
 #: apps/communication/abstract_models.py:42
 #, python-format
 msgid "Email to %(email)s with subject '%(subject)s'"
-msgstr ""
+msgstr "Email para %(email)s com assunto '%(subject)s''"
 
 #: apps/communication/abstract_models.py:61
 msgid ""
 "Code can only contain the uppercase letters (A-Z), digits, and underscores, "
 "and can't start with a digit."
-msgstr ""
+msgstr "O código pode conter apenas letras maiúsculas (A-Z), dígitos e sublinhados, e não pode começar com um dígito."
 
 #: apps/communication/abstract_models.py:63
 msgid "Code used for looking up this event programmatically"
@@ -1815,7 +1816,7 @@ msgstr "Avisos"
 
 #: apps/communication/apps.py:9 apps/communication/config.py:8
 msgid "Communication"
-msgstr ""
+msgstr "Comunicação"
 
 #: apps/communication/notifications/views.py:90
 #, python-format
@@ -1823,6 +1824,7 @@ msgid "%(count)d notification archived"
 msgid_plural "%(count)d notifications archived"
 msgstr[0] "%(count)d notificação arquivada"
 msgstr[1] "%(count)d notificações arquivadas"
+msgstr[2] "%(count)d notificações arquivadas"
 
 #: apps/communication/notifications/views.py:100
 #, python-format
@@ -1830,6 +1832,7 @@ msgid "%(count)d notification deleted"
 msgid_plural "%(count)d notifications deleted"
 msgstr[0] "%(count)d notificação removida"
 msgstr[1] "%(count)d notificações removidas"
+msgstr[2] "%(count)d notificações removidas"
 
 #: apps/customer/abstract_models.py:49
 msgid "email address"
@@ -2341,7 +2344,7 @@ msgstr "Painel"
 
 #: apps/dashboard/catalogue/forms.py:53
 msgid "Leave blank to generate from category name"
-msgstr ""
+msgstr "Deixe em branco para gerar a partir do nome da categoria"
 
 #: apps/dashboard/catalogue/forms.py:62
 msgid "Create a new product of type"
@@ -2357,7 +2360,7 @@ msgstr "Título do produto"
 
 #: apps/dashboard/catalogue/forms.py:240
 msgid "Leave blank to generate from product title"
-msgstr ""
+msgstr "Deixe em branco para gerar a partir do título do produto"
 
 #: apps/dashboard/catalogue/forms.py:385
 msgid "Select an option group"
@@ -2426,6 +2429,7 @@ msgid "%s Category"
 msgid_plural "%s Categories"
 msgstr[0] "%s Categoria"
 msgstr[1] "%s Categorias"
+msgstr[2] "%s Categorias"
 
 #: apps/dashboard/catalogue/tables.py:84
 msgid "Option summary"
@@ -2437,6 +2441,7 @@ msgid "%s Attribute Option Group"
 msgid_plural "%s Attribute Option Groups"
 msgstr[0] "%s Grupo de Atributos a Ecolher"
 msgstr[1] "%s Grupo de Atributos a Escolher"
+msgstr[2] "%s Grupo de Atributos a Escolher"
 
 #: apps/dashboard/catalogue/tables.py:113
 #, python-format
@@ -2444,6 +2449,7 @@ msgid "%s Option"
 msgid_plural "%s Options"
 msgstr[0] "%sOpção"
 msgstr[1] "%sOpções"
+msgstr[2] "%sOpções"
 
 #: apps/dashboard/catalogue/views.py:105
 msgid "Product search results"
@@ -3298,6 +3304,7 @@ msgid "Removed %d product from range"
 msgid_plural "Removed %d products from range"
 msgstr[0] "Removido %d produto da lista"
 msgstr[1] "Removidos %d produtos da lista"
+msgstr[2] "Removidos %d produtos da lista"
 
 #: apps/dashboard/ranges/views.py:160
 #, python-format
@@ -3305,6 +3312,7 @@ msgid "%d product added to range"
 msgid_plural "%d products added to range"
 msgstr[0] "Adicionado %d produto à lista"
 msgstr[1] "Adicionados %d produtos à lista"
+msgstr[2] "Adicionados %d produtos à lista"
 
 #: apps/dashboard/ranges/views.py:173
 #, python-format
@@ -3415,6 +3423,7 @@ msgid "%d Row"
 msgid_plural "%d Rows"
 msgstr[0] "%d Linha"
 msgstr[1] "%d Linhas"
+msgstr[2] "%d Linhas"
 
 #: apps/dashboard/users/apps.py:11
 msgid "Users dashboard"
@@ -4086,6 +4095,7 @@ msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] "Compre mais %(delta)d produto da lista %(range)s"
 msgstr[1] "Compra mais %(delta)d produtos da lista %(range)s"
+msgstr[2] "Compra mais %(delta)d produtos da lista %(range)s"
 
 #: apps/offer/conditions.py:109
 #, python-format
@@ -5649,6 +5659,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n<strong>%(num_results)s</strong> resultado - exibindo <strong>%(start)s</strong> até <strong>%(end)s</strong>."
 msgstr[1] "\n<strong>%(num_results)s</strong> resultados - exibindo <strong>%(start)s</strong> até <strong>%(end)s</strong>."
+msgstr[2] "\n<strong>%(num_results)s</strong> resultados - exibindo <strong>%(start)s</strong> até <strong>%(end)s</strong>."
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5662,6 +5673,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n<strong>%(num_results)s</strong> resultado."
 msgstr[1] "\n<strong>%(num_results)s</strong> resultados."
+msgstr[2] "\n<strong>%(num_results)s</strong> resultados."
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -5863,6 +5875,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n<strong>%(num_up_votes)s</strong> de %(num_votes)s cliente achou esta avaliação útil"
 msgstr[1] "\n<strong>%(num_up_votes)s</strong> de %(num_votes)s clientes acharam esta avaliação útil"
+msgstr[2] "\n<strong>%(num_up_votes)s</strong> de %(num_votes)s clientes acharam esta avaliação útil"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5884,6 +5897,7 @@ msgid_plural ""
 "                "
 msgstr[0] "\n%(num_reviews)s comentário"
 msgstr[1] "\n%(num_reviews)s comentários"
+msgstr[2] "\n%(num_reviews)s comentários"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:83
@@ -6499,7 +6513,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
-msgstr ""
+msgstr "\nOlá,\n\nAlguém (esperamos que você) solicitou um alerta por e-mail quando\n'%(title)s' estivesse disponível em estoque. Clique no link a seguir\npara confirmar: %(confirm_url)s\n\nVocê pode cancelar este alerta a qualquer momento, clicando no link a seguir:\n%(cancel_url)s\n\nAgradecemos pelo interesse,\nEquipe %(site)s\n"
 
 #: templates/oscar/communication/emails/commtype_product_alert_confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"
@@ -7041,7 +7055,7 @@ msgstr "\n<p>Excluir categoria <strong>%(name)s</strong> - você tem certeza?</p
 #: templates/oscar/dashboard/catalogue/category_form.html:43
 #: templates/oscar/dashboard/catalogue/category_form.html:62
 msgid "Category details"
-msgstr ""
+msgstr "Detalhes da categoria"
 
 #: templates/oscar/dashboard/catalogue/category_form.html:48
 #: templates/oscar/dashboard/catalogue/category_form.html:82
@@ -8282,6 +8296,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\n<strong>%(n)s</strong> produto adicionado"
 msgstr[1] "\n<strong>%(n)s</strong> produtos adicionados"
+msgstr[2] "\n<strong>%(n)s</strong> produtos adicionados"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8295,6 +8310,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\nExiste <strong>%(n)s</strong> produto duplicado no arquivo"
 msgstr[1] "\nExistem <strong>%(n)s</strong> produtos duplicados no arquivo"
+msgstr[2] "\nExistem <strong>%(n)s</strong> produtos duplicados no arquivo"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8308,6 +8324,7 @@ msgid_plural ""
 "            "
 msgstr[0] "\nExiste <strong>%(n)s</strong> produto no arquivo que não foi encontrado no catálogo"
 msgstr[1] "\nExistem <strong>%(n)s</strong> produtos no arquivo que não foram encontrados no catálogo"
+msgstr[2] "\nExistem <strong>%(n)s</strong> produtos no arquivo que não foram encontrados no catálogo"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -9096,6 +9113,7 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: templates/oscar/search/results.html:69
 msgid "Found <strong>0</strong> results."

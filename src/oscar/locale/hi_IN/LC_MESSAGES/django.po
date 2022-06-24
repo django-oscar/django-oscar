@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Prabhat Sharma, 2022
 # Priyank Soni <priyanksonigeca7@gmail.com>, 2019
 # Rupesh Saini <rupeshsaini2011@gmail.com>, 2020
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Prabhat Sharma, 2022\n"
 "Language-Team: Hindi (India) (http://www.transifex.com/codeinthehole/django-oscar/language/hi_IN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1280,7 +1281,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:959
 msgid "Must be str"
-msgstr ""
+msgstr "स्ट्रिंग होना चाहिए"
 
 #: apps/catalogue/abstract_models.py:966
 msgid "Must be a float"
@@ -1288,15 +1289,15 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:972
 msgid "Must be an integer"
-msgstr ""
+msgstr "पूर्णांक होना चाहिए"
 
 #: apps/catalogue/abstract_models.py:976
 msgid "Must be a date or datetime"
-msgstr ""
+msgstr "दिनांक या दिनांक-समय होना चाहिए"
 
 #: apps/catalogue/abstract_models.py:980
 msgid "Must be a datetime"
-msgstr ""
+msgstr "दिनांक-समय होना चाहिए"
 
 #: apps/catalogue/abstract_models.py:984
 msgid "Must be a boolean"
@@ -1329,7 +1330,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1034
 msgid "Attribute"
-msgstr ""
+msgstr "गुण"
 
 #: apps/catalogue/abstract_models.py:1043
 msgid "Boolean"
@@ -1341,7 +1342,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1047
 msgid "DateTime"
-msgstr ""
+msgstr "दिनांक-समय"
 
 #: apps/catalogue/abstract_models.py:1051
 msgid "Value multi option"
@@ -1369,7 +1370,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1194
 msgid "Group"
-msgstr ""
+msgstr "समूह"
 
 #: apps/catalogue/abstract_models.py:1204
 msgid "Attribute option"
@@ -1385,30 +1386,30 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1314
 msgid "Original"
-msgstr ""
+msgstr "असली"
 
 #: apps/catalogue/abstract_models.py:1315
 msgid "Caption"
-msgstr ""
+msgstr "शीर्षक"
 
 #: apps/catalogue/abstract_models.py:1320
 msgid ""
 "An image with a display order of zero will be the primary image for a "
 "product"
-msgstr ""
+msgstr "शून्य के प्रदर्शन क्रम वाली छवि किसी उत्पाद की प्राथमिक छवि होगी"
 
 #: apps/catalogue/abstract_models.py:1330
 msgid "Product image"
-msgstr ""
+msgstr "उत्पाद का चित्र"
 
 #: apps/catalogue/abstract_models.py:1331
 msgid "Product images"
-msgstr ""
+msgstr "उत्पाद चित्र"
 
 #: apps/catalogue/apps.py:12 apps/catalogue/apps.py:44
 #: apps/dashboard/catalogue/apps.py:11 defaults.py:97
 msgid "Catalogue"
-msgstr ""
+msgstr "सूची"
 
 #: apps/catalogue/product_attributes.py:25
 #, python-format
@@ -1430,39 +1431,39 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:181
 msgctxt "Product review title"
 msgid "Title"
-msgstr ""
+msgstr "शीर्षक"
 
 #: apps/catalogue/reviews/abstract_models.py:35
 #: templates/oscar/communication/email/email_detail.html:23
 #: templates/oscar/communication/notifications/detail.html:28
 #: templates/oscar/dashboard/users/detail.html:182
 msgid "Body"
-msgstr ""
+msgstr "शरीर"
 
 #: apps/catalogue/reviews/abstract_models.py:47
 msgctxt "Anonymous reviewer name"
 msgid "Name"
-msgstr ""
+msgstr "नाम"
 
 #: apps/catalogue/reviews/abstract_models.py:50
 #: apps/dashboard/pages/forms.py:26 models/fields/__init__.py:32
 #: templates/oscar/dashboard/pages/index.html:55
 msgid "URL"
-msgstr ""
+msgstr "यूआरएल"
 
 #: apps/catalogue/reviews/abstract_models.py:54
 msgid "Requires moderation"
-msgstr ""
+msgstr "मॉडरेशन की आवश्यकता है"
 
 #: apps/catalogue/reviews/abstract_models.py:55
 #: apps/dashboard/reviews/forms.py:12
 msgid "Approved"
-msgstr ""
+msgstr "स्वीकृत"
 
 #: apps/catalogue/reviews/abstract_models.py:56
 #: apps/dashboard/reviews/forms.py:13
 msgid "Rejected"
-msgstr ""
+msgstr "अस्वीकृत"
 
 #: apps/catalogue/reviews/abstract_models.py:64
 msgid "Total Votes"
@@ -1470,27 +1471,27 @@ msgstr "कुल वोट"
 
 #: apps/catalogue/reviews/abstract_models.py:66
 msgid "Delta Votes"
-msgstr ""
+msgstr "डेल्टा वोट"
 
 #: apps/catalogue/reviews/abstract_models.py:78
 msgid "Product review"
-msgstr ""
+msgstr "उत्पाद समीक्षा"
 
 #: apps/catalogue/reviews/abstract_models.py:79
 msgid "Product reviews"
-msgstr ""
+msgstr "उत्पाद की समीक्षा"
 
 #: apps/catalogue/reviews/abstract_models.py:97
 msgid "Anonymous reviews must include a name and an email"
-msgstr ""
+msgstr "अनाम समीक्षाओं में एक नाम और एक ईमेल शामिल होना चाहिए"
 
 #: apps/catalogue/reviews/abstract_models.py:150
 msgid "anonymous"
-msgstr ""
+msgstr "अनाम"
 
 #: apps/catalogue/reviews/abstract_models.py:172
 msgid "Only signed in users can vote"
-msgstr ""
+msgstr "केवल साइन इन उपयोगकर्ता ही वोट कर सकते हैं"
 
 #: apps/catalogue/reviews/abstract_models.py:198
 msgid "Up"
@@ -1502,7 +1503,7 @@ msgstr "नीचे"
 
 #: apps/catalogue/reviews/abstract_models.py:201
 msgid "Delta"
-msgstr ""
+msgstr "डेल्टा"
 
 #: apps/catalogue/reviews/abstract_models.py:209
 msgid "Vote"
@@ -1516,61 +1517,61 @@ msgstr "वोट"
 
 #: apps/catalogue/reviews/abstract_models.py:218
 msgid "You cannot vote on your own reviews"
-msgstr ""
+msgstr "आप अपनी समीक्षाओं पर वोट नहीं कर सकते"
 
 #: apps/catalogue/reviews/abstract_models.py:221
 msgid "Only signed-in users can vote on reviews"
-msgstr ""
+msgstr "केवल साइन-इन उपयोगकर्ता ही समीक्षाओं पर वोट कर सकते हैं"
 
 #: apps/catalogue/reviews/abstract_models.py:225
 msgid "You can only vote once on a review"
-msgstr ""
+msgstr "आप समीक्षा पर केवल एक बार वोट कर सकते हैं"
 
 #: apps/catalogue/reviews/apps.py:12
 msgid "Catalogue reviews"
-msgstr ""
+msgstr "कैटलॉग समीक्षा"
 
 #: apps/catalogue/reviews/forms.py:52
 msgid "Recency"
-msgstr ""
+msgstr "नवीनता"
 
 #: apps/catalogue/reviews/forms.py:57 apps/search/forms.py:83
 msgid "Sort by"
-msgstr ""
+msgstr "इसके अनुसार क्रमबद्ध करें"
 
 #: apps/catalogue/reviews/views.py:33
 msgid "You have already reviewed this product!"
-msgstr ""
+msgstr "आप पहले ही इस उत्पाद की समीक्षा कर चुके हैं!"
 
 #: apps/catalogue/reviews/views.py:35
 msgid "You can't leave a review for this product."
-msgstr ""
+msgstr "आप इस उत्पाद के लिए समीक्षा नहीं छोड़ सकते।"
 
 #: apps/catalogue/reviews/views.py:60
 msgid "Thank you for reviewing this product"
-msgstr ""
+msgstr "इस उत्पाद की समीक्षा करने के लिए धन्यवाद"
 
 #: apps/catalogue/reviews/views.py:98
 msgid "Thanks for voting!"
-msgstr ""
+msgstr "मतदान करने के लिए शुक्रिया!"
 
 #: apps/catalogue/utils.py:62
 #, python-format
 msgid "%(filename)s is not a valid image (%(error)s)"
-msgstr ""
+msgstr "1%(filename)sएक मान्य छवि नहीं है (%(error)s)"
 
 #: apps/catalogue/utils.py:71
 #, python-format
 msgid "%s is not a valid image archive"
-msgstr ""
+msgstr "%s वैध छवि संग्रह नहीं है"
 
 #: apps/catalogue/views.py:135 apps/catalogue/views.py:176
 msgid "The given page number was invalid."
-msgstr ""
+msgstr "दिया गया पृष्ठ क्रमांक अमान्य था।"
 
 #: apps/catalogue/views.py:144 templates/oscar/partials/nav_primary.html:41
 msgid "All products"
-msgstr ""
+msgstr "सारे उत्पाद"
 
 #: apps/checkout/apps.py:13
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -9093,4 +9094,4 @@ msgstr ""
 #: views/generic.py:78
 #, python-format
 msgid "You need to select some %ss"
-msgstr ""
+msgstr "आपको कुछ %s का चयन करने की आवश्यकता है"

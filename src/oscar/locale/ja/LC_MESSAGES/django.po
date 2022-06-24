@@ -8,14 +8,15 @@
 # Miyuki Kanda <info@axispoint.co.jp>, 2013
 # Negishi Yoshimasa <yoshimasa.negishi@gmail.com>, 2017
 # 小口英昭 <oguchi@bluff-lab.com>, 2019
+# Yoshika Takada <touch@rnsk.net>, 2021
 # 小口英昭 <oguchi@bluff-lab.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
-"PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: Yoshika Takada <touch@rnsk.net>, 2021\n"
 "Language-Team: Japanese (http://www.transifex.com/codeinthehole/django-oscar/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -840,7 +841,7 @@ msgstr "ログインしていない場合は商品を保存することができ
 #: apps/basket/views.py:247
 msgid ""
 "Your basket has got some issues. Please correct any validation errors below."
-msgstr ""
+msgstr "カートの更新ができませんでした。 以下のエラーを修正してください。"
 
 #: apps/basket/views.py:382
 #, python-format
@@ -928,11 +929,11 @@ msgstr "説明"
 
 #: apps/catalogue/abstract_models.py:132 apps/catalogue/abstract_models.py:381
 msgid "Meta title"
-msgstr ""
+msgstr "メタタイトル"
 
 #: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:382
 msgid "Meta description"
-msgstr ""
+msgstr "メタ説明文"
 
 #: apps/catalogue/abstract_models.py:134 apps/catalogue/abstract_models.py:852
 #: apps/dashboard/catalogue/tables.py:22
@@ -945,15 +946,15 @@ msgstr "公開"
 
 #: apps/catalogue/abstract_models.py:142
 msgid "Show this category in search results and catalogue listings."
-msgstr ""
+msgstr "このカテゴリを検索結果とカテゴリ一覧に表示します。"
 
 #: apps/catalogue/abstract_models.py:145
 msgid "Ancestor categories are public"
-msgstr ""
+msgstr "上位カテゴリは公開されています"
 
 #: apps/catalogue/abstract_models.py:148
 msgid "The ancestors of this category are public"
-msgstr ""
+msgstr "このカテゴリの上位は公開されています"
 
 #: apps/catalogue/abstract_models.py:291 apps/catalogue/abstract_models.py:312
 #: apps/communication/abstract_models.py:78
@@ -1149,12 +1150,12 @@ msgstr "在庫記録を持つ商品には子商品を登録することはでき
 #: apps/catalogue/abstract_models.py:632
 msgctxt "Product meta title"
 msgid "Meta title"
-msgstr ""
+msgstr "メタタイトル"
 
 #: apps/catalogue/abstract_models.py:639
 msgctxt "Product meta description"
 msgid "Meta description"
-msgstr ""
+msgstr "メタ説明文"
 
 #: apps/catalogue/abstract_models.py:784
 msgid "Primary product"
@@ -1385,7 +1386,7 @@ msgstr "属性オプション"
 
 #: apps/catalogue/abstract_models.py:1243
 msgid "Is this option required?"
-msgstr ""
+msgstr "このオプションは必須ですか？"
 
 #: apps/catalogue/abstract_models.py:1314
 msgid "Original"
@@ -1639,11 +1640,11 @@ msgstr "以前に選択した配送方法は無効になりました。 別の�
 
 #: apps/checkout/surcharges.py:23
 msgid "Percentage surcharge"
-msgstr ""
+msgstr "割合の追加料金"
 
 #: apps/checkout/surcharges.py:54
 msgid "Flat surcharge"
-msgstr ""
+msgstr "固定の追加料金"
 
 #: apps/checkout/views.py:83
 msgid ""
@@ -1678,7 +1679,7 @@ msgstr "この注文の決済処理中に問題が発生しました-決済は�
 msgid ""
 "A problem occurred while placing this order. Please contact customer "
 "services."
-msgstr ""
+msgstr "この注文中に問題が発生しました。 カスタマーサービスにお問い合わせください。"
 
 #: apps/communication/abstract_models.py:24
 msgid "Email Address"
@@ -1728,7 +1729,7 @@ msgstr ""
 msgid ""
 "Code can only contain the uppercase letters (A-Z), digits, and underscores, "
 "and can't start with a digit."
-msgstr ""
+msgstr "コードにはa〜z、A〜Z、数字、アンダースコアのみが使用でき、数字から開始することはできません。"
 
 #: apps/communication/abstract_models.py:63
 msgid "Code used for looking up this event programmatically"
@@ -2320,7 +2321,7 @@ msgstr "ダッシュボード"
 
 #: apps/dashboard/catalogue/forms.py:53
 msgid "Leave blank to generate from category name"
-msgstr ""
+msgstr "カテゴリ名から生成する場合は空白にします。"
 
 #: apps/dashboard/catalogue/forms.py:62
 msgid "Create a new product of type"
@@ -2336,7 +2337,7 @@ msgstr "商品名"
 
 #: apps/dashboard/catalogue/forms.py:240
 msgid "Leave blank to generate from product title"
-msgstr ""
+msgstr "商品名から生成する場合は空白にします。"
 
 #: apps/dashboard/catalogue/forms.py:385
 msgid "Select an option group"
@@ -2670,7 +2671,7 @@ msgstr "終了日時は開始日時より未来でなければなりません。
 
 #: apps/dashboard/offers/forms.py:51
 msgid "Exclusive offers cannot be combined"
-msgstr ""
+msgstr "限定セールを組み合わせることはできません。"
 
 #: apps/dashboard/offers/forms.py:81
 msgid "Custom condition"
