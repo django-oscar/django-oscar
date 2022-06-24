@@ -113,6 +113,8 @@ Dependency changes
 Python package dependencies:
 
 - Upgraded ``django-treebeard`` to version >=4.3.0
+- Upgraded ``django-phonenumber-field`` to version >=4.0.0,<7.0.0
+- Upgraded ``django-extra-views`` to version >=0.13,<0.15
 
 
 Javascript and CSS dependencies:
