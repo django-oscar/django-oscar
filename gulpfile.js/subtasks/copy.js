@@ -41,6 +41,9 @@ module.exports = function(done) {
         "node_modules/tinymce/**/img/*",
     ]).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce"));
 
+    gulp.src("node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js")
+        .pipe(gulp.dest("src/oscar/static/oscar/js/tinymce"));
+
     gulp.src([
         "node_modules/select2/dist/js/select2.min.js",
         "node_modules/select2/dist/css/select2.min.css"
