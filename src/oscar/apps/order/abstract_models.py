@@ -135,8 +135,9 @@ class AbstractOrder(models.Model):
         self.status = new_status
         if new_status in self.cascade:
             for line in self.lines.all():
-                line.status = self.cascade[self.status]
-                line.save()
+                if new_status in line.available_statuses():
+                    line.status = self.cascade[self.status]
+                    line.save()
         self.save()
 
         # Send signal for handling status changed
