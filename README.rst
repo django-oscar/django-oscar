@@ -223,6 +223,8 @@ The following are community-written extensions:
 * django-oscar-wfrs_ - Oscar WFRS is a plugin for django-oscar-api-checkout_
   that makes it possible to use `Wells Fargo Retail Services`_ as an order
   payment method.
+  
+* django-oscar-zarinpal-gateway_ - Payment gateway integration for Zarinpal Payments in django-oscar. Zarinpal Payments is a large payment gateway based in The I.R. Iran .
 
 Let us know if you're writing a new one!
 
@@ -239,6 +241,7 @@ Let us know if you're writing a new one!
 .. _`CyberSource Secure Acceptance Silent Order Post`: https://www.cybersource.com/products/payment_security/secure_acceptance_silent_order_post/
 .. _django-oscar-wfrs: https://github.com/thelabnyc/django-oscar-wfrs
 .. _`Wells Fargo Retail Services`: https://retailservices.wellsfargo.com/
+.. _django-oscar-zarinpal-gateway:https://github.com/mojtabaakbari221b/django-oscar-zarinpal-gateway
 
 Videos
 ------
