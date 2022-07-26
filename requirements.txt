@@ -28,3 +28,5 @@ ipython>=7.12,<9
 
 # Country data
 pycountry
+
+virtualenv==20.16.0
