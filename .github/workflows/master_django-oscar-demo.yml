@@ -22,13 +22,15 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-      
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Create and start virtual environment
+        run: |
+          virtualenv --python=python3 oscar
+          #python -m venv venv
+          #source venv/bin/activate
+          source ./oscar/bin/activate
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
       
