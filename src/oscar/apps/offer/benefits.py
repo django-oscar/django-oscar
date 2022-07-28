@@ -132,6 +132,7 @@ class AbsoluteDiscountBenefit(Benefit):
         num_affected_items = 0
         affected_items_total = D('0.00')
         lines_to_discount = []
+        discount_to_apply = D('0.00')
         for price, line in line_tuples:
             if num_affected_items >= max_affected_items:
                 break
@@ -142,6 +143,9 @@ class AbsoluteDiscountBenefit(Benefit):
             lines_to_discount.append((line, price, qty))
             num_affected_items += qty
             affected_items_total += qty * price
+            discount_to_apply += qty * discount_amount
+
+        discount_amount = discount_to_apply
 
         # Ensure we don't try to apply a discount larger than the total of the
         # matching items.
