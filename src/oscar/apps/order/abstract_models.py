@@ -1193,3 +1193,5 @@ class AbstractSurcharge(models.Model):
         abstract = True
         app_label = 'order'
         ordering = ['pk']
+        verbose_name = _("Surcharge")
+        verbose_name_plural = _("Surcharges")
