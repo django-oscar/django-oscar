@@ -22,13 +22,14 @@
 # Игнат Кудрявцев <ignat@ignat.tel>, 2013
 # Ігор <singularitty@gmail.com>, 2013
 # Сергей С <sechins01@yandex.ru>, 2020
+# dhvcc <alexey.artishevskiy@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 13:37+0300\n"
 "PO-Revision-Date: 2020-12-11 10:39+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>\n"
+"Last-Translator: dhvcc <alexey.artishevskiy@gmail.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/codeinthehole/django-oscar/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -941,11 +942,11 @@ msgstr "Описание"
 
 #: apps/catalogue/abstract_models.py:132 apps/catalogue/abstract_models.py:381
 msgid "Meta title"
-msgstr ""
+msgstr "Мета-название"
 
 #: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:382
 msgid "Meta description"
-msgstr ""
+msgstr "Мета-описание"
 
 #: apps/catalogue/abstract_models.py:134 apps/catalogue/abstract_models.py:852
 #: apps/dashboard/catalogue/tables.py:22
@@ -954,7 +955,7 @@ msgstr "Изображение"
 
 #: apps/catalogue/abstract_models.py:139 apps/catalogue/abstract_models.py:352
 msgid "Is public"
-msgstr ""
+msgstr "Публичный"
 
 #: apps/catalogue/abstract_models.py:142
 msgid "Show this category in search results and catalogue listings."
@@ -1167,7 +1168,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:639
 msgctxt "Product meta description"
 msgid "Meta description"
-msgstr ""
+msgstr "Описание"
 
 #: apps/catalogue/abstract_models.py:784
 msgid "Primary product"
@@ -2339,7 +2340,7 @@ msgstr "Панель"
 
 #: apps/dashboard/catalogue/forms.py:53
 msgid "Leave blank to generate from category name"
-msgstr ""
+msgstr "Оставьте пустым, что бы сгенерировать из названия категории."
 
 #: apps/dashboard/catalogue/forms.py:62
 msgid "Create a new product of type"
@@ -2355,7 +2356,7 @@ msgstr "Название товара"
 
 #: apps/dashboard/catalogue/forms.py:240
 msgid "Leave blank to generate from product title"
-msgstr ""
+msgstr "Оставьте пустым, что бы сгенерировать из названия"
 
 #: apps/dashboard/catalogue/forms.py:385
 msgid "Select an option group"
@@ -7068,7 +7069,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_update.html:117
 #: templates/oscar/dashboard/catalogue/product_update.html:349
 msgid "Search engine optimisation"
-msgstr ""
+msgstr "SEO оптимизация"
 
 #: templates/oscar/dashboard/catalogue/category_form.html:108
 #: templates/oscar/dashboard/catalogue/product_update.html:381
@@ -7344,6 +7345,8 @@ msgid ""
 "Drag images to re-order them. Space for additional images will appear when "
 "images are added."
 msgstr ""
+"Перетащите изображения, чтобы изменить их порядок. "
+"Место для дополнительных изображений появится при добавлении изображений."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:226
 msgid "SKU"
@@ -7376,7 +7379,7 @@ msgstr "На данном этапе нельзя добавить вариан�
 
 #: templates/oscar/dashboard/catalogue/product_update.html:313
 msgid "Please save the product before trying to add variants."
-msgstr ""
+msgstr "Пожалуйста, сохраните товар, прежде чем добавлять варианты."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:315
 msgid "This is likely because this product still has stock records."
@@ -8173,7 +8176,7 @@ msgstr "вперед"
 #: templates/oscar/dashboard/ranges/range_product_list.html:114
 msgctxt "Change the sequence order"
 msgid "Re-order"
-msgstr "Повторный заказ"
+msgstr "Поменять порядок"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
