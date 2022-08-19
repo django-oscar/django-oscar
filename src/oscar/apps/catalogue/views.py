@@ -67,7 +67,7 @@ class ProductDetailView(DetailView):
 
         if self.enforce_paths:
             expected_path = product.get_absolute_url()
-            if expected_path != quote(current_path):
+            if quote(expected_path) != quote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_context_data(self, **kwargs):
