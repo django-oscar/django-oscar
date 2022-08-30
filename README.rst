@@ -241,7 +241,8 @@ Let us know if you're writing a new one!
 .. _`CyberSource Secure Acceptance Silent Order Post`: https://www.cybersource.com/products/payment_security/secure_acceptance_silent_order_post/
 .. _django-oscar-wfrs: https://github.com/thelabnyc/django-oscar-wfrs
 .. _`Wells Fargo Retail Services`: https://retailservices.wellsfargo.com/
-.. _django-oscar-zarinpal-gateway:https://github.com/mojtabaakbari221b/django-oscar-zarinpal-gateway
+.. _django-oscar-zarinpal-gateway: https://github.com/mojtabaakbari221b/django-oscar-zarinpal-gateway
+
 
 Videos
 ------
