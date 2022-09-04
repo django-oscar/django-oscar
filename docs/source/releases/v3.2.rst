@@ -41,7 +41,7 @@ Backwards incompatible changes
 - The interface for the OPTION_FIELD_FACTORIES has changed and now receives the
   form, the product and the option. Update your overrides as required.
 
-- The ``value`` field on the ``BasketLineAttribute`` and ``OrderLineAttribute`` models is a JSONField now. If you have overidden the ``description`` property on the ``BasketLine`` and ``OrderLine`` models, you'll need to change this to make sure options/multi options are displayed normally in the basket and order.
+- The ``value`` field on the ``BasketLineAttribute`` and ``OrderLineAttribute`` models is a JSONField now. If you have overridden the ``description`` property on the ``BasketLine`` and ``OrderLine`` models, you'll need to change this to make sure options/multi options are displayed normally in the basket and order.
 
 - The wishlist create and update view now inherits from a new mixin that shares functionality. If you've overrides on those views, you should check to see if everything works as intended.
 

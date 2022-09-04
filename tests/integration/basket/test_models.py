@@ -274,7 +274,7 @@ class TestANonEmptyBasket(TestCase):
             self.assertIsNotNone(message)
 
         with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=None):
-            # with the treshold disabled all quantities are possible
+            # with the threshold disabled all quantities are possible
             allowed, message = self.basket.is_quantity_allowed(qty=7)
             self.assertTrue(allowed)
             self.assertIsNone(message)

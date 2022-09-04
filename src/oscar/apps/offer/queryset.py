@@ -40,7 +40,7 @@ class RangeQuerySet(models.query.QuerySet):
 
     def _get_category_ids(self, product):
         if product.structure == product.CHILD:
-            # Since a child can not be in a catagory, it must be determined
+            # Since a child can not be in a category, it must be determined
             # which category the parent is in
             ProductCategory = product.productcategory_set.model
             return ProductCategory.objects.filter(product_id=product.parent_id).values("category_id")
