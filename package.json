@@ -3,7 +3,8 @@
   "version": "3.2.0-alpha",
   "description": "A domain-driven e-commerce framework for Django",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.1.2",
     "bootstrap": "^4.6.2",
@@ -13,19 +14,21 @@
     "gulp-concat": "^2.6.1",
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0.0",
+    "gulp-rename": "^2.0.0",
     "inputmask": "^5.0.7",
     "jquery": "^3.6.0",
     "jquery-mousewheel": "^3.1.13",
     "jquery-sortable": "^0.9.13",
-    "node-sass": "^7.0.1",
     "nan": "^2.16.0",
+    "node-sass": "^7.0.1",
     "popper.js": "^1.16.1",
     "pump": "^3.0.0",
     "sass": "^1.54.0",
     "select2": "4.0.13",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tempusdominus-bootstrap-4": "^5.39.2",
-    "tinymce": "^6.1.2"
+    "tinymce": "^6.1.2",
+    "@tinymce/tinymce-jquery": "^2.0.0"
   },
   "scripts": {
     "build": "gulp copy && gulp scss",
