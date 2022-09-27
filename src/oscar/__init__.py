@@ -1,5 +1,5 @@
 # Use 'alpha', 'beta', 'rc' or 'final' as the 4th element to indicate release type.
-VERSION = (3, 2, 0, 'alpha')
+VERSION = (3, 2, 0, 'alpha', 1)
 
 
 def get_short_version():
