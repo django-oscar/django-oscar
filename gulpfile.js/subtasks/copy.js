@@ -1,4 +1,5 @@
 const gulp = require("gulp");
+var rename = require('gulp-rename');
 
 module.exports = function(done) {
     // Copy all tracked static files into the build directory
@@ -39,7 +40,11 @@ module.exports = function(done) {
         "node_modules/tinymce/**/*.min.css",
         "node_modules/tinymce/**/fonts/*",
         "node_modules/tinymce/**/img/*",
-    ]).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce"));
+    ]).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce/"));
+
+    gulp.src([
+      "node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js"
+    ]).pipe(rename("jquery.tinymce.min.js")).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce/"));
 
     gulp.src([
         "node_modules/select2/dist/js/select2.min.js",

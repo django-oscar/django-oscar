@@ -30,7 +30,7 @@
   .image_container,
   .availability,
   .price_color {
-    margin-bottom: $base-margin-bottom / 2;
+    margin-bottom: calc($base-margin-bottom / 2);
   }
 
   .product_price {

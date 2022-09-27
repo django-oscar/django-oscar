@@ -5,7 +5,7 @@ body {
 // TYPES CHANGES
 // -------------
 h1, h2, h3, h4, h5, h6 {
-  margin-bottom: $line-height-base / 2;
+  margin-bottom: calc($line-height-base / 2);
   margin-top: 0;
   font-weight: normal;
 }
