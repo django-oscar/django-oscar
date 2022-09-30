@@ -8,7 +8,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 def forward(apps, schema_editor):
     LineAttribute = apps.get_model("order", "LineAttribute")
-    for at in LineAttribute.objects.filter(value__isnull=False):
+    for at in LineAttribute.objects.all():
         try:  # if the value is allready valid json, continue
             json.loads(at.value)
             continue
