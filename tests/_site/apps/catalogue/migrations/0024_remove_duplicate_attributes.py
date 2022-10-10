@@ -5,6 +5,12 @@ from django.db import migrations
 from django.db.models import CharField, Count, Value
 from django.db.models.functions import Concat
 
+from oscar.core.loading import get_model
+
+# Needed for calling _get_value, the historical model can't be used for that.
+NonHistoricalProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -13,6 +19,7 @@ def remove_duplicate_attributes(apps, schema_editor):
     Removes duplicate attributes that have the same code and product class.
     """
     ProductAttribute = apps.get_model('catalogue', 'ProductAttribute')
+    ProductAttributeValue = apps.get_model('catalogue', 'ProductAttributeValue')
     ProductClass = apps.get_model("catalogue", "ProductClass")
 
     # Instead of iterating over all attributes, we concat the code and product class pk
@@ -57,13 +64,6 @@ def remove_duplicate_attributes(apps, schema_editor):
         to_be_used_attribute = used_attributes.first()
         to_be_deleted_attributes = used_attributes.exclude(pk=to_be_used_attribute.pk)
 
-        # Can't use model properties in migrations, so copied the _get_value here as we might need it.
-        def get_value(attribute_value):
-            value = getattr(attribute_value, 'value_%s' % attribute_value.attribute.type)
-            if hasattr(value, 'all'):
-                value = value.all()
-            return value
-
         for attribute in to_be_deleted_attributes:
             for attribute_value in attribute.productattributevalue_set.all():
                 product = attribute_value.product
@@ -80,7 +80,12 @@ def remove_duplicate_attributes(apps, schema_editor):
                     msg = """Product with ID '%s' had more than one attribute value linked to an attribute
                     with code '%s'. We've kept the value '%s' and removed the value '%s' as this is the one you
                     would see in the dashboard when editing the product.
-                    """ % (product.id, attribute.code, get_value(to_be_used_attribute_value), get_value(attribute_value))
+                    """ % (
+                        product.id,
+                        attribute.code,
+                        NonHistoricalProductAttributeValue._get_value(to_be_used_attribute_value),
+                        NonHistoricalProductAttributeValue._get_value(attribute_value)
+                    )
                     logger.warning(msg)
 
             # Once the attribute values have been updated, we can safely remove the attribute instance.
