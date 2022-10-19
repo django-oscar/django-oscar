@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
@@ -66,4 +66,13 @@ class ProductAttributesContainer:
         for attribute in self.get_all_attributes():
             if hasattr(self, attribute.code):
                 value = getattr(self, attribute.code)
+
+                # only go and save values that have changed, don't do anything useless
+                try:
+                    attribute_value_current = self.get_value_by_attribute(attribute)
+                    if attribute_value_current.value == value:
+                        continue  # no new value needs to be saved
+                except ObjectDoesNotExist:
+                    pass  # there is no existing value, so a value needs to be saved.
+
                 attribute.save_value(self.product, value)
