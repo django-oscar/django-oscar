@@ -19,13 +19,34 @@ class ProductAttributesContainer:
         self.__dict__ = state
 
     def __init__(self, product):
-        self.product = product
-        self.refresh()
+        self._product = product
+        self._initialized = False
+
+    @property
+    def product(self):
+        return self._product
+
+    def initialize(self):
+        self._initialized = True
+        # initialize should not overwrite any values that have allready been set
+        attrs = self.__dict__
+        for v in self.get_values().select_related('attribute'):
+            attrs.setdefault(v.attribute.code, v.value)
 
     def refresh(self):
-        values = self.get_values().select_related('attribute')
-        for v in values:
+        for v in self.get_values().select_related('attribute'):
             setattr(self, v.attribute.code, v.value)
+
+    def __getattribute__(self, name):
+        try:
+            return super().__getattribute__(name)
+        except AttributeError:
+            if self._initialized:
+                raise
+            else:
+                self.initialize()
+                # try again, whever happens then will just be the result.
+                return super().__getattribute__(name)
 
     def __getattr__(self, name):
         raise AttributeError(
@@ -66,7 +87,6 @@ class ProductAttributesContainer:
         for attribute in self.get_all_attributes():
             if hasattr(self, attribute.code):
                 value = getattr(self, attribute.code)
-
                 # only go and save values that have changed, don't do anything useless
                 try:
                     attribute_value_current = self.get_value_by_attribute(attribute)
