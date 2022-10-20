@@ -87,7 +87,10 @@ class ProductAttributesContainer:
         for attribute in self.get_all_attributes():
             if hasattr(self, attribute.code):
                 value = getattr(self, attribute.code)
-                # only go and save values that have changed, don't do anything useless
+                # Make sure that if a value comes from a parent product, it is not
+                # copied to the child, we do this by checking if a value has been
+                # changed, which would not be the case if the value comes from the
+                # parent.
                 try:
                     attribute_value_current = self.get_value_by_attribute(attribute)
                     if attribute_value_current.value == value:
