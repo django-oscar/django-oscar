@@ -2,8 +2,146 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.core.loading import get_model
+from oscar.test.factories import (
+    ProductAttributeFactory, ProductClassFactory, ProductFactory)
 
 Product = get_model("catalogue", "Product")
+ProductAttribute = get_model("catalogue", "ProductAttribute")
+ProductAttributeValue = get_model("catalogue", "ProductAttributeValue")
+
+
+class ProductAttributeTest(TestCase):
+
+    def setUp(self):
+        super().setUp()
+
+        # setup the productclass
+        self.product_class = product_class = ProductClassFactory(name='Cows', slug='cows')
+        self.name_attr = ProductAttributeFactory(
+            type=ProductAttribute.TEXT, product_class=product_class, name="name", code="name")
+        self.weight_attrs = ProductAttributeFactory(
+            type=ProductAttribute.INTEGER, name="weight", code="weight", product_class=product_class)
+
+        # create the parent product
+        self.product = product = ProductFactory(
+            title="I am your father", stockrecords=None, product_class=product_class, structure="parent", upc="1234")
+        product.attr.weight = 3
+        product.full_clean()
+        product.save()
+
+        # create the child product
+        self.child_product = ProductFactory(
+            parent=product, structure="child", categories=None, product_class=None,
+            title="You are my father", upc="child-1234")
+        self.child_product.full_clean()
+
+    def test_update_child_with_attributes(self):
+        "Attributes preseent on the parent should not be copied to the child "
+        "when title of the child is modified"
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
+            1,
+            "The parent has 1 attributes",
+        )
+
+        # establish baseline
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            0,
+            "The child has no attributes",
+        )
+        self.assertEqual(self.child_product.parent_id, self.product.pk)
+        self.assertIsNone(self.child_product.product_class)
+        self.assertEqual(self.child_product.upc, "child-1234")
+        self.assertEqual(self.child_product.slug, "you-are-my-father")
+        self.assertNotEqual(self.child_product.title, "Klaas is my real father")
+
+        self.child_product.title = "Klaas is my real father"
+        self.child_product.save()
+
+        self.child_product.refresh_from_db()
+        self.assertEqual(self.child_product.title, "Klaas is my real father")
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            0,
+            "The child has no attributes",
+        )
+
+    def test_update_child_attributes(self):
+        "Attributes preseent on the parent should not be copied to the child "
+        "when the child attributes are modified"
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
+            1,
+            "The parent has 1 attributes",
+        )
+
+        # establish baseline
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            0,
+            "The child has no attributes",
+        )
+        self.assertEqual(self.child_product.parent_id, self.product.pk)
+        self.assertIsNone(self.child_product.product_class)
+        self.assertEqual(self.child_product.upc, "child-1234")
+        self.assertEqual(self.child_product.slug, "you-are-my-father")
+        self.assertNotEqual(self.child_product.title, "Klaas is my real father")
+
+        self.child_product.title = "Klaas is my real father"
+        self.child_product.attr.name = "Berta"
+        self.child_product.save()
+
+        self.child_product.refresh_from_db()
+        self.assertEqual(self.child_product.title, "Klaas is my real father")
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            1,
+            "The child now has 1 attribute",
+        )
+
+    def test_update_attributes_to_parent_and_child(self):
+        "Attributes present on the parent should not be copied to the child "
+        "ever, not even newly added attributes"
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
+            1,
+            "The parent has 1 attributes",
+        )
+        self.product.attr.name = "Greta"
+        self.product.save()
+        self.product.refresh_from_db()
+        self.product.attr.refresh()
+
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
+            2,
+            "The parent now has 2 attributes",
+        )
+
+        # establish baseline
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            0,
+            "The child has no attributes",
+        )
+        self.assertEqual(self.child_product.parent_id, self.product.pk)
+        self.assertIsNone(self.child_product.product_class)
+        self.assertEqual(self.child_product.upc, "child-1234")
+        self.assertEqual(self.child_product.slug, "you-are-my-father")
+        self.assertNotEqual(self.child_product.title, "Klaas is my real father")
+
+        self.child_product.title = "Klaas is my real father"
+        self.child_product.attr.name = "Berta"
+        self.child_product.save()
+
+        self.child_product.refresh_from_db()
+        self.assertEqual(self.child_product.title, "Klaas is my real father")
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            1,
+            "The child now has 1 attribute",
+        )
 
 
 class ProductAttributeQuerysetTest(TestCase):
