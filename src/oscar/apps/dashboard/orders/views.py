@@ -117,14 +117,14 @@ class OrderListView(EventHandlerMixin, BulkEditMixin, ListView):
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     actions = ('download_selected_orders', 'change_order_statuses')
     CSV_COLUMNS = {
-        'number', _('Order number'),
-        'value', _('Order value'),
-        'date', _('Date of purchase'),
-        'num_items', _('Number of items'),
-        'status', _('Order status'),
-        'customer', _('Customer email address'),
-        'shipping_address_name', _('Deliver to name'),
-        'billing_address_name', _('Bill to name'),
+        'number': _('Order number'),
+        'value': _('Order value'),
+        'date': _('Date of purchase'),
+        'num_items': _('Number of items'),
+        'status': _('Order status'),
+        'customer': _('Customer email address'),
+        'shipping_address_name': _('Deliver to name'),
+        'billing_address_name': _('Bill to name'),
     }
 
     def dispatch(self, request, *args, **kwargs):
