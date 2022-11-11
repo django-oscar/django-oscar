@@ -97,6 +97,12 @@ class StockRecordForm(forms.ModelForm):
         if not self.user.is_staff:
             self.fields['partner'].queryset = self.user.partners.all()
 
+        # If not tracking stock, make price required
+        if not product_class.track_stock:
+            for field_name in ['price']:
+                if field_name in self.fields:
+                    self.fields[field_name].required = True
+
         # If not tracking stock, we hide the fields
         if not product_class.track_stock:
             for field_name in ['num_in_stock', 'low_stock_threshold']:
