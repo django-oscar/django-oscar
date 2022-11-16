@@ -1145,8 +1145,8 @@ class AbstractProductAttributeValue(models.Model):
     @property
     def _boolean_as_text(self):
         if self.value:
-            return (_("Yes"))
-        return (_("No"))
+            return _("Yes")
+        return _("No")
 
     @property
     def value_as_html(self):
