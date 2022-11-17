@@ -143,6 +143,30 @@ class ProductAttributeTest(TestCase):
             "The child now has 1 attribute",
         )
 
+    def test_explicit_identical_child_attribute(self):
+        self.assertEqual(self.product.attr.weight, 3, "parent product has weight 3")
+        self.assertEqual(self.child_product.attr.weight, 3, "chiuld product also has weight 3")
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
+            1,
+            "The parent has 1 attributes, which is the weight",
+        )
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            0,
+            "The child has no attributes, because it gets weight from the parent",
+        )
+        # explicitly set a value to the child
+        self.child_product.attr.weight = 3
+        self.child_product.full_clean()
+        self.child_product.save()
+        self.assertEqual(
+            ProductAttributeValue.objects.filter(product=self.child_product).count(),
+            1,
+            "The child now has 1 attribute, because we explicitly set the attribute, "
+            "so it saved, even when the parent has the same value",
+        )
+
 
 class ProductAttributeQuerysetTest(TestCase):
     fixtures = ["productattributes"]
