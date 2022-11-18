@@ -1143,6 +1143,12 @@ class AbstractProductAttributeValue(models.Model):
         return str(self.value)
 
     @property
+    def _boolean_as_text(self):
+        if self.value:
+            return _("Yes")
+        return _("No")
+
+    @property
     def value_as_html(self):
         """
         Returns a HTML representation of the attribute's value. To customise

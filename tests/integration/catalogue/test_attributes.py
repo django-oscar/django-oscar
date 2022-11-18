@@ -68,6 +68,19 @@ class TestBooleanAttributes(TestCase):
         with self.assertRaises(ValidationError):
             self.attr.validate_value(1)
 
+    def test_boolean_value_as_text_true(self):
+        product = factories.ProductFactory()
+        self.attr.save_value(product, True)
+        attr_val = product.attribute_values.get(attribute=self.attr)
+        assert attr_val.value_as_text == "Yes"
+
+    def test_boolean_value_as_text_false(self):
+        product = factories.ProductFactory()
+        self.attr.save_value(product, False)
+        attr_val = product.attribute_values.get(attribute=self.attr)
+        assert attr_val.value_as_text == "No"
+
+
 
 class TestMultiOptionAttributes(TestCase):
 
