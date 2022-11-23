@@ -19,9 +19,8 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
-from django.utils.translation import get_language
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import (
+    get_language, pgettext_lazy, pgettext, gettext_lazy as _)
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.loading import get_class, get_classes, get_model
@@ -1145,8 +1144,8 @@ class AbstractProductAttributeValue(models.Model):
     @property
     def _boolean_as_text(self):
         if self.value:
-            return _("Yes")
-        return _("No")
+            return pgettext("Product attribute value", "Yes")
+        return pgettext("Product attribute value", "No")
 
     @property
     def value_as_html(self):
