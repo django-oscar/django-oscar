@@ -81,7 +81,6 @@ class TestBooleanAttributes(TestCase):
         assert attr_val.value_as_text == "No"
 
 
-
 class TestMultiOptionAttributes(TestCase):
 
     def setUp(self):
