@@ -148,13 +148,18 @@ class AbstractBasket(models.Model):
             return max_allowed, basket_threshold
         return None, None
 
-    def is_quantity_allowed(self, qty):
+    def is_quantity_allowed(self, qty, line=None):
         """
         Test whether the passed quantity of items can be added to the basket
         """
         # We enforce a max threshold to prevent a DOS attack via the offers
         # system.
         max_allowed, basket_threshold = self.max_allowed_quantity()
+        if line:
+            is_permitted, reason = line.purchase_info.availability.is_purchase_permitted(self.basket_quantity(line) + qty)
+            if not is_permitted:
+                return False, reason
+                
         if max_allowed is not None and qty > max_allowed:
             return False, _(
                 "Due to technical limitations we are not able "
@@ -162,6 +167,15 @@ class AbstractBasket(models.Model):
                 % {'threshold': basket_threshold}
         return True, None
 
+    def basket_quantity(self, line):
+        """Return the quantity of similar lines in the basket.
+        
+        The basket can contain multiple lines with the same product and
+        stockrecord, but different options. Those quantities are summed up.
+        """
+        matching_lines = self.lines.filter(stockrecord=line.stockrecord)
+        quantity = matching_lines.aggregate(Sum('quantity'))['quantity__sum']
+        return quantity or 0
     # ============
     # Manipulation
     # ============
