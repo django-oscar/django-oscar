@@ -16,7 +16,7 @@ from oscar.apps.partner import strategy
 from oscar.core.compat import get_user_model
 from oscar.test import factories
 from oscar.test.basket import add_product
-from oscar.test.factories import create_product
+from oscar.test.factories import OptionFactory, create_product
 from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
@@ -482,3 +482,39 @@ class BasketFormSetTests(WebTestCase):
         self.assertFalse(response.context['formset'].forms[0].is_valid())
         self.assertEqual(basket.lines.count(), 1)
         self.assertEqual(basket.lines.all()[0].quantity, 1)
+
+    def test_formset_quantity_update_with_options(self):
+        product = create_product(num_in_stock=2)
+        option = OptionFactory()
+        # Add the option to the product class
+        product.get_product_class().options.add(option)
+
+        basket = factories.create_basket(empty=True)
+        basket.owner = self.user
+        basket.save()
+        basket.add_product(product, options=[{"option": option, "value": "Test 1"}])
+        basket.add_product(product, options=[{"option": option, "value": "Test 2"}])
+
+        response = self.get(reverse('basket:summary'))
+        formset = response.context['formset']
+        self.assertEqual(len(formset.forms), 2)
+
+        # Now update one of the quantities to 2
+        data = {
+            formset.add_prefix('TOTAL_FORMS'): formset.management_form.initial['TOTAL_FORMS'],
+            formset.add_prefix('INITIAL_FORMS'): formset.management_form.initial['INITIAL_FORMS'],
+            formset.add_prefix('MIN_NUM_FORMS'): formset.management_form.initial['MIN_NUM_FORMS'],
+            formset.add_prefix('MAX_NUM_FORMS'): formset.management_form.initial['MAX_NUM_FORMS'],
+            formset.forms[0].add_prefix('id'): formset.forms[0].instance.pk,
+            formset.forms[0].add_prefix('quantity'): 2,
+            formset.forms[1].add_prefix('id'): formset.forms[1].instance.pk,
+            formset.forms[1].add_prefix('quantity'): formset.forms[1].instance.quantity,
+        }
+        response = self.post(reverse('basket:summary'), params=data, xhr=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['formset'].forms[0].is_valid())
+        self.assertIn(
+            "can be bought which has been exceeded because you have multiple lines of the same product.",
+            str(response.context['formset'].forms[0].errors)
+        )

@@ -138,6 +138,26 @@ class TestBasketLineForm(TestCase):
             queryset=self.basket.all_lines())
         self.assertTrue(formset.forms[0].instance.has_discount)
 
+    def test_max_allowed_quantity_with_options(self):
+        self.basket.flush()
+
+        option = OptionFactory(required=False)
+        product = factories.create_product(num_in_stock=2)
+        product.get_product_class().options.add(option)
+        self.basket.add_product(product, options=[{"option": option, "value": "Test 1"}])
+        self.basket.add_product(product, options=[{"option": option, "value": "Test 2"}])
+
+        form = forms.BasketLineForm(
+            strategy=self.basket.strategy,
+            data={'quantity': 2},
+            instance=self.basket.all_lines()[0]
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "can be bought which has been exceeded because you have multiple lines of the same product.",
+            str(form.errors)
+        )
+
 
 class TestAddToBasketForm(TestCase):
 
