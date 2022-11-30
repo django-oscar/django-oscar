@@ -155,7 +155,7 @@ class AbstractBasket(models.Model):
         # We enforce a max threshold to prevent a DOS attack via the offers
         # system.
         max_allowed, basket_threshold = self.max_allowed_quantity()
-        if line:
+        if line is not None:
             is_permitted, reason = line.purchase_info.availability.is_purchase_permitted(self.basket_quantity(line) + qty)
             if not is_permitted:
                 return False, reason
