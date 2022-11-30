@@ -74,6 +74,9 @@ class RestrictionsForm(forms.ModelForm):
         """
         instance = super().save(*args, **kwargs)
         if instance.id:
+            for offer in instance.combinations.all():
+                if offer not in self.cleaned_data['combinations']:
+                    offer.combinations.remove(instance)
             instance.combinations.clear()
             for offer in self.cleaned_data['combinations']:
                 if offer != instance:
