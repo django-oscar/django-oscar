@@ -16,6 +16,9 @@ class ProductAttributesContainer:
     """
 
     def __setstate__(self, state):
+        self.__dict__.setdefault("_product", None)
+        self.__dict__.setdefault("_initialized", False)
+        self.__dict__.setdefault("_dirty", set())
         self.__dict__ = state
 
     def __init__(self, product):
