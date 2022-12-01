@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
@@ -166,6 +168,11 @@ class ProductAttributeTest(TestCase):
             "The child now has 1 attribute, because we explicitly set the attribute, "
             "so it saved, even when the parent has the same value",
         )
+
+    def test_deepcopy(self):
+        "Deepcopy should not cause a recursion error"
+        deepcopy(self.product)
+        deepcopy(self.child_product)
 
 
 class ProductAttributeQuerysetTest(TestCase):
