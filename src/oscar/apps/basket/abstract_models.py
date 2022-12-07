@@ -156,10 +156,10 @@ class AbstractBasket(models.Model):
         # system.
         max_allowed, basket_threshold = self.max_allowed_quantity()
         if line is not None:
-            is_permitted, reason = line.purchase_info.availability.is_purchase_permitted(self.basket_quantity(line) + qty)
+            is_permitted, reason = line.purchase_info.availability.is_purchase_permitted(
+                self.basket_quantity(line) + qty)
             if not is_permitted:
                 return False, reason
-                
         if max_allowed is not None and qty > max_allowed:
             return False, _(
                 "Due to technical limitations we are not able "
@@ -169,7 +169,6 @@ class AbstractBasket(models.Model):
 
     def basket_quantity(self, line):
         """Return the quantity of similar lines in the basket.
-        
         The basket can contain multiple lines with the same product and
         stockrecord, but different options. Those quantities are summed up.
         """
