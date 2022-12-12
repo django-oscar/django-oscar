@@ -173,3 +173,9 @@ SECRET_KEY = 'notverysecret'
 DEFAULT_HASHING_ALGORITHM = 'sha1'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 FIXTURE_DIRS = [location('unit/fixtures')]
+
+# Try and import local settings which can be used to override any of the above.
+try:
+    from tests.settings_local import *
+except ImportError:
+    pass
