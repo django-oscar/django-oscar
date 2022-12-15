@@ -1,6 +1,6 @@
 import csv
 import operator
-from decimal import ROUND_DOWN
+from decimal import ROUND_HALF_UP
 from decimal import Decimal as D
 
 from django.conf import settings
@@ -643,7 +643,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
             rounding_function = cached_import_string(rounding_function_path)
             return rounding_function(amount, currency)
 
-        return amount.quantize(D('.01'), ROUND_DOWN)
+        return amount.quantize(D('.01'), ROUND_HALF_UP)
 
     def _effective_max_affected_items(self):
         """
