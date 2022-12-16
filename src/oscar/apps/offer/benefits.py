@@ -13,7 +13,7 @@ CoverageCondition, ValueCondition = get_classes('offer.conditions', ['CoverageCo
 range_anchor = get_class('offer.utils', 'range_anchor')
 
 __all__ = [
-    'PercentageDiscountBenefit', 'AbsoluteDiscountBenefit', 'FixedPriceBenefit',
+    'PercentageDiscountBenefit', 'AbsoluteDiscountBenefit', 'AbsoluteDiscountProductBenefit', 'FixedPriceBenefit',
     'ShippingBenefit', 'MultibuyDiscountBenefit',
     'ShippingAbsoluteDiscountBenefit', 'ShippingFixedPriceBenefit',
     'ShippingPercentageDiscountBenefit',
@@ -243,6 +243,89 @@ class FixedPriceBenefit(Benefit):
                     discount * (price * quantity) / value_affected, basket.currency)
             apply_discount(line, line_discount, quantity, offer)
             discount_applied += line_discount
+        return BasketDiscount(discount)
+
+
+class AbsoluteDiscountProductBenefit(Benefit):
+    """
+    An offer benefit that gives an absolute discount
+    """
+    _description = _("%(value)s discount on %(range)s")
+
+    @property
+    def name(self):
+        return self._description % {
+            'value': currency(self.value),
+            'range': self.range.name.lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'value': currency(self.value),
+            'range': range_anchor(self.range)}
+
+    class Meta:
+        app_label = 'offer'
+        proxy = True
+        verbose_name = _("Absolute product discount benefit")
+        verbose_name_plural = _("Absolute product discount benefits")
+
+    def apply(self, basket, condition, offer, discount_amount=None,
+        max_total_discount=None, **kwargs):
+        if discount_amount is None:
+            discount_amount = self.value
+
+        # Fetch basket lines that are in the range and available to be used in
+        # an offer.
+        line_tuples = self.get_applicable_lines(offer, basket)
+
+        # Determine which lines can have the discount applied to them
+        max_affected_items = self._effective_max_affected_items()
+        num_affected_items = 0
+        affected_items_total = D('0.00')
+        discount_to_apply = D('0.00')
+        lines_to_discount = []
+        for price, line in line_tuples:
+            if num_affected_items >= max_affected_items:
+                break
+            qty = min(
+                line.quantity_without_offer_discount(offer),
+                max_affected_items - num_affected_items
+            )
+            lines_to_discount.append((line, price, qty))
+            affected_items_total += qty * price
+            discount_to_apply += qty * discount_amount
+            
+        discount_amount = discount_to_apply
+
+        # Ensure we don't try to apply a discount larger than the total of the
+        # matching items.
+        discount = min(discount_amount, affected_items_total, discount_to_apply)
+
+        if max_total_discount is not None:
+            discount = min(discount, max_total_discount, qty, discount_to_apply)
+
+        if discount == 0:
+            return ZERO_DISCOUNT
+
+        # XXX: spreading the discount is a policy decision that may not apply
+
+        # Apply discount equally amongst them
+        applied_discount = D('0.00')
+        last_line_idx = len(lines_to_discount) - 1
+        for i, (line, price, qty) in enumerate(lines_to_discount):
+            if i == last_line_idx:
+                # If last line, then take the delta as the discount to ensure
+                # the total discount is correct and doesn't mismatch due to
+                # rounding.
+                product_discount = discount - applied_discount
+            else:
+                # Calculate a weighted discount for the line
+                product_discount = self.round(
+                    ((price * qty) / affected_items_total) * discount, basket.currency)
+            apply_discount(line, product_discount, qty, offer)
+            applied_discount += product_discount
+
         return BasketDiscount(discount)
 
 
