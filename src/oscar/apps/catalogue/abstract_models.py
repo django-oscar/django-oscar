@@ -19,7 +19,7 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import get_language, pgettext_lazy
+from django.utils.translation import pgettext, get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node, MP_NodeQuerySet
 
 from oscar.core.loading import get_class, get_model
@@ -1119,6 +1119,12 @@ class AbstractProductAttributeValue(models.Model):
         want to customise this (and maybe _entity_as_html) if you use entities.
         """
         return str(self.value)
+
+    @property
+    def _boolean_as_text(self):
+        if self.value:
+            return pgettext("Product attribute value", "Yes")
+        return pgettext("Product attribute value", "No")
 
     @property
     def value_as_html(self):
