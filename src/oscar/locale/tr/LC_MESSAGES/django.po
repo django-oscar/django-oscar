@@ -5,7 +5,7 @@
 # Translators:
 # 99e7f2fb1b618f771e5524cb91874d00_ccf5018 <bf51e1c82aa7853e25ba80ce6274ebe8_277284>, 2015
 # abc Def <hdogan1974@gmail.com>, 2020
-# Burhan Parmaksizoglu <salihburhan@gmail.com>, 2021
+# Burhan Parmaksizoglu <salihburhan@gmail.com>, 2021-2022
 # Burhan Parmaksizoglu <salihburhan@gmail.com>, 2021
 # canburak <can@canb.net>, 2013
 # canburak <can@canb.net>, 2013
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-30 10:56+0100\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
-"Last-Translator: Yağız Nalçakan <yagiznalcakan@gmail.com>, 2016\n"
+"Last-Translator: Burhan Parmaksizoglu <salihburhan@gmail.com>, 2021-2022\n"
 "Language-Team: Turkish (http://www.transifex.com/codeinthehole/django-oscar/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -895,7 +895,7 @@ msgstr "Lütfen kupon kodunu giriniz"
 #: apps/basket/views.py:477
 #, python-format
 msgid "No voucher found with id '%s'"
-msgstr ""
+msgstr "'%s' sıra numarası için kupon bulunamadı. "
 
 #: apps/basket/views.py:483
 #, python-format
@@ -1387,12 +1387,12 @@ msgstr "Ürün özellik değerleri"
 #: apps/catalogue/abstract_models.py:1148
 msgctxt "Product attribute value"
 msgid "Yes"
-msgstr ""
+msgstr "Evet"
 
 #: apps/catalogue/abstract_models.py:1149
 msgctxt "Product attribute value"
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 #: apps/catalogue/abstract_models.py:1182
 msgid "Attribute option group"
@@ -1416,7 +1416,7 @@ msgstr "Özellik seçenekleri"
 
 #: apps/catalogue/abstract_models.py:1249
 msgid "Select"
-msgstr ""
+msgstr "Seç"
 
 #: apps/catalogue/abstract_models.py:1250
 msgid "Radio"
@@ -1440,11 +1440,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1272
 msgid "Help text"
-msgstr ""
+msgstr "Yardım Metni"
 
 #: apps/catalogue/abstract_models.py:1273
 msgid "Help text shown to the user on the add to basket form"
-msgstr ""
+msgstr "Kullanıcı için yardım bilgisi sepete ekleme sayfasında bulunuyor."
 
 #: apps/catalogue/abstract_models.py:1276
 msgid "Ordering"
@@ -2864,11 +2864,11 @@ msgstr ""
 
 #: apps/dashboard/offers/views.py:69 apps/dashboard/vouchers/views.py:79
 msgid "Is active"
-msgstr ""
+msgstr "Aktif"
 
 #: apps/dashboard/offers/views.py:72 apps/dashboard/vouchers/views.py:82
 msgid "Is inactive"
-msgstr ""
+msgstr "Aktif Değil"
 
 #: apps/dashboard/offers/views.py:75
 #, python-format
@@ -7868,7 +7868,7 @@ msgstr "Kampanya detayları"
 #: templates/oscar/dashboard/offers/offer_detail.html:101
 #: templates/oscar/dashboard/offers/offer_list.html:88
 msgid "Num of vouchers"
-msgstr ""
+msgstr "Kupon sayısı"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:110
 msgid "Attached vouchers"
@@ -9018,7 +9018,7 @@ msgstr "Pasif yap"
 #: templates/oscar/dashboard/vouchers/partials/voucher_set_details_table.html:6
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:27
 msgid "Voucher set"
-msgstr ""
+msgstr "Kupon Grubu"
 
 #: templates/oscar/dashboard/vouchers/partials/voucher_details_table.html:13
 #: templates/oscar/dashboard/vouchers/partials/voucher_set_details_table.html:31
@@ -9046,12 +9046,12 @@ msgstr "'%(name)s' isimli kuponu sil?"
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:11
 #, python-format
 msgid "Delete voucher '%(code)s'?"
-msgstr ""
+msgstr "'%(code)s' kuponu silinsin mi?"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:30
 #, python-format
 msgid "Delete voucher '%(code)s' from set?"
-msgstr ""
+msgstr "'%(code)s' kuponu gruptan silinsin mi? "
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:36
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:26
@@ -9082,12 +9082,12 @@ msgstr "Bu kuponu kullanabilmek için hiçbir sipariş seçilmedi."
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:131
 #: templates/oscar/dashboard/vouchers/voucher_list.html:147
 msgid "Edit set"
-msgstr ""
+msgstr "Grubu düzenle"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:137
 #: templates/oscar/dashboard/vouchers/voucher_list.html:154
 msgid "Delete from set"
-msgstr ""
+msgstr "Gruptan sil"
 
 #: templates/oscar/dashboard/vouchers/voucher_form.html:30
 msgid "Edit voucher"
@@ -9100,12 +9100,12 @@ msgstr "Yeni kupon oluştur"
 #: templates/oscar/dashboard/vouchers/voucher_list.html:82
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
 msgid "Voucher Search Results"
-msgstr ""
+msgstr "Kupon Arama Sonuçları"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:84
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:60
 msgid "All Vouchers"
-msgstr ""
+msgstr "Tüm Kuponlar"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:93
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:38
@@ -9136,16 +9136,16 @@ msgstr "Hiçbir kupon bulunamadı."
 #: templates/oscar/dashboard/vouchers/voucher_set_delete.html:8
 #, python-format
 msgid "Delete voucher set '%(name)s'?"
-msgstr ""
+msgstr "%(name)s kupon grubu silinsin mi? "
 
 #: templates/oscar/dashboard/vouchers/voucher_set_delete.html:23
 #, python-format
 msgid "Delete voucher set '%(name)s' and its %(count)s vouchers?"
-msgstr ""
+msgstr "%(name)s kupon grubu ve içindeki %(count)s kupon silinsin mi?"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_delete.html:28
 msgid "Voucher set details"
-msgstr ""
+msgstr "Kupon grubu detayları"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:24
 msgid "Download CSV"
@@ -9153,7 +9153,7 @@ msgstr "CSV İndir"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:36
 msgid "Search vouchers"
-msgstr ""
+msgstr "Kuponlarda ara"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:154
 msgid "No offers are attached to this voucher set."
@@ -9161,11 +9161,11 @@ msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:30
 msgid "Edit voucher set"
-msgstr ""
+msgstr "Kupon grubu güncelle"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
 msgid "Create new voucher set"
-msgstr ""
+msgstr "Yeni kupon grubu yarat."
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:36
 msgid "Num"
@@ -9173,7 +9173,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:67
 msgid "Detail"
-msgstr ""
+msgstr "Detay"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:82
 msgid "No voucher sets found."
@@ -9187,7 +9187,7 @@ msgstr ""
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:13
 #, python-format
 msgid "Add another %(model)s"
-msgstr ""
+msgstr "Bir tane daha ekle %(model)s"
 
 #: templates/oscar/dashboard/widgets/related_multiple_widget_wrapper.html:9
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:14
@@ -9197,12 +9197,12 @@ msgstr "Ekle"
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:8
 #, python-format
 msgid "Change selected %(model)s"
-msgstr ""
+msgstr "Seçilenleri değiştir %(model)s"
 
 #: templates/oscar/dashboard/widgets/related_widget_wrapper.html:18
 #, python-format
 msgid "Delete selected %(model)s"
-msgstr ""
+msgstr "Seçilenleri sil %(model)s"
 
 #: templates/oscar/error.html:9
 msgid "Sorry!"
@@ -9415,7 +9415,7 @@ msgstr "\n                        Bunu mu demek istediniz <a href=\"%(search_url
 
 #: templates/oscar/wishlists/wishlist_detail.html:40
 msgid "This wish list is empty."
-msgstr ""
+msgstr "Bu istek listesi boş."
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
