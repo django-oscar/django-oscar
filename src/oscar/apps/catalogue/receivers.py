@@ -35,4 +35,7 @@ if settings.OSCAR_DELETE_IMAGE_FILES:
 
 @receiver(post_save, sender=Category, dispatch_uid='set_ancestors_are_public')
 def post_save_set_ancestors_are_public(sender, instance, **kwargs):
+    if kwargs.get("raw"):
+        return
+
     instance.set_ancestors_are_public()
