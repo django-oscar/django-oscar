@@ -220,6 +220,26 @@ class TestLineOfferConsumer:
         assert len(basket.offer_applications.offer_discounts) == 1
         assert [x.consumer.consumed() for x in basket.all_lines()] == [1, 0]
 
+    def test_consumed_with_exclusive_offer_3(self, filled_basket):
+        offer1 = ConditionalOfferFactory(name='offer1')
+        offer2 = ConditionalOfferFactory(name='offer2')
+        offer3 = ConditionalOfferFactory(name='offer3')
+        offer1.exclusive = True
+        offer2.exclusive = True
+        offer3.exclusive = False
+
+        for line in filled_basket.all_lines():
+            assert line.consumer.consumed(offer1) == 0
+            assert line.consumer.consumed(offer2) == 0
+
+        line1 = filled_basket.all_lines()[0]
+
+        line1.consumer.consume(1, offer1)
+
+        assert line1.quantity_with_offer_discount(offer2) == 0
+        assert line1.quantity_with_offer_discount(offer1) == 1
+        assert line1.quantity_with_offer_discount(offer3) == 0
+
     def test_consumed_with_combined_offer(self, filled_basket):
         offer1 = ConditionalOfferFactory(name='offer1')
         offer2 = ConditionalOfferFactory(name='offer2')
