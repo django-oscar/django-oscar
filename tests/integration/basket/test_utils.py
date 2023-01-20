@@ -234,11 +234,24 @@ class TestLineOfferConsumer:
 
         line1 = filled_basket.all_lines()[0]
 
+        assert line1.consumer.consume( offer2 == False)
         line1.consumer.consume(1, offer2)
 
         assert line1.quantity_with_offer_discount(offer2) == 1
         assert line1.quantity_with_offer_discount(offer1) == 0
         assert line1.quantity_with_offer_discount(offer3) == 0
+        
+        line1.consumer.consume(1, offer3)
+
+        assert line1.quantity_with_offer_discount(offer1) == False
+        assert line1.quantity_with_offer_discount(offer2) == True
+        assert line1.quantity_with_offer_discount(offer3) == False
+
+        line1.consumer.consume(1, offer1 == False)
+
+        assert line1.quantity_with_offer_discount(offer1) == False
+        assert line1.quantity_with_offer_discount(offer2) == True
+        assert line1.quantity_with_offer_discount(offer3) == False
 
     def test_consumed_with_combined_offer(self, filled_basket):
         offer1 = ConditionalOfferFactory(name='offer1')
