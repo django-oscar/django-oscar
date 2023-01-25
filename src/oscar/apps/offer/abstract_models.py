@@ -1011,8 +1011,10 @@ class AbstractRange(models.Model):
         else:
             if self.use_short_query():
                 # we have a simple range with just included products
-                included = self.included_products.values_list('id', flat=True)
-                return Product.objects.filter(id__in=included).distinct()
+                return Product.objects.filter(
+                    Q(includes=self)
+                    | Q(parent__includes=self),  # noqa W503
+                ).distinct()
             selected_products = Product.objects.filter(
                 Q(product_class__classes=self)
                 | Q(includes=self)
