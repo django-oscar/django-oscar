@@ -982,7 +982,7 @@ class AbstractRange(models.Model):
         if self.classes.exists():
             return False
         return True
-    
+
     @cached_property
     def product_queryset(self):
         "cached queryset of all the products in the Range"
