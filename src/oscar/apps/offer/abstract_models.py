@@ -964,6 +964,25 @@ class AbstractRange(models.Model):
 
         return self.product_queryset
 
+    def use_short_query(self):
+        """
+        Speed up product_queryset() if range has only included_products
+        if range has excluded_products
+          or products in the range have parents
+          or range has classes set
+         we use the common queryset with Q - joins
+        otherwise, we can just query the products included in the range
+        """
+        if self.excluded_products.exists():
+            return False
+        if self.included_products.exclude(parent_id=None).exists():
+            return False
+        if self.excluded_products.exclude(parent_id=None).exists():
+            return False
+        if self.classes.exists():
+            return False
+        return True
+    
     @cached_property
     def product_queryset(self):
         "cached queryset of all the products in the Range"
@@ -990,6 +1009,10 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         else:
+            if self.use_short_query():
+                # we have a simple range with just included products
+                included = self.included_products.values_list('id', flat=True)
+                return Product.objects.filter(id__in=included).distinct()
             selected_products = Product.objects.filter(
                 Q(product_class__classes=self)
                 | Q(includes=self)
