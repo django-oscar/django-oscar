@@ -985,7 +985,7 @@ class AbstractRange(models.Model):
         return Product.objects.filter(
             Q(categories__in=expanded_range_categories)
             | Q(includes=self)
-            ~Q(excludes=self))
+            ~Q(excludes=self)
         )
 
     def included_products_queryset(self):
@@ -1004,7 +1004,7 @@ class AbstractRange(models.Model):
         else:
             return Product.objects.filter(
                 | Q(includes=self)
-                ~Q(excludes=self),
+                ~Q(excludes=self)
             )
 
     @cached_property
