@@ -1007,11 +1007,19 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         else:
+            # check if there are children
+            if self.included_products.exclude(parent_id=None).exists():
+                return Product.objects.filter(
+                    Q(includes=self)
+                    | Q(parent__includes=self),
+                    ~Q(excludes=self),
+                    ~Q(parent__excludes=self)
+                )
+            # no children, use fastest query
             return Product.objects.filter(
-                Q(includes=self)
-                | Q(parent__includes=self),
-                ~Q(excludes=self),
-                ~Q(parent__excludes=self)
+                id__in=self.included_products.values("id")
+            ).exclude(
+                id__in=self.excluded_products.values("id")
             )
 
     @cached_property
