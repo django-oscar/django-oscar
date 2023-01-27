@@ -1005,7 +1005,8 @@ class AbstractRange(models.Model):
             )
         else:
             return Product.objects.filter(
-                id__in=self.included_products.values("id").exclude(
+                id__in=self.included_products.values("id")
+            ).exclude(
                 id__in=self.excluded_products.values("id")
             )
 
