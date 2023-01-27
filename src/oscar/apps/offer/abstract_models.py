@@ -963,11 +963,12 @@ class AbstractRange(models.Model):
             return self.proxy.all_products()
 
         return self.product_queryset
-    
+
     def included_categories_queryset(self):
         """
         reduce joins if there are no classes in the range
         """
+        Product = self.included_products.model
         expanded_range_categories = ExpandDownwardsCategoryQueryset(
             self.included_categories.values("id")
         )
@@ -992,6 +993,7 @@ class AbstractRange(models.Model):
         """
         reduce joins if there are no classes in the range
         """
+        Product = self.included_products.model
         if self.classes.exists():
             return Product.objects.filter(
                 Q(product_class__classes=self)
@@ -1002,17 +1004,17 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         else:
-            included = self.included_products.values_list('id', flat=True)
-            return (Product.objects.filter(id__in=included)
-                | Product.objects.filter(parent_id__in=included)
+            return (Product.objects.filter(
+                id__in=self.included_products.values("id").exclude(
+                id__in=self.excluded_products.values("id")
             )
 
     @cached_property
     def product_queryset(self):
         "cached queryset of all the products in the Range"
-        Product = self.included_products.model
         if self.includes_all_products:
             # Filter out blacklisted products
+            Product = self.included_products.model
             return Product.objects.all().exclude(
                 id__in=self.excluded_products.values("id")
             )
