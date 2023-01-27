@@ -963,7 +963,7 @@ class AbstractRange(models.Model):
             return self.proxy.all_products()
 
         return self.product_queryset
-
+    
     def included_categories_queryset(self):
         """
         reduce joins if there are no classes in the range
@@ -984,7 +984,7 @@ class AbstractRange(models.Model):
             )
         return Product.objects.filter(
             Q(categories__in=expanded_range_categories)
-            | Q(includes=self)
+            | Q(includes=self),
             ~Q(excludes=self)
         )
 
@@ -1002,9 +1002,9 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         else:
-            return Product.objects.filter(
-                | Q(includes=self)
-                ~Q(excludes=self)
+            included = self.included_products.values_list('id', flat=True)
+            return Product.objects.filter(id__in=included)
+                | Product.objects.filter(parent_id__in=included)
             )
 
     @cached_property
