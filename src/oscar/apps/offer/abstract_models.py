@@ -1007,7 +1007,7 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         else:
-            return (Product.objects.filter(
+            return Product.objects.filter(
                 Q(includes=self)
                 | Q(parent__includes=self),
                 ~Q(excludes=self),
