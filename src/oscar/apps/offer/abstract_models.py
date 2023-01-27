@@ -1008,7 +1008,7 @@ class AbstractRange(models.Model):
             )
         else:
             # check if there are children
-            if self.included_products.exclude(parent_id=None).exists():
+            if self.included_products.filter(structure='child').exists():
                 return Product.objects.filter(
                     Q(includes=self)
                     | Q(parent__includes=self),
