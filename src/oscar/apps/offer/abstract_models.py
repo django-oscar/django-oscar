@@ -1003,7 +1003,7 @@ class AbstractRange(models.Model):
             )
         else:
             included = self.included_products.values_list('id', flat=True)
-            return Product.objects.filter(id__in=included)
+            return (Product.objects.filter(id__in=included)
                 | Product.objects.filter(parent_id__in=included)
             )
 
