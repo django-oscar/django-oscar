@@ -983,13 +983,21 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
+        # check if included products have children
+        if self.included_products.exclude(children=None).exists():
+            return Product.objects.filter(
+                Q(categories__in=expanded_range_categories)
+                | Q(includes=self)
+                | Q(parent__categories__in=expanded_range_categories)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            )
+        # included products have no children, use fastest query
         return Product.objects.filter(
             Q(categories__in=expanded_range_categories)
-            | Q(includes=self)
-            | Q(parent__categories__in=expanded_range_categories)
-            | Q(parent__includes=self),
-            ~Q(excludes=self),
-            ~Q(parent__excludes=self)
+            | Q(includes=self),
+            ~Q(excludes=self)
         )
 
     def included_products_queryset(self):
@@ -1006,21 +1014,20 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        else:
-            # check if the included products have children
-            if self.included_products.exclude(children=None).exists():
-                return Product.objects.filter(
-                    Q(includes=self)
-                    | Q(parent__includes=self),
-                    ~Q(excludes=self),
-                    ~Q(parent__excludes=self)
-                )
-            # included products have no children, use fastest query
+        # check if included products have children
+        if self.included_products.exclude(children=None).exists():
             return Product.objects.filter(
-                id__in=self.included_products.values("id")
-            ).exclude(
-                id__in=self.excluded_products.values("id")
+                Q(includes=self)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
             )
+        # included products have no children, use fastest query
+        return Product.objects.filter(
+            id__in=self.included_products.values("id")
+        ).exclude(
+            id__in=self.excluded_products.values("id")
+        )
 
     @cached_property
     def product_queryset(self):
