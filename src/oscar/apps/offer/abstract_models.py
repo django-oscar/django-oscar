@@ -996,7 +996,8 @@ class AbstractRange(models.Model):
         # included products have no children, use fastest query
         return Product.objects.filter(
             Q(categories__in=expanded_range_categories)
-            | Q(includes=self),
+            | Q(includes=self)
+            | Q(parent__categories__in=expanded_range_categories),
             ~Q(excludes=self)
         )
 
