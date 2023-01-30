@@ -967,6 +967,7 @@ class AbstractRange(models.Model):
     def included_categories_queryset(self):
         """
         reduce joins if there are no classes in the range
+        or if included products have no children
         """
         Product = self.included_products.model
         expanded_range_categories = ExpandDownwardsCategoryQueryset(
@@ -983,8 +984,8 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        # check if included products have children
-        if self.included_products.exclude(children=None).exists():
+        # check if products in included categories have children
+        if self.included_categories.exclude(product__children=None).exists():
             return Product.objects.filter(
                 Q(categories__in=expanded_range_categories)
                 | Q(includes=self)
@@ -993,7 +994,7 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        # included products have no children, use fastest query
+        # products in included categories have no children, use fastest query
         return Product.objects.filter(
             Q(categories__in=expanded_range_categories)
             | Q(includes=self)
@@ -1004,6 +1005,7 @@ class AbstractRange(models.Model):
     def included_products_queryset(self):
         """
         reduce joins if there are no classes in the range
+        or included products have no children
         """
         Product = self.included_products.model
         if self.classes.exists():
