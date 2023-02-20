@@ -1038,7 +1038,7 @@ class AbstractRange(models.Model):
         if self.includes_all_products:
             # Filter out blacklisted products
             Product = self.included_products.model
-            return Product.objects.all().exclude(
+            return Product.objects.filter(is_public=True).exclude(
                 id__in=self.excluded_products.values("id")
             )
         # reducing joins without having classes
@@ -1046,7 +1046,7 @@ class AbstractRange(models.Model):
             selected_products = self.included_categories_queryset()
         else:
             selected_products = self.included_products_queryset()
-        return selected_products.distinct()
+        return selected_products.filter(is_public=True).distinct()
 
     @property
     def is_editable(self):
