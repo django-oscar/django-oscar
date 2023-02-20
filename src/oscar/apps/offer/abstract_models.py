@@ -1036,7 +1036,7 @@ class AbstractRange(models.Model):
     def product_queryset(self):
         "cached queryset of all the products in the Range"
         if self.includes_all_products:
-            # Filter out blacklisted products
+            # Filter out blacklisted and non-public products
             Product = self.included_products.model
             return Product.objects.filter(is_public=True).exclude(
                 id__in=self.excluded_products.values("id")
@@ -1046,6 +1046,7 @@ class AbstractRange(models.Model):
             selected_products = self.included_categories_queryset()
         else:
             selected_products = self.included_products_queryset()
+        # Filter out non-public products
         return selected_products.filter(is_public=True).distinct()
 
     @property
