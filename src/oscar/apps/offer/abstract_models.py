@@ -970,7 +970,7 @@ class AbstractRange(models.Model):
         Product = self.included_products.model
 
         if self.includes_all_products:
-            # Filter out blacklisted products
+            # Filter out blacklisted and non-public products
             return Product.objects.filter(is_public=True).exclude(
                 id__in=self.excluded_products.values("id")
             )
@@ -998,7 +998,7 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-
+        # exclude non-public Products
         return selected_products.filter(is_public=True).distinct()
 
     @property
