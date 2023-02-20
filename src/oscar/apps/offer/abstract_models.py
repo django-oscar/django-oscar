@@ -971,7 +971,7 @@ class AbstractRange(models.Model):
 
         if self.includes_all_products:
             # Filter out blacklisted products
-            return Product.objects.all().exclude(
+            return Product.objects.filter(is_public=True).exclude(
                 id__in=self.excluded_products.values("id")
             )
 
@@ -999,7 +999,7 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
 
-        return selected_products.distinct()
+        return selected_products.filter(is_public=True).distinct()
 
     @property
     def is_editable(self):
