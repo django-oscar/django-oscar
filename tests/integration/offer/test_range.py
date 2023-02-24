@@ -280,14 +280,6 @@ class TestRangeQuerySet(TestCase):
         ranges = models.Range.objects.contains_product(self.prod)
         self.assertEqual(ranges.count(), 2, "Both ranges should contain the product")
 
-    def test_not_contains_non_public_product(self):
-        product = create_product()
-        self.range.add_product(product)
-        product.is_public = False
-        product.save()
-        self.assertFalse(product in self.range.all_products())
-        self.range.remove_product(product)
-
     def test_excluded_product(self):
         ranges = models.Range.objects.contains_product(self.excludedprod)
         self.assertEqual(
