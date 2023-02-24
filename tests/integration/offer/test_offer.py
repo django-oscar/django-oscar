@@ -1,5 +1,7 @@
 from django.test import TestCase
 
+from oscar.apps.offer.views import RangeDetailView
+
 from oscar.test.factories import create_product
 from oscar.test.factories.offer import ConditionalOfferFactory
 
@@ -11,5 +13,6 @@ class TestOffer(TestCase):
         product = create_product(is_public=False)
         offer.condition.range.add_product(product)
         self.assertFalse(product in offer.products())
-        self.assertFalse(
-            product in offer.condition.range.all_products().browsable())
+        view = RangeDetailView()
+        view.range = offer.condition.range
+        self.assertFalse(product in view.get_queryset())
