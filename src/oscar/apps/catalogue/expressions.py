@@ -32,3 +32,4 @@ class ExpandDownwardsCategoryQueryset(Subquery):
 
     def as_sqlite(self, compiler, connection):
         return super().as_sql(compiler, connection, self.template[1:-1])
+    
