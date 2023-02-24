@@ -962,7 +962,7 @@ class AbstractRange(models.Model):
         if self.proxy:
             return self.proxy.all_products()
 
-        return self.product_queryset
+        return self.product_queryset()
 
     @cached_property
     def product_queryset(self):
@@ -970,8 +970,8 @@ class AbstractRange(models.Model):
         Product = self.included_products.model
 
         if self.includes_all_products:
-            # Filter out blacklisted and non-public products
-            return Product.objects.browsable().exclude(
+            # Filter out blacklisted
+            return Product.objects.exclude(
                 id__in=self.excluded_products.values("id")
             )
 
@@ -999,7 +999,7 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         # Filter out non-public Products
-        return selected_products.browsable().distinct()
+        return selected_products.distinct()
 
     @property
     def is_editable(self):
