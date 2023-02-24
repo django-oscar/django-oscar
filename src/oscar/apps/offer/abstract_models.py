@@ -451,8 +451,7 @@ class AbstractConditionalOffer(models.Model):
             return Product.objects.none()
 
         queryset = self.condition.range.all_products()
-        return queryset.filter(is_discountable=True).exclude(
-            structure=Product.CHILD)
+        return queryset.filter(is_discountable=True).browsable()
 
     @cached_property
     def combined_offers(self):
@@ -1036,9 +1035,9 @@ class AbstractRange(models.Model):
     def product_queryset(self):
         "cached queryset of all the products in the Range"
         if self.includes_all_products:
-            # Filter out blacklisted and non-public products
+            # Filter out blacklisted
             Product = self.included_products.model
-            return Product.objects.filter(is_public=True).exclude(
+            return Product.objects.exclude(
                 id__in=self.excluded_products.values("id")
             )
         # reducing joins without having classes
@@ -1046,8 +1045,7 @@ class AbstractRange(models.Model):
             selected_products = self.included_categories_queryset()
         else:
             selected_products = self.included_products_queryset()
-        # Filter out non-public products
-        return selected_products.filter(is_public=True).distinct()
+        return selected_products.distinct()
 
     @property
     def is_editable(self):
