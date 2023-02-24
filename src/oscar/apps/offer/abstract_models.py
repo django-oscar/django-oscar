@@ -962,7 +962,7 @@ class AbstractRange(models.Model):
         if self.proxy:
             return self.proxy.all_products()
 
-        return self.product_queryset()
+        return self.product_queryset
 
     @cached_property
     def product_queryset(self):
