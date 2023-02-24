@@ -124,6 +124,12 @@ class UserDetailView(DetailView):
     model = User
     context_object_name = 'customer'
 
+    def get_queryset(self):
+        queryset = self.model.objects.prefetch_related(
+            'orders__lines', 'orders__surcharges'
+        )
+        return queryset
+
 
 class PasswordResetView(SingleObjectMixin, FormView):
     form_class = PasswordResetForm
