@@ -227,6 +227,27 @@ class TestAnAdmin(testcases.WebTestCase):
         self.assertFalse('range' in condition_page.errors)
         self.assertEqual(len(condition_page.errors), 0)
 
+    def test_remove_offer_from_combinations(self):
+        offer_a = factories.create_offer("Offer A")
+        offer_b = factories.create_offer("Offer B")
+        offer_b.exclusive = False
+        offer_b.save()
+
+        restrictions_page = self.get(reverse(
+            'dashboard:offer-restrictions', kwargs={'pk': offer_a.pk}))
+        restrictions_page.form['exclusive'] = False
+        restrictions_page.form['combinations'] = [offer_b.id]
+        restrictions_page.form.submit()
+
+        self.assertIn(offer_a, offer_b.combinations.all())
+
+        restrictions_page = self.get(reverse(
+            'dashboard:offer-restrictions', kwargs={'pk': offer_a.pk}))
+        restrictions_page.form['combinations'] = []
+        restrictions_page.form.submit()
+
+        self.assertNotIn(offer_a, offer_b.combinations.all())
+
 
 class TestOfferListSearch(testcases.WebTestCase):
     is_staff = True
