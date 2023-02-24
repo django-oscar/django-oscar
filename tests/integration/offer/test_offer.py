@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from oscar.test.factories import create_product
-from test.factories.offer import ConditionalOfferFactory
+from oscar.test.factories.offer import ConditionalOfferFactory
 
 
 class TestOffer(TestCase):
