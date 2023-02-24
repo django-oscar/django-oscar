@@ -7,11 +7,15 @@ from oscar.test.factories.offer import ConditionalOfferFactory
 
 class TestOffer(TestCase):
 
-    def test_non_public_product_not_in_offer(self):
-        offer = ConditionalOfferFactory()
-        product = create_product(is_public=False)
-        offer.condition.range.add_product(product)
-        self.assertFalse(product in offer.products())
+    def setUp(self):
+        self.offer = ConditionalOfferFactory()
+        self.non_public_product = create_product(is_public=False)
+        self.offer.condition.range.add_product(self.non_public_product)
+
+    def test_non_public_product_not_in_offer(self):      
+        self.assertFalse(product in self.offer.products())
+
+    def test_non_public_product_not_in_range_detail_view(self):
         view = RangeDetailView()
-        view.range = offer.condition.range
+        view.range = self.offer.condition.range
         self.assertFalse(product in view.get_queryset())
