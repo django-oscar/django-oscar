@@ -12,7 +12,7 @@ class TestOffer(TestCase):
         self.non_public_product = create_product(is_public=False)
         self.offer.condition.range.add_product(self.non_public_product)
 
-    def test_non_public_product_not_in_offer(self):      
+    def test_non_public_product_not_in_offer(self):
         self.assertFalse(self.non_public_product in self.offer.products())
 
     def test_non_public_product_not_in_range_detail_view(self):
