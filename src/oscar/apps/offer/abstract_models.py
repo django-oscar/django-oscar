@@ -452,7 +452,7 @@ class AbstractConditionalOffer(models.Model):
 
         queryset = self.condition.range.all_products()
         return queryset.filter(is_discountable=True).exclude(
-            structure=Product.CHILD)
+            structure=Product.CHILD).browsable()
 
     @cached_property
     def combined_offers(self):
