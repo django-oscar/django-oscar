@@ -49,7 +49,7 @@ class OfferDetailView(ListView):
         Return a queryset of all :py:class:`Product <oscar.apps.catalogue.abstract_models.AbstractProduct>`
         instances related to the :py:class:`ConditionalOffer <oscar.apps.offer.abstract_models.AbstractConditionalOffer>`.
         """  # noqa
-        return self.offer.products().browsable()
+        return self.offer.products()
 
 
 class RangeDetailView(ListView):
@@ -68,7 +68,7 @@ class RangeDetailView(ListView):
         Return a queryset of all :py:class:`Product <oscar.apps.catalogue.abstract_models.AbstractProduct>`
         instances related to the :py:class:`Range <oscar.apps.offer.abstract_models.AbstractRange>`.
         """  # noqa
-        products = self.range.all_products().browsable()
+        products = self.range.all_products()
         return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):
