@@ -998,7 +998,6 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        # Filter out non-public Products
         return selected_products.distinct()
 
     @property
