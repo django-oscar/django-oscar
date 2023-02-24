@@ -114,7 +114,7 @@
                             {% if order.guest_email %}
                                 {{ order.guest_email }}
                             {% elif order.user %}
-                                <a href="{% url 'dashboard:user-detail' pk=order.user.id %}">{{ order.user.get_full_name|default:"-" }}</a>
+                                <a href="{% url 'dashboard:user-detail' pk=order.user.id %}">{{ order.user.get_full_name|default:order.user.email }}</a>
                             {% else %}
                                 &lt;{% trans "Deleted" %}&gt;
                             {% endif %}
