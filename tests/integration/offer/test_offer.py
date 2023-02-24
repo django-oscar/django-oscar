@@ -11,3 +11,5 @@ class TestOffer(TestCase):
         product = create_product(is_public=False)
         offer.condition.range.add_product(product)
         self.assertFalse(product in offer.products())
+        self.assertFalse(
+            product in offer.condition.range.all_products().browsable())
