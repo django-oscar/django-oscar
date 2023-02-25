@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.messages.constants import SUCCESS, WARNING
 from django.test import TestCase
 from django.urls import reverse
@@ -224,8 +226,11 @@ class RangeReorderViewTest(WebTestCase):
             self.product1, self.product2, self.product3])
 
     def test_range_product_reordering(self):
-        data = {'product': [3, 1, 2]}
+        product_order = list(self.range.rangeproduct_set.values_list(
+            'product_id', flat=True))
+        random.shuffle(product_order)
+        data = {'product': product_order}
         self.post(self.url, params=data)
-        product_order = self.range.rangeproduct_set.values_list(
-            'product_id', flat=True).order_by('display_order')
-        self.assertEqual(product_order, [3, 1, 2])
+        new_product_order = list(self.range.rangeproduct_set.values_list(
+            'product_id', flat=True).order_by('display_order'))
+        self.assertEqual(new_product_order, product_order)
