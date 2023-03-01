@@ -451,8 +451,7 @@ class AbstractConditionalOffer(models.Model):
             return Product.objects.none()
 
         queryset = self.condition.range.all_products()
-        return queryset.filter(is_discountable=True).exclude(
-            structure=Product.CHILD)
+        return queryset.filter(is_discountable=True).browsable()
 
     @cached_property
     def combined_offers(self):
@@ -970,8 +969,8 @@ class AbstractRange(models.Model):
         Product = self.included_products.model
 
         if self.includes_all_products:
-            # Filter out blacklisted products
-            return Product.objects.all().exclude(
+            # Filter out blacklisted
+            return Product.objects.exclude(
                 id__in=self.excluded_products.values("id")
             )
 
@@ -998,7 +997,6 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-
         return selected_products.distinct()
 
     @property
