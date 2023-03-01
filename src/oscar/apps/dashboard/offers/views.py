@@ -64,7 +64,8 @@ class OfferListView(ListView):
             if is_active:
                 qs = qs.filter(
                     (Q(start_datetime__lte=now) | Q(start_datetime__isnull=True))
-                    & (Q(end_datetime__gte=now) | Q(end_datetime__isnull=True))
+                    & (Q(end_datetime__gte=now) | Q(end_datetime__isnull=True)),
+                    status=ConditionalOffer.OPEN
                 )
                 self.search_filters.append(_("Is active"))
             else:
