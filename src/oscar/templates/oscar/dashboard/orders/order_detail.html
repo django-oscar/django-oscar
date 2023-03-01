@@ -522,9 +522,11 @@
                                     {% for field in order.shipping_address.active_address_fields %}
                                         {{ field }}<br/>
                                     {% endfor %}
-                                    <a class="btn btn-secondary" href="{% url 'dashboard:order-shipping-address' order.number %}">
-                                        {% trans "Update" %}
-                                    </a>
+                                    {% if order.shipping_address %}
+                                        <a class="btn btn-secondary" href="{% url 'dashboard:order-shipping-address' order.number %}">
+                                            {% trans "Update" %}
+                                        </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             <tr>
