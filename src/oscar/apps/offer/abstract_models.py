@@ -963,6 +963,89 @@ class AbstractRange(models.Model):
 
         return self.product_queryset
 
+    def included_categories_queryset(self):
+        """
+        reduce joins if there are no classes in the range
+        or if included products have no children
+        """
+        Product = self.included_products.model
+        expanded_range_categories = ExpandDownwardsCategoryQueryset(
+            self.included_categories.values("id")
+        )
+        if self.classes.exists():
+            return Product.objects.filter(
+                Q(categories__in=expanded_range_categories)
+                | Q(product_class__classes=self)
+                | Q(includes=self)
+                | Q(parent__categories__in=expanded_range_categories)
+                | Q(parent__product_class__classes=self)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            )
+        # check if products in included categories have children
+        if self.included_categories.exclude(product__children=None).exists():
+            return Product.objects.filter(
+                Q(categories__in=expanded_range_categories)
+                | Q(includes=self)
+                | Q(parent__categories__in=expanded_range_categories)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            )
+        # products in included categories have no children, use fastest query
+        return Product.objects.filter(
+            Q(categories__in=expanded_range_categories)
+            | Q(includes=self)
+            | Q(parent__categories__in=expanded_range_categories),
+            ~Q(excludes=self)
+        )
+
+    def included_products_queryset(self):
+        """
+        reduce joins if there are no classes in the range
+        or included products have no children
+        """
+        Product = self.included_products.model
+        if self.classes.exists():
+            return Product.objects.filter(
+                Q(product_class__classes=self)
+                | Q(includes=self)
+                | Q(parent__product_class__classes=self)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            )
+        # check if included products have children
+        if self.included_products.exclude(children=None).exists():
+            return Product.objects.filter(
+                Q(includes=self)
+                | Q(parent__includes=self),
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            )
+        # included products have no children, use fastest query
+        return Product.objects.filter(
+            id__in=self.included_products.values("id")
+        ).exclude(
+            id__in=self.excluded_products.values("id")
+        )
+    @cached_property
+    def product_queryset(self):
+        "cached queryset of all the products in the Range"
+        if self.includes_all_products:
+            # Filter out blacklisted
+            Product = self.included_products.model
+            return Product.objects.exclude(
+                id__in=self.excluded_products.values("id")
+            )
+        # reducing joins without having classes
+        if self.included_categories.exists():
+            selected_products = self.included_categories_queryset()
+        else:
+            selected_products = self.included_products_queryset()
+        return selected_products.distinct()
+
     @cached_property
     def product_queryset(self):
         "cached queryset of all the products in the Range"
