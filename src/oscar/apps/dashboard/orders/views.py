@@ -12,7 +12,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
-from oscar.apps.order import exceptions as order_exceptions
 from oscar.core.compat import UnicodeCSVWriter
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import datetime_combine, format_datetime
@@ -35,6 +34,10 @@ OrderNoteForm = get_class('dashboard.orders.forms', 'OrderNoteForm')
 ShippingAddressForm = get_class(
     'dashboard.orders.forms', 'ShippingAddressForm')
 OrderStatusForm = get_class('dashboard.orders.forms', 'OrderStatusForm')
+InvalidOrderStatus = get_class('order.exceptions', 'InvalidOrderStatus')
+InvalidPaymentEvent = get_class('order.exceptions', 'InvalidPaymentEvent')
+InvalidShippingEvent = get_class('order.exceptions', 'InvalidShippingEvent')
+InvalidStatus = get_class('order.exceptions', 'InvalidStatus')
 PaymentError = get_class('payment.exceptions', 'PaymentError')
 
 
@@ -599,7 +602,7 @@ class OrderDetailView(EventHandlerMixin, DetailView):
             messages.error(
                 request, _("Unable to change order status due to "
                            "payment error: %s") % e)
-        except order_exceptions.InvalidOrderStatus:
+        except InvalidOrderStatus:
             # The form should validate against this, so we should only end up
             # here during race conditions.
             messages.error(
@@ -667,10 +670,10 @@ class OrderDetailView(EventHandlerMixin, DetailView):
             self.get_handler().handle_shipping_event(order, event_type, lines,
                                                      quantities,
                                                      reference=reference)
-        except order_exceptions.InvalidShippingEvent as e:
+        except InvalidShippingEvent as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
-        except order_exceptions.InvalidStatus as e:
+        except InvalidStatus as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
         except PaymentError as e:
@@ -714,7 +717,7 @@ class OrderDetailView(EventHandlerMixin, DetailView):
         except PaymentError as e:
             messages.error(request, _("Unable to create payment event due to"
                                       " payment error: %s") % e)
-        except order_exceptions.InvalidPaymentEvent as e:
+        except InvalidPaymentEvent as e:
             messages.error(
                 request, _("Unable to create payment event: %s") % e)
         else:
