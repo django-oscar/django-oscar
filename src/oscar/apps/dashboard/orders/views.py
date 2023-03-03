@@ -13,7 +13,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
 from oscar.apps.order import exceptions as order_exceptions
-from oscar.apps.payment.exceptions import PaymentError
 from oscar.core.compat import UnicodeCSVWriter
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import datetime_combine, format_datetime
@@ -36,6 +35,7 @@ OrderNoteForm = get_class('dashboard.orders.forms', 'OrderNoteForm')
 ShippingAddressForm = get_class(
     'dashboard.orders.forms', 'ShippingAddressForm')
 OrderStatusForm = get_class('dashboard.orders.forms', 'OrderStatusForm')
+PaymentError = get_class('payment.exceptions', 'PaymentError')
 
 
 def queryset_orders_for_user(user):
