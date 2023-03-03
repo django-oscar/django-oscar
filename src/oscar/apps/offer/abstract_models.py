@@ -1030,6 +1030,7 @@ class AbstractRange(models.Model):
         ).exclude(
             id__in=self.excluded_products.values("id")
         )
+
     @cached_property
     def product_queryset(self):
         "cached queryset of all the products in the Range"
@@ -1044,42 +1045,6 @@ class AbstractRange(models.Model):
             selected_products = self.included_categories_queryset()
         else:
             selected_products = self.included_products_queryset()
-        return selected_products.distinct()
-
-    @cached_property
-    def product_queryset(self):
-        "cached queryset of all the products in the Range"
-        Product = self.included_products.model
-
-        if self.includes_all_products:
-            # Filter out blacklisted
-            return Product.objects.exclude(
-                id__in=self.excluded_products.values("id")
-            )
-
-        if self.included_categories.exists():
-            expanded_range_categories = ExpandDownwardsCategoryQueryset(
-                self.included_categories.values("id")
-            )
-            selected_products = Product.objects.filter(
-                Q(categories__in=expanded_range_categories)
-                | Q(product_class__classes=self)
-                | Q(includes=self)
-                | Q(parent__categories__in=expanded_range_categories)
-                | Q(parent__product_class__classes=self)
-                | Q(parent__includes=self),
-                ~Q(excludes=self),
-                ~Q(parent__excludes=self)
-            )
-        else:
-            selected_products = Product.objects.filter(
-                Q(product_class__classes=self)
-                | Q(includes=self)
-                | Q(parent__product_class__classes=self)
-                | Q(parent__includes=self),
-                ~Q(excludes=self),
-                ~Q(parent__excludes=self)
-            )
         return selected_products.distinct()
 
     @property
