@@ -984,8 +984,7 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         # check if products in included categories have children
-        if self.included_categories.filter(
-                product__structure=Product.CHILD).exists():
+        if self.included_categories.exclude(product__parent=None).exists():
             return Product.objects.filter(
                 Q(categories__in=expanded_range_categories)
                 | Q(includes=self)
@@ -1018,7 +1017,7 @@ class AbstractRange(models.Model):
                 ~Q(parent__excludes=self)
             )
         # check if included products have children
-        if self.included_products.filter(structure=Product.CHILD).exists():
+        if self.included_products.exclude(parent=None).exists():
             return Product.objects.filter(
                 Q(includes=self)
                 | Q(parent__includes=self),
