@@ -983,8 +983,8 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        # check if products in included categories have children
-        if self.included_categories.exclude(product__parent=None).exists():
+        # check if included_products have children
+        if Product.objects.filter(parent__includes=self).exists():
             return Product.objects.filter(
                 Q(categories__in=expanded_range_categories)
                 | Q(includes=self)
@@ -993,7 +993,7 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        # products in included categories have no children, use fastest query
+        # included_productss have no children, use fastest query
         return Product.objects.filter(
             Q(categories__in=expanded_range_categories)
             | Q(includes=self)
@@ -1016,15 +1016,15 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        # check if included products have children
-        if self.included_products.exclude(parent=None).exists():
+        # check if included_products have children
+        if Product.objects.filter(parent__includes=self).exists():
             return Product.objects.filter(
                 Q(includes=self)
                 | Q(parent__includes=self),
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             )
-        # included products have no children, use fastest query
+        # included_products have no children, use fastest query
         return Product.objects.filter(
             id__in=self.included_products.values("id")
         ).exclude(
