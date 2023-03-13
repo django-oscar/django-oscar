@@ -96,12 +96,15 @@ class RangeProductListView(BulkEditMixin, ListView):
     model = Product
     template_name = 'oscar/dashboard/ranges/range_product_list.html'
     context_object_name = 'products'
-    actions = ('remove_selected_products', 'add_products')
+    actions = ('remove_selected_products', 'add_selected_products',
+               'add_products')
     form_class = RangeProductForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def post(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
+        if request.POST.get('action', None) == 'add_selected_products':
+            return self.add_selected_products(request)
         if request.POST.get('action', None) == 'add_products':
             return self.add_products(request)
         return super().post(request, *args, **kwargs)
@@ -122,6 +125,22 @@ class RangeProductListView(BulkEditMixin, ListView):
         if 'form' not in ctx:
             ctx['form'] = self.form_class(range)
         return ctx
+
+    def add_selected_products(self, request):
+        product_ids = request.POST.getlist('selected_product', None)
+        products = self.model.objects.filter(id__in=product_ids)
+        log.info(f'add_selected_products: {products}')
+        range = self.get_range()
+        for product in products:
+            range.add_product(product)
+        num_products = len(products)
+        messages.success(
+            request,
+            ngettext(
+                "Added %d product to range", "Added %d products to range",
+                num_products) % num_products
+        )
+        return HttpResponseRedirect(self.get_success_url(request))
 
     def remove_selected_products(self, request, products):
         range = self.get_range()
