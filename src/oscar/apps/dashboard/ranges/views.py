@@ -129,7 +129,6 @@ class RangeProductListView(BulkEditMixin, ListView):
     def add_selected_products(self, request):
         product_ids = request.POST.getlist('selected_product', None)
         products = self.model.objects.filter(id__in=product_ids)
-        log.info(f'add_selected_products: {products}')
         range = self.get_range()
         for product in products:
             range.add_product(product)
