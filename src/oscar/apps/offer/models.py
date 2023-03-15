@@ -1,6 +1,7 @@
 from oscar.apps.offer.abstract_models import (
     AbstractBenefit, AbstractCondition, AbstractConditionalOffer,
-    AbstractRange, AbstractRangeProduct, AbstractRangeProductFileUpload)
+    AbstractRange, AbstractRangeProduct, AbstractRangeProductFileUpload,
+    AbstractRangeProductExcludedFileUpload)
 from oscar.apps.offer.results import (
     SHIPPING_DISCOUNT, ZERO_DISCOUNT, BasketDiscount, PostOrderAction,
     ShippingDiscount)
@@ -55,7 +56,8 @@ if not is_model_registered('offer', 'RangeProductFileUpload'):
 
 
 if not is_model_registered('offer', 'RangeProductExcludedFileUpload'):
-    class RangeProductFileUpload(AbstractRangeProductExcludedFileUpload):
+    class RangeProductExcludedFileUpload(
+            AbstractRangeProductExcludedFileUpload):
         pass
 
     __all__.append('RangeProductExcludedFileUpload')
