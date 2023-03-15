@@ -388,21 +388,19 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
         assert basket.total_incl_tax == 0
 
     def test_apply_benefit_with_product_variant_is_discountable_true(self):
-        benefit = factories.BenefitFactory()
+        rng = factories.RangeFactory(includes_all_products=True)
+        benefit = factories.BenefitFactory(
+            range=rng, type=models.Benefit.PERCENTAGE, value=5, max_affected_items=1
+        )
         factories.ConditionalOfferFactory(
             priority=99999,
             exclusive=True,
-
             condition__type=models.Condition.COUNT,
             condition__value=1,
-
-            benefit__type=models.Benefit.PERCENTAGE,
-            benefit__value=5,
-            benefit__max_affected_items=1
+            benefit=benefit
         )
 
         basket = factories.create_basket(empty=True)
-
         prod1 = factories.create_product(is_discountable=True)
         parent_product = factories.create_product(structure='parent', is_discountable=False)
         child = factories.create_product(
@@ -416,7 +414,7 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
         assert line[0].discount_percentage == 5
 
         variant_actual = benefit.can_apply_benefit(line[1])
-        assert variant_actual
+        assert variant_actual is False
         assert parent_product.is_discountable is False
         assert child.is_discountable is False
         assert line[1].discount_percentage == 0
