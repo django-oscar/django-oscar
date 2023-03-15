@@ -6,8 +6,8 @@ from django.urls import reverse
 from webtest.forms import Upload
 
 from oscar.apps.dashboard.ranges import forms
-from oscar.apps.offer.models import Range, RangeProductFileUpload, \
-    RangeProductExcludedFileUpload
+from oscar.apps.offer.models import (Range, RangeProductFileUpload,
+    RangeProductExcludedFileUpload)
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
 
