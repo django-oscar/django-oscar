@@ -85,7 +85,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_upload_file_with_skus(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.form
+        form = range_products_page.forms[0]
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
         all_products = self.range.all_products()
@@ -132,7 +132,7 @@ class RangeProductViewTest(WebTestCase):
             response.context['form'].errors['query'],
             ['No products exist with a SKU or UPC matching 321']
         )
-        form = range_products_page.form
+        form = range_products_page.forms[0]
         form['query'] = '456, 321'
         response = form.submit().follow()
         messages = list(response.context['messages'])
