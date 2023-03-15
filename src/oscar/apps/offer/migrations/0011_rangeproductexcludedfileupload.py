@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RangeProductExcludedFileUpload',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('filepath', models.CharField(max_length=255, verbose_name='File Path')),
                 ('size', models.PositiveIntegerField(verbose_name='Size')),
                 ('date_uploaded', models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Date Uploaded')),
