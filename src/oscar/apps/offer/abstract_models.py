@@ -1138,6 +1138,13 @@ class AbstractRangeProductExcludedFileUpload(AbstractRangeProductFileUpload):
         related_name='file_uploads_excluded',
         verbose_name=_("Range"))
 
+    class Meta:
+        abstract = True
+        app_label = 'offer'
+        ordering = ('-date_uploaded',)
+        verbose_name = _("Range Excluded Product Uploaded File")
+        verbose_name_plural = _("Range Excluded Product Uploaded Files")
+
     def process(self, file_obj):
         """
         Process the file upload and exclude products from the range
