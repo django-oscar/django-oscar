@@ -6,8 +6,7 @@ from django.urls import reverse
 from webtest.forms import Upload
 
 from oscar.apps.dashboard.ranges import forms
-from oscar.apps.offer.models import (
-    Range, RangeProductExcludedFileUpload, RangeProductFileUpload)
+from oscar.apps.offer.models import Range, RangeProductFileUpload
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
 
@@ -95,23 +94,31 @@ class RangeProductViewTest(WebTestCase):
         range_product_file_upload = RangeProductFileUpload.objects.get()
         self.assertEqual(range_product_file_upload.range, self.range)
         self.assertEqual(range_product_file_upload.num_new_skus, 1)
-        self.assertEqual(range_product_file_upload.status, RangeProductFileUpload.PROCESSED)
+        self.assertEqual(range_product_file_upload.status,
+                         RangeProductFileUpload.PROCESSED)
         self.assertEqual(range_product_file_upload.size, 3)
 
     def test_upload_excluded_file_with_skus(self):
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 0)
+        self.assertFalse(self.product3 in excluded_products)
+
+        # Upload the product
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms[1]
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
+
         excluded_products = self.range.excluded_products.all()
         self.assertEqual(len(excluded_products), 1)
         self.assertTrue(self.product3 in excluded_products)
-        range_product_excluded_file_upload = RangeProductExcludedFileUpload.objects.get()
-        self.assertEqual(range_product_excluded_file_upload.range, self.range)
-        self.assertEqual(range_product_excluded_file_upload.num_new_skus, 1)
-        self.assertEqual(range_product_excluded_file_upload.status,
-                         RangeProductExcludedFileUpload.PROCESSED)
-        self.assertEqual(range_product_excluded_file_upload.size, 3)
+
+        range_product_file_upload = RangeProductFileUpload.objects.get()
+        self.assertEqual(range_product_file_upload.range, self.range)
+        self.assertEqual(range_product_file_upload.num_new_skus, 1)
+        self.assertEqual(range_product_file_upload.status,
+                         RangeProductFileUpload.PROCESSED)
+        self.assertEqual(range_product_file_upload.size, 3)
 
     def test_dupe_skus_warning(self):
         self.range.add_product(self.product3)
@@ -122,7 +129,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(list(response.context['messages']), [])
         self.assertEqual(
             response.context['form'].errors['query'],
-            ['The products with SKUs or UPCs matching 456 are already in this range']
+            ['The products with SKUs or UPCs matching 456 have already been added to this range']
         )
 
         form = response.forms[0]
@@ -131,11 +138,38 @@ class RangeProductViewTest(WebTestCase):
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 2)
         self.assertEqual(messages[0].level, SUCCESS)
-        self.assertEqual(messages[0].message, '1 product added to range')
+        self.assertEqual(messages[0].message, '1 product has been added to this range')
         self.assertEqual(messages[1].level, WARNING)
         self.assertEqual(
             messages[1].message,
-            'The products with SKUs or UPCs matching 456 are already in this range'
+            'The products with SKUs or UPCs matching 456 have already been added to this range'
+        )
+
+    def test_dupe_excluded_skus_warning(self):
+        self.range.add_product(self.product3)
+        self.range.add_product(self.product4)
+        self.range.excluded_products.add(self.product3)
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[2]
+        form['query'] = '456'
+        response = form.submit()
+        self.assertEqual(list(response.context['messages']), [])
+        self.assertEqual(
+            response.context['form_excluded'].errors['query'],
+            ['The products with SKUs or UPCs matching 456 have already been excluded from this range']
+        )
+
+        form = response.forms[2]
+        form['query'] = '456, 789'
+        response = form.submit().follow()
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, '1 product has been excluded from this range')
+        self.assertEqual(messages[1].level, WARNING)
+        self.assertEqual(
+            messages[1].message,
+            'The products with SKUs or UPCs matching 456 have already been excluded from this range'
         )
 
     def test_missing_skus_warning(self):
@@ -154,7 +188,7 @@ class RangeProductViewTest(WebTestCase):
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 2)
         self.assertEqual(messages[0].level, SUCCESS)
-        self.assertEqual(messages[0].message, '1 product added to range')
+        self.assertEqual(messages[0].message, '1 product has been added to this range')
         self.assertEqual(messages[1].level, WARNING)
         self.assertEqual(
             messages[1].message, 'No product(s) were found with SKU or UPC matching 321'
@@ -225,6 +259,36 @@ class RangeProductViewTest(WebTestCase):
         self.assertTrue(self.range.contains_product(self.child1))
         self.assertTrue(self.range.contains_product(self.child2))
         self.assertFalse(self.range.contains_product(self.parent))
+
+    def test_remove_selected_product(self):
+        self.range.add_product(self.product3)
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[1]
+        form['selected_product'] = '456'
+        response = form.submit().follow()
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, 'Removed 1 product from range')
+        self.assertFalse(self.range.contains_product(self.product3))
+        self.assertTrue(self.product3 in self.range.excluded_products.all())
+
+    def test_remove_excluded_product(self):
+        self.range.add_product(self.product3)
+        self.range.excluded_products.add(self.product3)
+        self.assertFalse(self.range.contains_product(self.product3))
+
+        # Remove the product from exclusion form
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[2]
+        form['selected_product'] = '456'
+        response = form.submit().follow()
+
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, 'Removed 1 product from excluded list')
+        self.assertTrue(self.range.contains_product(self.product3))
 
 
 class RangeReorderViewTest(WebTestCase):

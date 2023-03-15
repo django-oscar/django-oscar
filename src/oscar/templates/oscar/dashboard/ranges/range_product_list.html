@@ -35,12 +35,12 @@
   <ul class="nav nav-tabs mb-0" role="tablist">
     {% block nav_tabs %}
       <li class="nav-item">
-        <a class="nav-link {% if active_tab == 'included' %}active{% endif %}" href="#included" data-toggle="tab">
+        <a class="nav-link {% if not upload_type == "excluded" %}active{% endif %}" href="#included" data-toggle="tab">
           {% trans "Products in range" %}
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if active_tab == 'excluded' %}active{% endif %}" href="#excluded" data-toggle="tab">
+        <a class="nav-link {% if upload_type == "excluded" %}active{% endif %}" href="#excluded" data-toggle="tab">
           {% trans "Products excluded from range" %}
         </a>
       </li>
@@ -49,7 +49,7 @@
 
   <div class="tab-content">
 
-    <div class="tab-pane fade {% if active_tab == 'included' %}show active{% endif %}" id="included" role="tabpanel">
+    <div class="tab-pane fade {% if not upload_type == "excluded" %}show active{% endif %}" id="included" role="tabpanel">
 
       {% if range.includes_all_products %}
         {% trans "This range contains all products. To add products manually, please unselect the 'Includes All Products' option on the edit range page." %}
@@ -72,7 +72,7 @@
             </div>
           </form>
 
-          {% with uploads=range.file_uploads.all %}
+          {% with uploads=file_uploads_included %}
             {% if uploads %}
             <div class="table-header">
               <h3>{% trans "Upload history" %}</h3>
@@ -163,7 +163,7 @@
 
     </div>
 
-    <div class="tab-pane fade {% if active_tab == 'excluded' %}show active{% endif %}" id="excluded" role="tabpanel">
+    <div class="tab-pane fade {% if upload_type == "excluded" %}show active{% endif %}" id="excluded" role="tabpanel">
 
         <div class="table-header">
           <h3>{% trans "Exclude products" %}</h3>
@@ -182,7 +182,7 @@
             </div>
           </form>
 
-          {% with uploads=range.file_uploads_excluded.all %}
+          {% with uploads=file_uploads_excluded %}
           {% if uploads %}
             <div class="table-header">
               <h3>{% trans "Upload history" %}</h3>
@@ -221,7 +221,7 @@
                   <div class="float-right">
                     <input type="hidden" name="action" value="remove_excluded_products" />
                     <button type="submit" class="btn btn-secondary" data-loading-text="{% trans 'Removing...' %}">
-                      {% trans "Remove excluded products" %}
+                      {% trans "Remove selected excluded products" %}
                     </button>
                   </div>
                 </caption>
