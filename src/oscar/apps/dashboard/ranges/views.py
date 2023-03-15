@@ -175,7 +175,7 @@ class RangeProductListView(BulkEditMixin, ListView):
         self.handle_query_excluded_products(request, range, form)
         self.handle_file_excluded_products(request, range, form)
         return redirect(reverse('dashboard:range-products-excluded',
-            kwargs={'pk': range.pk, 'excluded': 1}))
+                                kwargs={'pk': range.pk, 'excluded': 1}))
 
     def remove_excluded_products(self, request):
         product_ids = request.POST.getlist('selected_product', None)
@@ -192,7 +192,7 @@ class RangeProductListView(BulkEditMixin, ListView):
                 num_products) % num_products
         )
         return redirect(reverse('dashboard:range-products-excluded',
-            kwargs={'pk': range.pk, 'excluded': 1}))
+                                kwargs={'pk': range.pk, 'excluded': 1}))
 
     def handle_query_products(self, request, range, form):
         products = form.get_products()
