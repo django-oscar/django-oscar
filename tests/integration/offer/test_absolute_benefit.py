@@ -386,3 +386,31 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
         assert line.line_price_excl_tax_incl_discounts == D(0)
         assert line.line_price_incl_tax_incl_discounts == D(0)
         assert basket.total_incl_tax == 0
+
+    def test_apply_benefit_with_product_variant_is_discountable_true(self):
+        benefit = factories.BenefitFactory()
+        factories.ConditionalOfferFactory(benefit=benefit)
+        basket = factories.create_basket(empty=True)
+
+        prod1 = factories.create_product()
+        parent_product = factories.create_product(structure='parent')
+        child = factories.create_product(
+            title="Variant 1", structure='child', parent=parent_product)
+
+        prod1.is_discountable = False
+        prod1.save()
+        child.is_discountable = True
+        child.save()
+
+        add_product(basket, product=prod1)
+        add_product(basket, product=child)
+
+        line = basket.all_lines()
+        product_actual = benefit.can_apply_benefit(line[0])
+        assert product_actual
+        assert prod1.is_discountable is False
+
+        variant_actual = benefit.can_apply_benefit(line[1])
+        assert variant_actual
+        assert parent_product.is_discountable
+        assert child.is_discountable
