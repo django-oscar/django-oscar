@@ -99,7 +99,7 @@ class RangeProductListView(BulkEditMixin, ListView):
     template_name = 'oscar/dashboard/ranges/range_product_list.html'
     context_object_name = 'products'
     actions = ('add_products', 'add_excluded_products',
-        'remove_selected_products', 'remove_excluded_products')
+               'remove_selected_products', 'remove_excluded_products')
     form_class = RangeProductForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
