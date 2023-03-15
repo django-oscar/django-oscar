@@ -234,8 +234,22 @@ class RangeProductListView(BulkEditMixin, ListView):
         messages.success(
             request,
             ngettext("%d product excluded from range",
-                "%d products excluded from range", num_products) % num_products
+                     "%d products excluded from range", num_products) % num_products
         )
+        dupe_skus = form.get_duplicate_skus()
+        if dupe_skus:
+            messages.warning(
+                request,
+                _("The products with SKUs or UPCs matching %s are already "
+                  "in this range") % ", ".join(dupe_skus))
+
+        missing_skus = form.get_missing_skus()
+        if missing_skus:
+            messages.warning(
+                request,
+                _("No product(s) were found with SKU or UPC matching %s") %
+                ", ".join(missing_skus))
+        self.check_imported_products_sku_duplicates(request, products)
 
     def handle_file_products(self, request, range, form):
         if 'file_upload' not in request.FILES:
