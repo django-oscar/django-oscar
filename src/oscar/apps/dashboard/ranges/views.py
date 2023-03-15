@@ -236,7 +236,7 @@ class RangeProductListView(BulkEditMixin, ListView):
             ngettext("%d product excluded from range",
                 "%d products excluded from range", num_products) % num_products
         )
-    
+
     def handle_file_products(self, request, range, form):
         if 'file_upload' not in request.FILES:
             return
