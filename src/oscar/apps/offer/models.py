@@ -1,7 +1,7 @@
 from oscar.apps.offer.abstract_models import (
     AbstractBenefit, AbstractCondition, AbstractConditionalOffer,
-    AbstractRange, AbstractRangeProduct, AbstractRangeProductFileUpload,
-    AbstractRangeProductExcludedFileUpload)
+    AbstractRange, AbstractRangeProduct,
+    AbstractRangeProductExcludedFileUpload, AbstractRangeProductFileUpload)
 from oscar.apps.offer.results import (
     SHIPPING_DISCOUNT, ZERO_DISCOUNT, BasketDiscount, PostOrderAction,
     ShippingDiscount)
