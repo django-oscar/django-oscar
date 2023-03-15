@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core import exceptions
 from django.db.models import Count
 from django.http import HttpResponseRedirect
-from django.shortcuts import HttpResponse, get_object_or_404
+from django.shortcuts import HttpResponse, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
