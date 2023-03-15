@@ -1136,7 +1136,7 @@ class AbstractRangeProductFileUpload(models.Model):
                 yield line[0]
 
 
-class RangeProductExcludedFileUpload(AbstractRangeProductFileUpload):
+class AbstractRangeProductExcludedFileUpload(AbstractRangeProductFileUpload):
     """
     File Upload for excluded products in range dashboard
     """
