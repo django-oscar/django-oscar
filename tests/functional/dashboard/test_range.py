@@ -6,7 +6,8 @@ from django.urls import reverse
 from webtest.forms import Upload
 
 from oscar.apps.dashboard.ranges import forms
-from oscar.apps.offer.models import Range, RangeProductFileUpload
+from oscar.apps.offer.models import Range, RangeProductFileUpload, \
+    RangeProductExcludedFileUpload
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
 
@@ -96,6 +97,21 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(range_product_file_upload.num_new_skus, 1)
         self.assertEqual(range_product_file_upload.status, RangeProductFileUpload.PROCESSED)
         self.assertEqual(range_product_file_upload.size, 3)
+
+    def test_upload_excluded_file_with_skus(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[0]
+        form['file_upload'] = Upload('new_skus.txt', b'456')
+        form.submit().follow()
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 1)
+        self.assertTrue(self.product3 in excluded_products)
+        range_product_excluded_file_upload = RangeProductExcludedFileUpload.objects.get()
+        self.assertEqual(range_product_excluded_file_upload.range, self.range)
+        self.assertEqual(range_product_excluded_file_upload.num_new_skus, 1)
+        self.assertEqual(range_product_excluded_file_upload.status,
+                         RangeProductExcludedFileUpload.PROCESSED)
+        self.assertEqual(range_product_excluded_file_upload.size, 3)
 
     def test_dupe_skus_warning(self):
         self.range.add_product(self.product3)
