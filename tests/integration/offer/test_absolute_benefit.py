@@ -406,6 +406,9 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
         child = factories.create_product(
             title="Variant 1", structure='child', parent=parent_product, is_discountable=False)
 
+        basket.add_product(prod1, quantity=1)
+        basket.add_product(child, quantity=1)
+
         Applicator().apply(basket)
         line = basket.all_lines()
         product_actual = benefit.can_apply_benefit(line[0])
