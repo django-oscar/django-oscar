@@ -54,6 +54,13 @@ if not is_model_registered('offer', 'RangeProductFileUpload'):
     __all__.append('RangeProductFileUpload')
 
 
+if not is_model_registered('offer', 'RangeProductExcludedFileUpload'):
+    class RangeProductFileUpload(AbstractRangeProductExcludedFileUpload):
+        pass
+
+    __all__.append('RangeProductExcludedFileUpload')
+
+
 # Import the benefits and the conditions. Required after initializing the
 # parent models to allow overriding them
 
