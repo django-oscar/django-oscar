@@ -89,6 +89,9 @@ class RangeProductForm(forms.Form):
 
 
 class RangeExcludedProductForm(RangeProductForm):
+    """
+    adds products in range.excluded_products
+    """
 
     def clean_query(self):
         raw = self.cleaned_data['query']
