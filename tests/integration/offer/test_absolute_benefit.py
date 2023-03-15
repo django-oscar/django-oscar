@@ -389,28 +389,34 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
 
     def test_apply_benefit_with_product_variant_is_discountable_true(self):
         benefit = factories.BenefitFactory()
-        factories.ConditionalOfferFactory(benefit=benefit)
+        factories.ConditionalOfferFactory(
+            priority=99999,
+            exclusive=True,
+
+            condition__type=models.Condition.COUNT,
+            condition__value=1,
+
+            benefit__type=models.Benefit.PERCENTAGE,
+            benefit__value=5,
+            benefit__max_affected_items=1
+        )
+
         basket = factories.create_basket(empty=True)
 
-        prod1 = factories.create_product()
-        parent_product = factories.create_product(structure='parent')
+        prod1 = factories.create_product(is_discountable=True)
+        parent_product = factories.create_product(structure='parent', is_discountable=False)
         child = factories.create_product(
-            title="Variant 1", structure='child', parent=parent_product)
+            title="Variant 1", structure='child', parent=parent_product, is_discountable=False)
 
-        prod1.is_discountable = False
-        prod1.save()
-        child.is_discountable = True
-        child.save()
-
-        add_product(basket, product=prod1)
-        add_product(basket, product=child)
-
+        Applicator().apply(basket)
         line = basket.all_lines()
         product_actual = benefit.can_apply_benefit(line[0])
         assert product_actual
-        assert prod1.is_discountable is False
+        assert prod1.is_discountable
+        assert line[0].discount_percentage == 5
 
         variant_actual = benefit.can_apply_benefit(line[1])
         assert variant_actual
-        assert parent_product.is_discountable
-        assert child.is_discountable
+        assert parent_product.is_discountable is False
+        assert child.is_discountable is False
+        assert line[1].discount_percentage == 0
