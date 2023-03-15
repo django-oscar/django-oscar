@@ -124,7 +124,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_missing_skus_warning(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.form
+        form = range_products_page.forms[0]
         form['query'] = '321'
         response = form.submit()
         self.assertEqual(list(response.context['messages']), [])
@@ -146,7 +146,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_same_skus_within_different_products_warning_query(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.form
+        form = range_products_page.forms[0]
         form['query'] = '123123'
         response = form.submit().follow()
         messages = list(response.context['messages'])
@@ -158,7 +158,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_same_skus_within_different_products_warning_file_upload(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.form
+        form = range_products_page.forms[0]
         form['file_upload'] = Upload('skus.txt', b'123123')
         response = form.submit().follow()
         messages = list(response.context['messages'])
