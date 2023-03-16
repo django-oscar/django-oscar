@@ -18,7 +18,6 @@ from oscar.views.generic import BulkEditMixin
 Range = get_model('offer', 'Range')
 RangeProduct = get_model('offer', 'RangeProduct')
 RangeProductFileUpload = get_model('offer', 'RangeProductFileUpload')
-RangeProductExcludedFileUpload = get_model('offer', 'RangeProductExcludedFileUpload')
 Product = get_model('catalogue', 'Product')
 RangeForm, RangeProductForm = get_classes(
     'dashboard.ranges.forms', ['RangeForm', 'RangeProductForm'])
@@ -256,15 +255,6 @@ class RangeProductListView(BulkEditMixin, ListView):
 
     def create_upload_object(self, request, range, f):
         upload = RangeProductFileUpload.objects.create(
-            range=range,
-            uploaded_by=request.user,
-            filepath=f.name,
-            size=f.size
-        )
-        return upload
-
-    def create_excluded_upload_object(self, request, range, f):
-        upload = RangeProductExcludedFileUpload.objects.create(
             range=range,
             uploaded_by=request.user,
             filepath=f.name,
