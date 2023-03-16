@@ -1042,6 +1042,8 @@ class AbstractRangeProductFileUpload(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Uploaded By"))
     date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True, db_index=True)
+    # for managing excluded_products
+    included = models.BooleanField(default=True)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
     choices = (
@@ -1090,9 +1092,13 @@ class AbstractRangeProductFileUpload(models.Model):
     def process(self, file_obj):
         """
         Process the file upload and add products to the range
+        or add products to range.excluded_products
         """
         all_ids = set(self.extract_ids(file_obj))
-        products = self.range.all_products()
+        if self.included:
+            products = self.range.all_products()
+        else:
+            products = self.range.excluded_products.all()
         existing_skus = products.values_list(
             'stockrecords__partner_sku', flat=True)
         existing_skus = set(filter(bool, existing_skus))
@@ -1106,7 +1112,10 @@ class AbstractRangeProductFileUpload(models.Model):
             models.Q(stockrecords__partner_sku__in=new_ids)
             | models.Q(upc__in=new_ids))
         for product in products:
-            self.range.add_product(product)
+            if self.included:
+                self.range.add_product(product)
+            else:
+                self.range.excluded_products.add(product)
 
         # Processing stats
         found_skus = products.values_list(
@@ -1125,55 +1134,3 @@ class AbstractRangeProductFileUpload(models.Model):
         for line in reader:
             if line:
                 yield line[0]
-
-
-class AbstractRangeProductExcludedFileUpload(AbstractRangeProductFileUpload):
-    """
-    File Upload for excluded products in range dashboard
-    """
-
-    range = models.ForeignKey(
-        'offer.Range',
-        on_delete=models.CASCADE,
-        related_name='file_uploads_excluded',
-        verbose_name=_("Range"))
-
-    class Meta:
-        abstract = True
-        app_label = 'offer'
-        ordering = ('-date_uploaded',)
-        verbose_name = _("Range Excluded Product Uploaded File")
-        verbose_name_plural = _("Range Excluded Product Uploaded Files")
-
-    def process(self, file_obj):
-        """
-        Process the file upload and exclude products from the range
-        """
-        all_ids = set(self.extract_ids(file_obj))
-        products = self.range.excluded_products.all()
-        existing_skus = products.values_list(
-            'stockrecords__partner_sku', flat=True)
-        existing_skus = set(filter(bool, existing_skus))
-        existing_upcs = products.values_list('upc', flat=True)
-        existing_upcs = set(filter(bool, existing_upcs))
-        existing_ids = existing_skus.union(existing_upcs)
-        new_ids = all_ids - existing_ids
-
-        Product = get_model('catalogue', 'Product')
-        products = Product._default_manager.filter(
-            models.Q(stockrecords__partner_sku__in=new_ids)
-            | models.Q(upc__in=new_ids))
-        for product in products:
-            self.range.excluded_products.add(product)
-
-        # Processing stats
-        found_skus = products.values_list(
-            'stockrecords__partner_sku', flat=True)
-        found_skus = set(filter(bool, found_skus))
-        found_upcs = set(filter(bool, products.values_list('upc', flat=True)))
-        found_ids = found_skus.union(found_upcs)
-        missing_ids = new_ids - found_ids
-        dupes = set(all_ids).intersection(existing_ids)
-
-        self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
-        return products

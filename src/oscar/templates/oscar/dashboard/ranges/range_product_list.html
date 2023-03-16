@@ -72,7 +72,7 @@
             </div>
           </form>
 
-          {% with uploads=range.file_uploads.all %}
+          {% with uploads=file_uploads_included %}
             {% if uploads %}
             <div class="table-header">
               <h3>{% trans "Upload history" %}</h3>
@@ -182,7 +182,7 @@
             </div>
           </form>
 
-          {% with uploads=range.file_uploads_excluded.all %}
+          {% with uploads=file_uploads_excluded %}
           {% if uploads %}
             <div class="table-header">
               <h3>{% trans "Upload history" %}</h3>

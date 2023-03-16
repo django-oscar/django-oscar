@@ -1,7 +1,6 @@
 from oscar.apps.offer.abstract_models import (
     AbstractBenefit, AbstractCondition, AbstractConditionalOffer,
-    AbstractRange, AbstractRangeProduct,
-    AbstractRangeProductExcludedFileUpload, AbstractRangeProductFileUpload)
+    AbstractRange, AbstractRangeProduct, AbstractRangeProductFileUpload)
 from oscar.apps.offer.results import (
     SHIPPING_DISCOUNT, ZERO_DISCOUNT, BasketDiscount, PostOrderAction,
     ShippingDiscount)
@@ -53,15 +52,6 @@ if not is_model_registered('offer', 'RangeProductFileUpload'):
         pass
 
     __all__.append('RangeProductFileUpload')
-
-
-if not is_model_registered('offer', 'RangeProductExcludedFileUpload'):
-    class RangeProductExcludedFileUpload(
-            AbstractRangeProductExcludedFileUpload):
-        pass
-
-    __all__.append('RangeProductExcludedFileUpload')
-
 
 # Import the benefits and the conditions. Required after initializing the
 # parent models to allow overriding them

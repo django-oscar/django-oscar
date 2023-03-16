@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.core import exceptions
 from django.db.models import Count
-from django.http import HttpResponseRedirect
 from django.shortcuts import HttpResponse, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -21,9 +20,8 @@ RangeProduct = get_model('offer', 'RangeProduct')
 RangeProductFileUpload = get_model('offer', 'RangeProductFileUpload')
 RangeProductExcludedFileUpload = get_model('offer', 'RangeProductExcludedFileUpload')
 Product = get_model('catalogue', 'Product')
-RangeForm, RangeProductForm, RangeExcludedProductForm = get_classes(
-    'dashboard.ranges.forms',
-    ['RangeForm', 'RangeProductForm', 'RangeExcludedProductForm'])
+RangeForm, RangeProductForm = get_classes(
+    'dashboard.ranges.forms', ['RangeForm', 'RangeProductForm'])
 
 
 class RangeListView(ListView):
@@ -134,11 +132,14 @@ class RangeProductListView(BulkEditMixin, ListView):
         if 'form' not in ctx:
             ctx['form'] = self.form_class(range)
         if 'form_excluded' not in ctx:
-            ctx['form_excluded'] = RangeExcludedProductForm(range)
+            ctx['form_excluded'] = self.form_class(range)
         if self.excluded:
             ctx['active_tab'] = 'excluded'
         else:
             ctx['active_tab'] = kwargs.get('active_tab', 'included')
+        ctx['file_uploads_included'] = range.file_uploads.filter(included=True)
+        ctx['file_uploads_excluded'] = range.file_uploads.filter(
+            included=False)
         return ctx
 
     def remove_selected_products(self, request, products):
@@ -148,33 +149,39 @@ class RangeProductListView(BulkEditMixin, ListView):
         num_products = len(products)
         messages.success(
             request,
-            ngettext("Removed %d product from range", "Removed %d products from range", num_products) % num_products
+            ngettext("Removed %d product from range",
+                     "Removed %d products from range",
+                     num_products) % num_products
         )
-        return HttpResponseRedirect(self.get_success_url(request))
+        return redirect(reverse('dashboard:range-products',
+            kwargs={'pk': range.pk}))
 
     def add_products(self, request):
         range = self.get_range()
         form = self.form_class(range, request.POST, request.FILES)
+        form.included = True
         if not form.is_valid():
             ctx = self.get_context_data(form=form,
                                         object_list=self.object_list)
             return self.render_to_response(ctx)
 
         self.handle_query_products(request, range, form)
-        self.handle_file_products(request, range, form)
-        return HttpResponseRedirect(self.get_success_url(request))
+        self.handle_file_products(request, range, form, included=True)
+        return redirect(reverse('dashboard:range-products',
+            kwargs={'pk': range.pk}))
 
     def add_excluded_products(self, request):
         range = self.get_range()
-        form = RangeExcludedProductForm(range, request.POST, request.FILES)
+        form = self.form_class(range, request.POST, request.FILES)
+        form.included = False
         if not form.is_valid():
             ctx = self.get_context_data(form_excluded=form,
                                         object_list=self.object_list)
             ctx['active_tab'] = 'excluded'
             return self.render_to_response(ctx)
 
-        self.handle_query_excluded_products(request, range, form)
-        self.handle_file_excluded_products(request, range, form)
+        self.handle_query_products(request, range, form)
+        self.handle_file_products(request, range, form, included=False)
         return redirect(reverse('dashboard:range-products-excluded',
                                 kwargs={'pk': range.pk, 'excluded': 1}))
 
@@ -199,50 +206,29 @@ class RangeProductListView(BulkEditMixin, ListView):
         products = form.get_products()
         if not products:
             return
-
         for product in products:
-            range.add_product(product)
+            if form.included:
+                range.add_product(product)
+            else:
+                range.excluded_products.add(product)
 
         num_products = len(products)
+        if form.included:
+            action = 'added to range'
+        else:
+            action = 'removed from range'
         messages.success(
             request,
-            ngettext("%d product added to range", "%d products added to range", num_products) % num_products
+            ngettext("%d product %s",
+                     "%d products %s",
+                     num_products) % (num_products, action)
         )
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
             messages.warning(
                 request,
-                _("The products with SKUs or UPCs matching %s are already "
-                  "in this range") % ", ".join(dupe_skus))
-
-        missing_skus = form.get_missing_skus()
-        if missing_skus:
-            messages.warning(
-                request,
-                _("No product(s) were found with SKU or UPC matching %s") %
-                ", ".join(missing_skus))
-        self.check_imported_products_sku_duplicates(request, products)
-
-    def handle_query_excluded_products(self, request, range, form):
-        products = form.get_products()
-        if not products:
-            return
-
-        for product in products:
-            range.excluded_products.add(product)
-
-        num_products = len(products)
-        messages.success(
-            request,
-            ngettext("%d product excluded from range",
-                     "%d products excluded from range", num_products) % num_products
-        )
-        dupe_skus = form.get_duplicate_skus()
-        if dupe_skus:
-            messages.warning(
-                request,
-                _("The products with SKUs or UPCs matching %s are already "
-                  "in this range") % ", ".join(dupe_skus))
+                _("The products with SKUs or UPCs matching %s have already "
+                  "been %s") % (", ".join(dupe_skus), action))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
@@ -257,22 +243,6 @@ class RangeProductListView(BulkEditMixin, ListView):
             return
         f = request.FILES['file_upload']
         upload = self.create_upload_object(request, range, f)
-        products = upload.process(TextIOWrapper(f, encoding=request.encoding))
-        if not upload.was_processing_successful():
-            messages.error(request, upload.error_message)
-        else:
-            msg = render_to_string(
-                'oscar/dashboard/ranges/messages/range_products_saved.html',
-                {'range': range,
-                 'upload': upload})
-            messages.success(request, msg, extra_tags='safe noicon block')
-        self.check_imported_products_sku_duplicates(request, products)
-
-    def handle_file_excluded_products(self, request, range, form):
-        if 'file_upload' not in request.FILES:
-            return
-        f = request.FILES['file_upload']
-        upload = self.create_excluded_upload_object(request, range, f)
         products = upload.process(TextIOWrapper(f, encoding=request.encoding))
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
