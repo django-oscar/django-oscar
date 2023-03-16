@@ -237,11 +237,12 @@ class RangeProductListView(BulkEditMixin, ListView):
                 ", ".join(missing_skus))
         self.check_imported_products_sku_duplicates(request, products)
 
-    def handle_file_products(self, request, range, form):
+    def handle_file_products(self, request, range, form, included=True):
         if 'file_upload' not in request.FILES:
             return
         f = request.FILES['file_upload']
-        upload = self.create_upload_object(request, range, f)
+        upload = self.create_upload_object(
+            request, range, f, included=included)
         products = upload.process(TextIOWrapper(f, encoding=request.encoding))
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
@@ -253,12 +254,13 @@ class RangeProductListView(BulkEditMixin, ListView):
             messages.success(request, msg, extra_tags='safe noicon block')
         self.check_imported_products_sku_duplicates(request, products)
 
-    def create_upload_object(self, request, range, f):
+    def create_upload_object(self, request, range, f, included=True):
         upload = RangeProductFileUpload.objects.create(
             range=range,
             uploaded_by=request.user,
             filepath=f.name,
-            size=f.size
+            size=f.size,
+            included=included
         )
         return upload
 
