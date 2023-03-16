@@ -218,8 +218,8 @@ class RangeProductListView(BulkEditMixin, ListView):
             action = 'removed from'
         messages.success(
             request,
-            ngettext("%d product %s",
-                     "%d products %s",
+            ngettext("%d product %s range",
+                     "%d products %s range",
                      num_products) % (num_products, action)
         )
         dupe_skus = form.get_duplicate_skus()
