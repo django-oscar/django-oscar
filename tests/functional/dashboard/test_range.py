@@ -94,7 +94,8 @@ class RangeProductViewTest(WebTestCase):
         range_product_file_upload = RangeProductFileUpload.objects.get()
         self.assertEqual(range_product_file_upload.range, self.range)
         self.assertEqual(range_product_file_upload.num_new_skus, 1)
-        self.assertEqual(range_product_file_upload.status, RangeProductFileUpload.PROCESSED)
+        self.assertEqual(range_product_file_upload.status,
+                         RangeProductFileUpload.PROCESSED)
         self.assertEqual(range_product_file_upload.size, 3)
 
     def test_upload_excluded_file_with_skus(self):
