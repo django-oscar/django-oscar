@@ -213,9 +213,9 @@ class RangeProductListView(BulkEditMixin, ListView):
 
         num_products = len(products)
         if form.included:
-            action = 'added to range'
+            action = 'added to'
         else:
-            action = 'removed from range'
+            action = 'removed from'
         messages.success(
             request,
             ngettext("%d product %s",
@@ -227,7 +227,7 @@ class RangeProductListView(BulkEditMixin, ListView):
             messages.warning(
                 request,
                 _("The products with SKUs or UPCs matching %s have already "
-                  "been %s") % (", ".join(dupe_skus), action))
+                  "been %s this range") % (", ".join(dupe_skus), action))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
