@@ -102,7 +102,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_upload_excluded_file_with_skus(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[2]
+        form = range_products_page.forms[1]
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
         excluded_products = self.range.excluded_products.all()
