@@ -22,7 +22,7 @@ class RangeProductFormTests(TestCase):
     def submit_form(self, data):
         form = forms.RangeProductForm(self.range, data)
         form.included = True
-        return forms.RangeProductForm(self.range, data)
+        return form
 
     def test_either_query_or_file_must_be_submitted(self):
         form = self.submit_form({'query': ''})
