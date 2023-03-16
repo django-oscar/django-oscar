@@ -62,7 +62,7 @@ class RangeProductForm(forms.Form):
         if len(new_ids) == 0:
             raise forms.ValidationError(
                 _("The products with SKUs or UPCs matching %s have already "
-                  "been added in this range") % (', '.join(ids)))
+                  "been added to this range") % (', '.join(ids)))
 
         self.products = Product._default_manager.filter(
             Q(stockrecords__partner_sku__in=new_ids)
