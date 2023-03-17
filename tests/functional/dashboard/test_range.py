@@ -259,7 +259,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_remove_selected_product(self):
         self.range.add_product(self.product3)
-        range_products_page = self.get(self.url1)
+        range_products_page = self.get(self.url)
         form = range_products_page.forms[1]
         form['selected_product'] = '456'
         self.assertFalse(self.range.contains_product(self.product3))
