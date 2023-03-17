@@ -49,19 +49,18 @@ class RangeProductForm(forms.Form):
 
         # Check that the search matches some products
         ids = set(UPC_SET_REGEX.findall(raw))
+        # switch for included or excluded products
         if self.included:
             products = self.range.all_products()
+            action = 'added to'
         else:
             products = self.range.excluded_products.all()
+            action = 'removed from'
         existing_skus = set(products.values_list(
             'stockrecords__partner_sku', flat=True))
         existing_upcs = set(products.values_list('upc', flat=True))
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = ids - existing_ids
-        if self.included:
-            action = 'added to'
-        else:
-            action = 'removed from'
         if len(new_ids) == 0:
             raise forms.ValidationError(
                 _("The products with SKUs or UPCs matching %s have already "
