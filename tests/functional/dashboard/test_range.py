@@ -104,7 +104,7 @@ class RangeProductViewTest(WebTestCase):
         url = reverse(
             'dashboard:range-products-excluded', args=(self.range.id, 1))
         range_products_page = self.get(url)
-        form = range_products_page.forms[2]
+        form = range_products_page.forms[1]
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
         excluded_products = self.range.excluded_products.all()
