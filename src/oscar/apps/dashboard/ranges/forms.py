@@ -58,11 +58,14 @@ class RangeProductForm(forms.Form):
         existing_upcs = set(products.values_list('upc', flat=True))
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = ids - existing_ids
-
+        if self.included:
+            action = 'added to'
+        else:
+            action = 'removed from'
         if len(new_ids) == 0:
             raise forms.ValidationError(
                 _("The products with SKUs or UPCs matching %s have already "
-                  "been added to this range") % (', '.join(ids)))
+                  "been %s this range") % (', '.join(ids), action))
 
         self.products = Product._default_manager.filter(
             Q(stockrecords__partner_sku__in=new_ids)
