@@ -101,8 +101,10 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(range_product_file_upload.size, 3)
 
     def test_upload_excluded_file_with_skus(self):
-        range_products_page = self.get(self.url)
-        form = range_products_page.forms[1]
+        url = reverse(
+            'dashboard:range-products-excluded', args=(self.range.id,))
+        range_products_page = self.get(url)
+        form = range_products_page.forms[0]
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
         excluded_products = self.range.excluded_products.all()
