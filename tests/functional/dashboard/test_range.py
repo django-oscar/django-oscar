@@ -262,6 +262,11 @@ class RangeProductViewTest(WebTestCase):
         range_products_page = self.get(self.url)
         form = range_products_page.forms[1]
         form['selected_product'] = '456'
+        response = form.submit().follow()
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, 'Removed 1 product from range')
         self.assertFalse(self.range.contains_product(self.product3))
         self.assertTrue(self.product3 in self.range.excluded_products.all())
 
@@ -272,11 +277,11 @@ class RangeProductViewTest(WebTestCase):
         form = range_products_page.forms[2]
         form['selected_product'] = '456'
         response = form.submit().follow()
-        self.assertTrue(self.range.contains_product(self.product3))
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages[0].level, SUCCESS)
         self.assertEqual(messages[0].message, 'Removed 1 product from excluded list')
+        self.assertTrue(self.range.contains_product(self.product3))
 
 
 class RangeReorderViewTest(WebTestCase):
