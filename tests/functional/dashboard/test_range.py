@@ -145,7 +145,7 @@ class RangeProductViewTest(WebTestCase):
     def test_dupe_excluded_skus_warning(self):
         self.range.excluded_products.add(self.product3)
         range_products_page = self.get(self.url2)
-        form = range_products_page.forms[1]
+        form = range_products_page.forms[2]
         form['query'] = '456'
         response = form.submit()
         self.assertEqual(list(response.context['messages']), [])
