@@ -257,6 +257,14 @@ class RangeProductViewTest(WebTestCase):
         self.assertTrue(self.range.contains_product(self.child2))
         self.assertFalse(self.range.contains_product(self.parent))
 
+    def test_remove_selected_product(self):
+        self.range.add_product(self.product3)
+        range_products_page = self.get(self.url1)
+        form = range_products_page.forms[1]
+        form['selected_product'] = '456'
+        self.assertFalse(self.range.contains_product(self.product3))
+        self.assertTrue(self.product3 in self.range.excluded_products.all())
+
     def test_remove_excluded_product(self):
         self.range.add_product(self.product3)
         self.range.excluded_products.add(self.product3)
