@@ -257,6 +257,19 @@ class RangeProductViewTest(WebTestCase):
         self.assertTrue(self.range.contains_product(self.child2))
         self.assertFalse(self.range.contains_product(self.parent))
 
+    def test_remove_excluded_product(self):
+        self.range.add_product(self.product3)
+        self.range.excluded_products.add(self.product3)
+        range_products_page = self.get(self.url2)
+        form = range_products_page.forms[2]
+        form['selected_product'] = '456'
+        response = form.submit().follow()
+        self.assertTrue(self.range.contains_product(self.product3))
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, 'Removed 1 product from excluded list')
+
 
 class RangeReorderViewTest(WebTestCase):
     is_staff = True
