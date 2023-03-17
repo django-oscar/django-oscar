@@ -162,7 +162,7 @@ class RangeProductViewTest(WebTestCase):
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 2)
         self.assertEqual(messages[0].level, SUCCESS)
-        self.assertEqual(messages[0].message, 'Removed 1 product from excluded list')
+        self.assertEqual(messages[0].message, 'Removed 1 product from range')
         self.assertEqual(messages[1].level, WARNING)
         self.assertEqual(
             messages[1].message,
