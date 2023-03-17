@@ -145,7 +145,7 @@ class RangeProductViewTest(WebTestCase):
     def test_dupe_excluded_skus_warning(self):
         self.range.excluded_products.add(self.product3)
         range_products_page = self.get(self.url2)
-        form = range_products_page.forms[3]
+        form = range_products_page.forms[1]
         form['query'] = '456'
         response = form.submit()
         self.assertEqual(list(response.context['messages']), [])
@@ -154,7 +154,7 @@ class RangeProductViewTest(WebTestCase):
             ['The products with SKUs or UPCs matching 456 have already been removed from this range']
         )
 
-        form = response.forms[3]
+        form = response.forms[1]
         form['query'] = '456, 789'
         response = form.submit().follow()
         messages = list(response.context['messages'])
