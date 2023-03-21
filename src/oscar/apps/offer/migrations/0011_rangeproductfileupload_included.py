@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='rangeproductfileupload',
-            name='included',
-            field=models.BooleanField(default=True),
+            name='upload_type',
+            field=models.CharField(choices=[('included', 'Included products upload'), ('excluded', 'Excluded products upload')], default='included', max_length=8),
         ),
     ]

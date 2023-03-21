@@ -101,11 +101,11 @@ class RangeProductListView(BulkEditMixin, ListView):
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get(self, request, **kwargs):
-        self.excluded = 'excluded' in kwargs
+        self.active_tab = kwargs.get('active_tab', 0)
         return super().get(request, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.excluded = False
+        self.active_tab = kwargs.get('active_tab', 0)
         self.object_list = self.get_queryset()
         if request.POST.get('action', None) == 'add_products':
             return self.add_products(request)
@@ -129,16 +129,14 @@ class RangeProductListView(BulkEditMixin, ListView):
         range = self.get_range()
         ctx['range'] = range
         if 'form' not in ctx:
-            ctx['form'] = self.form_class(range)
+            ctx['form'] = self.form_class(range, False)
         if 'form_excluded' not in ctx:
-            ctx['form_excluded'] = self.form_class(range)
-        if self.excluded:
-            ctx['active_tab'] = 'excluded'
-        else:
-            ctx['active_tab'] = kwargs.get('active_tab', 'included')
-        ctx['file_uploads_included'] = range.file_uploads.filter(included=True)
+            ctx['form_excluded'] = self.form_class(range, True)
+        ctx['active_tab'] = self.active_tab
+        ctx['file_uploads_included'] = range.file_uploads.filter(
+            upload_type=RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE)
         ctx['file_uploads_excluded'] = range.file_uploads.filter(
-            included=False)
+            upload_type=RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE)
         return ctx
 
     def remove_selected_products(self, request, products):
@@ -157,8 +155,7 @@ class RangeProductListView(BulkEditMixin, ListView):
 
     def add_products(self, request):
         range = self.get_range()
-        form = self.form_class(range, request.POST, request.FILES)
-        form.included = True
+        form = self.form_class(range, False, request.POST, request.FILES)
         if not form.is_valid():
             ctx = self.get_context_data(form=form,
                                         object_list=self.object_list)
@@ -171,18 +168,17 @@ class RangeProductListView(BulkEditMixin, ListView):
 
     def add_excluded_products(self, request):
         range = self.get_range()
-        form = self.form_class(range, request.POST, request.FILES)
-        form.included = False
+        form = self.form_class(range, True, request.POST, request.FILES)
         if not form.is_valid():
             ctx = self.get_context_data(form_excluded=form,
                                         object_list=self.object_list)
-            ctx['active_tab'] = 'excluded'
+            ctx['active_tab'] = 1
             return self.render_to_response(ctx)
 
         self.handle_query_products(request, range, form)
         self.handle_file_products(request, range, form, included=False)
         return redirect(reverse('dashboard:range-products-excluded',
-                                kwargs={'pk': range.pk, 'excluded': 1}))
+                                kwargs={'pk': range.pk, 'active_tab': 1}))
 
     def remove_excluded_products(self, request):
         product_ids = request.POST.getlist('selected_product', None)
@@ -199,23 +195,20 @@ class RangeProductListView(BulkEditMixin, ListView):
                 num_products) % num_products
         )
         return redirect(reverse('dashboard:range-products-excluded',
-                                kwargs={'pk': range.pk, 'excluded': 1}))
+                                kwargs={'pk': range.pk, 'active_tab': 1}))
 
     def handle_query_products(self, request, range, form):
         products = form.get_products()
         if not products:
             return
         for product in products:
-            if form.included:
-                range.add_product(product)
-            else:
+            if form.excluded:
                 range.excluded_products.add(product)
-
+                action = 'removed from'
+            else:
+                range.add_product(product)
+                action = 'added to'
         num_products = len(products)
-        if form.included:
-            action = 'added to'
-        else:
-            action = 'removed from'
         messages.success(
             request,
             ngettext("%d product %s range",
@@ -255,12 +248,16 @@ class RangeProductListView(BulkEditMixin, ListView):
         self.check_imported_products_sku_duplicates(request, products)
 
     def create_upload_object(self, request, range, f, included=True):
+        if included:
+            upload_type = RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE
+        else:
+            upload_type = RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE
         upload = RangeProductFileUpload.objects.create(
             range=range,
             uploaded_by=request.user,
             filepath=f.name,
             size=f.size,
-            included=included
+            upload_type=upload_type
         )
         return upload
 

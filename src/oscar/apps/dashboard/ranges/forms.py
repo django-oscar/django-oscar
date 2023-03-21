@@ -31,8 +31,9 @@ class RangeProductForm(forms.Form):
         label=_("File of SKUs or UPCs"), required=False, max_length=255,
         help_text=_('Either comma-separated, or one identifier per line'))
 
-    def __init__(self, range, *args, **kwargs):
+    def __init__(self, range, excluded, *args, **kwargs):
         self.range = range
+        self.excluded = excluded
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -50,12 +51,12 @@ class RangeProductForm(forms.Form):
         # Check that the search matches some products
         ids = set(UPC_SET_REGEX.findall(raw))
         # switch for included or excluded products
-        if self.included:
-            products = self.range.all_products()
-            action = 'added to'
-        else:
+        if self.excluded:
             products = self.range.excluded_products.all()
             action = 'removed from'
+        else:
+            products = self.range.all_products()
+            action = 'added to'
         existing_skus = set(products.values_list(
             'stockrecords__partner_sku', flat=True))
         existing_upcs = set(products.values_list('upc', flat=True))
