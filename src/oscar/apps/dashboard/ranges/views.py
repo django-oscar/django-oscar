@@ -146,8 +146,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         num_products = len(products)
         messages.success(
             request,
-            ngettext("Removed %(num_products)d product from range",
-                     "Removed %(num_products)d products from range",
+            ngettext("Removed %d product from range",
+                     "Removed %d products from range",
                      num_products) % num_products
         )
         return redirect(reverse('dashboard:range-products',
