@@ -213,7 +213,8 @@ class RangeProductListView(BulkEditMixin, ListView):
             request,
             ngettext("%(num_products)d product %(action)s",
                      "%(num_products)d products %(action)s",
-                     num_products) % (num_products, action)
+                     num_products) % {'num_products': num_products,
+                                      'action': action}
         )
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
