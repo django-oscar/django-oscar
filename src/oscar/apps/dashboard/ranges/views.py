@@ -190,8 +190,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         messages.success(
             request,
             ngettext(
-                "Removed %(num_products)d product from excluded list",
-                "Removed %(num_products)d products from excluded list",
+                "Removed %d product from excluded list",
+                "Removed %d products from excluded list",
                 num_products) % num_products
         )
         return redirect(reverse('dashboard:range-products-excluded',
