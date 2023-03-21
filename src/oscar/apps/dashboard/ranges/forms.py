@@ -53,10 +53,10 @@ class RangeProductForm(forms.Form):
         # switch for included or excluded products
         if self.excluded:
             products = self.range.excluded_products.all()
-            action = 'removed from'
+            action = _('removed from this range')
         else:
             products = self.range.all_products()
-            action = 'added to'
+            action = _('added to this range')
         existing_skus = set(products.values_list(
             'stockrecords__partner_sku', flat=True))
         existing_upcs = set(products.values_list('upc', flat=True))
@@ -65,7 +65,7 @@ class RangeProductForm(forms.Form):
         if len(new_ids) == 0:
             raise forms.ValidationError(
                 _("The products with SKUs or UPCs matching %s have already "
-                  "been %s this range") % (', '.join(ids), action))
+                  "been %s") % (', '.join(ids), action))
 
         self.products = Product._default_manager.filter(
             Q(stockrecords__partner_sku__in=new_ids)

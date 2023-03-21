@@ -146,8 +146,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         num_products = len(products)
         messages.success(
             request,
-            ngettext("Removed %d product from range",
-                     "Removed %d products from range",
+            ngettext("Removed %(num_products)d product from range",
+                     "Removed %(num_products)d products from range",
                      num_products) % num_products
         )
         return redirect(reverse('dashboard:range-products',
@@ -190,8 +190,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         messages.success(
             request,
             ngettext(
-                "Removed %d product from excluded list",
-                "Removed %d products from excluded list",
+                "Removed %(num_products)d product from excluded list",
+                "Removed %(num_products)d products from excluded list",
                 num_products) % num_products
         )
         return redirect(reverse('dashboard:range-products-excluded',
@@ -204,15 +204,15 @@ class RangeProductListView(BulkEditMixin, ListView):
         for product in products:
             if form.excluded:
                 range.excluded_products.add(product)
-                action = 'removed from'
+                action = _('removed from this range')
             else:
                 range.add_product(product)
-                action = 'added to'
+                action = _('added to this range')
         num_products = len(products)
         messages.success(
             request,
-            ngettext("%d product %s range",
-                     "%d products %s range",
+            ngettext("%(num_products)d product %s range",
+                     "%(num_products)d products %s range",
                      num_products) % (num_products, action)
         )
         dupe_skus = form.get_duplicate_skus()
@@ -220,7 +220,7 @@ class RangeProductListView(BulkEditMixin, ListView):
             messages.warning(
                 request,
                 _("The products with SKUs or UPCs matching %s have already "
-                  "been %s this range") % (", ".join(dupe_skus), action))
+                  "been %s") % (", ".join(dupe_skus), action))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
