@@ -211,8 +211,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         num_products = len(products)
         messages.success(
             request,
-            ngettext("%(num_products)d product %s range",
-                     "%(num_products)d products %s range",
+            ngettext("%(num_products)d product %(action)s",
+                     "%(num_products)d products %(action)s",
                      num_products) % (num_products, action)
         )
         dupe_skus = form.get_duplicate_skus()
@@ -220,7 +220,7 @@ class RangeProductListView(BulkEditMixin, ListView):
             messages.warning(
                 request,
                 _("The products with SKUs or UPCs matching %s have already "
-                  "been %s") % (", ".join(dupe_skus), action))
+                  "been %(action)s") % (", ".join(dupe_skus), action))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
