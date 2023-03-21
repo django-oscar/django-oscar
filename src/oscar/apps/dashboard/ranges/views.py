@@ -220,8 +220,9 @@ class RangeProductListView(BulkEditMixin, ListView):
         if dupe_skus:
             messages.warning(
                 request,
-                _("The products with SKUs or UPCs matching %s have already "
-                  "been %(action)s") % (", ".join(dupe_skus), action))
+                _("The products with SKUs or UPCs matching %(skus)s have "
+                  "already been %(action)s") % {'skus': ", ".join(dupe_skus),
+                                                'action': action})
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
