@@ -134,7 +134,7 @@ class RangeProductViewTest(WebTestCase):
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 2)
         self.assertEqual(messages[0].level, SUCCESS)
-        self.assertEqual(messages[0].message, '1 product added to this range')
+        self.assertEqual(messages[0].message, '1 product added to range')
         self.assertEqual(messages[1].level, WARNING)
         self.assertEqual(
             messages[1].message,
