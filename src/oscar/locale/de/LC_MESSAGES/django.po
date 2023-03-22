@@ -1,3 +1,45 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# 3b88561c85fc32e4cc7b8e83215a03d9, 2013
+# B S <s@kill.io>, 2015
+# Christoph Kepper <christoph.kepper@pediapress.com>, 2016
+# Daniel Möllenbeck, 2020-2021
+# Jannis Leidel <jannis@leidel.info>, 2013-2014
+# Jyggafey <jyggafey@googlemail.com>, 2013
+# Jyggafey <jyggafey@googlemail.com>, 2013
+# Krzysztof Jeziorny <github@jeziorny.net>, 2021
+# Maik Hoepfel <m@maikhoepfel.de>, 2013
+# Maik Hoepfel <m@maikhoepfel.de>, 2013
+# Marc Wienhold <marc.wienhold@gmail.com>, 2015
+# Max Wessendorf <m.wessendorf@ukd.de>, 2021
+# 3b88561c85fc32e4cc7b8e83215a03d9, 2013
+# Sebastian Vetter <sebastian.vetter@tangentsnowball.com.au>, 2012
+# Sören Schlömer <sos@anotherone.de>, 2013
+# Sören Schlömer <sos@anotherone.de>, 2013
+# Stefano Probst <stefano.probst@htl-klu.at>, 2014
+# Stefano Probst <stefano.probst@htl-klu.at>, 2014
+# Stefan Wagner <sw@stwagner.at>, 2020
+# Tim Kleinschmidt <tim.kleinschmidt@gmail.com>, 2014-2015
+# Tobias <te@englert.it>, 2016-2017
+# 3b88561c85fc32e4cc7b8e83215a03d9, 2013
+# welworx <wpm@liemberger.cc>, 2014
+# welworx <wpm@liemberger.cc>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: django-oscar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-30 10:56+0100\n"
+"PO-Revision-Date: 2013-02-18 17:05+0000\n"
+"Last-Translator: welworx <wpm@liemberger.cc>, 2014\n"
+"Language-Team: German (http://www.transifex.com/codeinthehole/django-oscar/language/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
