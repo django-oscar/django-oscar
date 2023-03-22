@@ -3444,7 +3444,7 @@ msgstr "Kein(e) Produkt(e) mit SKU oder UPC %s gefunden"
 #: apps/dashboard/ranges/views.py:210
 #, python-format
 msgid "There are more than one product with SKU %s"
-msgstr "Es gibt mehr als ein Produkt mit SKU %s"
+msgstr ""
 
 #: apps/dashboard/reports/apps.py:11
 msgid "Reports dashboard"
@@ -6941,7 +6941,7 @@ msgstr "Meine Bestellungen"
 #: templates/oscar/customer/order/order_detail.html:149
 msgctxt "Buy again"
 msgid "Re-ordering..."
-msgstr "Erneut bestellen"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:64
 msgctxt "Buy again"
@@ -7523,8 +7523,7 @@ msgstr "Bilder hochladen, ändern oder löschen"
 msgid ""
 "Drag images to re-order them. Space for additional images will appear when "
 "images are added."
-msgstr "Ziehen Sie die Bilder um sie umzusorieren. Platz für zusätzliche "
-"Bilder erscheint sobald Bilder hinzugefügt worden sind."
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:225
 msgid "SKU"
@@ -8387,7 +8386,7 @@ msgstr "Weiter"
 #: templates/oscar/dashboard/ranges/range_product_list.html:114
 msgctxt "Change the sequence order"
 msgid "Re-order"
-msgstr "Umsortieren"
+msgstr "Erneut bestellen"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
