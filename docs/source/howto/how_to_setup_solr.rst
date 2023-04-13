@@ -107,8 +107,8 @@ If all is well, you should now be able to rebuild the search index.
 If the indexing succeeded, search in Oscar will be working. Search for any term
 in the search box on your Oscar site, and you should get results.
 
-Adding custom product attributes in OSCAR_SEARCH_FACETS
-=======================================================
+Add custom product attributes in faceted search
+===============================================
 
 Fork Oscar's search app and add the additional fields to your search index:
 
@@ -117,7 +117,7 @@ Fork Oscar's search app and add the additional fields to your search index:
     $ ./manage.py fork_app search <yourapp>
     $ touch <yourapp>/search/search_indexes.py
 
-Edit <yourapp>/search/search_indexes.py, create a subclass of Oscar's
+Edit ``<yourapp>/search/search_indexes.py``, create a subclass of Oscar's
 ProductIndex with your additional fields:
 
 .. code-block:: python
@@ -139,11 +139,11 @@ Add the new fields to your ``schema.xml``:
 
 .. code-block:: xml
 
-    <field name="format" type="text" indexed="true" stored="true" multiValued="false" />
-    <field name="format_exact" type="string" indexed="true" stored="true" multiValued="false" />
+        <field name="format" type="text" indexed="true" stored="true" multiValued="false" />
+        <field name="format_exact" type="string" indexed="true" stored="true" multiValued="false" />
 
-    <field name="color" type="text" indexed="true" stored="true" multiValued="false" />
-    <field name="color_exact" type="string" indexed="true" stored="true" multiValued="false" />
+        <field name="color" type="text" indexed="true" stored="true" multiValued="false" />
+        <field name="color_exact" type="string" indexed="true" stored="true" multiValued="false" />
 
 Reload your new ``schema.xml`` & restart solr:
 
