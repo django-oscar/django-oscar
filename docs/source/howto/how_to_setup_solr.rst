@@ -156,6 +156,7 @@ Reload your new ``schema.xml`` & restart solr:
 Rebuild the search index with the new fields:
 
 .. code-block:: bash
+
     $ cd <path to your app>
     $ ./manage.py rebuild_index --noinput
 
