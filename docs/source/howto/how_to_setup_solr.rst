@@ -139,11 +139,11 @@ Add the new fields to your ``schema.xml``:
 
 .. code-block:: xml
 
-        <field name="format" type="text" indexed="true" stored="true" multiValued="false" />
-        <field name="format_exact" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="format" type="text" indexed="true" stored="true" multiValued="false" />
+    <field name="format_exact" type="string" indexed="true" stored="true" multiValued="false" />
 
-        <field name="color" type="text" indexed="true" stored="true" multiValued="false" />
-        <field name="color_exact" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="color" type="text" indexed="true" stored="true" multiValued="false" />
+    <field name="color_exact" type="string" indexed="true" stored="true" multiValued="false" />
 
 Reload your new ``schema.xml`` & restart solr:
 
