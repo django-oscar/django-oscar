@@ -119,7 +119,7 @@ Integrate ```cash on delivery```
 With cash-on-delivery, there is no need to handle payment in PaymentDetailsView. So you can just redirect from PaymentMethodView to preview, when 'cash-on-delivery' is selected:
 
 
- * add a PaymentSourceType:
+Add PaymentSourceType "Cash on delivery":
 
 .. code-block:: bash
 
