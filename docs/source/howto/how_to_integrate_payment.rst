@@ -121,16 +121,19 @@ With cash-on-delivery, there is no need to handle payment in PaymentDetailsView.
 
  * add a PaymentSourceType:
 
-    ``$ ./manage.py shell``
+.. code-block:: bash
 
-    ```
-    >>> from oscar.core.loading import get_model
-    >>> SourceType = get_model('payment', 'SourceType')
-    >>> SourceType.objects.create(name='Cash on delivery')
-    ```
+    $ ./manage.py shell
+
+.. code-block:: python
+
+    from oscar.core.loading import get_model
+    SourceType = get_model('payment', 'SourceType')
+    SourceType.objects.create(name='Cash on delivery')
 
 Subclass ```PaymentMethodView``` to redirect to preview
 
+.. code-block:: python
 
     from django.shortcuts import redirect
     from django.urls import reverse
