@@ -1,7 +1,7 @@
 import sys
 from os.path import dirname
 
-from django.apps import AppConfig, apps
+from django.apps import apps
 from django.conf import settings
 from django.test import TestCase, override_settings
 
@@ -10,6 +10,8 @@ from oscar.core.loading import (
     get_classes, get_model)
 from tests import temporary_python_path
 from tests._site.loader import DummyClass
+
+CustomerConfig = get_class("customer.apps", "CustomerConfig")
 
 
 class TestClassLoading(TestCase):
@@ -98,7 +100,7 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
     def test_overriding_view_is_possible_without_overriding_app(self):
         # If test fails, it's helpful to know if it's caused by order of
         # execution
-        customer_app_config = AppConfig.create('oscar.apps.customer')
+        customer_app_config = CustomerConfig.create('oscar.apps.customer')
         customer_app_config.ready()
         self.assertEqual(customer_app_config.summary_view.__module__,
                          'tests._site.apps.customer.views')

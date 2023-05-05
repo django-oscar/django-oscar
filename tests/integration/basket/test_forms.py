@@ -81,6 +81,10 @@ class TestBasketLineForm(TestCase):
         form = self.build_form(quantity=6)
         self.assertTrue(form.is_valid())
         form.save()
+        # We set the _lines to None because the basket caches the lines here.
+        # We want the basket to do the query again.
+        # basket.num_items() will otherwise not return the correct values
+        self.basket._lines = None
         form = self.build_form(quantity=11)
         self.assertFalse(form.is_valid())
 
