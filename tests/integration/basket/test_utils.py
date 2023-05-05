@@ -4,7 +4,7 @@ import pytest
 from oscar.apps.offer import models
 from oscar.apps.offer.applicator import Applicator
 from oscar.test.factories import (
-    BasketFactory, ConditionalOfferFactory, ProductFactory)
+    BasketFactory, ConditionalOfferFactory, ProductFactory, VoucherFactory)
 
 
 @pytest.fixture
@@ -220,38 +220,34 @@ class TestLineOfferConsumer:
         assert len(basket.offer_applications.offer_discounts) == 1
         assert [x.consumer.consumed() for x in basket.all_lines()] == [1, 0]
 
-    def test_consumed_with_exclusive_offer_3(self, filled_basket):
-        offer1 = ConditionalOfferFactory(name='offer1')
-        offer2 = ConditionalOfferFactory(name='offer2')
-        offer3 = ConditionalOfferFactory(name='offer3')
+    def test_apply_multiple_vouchers(self, filled_basket):
+        offer1 = ConditionalOfferFactory(
+            condition__range__includes_all_products=True,
+            benefit__range__includes_all_products=True,
+            name='offer1',
+            exclusive=True,
+        )
+        voucher1 = VoucherFactory(name="voucher1", code="VOUCHER1")
+        voucher1.offers.add(offer1)
+        offer2 = ConditionalOfferFactory(
+            condition__range__includes_all_products=True,
+            benefit__range__includes_all_products=True,
+            name='offer2',
+            exclusive=True,
+        )
+        voucher2 = VoucherFactory(name="voucher2", code="VOUCHER2")
+        voucher2.offers.add(offer2)
         offer1.exclusive = True
         offer2.exclusive = True
-        offer3.exclusive = False
 
-        for line in filled_basket.all_lines():
-            assert line.consumer.consumed(offer1) == 0
-            assert line.consumer.consumed(offer2) == 0
-
-        line1 = filled_basket.all_lines()[0]
-
-        assert line1.consumer.consume( offer2 == False)
-        line1.consumer.consume(1, offer2)
-
-        assert line1.quantity_with_offer_discount(offer2) == 1
-        assert line1.quantity_with_offer_discount(offer1) == 0
-        assert line1.quantity_with_offer_discount(offer3) == 0
-        
-        line1.consumer.consume(1, offer3)
-
-        assert line1.quantity_with_offer_discount(offer1) == False
-        assert line1.quantity_with_offer_discount(offer2) == True
-        assert line1.quantity_with_offer_discount(offer3) == False
-
-        line1.consumer.consume(1, offer1 == False)
-
-        assert line1.quantity_with_offer_discount(offer1) == False
-        assert line1.quantity_with_offer_discount(offer2) == True
-        assert line1.quantity_with_offer_discount(offer3) == False
+        assert len(filled_basket.offer_applications) == 0
+        Applicator().apply_offers(
+            basket=filled_basket,
+            offers=[offer2, offer1]
+        )
+        filled_basket.refresh_from_db()
+        # Only one should be applied because they're both exclusive.
+        assert len(filled_basket.offer_applications) == 1
 
     def test_consumed_with_combined_offer(self, filled_basket):
         offer1 = ConditionalOfferFactory(name='offer1')
