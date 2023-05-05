@@ -99,7 +99,7 @@ class OrderSearchForm(forms.Form):
         # Ensure that 'response_format' is always set
         if 'data' in kwargs:
             data = kwargs['data']
-            del(kwargs['data'])
+            del kwargs['data']
         elif len(args) > 0:
             data = args[0]
             args = args[1:]
