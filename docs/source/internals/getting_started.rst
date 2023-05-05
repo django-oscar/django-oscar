@@ -27,11 +27,12 @@ project:
     $ pip install django-oscar[sorl-thumbnail]
     $ django-admin startproject frobshop
 
-If you do not have :command:`mkvirtualenv`, then replace that line with::
+If you do not have :command:`mkvirtualenv`, you can use instead::
 
-    $ virtualenv oscar
+    $ python3 -m venv oscar
     $ . ./oscar/bin/activate
-    (oscar) $
+    (oscar) $ pip install django-oscar[sorl-thumbnail]
+    (oscar) $ django-admin startproject frobshop
 
 This will create a folder ``frobshop`` for your project. It is highly
 recommended to install Oscar in a virtualenv.
