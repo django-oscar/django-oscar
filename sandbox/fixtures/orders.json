@@ -91,5 +91,19 @@
     },
     "model": "order.orderdiscount",
     "pk": 1
+},
+{
+    "fields": {
+        "user": 1,
+        "num_product_views": 1,
+        "num_basket_additions": 1,
+        "num_orders": 1,
+        "num_order_lines": 1,
+        "num_order_items": 1,
+        "total_spent": 7.99,
+        "date_last_order": "2014-10-10T13:07:36.499Z"
+    },
+    "model": "analytics.userrecord",
+    "pk": 1
 }
 ]
