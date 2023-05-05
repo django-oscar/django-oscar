@@ -44,7 +44,11 @@
                             {% for discount in voucher_discounts %}
                                 <tr>
                                     <td>
-                                        {{ discount.voucher.name }} ({{ discount.voucher.code }})
+                                        {% if discount.voucher.voucher_set %}
+                                            {{ discount.voucher.voucher_set.name }} ({{ discount.voucher.code }})
+                                        {% else %}
+                                            {{ discount.voucher.name }} ({{ discount.voucher.code }})
+                                        {% endif %}
                                         {% if editable %}
                                             <form action="{% url 'basket:vouchers-remove' pk=discount.voucher.id %}" method="POST">
                                                 {% csrf_token %}
