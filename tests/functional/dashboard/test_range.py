@@ -20,7 +20,7 @@ class RangeProductFormTests(TestCase):
         Range.objects.all().delete()
 
     def submit_form(self, data):
-        form = forms.RangeProductForm(self.range, False, data)
+        form = forms.RangeProductForm(self.range, data)
         return form
 
     def test_either_query_or_file_must_be_submitted(self):
