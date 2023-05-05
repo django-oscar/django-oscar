@@ -28,7 +28,7 @@ class ReviewsDashboardTests(WebTestCase):
         ProductReviewFactory(pk=2, user=user2, status=0)
         ProductReviewFactory(pk=3, user=user2, status=0)
 
-        assert(ProductReview.objects.count() == 3)
+        assert ProductReview.objects.count() == 3
 
         list_page = self.get(reverse('dashboard:reviews-list'))
         form = list_page.forms[1]

@@ -99,9 +99,9 @@ class OrderLineFactory(factory.django.DjangoModelFactory):
     order = factory.SubFactory(OrderFactory)
     product = factory.SubFactory(
         'oscar.test.factories.ProductFactory')
-    partner_sku = factory.LazyAttribute(lambda l: l.product.upc)
+    partner_sku = factory.LazyAttribute(lambda x: x.product.upc)
     stockrecord = factory.LazyAttribute(
-        lambda l: l.product.stockrecords.first())
+        lambda s: s.product.stockrecords.first())
     quantity = 1
 
     line_price_incl_tax = factory.LazyAttribute(lambda obj: tax_add(obj.stockrecord.price) * obj.quantity)
