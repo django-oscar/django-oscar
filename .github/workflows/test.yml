@@ -8,6 +8,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Python ${{ matrix.python-version }}, Django ${{ matrix.django-version }}
