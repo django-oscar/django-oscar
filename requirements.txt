@@ -17,7 +17,7 @@ uWSGI>=2.0.19,<2.1
 whitenoise>=5.2,<6.5
 
 # Linting
-flake8==6.0.0
+flake8<6.0.0
 flake8-debugger==4.1.2
 isort==5.10.1
 
