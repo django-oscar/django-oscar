@@ -129,9 +129,9 @@ class RangeProductListView(BulkEditMixin, ListView):
         range = self.get_range()
         ctx['range'] = range
         if 'form' not in ctx:
-            ctx['form'] = self.form_class(range, False)
+            ctx['form'] = self.form_class(range)
         if 'form_excluded' not in ctx:
-            ctx['form_excluded'] = self.form_class(range, True)
+            ctx['form_excluded'] = self.form_class(range, excluded=True)
         ctx['active_tab'] = self.active_tab
         ctx['file_uploads_included'] = range.file_uploads.filter(
             upload_type=RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE)
@@ -155,7 +155,7 @@ class RangeProductListView(BulkEditMixin, ListView):
 
     def add_products(self, request):
         range = self.get_range()
-        form = self.form_class(range, False, request.POST, request.FILES)
+        form = self.form_class(range, request.POST, request.FILES)
         if not form.is_valid():
             ctx = self.get_context_data(form=form,
                                         object_list=self.object_list)
@@ -168,7 +168,8 @@ class RangeProductListView(BulkEditMixin, ListView):
 
     def add_excluded_products(self, request):
         range = self.get_range()
-        form = self.form_class(range, True, request.POST, request.FILES)
+        form = self.form_class(
+            range, request.POST, request.FILES, excluded=True)
         if not form.is_valid():
             ctx = self.get_context_data(form_excluded=form,
                                         object_list=self.object_list)

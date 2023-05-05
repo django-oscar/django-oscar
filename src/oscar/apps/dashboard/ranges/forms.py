@@ -33,7 +33,7 @@ class RangeProductForm(forms.Form):
 
     def __init__(self, range, excluded, *args, **kwargs):
         self.range = range
-        self.excluded = excluded
+        self.excluded = kwargs.pop('excluded', False)
         super().__init__(*args, **kwargs)
 
     def clean(self):
