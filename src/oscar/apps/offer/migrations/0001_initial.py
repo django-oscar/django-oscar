@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(unique=True, max_length=128, verbose_name='Name')),
                 ('slug', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Slug', max_length=128, editable=False, blank=True)),
-                ('description', models.TextField(blank=True)),
+                ('description', models.TextField(verbose_name="Description", blank=True)),
                 ('is_public', models.BooleanField(default=False, verbose_name='Is public?', help_text='Public ranges have a customer-facing page')),
                 ('includes_all_products', models.BooleanField(default=False, verbose_name='Includes all products?')),
                 ('proxy_class', oscar.models.fields.NullCharField(unique=True, verbose_name='Custom class', default=None, max_length=255)),

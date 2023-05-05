@@ -27,7 +27,9 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
-                'ordering': ['pk']
+                'ordering': ['pk'],
+                'verbose_name': 'Surcharge',
+                'verbose_name_plural': 'Surcharges'
             },
         ),
     ]
