@@ -90,7 +90,7 @@
                         <th>{% trans "Name" %}</th>
                         <th>{% trans "Code" %}</th>
                         <th>{% trans "Status" %}</th>
-                        <th>{% trans "Num offers" %}</th>
+                        <th>{% anchor 'num_offers' _("Num Offers") %}</th>
                         <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
                         <th>{% anchor 'num_orders' _("Num orders") %}</th>
                         <th>{% anchor 'date_created' _("Date created") %}</th>
@@ -114,7 +114,7 @@
                                     <span class="badge badge-secondary">{% trans "Inactive" %}</span>
                                 {% endif %}
                             </td>
-                            <td>{{ voucher.offers.count }}</td>
+                            <td>{{ voucher.num_offers }}</td>
                             <td>{{ voucher.num_basket_additions }}</td>
                             <td>{{ voucher.num_orders }}</td>
                             <td>{{ voucher.date_created }}</td>
