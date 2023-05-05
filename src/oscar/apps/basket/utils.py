@@ -163,7 +163,7 @@ class LineOfferConsumer(object):
                     if a.exclusive:
                         if any([
                             a.priority > offer.priority,
-                            a.priority == offer.priority and a.id < offer.id
+                            a.priority == offer.priority and a.id != offer.id
                         ]):
                             # Exclusive offers cannot be applied if any other exclusive
                             # offer with higher priority is active already.
