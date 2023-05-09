@@ -975,10 +975,10 @@ class AbstractRange(models.Model):
         if self.classes.exists():
             return Product.objects.filter(
                 Q(categories__in=expanded_range_categories)
-                | Q(product_class__classes=self)
+                # | Q(product_class__classes=self)
                 | Q(includes=self)
                 | Q(parent__categories__in=expanded_range_categories)
-                | Q(parent__product_class__classes=self)
+                # | Q(parent__product_class__classes=self)
                 | Q(parent__includes=self),
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
@@ -1041,19 +1041,42 @@ class AbstractRange(models.Model):
 
     @cached_property
     def product_queryset(self):
-        "cached queryset of all the products in the Range"
+        """
+        cached queryset of all the products in the Range
+        """
+        Product = self.included_products.model
         if self.includes_all_products:
             # Filter out blacklisted
-            Product = self.included_products.model
             return Product.objects.exclude(
                 id__in=self.excluded_products.values("id")
             )
-        # reducing joins without having classes
+        # start with empty filter (if included_products do not exist)
+        _filter = Q(True)
+        _exclude_filter = Q(True)
+        # extend filter for included products
+        if self.included_products.exists():
+            _filter |= Q(includes=self)
+            _exclude_filter |= Q(excludes=self)
+        # extend filter for included classes:
+        if self.classes.exists():
+            _filter |= Q(product_class__classes=self)
+            _filter |= Q(parent__product_class__classes=self)
+        # extend filter if included_products have children
+        if Product.objects.filter(parent__includes=self).exists():
+            _filter |= Q(parent__includes=self)
+            _exclude_filter |= Q(parent__excludes=self)
+        # extend filter for included_categories
         if self.included_categories.exists():
-            selected_products = self.included_categories_queryset()
-        else:
-            selected_products = self.included_products_queryset()
-        return selected_products.distinct()
+            expanded_range_categories = ExpandDownwardsCategoryQueryset(
+                self.included_categories.values("id")
+            )
+            _filter |= Q(categories__in=expanded_range_categories)
+            # extend filter for parent categories
+            if Product.objects.filter(
+                    parent__categories__in=expanded_range_categories).exists():
+                _filter |= Q(parent__categories__in=expanded_range_categories)
+        return Product.objects.filter(
+            _filter).exclude(_exclude_filter).distinct()
 
     @property
     def is_editable(self):
