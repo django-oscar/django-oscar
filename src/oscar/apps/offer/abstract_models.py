@@ -1050,13 +1050,9 @@ class AbstractRange(models.Model):
             return Product.objects.exclude(
                 id__in=self.excluded_products.values("id")
             )
-        # start with empty filter (if included_products do not exist)
-        _filter = Q()
-        _exclude_filter = Q()
-        # extend filter for included products
-        if self.included_products.exists():
-            _filter |= Q(includes=self)
-            _exclude_filter |= Q(excludes=self)
+        # start with filter clause that always applies
+        _filter = Q(includes=self)
+        _exclude_filter = Q(excludes=self)
         # extend filter for included classes:
         if self.classes.exists():
             _filter |= Q(product_class__classes=self)
