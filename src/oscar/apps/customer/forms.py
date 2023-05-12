@@ -314,7 +314,6 @@ if Profile:  # noqa (too complex (12))
             self.field_order = user_field_names + profile_field_names
             self.order_fields(self.field_order)
 
-
         class Meta:
             model = Profile
             exclude = ('user',)
