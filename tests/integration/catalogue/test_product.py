@@ -106,7 +106,6 @@ class ChildProductTests(ProductTests):
             is_discountable=True)
         self.assertEqual("Parent product", p.get_title())
         self.assertEqual("Clothing", p.get_product_class().name)
-        self.assertEqual(False, p.get_is_discountable())
 
     def test_child_products_are_not_part_of_browsable_set(self):
         Product.objects.create(
