@@ -154,7 +154,7 @@ class TestBasketLineForm(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn(
-            "can be bought which has been exceeded because you have multiple lines of the same product.",
+            "Available stock is only %s, which has been exceeded because multiple lines contain the same product." % 2,
             str(form.errors)
         )
 

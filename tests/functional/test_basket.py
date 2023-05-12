@@ -515,6 +515,6 @@ class BasketFormSetTests(WebTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['formset'].forms[0].is_valid())
         self.assertIn(
-            "can be bought which has been exceeded because you have multiple lines of the same product.",
+            "Available stock is only %s, which has been exceeded because multiple lines contain the same product." % 2,
             str(response.context['formset'].forms[0].errors)
         )
