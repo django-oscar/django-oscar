@@ -148,20 +148,47 @@ class AbstractBasket(models.Model):
             return max_allowed, basket_threshold
         return None, None
 
-    def is_quantity_allowed(self, qty):
+    def is_quantity_allowed(self, qty, line=None):
         """
         Test whether the passed quantity of items can be added to the basket
         """
         # We enforce a max threshold to prevent a DOS attack via the offers
         # system.
         max_allowed, basket_threshold = self.max_allowed_quantity()
+
+        if line is not None:
+            line_purchase_permitted, reason = line.purchase_info.availability.is_purchase_permitted(qty)
+
+            if not line_purchase_permitted:
+                return line_purchase_permitted, reason
+
+            # Also check if it's permitted with potentional other lines of the same product & stocrecord
+            total_lines_quantity = self.basket_quantity(line) + qty
+            line_purchase_permitted, reason = line.purchase_info.availability.is_purchase_permitted(
+                total_lines_quantity)
+
+            if not line_purchase_permitted:
+                return line_purchase_permitted, _(
+                    "Available stock is only %(max)d, which has been exceeded because "
+                    "multiple lines contain the same product."
+                ) % {'max': line.purchase_info.availability.num_available}
+
         if max_allowed is not None and qty > max_allowed:
             return False, _(
                 "Due to technical limitations we are not able "
                 "to ship more than %(threshold)d items in one order.") \
                 % {'threshold': basket_threshold}
+
         return True, None
 
+    def basket_quantity(self, line):
+        """Return the quantity of similar lines in the basket.
+        The basket can contain multiple lines with the same product and
+        stockrecord, but different options. Those quantities are summed up.
+        """
+        matching_lines = self.lines.filter(stockrecord=line.stockrecord)
+        quantity = matching_lines.aggregate(Sum('quantity'))['quantity__sum']
+        return quantity or 0
     # ============
     # Manipulation
     # ============

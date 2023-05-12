@@ -126,7 +126,7 @@ class BasketLineForm(forms.ModelForm):
         # number and updated. Thus, product already in the basket and we don't
         # add second time, just updating number of items.
         qty_delta = qty - self.instance.quantity
-        is_allowed, reason = self.instance.basket.is_quantity_allowed(qty_delta)
+        is_allowed, reason = self.instance.basket.is_quantity_allowed(qty_delta, line=self.instance)
         if not is_allowed:
             raise forms.ValidationError(reason)
 
