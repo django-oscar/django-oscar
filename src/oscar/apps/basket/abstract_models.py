@@ -169,8 +169,8 @@ class AbstractBasket(models.Model):
 
             if not line_purchase_permitted:
                 return line_purchase_permitted, _(
-                    "a maximum of %(max)d can be bought which has been exceeded because "
-                    "you have multiple lines of the same product."
+                    "Available stock is only %(max)d, which has been exceeded because "
+                    "multiple lines contain the same product."
                 ) % {'max': line.purchase_info.availability.num_available}
 
         if max_allowed is not None and qty > max_allowed:
