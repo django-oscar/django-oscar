@@ -311,7 +311,8 @@ if Profile:  # noqa (too complex (12))
                 self.fields[field_name].initial = getattr(user, field_name)
 
             # Ensure order of fields is email, user fields then profile fields
-            self.fields.keyOrder = user_field_names + profile_field_names
+            self.field_order = user_field_names + profile_field_names
+            self.order_fields(self.field_order)
 
         class Meta:
             model = Profile
