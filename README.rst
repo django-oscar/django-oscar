@@ -323,7 +323,7 @@ This Code of Conduct applies to all contributors, both online and offline, in al
 Enforcement
 -----------
 
-If you witness or experience unacceptable behavior, or have any other concerns, please notify the project maintainers at [insert contact email here]. All reports will be kept confidential, and the project maintainers will work with you to determine a resolution.
+If you witness or experience unacceptable behavior, or have any other concerns, please notify the project maintainers at viggo@highbiza.nl & joey@highbiza.nl. All reports will be kept confidential, and the project maintainers will work with you to determine a resolution.
 
 We reserve the right to take any action deemed necessary to enforce this Code of Conduct, including but not limited to warning the offender, banning the offender from the project's spaces, or reporting the offender to relevant authorities.
 Case studies
