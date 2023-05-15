@@ -998,6 +998,7 @@ class AbstractRange(models.Model):
                 ~Q(excludes=self),
                 ~Q(parent__excludes=self)
             ).distinct()
+        # reduced query if there are no parent_excludes
         return Product.objects.filter(
             _filter,
             ~Q(excludes=self)
