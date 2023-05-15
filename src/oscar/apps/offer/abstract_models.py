@@ -992,10 +992,15 @@ class AbstractRange(models.Model):
             if Product.objects.filter(
                     parent__categories__in=expanded_range_categories).exists():
                 _filter |= Q(parent__categories__in=expanded_range_categories)
+        if Product.objects.filter(parent__excludes=self).exists():
+            return Product.objects.filter(
+                _filter,
+                ~Q(excludes=self),
+                ~Q(parent__excludes=self)
+            ).distinct()
         return Product.objects.filter(
             _filter,
-            ~Q(excludes=self),
-            ~Q(parent__excludes=self)
+            ~Q(excludes=self)
         ).distinct()
 
     @property
