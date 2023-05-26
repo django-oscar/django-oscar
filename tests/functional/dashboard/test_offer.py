@@ -250,8 +250,8 @@ class TestAnAdmin(testcases.WebTestCase):
         self.assertNotIn(offer_a, offer_b.combinations.all())
 
     def test_create_offer_order_report(self):
-        order1 = factories.create_order()
-        order2 = factories.create_order()
+        order1 = factories.create_order(number="100001")
+        order2 = factories.create_order(number="100002")
         offer = factories.create_offer()
         OrderDiscount.objects.create(order=order1, offer_id=offer.id)
         OrderDiscount.objects.create(order=order2, offer_id=offer.id)
