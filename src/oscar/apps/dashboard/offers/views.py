@@ -407,6 +407,6 @@ class OfferDetailView(ListView):
     def render_to_response(self, context):
         if self.request.GET.get('format') == 'csv':
             formatter = OrderDiscountCSVFormatter()
-            return formatter.generate_response(context['order_discounts'],
+            return formatter.generate_response(self.get_queryset(),
                                                offer=self.offer)
         return super().render_to_response(context)
