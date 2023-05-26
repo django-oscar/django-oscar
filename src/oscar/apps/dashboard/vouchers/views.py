@@ -34,7 +34,7 @@ class VoucherListView(generic.ListView):
     def get_queryset(self):
         self.search_filters = []
         qs = self.model._default_manager.all()
-        qs = qs.annotate(num_offers=Count('offers'))
+        qs = qs.annotate(num_offers=Count('offers', distinct=True))
         qs = sort_queryset(qs, self.request,
                            ['num_basket_additions', 'num_orders', 'num_offers',
                             'date_created'],
