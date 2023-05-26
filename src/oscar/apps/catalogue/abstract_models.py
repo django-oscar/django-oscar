@@ -24,6 +24,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
+from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -647,15 +648,14 @@ class AbstractProduct(models.Model):
             return self.product_class
     get_product_class.short_description = _("Product class")
 
+    @deprecated
     def get_is_discountable(self):
         """
-        At the moment, :py:attr:`.is_discountable` can't be set individually for child
-        products; they inherit it from their parent.
+        It used to be that, :py:attr:`.is_discountable` couldn't be set individually for child
+        products; so they had to inherit it from their parent. This is nolonger the case because
+        ranges can include child products as well. That make this method useless.
         """
-        if self.is_child:
-            return self.parent.is_discountable
-        else:
-            return self.is_discountable
+        return self.is_discountable
 
     def get_categories(self):
         """

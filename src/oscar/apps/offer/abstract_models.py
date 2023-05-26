@@ -805,7 +805,7 @@ class AbstractCondition(BaseOfferMixin, models.Model):
             return False
         product = line.product
         return (self.range.contains_product(product)
-                and product.get_is_discountable())
+                and product.is_discountable)
 
     def get_applicable_lines(self, offer, basket, most_expensive_first=True):
         """
@@ -829,9 +829,6 @@ class AbstractCondition(BaseOfferMixin, models.Model):
 class AbstractRange(models.Model):
     """
     Represents a range of products that can be used within an offer.
-
-    Ranges only support adding parent or stand-alone products. Offers will
-    consider child products automatically.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     slug = fields.AutoSlugField(
