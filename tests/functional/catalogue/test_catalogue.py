@@ -64,6 +64,17 @@ class TestProductDetailView(WebTestCase):
 
         self.assertEqual(response.status_code, http_client.NOT_FOUND)
 
+    def test_does_not_go_into_redirect_loop(self):
+        "when a product slug contains a colon, there should be no redirect loop"
+        with self.settings(ROOT_URLCONF='tests._site.specialurls'):
+            product = create_product(slug="no-redirect", is_public=True)
+            kwargs = {'product_slug': "si-redirect", 'pk': product.id}
+            url = reverse('catalogue:detail', kwargs=kwargs)
+            response = self.app.get(url, expect_errors=True)
+            self.assertIsRedirect(response)
+            response = self.app.get(response['Location'])
+            self.assertIsNotRedirect(response)
+
 
 class TestProductListView(WebTestCase):
 
