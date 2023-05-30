@@ -20,8 +20,7 @@ class RangeProductFormTests(TestCase):
         Range.objects.all().delete()
 
     def submit_form(self, data):
-        form = forms.RangeProductForm(self.range, data)
-        return form
+        return forms.RangeProductForm(self.range, data)
 
     def test_either_query_or_file_must_be_submitted(self):
         form = self.submit_form({'query': ''})
@@ -60,7 +59,10 @@ class RangeProductFormTests(TestCase):
         product = create_product(partner_sku='123123')
         create_product(partner_sku='123124')
         self.range.add_product(product)
-        form = self.submit_form({'query': '123123, 123124'})
+        form = self.submit_form(
+            {'query': '123123, 123124',
+             'upload_type': 'included'}
+        )
         self.assertTrue(form.is_valid())
         self.assertTrue('123123' in form.get_duplicate_skus())
 
