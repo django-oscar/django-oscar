@@ -152,8 +152,9 @@ class RangeProductListView(BulkEditMixin, ListView):
                      "Removed %d products from range",
                      num_products) % num_products
         )
-        return redirect(reverse('dashboard:range-products',
-                                kwargs={'pk': range.pk}))
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+        )
 
     def add_products(self, request):
         range = self.get_range()
@@ -165,8 +166,9 @@ class RangeProductListView(BulkEditMixin, ListView):
 
         self.handle_query_products(request, range, form)
         self.handle_file_products(request, range, form)
-        return redirect(reverse('dashboard:range-products',
-                                kwargs={'pk': range.pk}))
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+        )
 
     def add_excluded_products(self, request):
         range = self.get_range()
