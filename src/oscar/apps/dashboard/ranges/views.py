@@ -101,12 +101,12 @@ class RangeProductListView(BulkEditMixin, ListView):
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get(self, request, **kwargs):
-        self.active_tab = kwargs.get('active_tab', 0)
+        self.upload_type = request.GET.get('upload_type', "")
         return super().get(request, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.active_tab = kwargs.get('active_tab', 0)
         self.object_list = self.get_queryset()
+        self.upload_type = request.POST.get('upload_type', "")
         if request.POST.get('action', None) == 'add_products':
             return self.add_products(request)
         if request.POST.get('action', None) == 'add_excluded_products':
@@ -129,14 +129,16 @@ class RangeProductListView(BulkEditMixin, ListView):
         range = self.get_range()
         ctx['range'] = range
         if 'form' not in ctx:
-            ctx['form'] = self.form_class(range)
+            ctx['form'] = self.form_class(range, initial={
+                "upload_type": RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE})
         if 'form_excluded' not in ctx:
-            ctx['form_excluded'] = self.form_class(range, excluded=True)
-        ctx['active_tab'] = self.active_tab
+            ctx["form_excluded"] = self.form_class(range, initial={
+                "upload_type": RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE})
         ctx['file_uploads_included'] = range.file_uploads.filter(
             upload_type=RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE)
         ctx['file_uploads_excluded'] = range.file_uploads.filter(
             upload_type=RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE)
+        ctx["upload_type"] = self.upload_type
         return ctx
 
     def remove_selected_products(self, request, products):
@@ -162,24 +164,27 @@ class RangeProductListView(BulkEditMixin, ListView):
             return self.render_to_response(ctx)
 
         self.handle_query_products(request, range, form)
-        self.handle_file_products(request, range, form, included=True)
+        self.handle_file_products(request, range, form)
         return redirect(reverse('dashboard:range-products',
                                 kwargs={'pk': range.pk}))
 
     def add_excluded_products(self, request):
         range = self.get_range()
         form = self.form_class(
-            range, request.POST, request.FILES, excluded=True)
+            range, request.POST, request.FILES, initial={
+                "upload_type": RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE}
+        )
         if not form.is_valid():
             ctx = self.get_context_data(form_excluded=form,
                                         object_list=self.object_list)
-            ctx['active_tab'] = 1
             return self.render_to_response(ctx)
 
         self.handle_query_products(request, range, form)
-        self.handle_file_products(request, range, form, included=False)
-        return redirect(reverse('dashboard:range-products-excluded',
-                                kwargs={'pk': range.pk, 'active_tab': 1}))
+        self.handle_file_products(request, range, form)
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+            + '?upload_type=excluded'
+        )
 
     def remove_excluded_products(self, request):
         product_ids = request.POST.getlist('selected_product', None)
@@ -195,25 +200,27 @@ class RangeProductListView(BulkEditMixin, ListView):
                 "Removed %d products from excluded list",
                 num_products) % num_products
         )
-        return redirect(reverse('dashboard:range-products-excluded',
-                                kwargs={'pk': range.pk, 'active_tab': 1}))
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+            + '?upload_type=excluded'
+        )
 
     def handle_query_products(self, request, range, form):
         products = form.get_products()
         if not products:
             return
         for product in products:
-            if form.excluded:
+            if form.cleaned_data["upload_type"] == "excluded":
                 range.excluded_products.add(product)
-                action = _('removed from this range')
+                action = _('excluded from this range')
             else:
                 range.add_product(product)
                 action = _('added to this range')
         num_products = len(products)
         messages.success(
             request,
-            ngettext("%(num_products)d product %(action)s",
-                     "%(num_products)d products %(action)s",
+            ngettext("%(num_products)d product has been %(action)s",
+                     "%(num_products)d products have been %(action)s",
                      num_products) % {'num_products': num_products,
                                       'action': action}
         )
@@ -233,28 +240,29 @@ class RangeProductListView(BulkEditMixin, ListView):
                 ", ".join(missing_skus))
         self.check_imported_products_sku_duplicates(request, products)
 
-    def handle_file_products(self, request, range, form, included=True):
+    def handle_file_products(self, request, range, form):
         if 'file_upload' not in request.FILES:
             return
         f = request.FILES['file_upload']
         upload = self.create_upload_object(
-            request, range, f, included=included)
+            request, range, f, form.cleaned_data["upload_type"])
         products = upload.process(TextIOWrapper(f, encoding=request.encoding))
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
+            if form.cleaned_data["upload_type"] == "excluded":
+                action = "excluded from this range"
+            else:
+                action = "added to this range"
             msg = render_to_string(
                 'oscar/dashboard/ranges/messages/range_products_saved.html',
                 {'range': range,
-                 'upload': upload})
+                 'upload': upload,
+                 'action': action})
             messages.success(request, msg, extra_tags='safe noicon block')
         self.check_imported_products_sku_duplicates(request, products)
 
-    def create_upload_object(self, request, range, f, included=True):
-        if included:
-            upload_type = RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE
-        else:
-            upload_type = RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE
+    def create_upload_object(self, request, range, f, upload_type):
         upload = RangeProductFileUpload.objects.create(
             range=range,
             uploaded_by=request.user,

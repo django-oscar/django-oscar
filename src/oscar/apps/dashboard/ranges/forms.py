@@ -8,6 +8,7 @@ from oscar.core.loading import get_model
 
 Product = get_model('catalogue', 'Product')
 Range = get_model('offer', 'Range')
+RangeProductFileUpload = get_model("offer", "RangeProductFileUpload")
 
 UPC_SET_REGEX = re.compile(r'[^,\s]+')
 
@@ -30,10 +31,14 @@ class RangeProductForm(forms.Form):
     file_upload = forms.FileField(
         label=_("File of SKUs or UPCs"), required=False, max_length=255,
         help_text=_('Either comma-separated, or one identifier per line'))
+    upload_type = forms.CharField(widget=forms.HiddenInput())
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
-        self.excluded = kwargs.pop('excluded', False)
+        if kwargs.get("initial"):
+            self.upload_type = kwargs.get("initial").get("upload_type")
+        else:
+            self.upload_type = RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -51,7 +56,7 @@ class RangeProductForm(forms.Form):
         # Check that the search matches some products
         ids = set(UPC_SET_REGEX.findall(raw))
         # switch for included or excluded products
-        if self.excluded:
+        if self.upload_type == 'excluded':
             products = self.range.excluded_products.all()
             action = _('removed from this range')
         else:
