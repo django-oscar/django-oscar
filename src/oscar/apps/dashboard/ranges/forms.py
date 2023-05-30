@@ -36,6 +36,7 @@ class RangeProductForm(forms.Form):
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
+        # make upload_type accessible in clean_query
         if kwargs.get("initial"):
             self.upload_type = kwargs.get("initial").get("upload_type")
         else:
