@@ -59,10 +59,7 @@ class RangeProductFormTests(TestCase):
         product = create_product(partner_sku='123123')
         create_product(partner_sku='123124')
         self.range.add_product(product)
-        form = self.submit_form(
-            {'query': '123123, 123124',
-             'upload_type': 'included'}
-        )
+        form = self.submit_form({'query': '123123, 123124'})
         self.assertTrue(form.is_valid())
         self.assertTrue('123123' in form.get_duplicate_skus())
 

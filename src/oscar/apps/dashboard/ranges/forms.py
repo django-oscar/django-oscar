@@ -31,7 +31,8 @@ class RangeProductForm(forms.Form):
     file_upload = forms.FileField(
         label=_("File of SKUs or UPCs"), required=False, max_length=255,
         help_text=_('Either comma-separated, or one identifier per line'))
-    upload_type = forms.CharField(widget=forms.HiddenInput())
+    upload_type = forms.CharField(widget=forms.HiddenInput(),
+        initial=RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE)
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
