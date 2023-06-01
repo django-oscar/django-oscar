@@ -71,9 +71,6 @@ class RangeProductViewTest(WebTestCase):
         super().setUp()
         self.range = Range.objects.create(name='dummy')
         self.url = reverse('dashboard:range-products', args=(self.range.id,))
-        self.url2 = reverse(
-            'dashboard:range-products', args=(self.range.id,)
-        ) + 'upload_type=excluded'
         self.product1 = create_product(
             title='Product 1', partner_sku='123123', partner_name='Partner 1'
         )
@@ -102,7 +99,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(range_product_file_upload.size, 3)
 
     def test_upload_excluded_file_with_skus(self):
-        range_products_page = self.get(self.url2)
+        range_products_page = self.get(self.url)
         form = range_products_page.forms[1]
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
@@ -145,7 +142,7 @@ class RangeProductViewTest(WebTestCase):
         self.range.add_product(self.product3)
         self.range.add_product(self.product4)
         self.range.excluded_products.add(self.product3)
-        range_products_page = self.get(self.url2)
+        range_products_page = self.get(self.url)
         form = range_products_page.forms[2]
         form['query'] = '456'
         response = form.submit()
@@ -272,7 +269,7 @@ class RangeProductViewTest(WebTestCase):
     def test_remove_excluded_product(self):
         self.range.add_product(self.product3)
         self.range.excluded_products.add(self.product3)
-        range_products_page = self.get(self.url2)
+        range_products_page = self.get(self.url)
         form = range_products_page.forms[2]
         form['selected_product'] = '456'
         response = form.submit().follow()
