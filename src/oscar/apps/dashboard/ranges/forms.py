@@ -35,11 +35,6 @@ class RangeProductForm(forms.Form):
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
-        # make upload_type accessible in clean_query
-        if kwargs.get("initial"):
-            self.upload_type = kwargs.get("initial").get("upload_type")
-        else:
-            self.upload_type = RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -47,17 +42,14 @@ class RangeProductForm(forms.Form):
         if not clean_data.get('query') and not clean_data.get('file_upload'):
             raise forms.ValidationError(
                 _("You must submit either a list of SKU/UPCs or a file"))
-        return clean_data
-
-    def clean_query(self):
-        raw = self.cleaned_data['query']
+        raw = clean_data['query']
         if not raw:
-            return raw
+            return clean_data
 
         # Check that the search matches some products
         ids = set(UPC_SET_REGEX.findall(raw))
         # switch for included or excluded products
-        if self.upload_type == 'excluded':
+        if clean_data['upload_type'] == 'excluded':
             products = self.range.excluded_products.all()
             action = _('excluded from this range')
         else:
@@ -90,7 +82,7 @@ class RangeProductForm(forms.Form):
         self.missing_skus = new_ids - found_ids
         self.duplicate_skus = existing_ids.intersection(ids)
 
-        return raw
+        return clean_data
 
     def get_products(self):
         return self.products if hasattr(self, 'products') else []
