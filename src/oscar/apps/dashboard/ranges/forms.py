@@ -65,22 +65,22 @@ class RangeProductForm(forms.Form):
                       "already been %(action)s") % {'skus': ", ".join(ids),
                                                     'action': action}
                 )
+            else:
+                self.products = Product._default_manager.filter(
+                    Q(stockrecords__partner_sku__in=new_ids)
+                    | Q(upc__in=new_ids))
+                if len(self.products) == 0:
+                    self.add_error(
+                        'query',
+                        _("No products exist with a SKU or UPC matching %s")
+                        % ", ".join(ids))
 
-            self.products = Product._default_manager.filter(
-                Q(stockrecords__partner_sku__in=new_ids)
-                | Q(upc__in=new_ids))
-            if len(self.products) == 0:
-                self.add_error(
-                    'query',
-                    _("No products exist with a SKU or UPC matching %s")
-                    % ", ".join(ids))
-
-            found_skus = set(self.products.values_list(
-                'stockrecords__partner_sku', flat=True))
-            found_upcs = set(self.products.values_list('upc', flat=True))
-            found_ids = found_skus.union(found_upcs)
-            self.missing_skus = new_ids - found_ids
-            self.duplicate_skus = existing_ids.intersection(ids)
+                found_skus = set(self.products.values_list(
+                    'stockrecords__partner_sku', flat=True))
+                found_upcs = set(self.products.values_list('upc', flat=True))
+                found_ids = found_skus.union(found_upcs)
+                self.missing_skus = new_ids - found_ids
+                self.duplicate_skus = existing_ids.intersection(ids)
 
         return clean_data
 
