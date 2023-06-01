@@ -72,7 +72,7 @@ class RangeProductViewTest(WebTestCase):
         self.range = Range.objects.create(name='dummy')
         self.url = reverse('dashboard:range-products', args=(self.range.id,))
         self.url2 = reverse(
-            'dashboard:range-products', args=(self.range.id)
+            'dashboard:range-products', args=(self.range.id,)
         ) + 'upload_type=excluded'
         self.product1 = create_product(
             title='Product 1', partner_sku='123123', partner_name='Partner 1'
