@@ -149,7 +149,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(list(response.context['messages']), [])
         self.assertEqual(
             response.context['form_excluded'].errors['query'],
-            ['The products with SKUs or UPCs matching 456 have already been removed from this range']
+            ['The products with SKUs or UPCs matching 456 have already been excluded from this range']
         )
 
         form = response.forms[2]
@@ -162,7 +162,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(messages[1].level, WARNING)
         self.assertEqual(
             messages[1].message,
-            'The products with SKUs or UPCs matching 456 have already been removed from this range'
+            'The products with SKUs or UPCs matching 456 have already been excluded from this range'
         )
 
     def test_missing_skus_warning(self):

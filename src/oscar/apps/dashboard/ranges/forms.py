@@ -59,7 +59,7 @@ class RangeProductForm(forms.Form):
         # switch for included or excluded products
         if self.upload_type == 'excluded':
             products = self.range.excluded_products.all()
-            action = _('removed from this range')
+            action = _('excluded from this range')
         else:
             products = self.range.all_products()
             action = _('added to this range')
