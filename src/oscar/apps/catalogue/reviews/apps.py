@@ -23,7 +23,7 @@ class CatalogueReviewsConfig(OscarConfig):
         urls = [
             path('<int:pk>/', self.detail_view.as_view(), name='reviews-detail'),
             path('add/', self.create_view.as_view(), name='reviews-add'),
-            path('<int:pk>)/vote/', login_required(self.vote_view.as_view()), name='reviews-vote'),
+            path('<int:pk>/vote/', login_required(self.vote_view.as_view()), name='reviews-vote'),
             path('', self.list_view.as_view(), name='reviews-list'),
         ]
         return self.post_process_urls(urls)
