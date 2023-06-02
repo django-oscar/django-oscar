@@ -973,15 +973,20 @@ class AbstractRange(models.Model):
             return Product.objects.exclude(
                 id__in=self.excluded_products.values("id")
             )
+
         # start with filter clause that always applies
         _filter = Q(includes=self)
-        # extend filter if included classes exist:
-        if self.classes.exists():
-            _filter |= Q(product_class__classes=self)
-            _filter |= Q(parent__product_class__classes=self)
+
         # extend filter if included_products have children
         if Product.objects.filter(parent__includes=self).exists():
             _filter |= Q(parent__includes=self)
+
+        # extend filter if included classes exist:
+        if self.classes.exists():
+            _filter |= Q(product_class__classes=self)
+            # this is always very fast so no check is needed
+            _filter |= Q(parent__product_class__classes=self)
+
         # extend filter if included_categories exist
         if self.included_categories.exists():
             expanded_range_categories = ExpandDownwardsCategoryQueryset(
@@ -992,17 +997,19 @@ class AbstractRange(models.Model):
             if Product.objects.filter(
                     parent__categories__in=expanded_range_categories).exists():
                 _filter |= Q(parent__categories__in=expanded_range_categories)
-        if Product.objects.filter(parent__excludes=self).exists():
-            return Product.objects.filter(
-                _filter,
-                ~Q(excludes=self),
-                ~Q(parent__excludes=self)
-            ).distinct()
-        # reduced query if there are no parent_excludes
-        return Product.objects.filter(
+
+        qs = Product.objects.filter(
             _filter,
             ~Q(excludes=self)
-        ).distinct()
+        )
+
+        if Product.objects.filter(parent__excludes=self).exists():
+            qs = qs.filter(
+                ~Q(parent__excludes=self)
+            )
+
+        # make sure to filter out duplicates originating from a join
+        return qs.distinct()
 
     @property
     def is_editable(self):
