@@ -971,30 +971,42 @@ class AbstractRange(models.Model):
                 id__in=self.excluded_products.values("id")
             )
 
+        # start with filter clause that always applies
+        _filter = Q(includes=self)
+
+        # extend filter if included_products have children
+        if Product.objects.filter(parent__includes=self).exists():
+            _filter |= Q(parent__includes=self)
+
+        # extend filter if included classes exist:
+        if self.classes.exists():
+            _filter |= Q(product_class__classes=self)
+            # this is always very fast so no check is needed
+            _filter |= Q(parent__product_class__classes=self)
+
+        # extend filter if included_categories exist
         if self.included_categories.exists():
             expanded_range_categories = ExpandDownwardsCategoryQueryset(
                 self.included_categories.values("id")
             )
-            selected_products = Product.objects.filter(
-                Q(categories__in=expanded_range_categories)
-                | Q(product_class__classes=self)
-                | Q(includes=self)
-                | Q(parent__categories__in=expanded_range_categories)
-                | Q(parent__product_class__classes=self)
-                | Q(parent__includes=self),
-                ~Q(excludes=self),
+            _filter |= Q(categories__in=expanded_range_categories)
+            # extend filter for parent categories
+            if Product.objects.filter(
+                    parent__categories__in=expanded_range_categories).exists():
+                _filter |= Q(parent__categories__in=expanded_range_categories)
+
+        qs = Product.objects.filter(
+            _filter,
+            ~Q(excludes=self)
+        )
+
+        if Product.objects.filter(parent__excludes=self).exists():
+            qs = qs.filter(
                 ~Q(parent__excludes=self)
             )
-        else:
-            selected_products = Product.objects.filter(
-                Q(product_class__classes=self)
-                | Q(includes=self)
-                | Q(parent__product_class__classes=self)
-                | Q(parent__includes=self),
-                ~Q(excludes=self),
-                ~Q(parent__excludes=self)
-            )
-        return selected_products.distinct()
+
+        # make sure to filter out duplicates originating from a join
+        return qs.distinct()
 
     @property
     def is_editable(self):
