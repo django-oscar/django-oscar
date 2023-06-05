@@ -450,7 +450,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         override this method to ensure they are valid before extracting their
         data into the submission dict and passing it onto `submit`.
         """
-        return self.submit(**self.build_submission())
+        submission_params = self.build_submission(basket=self.request.basket, user=self.request.user)
+        return self.submit(**submission_params)
 
     def handle_payment_details_submission(self, request):
         """
@@ -623,8 +624,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
                     order_number)
         try:
             return self.handle_order_placement(
-                order_number, user, basket, shipping_address, shipping_method,
-                shipping_charge, billing_address, order_total, surcharges=surcharges, **order_kwargs)
+                order_number, user, basket, shipping_address, shipping_method, shipping_charge,
+                billing_address, order_total, surcharges=surcharges, request=self.request, **order_kwargs)
         except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a
