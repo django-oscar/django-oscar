@@ -38,6 +38,7 @@ class RangeProductForm(forms.Form):
         super().__init__(*args, **kwargs)
 
     def clean_query_with_upload_type(self, raw, upload_type):
+        # Check that the search matches some products
         ids = set(UPC_SET_REGEX.findall(raw))
         # switch for included or excluded products
         if upload_type == RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE:
