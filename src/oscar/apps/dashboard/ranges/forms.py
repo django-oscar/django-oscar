@@ -81,7 +81,7 @@ class RangeProductForm(forms.Form):
                 _("You must submit either a list of SKU/UPCs or a file"))
         raw = clean_data['query']
         if raw:
-            self.clean_query_with_upload_type(raw, clean_data['upload_type'])         
+            self.clean_query_with_upload_type(raw, clean_data['upload_type'])
         return clean_data
 
     def get_products(self):
