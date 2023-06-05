@@ -47,7 +47,8 @@ class RangeProductForm(forms.Form):
             # Check that the search matches some products
             ids = set(UPC_SET_REGEX.findall(raw))
             # switch for included or excluded products
-            if clean_data['upload_type'] == 'excluded':
+            if clean_data['upload_type'] == \
+                    RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE:
                 products = self.range.excluded_products.all()
                 action = _('excluded from this range')
             else:

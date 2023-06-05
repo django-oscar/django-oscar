@@ -212,8 +212,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         if not products:
             return
         for product in products:
-            if form.cleaned_data["upload_type"] == "excluded":
-                range.excluded_products.add(product)
+            if form.cleaned_data["upload_type"] == \
+                    RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE:
                 action = _('excluded from this range')
             else:
                 range.add_product(product)
@@ -252,7 +252,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
-            if form.cleaned_data["upload_type"] == "excluded":
+            if form.cleaned_data["upload_type"] == \
+                    RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE:
                 action = "excluded from this range"
             else:
                 action = "added to this range"
