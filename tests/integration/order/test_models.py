@@ -413,12 +413,12 @@ class OrderTests(TestCase):
     @override_settings(SECRET_KEY='order_hash_secret')
     def test_verification_hash_generation(self):
         order = OrderFactory(number='111000')
-        self.assertEqual(order.verification_hash(), '111000:UJrZWNPLsq7zf1r17c3v1Q6DUmE')
+        self.assertEqual(order.verification_hash(), '111000:Ra7jPGqhkcTm6VXKWEdKtFjA0wBIRVqdxED4bp313os')
 
     @override_settings(SECRET_KEY='order_hash_secret')
     def test_check_verification_hash_valid(self):
         order = OrderFactory(number='111000')
-        self.assertTrue(order.check_verification_hash('111000:UJrZWNPLsq7zf1r17c3v1Q6DUmE'))
+        self.assertTrue(order.check_verification_hash('111000:Ra7jPGqhkcTm6VXKWEdKtFjA0wBIRVqdxED4bp313os'))
 
     @override_settings(SECRET_KEY='order_hash_secret')
     def test_check_verification_hash_invalid_signature(self):

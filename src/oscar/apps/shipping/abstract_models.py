@@ -83,7 +83,7 @@ class AbstractOrderAndItemCharges(AbstractBase):
                 incl_tax=D('0.00'))
 
         charge = self.price_per_order
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             if line.product.is_shipping_required:
                 charge += line.quantity * self.price_per_item
 

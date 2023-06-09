@@ -306,6 +306,13 @@ class PopUpWindowDeleteMixin(PopUpWindowMixin):
         else:
             return response
 
+    def post(self, request, *args, **kwargs):
+        """
+        Calls the delete() method on the fetched object and then
+        redirects to the success URL, or closes the popup, it it is one.
+        """
+        return self.delete(request, *args, **kwargs)
+
 
 class LoginView(auth_views.LoginView):
     template_name = 'oscar/dashboard/login.html'

@@ -152,6 +152,7 @@ PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 ROOT_URLCONF = 'tests._site.urls'
 LOGIN_REDIRECT_URL = '/accounts/'
 STATIC_URL = '/static/'
+STATIC_ROOT = location('public/static')
 MEDIA_URL = '/media/'
 PUBLIC_ROOT = location('public')
 MEDIA_ROOT = os.path.join(PUBLIC_ROOT, 'media')
@@ -169,7 +170,6 @@ OSCAR_INITIAL_LINE_STATUS = 'a'
 OSCAR_LINE_STATUS_PIPELINE = {'a': ('b', ), 'b': ()}
 
 SECRET_KEY = 'notverysecret'
-# Removed in Django 4.0, then we need to update the hashes to SHA-256 in tests/integration/order/test_models.py
-DEFAULT_HASHING_ALGORITHM = 'sha1'
+
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 FIXTURE_DIRS = [location('unit/fixtures')]

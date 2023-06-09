@@ -186,6 +186,9 @@ class VoucherDeleteView(generic.DeleteView):
             self.object.voucher_set.update_count()
         return response
 
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
     def get_success_url(self):
         messages.warning(self.request, _("Voucher deleted"))
         if self.object.voucher_set is not None:
