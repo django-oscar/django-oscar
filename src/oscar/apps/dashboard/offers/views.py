@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -38,7 +38,9 @@ class OfferListView(ListView):
 
     def get_queryset(self):
         self.search_filters = []
-        qs = self.model._default_manager.all()
+        qs = self.model._default_manager.annotate(
+            voucher_count=Count('vouchers')
+        ).select_related('benefit', 'condition')
         qs = sort_queryset(qs, self.request, ['name', 'offer_type', 'start_datetime', 'end_datetime',
                                               'num_applications', 'total_discount'])
 
