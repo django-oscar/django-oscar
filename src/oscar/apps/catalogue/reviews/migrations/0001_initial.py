@@ -4,7 +4,11 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import django.db.models.deletion
 import oscar.core.validators
+from django.utils.module_loading import import_string
 from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
+
 
 
 class Migration(migrations.Migration):
@@ -18,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductReview',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('score', models.SmallIntegerField(verbose_name='Score', choices=[(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)])),
                 ('title', models.CharField(max_length=255, verbose_name='Title', validators=[oscar.core.validators.non_whitespace])),
                 ('body', models.TextField(verbose_name='Body')),
@@ -43,7 +47,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Vote',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('delta', models.SmallIntegerField(verbose_name='Delta', choices=[(1, 'Up'), (-1, 'Down')])),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('review', models.ForeignKey(related_name='votes', to='reviews.ProductReview', on_delete=models.CASCADE)),

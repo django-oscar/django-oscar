@@ -5,7 +5,11 @@ from django.db import models, migrations
 import oscar.models.fields.autoslugfield
 from decimal import Decimal
 import oscar.models.fields
+from django.utils.module_loading import import_string
 from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
+
 
 
 class Migration(migrations.Migration):
@@ -19,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Benefit',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(verbose_name='Type', max_length=128, blank=True, choices=[('Percentage', "Discount is a percentage off of the product's value"), ('Absolute', "Discount is a fixed amount off of the product's value"), ('Multibuy', 'Discount is to give the cheapest product for free'), ('Fixed price', 'Get the products that meet the condition for a fixed price'), ('Shipping absolute', 'Discount is a fixed amount of the shipping cost'), ('Shipping fixed price', 'Get shipping for a fixed price'), ('Shipping percentage', 'Discount is a percentage off of the shipping cost')])),
                 ('value', oscar.models.fields.PositiveDecimalField(max_digits=12, decimal_places=2, blank=True, verbose_name='Value', null=True)),
                 ('max_affected_items', models.PositiveIntegerField(verbose_name='Max Affected Items', blank=True, help_text='Set this to prevent the discount consuming all items within the range that are in the basket.', null=True)),
@@ -34,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Condition',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(verbose_name='Type', max_length=128, blank=True, choices=[('Count', 'Depends on number of items in basket that are in condition range'), ('Value', 'Depends on value of items in basket that are in condition range'), ('Coverage', 'Needs to contain a set number of DISTINCT items from the condition range')])),
                 ('value', oscar.models.fields.PositiveDecimalField(max_digits=12, decimal_places=2, blank=True, verbose_name='Value', null=True)),
                 ('proxy_class', oscar.models.fields.NullCharField(unique=True, verbose_name='Custom class', default=None, max_length=255)),
@@ -48,7 +52,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ConditionalOffer',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(verbose_name='Name', unique=True, max_length=128, help_text="This is displayed within the customer's basket")),
                 ('slug', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Slug', max_length=128, editable=False, blank=True)),
                 ('description', models.TextField(verbose_name='Description', help_text='This is displayed on the offer browsing page', blank=True)),
@@ -79,7 +83,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Range',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(unique=True, max_length=128, verbose_name='Name')),
                 ('slug', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Slug', max_length=128, editable=False, blank=True)),
                 ('description', models.TextField(verbose_name="Description", blank=True)),
@@ -100,7 +104,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RangeProduct',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('display_order', models.IntegerField(default=0)),
                 ('product', models.ForeignKey(to='catalogue.Product', on_delete=models.CASCADE)),
                 ('range', models.ForeignKey(to='offer.Range', on_delete=models.CASCADE)),
@@ -112,7 +116,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RangeProductFileUpload',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('filepath', models.CharField(max_length=255, verbose_name='File Path')),
                 ('size', models.PositiveIntegerField(verbose_name='Size')),
                 ('date_uploaded', models.DateTimeField(auto_now_add=True, verbose_name='Date Uploaded')),

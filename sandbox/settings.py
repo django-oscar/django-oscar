@@ -325,8 +325,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
 LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
