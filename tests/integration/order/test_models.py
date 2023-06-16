@@ -79,7 +79,14 @@ class OrderStatusPipelineTests(TestCase):
         self.order.set_status('SHIPPED')
         self.assertEqual('SHIPPED', self.order.status)
 
-    def test_cascading_status_change(self):
+    def test_cascading_line_status_not_allowed(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('SHIPPED')
+        for line in self.order.lines.all():
+            self.assertEqual('a', line.status)
+
+    def test_cascading_status_change_allowed(self):
+        Line.pipeline['a'] = ('SHIPPED',)
         self.order = create_order(status='PENDING')
         self.order.set_status('SHIPPED')
         for line in self.order.lines.all():
