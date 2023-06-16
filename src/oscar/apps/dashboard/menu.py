@@ -3,6 +3,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
 
 from oscar.core.loading import get_class
+from oscar.navigation_menu_registry import get_dashboard_navigation_menu
 
 Node = get_class('dashboard.nav', 'Node')
 
@@ -11,7 +12,7 @@ def get_nodes(user):
     """
     Return the visible navigation nodes for the passed user
     """
-    all_nodes = create_menu(settings.OSCAR_DASHBOARD_NAVIGATION)
+    all_nodes = create_menu(get_dashboard_navigation_menu())
     visible_nodes = []
     for node in all_nodes:
         filtered_node = node.filter(user)
