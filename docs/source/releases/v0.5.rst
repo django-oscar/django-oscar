@@ -203,7 +203,7 @@ There are new migrations in the following apps to be aware of.
 
 * Offer:
 
-    - ``0007``: Add ``max_global_appliations`` field to ``ConditionalOffer`` model
+    - ``0007``: Add ``max_global_applications`` field to ``ConditionalOffer`` model
     - ``0008``: Add ``num_applications`` field to ``ConditionalOffer`` model
     - ``0009``: Rename ``max_applications`` field to ``max_basket_applications``
     - ``0010``: Add ``max_user_applications`` field to ``ConditionalOffer`` model

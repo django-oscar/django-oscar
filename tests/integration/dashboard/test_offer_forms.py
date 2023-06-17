@@ -202,14 +202,34 @@ class TestConditionForm(TestCase):
 
     def test_clean_custom_condition(self):
         """
-        If a custom condition exists, and the data for range and custom condition is supplied,
-        the form should be valid.
+        If a custom condition is selected, the form should be valid.
         """
         custom_condition = create_condition(CustomConditionModel)
         form = forms.ConditionForm(data={
-            'range': self.range.id,
+            'range': '',
             'type': '',
             'value': '',
             'custom_condition': custom_condition.id
         })
         self.assertTrue(form.is_valid())
+        self.assertEqual({
+            'range': None,
+            'type': '',
+            'value': None,
+            'custom_condition': str(custom_condition.id)
+        }, form.clean())
+
+    def test_clean_custom_condition_with_range_type_and_value(self):
+        """
+        If a custom condition is selected, but a range, type and value is selected as well,
+        it should throw a ValidationError as you may only have a custom condition.
+        """
+        custom_condition = create_condition(CustomConditionModel)
+        form = forms.ConditionForm(data={
+            'range': self.range.id,
+            'type': 'Count',
+            'value': '5',
+            'custom_condition': custom_condition.id
+        })
+        self.assertFalse(form.is_valid())
+        self.assertRaises(ValidationError, form.clean)

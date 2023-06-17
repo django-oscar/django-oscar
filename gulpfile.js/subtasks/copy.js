@@ -1,4 +1,5 @@
 const gulp = require("gulp");
+var rename = require('gulp-rename');
 
 module.exports = function(done) {
     // Copy all tracked static files into the build directory
@@ -10,8 +11,7 @@ module.exports = function(done) {
         .pipe(gulp.dest("src/oscar/static/oscar/js/jquery"));
 
     gulp.src([
-        "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
-        "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+        "node_modules/bootstrap/dist/js/*",
     ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
 
     gulp.src("node_modules/bootstrap/fonts/*")
@@ -22,7 +22,7 @@ module.exports = function(done) {
         "node_modules/tempusdominus-bootstrap-4/build/css/*.min.css"
     ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
-    gulp.src("node_modules/moment/min/moment-with-locales.min.js")
+    gulp.src("node_modules/moment/min/*")
         .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
     gulp.src("node_modules/inputmask/dist/jquery.inputmask.min.js")
@@ -39,7 +39,11 @@ module.exports = function(done) {
         "node_modules/tinymce/**/*.min.css",
         "node_modules/tinymce/**/fonts/*",
         "node_modules/tinymce/**/img/*",
-    ]).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce"));
+    ]).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce/"));
+
+    gulp.src([
+      "node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js"
+    ]).pipe(rename("jquery.tinymce.min.js")).pipe(gulp.dest("src/oscar/static/oscar/js/tinymce/"));
 
     gulp.src([
         "node_modules/select2/dist/js/select2.min.js",

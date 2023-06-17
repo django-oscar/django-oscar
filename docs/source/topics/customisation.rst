@@ -95,6 +95,20 @@ with that for your own app.
             'yourappsfolder.dashboard.reports.apps.ReportsDashboardConfig',
         ]
 
+.. note::
+
+    It is recommended to use the dotted Python path to the app config class,
+    rather than to the app package (e.g. ``yourappsfolder.order.apps.OrderConfig``
+    instead of ``yourappsfolder.order``).
+
+    This is to work around a `problem`_ in the way Django's automatic
+    ``AppConfig`` discovery (introduced in version 3.2) scans for ``AppConfig``
+    subclasses in an app's ``apps.py`` module (in short, it finds all
+    ``AppConfig`` subclasses in the ``apps.py``, including ones imported to be
+    subclassed). Specifying the path to the app config class ensures that
+    automatic ``AppConfig`` discovery is not used at all.
+
+.. _`problem`: https://code.djangoproject.com/ticket/33013
 
 Start customising!
 ==================

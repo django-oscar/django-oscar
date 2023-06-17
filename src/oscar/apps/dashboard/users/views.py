@@ -55,7 +55,7 @@ class IndexView(BulkEditMixin, FormMixin, SingleTableView):
         return kwargs
 
     def get_queryset(self):
-        queryset = self.model.objects.all().order_by('-date_joined')
+        queryset = self.model.objects.select_related('userrecord').order_by('-date_joined')
         return self.apply_search(queryset)
 
     def apply_search(self, queryset):
@@ -123,6 +123,12 @@ class UserDetailView(DetailView):
     template_name = 'oscar/dashboard/users/detail.html'
     model = User
     context_object_name = 'customer'
+
+    def get_queryset(self):
+        queryset = self.model.objects.prefetch_related(
+            'orders__lines', 'orders__surcharges'
+        )
+        return queryset
 
 
 class PasswordResetView(SingleObjectMixin, FormView):

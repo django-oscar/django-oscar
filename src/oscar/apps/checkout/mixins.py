@@ -272,7 +272,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         ctx = {
             'user': self.request.user,
             'order': order,
-            'lines': order.lines.all()
+            'lines': order.lines.all(),
+            # 'request': self.request,
         }
 
         # Attempt to add the order status URL to the email template ctx.
@@ -289,6 +290,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             pass
         else:
             # fixme
+            ctx['status_path'] = path
+
+            # status_url is deprecated, see https://github.com/django-oscar/django-oscar/issues/3826
             # site = Site.objects.get_current(self.request)
             # ctx['status_url'] = 'http://%s%s' % (site.domain, path)
             ctx['status_url'] = 'please override this :)'

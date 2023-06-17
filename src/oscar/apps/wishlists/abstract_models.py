@@ -69,10 +69,13 @@ class AbstractWishList(models.Model):
                 return key
 
     def is_allowed_to_see(self, user):
-        if self.visibility in (self.PUBLIC, self.SHARED):
+        if user == self.owner:
             return True
-        else:
-            return user == self.owner
+        elif self.visibility == self.PUBLIC:
+            return True
+        elif self.visibility == self.SHARED and user.is_authenticated:
+            return self.shared_emails.filter(email=user.email).exists()
+        return False
 
     def is_allowed_to_edit(self, user):
         # currently only the owner can edit their wish list
@@ -100,6 +103,14 @@ class AbstractWishList(models.Model):
             line = lines[0]
             line.quantity += 1
             line.save()
+
+    def get_shared_url(self):
+        return reverse("wishlists:detail", kwargs={
+            'key': self.key})
+
+    @property
+    def is_shareable(self):
+        return self.visibility in [self.PUBLIC, self.SHARED]
 
 
 class AbstractLine(models.Model):
@@ -136,3 +147,24 @@ class AbstractLine(models.Model):
         ordering = ['pk']
         unique_together = (('wishlist', 'product'), )
         verbose_name = _('Wish list line')
+
+
+class AbstractWishListSharedEmail(models.Model):
+    """
+    An email which is allowed to view and possibly edit the wishlist, if shared.
+    The user will have to login/create an account with this email in order to view it.
+    """
+    wishlist = models.ForeignKey(
+        'wishlists.WishList',
+        on_delete=models.CASCADE,
+        related_name='shared_emails',
+        verbose_name=_('Wish List'))
+    email = models.EmailField(verbose_name=_('Email'))
+
+    def __str__(self):
+        return "%s - %s" % (self.wishlist.name, self.email)
+
+    class Meta:
+        abstract = True
+        app_label = 'wishlists'
+        verbose_name = _('Wish list shared email')

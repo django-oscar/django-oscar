@@ -74,6 +74,9 @@ class RestrictionsForm(forms.ModelForm):
         """
         instance = super().save(*args, **kwargs)
         if instance.id:
+            for offer in instance.combinations.all():
+                if offer not in self.cleaned_data['combinations']:
+                    offer.combinations.remove(instance)
             instance.combinations.clear()
             for offer in self.cleaned_data['combinations']:
                 if offer != instance:
@@ -123,11 +126,17 @@ class ConditionForm(forms.ModelForm):
 
         # Check that either a condition has been entered or a custom condition
         # has been chosen
-        if data.get('custom_condition'):
-            if not data.get('range', None):
+        if not any(data.values()):
+            raise forms.ValidationError(
+                _("Please either choose a range, type and value OR "
+                  "select a custom condition"))
+
+        if data['custom_condition']:
+            if data.get('range') or data.get('type') or data.get('value'):
                 raise forms.ValidationError(
-                    _("A range is required"))
-        elif not all([data.get('range'), data.get('type'), data.get('value')]):
+                    _("No other options can be set if you are using a "
+                      "custom condition"))
+        elif not data.get('type'):
             raise forms.ValidationError(
                 _("Please either choose a range, type and value OR "
                   "select a custom condition"))

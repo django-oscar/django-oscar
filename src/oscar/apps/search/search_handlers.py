@@ -1,5 +1,4 @@
 from django.core.paginator import InvalidPage, Paginator
-from django.utils.translation import gettext_lazy as _
 from haystack import connections
 
 from oscar.core.loading import get_class
@@ -9,7 +8,39 @@ from . import facets
 FacetMunger = get_class('search.facets', 'FacetMunger')
 
 
-class SearchHandler(object):
+class SearchResultsPaginationMixin:
+    paginate_by = None
+    paginator_class = Paginator
+    page_kwarg = 'page'
+
+    def paginate_queryset(self, queryset, page_size):
+        """
+        Paginate the search results. This is a simplified version of
+        Django's MultipleObjectMixin.paginate_queryset
+        """
+        paginator = self.get_paginator(queryset, page_size)
+        page_kwarg = self.page_kwarg
+        page_number = self.request_data.get(page_kwarg, 1)
+        try:
+            page_number = int(page_number)
+        except ValueError:
+            if page_number == 'last':
+                page_number = paginator.num_pages
+            else:
+                raise InvalidPage
+        # This can also raise an InvalidPage exception.
+        page = paginator.page(page_number)
+        return paginator, page, page.object_list, page.has_other_pages()
+
+    def get_paginator(self, queryset, per_page=None):
+        """
+        Return a paginator. Override this to set settings like orphans,
+        allow_empty, etc.
+        """
+        return self.paginator_class(queryset, per_page)
+
+
+class SearchHandler(SearchResultsPaginationMixin):
     """
     A class that is concerned with performing a search and paginating the
     results. The search is triggered upon initialisation (mainly to have a
@@ -36,9 +67,6 @@ class SearchHandler(object):
 
     form_class = None
     model_whitelist = None
-    paginate_by = None
-    paginator_class = Paginator
-    page_kwarg = 'page'
 
     def __init__(self, request_data, full_path):
         self.full_path = full_path
@@ -51,8 +79,7 @@ class SearchHandler(object):
         self.results = self.get_search_results(self.search_form)
         # If below raises an UnicodeDecodeError, you're running pysolr < 3.2
         # with Solr 4.
-        self.paginator, self.page = self.paginate_queryset(
-            self.results, request_data)
+        self.paginator, self.page = self.paginate_queryset(self.results, self.paginate_by)[0:2]
 
     # Search related methods
 
@@ -84,34 +111,6 @@ class SearchHandler(object):
             # Limit queryset to specified list of models
             sqs = sqs.models(*self.model_whitelist)
         return sqs
-
-    # Pagination related methods
-
-    def paginate_queryset(self, queryset, request_data):
-        """
-        Paginate the search results. This is a simplified version of
-        Django's MultipleObjectMixin.paginate_queryset
-        """
-        paginator = self.get_paginator(queryset)
-        page_kwarg = self.page_kwarg
-        page = request_data.get(page_kwarg, 1)
-        try:
-            page_number = int(page)
-        except ValueError:
-            if page == 'last':
-                page_number = paginator.num_pages
-            else:
-                raise InvalidPage(_(
-                    "Page is not 'last', nor can it be converted to an int."))
-        # This can also raise an InvalidPage exception.
-        return paginator, paginator.page(page_number)
-
-    def get_paginator(self, queryset):
-        """
-        Return a paginator. Override this to set settings like orphans,
-        allow_empty, etc.
-        """
-        return self.paginator_class(queryset, self.paginate_by)
 
     # Accessing the search results and meta data
 

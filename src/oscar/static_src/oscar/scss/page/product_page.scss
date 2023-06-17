@@ -65,3 +65,24 @@
     max-width: 500px;
   }
 }
+
+#add_to_basket_form {
+    .form-check {
+        padding-left: 0;
+    }
+    ul.form-control {
+        height: auto;
+        list-style-type:none;
+        li {
+            line-height: auto;
+            label {
+                display: block;
+                input.form-control {
+                    height: auto;
+                    display: inline;
+                    width: auto;
+                }
+            }
+        }
+    }
+}

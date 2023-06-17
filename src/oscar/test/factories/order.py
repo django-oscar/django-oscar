@@ -59,6 +59,7 @@ class OrderFactory(factory.django.DjangoModelFactory):
     if hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
         status = settings.OSCAR_INITIAL_ORDER_STATUS
 
+    # site_id = getattr(settings, "SITE_ID", None)
     number = factory.LazyAttribute(lambda o: '%d' % (100000 + o.basket.pk))
     basket = factory.SubFactory(
         'oscar.test.factories.BasketFactory')
@@ -81,16 +82,6 @@ class OrderFactory(factory.django.DjangoModelFactory):
     shipping_address = factory.SubFactory(ShippingAddressFactory)
     billing_address = factory.SubFactory(BillingAddressFactory)
 
-    @classmethod
-    def _create(cls, target_class, *args, **kwargs):
-        date_placed = kwargs.pop('date_placed', None)
-        instance = super(OrderFactory, cls)._create(
-            target_class, *args, **kwargs)
-
-        if date_placed:
-            instance.date_placed = date_placed
-        return instance
-
     @factory.post_generation
     def create_line_models(obj, create, extracted, **kwargs):
         if not create:
@@ -108,9 +99,9 @@ class OrderLineFactory(factory.django.DjangoModelFactory):
     order = factory.SubFactory(OrderFactory)
     product = factory.SubFactory(
         'oscar.test.factories.ProductFactory')
-    partner_sku = factory.LazyAttribute(lambda l: l.product.upc)
+    partner_sku = factory.LazyAttribute(lambda x: x.product.upc)
     stockrecord = factory.LazyAttribute(
-        lambda l: l.product.stockrecords.first())
+        lambda s: s.product.stockrecords.first())
     quantity = 1
 
     line_price_incl_tax = factory.LazyAttribute(lambda obj: tax_add(obj.stockrecord.price) * obj.quantity)

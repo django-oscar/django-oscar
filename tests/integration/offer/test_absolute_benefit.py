@@ -386,3 +386,63 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
         assert line.line_price_excl_tax_incl_discounts == D(0)
         assert line.line_price_incl_tax_incl_discounts == D(0)
         assert basket.total_incl_tax == 0
+
+    def test_is_discountable_works_on_child_level(self):
+        rng = factories.RangeFactory(includes_all_products=True, name="klaazien")
+        benefit = factories.BenefitFactory(
+            range=rng, type=models.Benefit.PERCENTAGE, value=5, max_affected_items=100
+        )
+        condition = models.ValueCondition.objects.create(
+            range=rng,
+            type=models.Condition.COUNT,
+            value=1
+        )
+
+        factories.ConditionalOfferFactory(
+            priority=99999,
+            exclusive=False,
+            condition=condition,
+            benefit=benefit
+        )
+
+        basket = factories.create_basket(empty=True)
+
+        prod1 = factories.create_product(title="Gert is friends with Berrie", is_discountable=True, price=100)
+
+        parent_discountable_product = factories.create_product(structure='parent', is_discountable=True)
+        child = factories.create_product(
+            title="Undiscountable variant",
+            structure='child',
+            parent=parent_discountable_product,
+            is_discountable=False,
+            price=100
+        )
+
+        parent_product = factories.create_product(structure='parent', is_discountable=False)
+        child_discountable = factories.create_product(
+            title="Discountable variant ", structure='child', parent=parent_product, is_discountable=True, price=200)
+
+        basket.add_product(prod1, quantity=1)
+        basket.add_product(child, quantity=2)
+        basket.add_product(child_discountable, quantity=3)
+
+        Applicator().apply(basket)
+        line = basket.all_lines()
+        product_actual = benefit.can_apply_benefit(line[0])
+        assert product_actual
+        assert prod1.is_discountable
+        assert line[0].has_discount
+        assert line[0].discount_value == D(5)
+
+        variant_actual = benefit.can_apply_benefit(line[1])
+        assert not variant_actual
+        assert parent_discountable_product.is_discountable
+        assert not child.is_discountable
+        assert line[1].discount_value == D(0)
+
+        variant_discountable_actual = benefit.can_apply_benefit(line[2])
+        assert variant_discountable_actual
+        assert not parent_product.is_discountable
+        assert child_discountable.is_discountable
+        assert line[2].has_discount
+        assert line[2].discount_value == D(30)

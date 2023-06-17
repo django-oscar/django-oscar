@@ -64,7 +64,7 @@ class TestBasketLine(TestCase):
         product = ProductFactory(title="A product")
         option = OptionFactory(name="product_option", code="product_option")
         option_product = ProductFactory(title='Asunción')
-        options = [{'option': option, 'value': option_product}]
+        options = [{'option': option, 'value': str(option_product)}]
         basket.add_product(product, options=options)
 
     def test_basket_lines_queryset_is_ordered(self):
@@ -274,7 +274,7 @@ class TestANonEmptyBasket(TestCase):
             self.assertIsNotNone(message)
 
         with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=None):
-            # with the treshold disabled all quantities are possible
+            # with the threshold disabled all quantities are possible
             allowed, message = self.basket.is_quantity_allowed(qty=7)
             self.assertTrue(allowed)
             self.assertIsNone(message)

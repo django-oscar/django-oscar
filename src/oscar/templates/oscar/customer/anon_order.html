@@ -88,9 +88,11 @@
         {% endfor %}
         {% for discount in order.discounts.all %}
             <tr>
-                <td colspan="5">{{ discount.description }}</td>
+                <td colspan="4">{{ discount.description }}</td>
                 <td>-{{ discount.amount|currency:order.currency }}</td>
-                <td colspan="1"></td>
+                {% iffeature "reviews" %}
+                    <td colspan="1"></td>
+                {% endiffeature %}
             </tr>
         {% endfor %}
     </table>

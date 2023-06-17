@@ -6,6 +6,10 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 import oscar.models.fields.autoslugfield
+from django.utils.module_loading import import_string
+from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 
 class Migration(migrations.Migration):
@@ -22,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CommunicationEventType',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(blank=True, editable=False, help_text='Code used for looking up this event programmatically', max_length=128, populate_from='name', separator='_', unique=True, validators=[django.core.validators.RegexValidator(message="Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit.", regex='^[a-zA-Z_][0-9a-zA-Z_]*$')], verbose_name='Code')),
                 ('name', models.CharField(max_length=255, verbose_name='Name')),
                 ('category', models.CharField(choices=[('Order related', 'Order related'), ('User related', 'User related')], default='Order related', max_length=255, verbose_name='Category')),
@@ -43,7 +47,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Email',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('email', models.EmailField(blank=True, max_length=254, null=True, verbose_name='Email Address')),
                 ('subject', models.TextField(max_length=255, verbose_name='Subject')),
                 ('body_text', models.TextField(verbose_name='Body Text')),
@@ -61,7 +65,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Notification',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('subject', models.CharField(max_length=255)),
                 ('body', models.TextField()),
                 ('category', models.CharField(blank=True, max_length=255)),

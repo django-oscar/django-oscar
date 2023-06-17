@@ -82,5 +82,5 @@ class RegisterUserMixin(object):
         return user
 
     def send_registration_email(self, user):
-        extra_context = {'user': user}
+        extra_context = {'user': user, 'request': self.request}
         CustomerDispatcher().send_registration_email_for_user(user, extra_context)

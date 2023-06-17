@@ -30,6 +30,6 @@ class Scale(object):
 
     def weigh_basket(self, basket):
         weight = D('0.0')
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             weight += self.weigh_product(line.product) * line.quantity
         return weight

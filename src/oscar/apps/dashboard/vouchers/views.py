@@ -3,6 +3,7 @@ import csv
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -33,8 +34,9 @@ class VoucherListView(generic.ListView):
     def get_queryset(self):
         self.search_filters = []
         qs = self.model._default_manager.all()
+        qs = qs.annotate(num_offers=Count('offers', distinct=True))
         qs = sort_queryset(qs, self.request,
-                           ['num_basket_additions', 'num_orders',
+                           ['num_basket_additions', 'num_orders', 'num_offers',
                             'date_created'],
                            '-date_created')
 
@@ -183,6 +185,9 @@ class VoucherDeleteView(generic.DeleteView):
         if self.object.voucher_set is not None:
             self.object.voucher_set.update_count()
         return response
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.warning(self.request, _("Voucher deleted"))

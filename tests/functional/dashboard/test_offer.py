@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from oscar.apps.offer import models
+from oscar.apps.order.models import OrderDiscount
 from oscar.test import factories, testcases
 
 
@@ -226,6 +227,41 @@ class TestAnAdmin(testcases.WebTestCase):
 
         self.assertFalse('range' in condition_page.errors)
         self.assertEqual(len(condition_page.errors), 0)
+
+    def test_remove_offer_from_combinations(self):
+        offer_a = factories.create_offer("Offer A")
+        offer_b = factories.create_offer("Offer B")
+        offer_b.exclusive = False
+        offer_b.save()
+
+        restrictions_page = self.get(reverse(
+            'dashboard:offer-restrictions', kwargs={'pk': offer_a.pk}))
+        restrictions_page.form['exclusive'] = False
+        restrictions_page.form['combinations'] = [offer_b.id]
+        restrictions_page.form.submit()
+
+        self.assertIn(offer_a, offer_b.combinations.all())
+
+        restrictions_page = self.get(reverse(
+            'dashboard:offer-restrictions', kwargs={'pk': offer_a.pk}))
+        restrictions_page.form['combinations'] = []
+        restrictions_page.form.submit()
+
+        self.assertNotIn(offer_a, offer_b.combinations.all())
+
+    def test_create_offer_order_report(self):
+        order1 = factories.create_order(number="100001")
+        order2 = factories.create_order(number="100002")
+        offer = factories.create_offer()
+        OrderDiscount.objects.create(order=order1, offer_id=offer.id)
+        OrderDiscount.objects.create(order=order2, offer_id=offer.id)
+
+        report_url = "%s%s" % (reverse("dashboard:offer-detail", kwargs={'pk': offer.pk}), "?format=csv")
+        response = self.get(report_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["Content-Type"], "text/csv")
+        self.assertIn("100001", response.content.decode("utf-8"))
+        self.assertIn("100002", response.content.decode("utf-8"))
 
 
 class TestOfferListSearch(testcases.WebTestCase):

@@ -185,17 +185,19 @@ class Structured(Base):
 # Mixins - these can be used to construct the appropriate strategy class
 
 
-class UseFirstStockRecord(object):
+class UseFirstStockRecord:
     """
     Stockrecord selection mixin for use with the ``Structured`` base strategy.
     This mixin picks the first (normally only) stockrecord to fulfil a product.
-
-    This is backwards compatible with Oscar<0.6 where only one stockrecord per
-    product was permitted.
     """
 
     def select_stockrecord(self, product):
-        return product.stockrecords.first()
+        # We deliberately fetch by index here, to ensure that no additional database queries are made
+        # when stockrecords have already been prefetched in a queryset annotated using ProductQuerySet.base_queryset
+        try:
+            return product.stockrecords.all()[0]
+        except IndexError:
+            pass
 
 
 class StockRequired(object):

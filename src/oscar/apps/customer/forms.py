@@ -8,12 +8,12 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.utils.crypto import get_random_string
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
-from oscar.core.compat import (
-    existing_user_fields, get_user_model, url_has_allowed_host_and_scheme)
+from oscar.core.compat import existing_user_fields, get_user_model
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.core.utils import datetime_combine
 from oscar.forms import widgets
@@ -50,13 +50,14 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         # if domain_override is not None:
         #     site.domain = site.name = domain_override
         # for user in self.get_users(self.cleaned_data['email']):
-        #     self.send_password_reset_email(site, user)
+        #     self.send_password_reset_email(site, user, request)
 
-    def send_password_reset_email(self, site, user):
+    def send_password_reset_email(self, site, user, request=None):
         extra_context = {
             'user': user,
             'site': site,
             'reset_url': get_password_reset_url(user),
+            'request': request,
         }
         CustomerDispatcher().send_password_reset_email_for_user(user, extra_context)
 
@@ -311,7 +312,8 @@ if Profile:  # noqa (too complex (12))
                 self.fields[field_name].initial = getattr(user, field_name)
 
             # Ensure order of fields is email, user fields then profile fields
-            self.fields.keyOrder = user_field_names + profile_field_names
+            self.field_order = user_field_names + profile_field_names
+            self.order_fields(self.field_order)
 
         class Meta:
             model = Profile

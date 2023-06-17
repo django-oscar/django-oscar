@@ -570,7 +570,7 @@ class CategoryDetailListView(SingleTableMixin, generic.DetailView):
 class CategoryListMixin(object):
 
     def get_success_url(self):
-        parent = self.object.get_parent()
+        parent = self.object.get_parent(update=True)
         if parent is None:
             return reverse("dashboard:catalogue-category-list")
         else:

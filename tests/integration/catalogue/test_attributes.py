@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
-from oscar.apps.catalogue.models import Product, ProductAttribute
+from oscar.apps.catalogue.models import Product, ProductAttribute, ProductClass
 from oscar.test import factories
 
 
@@ -44,6 +44,17 @@ class TestContainer(TestCase):
         product.attr.refresh()
         assert product.attr.a1 == "v2"
 
+    def test_attribute_code_uniqueness(self):
+        product_class = factories.ProductClassFactory()
+        attribute1 = ProductAttribute.objects.create(name='a1', code='a1', product_class=product_class)
+        attribute1.full_clean()
+
+        with self.assertRaises(ValidationError):
+            ProductAttribute(name='a1', code='a1', product_class=product_class).full_clean()
+
+        another_product_class = ProductClass.objects.create(name="another product class")
+        ProductAttribute(name='a1', code='a1', product_class=another_product_class).full_clean()
+
 
 class TestBooleanAttributes(TestCase):
 
@@ -56,6 +67,18 @@ class TestBooleanAttributes(TestCase):
     def test_validate_invalid_boolean_values(self):
         with self.assertRaises(ValidationError):
             self.attr.validate_value(1)
+
+    def test_boolean_value_as_text_true(self):
+        product = factories.ProductFactory()
+        self.attr.save_value(product, True)
+        attr_val = product.attribute_values.get(attribute=self.attr)
+        assert attr_val.value_as_text == "Yes"
+
+    def test_boolean_value_as_text_false(self):
+        product = factories.ProductFactory()
+        self.attr.save_value(product, False)
+        attr_val = product.attribute_values.get(attribute=self.attr)
+        assert attr_val.value_as_text == "No"
 
 
 class TestMultiOptionAttributes(TestCase):

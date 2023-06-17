@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.messages.constants import SUCCESS, WARNING
 from django.test import TestCase
 from django.urls import reverse
@@ -207,3 +209,28 @@ class RangeProductViewTest(WebTestCase):
         self.assertTrue(self.range.contains_product(self.child1))
         self.assertTrue(self.range.contains_product(self.child2))
         self.assertFalse(self.range.contains_product(self.parent))
+
+
+class RangeReorderViewTest(WebTestCase):
+    is_staff = True
+    csrf_checks = False
+
+    def setUp(self):
+        super().setUp()
+        self.range = Range.objects.create(name='dummy')
+        self.url = reverse('dashboard:range-reorder', args=(self.range.id,))
+        self.product1 = create_product()
+        self.product2 = create_product()
+        self.product3 = create_product()
+        self.range.included_products.set([
+            self.product1, self.product2, self.product3])
+
+    def test_range_product_reordering(self):
+        product_order = list(self.range.rangeproduct_set.values_list(
+            'product_id', flat=True))
+        random.shuffle(product_order)
+        data = {'product': product_order}
+        self.post(self.url, params=data)
+        new_product_order = list(self.range.rangeproduct_set.values_list(
+            'product_id', flat=True).order_by('display_order'))
+        self.assertEqual(new_product_order, product_order)

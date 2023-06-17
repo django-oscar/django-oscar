@@ -53,18 +53,18 @@ class CheckoutSessionMixin(object):
         # views.
         self.checkout_session = CheckoutSessionData(request)
 
+        # Check if this view should be skipped
+        try:
+            self.check_skip_conditions(request)
+        except exceptions.PassedSkipCondition as e:
+            return http.HttpResponseRedirect(e.url)
+
         # Enforce any pre-conditions for the view.
         try:
             self.check_pre_conditions(request)
         except exceptions.FailedPreCondition as e:
             for message in e.messages:
                 messages.warning(request, message)
-            return http.HttpResponseRedirect(e.url)
-
-        # Check if this view should be skipped
-        try:
-            self.check_skip_conditions(request)
-        except exceptions.PassedSkipCondition as e:
             return http.HttpResponseRedirect(e.url)
 
         return super().dispatch(

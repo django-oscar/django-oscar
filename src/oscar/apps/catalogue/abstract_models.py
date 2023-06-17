@@ -16,14 +16,15 @@ from django.db.models.fields import Field
 from django.db.models.lookups import StartsWith
 from django.template.defaultfilters import striptags
 from django.urls import reverse
-from django.utils.functional import SimpleLazyObject, cached_property
+from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
+from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -219,8 +220,8 @@ class AbstractCategory(MP_Node):
             is_public=False, path__rstartswith=OuterRef("path"), depth__lt=OuterRef("depth")
         )
         self.get_descendants_and_self().update(
-            ancestors_are_public=Exists(
-                included_in_non_public_subtree.values("id"), negated=True))
+            ancestors_are_public=~Exists(
+                included_in_non_public_subtree.values("id")))
 
         # Correctly populate ancestors_are_public
         self.refresh_from_db()
@@ -375,7 +376,7 @@ class AbstractProduct(models.Model):
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(pgettext_lazy('Product title', 'Title'),
                              max_length=255, blank=True)
-    slug = models.SlugField(_('Slug'), max_length=255, unique=False)
+    slug = SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
     meta_title = models.CharField(_('Meta title'), max_length=255, blank=True, null=True)
     meta_description = models.TextField(_('Meta description'), blank=True, null=True)
@@ -445,7 +446,7 @@ class AbstractProduct(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.attr = SimpleLazyObject(lambda: ProductAttributesContainer(product=self))
+        self.attr = ProductAttributesContainer(product=self)
 
     def __str__(self):
         if self.title:
@@ -598,7 +599,9 @@ class AbstractProduct(models.Model):
         """
         Test if this product has any stockrecords
         """
-        return self.stockrecords.exists()
+        if self.id:
+            return self.stockrecords.exists()
+        return False
 
     @property
     def num_stockrecords(self):
@@ -647,24 +650,23 @@ class AbstractProduct(models.Model):
             return self.product_class
     get_product_class.short_description = _("Product class")
 
+    @deprecated
     def get_is_discountable(self):
         """
-        At the moment, :py:attr:`.is_discountable` can't be set individually for child
-        products; they inherit it from their parent.
+        It used to be that, :py:attr:`.is_discountable` couldn't be set individually for child
+        products; so they had to inherit it from their parent. This is nolonger the case because
+        ranges can include child products as well. That make this method useless.
         """
-        if self.is_child:
-            return self.parent.is_discountable
-        else:
-            return self.is_discountable
+        return self.is_discountable
 
     def get_categories(self):
         """
-        Return a product's categories or parent's if there is a parent product.
+        Return a product's public categories or parent's if there is a parent product.
         """
         if self.is_child:
-            return self.parent.categories
+            return self.parent.categories.browsable()
         else:
-            return self.categories
+            return self.categories.browsable()
     get_categories.short_description = _("Categories")
 
     def get_attribute_values(self):
@@ -870,6 +872,7 @@ class AbstractProductAttribute(models.Model):
         ordering = ['code']
         verbose_name = _('Product attribute')
         verbose_name_plural = _('Product attributes')
+        unique_together = ('code', 'product_class')
 
     @property
     def is_option(self):
@@ -1142,6 +1145,12 @@ class AbstractProductAttributeValue(models.Model):
         return str(self.value)
 
     @property
+    def _boolean_as_text(self):
+        if self.value:
+            return pgettext("Product attribute value", "Yes")
+        return pgettext("Product attribute value", "No")
+
+    @property
     def value_as_html(self):
         """
         Returns a HTML representation of the attribute's value. To customise
@@ -1228,23 +1237,101 @@ class AbstractOption(models.Model):
     BOOLEAN = "boolean"
     DATE = "date"
 
+    SELECT = "select"
+    RADIO = "radio"
+    MULTI_SELECT = "multi_select"
+    CHECKBOX = "checkbox"
+
     TYPE_CHOICES = (
         (TEXT, _("Text")),
         (INTEGER, _("Integer")),
         (BOOLEAN, _("True / False")),
         (FLOAT, _("Float")),
         (DATE, _("Date")),
+        (SELECT, _("Select")),
+        (RADIO, _("Radio")),
+        (MULTI_SELECT, _("Multi select")),
+        (CHECKBOX, _("Checkbox")),
     )
+
+    empty_label = "------"
+    empty_radio_label = _("Skip this option")
 
     name = models.CharField(_("Name"), max_length=128, db_index=True)
     code = AutoSlugField(_("Code"), max_length=128, unique=True, populate_from='name')
     type = models.CharField(_("Type"), max_length=255, default=TEXT, choices=TYPE_CHOICES)
     required = models.BooleanField(_("Is this option required?"), default=False)
+    option_group = models.ForeignKey(
+        "catalogue.AttributeOptionGroup",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="product_options",
+        verbose_name=_("Option Group"),
+        help_text=_('Select an option group if using type "Option" or "Multi Option"'),
+    )
+    help_text = models.CharField(
+        verbose_name=_("Help text"), blank=True, null=True, max_length=255,
+        help_text=_("Help text shown to the user on the add to basket form")
+    )
+    order = models.IntegerField(
+        _("Ordering"),
+        null=True,
+        blank=True,
+        help_text=_("Controls the ordering of product options on product detail pages"),
+        db_index=True,
+    )
+
+    @property
+    def is_option(self):
+        return self.type in [self.SELECT, self.RADIO]
+
+    @property
+    def is_multi_option(self):
+        return self.type in [self.MULTI_SELECT, self.CHECKBOX]
+
+    @property
+    def is_select(self):
+        return self.type in [self.SELECT, self.MULTI_SELECT]
+
+    @property
+    def is_radio(self):
+        return self.type in [self.RADIO]
+
+    def add_empty_choice(self, choices):
+        if self.is_select and not self.is_multi_option:
+            choices = [("", self.empty_label)] + choices
+        elif self.is_radio:
+            choices = [(None, self.empty_radio_label)] + choices
+        return choices
+
+    def get_choices(self):
+        if self.option_group:
+            choices = [(opt.option, opt.option) for opt in self.option_group.options.all()]
+        else:
+            choices = []
+
+        if not self.required:
+            choices = self.add_empty_choice(choices)
+
+        return choices
+
+    def clean(self):
+        if self.type in [self.RADIO, self.SELECT, self.MULTI_SELECT, self.CHECKBOX]:
+            if self.option_group is None:
+                raise ValidationError(
+                    _("Option Group is required for type %s") % self.get_type_display()
+                )
+        elif self.option_group:
+            raise ValidationError(
+                _("Option Group can not be used with type %s") % self.get_type_display()
+            )
+        return super().clean()
 
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        ordering = ['name']
+        ordering = ['order', 'name']
         verbose_name = _("Option")
         verbose_name_plural = _("Options")
 

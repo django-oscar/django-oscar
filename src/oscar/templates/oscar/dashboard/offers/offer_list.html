@@ -103,7 +103,7 @@
                         <td><a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a></td>
                         <td>{{ offer.offer_type }}</td>
                         {% if form.is_bound %}{% if form.is_voucher_offer_type or not form.cleaned_data.offer_type %}
-                        <td>{{ offer.vouchers.count }}</td>
+                        <td>{{ offer.voucher_count }}</td>
                         {% endif %}{% endif %}
                         <td>{{ offer.start_datetime|default:"-" }}</td>
                         <td>{{ offer.end_datetime|default:"-" }}</td>
@@ -145,7 +145,7 @@
                                         <a class="dropdown-item" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}">
                                             {% trans "Edit" %}
                                         </a>
-                                        {% if not offer.vouchers.exists %}
+                                        {% if not offer.voucher_count %}
                                         <a class="dropdown-item" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">
                                             {% trans "Delete" %}
                                         </a>

@@ -55,6 +55,7 @@ class OfferDetailView(ListView):
 class RangeDetailView(ListView):
     template_name = 'oscar/offer/range.html'
     context_object_name = 'products'
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
     def dispatch(self, request, *args, **kwargs):
         self.range = get_object_or_404(
@@ -67,7 +68,7 @@ class RangeDetailView(ListView):
         Return a queryset of all :py:class:`Product <oscar.apps.catalogue.abstract_models.AbstractProduct>`
         instances related to the :py:class:`Range <oscar.apps.offer.abstract_models.AbstractRange>`.
         """  # noqa
-        products = self.range.all_products()
+        products = self.range.all_products().browsable()
         return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):

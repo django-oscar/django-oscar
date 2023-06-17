@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from oscar.apps.wishlists.models import WishList
+from oscar.apps.wishlists.models import WishList, WishListSharedEmail
 from oscar.core.compat import get_user_model
 
 User = get_user_model()
@@ -16,7 +16,7 @@ class TestAWishlist(TestCase):
 class TestAPublicWishList(TestCase):
 
     def setUp(self):
-        self.wishlist = WishList(visibility=WishList.PUBLIC)
+        self.wishlist = WishList(visibility=WishList.PUBLIC, owner=User(id=1))
 
     def test_is_visible_to_anyone(self):
         user = User()
@@ -26,11 +26,16 @@ class TestAPublicWishList(TestCase):
 class TestASharedWishList(TestCase):
 
     def setUp(self):
-        self.wishlist = WishList(visibility=WishList.SHARED)
+        user = User.objects.create(email="test1@example.com")
+        self.wishlist = WishList.objects.create(visibility=WishList.SHARED, owner=user)
 
     def test_is_visible_to_anyone(self):
         user = User()
-        self.assertTrue(self.wishlist.is_allowed_to_see(user))
+        self.assertFalse(self.wishlist.is_allowed_to_see(user))
+
+    def test_is_visible_for_shared_email(self):
+        WishListSharedEmail.objects.create(wishlist=self.wishlist, email="test2@example.com")
+        self.assertTrue(self.wishlist.is_allowed_to_see(User(email="test2@example.com")))
 
 
 class TestAPrivateWishList(TestCase):

@@ -222,9 +222,11 @@ class RangeReorderView(View):
         """
         Save the order of the products within range.
         """
-        range = get_object_or_404(Range, pk=self.kwargs['pk'])
-        for index, item in enumerate(order):
-            entry = RangeProduct.objects.get(range=range, product__pk=item)
-            if entry.display_order != index:
-                entry.display_order = index
-                entry.save()
+        range_products = RangeProduct.objects.filter(
+            range_id=self.kwargs['pk'], product_id__in=order
+        )
+        for range_product in range_products:
+            range_product.display_order = order.index(
+                str(range_product.product_id)
+            )
+        RangeProduct.objects.bulk_update(range_products, ["display_order"])

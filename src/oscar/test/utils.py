@@ -99,10 +99,15 @@ class ThumbnailMixin:
 
 
 class EmailsMixin:
+    DJANGO_IMPROPERLY_CONFIGURED_MSG = 'You\'re using the Django "sites framework" '\
+        'without having set the SITE_ID setting. Create a site in your database and set '\
+        'the SITE_ID setting or pass a request to Site.objects.get_current() to fix this error.'
 
     def setUp(self):
         super().setUp()
         self.user = UserFactory()
+        factory = RequestFactory(SERVER_NAME="example.com")
+        self.request = factory.get("/")
 
     def _test_send_plain_text_and_html(self, outboxed_email):
         email = outboxed_email

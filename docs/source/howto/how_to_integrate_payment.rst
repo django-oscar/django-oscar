@@ -112,3 +112,41 @@ For example::
 
             # Record payment event
             self.add_payment_event('pre-auth', total.incl_tax)
+
+Integrate ```cash on delivery```
+================================
+
+With cash-on-delivery, there is no need to handle payment in PaymentDetailsView. So you can just redirect from PaymentMethodView to preview, when 'cash-on-delivery' is selected:
+
+
+Add PaymentSourceType "Cash on delivery":
+
+.. code-block:: bash
+
+    $ ./manage.py shell
+
+.. code-block:: python
+
+    from oscar.core.loading import get_model
+    SourceType = get_model('payment', 'SourceType')
+    SourceType.objects.create(name='Cash on delivery')
+
+Subclass ```PaymentMethodView``` to redirect to preview
+
+.. code-block:: python
+
+    from django.shortcuts import redirect
+    from django.urls import reverse
+    from oscar.apps.checkout import views
+
+    class PaymentMethodView(views.PaymentMethodView):
+
+        def form_valid(self, form):
+            """
+            redirect to preview if payment_method == cash-on-delivery
+            """
+            payment_method = form.cleaned_data["payment_method"]
+            self.checkout_session.pay_by(payment_method.code)
+            if payment_method.code == 'cash-on-delivery':
+                return redirect(reverse("checkout:preview"))
+            return super().form_valid(form)

@@ -99,13 +99,12 @@ sorting, filtering, etc.
 The default is::
 
     OSCAR_SEARCH_FACETS = {
-        'fields': OrderedDict([
-            ('product_class', {'name': _('Type'), 'field': 'product_class'}),
-            ('rating', {'name': _('Rating'), 'field': 'rating'}),
-        ]),
-        'queries': OrderedDict([
-            ('price_range',
-             {
+        'fields': {
+            'product_class': {'name': _('Type'), 'field': 'product_class'},
+            'rating': {'name': _('Rating'), 'field': 'rating'},
+        },
+        'queries': {
+            'price_range': {
                  'name': _('Price range'),
                  'field': 'price',
                  'queries': [
@@ -116,8 +115,8 @@ The default is::
                      (_('40 to 60'), '[40 TO 60]'),
                      (_('60+'), '[60 TO *]'),
                  ]
-             }),
-        ]),
+             },
+        },
     }
 
 ``OSCAR_PRODUCT_SEARCH_HANDLER``

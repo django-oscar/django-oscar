@@ -19,6 +19,7 @@ from oscar.core.loading import (
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
 
+ExpandDownwardsCategoryQueryset = get_class("catalogue.expressions", "ExpandDownwardsCategoryQueryset")
 ActiveOfferManager, RangeManager, BrowsableRangeManager \
     = get_classes('offer.managers', ['ActiveOfferManager', 'RangeManager', 'BrowsableRangeManager'])
 ZERO_DISCOUNT = get_class('offer.results', 'ZERO_DISCOUNT')
@@ -450,8 +451,7 @@ class AbstractConditionalOffer(models.Model):
             return Product.objects.none()
 
         queryset = self.condition.range.all_products()
-        return queryset.filter(is_discountable=True).exclude(
-            structure=Product.CHILD)
+        return queryset.filter(is_discountable=True).browsable()
 
     @cached_property
     def combined_offers(self):
@@ -731,6 +731,50 @@ class AbstractCondition(BaseOfferMixin, models.Model):
                 'offer.conditions', 'CoverageCondition'),
         }
 
+    def clean(self):
+        # The form will validate whether this is ok or not.
+        if not self.type:
+            return
+        method_name = 'clean_%s' % self.type.lower()
+        if hasattr(self, method_name):
+            getattr(self, method_name)()
+
+    def clean_count(self):
+        errors = []
+
+        if not self.range:
+            errors.append(_("Count conditions require a product range"))
+
+        if not self.value:
+            errors.append(_("Count conditions require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+    def clean_value(self):
+        errors = []
+
+        if not self.range:
+            errors.append(_("Value conditions require a product range"))
+
+        if not self.value:
+            errors.append(_("Value conditions require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+    def clean_coverage(self):
+        errors = []
+
+        if not self.range:
+            errors.append(_("Coverage conditions require a product range"))
+
+        if not self.value:
+            errors.append(_("Coverage conditions require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
     def consume_items(self, offer, basket, affected_lines):
         pass
 
@@ -761,7 +805,7 @@ class AbstractCondition(BaseOfferMixin, models.Model):
             return False
         product = line.product
         return (self.range.contains_product(product)
-                and product.get_is_discountable())
+                and product.is_discountable)
 
     def get_applicable_lines(self, offer, basket, most_expensive_first=True):
         """
@@ -785,15 +829,12 @@ class AbstractCondition(BaseOfferMixin, models.Model):
 class AbstractRange(models.Model):
     """
     Represents a range of products that can be used within an offer.
-
-    Ranges only support adding parent or stand-alone products. Offers will
-    consider child products automatically.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     slug = fields.AutoSlugField(
         _("Slug"), max_length=128, unique=True, populate_from="name")
 
-    description = models.TextField(blank=True)
+    description = models.TextField(_("Description"), blank=True)
 
     # Whether this range is public
     is_public = models.BooleanField(
@@ -925,44 +966,47 @@ class AbstractRange(models.Model):
         Product = self.included_products.model
 
         if self.includes_all_products:
-            # Filter out blacklisted products
-            return Product.objects.all().exclude(
+            # Filter out blacklisted
+            return Product.objects.exclude(
                 id__in=self.excluded_products.values("id")
             )
 
+        # start with filter clause that always applies
+        _filter = Q(includes=self)
+
+        # extend filter if included_products have children
+        if Product.objects.filter(parent__includes=self).exists():
+            _filter |= Q(parent__includes=self)
+
+        # extend filter if included classes exist:
+        if self.classes.exists():
+            _filter |= Q(product_class__classes=self)
+            # this is always very fast so no check is needed
+            _filter |= Q(parent__product_class__classes=self)
+
+        # extend filter if included_categories exist
         if self.included_categories.exists():
-            # build query to select all category subtrees.
-            category_filter = Q()
-            for path, depth in self.included_categories.values_list("path", "depth"):
-                category_filter |= Q(
-                    categories__depth__gte=depth, categories__path__startswith=path
-                )
+            expanded_range_categories = ExpandDownwardsCategoryQueryset(
+                self.included_categories.values("id")
+            )
+            _filter |= Q(categories__in=expanded_range_categories)
+            # extend filter for parent categories
+            if Product.objects.filter(
+                    parent__categories__in=expanded_range_categories).exists():
+                _filter |= Q(parent__categories__in=expanded_range_categories)
 
-            # select all those product that are selected either by product class,
-            # category, or explicitly by included_products.
-            selected_products = Product.objects.annotate(
-                selected_categories=models.FilteredRelation(
-                    "categories", condition=category_filter
-                )
-            ).filter(
-                Q(product_class_id__in=self.classes.values("id"))
-                | Q(selected_categories__isnull=False)
-            ) | self.included_products.all()
-        else:
-            selected_products = Product.objects.filter(
-                product_class_id__in=self.classes.values("id")
-            ) | self.included_products.all()
-
-        # Include children of matching parents
-        selected_products = selected_products | Product.objects.filter(
-            parent__in=selected_products.filter(structure=Product.PARENT)
+        qs = Product.objects.filter(
+            _filter,
+            ~Q(excludes=self)
         )
 
-        # now go and exclude all explicitly excluded products
-        excludes = self.excluded_products.values("id")
-        return selected_products.exclude(
-            Q(parent_id__in=excludes) | Q(id__in=excludes)
-        ).distinct()
+        if Product.objects.filter(parent__excludes=self).exists():
+            qs = qs.filter(
+                ~Q(parent__excludes=self)
+            )
+
+        # make sure to filter out duplicates originating from a join
+        return qs.distinct()
 
     @property
     def is_editable(self):
