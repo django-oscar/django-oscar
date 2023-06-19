@@ -214,6 +214,7 @@ class RangeProductListView(BulkEditMixin, ListView):
         for product in products:
             if form.cleaned_data["upload_type"] == \
                     RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE:
+                range.excluded_products.add(product)
                 action = _('excluded from this range')
             else:
                 range.add_product(product)
