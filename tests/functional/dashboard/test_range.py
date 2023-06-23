@@ -120,6 +120,60 @@ class RangeProductViewTest(WebTestCase):
                          RangeProductFileUpload.PROCESSED)
         self.assertEqual(range_product_file_upload.size, 3)
 
+    def test_upload_multiple_excluded_file_with_skus(self):
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 0)
+        self.assertFalse(self.product3 in excluded_products)
+        self.assertFalse(self.product4 in excluded_products)
+
+        # Upload the products
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[1]
+        form['file_upload'] = Upload('new_skus.txt', b'456,789')
+        form.submit().follow()
+
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 2)
+        self.assertTrue(self.product3 in excluded_products)
+        self.assertTrue(self.product4 in excluded_products)
+
+        range_product_file_upload = RangeProductFileUpload.objects.get()
+        self.assertEqual(range_product_file_upload.range, self.range)
+        self.assertEqual(range_product_file_upload.num_new_skus, 2)
+        self.assertEqual(range_product_file_upload.status,
+                         RangeProductFileUpload.PROCESSED)
+        self.assertEqual(range_product_file_upload.size, 7)
+
+    def test_exclude_skus_textarea_form_field(self):
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 0)
+        self.assertFalse(self.product3 in excluded_products)
+
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[1]
+        form['query'] = '456'
+        form.submit().follow()
+
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 1)
+        self.assertTrue(self.product3 in excluded_products)
+
+    def test_exclude_multiple_skus_textarea_form_field(self):
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 0)
+        self.assertFalse(self.product3 in excluded_products)
+        self.assertFalse(self.product4 in excluded_products)
+
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[1]
+        form['query'] = '456,789'
+        form.submit().follow()
+
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 2)
+        self.assertTrue(self.product3 in excluded_products)
+        self.assertTrue(self.product4 in excluded_products)
+
     def test_dupe_skus_warning(self):
         self.range.add_product(self.product3)
         range_products_page = self.get(self.url)
@@ -289,6 +343,23 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(messages[0].level, SUCCESS)
         self.assertEqual(messages[0].message, 'Removed 1 product from excluded list')
         self.assertTrue(self.range.contains_product(self.product3))
+
+    def test_remove_multiple_excluded_products(self):
+        self.test_upload_multiple_excluded_file_with_skus()
+        self.assertIn(self.product3, self.range.excluded_products.all())
+        self.assertIn(self.product4, self.range.excluded_products.all())
+
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[2]
+        form['selected_product'] = [self.product3.pk, self.product4.pk]
+        response = form.submit().follow()
+
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, 'Removed 2 products from excluded list')
+        self.assertNotIn(self.product3, self.range.excluded_products.all())
+        self.assertNotIn(self.product4, self.range.excluded_products.all())
 
 
 class RangeReorderViewTest(WebTestCase):

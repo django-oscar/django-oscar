@@ -1154,4 +1154,4 @@ class AbstractRangeProductFileUpload(models.Model):
         reader = csv.reader(file_obj)
         for line in reader:
             if line:
-                yield line[0]
+                yield from line
