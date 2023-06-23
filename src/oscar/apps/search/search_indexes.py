@@ -106,3 +106,6 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         Can be used to filter the query set when updating the index
         """
         return 'date_updated'
+
+    def should_update(self, instance, **kwargs):
+        return instance.is_public and not instance.is_child
