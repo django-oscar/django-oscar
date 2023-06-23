@@ -99,13 +99,20 @@ class RangeProductViewTest(WebTestCase):
         self.assertEqual(range_product_file_upload.size, 3)
 
     def test_upload_excluded_file_with_skus(self):
+        excluded_products = self.range.excluded_products.all()
+        self.assertEqual(len(excluded_products), 0)
+        self.assertFalse(self.product3 in excluded_products)
+
+        # Upload the product
         range_products_page = self.get(self.url)
         form = range_products_page.forms[1]
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
+
         excluded_products = self.range.excluded_products.all()
         self.assertEqual(len(excluded_products), 1)
         self.assertTrue(self.product3 in excluded_products)
+
         range_product_file_upload = RangeProductFileUpload.objects.get()
         self.assertEqual(range_product_file_upload.range, self.range)
         self.assertEqual(range_product_file_upload.num_new_skus, 1)
@@ -269,10 +276,14 @@ class RangeProductViewTest(WebTestCase):
     def test_remove_excluded_product(self):
         self.range.add_product(self.product3)
         self.range.excluded_products.add(self.product3)
+        self.assertFalse(self.range.contains_product(self.product3))
+
+        # Remove the product from exclusion form
         range_products_page = self.get(self.url)
         form = range_products_page.forms[2]
         form['selected_product'] = '456'
         response = form.submit().follow()
+
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages[0].level, SUCCESS)
