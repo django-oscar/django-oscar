@@ -4,15 +4,15 @@ from django.conf import settings
 
 from oscar.core.loading import get_model
 
-Product = get_model('catalogue', 'Product')
+Product = get_model("catalogue", "Product")
 
 
 class CustomerHistoryManager:
     cookie_name = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
     cookie_kwargs = {
-        'max_age': settings.OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME,
-        'secure': settings.OSCAR_RECENTLY_VIEWED_COOKIE_SECURE,
-        'httponly': True,
+        "max_age": settings.OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME,
+        "secure": settings.OSCAR_RECENTLY_VIEWED_COOKIE_SECURE,
+        "httponly": True,
     }
     max_products = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 
@@ -26,7 +26,9 @@ class CustomerHistoryManager:
         # Reordering as the ID order gets messed up in the query
         product_dict = Product.objects.browsable().in_bulk(ids)
         ids.reverse()
-        return [product_dict[product_id] for product_id in ids if product_id in product_dict]
+        return [
+            product_dict[product_id] for product_id in ids if product_id in product_dict
+        ]
 
     @classmethod
     def extract(cls, request, response=None):
@@ -56,7 +58,7 @@ class CustomerHistoryManager:
             ids.remove(new_id)
         ids.append(new_id)
         if len(ids) > cls.max_products:
-            ids = ids[len(ids) - cls.max_products:]
+            ids = ids[len(ids) - cls.max_products :]
         return ids
 
     @classmethod
@@ -68,6 +70,5 @@ class CustomerHistoryManager:
         ids = cls.extract(request, response)
         updated_ids = cls.add(ids, product.id)
         response.set_cookie(
-            cls.cookie_name,
-            json.dumps(updated_ids),
-            **cls.cookie_kwargs)
+            cls.cookie_name, json.dumps(updated_ids), **cls.cookie_kwargs
+        )

@@ -8,7 +8,6 @@ User = get_user_model()
 
 
 class TestAnAlertForARegisteredUser(TestCase):
-
     def setUp(self):
         user = UserFactory()
         product = create_product()

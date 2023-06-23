@@ -13,8 +13,9 @@ if settings.OSCAR_DELETE_IMAGE_FILES:
 
     from oscar.core.thumbnails import get_thumbnailer
 
-    ProductImage = get_model('catalogue', 'ProductImage')
+    ProductImage = get_model("catalogue", "ProductImage")
 
+    # pylint: disable=unused-argument
     def delete_image_files(sender, instance, **kwargs):
         """
         Deletes the original image and created thumbnails.
@@ -29,11 +30,12 @@ if settings.OSCAR_DELETE_IMAGE_FILES:
 
     # Connect for all models with ImageFields - add as needed
     models_with_images = [ProductImage, Category]
-    for sender in models_with_images:
-        post_delete.connect(delete_image_files, sender=sender)
+    for image_instance in models_with_images:
+        post_delete.connect(delete_image_files, sender=image_instance)
 
 
-@receiver(post_save, sender=Category, dispatch_uid='set_ancestors_are_public')
+# pylint: disable=unused-argument
+@receiver(post_save, sender=Category, dispatch_uid="set_ancestors_are_public")
 def post_save_set_ancestors_are_public(sender, instance, **kwargs):
     if kwargs.get("raw"):
         return

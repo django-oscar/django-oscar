@@ -1,3 +1,4 @@
+# pylint: disable=unused-argument
 from decimal import Decimal as D
 
 from django.conf import settings
@@ -10,13 +11,13 @@ from oscar.core.loading import get_class, get_model
 
 from . import exceptions
 
-Order = get_model('order', 'Order')
-Line = get_model('order', 'Line')
-OrderDiscount = get_model('order', 'OrderDiscount')
-CommunicationEvent = get_model('order', 'CommunicationEvent')
-CommunicationEventType = get_model('communication', 'CommunicationEventType')
-Dispatcher = get_class('communication.utils', 'Dispatcher')
-Surcharge = get_model('order', 'Surcharge')
+Order = get_model("order", "Order")
+Line = get_model("order", "Line")
+OrderDiscount = get_model("order", "OrderDiscount")
+CommunicationEvent = get_model("order", "CommunicationEvent")
+CommunicationEventType = get_model("communication", "CommunicationEventType")
+Dispatcher = get_class("communication.utils", "Dispatcher")
+Surcharge = get_model("order", "Surcharge")
 
 
 class OrderNumberGenerator(object):
@@ -39,10 +40,21 @@ class OrderCreator(object):
     Places the order by writing out the various models
     """
 
-    def place_order(self, basket, total,  # noqa (too complex (12))
-                    shipping_method, shipping_charge, user=None,
-                    shipping_address=None, billing_address=None,
-                    order_number=None, status=None, request=None, surcharges=None, **kwargs):
+    def place_order(
+        self,
+        basket,
+        total,
+        shipping_method,
+        shipping_charge,
+        user=None,
+        shipping_address=None,
+        billing_address=None,
+        order_number=None,
+        status=None,
+        request=None,
+        surcharges=None,
+        **kwargs
+    ):
         """
         Placing an order involves creating all the relevant models based on the
         basket and session data.
@@ -52,20 +64,30 @@ class OrderCreator(object):
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
-        if not status and hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
-            status = getattr(settings, 'OSCAR_INITIAL_ORDER_STATUS')
+        if not status and hasattr(settings, "OSCAR_INITIAL_ORDER_STATUS"):
+            status = getattr(settings, "OSCAR_INITIAL_ORDER_STATUS")
 
         if Order._default_manager.filter(number=order_number).exists():
-            raise ValueError(_("There is already an order with number %s")
-                             % order_number)
+            raise ValueError(
+                _("There is already an order with number %s") % order_number
+            )
 
         with transaction.atomic():
-
-            kwargs['surcharges'] = surcharges
+            kwargs["surcharges"] = surcharges
             # Ok - everything seems to be in order, let's place the order
             order = self.create_order_model(
-                user, basket, shipping_address, shipping_method, shipping_charge,
-                billing_address, total, order_number, status, request, **kwargs)
+                user,
+                basket,
+                shipping_address,
+                shipping_method,
+                shipping_charge,
+                billing_address,
+                total,
+                order_number,
+                status,
+                request,
+                **kwargs
+            )
             for line in basket.all_lines():
                 self.create_line_models(order, line)
                 self.update_stock_records(line)
@@ -82,19 +104,19 @@ class OrderCreator(object):
             for application in basket.offer_applications:
                 # Trigger any deferred benefits from offers and capture the
                 # resulting message
-                application['message'] \
-                    = application['offer'].apply_deferred_benefit(basket, order,
-                                                                  application)
+                application["message"] = application["offer"].apply_deferred_benefit(
+                    basket, order, application
+                )
                 # Record offer application results
-                if application['result'].affects_shipping:
+                if application["result"].affects_shipping:
                     # Skip zero shipping discounts
                     shipping_discount = shipping_method.discount(basket)
-                    if shipping_discount <= D('0.00'):
+                    if shipping_discount <= D("0.00"):
                         continue
                     # If a shipping offer, we need to grab the actual discount off
                     # the shipping method instance, which should be wrapped in an
                     # OfferDiscount instance.
-                    application['discount'] = shipping_discount
+                    application["discount"] = shipping_discount
                 self.create_discount_model(order, application)
                 self.record_discount(application)
 
@@ -106,31 +128,45 @@ class OrderCreator(object):
 
         return order
 
-    def create_order_model(self, user, basket, shipping_address,
-                           shipping_method, shipping_charge, billing_address,
-                           total, order_number, status, request=None, surcharges=None, **extra_order_fields):
+    def create_order_model(
+        self,
+        user,
+        basket,
+        shipping_address,
+        shipping_method,
+        shipping_charge,
+        billing_address,
+        total,
+        order_number,
+        status,
+        request=None,
+        surcharges=None,
+        **extra_order_fields
+    ):
         """Create an order model."""
-        order_data = {'basket': basket,
-                      'number': order_number,
-                      'currency': total.currency,
-                      'total_incl_tax': total.incl_tax,
-                      'total_excl_tax': total.excl_tax,
-                      'shipping_incl_tax': shipping_charge.incl_tax,
-                      'shipping_excl_tax': shipping_charge.excl_tax,
-                      'shipping_method': shipping_method.name,
-                      'shipping_code': shipping_method.code}
+        order_data = {
+            "basket": basket,
+            "number": order_number,
+            "currency": total.currency,
+            "total_incl_tax": total.incl_tax,
+            "total_excl_tax": total.excl_tax,
+            "shipping_incl_tax": shipping_charge.incl_tax,
+            "shipping_excl_tax": shipping_charge.excl_tax,
+            "shipping_method": shipping_method.name,
+            "shipping_code": shipping_method.code,
+        }
         if shipping_address:
-            order_data['shipping_address'] = shipping_address
+            order_data["shipping_address"] = shipping_address
         if billing_address:
-            order_data['billing_address'] = billing_address
+            order_data["billing_address"] = billing_address
         if user and user.is_authenticated:
-            order_data['user_id'] = user.id
+            order_data["user_id"] = user.id
         if status:
-            order_data['status'] = status
+            order_data["status"] = status
         if extra_order_fields:
             order_data.update(extra_order_fields)
-        if 'site' not in order_data:
-            order_data['site'] = Site._default_manager.get_current(request)
+        if "site" not in order_data:
+            order_data["site"] = Site._default_manager.get_current(request)
         order = Order(**order_data)
         order.save()
         if surcharges is not None:
@@ -140,7 +176,7 @@ class OrderCreator(object):
                     name=charge.surcharge.name,
                     code=charge.surcharge.code,
                     excl_tax=charge.price.excl_tax,
-                    incl_tax=charge.price.incl_tax
+                    incl_tax=charge.price.incl_tax,
                 )
         return order
 
@@ -155,38 +191,36 @@ class OrderCreator(object):
         stockrecord = basket_line.stockrecord
         if not stockrecord:
             raise exceptions.UnableToPlaceOrder(
-                "Basket line #%d has no stockrecord" % basket_line.id)
+                "Basket line #%d has no stockrecord" % basket_line.id
+            )
         partner = stockrecord.partner
         line_data = {
-            'order': order,
+            "order": order,
             # Partner details
-            'partner': partner,
-            'partner_name': partner.name,
-            'partner_sku': stockrecord.partner_sku,
-            'stockrecord': stockrecord,
+            "partner": partner,
+            "partner_name": partner.name,
+            "partner_sku": stockrecord.partner_sku,
+            "stockrecord": stockrecord,
             # Product details
-            'product': product,
-            'title': product.get_title(),
-            'upc': product.upc,
-            'quantity': basket_line.quantity,
+            "product": product,
+            "title": product.get_title(),
+            "upc": product.upc,
+            "quantity": basket_line.quantity,
             # Price details
-            'line_price_excl_tax':
-            basket_line.line_price_excl_tax_incl_discounts,
-            'line_price_incl_tax':
-            basket_line.line_price_incl_tax_incl_discounts,
-            'line_price_before_discounts_excl_tax':
-            basket_line.line_price_excl_tax,
-            'line_price_before_discounts_incl_tax':
-            basket_line.line_price_incl_tax,
+            "line_price_excl_tax": basket_line.line_price_excl_tax_incl_discounts,
+            "line_price_incl_tax": basket_line.line_price_incl_tax_incl_discounts,
+            "line_price_before_discounts_excl_tax": basket_line.line_price_excl_tax,
+            "line_price_before_discounts_incl_tax": basket_line.line_price_incl_tax,
             # Reporting details
-            'unit_price_incl_tax': basket_line.unit_price_incl_tax,
-            'unit_price_excl_tax': basket_line.unit_price_excl_tax,
+            "unit_price_incl_tax": basket_line.unit_price_incl_tax,
+            "unit_price_excl_tax": basket_line.unit_price_excl_tax,
         }
         extra_line_fields = extra_line_fields or {}
-        if hasattr(settings, 'OSCAR_INITIAL_LINE_STATUS'):
-            if not (extra_line_fields and 'status' in extra_line_fields):
-                extra_line_fields['status'] = getattr(
-                    settings, 'OSCAR_INITIAL_LINE_STATUS')
+        if hasattr(settings, "OSCAR_INITIAL_LINE_STATUS"):
+            if not (extra_line_fields and "status" in extra_line_fields):
+                extra_line_fields["status"] = getattr(
+                    settings, "OSCAR_INITIAL_LINE_STATUS"
+                )
         if extra_line_fields:
             line_data.update(extra_line_fields)
 
@@ -212,7 +246,7 @@ class OrderCreator(object):
         method provides a clean place to create additional models that
         relate to a given line.
         """
-        pass
+        return
 
     def create_line_price_models(self, order, order_line, basket_line):
         """
@@ -224,45 +258,46 @@ class OrderCreator(object):
                 order=order,
                 quantity=quantity,
                 price_incl_tax=price_incl_tax,
-                price_excl_tax=price_excl_tax)
+                price_excl_tax=price_excl_tax,
+            )
 
+    # pylint: disable=unused-argument
     def create_line_attributes(self, order, order_line, basket_line):
         """
         Creates the batch line attributes.
         """
         for attr in basket_line.attributes.all():
             order_line.attributes.create(
-                option=attr.option,
-                type=attr.option.code,
-                value=attr.value)
+                option=attr.option, type=attr.option.code, value=attr.value
+            )
 
     def create_discount_model(self, order, discount):
-
         """
         Create an order discount model for each offer application attached to
         the basket.
         """
         order_discount = OrderDiscount(
             order=order,
-            message=discount['message'] or '',
-            offer_id=discount['offer'].id,
-            frequency=discount['freq'],
-            amount=discount['discount'])
-        result = discount['result']
+            message=discount["message"] or "",
+            offer_id=discount["offer"].id,
+            frequency=discount["freq"],
+            amount=discount["discount"],
+        )
+        result = discount["result"]
         if result.affects_shipping:
             order_discount.category = OrderDiscount.SHIPPING
         elif result.affects_post_order:
             order_discount.category = OrderDiscount.DEFERRED
-        voucher = discount.get('voucher', None)
+        voucher = discount.get("voucher", None)
         if voucher:
             order_discount.voucher_id = voucher.id
             order_discount.voucher_code = voucher.code
         order_discount.save()
 
     def record_discount(self, discount):
-        discount['offer'].record_usage(discount)
-        if 'voucher' in discount and discount['voucher']:
-            discount['voucher'].record_discount(discount)
+        discount["offer"].record_usage(discount)
+        if "voucher" in discount and discount["voucher"]:
+            discount["voucher"].record_discount(discount)
 
     def record_voucher_usage(self, order, voucher, user):
         """
@@ -277,21 +312,29 @@ class OrderDispatcher:
     """
 
     # Event codes
-    ORDER_PLACED_EVENT_CODE = 'ORDER_PLACED'
+    ORDER_PLACED_EVENT_CODE = "ORDER_PLACED"
 
     def __init__(self, logger=None, mail_connection=None):
         self.dispatcher = Dispatcher(logger=logger, mail_connection=mail_connection)
 
-    def dispatch_order_messages(self, order, messages, event_code, attachments=None, **kwargs):
+    def dispatch_order_messages(
+        self, order, messages, event_code, attachments=None, **kwargs
+    ):
         """
         Dispatch order-related messages to the customer.
         """
-        self.dispatcher.logger.info("Order #%s - sending %s messages", order.number, event_code)
+        self.dispatcher.logger.info(
+            "Order #%s - sending %s messages", order.number, event_code
+        )
         if order.is_anonymous:
-            email = kwargs.get('email_address', order.guest_email)
-            dispatched_messages = self.dispatcher.dispatch_anonymous_messages(email, messages, attachments)
+            email = kwargs.get("email_address", order.guest_email)
+            dispatched_messages = self.dispatcher.dispatch_anonymous_messages(
+                email, messages, attachments
+            )
         else:
-            dispatched_messages = self.dispatcher.dispatch_user_messages(order.user, messages, attachments)
+            dispatched_messages = self.dispatcher.dispatch_user_messages(
+                order.user, messages, attachments
+            )
 
         try:
             event_type = CommunicationEventType.objects.get(code=event_code)
@@ -305,9 +348,13 @@ class OrderDispatcher:
         Create order communications event for audit.
         """
         if dispatched_messages and event_type is not None:
-            CommunicationEvent._default_manager.create(order=order, event_type=event_type)
+            CommunicationEvent._default_manager.create(
+                order=order, event_type=event_type
+            )
 
     def send_order_placed_email_for_user(self, order, extra_context, attachments=None):
         event_code = self.ORDER_PLACED_EVENT_CODE
         messages = self.dispatcher.get_messages(event_code, extra_context)
-        self.dispatch_order_messages(order, messages, event_code, attachments=attachments)
+        self.dispatch_order_messages(
+            order, messages, event_code, attachments=attachments
+        )

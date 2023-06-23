@@ -6,15 +6,14 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
 
-Applicator = get_class('offer.applicator', 'Applicator')
-Basket = get_model('basket', 'basket')
-Selector = get_class('partner.strategy', 'Selector')
+Applicator = get_class("offer.applicator", "Applicator")
+Basket = get_model("basket", "basket")
+Selector = get_class("partner.strategy", "Selector")
 
 selector = Selector()
 
 
 class BasketMiddleware:
-
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -63,34 +62,42 @@ class BasketMiddleware:
 
     def process_response(self, request, response):
         # Delete any surplus cookies
-        cookies_to_delete = getattr(request, 'cookies_to_delete', [])
+        cookies_to_delete = getattr(request, "cookies_to_delete", [])
         for cookie_key in cookies_to_delete:
             response.delete_cookie(cookie_key)
 
-        if not hasattr(request, 'basket'):
+        if not hasattr(request, "basket"):
             return response
 
         # If the basket was never initialized we can safely return
-        if (isinstance(request.basket, SimpleLazyObject)
-                and request.basket._wrapped is empty):
+        if (
+            isinstance(request.basket, SimpleLazyObject)
+            and request.basket._wrapped is empty
+        ):
             return response
 
         cookie_key = self.get_cookie_key(request)
         # Check if we need to set a cookie. If the cookies is already available
         # but is set in the cookies_to_delete list then we need to re-set it.
         has_basket_cookie = (
-            cookie_key in request.COOKIES
-            and cookie_key not in cookies_to_delete)
+            cookie_key in request.COOKIES and cookie_key not in cookies_to_delete
+        )
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if (request.basket.id and not request.user.is_authenticated
-                and not has_basket_cookie):
+        if (
+            request.basket.id
+            and not request.user.is_authenticated
+            and not has_basket_cookie
+        ):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
-                cookie_key, cookie,
+                cookie_key,
+                cookie,
                 max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME,
-                secure=settings.OSCAR_BASKET_COOKIE_SECURE, httponly=True)
+                secure=settings.OSCAR_BASKET_COOKIE_SECURE,
+                httponly=True,
+            )
         return response
 
     def get_cookie_key(self, request):
@@ -103,11 +110,11 @@ class BasketMiddleware:
         return settings.OSCAR_BASKET_COOKIE_OPEN
 
     def process_template_response(self, request, response):
-        if hasattr(response, 'context_data'):
+        if hasattr(response, "context_data"):
             if response.context_data is None:
                 response.context_data = {}
-            if 'basket' not in response.context_data:
-                response.context_data['basket'] = request.basket
+            if "basket" not in response.context_data:
+                response.context_data["basket"] = request.basket
             else:
                 # Occasionally, a view will want to pass an alternative basket
                 # to be rendered.  This can happen as part of checkout
@@ -117,7 +124,7 @@ class BasketMiddleware:
                 # template, we need to ensure that the frozen basket gets
                 # rendered (not request.basket).  We still keep a reference to
                 # the request basket (just in case).
-                response.context_data['request_basket'] = request.basket
+                response.context_data["request_basket"] = request.basket
         return response
 
     # Helper methods
@@ -134,7 +141,7 @@ class BasketMiddleware:
         cookie_key = self.get_cookie_key(request)
         cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
 
-        if hasattr(request, 'user') and request.user.is_authenticated:
+        if hasattr(request, "user") and request.user.is_authenticated:
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie.
@@ -170,9 +177,14 @@ class BasketMiddleware:
         request._basket_cache = basket
 
         if num_baskets_merged > 0:
-            messages.add_message(request, messages.WARNING,
-                                 _("We have merged a basket from a previous session. Its contents "
-                                   "might have changed."))
+            messages.add_message(
+                request,
+                messages.WARNING,
+                _(
+                    "We have merged a basket from a previous session. Its contents "
+                    "might have changed."
+                ),
+            )
 
         return basket
 
@@ -184,6 +196,7 @@ class BasketMiddleware:
         """
         master.merge(slave, add_quantities=False)
 
+    # pylint: disable=unused-argument
     def get_cookie_basket(self, cookie_key, request, manager):
         """
         Looks for a basket which is referenced by a cookie.
@@ -196,8 +209,9 @@ class BasketMiddleware:
             basket_hash = request.COOKIES[cookie_key]
             try:
                 basket_id = Signer().unsign(basket_hash)
-                basket = Basket.objects.get(pk=basket_id, owner=None,
-                                            status=Basket.OPEN)
+                basket = Basket.objects.get(
+                    pk=basket_id, owner=None, status=Basket.OPEN
+                )
             except (BadSignature, Basket.DoesNotExist):
                 request.cookies_to_delete.append(cookie_key)
         return basket

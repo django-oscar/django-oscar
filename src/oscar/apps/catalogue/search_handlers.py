@@ -4,12 +4,13 @@ from django.views.generic.list import MultipleObjectMixin
 
 from oscar.core.loading import get_class, get_classes, get_model
 
-BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
+BrowseCategoryForm = get_class("search.forms", "BrowseCategoryForm")
 SearchHandler, SearchResultsPaginationMixin = get_classes(
-    'search.search_handlers', ('SearchHandler', 'SearchResultsPaginationMixin'))
-is_solr_supported = get_class('search.features', 'is_solr_supported')
-is_elasticsearch_supported = get_class('search.features', 'is_elasticsearch_supported')
-Product = get_model('catalogue', 'Product')
+    "search.search_handlers", ("SearchHandler", "SearchResultsPaginationMixin")
+)
+is_solr_supported = get_class("search.features", "is_solr_supported")
+is_elasticsearch_supported = get_class("search.features", "is_elasticsearch_supported")
+Product = get_model("catalogue", "Product")
 
 
 def get_product_search_handler_class():
@@ -23,14 +24,14 @@ def get_product_search_handler_class():
     if settings.OSCAR_PRODUCT_SEARCH_HANDLER is not None:
         return import_string(settings.OSCAR_PRODUCT_SEARCH_HANDLER)
     if is_solr_supported():
-        return get_class('catalogue.search_handlers', 'SolrProductSearchHandler')
+        return get_class("catalogue.search_handlers", "SolrProductSearchHandler")
     elif is_elasticsearch_supported():
         return get_class(
-            'catalogue.search_handlers', 'ESProductSearchHandler',
+            "catalogue.search_handlers",
+            "ESProductSearchHandler",
         )
     else:
-        return get_class(
-            'catalogue.search_handlers', 'SimpleProductSearchHandler')
+        return get_class("catalogue.search_handlers", "SimpleProductSearchHandler")
 
 
 class SolrProductSearchHandler(SearchHandler):
@@ -38,6 +39,7 @@ class SolrProductSearchHandler(SearchHandler):
     Search handler specialised for searching products.  Comes with optional
     category filtering. To be used with a Solr search backend.
     """
+
     form_class = BrowseCategoryForm
     model_whitelist = [Product]
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
@@ -51,9 +53,10 @@ class SolrProductSearchHandler(SearchHandler):
         if self.categories:
             # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
             # opposed to filtering using 'q'.
-            pattern = ' OR '.join([
-                '"%s"' % sqs.query.clean(c.full_name) for c in self.categories])
-            sqs = sqs.narrow('category_exact:(%s)' % pattern)
+            pattern = " OR ".join(
+                ['"%s"' % sqs.query.clean(c.full_name) for c in self.categories]
+            )
+            sqs = sqs.narrow("category_exact:(%s)" % pattern)
         return sqs
 
 
@@ -62,6 +65,7 @@ class ESProductSearchHandler(SearchHandler):
     Search handler specialised for searching products.  Comes with optional
     category filtering. To be used with an ElasticSearch search backend.
     """
+
     form_class = BrowseCategoryForm
     model_whitelist = [Product]
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
@@ -87,12 +91,14 @@ class SimpleProductSearchHandler(SearchResultsPaginationMixin, MultipleObjectMix
     Note that is meant as a replacement search handler and not as a view
     mixin; the mixin just does most of what we need it to do.
     """
+
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
+    # pylint: disable=unused-argument
     def __init__(self, request_data, full_path, categories=None):
         self.request_data = request_data
         self.categories = categories
-        self.kwargs = {'page': request_data.get('page') or 1}
+        self.kwargs = {"page": request_data.get("page") or 1}
         self.object_list = self.get_queryset()
 
     def get_queryset(self):
@@ -106,5 +112,5 @@ class SimpleProductSearchHandler(SearchResultsPaginationMixin, MultipleObjectMix
         # internally by MultipleObjectMixin
         self.context_object_name = context_object_name
         context = self.get_context_data(object_list=self.object_list)
-        context[context_object_name] = context['page_obj'].object_list
+        context[context_object_name] = context["page_obj"].object_list
         return context

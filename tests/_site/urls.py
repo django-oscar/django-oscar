@@ -9,17 +9,17 @@ from tests._site.apps.myapp.views import TestView
 admin.autodiscover()
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include(apps.get_app_config('oscar').urls[0])),
-    path('i18n/', include('django.conf.urls.i18n')),
+    path("admin/", admin.site.urls),
+    path("", include(apps.get_app_config("oscar").urls[0])),
+    path("i18n/", include("django.conf.urls.i18n")),
 ]
 
 urlpatterns += i18n_patterns(
-    path('test/', TestView),
+    path("test/", TestView),
 )
 
 urlpatterns += staticfiles_urlpatterns()
 
-handler403 = 'oscar.views.handler403'
-handler404 = 'oscar.views.handler404'
-handler500 = 'oscar.views.handler500'
+handler403 = "oscar.views.handler403"
+handler404 = "oscar.views.handler404"
+handler500 = "oscar.views.handler500"

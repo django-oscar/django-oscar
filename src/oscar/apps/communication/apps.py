@@ -4,6 +4,6 @@ from oscar.core.application import OscarConfig
 
 
 class CommunicationConfig(OscarConfig):
-    label = 'communication'
-    name = 'oscar.apps.communication'
-    verbose_name = _('Communication')
+    label = "communication"
+    name = "oscar.apps.communication"
+    verbose_name = _("Communication")

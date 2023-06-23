@@ -13,29 +13,31 @@ class ReportGenerator(object):
     Top-level class that needs to be subclassed to provide a
     report generator.
     """
-    filename_template = 'report-%s-to-%s.csv'
-    content_type = 'text/csv'
-    code = ''
-    description = '<insert report description>'
+
+    filename_template = "report-%s-to-%s.csv"
+    content_type = "text/csv"
+    code = ""
+    description = "<insert report description>"
     date_range_field_name = None
     model_class = None
     queryset = None
 
     def __init__(self, **kwargs):
-        self.start_date = kwargs.get('start_date')
-        self.end_date = kwargs.get('end_date')
+        self.start_date = kwargs.get("start_date")
+        self.end_date = kwargs.get("end_date")
 
-        formatter_name = '%s_formatter' % kwargs.get('formatter', 'HTML')
+        formatter_name = "%s_formatter" % kwargs.get("formatter", "HTML")
+        # pylint: disable=no-member
         self.formatter = self.formatters[formatter_name]()
         self.queryset = self.get_queryset()
         self.queryset = self.filter_with_date_range(self.queryset)
 
     def report_description(self):
-        return _('%(report_filter)s between %(start_date)s and %(end_date)s') \
-            % {'report_filter': self.description,
-               'start_date': date(self.start_date, 'DATE_FORMAT'),
-               'end_date': date(self.end_date, 'DATE_FORMAT')
-               }
+        return _("%(report_filter)s between %(start_date)s and %(end_date)s") % {
+            "report_filter": self.description,
+            "start_date": date(self.start_date, "DATE_FORMAT"),
+            "end_date": date(self.end_date, "DATE_FORMAT"),
+        }
 
     def get_queryset(self):
         if self.queryset is not None:
@@ -93,35 +95,36 @@ class ReportGenerator(object):
 class ReportFormatter(object):
     def format_datetime(self, dt):
         if not dt:
-            return ''
-        return utils.format_datetime(dt, 'DATETIME_FORMAT')
+            return ""
+        return utils.format_datetime(dt, "DATETIME_FORMAT")
 
     def format_date(self, d):
         if not d:
-            return ''
-        return utils.format_datetime(d, 'DATE_FORMAT')
+            return ""
+        return utils.format_datetime(d, "DATE_FORMAT")
 
     def format_timedelta(self, td):
         return utils.format_timedelta(td)
 
     def filename(self):
+        # pylint: disable=no-member
         return self.filename_template
 
 
 class ReportCSVFormatter(ReportFormatter):
-
     def get_csv_writer(self, file_handle, **kwargs):
         return UnicodeCSVWriter(open_file=file_handle, **kwargs)
 
     def generate_response(self, objects, **kwargs):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s' \
-            % self.filename(**kwargs)
+        response = HttpResponse(content_type="text/csv")
+        # pylint: disable=no-member
+        response["Content-Disposition"] = "attachment; filename=%s" % self.filename(
+            **kwargs
+        )
         self.generate_csv(response, objects)
         return response
 
 
 class ReportHTMLFormatter(ReportFormatter):
-
     def generate_response(self, objects, **kwargs):
         return objects
