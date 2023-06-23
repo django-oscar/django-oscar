@@ -1050,7 +1050,18 @@ class AbstractRangeProductFileUpload(models.Model):
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name=_("Uploaded By"))
-    date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True, db_index=True)
+    date_uploaded = models.DateTimeField(_(
+        "Date Uploaded"), auto_now_add=True, db_index=True)
+
+    INCLUDED_PRODUCTS_TYPE = "included"
+    EXCLUDED_PRODUCTS_TYPE = "excluded"
+    UPLOAD_TYPE_CHOICES = [
+        (INCLUDED_PRODUCTS_TYPE, "Included products upload"),
+        (EXCLUDED_PRODUCTS_TYPE, "Excluded products upload"),
+    ]
+    upload_type = models.CharField(
+        max_length=8, choices=UPLOAD_TYPE_CHOICES,
+        default=INCLUDED_PRODUCTS_TYPE)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
     choices = (
@@ -1099,9 +1110,16 @@ class AbstractRangeProductFileUpload(models.Model):
     def process(self, file_obj):
         """
         Process the file upload and add products to the range
+        or add products to range.excluded_products
         """
         all_ids = set(self.extract_ids(file_obj))
-        products = self.range.all_products()
+        if self.upload_type == self.INCLUDED_PRODUCTS_TYPE:
+            products = self.range.all_products()
+        elif self.upload_type == self.EXCLUDED_PRODUCTS_TYPE:
+            products = self.range.excluded_products.all()
+        else:
+            raise ValueError(
+                "Unable to process upload type: %s" % self.upload_type)
         existing_skus = products.values_list(
             'stockrecords__partner_sku', flat=True)
         existing_skus = set(filter(bool, existing_skus))
@@ -1115,7 +1133,10 @@ class AbstractRangeProductFileUpload(models.Model):
             models.Q(stockrecords__partner_sku__in=new_ids)
             | models.Q(upc__in=new_ids))
         for product in products:
-            self.range.add_product(product)
+            if self.upload_type == self.INCLUDED_PRODUCTS_TYPE:
+                self.range.add_product(product)
+            else:
+                self.range.excluded_products.add(product)
 
         # Processing stats
         found_skus = products.values_list(
@@ -1133,4 +1154,4 @@ class AbstractRangeProductFileUpload(models.Model):
         reader = csv.reader(file_obj)
         for line in reader:
             if line:
-                yield line[0]
+                yield from line

@@ -4,8 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core import exceptions
 from django.db.models import Count
-from django.http import HttpResponseRedirect
-from django.shortcuts import HttpResponse, get_object_or_404
+from django.shortcuts import HttpResponse, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -20,8 +19,8 @@ Range = get_model('offer', 'Range')
 RangeProduct = get_model('offer', 'RangeProduct')
 RangeProductFileUpload = get_model('offer', 'RangeProductFileUpload')
 Product = get_model('catalogue', 'Product')
-RangeForm, RangeProductForm = get_classes('dashboard.ranges.forms',
-                                          ['RangeForm', 'RangeProductForm'])
+RangeForm, RangeProductForm = get_classes(
+    'dashboard.ranges.forms', ['RangeForm', 'RangeProductForm'])
 
 
 class RangeListView(ListView):
@@ -96,14 +95,24 @@ class RangeProductListView(BulkEditMixin, ListView):
     model = Product
     template_name = 'oscar/dashboard/ranges/range_product_list.html'
     context_object_name = 'products'
-    actions = ('remove_selected_products', 'add_products')
+    actions = ('add_products', 'add_excluded_products',
+               'remove_selected_products', 'remove_excluded_products')
     form_class = RangeProductForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
+    def get(self, request, **kwargs):
+        self.upload_type = request.GET.get('upload_type', "")
+        return super().get(request, **kwargs)
+
     def post(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
+        self.upload_type = request.POST.get('upload_type', "")
         if request.POST.get('action', None) == 'add_products':
             return self.add_products(request)
+        if request.POST.get('action', None) == 'add_excluded_products':
+            return self.add_excluded_products(request)
+        if request.POST.get('action', None) == 'remove_excluded_products':
+            return self.remove_excluded_products(request)
         return super().post(request, *args, **kwargs)
 
     def get_range(self):
@@ -120,7 +129,16 @@ class RangeProductListView(BulkEditMixin, ListView):
         range = self.get_range()
         ctx['range'] = range
         if 'form' not in ctx:
-            ctx['form'] = self.form_class(range)
+            ctx['form'] = self.form_class(range, initial={
+                "upload_type": RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE})
+        if 'form_excluded' not in ctx:
+            ctx["form_excluded"] = self.form_class(range, initial={
+                "upload_type": RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE})
+        ctx['file_uploads_included'] = range.file_uploads.filter(
+            upload_type=RangeProductFileUpload.INCLUDED_PRODUCTS_TYPE)
+        ctx['file_uploads_excluded'] = range.file_uploads.filter(
+            upload_type=RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE)
+        ctx["upload_type"] = self.upload_type
         return ctx
 
     def remove_selected_products(self, request, products):
@@ -130,9 +148,13 @@ class RangeProductListView(BulkEditMixin, ListView):
         num_products = len(products)
         messages.success(
             request,
-            ngettext("Removed %d product from range", "Removed %d products from range", num_products) % num_products
+            ngettext("Removed %d product from range",
+                     "Removed %d products from range",
+                     num_products) % num_products
         )
-        return HttpResponseRedirect(self.get_success_url(request))
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+        )
 
     def add_products(self, request):
         range = self.get_range()
@@ -144,27 +166,74 @@ class RangeProductListView(BulkEditMixin, ListView):
 
         self.handle_query_products(request, range, form)
         self.handle_file_products(request, range, form)
-        return HttpResponseRedirect(self.get_success_url(request))
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+        )
+
+    def add_excluded_products(self, request):
+        range = self.get_range()
+        form = self.form_class(
+            range, request.POST, request.FILES, initial={
+                "upload_type": RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE}
+        )
+        if not form.is_valid():
+            ctx = self.get_context_data(form_excluded=form,
+                                        object_list=self.object_list)
+            return self.render_to_response(ctx)
+
+        self.handle_query_products(request, range, form)
+        self.handle_file_products(request, range, form)
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+            + '?upload_type=excluded'
+        )
+
+    def remove_excluded_products(self, request):
+        product_ids = request.POST.getlist('selected_product', None)
+        products = self.model.objects.filter(id__in=product_ids)
+        range = self.get_range()
+        for product in products:
+            range.excluded_products.remove(product)
+        num_products = len(products)
+        messages.success(
+            request,
+            ngettext(
+                "Removed %d product from excluded list",
+                "Removed %d products from excluded list",
+                num_products) % num_products
+        )
+        return redirect(
+            reverse('dashboard:range-products', kwargs={'pk': range.pk})
+            + '?upload_type=excluded'
+        )
 
     def handle_query_products(self, request, range, form):
         products = form.get_products()
         if not products:
             return
-
         for product in products:
-            range.add_product(product)
-
+            if form.cleaned_data["upload_type"] == \
+                    RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE:
+                range.excluded_products.add(product)
+                action = _('excluded from this range')
+            else:
+                range.add_product(product)
+                action = _('added to this range')
         num_products = len(products)
         messages.success(
             request,
-            ngettext("%d product added to range", "%d products added to range", num_products) % num_products
+            ngettext("%(num_products)d product has been %(action)s",
+                     "%(num_products)d products have been %(action)s",
+                     num_products) % {'num_products': num_products,
+                                      'action': action}
         )
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
             messages.warning(
                 request,
-                _("The products with SKUs or UPCs matching %s are already "
-                  "in this range") % ", ".join(dupe_skus))
+                _("The products with SKUs or UPCs matching %(skus)s have "
+                  "already been %(action)s") % {'skus': ", ".join(dupe_skus),
+                                                'action': action})
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
@@ -178,24 +247,32 @@ class RangeProductListView(BulkEditMixin, ListView):
         if 'file_upload' not in request.FILES:
             return
         f = request.FILES['file_upload']
-        upload = self.create_upload_object(request, range, f)
+        upload = self.create_upload_object(
+            request, range, f, form.cleaned_data["upload_type"])
         products = upload.process(TextIOWrapper(f, encoding=request.encoding))
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
+            if form.cleaned_data["upload_type"] == \
+                    RangeProductFileUpload.EXCLUDED_PRODUCTS_TYPE:
+                action = "excluded from this range"
+            else:
+                action = "added to this range"
             msg = render_to_string(
                 'oscar/dashboard/ranges/messages/range_products_saved.html',
                 {'range': range,
-                 'upload': upload})
+                 'upload': upload,
+                 'action': action})
             messages.success(request, msg, extra_tags='safe noicon block')
         self.check_imported_products_sku_duplicates(request, products)
 
-    def create_upload_object(self, request, range, f):
+    def create_upload_object(self, request, range, f, upload_type):
         upload = RangeProductFileUpload.objects.create(
             range=range,
             uploaded_by=request.user,
             filepath=f.name,
-            size=f.size
+            size=f.size,
+            upload_type=upload_type
         )
         return upload
 
