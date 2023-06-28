@@ -79,3 +79,30 @@ def login_forbidden(view_func, template_name='oscar/login_forbidden.html',
         return render(request, template_name, status=status)
 
     return _checklogin
+
+
+def _set_is_basket_enabled_for_function(view_function, is_basket_enabled):
+    @wraps(view_function)
+    def _inner_func(*args, **kwargs):
+        return view_function(*args, **kwargs)
+    _inner_func.is_basket_enabled = is_basket_enabled
+    return _inner_func
+
+
+def _set_is_basket_enabled_for_class(view_class, is_basket_enabled):
+    view_class.is_basket_enabled = is_basket_enabled
+    return view_class
+
+
+def enable_basket(obj):
+    if isinstance(obj, type):
+        return _set_is_basket_enabled_for_class(obj, is_basket_enabled=True)
+    else:
+        return _set_is_basket_enabled_for_function(obj, is_basket_enabled=True)
+
+
+def disable_basket(obj):
+    if isinstance(obj, type):
+        return _set_is_basket_enabled_for_class(obj, is_basket_enabled=False)
+    else:
+        return _set_is_basket_enabled_for_function(obj, is_basket_enabled=False)
