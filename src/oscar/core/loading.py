@@ -11,7 +11,9 @@ from django.core.exceptions import AppRegistryNotReady
 from django.utils.module_loading import import_string
 
 from oscar.core.exceptions import (
-    AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
+    AppNotFoundError,
+    ClassNotFoundError,
+)
 from oscar.utils.deprecation import RemovedInOscar32Warning
 
 # To preserve backwards compatibility of loading classes which moved
@@ -20,7 +22,7 @@ from oscar.utils.deprecation import RemovedInOscar32Warning
 MOVED_MODELS = {}
 
 
-def get_class(module_label, classname, module_prefix='oscar.apps'):
+def get_class(module_label, classname, module_prefix="oscar.apps"):
     """
     Dynamically import a single class from the given module.
 
@@ -43,7 +45,7 @@ def get_class_loader():
     return import_string(settings.OSCAR_DYNAMIC_CLASS_LOADER)
 
 
-def get_classes(module_label, classnames, module_prefix='oscar.apps'):
+def get_classes(module_label, classnames, module_prefix="oscar.apps"):
     class_loader = get_class_loader()
     return class_loader(module_label, classnames, module_prefix)
 
@@ -92,13 +94,12 @@ def default_class_loader(module_label, classnames, module_prefix):
             ``ImportError``, it is re-raised
     """
 
-    if '.' not in module_label:
+    if "." not in module_label:
         # Importing from top-level modules is not supported, e.g.
         # get_class('shipping', 'Scale'). That should be easy to fix,
         # but @maikhoepfel had a stab and could not get it working reliably.
         # Overridable classes in a __init__.py might not be a good idea anyway.
-        raise ValueError(
-            "Importing from top-level modules is not supported")
+        raise ValueError("Importing from top-level modules is not supported")
 
     # import from Oscar package (should succeed in most cases)
     # e.g. 'oscar.apps.dashboard.catalogue.forms'
@@ -109,13 +110,13 @@ def default_class_loader(module_label, classnames, module_prefix):
     # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue',
     # depending on what is set in INSTALLED_APPS
     app_name = _find_registered_app_name(module_label)
-    if app_name.startswith('%s.' % module_prefix):
+    if app_name.startswith("%s." % module_prefix):
         # The entry is obviously an Oscar one, we don't import again
         local_module = None
     else:
         # Attempt to import the classes from the local module
         # e.g. 'yourproject.dashboard.catalogue.forms'
-        local_module_label = '.'.join(app_name.split('.') + module_label.split('.')[1:])
+        local_module_label = ".".join(app_name.split(".") + module_label.split(".")[1:])
         local_module = _import_module(local_module_label, classnames)
 
     if oscar_module is local_module is None:
@@ -172,8 +173,9 @@ def _pluck_classes(modules, classnames):
                 break
         if not klass:
             packages = [m.__name__ for m in modules if m is not None]
-            raise ClassNotFoundError("No class '%s' found in %s" % (
-                classname, ", ".join(packages)))
+            raise ClassNotFoundError(
+                "No class '%s' found in %s" % (classname, ", ".join(packages))
+            )
         klasses.append(klass)
     return klasses
 
@@ -185,15 +187,15 @@ def _find_registered_app_name(module_label):
     """
     from oscar.core.application import OscarConfig
 
-    app_label = module_label.split('.')[0]
+    app_label = module_label.split(".")[0]
     try:
         app_config = apps.get_app_config(app_label)
     except LookupError:
-        raise AppNotFoundError(
-            "Couldn't find an app to import %s from" % module_label)
+        raise AppNotFoundError("Couldn't find an app to import %s from" % module_label)
     if not isinstance(app_config, OscarConfig):
         raise AppNotFoundError(
-            "Couldn't find an Oscar app to import %s from" % module_label)
+            "Couldn't find an Oscar app to import %s from" % module_label
+        )
     return app_config.name
 
 
@@ -206,10 +208,10 @@ def get_profile_class():
     # 1.4 are likely to have used a profile class and it's very difficult to
     # upgrade to a single user model. Hence, we should continue to support
     # having a separate profile class even if Django doesn't.
-    setting = getattr(settings, 'AUTH_PROFILE_MODULE', None)
+    setting = getattr(settings, "AUTH_PROFILE_MODULE", None)
     if setting is None:
         return None
-    app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
+    app_label, model_name = settings.AUTH_PROFILE_MODULE.split(".")
     return get_model(app_label, model_name)
 
 
@@ -217,8 +219,7 @@ def feature_hidden(feature_name):
     """
     Test if a certain Oscar feature is disabled.
     """
-    return (feature_name is not None
-            and feature_name in settings.OSCAR_HIDDEN_FEATURES)
+    return feature_name is not None and feature_name in settings.OSCAR_HIDDEN_FEATURES
 
 
 def get_model(app_label, model_name):
@@ -237,9 +238,12 @@ def get_model(app_label, model_name):
             original_app_label = app_label
             app_label = oscar_moved_model[0]
             warnings.warn(
-                'Model %s has recently moved from %s to the application %s, '
-                'please update your imports.' % (model_name, original_app_label, app_label),
-                RemovedInOscar32Warning, stacklevel=2)
+                "Model %s has recently moved from %s to the application %s, "
+                "please update your imports."
+                % (model_name, original_app_label, app_label),
+                RemovedInOscar32Warning,
+                stacklevel=2,
+            )
     try:
         return apps.get_model(app_label, model_name)
     except AppRegistryNotReady:
@@ -253,7 +257,7 @@ def get_model(app_label, model_name):
             app_config = apps.get_app_config(app_label)
             # `app_config.import_models()` cannot be used here because it
             # would interfere with `apps.populate()`.
-            import_module('%s.%s' % (app_config.name, MODELS_MODULE_NAME))
+            import_module("%s.%s" % (app_config.name, MODELS_MODULE_NAME))
             # In order to account for case-insensitivity of model_name,
             # look up the model through a private API of the app registry.
             return apps.get_registered_model(app_label, model_name)

@@ -4,6 +4,6 @@ from oscar.core.application import OscarConfig
 
 
 class PaymentConfig(OscarConfig):
-    label = 'payment'
-    name = 'oscar.apps.payment'
-    verbose_name = _('Payment')
+    label = "payment"
+    name = "oscar.apps.payment"
+    verbose_name = _("Payment")

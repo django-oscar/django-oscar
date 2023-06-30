@@ -7,23 +7,28 @@ from oscar.core.loading import get_class
 
 
 class CatalogueReviewsConfig(OscarConfig):
-    label = 'reviews'
-    name = 'oscar.apps.catalogue.reviews'
-    verbose_name = _('Catalogue reviews')
+    label = "reviews"
+    name = "oscar.apps.catalogue.reviews"
+    verbose_name = _("Catalogue reviews")
 
-    hidable_feature_name = 'reviews'
+    hidable_feature_name = "reviews"
 
+    # pylint: disable=attribute-defined-outside-init
     def ready(self):
-        self.detail_view = get_class('catalogue.reviews.views', 'ProductReviewDetail')
-        self.create_view = get_class('catalogue.reviews.views', 'CreateProductReview')
-        self.vote_view = get_class('catalogue.reviews.views', 'AddVoteView')
-        self.list_view = get_class('catalogue.reviews.views', 'ProductReviewList')
+        self.detail_view = get_class("catalogue.reviews.views", "ProductReviewDetail")
+        self.create_view = get_class("catalogue.reviews.views", "CreateProductReview")
+        self.vote_view = get_class("catalogue.reviews.views", "AddVoteView")
+        self.list_view = get_class("catalogue.reviews.views", "ProductReviewList")
 
     def get_urls(self):
         urls = [
-            path('<int:pk>/', self.detail_view.as_view(), name='reviews-detail'),
-            path('add/', self.create_view.as_view(), name='reviews-add'),
-            path('<int:pk>/vote/', login_required(self.vote_view.as_view()), name='reviews-vote'),
-            path('', self.list_view.as_view(), name='reviews-list'),
+            path("<int:pk>/", self.detail_view.as_view(), name="reviews-detail"),
+            path("add/", self.create_view.as_view(), name="reviews-add"),
+            path(
+                "<int:pk>/vote/",
+                login_required(self.vote_view.as_view()),
+                name="reviews-vote",
+            ),
+            path("", self.list_view.as_view(), name="reviews-list"),
         ]
         return self.post_process_urls(urls)

@@ -15,6 +15,7 @@ class ProductAttributesContainer:
         product.attr.refresh()
     """
 
+    # pylint: disable=access-member-before-definition
     def __setstate__(self, state):
         self.__dict__.setdefault("_product", None)
         self.__dict__.setdefault("_initialized", False)

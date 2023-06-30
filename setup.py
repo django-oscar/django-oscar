@@ -69,7 +69,7 @@ test_requires = [
     easy_thumbnails_version,
 ]
 
-with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
+with open(os.path.join(PROJECT_DIR, 'README.rst'), encoding="utf-8") as fh:
     long_description = re.sub(
         '^.. start-no-pypi.*^.. end-no-pypi', '', fh.read(), flags=re.M | re.S)
 

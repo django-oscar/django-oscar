@@ -57,7 +57,9 @@ class AttributeFilter(dict):
 
         for code, (lookup, value) in self.items():
             selected_values = self._select_value(typedict[code], lookup, value)
-            if not selected_values:  # if no value clause can be formed, no result can be formed.
+            if (
+                not selected_values
+            ):  # if no value clause can be formed, no result can be formed.
                 return queryset.none()
 
             qs = qs.filter(
@@ -69,7 +71,6 @@ class AttributeFilter(dict):
 
 
 class ProductQuerySet(models.query.QuerySet):
-
     def filter_by_attributes(self, **filter_kwargs):
         """
         Allows querying by attribute as if the attributes where fields on the
@@ -93,13 +94,25 @@ class ProductQuerySet(models.query.QuerySet):
         Applies select_related and prefetch_related for commonly related
         models to save on queries
         """
-        Option = get_model('catalogue', 'Option')
-        product_class_options = Option.objects.filter(productclass=OuterRef('product_class'))
-        product_options = Option.objects.filter(product=OuterRef('pk'))
-        return self.select_related('product_class')\
-            .prefetch_related('children', 'product_options', 'product_class__options', 'stockrecords', 'images') \
-            .annotate(has_product_class_options=Exists(product_class_options),
-                      has_product_options=Exists(product_options))
+        Option = get_model("catalogue", "Option")
+        product_class_options = Option.objects.filter(
+            productclass=OuterRef("product_class")
+        )
+        product_options = Option.objects.filter(product=OuterRef("pk"))
+        return (
+            self.select_related("product_class")
+            .prefetch_related(
+                "children",
+                "product_options",
+                "product_class__options",
+                "stockrecords",
+                "images",
+            )
+            .annotate(
+                has_product_class_options=Exists(product_class_options),
+                has_product_options=Exists(product_options),
+            )
+        )
 
     def browsable(self):
         """
@@ -123,7 +136,6 @@ class ProductQuerySet(models.query.QuerySet):
 
 
 class CategoryQuerySet(MP_NodeQuerySet):
-
     def browsable(self):
         """
         Excludes non-public categories

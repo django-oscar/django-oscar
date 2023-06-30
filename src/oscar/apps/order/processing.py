@@ -20,8 +20,9 @@ class EventHandler(object):
     # Core API
     # --------
 
-    def handle_shipping_event(self, order, event_type, lines,
-                              line_quantities, **kwargs):
+    def handle_shipping_event(
+        self, order, event_type, lines, line_quantities, **kwargs
+    ):
         """
         Handle a shipping event for a given order.
 
@@ -34,12 +35,15 @@ class EventHandler(object):
         """
         # Example implementation
         self.validate_shipping_event(
-            order, event_type, lines, line_quantities, **kwargs)
+            order, event_type, lines, line_quantities, **kwargs
+        )
         return self.create_shipping_event(
-            order, event_type, lines, line_quantities, **kwargs)
+            order, event_type, lines, line_quantities, **kwargs
+        )
 
-    def handle_payment_event(self, order, event_type, amount, lines=None,
-                             line_quantities=None, **kwargs):
+    def handle_payment_event(
+        self, order, event_type, amount, lines=None, line_quantities=None, **kwargs
+    ):
         """
         Handle a payment event for a given order.
 
@@ -49,9 +53,11 @@ class EventHandler(object):
         shipping event and doesn't directly correspond to a set of lines.
         """
         self.validate_payment_event(
-            order, event_type, amount, lines, line_quantities, **kwargs)
+            order, event_type, amount, lines, line_quantities, **kwargs
+        )
         return self.create_payment_event(
-            order, event_type, amount, lines, line_quantities, **kwargs)
+            order, event_type, amount, lines, line_quantities, **kwargs
+        )
 
     def handle_order_status_change(self, order, new_status, note_msg=None):
         """
@@ -68,8 +74,10 @@ class EventHandler(object):
     # Validation methods
     # ------------------
 
-    def validate_shipping_event(self, order, event_type, lines,
-                                line_quantities, **kwargs):
+    # pylint: disable=unused-argument
+    def validate_shipping_event(
+        self, order, event_type, lines, line_quantities, **kwargs
+    ):
         """
         Test if the requested shipping event is permitted.
 
@@ -81,20 +89,24 @@ class EventHandler(object):
             # 'is_shipping_event_permitted' and enforce the correct order of
             # shipping events.
             if not line.is_shipping_event_permitted(event_type, qty):
-                msg = _("The selected quantity for line #%(line_id)s is too"
-                        " large") % {'line_id': line.id}
+                msg = _("The selected quantity for line #%(line_id)s is too large") % {
+                    "line_id": line.id
+                }
                 errors.append(msg)
         if errors:
             raise exceptions.InvalidShippingEvent(", ".join(errors))
 
-    def validate_payment_event(self, order, event_type, amount, lines=None,
-                               line_quantities=None, **kwargs):
+    # pylint: disable=unused-argument
+    def validate_payment_event(
+        self, order, event_type, amount, lines=None, line_quantities=None, **kwargs
+    ):
         if lines and line_quantities:
             errors = []
             for line, qty in zip(lines, line_quantities):
                 if not line.is_payment_event_permitted(event_type, qty):
-                    msg = _("The selected quantity for line #%(line_id)s is too"
-                            " large") % {'line_id': line.id}
+                    msg = _(
+                        "The selected quantity for line #%(line_id)s is too large"
+                    ) % {"line_id": line.id}
                     errors.append(msg)
             if errors:
                 raise exceptions.InvalidPaymentEvent(", ".join(errors))
@@ -103,8 +115,9 @@ class EventHandler(object):
     # -------------
     # These are to help determine the status of lines
 
-    def have_lines_passed_shipping_event(self, order, lines, line_quantities,
-                                         event_type):
+    def have_lines_passed_shipping_event(
+        self, order, lines, line_quantities, event_type
+    ):
         """
         Test whether the passed lines and quantities have been through the
         specified shipping event.
@@ -120,8 +133,7 @@ class EventHandler(object):
     # Payment stuff
     # -------------
 
-    def calculate_payment_event_subtotal(self, event_type, lines,
-                                         line_quantities):
+    def calculate_payment_event_subtotal(self, event_type, lines, line_quantities):
         """
         Calculate the total charge for the passed event type, lines and line
         quantities.
@@ -132,7 +144,7 @@ class EventHandler(object):
         Note that shipping is not including in this subtotal.  You need to
         subclass and extend this method if you want to include shipping costs.
         """
-        total = D('0.00')
+        total = D("0.00")
         for line, qty_to_consume in zip(lines, line_quantities):
             # This part is quite fiddly.  We need to skip the prices that have
             # already been settled.  This involves keeping a load of counters.
@@ -148,7 +160,7 @@ class EventHandler(object):
             # Consume prices in order of ID (this is the default but it's
             # better to be explicit)
             qty_consumed = 0
-            for price in line.prices.all().order_by('id'):
+            for price in line.prices.all().order_by("id"):
                 if qty_consumed == qty_to_consume:
                     # We've accounted for the asked-for quantity: we're done
                     break
@@ -161,8 +173,7 @@ class EventHandler(object):
                     # Need to account for some of this price instance and
                     # track how many we needed to skip and how many we settled
                     # for.
-                    qty_to_include = min(
-                        qty_to_consume - qty_consumed, qty_available)
+                    qty_to_include = min(qty_to_consume - qty_consumed, qty_available)
                     total += qty_to_include * price.price_incl_tax
                     # There can't be any left to skip if we've included some in
                     # our total
@@ -227,34 +238,33 @@ class EventHandler(object):
     # Model instance creation
     # -----------------------
 
-    def create_shipping_event(self, order, event_type, lines, line_quantities,
-                              **kwargs):
-        reference = kwargs.get('reference', '')
-        event = order.shipping_events.create(
-            event_type=event_type, notes=reference)
+    def create_shipping_event(
+        self, order, event_type, lines, line_quantities, **kwargs
+    ):
+        reference = kwargs.get("reference", "")
+        event = order.shipping_events.create(event_type=event_type, notes=reference)
         try:
             for line, quantity in zip(lines, line_quantities):
-                event.line_quantities.create(
-                    line=line, quantity=quantity)
+                event.line_quantities.create(line=line, quantity=quantity)
         except exceptions.InvalidShippingEvent:
             event.delete()
             raise
         return event
 
-    def create_payment_event(self, order, event_type, amount, lines=None,
-                             line_quantities=None, **kwargs):
-        reference = kwargs.get('reference', "")
+    def create_payment_event(
+        self, order, event_type, amount, lines=None, line_quantities=None, **kwargs
+    ):
+        reference = kwargs.get("reference", "")
         event = order.payment_events.create(
-            event_type=event_type, amount=amount, reference=reference)
+            event_type=event_type, amount=amount, reference=reference
+        )
         if lines and line_quantities:
             for line, quantity in zip(lines, line_quantities):
-                event.line_quantities.create(
-                    line=line, quantity=quantity)
+                event.line_quantities.create(line=line, quantity=quantity)
         return event
 
     def create_communication_event(self, order, event_type):
         return order.communication_events.create(event_type=event_type)
 
-    def create_note(self, order, message, note_type='System'):
-        return order.notes.create(
-            message=message, note_type=note_type, user=self.user)
+    def create_note(self, order, message, note_type="System"):
+        return order.notes.create(message=message, note_type=note_type, user=self.user)

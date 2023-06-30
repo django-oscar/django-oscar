@@ -5,7 +5,10 @@ from django.test import TestCase
 
 from oscar.core.loading import get_model
 from oscar.test.factories import (
-    ProductAttributeFactory, ProductClassFactory, ProductFactory)
+    ProductAttributeFactory,
+    ProductClassFactory,
+    ProductFactory,
+)
 
 Product = get_model("catalogue", "Product")
 ProductAttribute = get_model("catalogue", "ProductAttribute")
@@ -13,33 +16,55 @@ ProductAttributeValue = get_model("catalogue", "ProductAttributeValue")
 
 
 class ProductAttributeTest(TestCase):
-
     def setUp(self):
         super().setUp()
 
         # setup the productclass
-        self.product_class = product_class = ProductClassFactory(name='Cows', slug='cows')
+        self.product_class = product_class = ProductClassFactory(
+            name="Cows", slug="cows"
+        )
         self.name_attr = ProductAttributeFactory(
-            type=ProductAttribute.TEXT, product_class=product_class, name="name", code="name")
+            type=ProductAttribute.TEXT,
+            product_class=product_class,
+            name="name",
+            code="name",
+        )
         self.weight_attrs = ProductAttributeFactory(
-            type=ProductAttribute.INTEGER, name="weight", code="weight", product_class=product_class)
+            type=ProductAttribute.INTEGER,
+            name="weight",
+            code="weight",
+            product_class=product_class,
+        )
 
         # create the parent product
         self.product = product = ProductFactory(
-            title="I am your father", stockrecords=None, product_class=product_class, structure="parent", upc="1234")
+            title="I am your father",
+            stockrecords=None,
+            product_class=product_class,
+            structure="parent",
+            upc="1234",
+        )
         product.attr.weight = 3
         product.full_clean()
         product.save()
 
         # create the child product
         self.child_product = ProductFactory(
-            parent=product, structure="child", categories=None, product_class=None,
-            title="You are my father", upc="child-1234")
+            parent=product,
+            structure="child",
+            categories=None,
+            product_class=None,
+            title="You are my father",
+            upc="child-1234",
+        )
         self.child_product.full_clean()
 
     def test_update_child_with_attributes(self):
-        "Attributes preseent on the parent should not be copied to the child "
-        "when title of the child is modified"
+        """
+        Attributes preseent on the parent should not be copied to the child
+        when title of the child is modified
+        """
+
         self.assertEqual(
             ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
             1,
@@ -70,8 +95,11 @@ class ProductAttributeTest(TestCase):
         )
 
     def test_update_child_attributes(self):
-        "Attributes preseent on the parent should not be copied to the child "
-        "when the child attributes are modified"
+        """
+        Attributes preseent on the parent should not be copied to the child
+        when the child attributes are modified
+        """
+
         self.assertEqual(
             ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
             1,
@@ -103,8 +131,11 @@ class ProductAttributeTest(TestCase):
         )
 
     def test_update_attributes_to_parent_and_child(self):
-        "Attributes present on the parent should not be copied to the child "
-        "ever, not even newly added attributes"
+        """
+        Attributes present on the parent should not be copied to the child
+        ever, not even newly added attributes
+        """
+
         self.assertEqual(
             ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
             1,
@@ -147,7 +178,9 @@ class ProductAttributeTest(TestCase):
 
     def test_explicit_identical_child_attribute(self):
         self.assertEqual(self.product.attr.weight, 3, "parent product has weight 3")
-        self.assertEqual(self.child_product.attr.weight, 3, "chiuld product also has weight 3")
+        self.assertEqual(
+            self.child_product.attr.weight, 3, "chiuld product also has weight 3"
+        )
         self.assertEqual(
             ProductAttributeValue.objects.filter(product_id=self.product.pk).count(),
             1,
@@ -196,11 +229,17 @@ class ProductAttributeQuerysetTest(TestCase):
     def test_empty_results(self):
         "Empty results are possible without errors"
         result = Product.objects.filter_by_attributes(doesnotexist=True)
-        self.assertFalse(result.exists(), "querying with bulshit attributes should give no results")
+        self.assertFalse(
+            result.exists(), "querying with bulshit attributes should give no results"
+        )
         result = Product.objects.filter_by_attributes(henkie="zulthoofd")
-        self.assertFalse(result.exists(), "querying with non existing values should give no results")
+        self.assertFalse(
+            result.exists(), "querying with non existing values should give no results"
+        )
         result = Product.objects.filter_by_attributes(henkie=True)
-        self.assertFalse(result.exists(), "querying with wring value type should give no results")
+        self.assertFalse(
+            result.exists(), "querying with wring value type should give no results"
+        )
 
     def test_text_value(self):
         result = Product.objects.filter_by_attributes(subtitle="superhenk")
@@ -211,7 +250,7 @@ class ProductAttributeQuerysetTest(TestCase):
         self.assertFalse(result.exists())
 
     def test_formatted_text(self):
-        html = "<p style=\"margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica;\">Vivamus auctor leo vel dui. Aliquam erat volutpat. Phasellus nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras tempor. Morbi egestas, <em>urna</em> non consequat tempus, <strong>nunc</strong> arcu mollis enim, eu aliquam erat nulla non nibh. Duis consectetuer malesuada velit. Nam ante nulla, interdum vel, tristique ac, condimentum non, tellus. Proin ornare feugiat nisl. Suspendisse dolor nisl, ultrices at, eleifend vel, consequat at, dolor.</p>"  # noqa
+        html = '<p style="margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica;">Vivamus auctor leo vel dui. Aliquam erat volutpat. Phasellus nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras tempor. Morbi egestas, <em>urna</em> non consequat tempus, <strong>nunc</strong> arcu mollis enim, eu aliquam erat nulla non nibh. Duis consectetuer malesuada velit. Nam ante nulla, interdum vel, tristique ac, condimentum non, tellus. Proin ornare feugiat nisl. Suspendisse dolor nisl, ultrices at, eleifend vel, consequat at, dolor.</p>'  # noqa
         result = Product.objects.filter_by_attributes(additional_info=html)
         self.assertTrue(result.exists())
 
@@ -265,7 +304,9 @@ class ProductAttributeQuerysetTest(TestCase):
         self.assertEqual(result.count(), 2)
 
     def test_multiple_attributes(self):
-        result = Product.objects.filter_by_attributes(subkinds="megalomane", available=True)
+        result = Product.objects.filter_by_attributes(
+            subkinds="megalomane", available=True
+        )
         self.assertTrue(result.exists())
 
         result = Product.objects.filter_by_attributes(
@@ -274,7 +315,7 @@ class ProductAttributeQuerysetTest(TestCase):
             facets=8,
             subtitle="superhenk",
             subkinds="megalomane",
-            available=False
+            available=False,
         )
         self.assertTrue(result.exists())
 

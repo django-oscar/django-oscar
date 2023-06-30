@@ -18,12 +18,19 @@ from oscar.core.loading import get_class, get_model
 from oscar.core.thumbnails import get_thumbnailer
 from oscar.test.factories import ProductImageFactory, UserFactory
 
-OSCAR_IMAGE_FOLDER_FORMATTED = 'images/products/{0}/{1:02d}/'.format(date.today().year, date.today().month)
-FULL_PATH_TO_IMAGES_FOLDER = os.path.join(settings.MEDIA_ROOT, OSCAR_IMAGE_FOLDER_FORMATTED)
-FULL_PATH_TO_SORL_THUMBNAILS_FOLDER = os.path.join(settings.MEDIA_ROOT, sorl_settings.THUMBNAIL_PREFIX)
-EASY_THUMBNAIL_BASEDIR = 'thumbnails'
+OSCAR_IMAGE_FOLDER_FORMATTED = "images/products/{0}/{1:02d}/".format(
+    date.today().year, date.today().month
+)
+FULL_PATH_TO_IMAGES_FOLDER = os.path.join(
+    settings.MEDIA_ROOT, OSCAR_IMAGE_FOLDER_FORMATTED
+)
+FULL_PATH_TO_SORL_THUMBNAILS_FOLDER = os.path.join(
+    settings.MEDIA_ROOT, sorl_settings.THUMBNAIL_PREFIX
+)
+EASY_THUMBNAIL_BASEDIR = "thumbnails"
 FULL_PATH_TO_EASY_THUMBNAILS_FOLDER = os.path.join(
-    settings.MEDIA_ROOT, EASY_THUMBNAIL_BASEDIR, OSCAR_IMAGE_FOLDER_FORMATTED)
+    settings.MEDIA_ROOT, EASY_THUMBNAIL_BASEDIR, OSCAR_IMAGE_FOLDER_FORMATTED
+)
 
 
 def remove_image_folders():
@@ -42,7 +49,6 @@ def get_thumbnail_full_path(thumbnail_url):
 
 
 class ThumbnailMixin:
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -52,8 +58,8 @@ class ThumbnailMixin:
     def setUp(self):
         super().setUp()
         self.thumbnail_options = {
-            'size': 'x50',
-            'upscale': False,
+            "size": "x50",
+            "upscale": False,
         }
 
     def tearDown(self):
@@ -66,7 +72,7 @@ class ThumbnailMixin:
 
         kwargs = {}
         if product is not None:
-            kwargs['product'] = product
+            kwargs["product"] = product
         self.images = ProductImageFactory.create_batch(qty, **kwargs)
 
         file_names = os.listdir(FULL_PATH_TO_IMAGES_FOLDER)
@@ -77,12 +83,16 @@ class ThumbnailMixin:
         thumbnails_full_paths = []
 
         for image in self.images:
-            thumbnail = thumbnailer.generate_thumbnail(image.original, **self.thumbnail_options)
+            thumbnail = thumbnailer.generate_thumbnail(
+                image.original, **self.thumbnail_options
+            )
             thumbnails_full_paths.append(get_thumbnail_full_path(thumbnail.url))
 
         # Check thumbnails exist in the file system.
         for path in thumbnails_full_paths:
-            assert os.path.isfile(path)  # `isfile` returns `True` if path is an existing regular file.
+            assert os.path.isfile(
+                path
+            )  # `isfile` returns `True` if path is an existing regular file.
 
         return thumbnails_full_paths
 
@@ -99,9 +109,11 @@ class ThumbnailMixin:
 
 
 class EmailsMixin:
-    DJANGO_IMPROPERLY_CONFIGURED_MSG = 'You\'re using the Django "sites framework" '\
-        'without having set the SITE_ID setting. Create a site in your database and set '\
-        'the SITE_ID setting or pass a request to Site.objects.get_current() to fix this error.'
+    DJANGO_IMPROPERLY_CONFIGURED_MSG = (
+        'You\'re using the Django "sites framework" '
+        "without having set the SITE_ID setting. Create a site in your database and set "
+        "the SITE_ID setting or pass a request to Site.objects.get_current() to fix this error."
+    )
 
     def setUp(self):
         super().setUp()
@@ -112,13 +124,13 @@ class EmailsMixin:
     def _test_send_plain_text_and_html(self, outboxed_email):
         email = outboxed_email
 
-        assert '</p>' not in email.body  # Plain text body (because w/o </p> tags)
+        assert "</p>" not in email.body  # Plain text body (because w/o </p> tags)
 
         html_content = email.alternatives[0][0]
-        assert '</p>' in html_content
+        assert "</p>" in html_content
 
         mimetype = email.alternatives[0][1]
-        assert mimetype == 'text/html'
+        assert mimetype == "text/html"
 
     def _test_common_part(self):
         assert len(mail.outbox) == 1
@@ -127,8 +139,8 @@ class EmailsMixin:
 
 
 class RequestFactory(BaseRequestFactory):
-    Basket = get_model('basket', 'basket')
-    selector = get_class('partner.strategy', 'Selector')()
+    Basket = get_model("basket", "basket")
+    selector = get_class("partner.strategy", "Selector")()
 
     def request(self, user=None, basket=None, **request):
         request = super().request(**request)
@@ -137,8 +149,8 @@ class RequestFactory(BaseRequestFactory):
         request._messages = FallbackStorage(request)
 
         # Mimic basket middleware
-        request.strategy = self.selector.strategy(
-            request=request, user=request.user)
+        # pylint: disable=E1101
+        request.strategy = self.selector.strategy(request=request, user=request.user)
         request.basket = basket or self.Basket()
         request.basket.strategy = request.strategy
         request.basket_hash = Signer().sign(basket.pk) if basket else None
@@ -164,7 +176,7 @@ def run_concurrently(fn, kwargs=None, num_threads=5):
 
     # Run them
     threads = [
-        threading.Thread(target=worker, name='thread-%d' % i, kwargs=kwargs)
+        threading.Thread(target=worker, name="thread-%d" % i, kwargs=kwargs)
         for i in range(num_threads)
     ]
     try:

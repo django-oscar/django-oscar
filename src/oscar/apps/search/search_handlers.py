@@ -5,13 +5,13 @@ from oscar.core.loading import get_class
 
 from . import facets
 
-FacetMunger = get_class('search.facets', 'FacetMunger')
+FacetMunger = get_class("search.facets", "FacetMunger")
 
 
 class SearchResultsPaginationMixin:
     paginate_by = None
     paginator_class = Paginator
-    page_kwarg = 'page'
+    page_kwarg = "page"
 
     def paginate_queryset(self, queryset, page_size):
         """
@@ -24,7 +24,7 @@ class SearchResultsPaginationMixin:
         try:
             page_number = int(page_number)
         except ValueError:
-            if page_number == 'last':
+            if page_number == "last":
                 page_number = paginator.num_pages
             else:
                 raise InvalidPage
@@ -74,12 +74,13 @@ class SearchHandler(SearchResultsPaginationMixin):
 
         # Triggers the search.
         search_queryset = self.get_search_queryset()
-        self.search_form = self.get_search_form(
-            request_data, search_queryset)
+        self.search_form = self.get_search_form(request_data, search_queryset)
         self.results = self.get_search_results(self.search_form)
         # If below raises an UnicodeDecodeError, you're running pysolr < 3.2
         # with Solr 4.
-        self.paginator, self.page = self.paginate_queryset(self.results, self.paginate_by)[0:2]
+        self.paginator, self.page = self.paginate_queryset(
+            self.results, self.paginate_by
+        )[0:2]
 
     # Search related methods
 
@@ -90,18 +91,20 @@ class SearchHandler(SearchResultsPaginationMixin):
         """
         return search_form.search()
 
+    # pylint: disable=not-callable
     def get_search_form(self, request_data, search_queryset, **form_kwargs):
         """
         Return a bound version of Haystack's search form.
         """
         kwargs = {
-            'data': request_data,
-            'selected_facets': request_data.getlist("selected_facets"),
-            'searchqueryset': search_queryset
+            "data": request_data,
+            "selected_facets": request_data.getlist("selected_facets"),
+            "searchqueryset": search_queryset,
         }
         kwargs.update(**form_kwargs)
         return self.form_class(**kwargs)
 
+    # pylint: disable=not-an-iterable
     def get_search_queryset(self):
         """
         Returns the search queryset that is used as a base for the search.
@@ -154,11 +157,12 @@ class SearchHandler(SearchResultsPaginationMixin):
 
         return objects
 
+    # pylint: disable=access-member-before-definition, attribute-defined-outside-init
     def get_paginated_objects(self):
         """
         Return a paginated list of Django model instances. The call is cached.
         """
-        if hasattr(self, '_objects'):
+        if hasattr(self, "_objects"):
             return self._objects
         else:
             paginated_results = self.page.object_list
@@ -169,7 +173,8 @@ class SearchHandler(SearchResultsPaginationMixin):
         return FacetMunger(
             self.full_path,
             self.search_form.selected_multi_facets,
-            self.results.facet_counts())
+            self.results.facet_counts(),
+        )
 
     def get_search_context_data(self, context_object_name=None):
         """
@@ -194,19 +199,19 @@ class SearchHandler(SearchResultsPaginationMixin):
         # with products
         munger = self.get_facet_munger()
         facet_data = munger.facet_data()
-        has_facets = any([data['results'] for data in facet_data.values()])
+        has_facets = any([data["results"] for data in facet_data.values()])
 
         context = {
-            'facet_data': facet_data,
-            'has_facets': has_facets,
+            "facet_data": facet_data,
+            "has_facets": has_facets,
             # This is a serious code smell; we just pass through the selected
             # facets data to the view again, and the template adds those
             # as fields to the form. This hack ensures that facets stay
             # selected when changing relevancy.
-            'selected_facets': self.request_data.getlist('selected_facets'),
-            'form': self.search_form,
-            'paginator': self.paginator,
-            'page_obj': self.page,
+            "selected_facets": self.request_data.getlist("selected_facets"),
+            "form": self.search_form,
+            "paginator": self.paginator,
+            "page_obj": self.page,
         }
 
         # It's a pretty common pattern to want the actual results in the

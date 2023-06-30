@@ -2,7 +2,9 @@ from django.db import models
 
 from oscar.core.loading import get_class
 
-ExpandUpwardsCategoryQueryset = get_class("catalogue.expressions", "ExpandUpwardsCategoryQueryset")
+ExpandUpwardsCategoryQueryset = get_class(
+    "catalogue.expressions", "ExpandUpwardsCategoryQueryset"
+)
 
 
 class RangeQuerySet(models.query.QuerySet):
@@ -43,7 +45,9 @@ class RangeQuerySet(models.query.QuerySet):
             # Since a child can not be in a category, it must be determined
             # which category the parent is in
             ProductCategory = product.productcategory_set.model
-            return ProductCategory.objects.filter(product_id=product.parent_id).values("category_id")
+            return ProductCategory.objects.filter(product_id=product.parent_id).values(
+                "category_id"
+            )
 
         return product.categories.values("id")
 
@@ -57,7 +61,11 @@ class RangeQuerySet(models.query.QuerySet):
         narrow = self.filter(
             self._excluded_products_clause(product),
             self._included_products_clause(product)
-            | models.Q(included_categories__in=ExpandUpwardsCategoryQueryset(self._get_category_ids(product)))
+            | models.Q(
+                included_categories__in=ExpandUpwardsCategoryQueryset(
+                    self._get_category_ids(product)
+                )
+            )
             | self._productclasses_clause(product),
             includes_all_products=False,
         )

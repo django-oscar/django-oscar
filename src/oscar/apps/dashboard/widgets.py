@@ -10,12 +10,14 @@ class RelatedFieldWidgetWrapper(Widget):
     This class is a wrapper to a given widget to add the add icon for the
     Oscar dashboard.
     """
-    template_name = 'oscar/dashboard/widgets/related_widget_wrapper.html'
 
-    IS_POPUP_VALUE = '1'
-    IS_POPUP_VAR = '_popup'
-    TO_FIELD_VAR = '_to_field'
+    template_name = "oscar/dashboard/widgets/related_widget_wrapper.html"
 
+    IS_POPUP_VALUE = "1"
+    IS_POPUP_VAR = "_popup"
+    TO_FIELD_VAR = "_to_field"
+
+    # pylint: disable=super-init-not-called
     def __init__(self, widget, rel):
         self.needs_multipart_form = widget.needs_multipart_form
         self.attrs = widget.attrs
@@ -43,33 +45,46 @@ class RelatedFieldWidgetWrapper(Widget):
         model_object_name = info[1]
         # Convert the model's object name into lowercase, with dashes between
         # the camel-cased words
-        model_object_name = '-'.join(re.sub('([a-z])([A-Z])', r'\1 \2', model_object_name).lower().split())
+        model_object_name = "-".join(
+            re.sub("([a-z])([A-Z])", r"\1 \2", model_object_name).lower().split()
+        )
         # Does not specify current app
-        return reverse("dashboard:%s-%s-%s" % (app_label, model_object_name, action), args=args)
+        return reverse(
+            "dashboard:%s-%s-%s" % (app_label, model_object_name, action), args=args
+        )
 
     def get_context(self, name, value, attrs):
         rel_opts = self.rel.model._meta
         info = (rel_opts.app_label, rel_opts.object_name)
         self.widget.choices = self.choices
-        url_params = '&'.join("%s=%s" % param for param in [
-            (RelatedFieldWidgetWrapper.TO_FIELD_VAR, self.rel.get_related_field().name),
-            (RelatedFieldWidgetWrapper.IS_POPUP_VAR, RelatedFieldWidgetWrapper.IS_POPUP_VALUE),
-        ])
+        url_params = "&".join(
+            "%s=%s" % param
+            for param in [
+                (
+                    RelatedFieldWidgetWrapper.TO_FIELD_VAR,
+                    self.rel.get_related_field().name,
+                ),
+                (
+                    RelatedFieldWidgetWrapper.IS_POPUP_VAR,
+                    RelatedFieldWidgetWrapper.IS_POPUP_VALUE,
+                ),
+            ]
+        )
         context = {
-            'rendered_widget': self.widget.render(name, value, attrs),
-            'name': name,
-            'url_params': url_params,
-            'model': rel_opts.verbose_name,
+            "rendered_widget": self.widget.render(name, value, attrs),
+            "name": name,
+            "url_params": url_params,
+            "model": rel_opts.verbose_name,
         }
-        change_related_template_url = self.get_related_url(info, 'update', '__fk__')
+        change_related_template_url = self.get_related_url(info, "update", "__fk__")
         context.update(
             change_related_template_url=change_related_template_url,
         )
-        add_related_url = self.get_related_url(info, 'create')
+        add_related_url = self.get_related_url(info, "create")
         context.update(
             add_related_url=add_related_url,
         )
-        delete_related_template_url = self.get_related_url(info, 'delete', '__fk__')
+        delete_related_template_url = self.get_related_url(info, "delete", "__fk__")
         context.update(
             delete_related_template_url=delete_related_template_url,
         )
@@ -86,5 +101,4 @@ class RelatedFieldWidgetWrapper(Widget):
 
 
 class RelatedMultipleFieldWidgetWrapper(RelatedFieldWidgetWrapper):
-
-    template_name = 'oscar/dashboard/widgets/related_multiple_widget_wrapper.html'
+    template_name = "oscar/dashboard/widgets/related_multiple_widget_wrapper.html"

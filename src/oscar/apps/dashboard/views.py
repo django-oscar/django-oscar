@@ -15,14 +15,14 @@ from django.views.generic import TemplateView
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 
-RelatedFieldWidgetWrapper = get_class('dashboard.widgets', 'RelatedFieldWidgetWrapper')
-ConditionalOffer = get_model('offer', 'ConditionalOffer')
-Voucher = get_model('voucher', 'Voucher')
-Basket = get_model('basket', 'Basket')
-StockAlert = get_model('partner', 'StockAlert')
-Product = get_model('catalogue', 'Product')
-Order = get_model('order', 'Order')
-Line = get_model('order', 'Line')
+RelatedFieldWidgetWrapper = get_class("dashboard.widgets", "RelatedFieldWidgetWrapper")
+ConditionalOffer = get_model("offer", "ConditionalOffer")
+Voucher = get_model("voucher", "Voucher")
+Basket = get_model("basket", "Basket")
+StockAlert = get_model("partner", "StockAlert")
+Product = get_model("catalogue", "Product")
+Order = get_model("order", "Order")
+Line = get_model("order", "Line")
 User = get_user_model()
 
 
@@ -37,9 +37,11 @@ class IndexView(TemplateView):
 
     def get_template_names(self):
         if self.request.user.is_staff:
-            return ['oscar/dashboard/index.html', ]
+            return [
+                "oscar/dashboard/index.html",
+            ]
         else:
-            return ['oscar/dashboard/index_nonstaff.html', 'oscar/dashboard/index.html']
+            return ["oscar/dashboard/index_nonstaff.html", "oscar/dashboard/index.html"]
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -68,29 +70,27 @@ class IndexView(TemplateView):
         start_time = time_now - timedelta(hours=hours - 1)
 
         order_total_hourly = []
-        for hour in range(0, hours, 2):
+        for _ in range(0, hours, 2):
             end_time = start_time + timedelta(hours=2)
-            hourly_orders = orders.filter(date_placed__gte=start_time,
-                                          date_placed__lt=end_time)
-            total = hourly_orders.aggregate(
-                Sum('total_incl_tax')
-            )['total_incl_tax__sum'] or D('0.0')
-            order_total_hourly.append({
-                'end_time': end_time,
-                'total_incl_tax': total
-            })
+            hourly_orders = orders.filter(
+                date_placed__gte=start_time, date_placed__lt=end_time
+            )
+            total = hourly_orders.aggregate(Sum("total_incl_tax"))[
+                "total_incl_tax__sum"
+            ] or D("0.0")
+            order_total_hourly.append({"end_time": end_time, "total_incl_tax": total})
             start_time = end_time
 
-        max_value = max([x['total_incl_tax'] for x in order_total_hourly])
+        max_value = max([x["total_incl_tax"] for x in order_total_hourly])
         divisor = 1
         while divisor < max_value / 50:
             divisor *= 10
-        max_value = (max_value / divisor).quantize(D('1'), rounding=ROUND_UP)
+        max_value = (max_value / divisor).quantize(D("1"), rounding=ROUND_UP)
         max_value *= divisor
         if max_value:
-            segment_size = (max_value) / D('100.0')
+            segment_size = (max_value) / D("100.0")
             for item in order_total_hourly:
-                item['percentage'] = int(item['total_incl_tax'] / segment_size)
+                item["percentage"] = int(item["total_incl_tax"] / segment_size)
 
             y_range = []
             y_axis_steps = max_value / D(str(segments))
@@ -99,12 +99,12 @@ class IndexView(TemplateView):
         else:
             y_range = []
             for item in order_total_hourly:
-                item['percentage'] = 0
+                item["percentage"] = 0
 
         ctx = {
-            'order_total_hourly': order_total_hourly,
-            'max_revenue': max_value,
-            'y_range': y_range,
+            "order_total_hourly": order_total_hourly,
+            "max_revenue": max_value,
+            "y_range": y_range,
         }
         return ctx
 
@@ -120,10 +120,8 @@ class IndexView(TemplateView):
 
         user = self.request.user
         if not user.is_staff:
-            partners_ids = tuple(user.partners.values_list('id', flat=True))
-            orders = orders.filter(
-                lines__partner_id__in=partners_ids
-            ).distinct()
+            partners_ids = tuple(user.partners.values_list("id", flat=True))
+            orders = orders.filter(lines__partner_id__in=partners_ids).distinct()
             alerts = alerts.filter(stockrecord__partner_id__in=partners_ids)
             baskets = baskets.filter(
                 lines__stockrecord__partner_id__in=partners_ids
@@ -141,60 +139,58 @@ class IndexView(TemplateView):
 
         total_lines_last_day = lines.filter(order__in=orders_last_day).count()
         stats = {
-            'total_orders_last_day': orders_last_day.count(),
-            'total_lines_last_day': total_lines_last_day,
-
-            'average_order_costs': orders_last_day.aggregate(
-                Avg('total_incl_tax')
-            )['total_incl_tax__avg'] or D('0.00'),
-
-            'total_revenue_last_day': orders_last_day.aggregate(
-                Sum('total_incl_tax')
-            )['total_incl_tax__sum'] or D('0.00'),
-
-            'hourly_report_dict': self.get_hourly_report(orders),
-            'total_customers_last_day': customers.filter(
+            "total_orders_last_day": orders_last_day.count(),
+            "total_lines_last_day": total_lines_last_day,
+            "average_order_costs": orders_last_day.aggregate(Avg("total_incl_tax"))[
+                "total_incl_tax__avg"
+            ]
+            or D("0.00"),
+            "total_revenue_last_day": orders_last_day.aggregate(Sum("total_incl_tax"))[
+                "total_incl_tax__sum"
+            ]
+            or D("0.00"),
+            "hourly_report_dict": self.get_hourly_report(orders),
+            "total_customers_last_day": customers.filter(
                 date_joined__gt=datetime_24hrs_ago,
             ).count(),
-
-            'total_open_baskets_last_day': baskets.filter(
+            "total_open_baskets_last_day": baskets.filter(
                 date_created__gt=datetime_24hrs_ago
             ).count(),
-
-            'total_products': products.count(),
-            'total_open_stock_alerts': open_alerts.count(),
-            'total_closed_stock_alerts': closed_alerts.count(),
-
-            'total_customers': customers.count(),
-            'total_open_baskets': baskets.count(),
-            'total_orders': orders.count(),
-            'total_lines': lines.count(),
-            'total_revenue': orders.aggregate(
-                Sum('total_incl_tax')
-            )['total_incl_tax__sum'] or D('0.00'),
-
-            'order_status_breakdown': orders.order_by(
-                'status'
-            ).values('status').annotate(freq=Count('id'))
+            "total_products": products.count(),
+            "total_open_stock_alerts": open_alerts.count(),
+            "total_closed_stock_alerts": closed_alerts.count(),
+            "total_customers": customers.count(),
+            "total_open_baskets": baskets.count(),
+            "total_orders": orders.count(),
+            "total_lines": lines.count(),
+            "total_revenue": orders.aggregate(Sum("total_incl_tax"))[
+                "total_incl_tax__sum"
+            ]
+            or D("0.00"),
+            "order_status_breakdown": orders.order_by("status")
+            .values("status")
+            .annotate(freq=Count("id")),
         }
         if user.is_staff:
             stats.update(
-                offer_maps=(ConditionalOffer.objects.filter(end_datetime__gt=now())
-                                                    .values('offer_type')
-                                                    .annotate(count=Count('id'))
-                                                    .order_by('offer_type')),
+                offer_maps=(
+                    ConditionalOffer.objects.filter(end_datetime__gt=now())
+                    .values("offer_type")
+                    .annotate(count=Count("id"))
+                    .order_by("offer_type")
+                ),
                 total_vouchers=self.get_active_vouchers().count(),
             )
         return stats
 
 
 class PopUpWindowMixin:
-
     @property
     def is_popup(self):
         return self.request.GET.get(
             RelatedFieldWidgetWrapper.IS_POPUP_VAR,
-            self.request.POST.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR))
+            self.request.POST.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR),
+        )
 
     @property
     def is_popup_var(self):
@@ -206,12 +202,12 @@ class PopUpWindowMixin:
 
 
 class PopUpWindowCreateUpdateMixin(PopUpWindowMixin):
-
     @property
     def to_field(self):
         return self.request.GET.get(
             RelatedFieldWidgetWrapper.TO_FIELD_VAR,
-            self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR))
+            self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR),
+        )
 
     @property
     def to_field_var(self):
@@ -221,35 +217,37 @@ class PopUpWindowCreateUpdateMixin(PopUpWindowMixin):
         ctx = super().get_context_data(**kwargs)
 
         if self.is_popup:
-            ctx['to_field'] = self.to_field
-            ctx['to_field_var'] = self.to_field_var
-            ctx['is_popup'] = self.is_popup
-            ctx['is_popup_var'] = self.is_popup_var
+            ctx["to_field"] = self.to_field
+            ctx["to_field_var"] = self.to_field_var
+            ctx["is_popup"] = self.is_popup
+            ctx["is_popup_var"] = self.is_popup_var
 
         return ctx
 
 
 class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
-
     def popup_response(self, obj):
         if self.to_field:
             attr = str(self.to_field)
         else:
             attr = obj._meta.pk.attname
         value = obj.serializable_value(attr)
-        popup_response_data = json.dumps({
-            'value': str(value),
-            'obj': str(obj),
-        })
+        popup_response_data = json.dumps(
+            {
+                "value": str(value),
+                "obj": str(obj),
+            }
+        )
         return TemplateResponse(
             self.request,
-            'oscar/dashboard/widgets/popup_response.html',
-            {'popup_response_data': popup_response_data, }
+            "oscar/dashboard/widgets/popup_response.html",
+            {
+                "popup_response_data": popup_response_data,
+            },
         )
 
 
 class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
-
     def popup_response(self, obj):
         opts = obj._meta
         if self.to_field:
@@ -257,29 +255,32 @@ class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
         else:
             attr = opts.pk.attname
         # Retrieve the `object_id` from the resolved pattern arguments.
-        value = self.request.resolver_match.kwargs['pk']
+        value = self.request.resolver_match.kwargs["pk"]
         new_value = obj.serializable_value(attr)
-        popup_response_data = json.dumps({
-            'action': 'change',
-            'value': str(value),
-            'obj': str(obj),
-            'new_value': str(new_value),
-        })
+        popup_response_data = json.dumps(
+            {
+                "action": "change",
+                "value": str(value),
+                "obj": str(obj),
+                "new_value": str(new_value),
+            }
+        )
         return TemplateResponse(
             self.request,
-            'oscar/dashboard/widgets/popup_response.html',
-            {'popup_response_data': popup_response_data, }
+            "oscar/dashboard/widgets/popup_response.html",
+            {
+                "popup_response_data": popup_response_data,
+            },
         )
 
 
 class PopUpWindowDeleteMixin(PopUpWindowMixin):
-
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
         if self.is_popup:
-            ctx['is_popup'] = self.is_popup
-            ctx['is_popup_var'] = self.is_popup_var
+            ctx["is_popup"] = self.is_popup
+            ctx["is_popup_var"] = self.is_popup_var
 
         return ctx
 
@@ -294,14 +295,18 @@ class PopUpWindowDeleteMixin(PopUpWindowMixin):
 
         if self.is_popup:
             obj_id = obj.pk
-            popup_response_data = json.dumps({
-                'action': 'delete',
-                'value': str(obj_id),
-            })
+            popup_response_data = json.dumps(
+                {
+                    "action": "delete",
+                    "value": str(obj_id),
+                }
+            )
             return TemplateResponse(
                 request,
-                'oscar/dashboard/widgets/popup_response.html',
-                {'popup_response_data': popup_response_data, }
+                "oscar/dashboard/widgets/popup_response.html",
+                {
+                    "popup_response_data": popup_response_data,
+                },
             )
         else:
             return response
@@ -315,9 +320,9 @@ class PopUpWindowDeleteMixin(PopUpWindowMixin):
 
 
 class LoginView(auth_views.LoginView):
-    template_name = 'oscar/dashboard/login.html'
+    template_name = "oscar/dashboard/login.html"
     authentication_form = AuthenticationForm
-    login_redirect_url = reverse_lazy('dashboard:index')
+    login_redirect_url = reverse_lazy("dashboard:index")
 
     def get_success_url(self):
         url = self.get_redirect_url()

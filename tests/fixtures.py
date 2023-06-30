@@ -14,8 +14,8 @@ def rf():
 
 
 class RequestFactory(BaseRequestFactory):
-    Basket = get_model('basket', 'basket')
-    selector = get_class('partner.strategy', 'Selector')()
+    Basket = get_model("basket", "basket")
+    selector = get_class("partner.strategy", "Selector")()
 
     def request(self, user=None, **request):
         request = super().request(**request)
@@ -25,8 +25,8 @@ class RequestFactory(BaseRequestFactory):
 
         request.basket = self.Basket()
         request.basket_hash = None
-        strategy = self.selector.strategy(
-            request=request, user=request.user)
+        strategy = self.selector.strategy(request=request, user=request.user)
+        # pylint: disable=no-member
         request.strategy = request.basket.strategy = strategy
 
         return request

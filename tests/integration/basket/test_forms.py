@@ -10,45 +10,58 @@ from oscar.core.loading import get_model
 from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.factories import (
-    AttributeOptionFactory, AttributeOptionGroupFactory, BenefitFactory,
-    ConditionalOfferFactory, ConditionFactory, OptionFactory, RangeFactory)
+    AttributeOptionFactory,
+    AttributeOptionGroupFactory,
+    BenefitFactory,
+    ConditionalOfferFactory,
+    ConditionFactory,
+    OptionFactory,
+    RangeFactory,
+)
 
-Line = get_model('basket', 'Line')
-Option = get_model('catalogue', 'Option')
+Line = get_model("basket", "Line")
+Option = get_model("catalogue", "Option")
 
 
 class TestBasketLineForm(TestCase):
-
     def setUp(self):
         self.applicator = Applicator()
         rng = RangeFactory(includes_all_products=True)
         self.condition = ConditionFactory(
-            range=rng, type=ConditionFactory._meta.model.VALUE,
-            value=D('100'), proxy_class=None)
+            range=rng,
+            type=ConditionFactory._meta.model.VALUE,
+            value=D("100"),
+            proxy_class=None,
+        )
         self.benefit = BenefitFactory(
-            range=rng, type=BenefitFactory._meta.model.FIXED,
-            value=D('10'), max_affected_items=1)
+            range=rng,
+            type=BenefitFactory._meta.model.FIXED,
+            value=D("10"),
+            max_affected_items=1,
+        )
         self.basket = factories.create_basket()
         self.line = self.basket.all_lines()[0]
 
-    def mock_availability_return_value(self, is_available, reason=''):
+    def mock_availability_return_value(self, is_available, reason=""):
         policy = self.line.purchase_info.availability
         policy.is_purchase_permitted = mock.MagicMock(
-            return_value=(is_available, reason))
+            return_value=(is_available, reason)
+        )
 
     def build_form(self, quantity=None):
         if quantity is None:
             quantity = self.line.quantity
         return forms.BasketLineForm(
             strategy=self.basket.strategy,
-            data={'quantity': quantity},
-            instance=self.line)
+            data={"quantity": quantity},
+            instance=self.line,
+        )
 
     def test_interpret_empty_quantity_field_as_zero(self):
         form = self.build_form(quantity="")
 
         self.assertTrue(form.is_valid())
-        self.assertEqual(form.cleaned_data['quantity'], 0)
+        self.assertEqual(form.cleaned_data["quantity"], 0)
 
     def test_enforces_availability_policy_for_valid_quantities(self):
         self.mock_availability_return_value(True)
@@ -59,8 +72,7 @@ class TestBasketLineForm(TestCase):
         self.mock_availability_return_value(False, "Some reason")
         form = self.build_form()
         self.assertFalse(form.is_valid())
-        self.assertEqual(
-            form.errors['quantity'], ['Some reason'])
+        self.assertEqual(form.errors["quantity"], ["Some reason"])
 
     def test_skips_availability_policy_for_zero_quantities(self):
         self.mock_availability_return_value(True)
@@ -76,7 +88,7 @@ class TestBasketLineForm(TestCase):
     def test_enforce_max_line_quantity_for_existing_product(self):
         self.basket.flush()
         product = factories.create_product(num_in_stock=20)
-        add_product(self.basket, D('100'), 4, product)
+        add_product(self.basket, D("100"), 4, product)
         self.line = self.basket.all_lines()[0]
         form = self.build_form(quantity=6)
         self.assertTrue(form.is_valid())
@@ -91,27 +103,28 @@ class TestBasketLineForm(TestCase):
     def test_line_quantity_max_attribute_per_num_available(self):
         self.basket.flush()
         product = factories.create_product(num_in_stock=20)
-        add_product(self.basket, D('100'), 4, product)
+        add_product(self.basket, D("100"), 4, product)
         self.line = self.basket.all_lines()[0]
         form = self.build_form()
-        self.assertIn('max="20"', str(form['quantity']))
+        self.assertIn('max="20"', str(form["quantity"]))
 
     @override_settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=10)
     def test_line_quantity_max_attribute_per_basket_threshold(self):
         self.basket.flush()
         product = factories.create_product(num_in_stock=20)
-        add_product(self.basket, D('100'), 4, product)
+        add_product(self.basket, D("100"), 4, product)
         self.line = self.basket.all_lines()[0]
         form = self.build_form()
-        self.assertIn('max="6"', str(form['quantity']))
+        self.assertIn('max="6"', str(form["quantity"]))
 
     def test_basketline_formset_ordering(self):
         # when we use a unordered queryset in the Basketlineformset, the
         # discounts will be lost because django will query the database
         # again to enforce ordered results
-        add_product(self.basket, D('100'), 5)
+        add_product(self.basket, D("100"), 5)
         offer = ConditionalOfferFactory(
-            pk=1, condition=self.condition, benefit=self.benefit)
+            pk=1, condition=self.condition, benefit=self.benefit
+        )
 
         # now we force an unordered queryset so we can see that our discounts
         # will disappear due to a new ordering query (see django/forms/model.py)
@@ -121,8 +134,8 @@ class TestBasketLineForm(TestCase):
 
         self.applicator.apply_offers(self.basket, [offer])
         formset = formsets.BasketLineFormSet(
-            strategy=self.basket.strategy,
-            queryset=self.basket.all_lines())
+            strategy=self.basket.strategy, queryset=self.basket.all_lines()
+        )
 
         # the discount is in all_lines():
         self.assertTrue(self.basket.all_lines()[0].has_discount)
@@ -138,8 +151,8 @@ class TestBasketLineForm(TestCase):
         self.applicator.apply_offers(self.basket, [offer])
 
         formset = formsets.BasketLineFormSet(
-            strategy=self.basket.strategy,
-            queryset=self.basket.all_lines())
+            strategy=self.basket.strategy, queryset=self.basket.all_lines()
+        )
         self.assertTrue(formset.forms[0].instance.has_discount)
 
     def test_max_allowed_quantity_with_options(self):
@@ -148,31 +161,34 @@ class TestBasketLineForm(TestCase):
         option = OptionFactory(required=False)
         product = factories.create_product(num_in_stock=2)
         product.get_product_class().options.add(option)
-        self.basket.add_product(product, options=[{"option": option, "value": "Test 1"}])
-        self.basket.add_product(product, options=[{"option": option, "value": "Test 2"}])
+        self.basket.add_product(
+            product, options=[{"option": option, "value": "Test 1"}]
+        )
+        self.basket.add_product(
+            product, options=[{"option": option, "value": "Test 2"}]
+        )
 
         form = forms.BasketLineForm(
             strategy=self.basket.strategy,
-            data={'quantity': 2},
-            instance=self.basket.all_lines()[0]
+            data={"quantity": 2},
+            instance=self.basket.all_lines()[0],
         )
         self.assertFalse(form.is_valid())
         self.assertIn(
-            "Available stock is only %s, which has been exceeded because multiple lines contain the same product." % 2,
-            str(form.errors)
+            "Available stock is only %s, which has been exceeded because multiple lines contain the same product."
+            % 2,
+            str(form.errors),
         )
 
 
 class TestAddToBasketForm(TestCase):
-
     def test_allows_a_product_quantity_to_be_increased(self):
         basket = factories.create_basket()
         product = basket.all_lines()[0].product
 
         # Add more of the same product
-        data = {'quantity': 1}
-        form = forms.AddToBasketForm(
-            basket=basket, product=product, data=data)
+        data = {"quantity": 1}
+        form = forms.AddToBasketForm(basket=basket, product=product, data=data)
         self.assertTrue(form.is_valid())
 
     def test_checks_whether_passed_product_id_matches_a_real_product(self):
@@ -180,9 +196,8 @@ class TestAddToBasketForm(TestCase):
         product = basket.all_lines()[0].product
 
         # Add more of the same product
-        data = {'quantity': -1}
-        form = forms.AddToBasketForm(
-            basket=basket, product=product, data=data)
+        data = {"quantity": -1}
+        form = forms.AddToBasketForm(basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
 
     def test_checks_if_purchase_is_permitted(self):
@@ -195,52 +210,47 @@ class TestAddToBasketForm(TestCase):
         info = mock.Mock()
         info.availability = mock.Mock()
         info.availability.is_purchase_permitted = mock.Mock(
-            return_value=(False, "Not on your nelly!"))
-        basket.strategy.fetch_for_product = mock.Mock(
-            return_value=info)
+            return_value=(False, "Not on your nelly!")
+        )
+        basket.strategy.fetch_for_product = mock.Mock(return_value=info)
 
-        data = {'quantity': 1}
-        form = forms.AddToBasketForm(
-            basket=basket, product=product, data=data)
+        data = {"quantity": 1}
+        form = forms.AddToBasketForm(basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual('Not on your nelly!', form.errors['__all__'][0])
+        self.assertEqual("Not on your nelly!", form.errors["__all__"][0])
 
     def test_mixed_currency_baskets_are_not_permitted(self):
         # Ensure basket is one currency
         basket = mock.Mock()
-        basket.currency = 'GBP'
+        basket.currency = "GBP"
         basket.num_items = 1
 
         # Ensure new product has different currency
         info = mock.Mock()
-        info.price.currency = 'EUR'
-        basket.strategy.fetch_for_product = mock.Mock(
-            return_value=info)
+        info.price.currency = "EUR"
+        basket.strategy.fetch_for_product = mock.Mock(return_value=info)
 
         product = factories.ProductFactory()
 
-        data = {'quantity': 1}
-        form = forms.AddToBasketForm(
-            basket=basket, product=product, data=data)
+        data = {"quantity": 1}
+        form = forms.AddToBasketForm(basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
 
     def test_cannot_add_a_product_without_price(self):
         basket = factories.BasketFactory()
         product = factories.create_product(price=None)
 
-        data = {'quantity': 1}
-        form = forms.AddToBasketForm(
-            basket=basket, product=product, data=data)
+        data = {"quantity": 1}
+        form = forms.AddToBasketForm(basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors['__all__'][0],
-            'This product cannot be added to the basket because a price '
-            'could not be determined for it.',
+            form.errors["__all__"][0],
+            "This product cannot be added to the basket because a price "
+            "could not be determined for it.",
         )
 
 
 class TestAddToBasketWithOptionForm(TestCase):
-
     def setUp(self):
         self.basket = factories.create_basket(empty=True)
         self.product = factories.create_product(num_in_stock=1)
@@ -257,9 +267,11 @@ class TestAddToBasketWithOptionForm(TestCase):
     def test_add_to_basket_with_not_required_option(self):
         option = OptionFactory(required=False)
         self.product.product_class.options.add(option)
-        data = {'quantity': 1}
+        data = {"quantity": 1}
         form = self._get_basket_form(
-            basket=self.basket, product=self.product, data=data,
+            basket=self.basket,
+            product=self.product,
+            data=data,
         )
         self.assertTrue(form.is_valid())
         self.assertFalse(form.fields[option.code].required)
@@ -267,22 +279,31 @@ class TestAddToBasketWithOptionForm(TestCase):
     def test_add_to_basket_with_required_option(self):
         option = OptionFactory(required=True)
         self.product.product_class.options.add(option)
-        data = {'quantity': 1}
+        data = {"quantity": 1}
         invalid_form = self._get_basket_form(
-            basket=self.basket, product=self.product, data=data,
+            basket=self.basket,
+            product=self.product,
+            data=data,
         )
         self.assertFalse(invalid_form.is_valid())
         self.assertTrue(invalid_form.fields[option.code].required)
-        data[option.code] = 'Test value'
+        data[option.code] = "Test value"
         valid_form = self._get_basket_form(
-            basket=self.basket, product=self.product, data=data,
+            basket=self.basket,
+            product=self.product,
+            data=data,
         )
         self.assertTrue(valid_form.is_valid())
 
     def _test_add_to_basket_with_specific_option_type(
-            self, option_type, invalid_value, valid_value
+        self, option_type, invalid_value, valid_value
     ):
-        if option_type in [Option.SELECT, Option.RADIO, Option.MULTI_SELECT, Option.CHECKBOX]:
+        if option_type in [
+            Option.SELECT,
+            Option.RADIO,
+            Option.MULTI_SELECT,
+            Option.CHECKBOX,
+        ]:
             group = AttributeOptionGroupFactory(name="minte")
             AttributeOptionFactory(option="henk", group=group)
             AttributeOptionFactory(option="klaas", group=group)
@@ -291,53 +312,73 @@ class TestAddToBasketWithOptionForm(TestCase):
             option = OptionFactory(required=True, type=option_type)
 
         self.product.product_class.options.add(option)
-        data = {'quantity': 1, option.code: invalid_value}
+        data = {"quantity": 1, option.code: invalid_value}
         invalid_form = self._get_basket_form(
-            basket=self.basket, product=self.product, data=data,
+            basket=self.basket,
+            product=self.product,
+            data=data,
         )
         self.assertFalse(invalid_form.is_valid())
         data[option.code] = valid_value
         valid_form = self._get_basket_form(
-            basket=self.basket, product=self.product, data=data,
+            basket=self.basket,
+            product=self.product,
+            data=data,
         )
         self.assertTrue(valid_form.is_valid())
 
     def test_add_to_basket_with_integer_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.INTEGER, 1.55, 1,
+            Option.INTEGER,
+            1.55,
+            1,
         )
 
     def test_add_to_basket_with_float_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.FLOAT, 'invalid_float', 1,
+            Option.FLOAT,
+            "invalid_float",
+            1,
         )
 
     def test_add_to_basket_with_bool_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.BOOLEAN, None, True,
+            Option.BOOLEAN,
+            None,
+            True,
         )
 
     def test_add_to_basket_with_date_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.DATE, 'invalid_date', '2019-03-03',
+            Option.DATE,
+            "invalid_date",
+            "2019-03-03",
         )
 
     def test_add_to_basket_with_select_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.SELECT, 'invalid_select', 'henk',
+            Option.SELECT,
+            "invalid_select",
+            "henk",
         )
 
     def test_add_to_basket_with_radio_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.RADIO, 'invalid_radio', 'henk',
+            Option.RADIO,
+            "invalid_radio",
+            "henk",
         )
 
     def test_add_to_basket_with_multi_select_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.MULTI_SELECT, ['invalid_multi_select'], ['henk', 'klaas'],
+            Option.MULTI_SELECT,
+            ["invalid_multi_select"],
+            ["henk", "klaas"],
         )
 
     def test_add_to_basket_with_checkbox_option(self):
         self._test_add_to_basket_with_specific_option_type(
-            Option.CHECKBOX, ['invalid_checkbox'], ['henk', 'klaas'],
+            Option.CHECKBOX,
+            ["invalid_checkbox"],
+            ["henk", "klaas"],
         )

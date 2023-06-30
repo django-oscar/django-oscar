@@ -13,7 +13,6 @@ from oscar.core.loading import get_model
 
 
 class ExtendedURLValidator(validators.URLValidator):
-
     def __init__(self, *args, **kwargs):
         self.is_local_url = False
         super().__init__(*args, **kwargs)
@@ -35,7 +34,7 @@ class ExtendedURLValidator(validators.URLValidator):
         except Http404:
             # We load flatpages here as it causes a circular reference problem
             # sometimes.  FlatPages is None if not installed
-            FlatPage = get_model('flatpages', 'FlatPage')
+            FlatPage = get_model("flatpages", "FlatPage")
             if FlatPage is not None:
                 try:
                     FlatPage.objects.get(url=value)
@@ -74,16 +73,15 @@ class ExtendedURLValidator(validators.URLValidator):
         """
         Ensure url has a preceding slash and no query string
         """
-        if value != '/':
-            value = '/' + value.lstrip('/')
-        q_index = value.find('?')
+        if value != "/":
+            value = "/" + value.lstrip("/")
+        q_index = value.find("?")
         if q_index > 0:
             value = value[:q_index]
         return value
 
 
 class URLDoesNotExistValidator(ExtendedURLValidator):
-
     def __call__(self, value):
         """
         Validate that the URL does not already exist.
@@ -102,21 +100,17 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
         except ValidationError:
             # Page exists - that is what we want
             return
-        raise ValidationError(
-            _('Specified page already exists!'), code='invalid')
+        raise ValidationError(_("Specified page already exists!"), code="invalid")
 
 
 def non_whitespace(value):
     stripped = value.strip()
     if not stripped:
-        raise ValidationError(
-            _("This field is required"))
+        raise ValidationError(_("This field is required"))
     return stripped
 
 
 def non_python_keyword(value):
     if keyword.iskeyword(value):
-        raise ValidationError(
-            _("This field is invalid as its value is forbidden")
-        )
+        raise ValidationError(_("This field is invalid as its value is forbidden"))
     return value

@@ -8,13 +8,13 @@ from django.views.generic import DetailView
 
 from oscar.core.loading import get_model
 
-WishList = get_model('wishlists', 'WishList')
+WishList = get_model("wishlists", "WishList")
 
 
 class WishListView(DetailView):
-    template_name = 'oscar/wishlists/wishlist_detail.html'
+    template_name = "oscar/wishlists/wishlist_detail.html"
     model = WishList
-    context_object_name = 'wishlist'
+    context_object_name = "wishlist"
 
     def dispatch(self, request, *args, **kwargs):
         wishlist = self.get_object()
@@ -40,7 +40,7 @@ class WishListView(DetailView):
 
         wishlist_lines = self.object.lines.filter(product__isnull=False)
         paginator = Paginator(wishlist_lines, settings.OSCAR_PRODUCTS_PER_PAGE)
-        page_number = self.request.GET.get('page')
+        page_number = self.request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
         ctx["wishlist_title"] = str(self.object)

@@ -6,7 +6,6 @@ from oscar.test.factories.offer import ConditionalOfferFactory
 
 
 class TestOffer(TestCase):
-
     def setUp(self):
         self.offer = ConditionalOfferFactory()
         self.non_public_product = create_product(is_public=False)

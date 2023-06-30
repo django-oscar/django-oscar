@@ -14,5 +14,6 @@ class PartnerProductFilterMixin:
             return queryset
 
         return queryset.filter(
-            Q(children__stockrecords__partner__users__pk=user.pk) | Q(stockrecords__partner__users__pk=user.pk)
+            Q(children__stockrecords__partner__users__pk=user.pk)
+            | Q(stockrecords__partner__users__pk=user.pk)
         ).distinct()

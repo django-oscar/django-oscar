@@ -26,5 +26,5 @@ class OrderTotalCalculator(object):
                 incl_tax += surcharges.total.incl_tax
 
         return prices.Price(
-            currency=basket.currency,
-            excl_tax=excl_tax, incl_tax=incl_tax)
+            currency=basket.currency, excl_tax=excl_tax, incl_tax=incl_tax
+        )
