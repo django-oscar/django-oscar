@@ -29,6 +29,9 @@ class RangeListView(ListView):
     template_name = "oscar/dashboard/ranges/range_list.html"
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
+    def get_queryset(self):
+        return self.model._default_manager.prefetch_related('included_categories')
+
 
 class RangeCreateView(CreateView):
     model = Range
