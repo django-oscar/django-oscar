@@ -27,6 +27,9 @@ class Base(object):
     #: Price tax
     tax = None
 
+    # Code used to store the vat rate reference
+    code = None
+
     #: Retail price
     retail = None
 
@@ -58,11 +61,12 @@ class FixedPrice(Base):
 
     exists = True
 
-    def __init__(self, currency, excl_tax, tax=None):
+    def __init__(self, currency, excl_tax, tax=None, code=None):
         super().__init__()
         self.currency = currency
         self.excl_tax = excl_tax
         self.tax = tax
+        self.code = code
 
     @property
     def incl_tax(self):
