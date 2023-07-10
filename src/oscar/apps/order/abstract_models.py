@@ -609,7 +609,9 @@ class AbstractLine(models.Model):
         null=True,
     )
 
-    code = models.CharField(_("VAT rate code"), max_length=64, blank=True, null=True)
+    tax_code = models.CharField(
+        _("VAT rate code"), max_length=64, blank=True, null=True
+    )
 
     # Partners often want to assign some status to each line to help with their
     # own business processes.
@@ -930,7 +932,9 @@ class AbstractLinePrice(models.Model):
     shipping_excl_tax = models.DecimalField(
         _("Shipping (excl. tax)"), decimal_places=2, max_digits=12, default=0
     )
-    code = models.CharField(_("VAT rate code"), max_length=64, blank=True, null=True)
+    tax_code = models.CharField(
+        _("VAT rate code"), max_length=64, blank=True, null=True
+    )
 
     class Meta:
         abstract = True

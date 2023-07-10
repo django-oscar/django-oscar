@@ -17,10 +17,10 @@ class Price(object):
         currency (str): 3 character currency code
     """
 
-    def __init__(self, currency, excl_tax, incl_tax=None, tax=None, code=None):
+    def __init__(self, currency, excl_tax, incl_tax=None, tax=None, tax_code=None):
         self.currency = currency
         self.excl_tax = excl_tax
-        self.code = code
+        self.tax_code = tax_code
         if incl_tax is not None:
             self.incl_tax = incl_tax
             self.is_tax_known = True
@@ -73,7 +73,7 @@ class Price(object):
             currency=self.currency,
             incl_tax=self.incl_tax + other.incl_tax,
             excl_tax=self.excl_tax + other.excl_tax,
-            code=self.code,
+            tax_code=self.tax_code,
         )
 
     def __radd__(self, other):
