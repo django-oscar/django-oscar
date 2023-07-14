@@ -281,6 +281,7 @@ class AbstractBasket(models.Model):
             "quantity": quantity,
             "price_excl_tax": stock_info.price.excl_tax,
             "price_currency": stock_info.price.currency,
+            "tax_code": stock_info.price.tax_code,
         }
         if stock_info.price.is_tax_known:
             defaults["price_incl_tax"] = stock_info.price.incl_tax
@@ -708,6 +709,9 @@ class AbstractLine(models.Model):
     )
     price_incl_tax = models.DecimalField(
         _("Price incl. Tax"), decimal_places=2, max_digits=12, null=True
+    )
+    tax_code = models.CharField(
+        _("VAT rate code"), max_length=64, blank=True, null=True
     )
 
     # Track date of first addition

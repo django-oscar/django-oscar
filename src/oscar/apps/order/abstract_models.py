@@ -86,6 +86,9 @@ class AbstractOrder(models.Model):
     shipping_excl_tax = models.DecimalField(
         _("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0
     )
+    shipping_tax_code = models.CharField(
+        _("Shipping VAT rate code"), max_length=64, blank=True, null=True
+    )
 
     # Not all lines are actually shipped (such as downloads), hence shipping
     # address is not mandatory.
@@ -606,6 +609,10 @@ class AbstractLine(models.Model):
         null=True,
     )
 
+    tax_code = models.CharField(
+        _("VAT rate code"), max_length=64, blank=True, null=True
+    )
+
     # Partners often want to assign some status to each line to help with their
     # own business processes.
     status = models.CharField(_("Status"), max_length=255, blank=True)
@@ -924,6 +931,9 @@ class AbstractLinePrice(models.Model):
     )
     shipping_excl_tax = models.DecimalField(
         _("Shipping (excl. tax)"), decimal_places=2, max_digits=12, default=0
+    )
+    tax_code = models.CharField(
+        _("VAT rate code"), max_length=64, blank=True, null=True
     )
 
     class Meta:
@@ -1291,9 +1301,11 @@ class AbstractSurcharge(models.Model):
     incl_tax = models.DecimalField(
         _("Surcharge (inc. tax)"), decimal_places=2, max_digits=12, default=0
     )
-
     excl_tax = models.DecimalField(
         _("Surcharge (excl. tax)"), decimal_places=2, max_digits=12, default=0
+    )
+    tax_code = models.CharField(
+        _("VAT rate code"), max_length=64, blank=True, null=True
     )
 
     @property

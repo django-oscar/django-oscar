@@ -152,6 +152,7 @@ class OrderCreator(object):
             "total_excl_tax": total.excl_tax,
             "shipping_incl_tax": shipping_charge.incl_tax,
             "shipping_excl_tax": shipping_charge.excl_tax,
+            "shipping_tax_code": shipping_charge.tax_code,
             "shipping_method": shipping_method.name,
             "shipping_code": shipping_method.code,
         }
@@ -177,7 +178,9 @@ class OrderCreator(object):
                     code=charge.surcharge.code,
                     excl_tax=charge.price.excl_tax,
                     incl_tax=charge.price.incl_tax,
+                    tax_code=charge.price.tax_code,
                 )
+
         return order
 
     def create_line_models(self, order, basket_line, extra_line_fields=None):
@@ -193,6 +196,7 @@ class OrderCreator(object):
             raise exceptions.UnableToPlaceOrder(
                 "Basket line #%d has no stockrecord" % basket_line.id
             )
+
         partner = stockrecord.partner
         line_data = {
             "order": order,
@@ -214,6 +218,7 @@ class OrderCreator(object):
             # Reporting details
             "unit_price_incl_tax": basket_line.unit_price_incl_tax,
             "unit_price_excl_tax": basket_line.unit_price_excl_tax,
+            "tax_code": basket_line.tax_code,
         }
         extra_line_fields = extra_line_fields or {}
         if hasattr(settings, "OSCAR_INITIAL_LINE_STATUS"):
@@ -259,6 +264,7 @@ class OrderCreator(object):
                 quantity=quantity,
                 price_incl_tax=price_incl_tax,
                 price_excl_tax=price_excl_tax,
+                tax_code=basket_line.tax_code,
             )
 
     # pylint: disable=unused-argument
