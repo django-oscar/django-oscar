@@ -120,6 +120,15 @@ if not is_model_registered("order", "OrderDiscount"):
 
     __all__.append("OrderDiscount")
 
+
+if not is_model_registered("order", "OrderLineDiscount"):
+
+    class OrderLineDiscount(AbstractOrderLineDiscount):
+        pass
+
+    __all__.append("OrderDiscount")
+
+
 if not is_model_registered("order", "Surcharge"):
 
     class Surcharge(AbstractSurcharge):

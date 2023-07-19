@@ -14,6 +14,7 @@ from . import exceptions
 Order = get_model("order", "Order")
 Line = get_model("order", "Line")
 OrderDiscount = get_model("order", "OrderDiscount")
+OrderLineDiscount = get_model("order", "OrderLineDiscount")
 CommunicationEvent = get_model("order", "CommunicationEvent")
 CommunicationEventType = get_model("communication", "CommunicationEventType")
 Dispatcher = get_class("communication.utils", "Dispatcher")
@@ -88,10 +89,6 @@ class OrderCreator(object):
                 request,
                 **kwargs
             )
-            for line in basket.all_lines():
-                self.create_line_models(order, line)
-                self.update_stock_records(line)
-
             for voucher in basket.vouchers.select_for_update():
                 if not voucher.is_active():  # basket ignores inactive vouchers
                     basket.vouchers.remove(voucher)
@@ -122,6 +119,10 @@ class OrderCreator(object):
 
             for voucher in basket.vouchers.all():
                 self.record_voucher_usage(order, voucher, user)
+
+            for line in basket.all_lines():
+                self.create_line_models(order, line)
+                self.update_stock_records(line)
 
         # Send signal for analytics to pick up
         order_placed.send(sender=self, order=order, user=user)
@@ -232,6 +233,7 @@ class OrderCreator(object):
         order_line = Line._default_manager.create(**line_data)
         self.create_line_price_models(order, order_line, basket_line)
         self.create_line_attributes(order, order_line, basket_line)
+        self.create_line_discount_models(order, order_line, basket_line)
         self.create_additional_line_models(order, order_line, basket_line)
 
         return order_line
@@ -242,6 +244,16 @@ class OrderCreator(object):
         """
         if line.product.get_product_class().track_stock:
             line.stockrecord.allocate(line.quantity)
+
+    def create_line_discount_models(self, order, order_line, basket_line):
+        for discount in basket_line.discounts:
+            order_discount = order.discounts.filter(offer_id=discount.offer.id).first()
+            if order_discount:
+                order_line.discounts.create(
+                    order_discount=order_discount,
+                    is_incl_tax=discount.incl_tax,
+                    amount=discount.amount,
+                )
 
     def create_additional_line_models(self, order, order_line, basket_line):
         """

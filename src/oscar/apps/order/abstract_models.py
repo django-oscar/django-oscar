@@ -1286,6 +1286,33 @@ class AbstractOrderDiscount(models.Model):
         return self.offer_name or ""
 
 
+class AbstractOrderLineDiscount(models.Model):
+    line = models.ForeignKey(
+        "order.Line",
+        on_delete=models.CASCADE,
+        related_name="discounts",
+        verbose_name=_("Line"),
+    )
+    order_discount = models.ForeignKey(
+        "order.OrderDiscount",
+        on_delete=models.CASCADE,
+        related_name="discount_lines",
+        verbose_name=_("Order discount"),
+    )
+
+    is_incl_tax = models.BooleanField()
+    amount = models.DecimalField(
+        _("Line discount (excl. tax)"), decimal_places=2, max_digits=12, default=0
+    )
+
+    class Meta:
+        abstract = True
+        app_label = "order"
+        ordering = ["pk"]
+        verbose_name = _("Order line discount")
+        verbose_name_plural = _("Order line discounts")
+
+
 class AbstractSurcharge(models.Model):
     order = models.ForeignKey(
         "order.Order",
