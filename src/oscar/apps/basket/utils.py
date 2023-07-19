@@ -115,6 +115,7 @@ class LineOfferConsumer(object):
         basket line is consumed for *any* offer, else only for the
         specified offer.
         """
+        # raise Exception("viggo is henk")
         if offer:
             self._cache(offer)
             available = self.available(offer)
