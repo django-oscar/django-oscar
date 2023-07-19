@@ -14,12 +14,13 @@ from django.utils.translation import gettext_lazy as _
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes
 from oscar.core.utils import get_default_currency, round_half_up
+from oscar.core.decorators import deprecated
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
 OfferApplications = get_class("offer.results", "OfferApplications")
 Unavailable = get_class("partner.availability", "Unavailable")
-LineOfferConsumer = get_class("basket.utils", "LineOfferConsumer")
+LineDiscountRegistry = get_class("basket.utils", "LineDiscountRegistry")
 OpenBasketManager, SavedBasketManager = get_classes(
     "basket.managers", ["OpenBasketManager", "SavedBasketManager"]
 )
@@ -727,10 +728,9 @@ class AbstractLine(models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Instance variables used to persist discount information
-        self.discounts = []
         # self._discount_excl_tax = D("0.00")
         # self._discount_incl_tax = D("0.00")
-        self.consumer = LineOfferConsumer(self)
+        self.discounts = LineDiscountRegistry(self)
 
     class Meta:
         abstract = True
@@ -740,6 +740,11 @@ class AbstractLine(models.Model):
         unique_together = ("basket", "line_reference")
         verbose_name = _("Basket line")
         verbose_name_plural = _("Basket lines")
+
+    @property
+    @deprecated
+    def consumer(self):
+        return self.discounts
 
     def __str__(self):
         return _(
@@ -765,10 +770,7 @@ class AbstractLine(models.Model):
         """
         Remove any discounts from this line.
         """
-        self.discounts = []
-        # self._discount_excl_tax = D("0.00")
-        # self._discount_incl_tax = D("0.00")
-        self.consumer = LineOfferConsumer(self)
+        self.discounts = LineDiscountRegistry(self)
 
     def discount(self, discount_value, affected_quantity, incl_tax=True, offer=None):
         """
@@ -786,8 +788,9 @@ class AbstractLine(models.Model):
                     "Attempting to discount the tax-exclusive price of a line "
                     "when tax-inclusive discounts are already applied"
                 )
-        self.discounts.append((discount_value, affected_quantity, incl_tax, offer))
-        self.consume(affected_quantity, offer=offer)
+        self.discounts.discount(discount_value, affected_quantity, incl_tax, offer)
+        # self.discounts.append((discount_value, affected_quantity, incl_tax, offer))
+        # self.consume(affected_quantity, offer=offer)
 
     def consume(self, quantity, offer=None):
         """
@@ -795,7 +798,7 @@ class AbstractLine(models.Model):
 
         Consumed items are no longer available to be used in offers.
         """
-        return self.consumer.consume(quantity, offer=offer)
+        return self.discounts.consume(quantity, offer=offer)
 
     def get_price_breakdown(self):
         """
@@ -816,14 +819,16 @@ class AbstractLine(models.Model):
         else:
             # Need to split the discount among the affected quantity
             # of products.
-            item_incl_tax_discount = self.discount_value / int(self.consumer.consumed())
+            item_incl_tax_discount = self.discount_value / int(
+                self.discounts.num_consumed()
+            )
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
             item_excl_tax_discount = round_half_up(item_excl_tax_discount)
             prices.append(
                 (
                     self.unit_price_incl_tax - item_incl_tax_discount,
                     self.unit_price_excl_tax - item_excl_tax_discount,
-                    self.consumer.consumed(),
+                    self.discounts.num_consumed(),
                 )
             )
             if self.quantity_without_discount:
@@ -851,16 +856,16 @@ class AbstractLine(models.Model):
     # ===============
 
     def has_offer_discount(self, offer):
-        return self.consumer.consumed(offer) > 0
+        return self.discounts.num_consumed(offer) > 0
 
     def quantity_with_offer_discount(self, offer):
-        return self.consumer.consumed(offer)
+        return self.discounts.num_consumed(offer)
 
     def quantity_without_offer_discount(self, offer):
-        return self.consumer.available(offer)
+        return self.discounts.available(offer)
 
     def is_available_for_offer_discount(self, offer):
-        return self.consumer.available(offer) > 0
+        return self.discounts.available(offer) > 0
 
     def quantity_available_for_offer(self, offer):
         return self.quantity_without_offer_discount(
@@ -872,16 +877,18 @@ class AbstractLine(models.Model):
     # ==========
 
     @property
+    @deprecated
     def _discount_incl_tax(self):
-        return sum([discount[0] for discount in self.discounts if discount[2]], 0)
+        return self.discounts.incl_tax
 
     @_discount_incl_tax.setter
     def _discount_incl_tax(self, value):
         raise Exception("_discount_incl_tax kan je niet setten")
 
     @property
+    @deprecated
     def _discount_excl_tax(self):
-        return sum([discount[0] for discount in self.discounts if not discount[2]], 0)
+        return self.discounts.excl_tax
 
     @_discount_excl_tax.setter
     def _discount_excl_tax(self, value):
@@ -889,19 +896,20 @@ class AbstractLine(models.Model):
 
     @property
     def has_discount(self):
-        return bool(self.consumer.consumed())
+        return bool(self.discounts.num_consumed())
 
     @property
     def quantity_with_discount(self):
-        return self.consumer.consumed()
+        return self.discounts.num_consumed()
 
     @property
     def quantity_without_discount(self):
-        return self.consumer.available()
+        return self.discounts.available()
 
     @property
     def discount_value(self):
-        return sum([discount[0] for discount in self.discounts], 0)
+        return self.discounts.total
+        # return sum([discount[0] for discount in self.discounts], 0)
         # Only one of the incl- and excl- discounts should be non-zero
         # return max(self._discount_incl_tax, self._discount_excl_tax)
 
@@ -949,12 +957,8 @@ class AbstractLine(models.Model):
         if self.line_price_excl_tax is None:
             return None
 
-        excl_tax_discounts = sum(
-            [discount[0] for discount in self.discounts if not discount[2]], 0
-        )
-        incl_tax_discounts = sum(
-            [discount[0] for discount in self.discounts if discount[2]], 0
-        )
+        excl_tax_discounts = self.discounts.excl_tax
+        incl_tax_discounts = self.discounts.incl_tax
 
         if excl_tax_discounts and self.line_price_excl_tax is not None:
             return max(0, self.line_price_excl_tax - excl_tax_discounts)
@@ -970,12 +974,8 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_incl_tax_incl_discounts(self):
-        excl_tax_discounts = sum(
-            [discount[0] for discount in self.discounts if not discount[2]], 0
-        )
-        incl_tax_discounts = sum(
-            [discount[0] for discount in self.discounts if discount[2]], 0
-        )
+        excl_tax_discounts = self.discounts.excl_tax
+        incl_tax_discounts = self.discounts.incl_tax
 
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
