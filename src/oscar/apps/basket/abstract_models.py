@@ -1,5 +1,5 @@
 import zlib
-from decimal import Decimal as D
+from decimal import Decimal as D, ROUND_HALF_DOWN
 from operator import itemgetter
 
 from django.conf import settings
@@ -983,12 +983,15 @@ class AbstractLine(models.Model):
         if self.line_price_incl_tax is not None and incl_tax_discounts:
             return max(0, self.line_price_incl_tax - self._discount_incl_tax)
         elif self.line_price_excl_tax is not None and excl_tax_discounts:
-            return max(
-                0,
-                round_half_up(
-                    (self.line_price_excl_tax - excl_tax_discounts) / self._tax_ratio
-                ),
-            )
+            return round_half_up(self.line_price_excl_tax_incl_discounts / self._tax_ratio)
+            # return max(0, self.line_price_incl_tax - (excl_tax_discounts / self._tax_ratio).quantize(D("0.01"), ROUND_HALF_DOWN))
+            # return max(0, self.line_price_incl_tax - round_half_up(excl_tax_discounts / self._tax_ratio))
+            # return max(
+            #     0,
+            #     round_half_up(
+            #         (self.line_price_excl_tax - excl_tax_discounts) / self._tax_ratio
+            #     ),
+            # )
 
         return self.line_price_incl_tax
 
