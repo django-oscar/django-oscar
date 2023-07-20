@@ -1,4 +1,5 @@
 from oscar.core import prices
+from django.conf import settings
 
 
 class Base(object):
@@ -21,6 +22,8 @@ class Base(object):
     #: Price to use for offer calculations
     @property
     def effective_price(self):
+        if settings.OSCAR_OFFERS_INCL_TAX:
+            return self.incl_tax
         # Default to using the price excluding tax for calculations
         return self.excl_tax
 
