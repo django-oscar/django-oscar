@@ -132,7 +132,7 @@
                     </td>
                     <td>{{ product.upc|default:"-" }}</td>
                     <td><a href="{% url 'dashboard:catalogue-product' pk=product.id %}">{{ product.get_title }}</a></td>
-                    <td>{% if product.get_is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+                    <td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
                     <td>
                       <a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
                       {% if range.is_reorderable %}
@@ -242,7 +242,7 @@
                       </td>
                       <td>{{ product.upc|default:"-" }}</td>
                       <td><a href="{% url 'dashboard:catalogue-product' pk=product.id %}">{{ product.get_title }}</a></td>
-                      <td>{% if product.get_is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+                      <td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
                       <td><a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a></td>
                     </tr>
                   {% endfor %}

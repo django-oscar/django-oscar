@@ -552,8 +552,7 @@ Misc
 * Support for the ``OSCAR_OFFER_BLACKLIST_PRODUCT`` setting has been removed.
   It was only partially supported: it prevented products from being
   added to a range, but offers could be applied to the products nonetheless.
-  To prevent an offer being applied to a product, use ``is_discountable`` or
-  override ``get_is_discountable`` on your product instances.
+  To prevent an offer being applied to a product, use ``is_discountable``
 
 * ``Category.get_ancestors`` used to return a list of ancestors and would
   default to include itself. For consistency with get_descendants and to avoid
