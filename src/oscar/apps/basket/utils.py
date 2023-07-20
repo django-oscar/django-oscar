@@ -151,7 +151,7 @@ class LineOfferConsumer(object):
 
     @property
     def consumers(self):
-        return [x for x in self._offers.values() if self.consumed(x)]
+        return [x for x in self._offers.values() if self.num_consumed(x)]
 
     def available(self, offer=None) -> int:
         """
@@ -178,7 +178,9 @@ class LineOfferConsumer(object):
                         ):
                             # Exclusive offers cannot be applied if any other exclusive
                             # offer with higher priority is active already.
-                            max_affected_items = max_affected_items - self.consumed(a)
+                            max_affected_items = max_affected_items - self.num_consumed(
+                                a
+                            )
                             if max_affected_items == 0:
                                 return 0
 
@@ -197,7 +199,7 @@ class LineOfferConsumer(object):
                 if check and offer not in x.combined_offers:
                     return 0
 
-        return max_affected_items - self.consumed(offer)
+        return max_affected_items - self.num_consumed(offer)
 
 
 DiscountApplication = namedtuple(

@@ -1,5 +1,5 @@
 import zlib
-from decimal import Decimal as D, ROUND_HALF_DOWN
+from decimal import Decimal as D
 from operator import itemgetter
 
 from django.conf import settings
@@ -777,13 +777,13 @@ class AbstractLine(models.Model):
         Apply a discount to this line
         """
         if incl_tax:
-            if self._discount_excl_tax > 0:
+            if self.discounts.excl_tax > 0:
                 raise RuntimeError(
                     "Attempting to discount the tax-inclusive price of a line "
                     "when tax-exclusive discounts are already applied"
                 )
         else:
-            if self._discount_incl_tax > 0:
+            if self.discounts.incl_tax > 0:
                 raise RuntimeError(
                     "Attempting to discount the tax-exclusive price of a line "
                     "when tax-inclusive discounts are already applied"
@@ -981,9 +981,11 @@ class AbstractLine(models.Model):
         # calculated against the tax-exclusive prices, then the line price
         # including tax
         if self.line_price_incl_tax is not None and incl_tax_discounts:
-            return max(0, self.line_price_incl_tax - self._discount_incl_tax)
+            return max(0, self.line_price_incl_tax - incl_tax_discounts)
         elif self.line_price_excl_tax is not None and excl_tax_discounts:
-            return round_half_up(self.line_price_excl_tax_incl_discounts / self._tax_ratio)
+            return round_half_up(
+                self.line_price_excl_tax_incl_discounts / self._tax_ratio
+            )
             # return max(0, self.line_price_incl_tax - (excl_tax_discounts / self._tax_ratio).quantize(D("0.01"), ROUND_HALF_DOWN))
             # return max(0, self.line_price_incl_tax - round_half_up(excl_tax_discounts / self._tax_ratio))
             # return max(
