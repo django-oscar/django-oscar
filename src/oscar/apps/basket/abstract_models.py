@@ -727,9 +727,6 @@ class AbstractLine(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Instance variables used to persist discount information
-        # self._discount_excl_tax = D("0.00")
-        # self._discount_incl_tax = D("0.00")
         self.discounts = LineDiscountRegistry(self)
 
     class Meta:
@@ -789,8 +786,6 @@ class AbstractLine(models.Model):
                     "when tax-inclusive discounts are already applied"
                 )
         self.discounts.discount(discount_value, affected_quantity, incl_tax, offer)
-        # self.discounts.append((discount_value, affected_quantity, incl_tax, offer))
-        # self.consume(affected_quantity, offer=offer)
 
     def consume(self, quantity, offer=None):
         """
@@ -883,7 +878,7 @@ class AbstractLine(models.Model):
 
     @_discount_incl_tax.setter
     def _discount_incl_tax(self, value):
-        raise Exception("_discount_incl_tax kan je niet setten")
+        raise Exception("You can not set _discount_incl_tax")
 
     @property
     @deprecated
@@ -892,7 +887,7 @@ class AbstractLine(models.Model):
 
     @_discount_excl_tax.setter
     def _discount_excl_tax(self, value):
-        raise Exception("_discount_excl_tax kan je niet setten")
+        raise Exception("You can not set _discount_excl_tax")
 
     @property
     def has_discount(self):
@@ -909,9 +904,6 @@ class AbstractLine(models.Model):
     @property
     def discount_value(self):
         return self.discounts.total
-        # return sum([discount[0] for discount in self.discounts], 0)
-        # Only one of the incl- and excl- discounts should be non-zero
-        # return max(self._discount_incl_tax, self._discount_excl_tax)
 
     # pylint: disable=W0201
     @property
@@ -986,14 +978,6 @@ class AbstractLine(models.Model):
             return round_half_up(
                 self.line_price_excl_tax_incl_discounts / self._tax_ratio
             )
-            # return max(0, self.line_price_incl_tax - (excl_tax_discounts / self._tax_ratio).quantize(D("0.01"), ROUND_HALF_DOWN))
-            # return max(0, self.line_price_incl_tax - round_half_up(excl_tax_discounts / self._tax_ratio))
-            # return max(
-            #     0,
-            #     round_half_up(
-            #         (self.line_price_excl_tax - excl_tax_discounts) / self._tax_ratio
-            #     ),
-            # )
 
         return self.line_price_incl_tax
 

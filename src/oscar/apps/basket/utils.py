@@ -9,6 +9,10 @@ from oscar.core.decorators import deprecated
 Applicator = get_class("offer.applicator", "Applicator")
 ConditionalOffer = get_model("offer", "ConditionalOffer")
 
+DiscountApplication = namedtuple(
+    "DiscountApplication", ["amount", "quantity", "incl_tax", "offer"]
+)
+
 
 class BasketMessageGenerator(object):
     new_total_template_name = "oscar/basket/messages/new_total.html"
@@ -116,7 +120,6 @@ class LineOfferConsumer(object):
         basket line is consumed for *any* offer, else only for the
         specified offer.
         """
-        # raise Exception("viggo is henk")
         if offer:
             self._cache(offer)
             available = self.available(offer)
@@ -200,11 +203,6 @@ class LineOfferConsumer(object):
                     return 0
 
         return max_affected_items - self.num_consumed(offer)
-
-
-DiscountApplication = namedtuple(
-    "DiscountApplication", ["amount", "quantity", "incl_tax", "offer"]
-)
 
 
 class LineDiscountRegistry(LineOfferConsumer):

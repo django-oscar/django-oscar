@@ -248,6 +248,8 @@ class OrderCreator(object):
     def create_line_discount_models(self, order, order_line, basket_line):
         for discount in basket_line.discounts:
             order_discount = order.discounts.filter(offer_id=discount.offer.id).first()
+            # If we are unable to find the discount we do not care, the total amount is still saved on the discount model,
+            # these models are only created so we know how much discount was given per line for each offer
             if order_discount:
                 order_line.discounts.create(
                     order_discount=order_discount,
