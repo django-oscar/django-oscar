@@ -5,7 +5,7 @@
 {% load i18n %}
 
 <ul class="basket-mini-item list-unstyled">
-    {% if request.basket.num_lines %}
+    {% if request.basket.pk and request.basket.num_lines %}
         {% for line in request.basket.all_lines %}
             <li>
                 <div class="row">
