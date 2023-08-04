@@ -136,12 +136,12 @@ class BasketMiddleware:
         if request._basket_cache is not None:
             return request._basket_cache
 
-        num_baskets_merged = 0
+        num_items_merged = 0
         manager = Basket.open
         cookie_key = self.get_cookie_key(request)
         cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
 
-        if hasattr(request, "user") and request.user.is_authenticated:
+        if hasattr(request, 'user') and request.user.is_authenticated:
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie.
@@ -154,15 +154,17 @@ class BasketMiddleware:
                 basket = old_baskets[0]
                 for other_basket in old_baskets[1:]:
                     self.merge_baskets(basket, other_basket)
-                    num_baskets_merged += 1
+                    # count number of items that have been merged into the basket
+                    num_items_merged += other_basket.num_items
 
             # Assign user onto basket to prevent further SQL queries when
             # basket.owner is accessed.
             basket.owner = request.user
 
             if cookie_basket:
+                # count number of items in the basket
+                num_items_merged = basket.num_items
                 self.merge_baskets(basket, cookie_basket)
-                num_baskets_merged += 1
                 request.cookies_to_delete.append(cookie_key)
 
         elif cookie_basket:
@@ -176,18 +178,16 @@ class BasketMiddleware:
         # Cache basket instance for the during of this request
         request._basket_cache = basket
 
-        if num_baskets_merged > 0:
-            messages.add_message(
-                request,
-                messages.WARNING,
-                _(
-                    "We have merged a basket from a previous session. Its contents "
-                    "might have changed."
-                ),
+        if num_items_merged > 0:
+            # show warning only if items have been merged with number of merged items
+            messages.add_message(request, messages.WARNING,
+                _("We have merged %(num_items_merged)d items from a previous "
+                    "session to your basket. Its content has changed.") %
+                {'num_items_merged': num_items_merged}
             )
 
         return basket
-
+    
     def merge_baskets(self, master, slave):
         """
         Merge one basket into another.
