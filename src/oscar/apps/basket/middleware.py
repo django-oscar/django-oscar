@@ -184,8 +184,8 @@ class BasketMiddleware:
                 request,
                 messages.WARNING,
                 _(
-                    "We have merged %(num_items_merged)d items from a previous "
-                    "session to your basket. Its content has changed."
+                    "We have merged %(num_items_merged)d items from a "
+                    "previous session to your basket. Its content has changed."
                 ) % {'num_items_merged': num_items_merged}
             )
 
