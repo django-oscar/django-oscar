@@ -154,7 +154,7 @@ class BasketMiddleware:
                 basket = old_baskets[0]
                 for other_basket in old_baskets[1:]:
                     self.merge_baskets(basket, other_basket)
-                    # count number of items that have been merged into the basket
+                    # count number of items that have been merged
                     num_items_merged += other_basket.num_items
 
             # Assign user onto basket to prevent further SQL queries when
