@@ -179,7 +179,7 @@ class BasketMiddleware:
         request._basket_cache = basket
 
         if num_items_merged > 0:
-            # show warning only if items have been merged with number of merged items
+            # show warning only if items have been merged
             messages.add_message(
                 request,
                 messages.WARNING,
