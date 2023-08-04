@@ -180,9 +180,10 @@ class BasketMiddleware:
 
         if num_items_merged > 0:
             # show warning only if items have been merged with number of merged items
-            messages.add_message(request, messages.WARNING,
+            messages.add_message(
+                request, messages.WARNING,
                 _("We have merged %(num_items_merged)d items from a previous "
-                    "session to your basket. Its content has changed.") %
+                  "session to your basket. Its content has changed.") %
                 {'num_items_merged': num_items_merged}
             )
 
