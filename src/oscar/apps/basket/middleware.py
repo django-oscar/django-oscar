@@ -187,7 +187,7 @@ class BasketMiddleware:
             )
 
         return basket
-    
+
     def merge_baskets(self, master, slave):
         """
         Merge one basket into another.
