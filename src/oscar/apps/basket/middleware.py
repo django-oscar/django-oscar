@@ -133,6 +133,7 @@ class BasketMiddleware:
         """
         Return the open basket for this request
         """
+        # pylint: disable=protected-access
         if request._basket_cache is not None:
             return request._basket_cache
 
