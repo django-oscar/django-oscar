@@ -107,6 +107,7 @@ class BasketMiddleware:
         The method serves as a useful hook in multi-site scenarios where
         different baskets might be needed.
         """
+        # pylint: disable=unused-argument
         return settings.OSCAR_BASKET_COOKIE_OPEN
 
     def process_template_response(self, request, response):
