@@ -1120,9 +1120,11 @@ class AbstractRange(models.Model):
             )
             _filter |= Q(categories__in=expanded_range_categories)
             # extend filter for parent categories, exclude nulls
-            if Product.objects.exclude(parent__categories=None).filter(
-                parent__categories__in=expanded_range_categories
-            ).exists():
+            if (
+                Product.objects.exclude(parent__categories=None)
+                .filter(parent__categories__in=expanded_range_categories)
+                .exists()
+            ):
                 _filter |= Q(parent__categories__in=expanded_range_categories)
 
         qs = Product.objects.filter(_filter, ~Q(excludes=self))
