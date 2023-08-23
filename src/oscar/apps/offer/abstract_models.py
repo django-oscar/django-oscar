@@ -427,6 +427,36 @@ class AbstractConditionalOffer(models.Model):
         descriptions = [r["description"] for r in restrictions]
         return "<br/>".join(descriptions)
 
+    def hide_time_if_zero(self, dt):
+        # Only show hours/minutes if they have been specified
+        if dt.tzinfo:
+            localtime = dt.astimezone(get_current_timezone())
+        else:
+            localtime = dt
+        if localtime.hour == 0 and localtime.minute == 0:
+            return date_filter(localtime, settings.DATE_FORMAT)
+        return date_filter(localtime, settings.DATETIME_FORMAT)
+
+    def datetime_range_availability_restriction(self):
+        today = now()
+        if self.start_datetime and self.end_datetime:
+            desc = _("Available between %(start)s and %(end)s") % {
+                "start": self.hide_time_if_zero(self.start_datetime),
+                "end": self.hide_time_if_zero(self.end_datetime),
+            }
+            is_satisfied = self.start_datetime <= today <= self.end_datetime
+        elif self.start_datetime:
+            desc = _("Available from %(start)s") % {
+                "start": self.hide_time_if_zero(self.start_datetime)
+            }
+            is_satisfied = today >= self.start_datetime
+        elif self.end_datetime:
+            desc = _("Available until %(end)s") % {
+                "end": self.hide_time_if_zero(self.end_datetime)
+            }
+            is_satisfied = today <= self.end_datetime
+        return {"description": desc, "is_satisfied": is_satisfied}
+
     def availability_restrictions(self):
         restrictions = []
         if self.is_suspended:
@@ -460,35 +490,8 @@ class AbstractConditionalOffer(models.Model):
                 }
             restrictions.append({"description": desc, "is_satisfied": True})
 
-        def hide_time_if_zero(dt):
-            # Only show hours/minutes if they have been specified
-            if dt.tzinfo:
-                localtime = dt.astimezone(get_current_timezone())
-            else:
-                localtime = dt
-            if localtime.hour == 0 and localtime.minute == 0:
-                return date_filter(localtime, settings.DATE_FORMAT)
-            return date_filter(localtime, settings.DATETIME_FORMAT)
-
         if self.start_datetime or self.end_datetime:
-            today = now()
-            if self.start_datetime and self.end_datetime:
-                desc = _("Available between %(start)s and %(end)s") % {
-                    "start": hide_time_if_zero(self.start_datetime),
-                    "end": hide_time_if_zero(self.end_datetime),
-                }
-                is_satisfied = self.start_datetime <= today <= self.end_datetime
-            elif self.start_datetime:
-                desc = _("Available from %(start)s") % {
-                    "start": hide_time_if_zero(self.start_datetime)
-                }
-                is_satisfied = today >= self.start_datetime
-            elif self.end_datetime:
-                desc = _("Available until %(end)s") % {
-                    "end": hide_time_if_zero(self.end_datetime)
-                }
-                is_satisfied = today <= self.end_datetime
-            restrictions.append({"description": desc, "is_satisfied": is_satisfied})
+            restrictions.append(self.datetime_range_availability_restriction())
 
         if self.max_discount:
             desc = _("Limited to a cost of %(max)s") % {
