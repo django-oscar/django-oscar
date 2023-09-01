@@ -10,6 +10,7 @@ Release notes for each version of Oscar published to PyPI.
     :maxdepth: 1
 
     v3.2
+    v3.2.1
 
 3.1 release branch
 
