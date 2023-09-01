@@ -23,7 +23,6 @@ Support for Django 3.1 has been dropped. Support for Python 3.7 has been dropped
 What's new in Oscar 3.2.1?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-## What's Changed
 * Bump eslint from 8.22.0 to 8.33.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4047
 * Bump sass from 1.54.0 to 1.58.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4045
 * post_save_set_ancestors_are_public should not run when loading fixtures, by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4040
@@ -89,7 +88,12 @@ What's new in Oscar 3.2.1?
 * [FEAT] Optimize range listing by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4128
 * Save tax codes on the basket and order for reference by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4136
 
-## New Contributors
+
+.. new_contributors:
+
+New Contributors
+~~~~~~~~~~~~~~~~
+
 * @samar-hassan made their first contribution in https://github.com/django-oscar/django-oscar/pull/4017
 * @nathanhighbiza made their first contribution in https://github.com/django-oscar/django-oscar/pull/4009
 * @dd made their first contribution in https://github.com/django-oscar/django-oscar/pull/4014
