@@ -99,7 +99,7 @@ The currently supported versions of Oscar are:
 +---------+----------------+
 | Version | End of support |
 +=========+================+
-| 3.2 LTS | Januari 2026   |
+| 3.2 LTS | January 2026   |
 +---------+----------------+
 | 3.1     | April 2022     |
 +---------+----------------+
