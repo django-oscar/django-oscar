@@ -1,7 +1,7 @@
 # These requirements are only necessary when developing on Oscar.
 
 # development
-django-debug-toolbar>=2.2,<4.2
+django-debug-toolbar>=2.2,<4.3
 django-extensions>=2.2,<3.3
 psycopg2-binary>=2.8,<2.10
 
