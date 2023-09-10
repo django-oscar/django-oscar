@@ -41,6 +41,11 @@ class TestANewBasket(TestCase):
     def test_has_no_applied_offers(self):
         self.assertEqual({}, self.basket.applied_offers())
 
+    def test_is_tax_unknown(self):
+        self.assertTrue(self.basket.is_empty)
+        self.assertFalse(self.basket.is_tax_known)
+
+
 
 class TestBasketLine(TestCase):
     def test_description(self):
