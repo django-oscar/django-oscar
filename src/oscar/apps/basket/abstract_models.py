@@ -469,7 +469,7 @@ class AbstractBasket(models.Model):
 
         If the basket is empty, then tax values are unknown.
         """
-        return not self.is_empty and all(
+        return (not self.is_empty) and all(
             [line.is_tax_known for line in self.all_lines()]
         )
 
