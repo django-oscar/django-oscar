@@ -147,6 +147,9 @@ class TestAddingAProductToABasket(TestCase):
         with self.assertRaises(ValueError):
             self.basket.add(product)
 
+    def test_is_tax_known(self):
+        self.assertTrue(self.basket.is_tax_known)
+
 
 class TestANonEmptyBasket(TestCase):
     def setUp(self):
