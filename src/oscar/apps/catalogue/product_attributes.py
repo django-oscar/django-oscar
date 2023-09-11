@@ -1,3 +1,4 @@
+from copy import deepcopy
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -28,6 +29,16 @@ class ProductAttributesContainer:
         self.__dict__.update(
             {"_product": product, "_initialized": False, "_dirty": set()}
         )
+
+    def __deepcopy__(self, memo):
+        cpy = ProductAttributesContainer(self.product)
+        memo[id(self)] = cpy
+        if self.initialized:
+            # Only copy attributes for initialized containers
+            for key, value in self.__dict__.items():
+                cpy.__dict__[key] = deepcopy(value, memo)
+
+        return cpy
 
     @property
     def product(self):
@@ -97,7 +108,7 @@ class ProductAttributesContainer:
         return self.product.get_attribute_values()
 
     def get_value_by_attribute(self, attribute):
-        return self.get_values().get(attribute=attribute)
+        return self.get_values().filter(attribute=attribute)[0]
 
     def get_all_attributes(self):
         return self.product.get_product_class().attributes.all()
@@ -109,6 +120,9 @@ class ProductAttributesContainer:
         return iter(self.get_values())
 
     def save(self):
+        if not self.initialized and not self._dirty:
+            return  # no need to save untouched attr lists
+
         for attribute in self.get_all_attributes():
             if hasattr(self, attribute.code):
                 value = getattr(self, attribute.code)
