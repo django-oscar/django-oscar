@@ -1181,14 +1181,18 @@ class AbstractProductAttributeValue(models.Model):
     def type(self):
         return self.attribute.type
 
+    @property
+    def value_field_name(self):
+        return "value_%s" % self.type
+
     def _get_value(self):
-        value = getattr(self, "value_%s" % self.type)
+        value = getattr(self, self.value_field_name)
         if hasattr(value, "all"):
             value = value.all()
         return value
 
     def _set_value(self, new_value):
-        attr_name = "value_%s" % self.type
+        attr_name = self.value_field_name
 
         if self.attribute.is_option and isinstance(new_value, str):
             # Need to look up instance of AttributeOption

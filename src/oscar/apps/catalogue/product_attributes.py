@@ -215,6 +215,12 @@ class ProductAttributesContainer:
         if not self.initialized and not self._dirty:
             return  # no need to save untouched attr lists
 
+        ProductAttributeValue = self.product.attribute_values.model
+
+        to_be_updated = []
+        update_fields = set()
+        to_be_deleted = []
+        to_be_created = []
         for attribute in self.get_all_attributes():
             if hasattr(self, attribute.code):
                 value = getattr(self, attribute.code)
@@ -232,4 +238,45 @@ class ProductAttributesContainer:
                     except ObjectDoesNotExist:
                         pass  # there is no existing value, so a value needs to be saved.
 
-                attribute.save_value(self.product, value)
+                value_obj = self.get_value_by_attribute(attribute)
+                if (
+                    value_obj is None or value_obj.product != self.product
+                ):  # it doesn't exist yet so should be created
+                    new_value_obj = ProductAttributeValue(
+                        attribute=attribute, product=self.product
+                    )
+                    bound_value_obj = attribute.bind_value(new_value_obj, value)
+                    if bound_value_obj is not None:
+                        assert not bound_value_obj.pk
+                        to_be_created.append(bound_value_obj)
+                else:
+                    bound_value_obj = attribute.bind_value(value_obj, value)
+                    if bound_value_obj is None:
+                        to_be_deleted.append(value_obj.pk)
+                    else:
+                        if bound_value_obj.attribute.is_file:
+                            # with bulk_create the file is save just fine, but
+                            # with buld_update, it's not, so we have to performa
+                            # that manually
+                            bound_value_obj._meta.get_field(
+                                bound_value_obj.value_field_name
+                            ).pre_save(bound_value_obj, False)
+
+                        to_be_updated.append(bound_value_obj)
+                        update_fields.add(bound_value_obj.value_field_name)
+
+        # now save all the attributes in bulk
+        if to_be_deleted:
+            self.product.attribute_values.filter(pk__in=to_be_deleted).delete()
+        if to_be_updated:
+            self.product.attribute_values.bulk_update(
+                to_be_updated, update_fields, batch_size=500
+            )
+        if to_be_created:
+            self.product.attribute_values.bulk_create(
+                to_be_created, batch_size=500, ignore_conflicts=False
+            )
+
+        # after this the current data is nolonger valid and should be refetched
+        # from the database
+        self.invalidate()
