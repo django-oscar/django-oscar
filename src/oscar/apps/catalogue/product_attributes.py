@@ -6,22 +6,21 @@ from django.utils.functional import cached_property
 
 
 class QuerysetCache(dict):
-    def __init__(self, queryset, key_func):
-        self._key_func = key_func
+    def __init__(self, queryset):
         self._queryset = queryset
         self._queryset_iterator = queryset.iterator()
 
     def queryset(self):
         return self._queryset
 
-    def get(self, key, default=None):
+    def get(self, code, default=None):
         try:
-            return self[key]
+            return self[code]
         except KeyError:
             for instance in self._queryset_iterator:
-                instance_key = self._key_func(instance)
-                self[instance_key] = instance
-                if instance_key == key:
+                instance_code = instance.code
+                self[instance_code] = instance
+                if instance_code == code:
                     return instance
 
         return default
@@ -33,15 +32,14 @@ class AttributesQuerysetCache:
 
     @cached_property
     def attributes(self):
-        return QuerysetCache(
-            self.product.get_product_class().attributes.all(), lambda a: a.code
-        )
+        return QuerysetCache(self.product.get_product_class().attributes.all())
 
     @cached_property
     def attribute_values(self):
         return QuerysetCache(
-            self.product.get_attribute_values().select_related("attribute"),
-            lambda v: v.attribute.code,
+            self.product.get_attribute_values()
+            .select_related("attribute")
+            .annotate(code=models.F("attribute__code"))
         )
 
 
