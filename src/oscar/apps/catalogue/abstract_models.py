@@ -593,6 +593,10 @@ class AbstractProduct(models.Model):
         super().save(*args, **kwargs)
         self.attr.save()
 
+    def refresh_from_db(self, using=None, fields=None):
+        super().refresh_from_db(using, fields)
+        self.attr.invalidate()
+
     # Properties
 
     @property
@@ -971,43 +975,6 @@ class AbstractProductAttribute(models.Model):
         if self.type == self.BOOLEAN and self.required:
             raise ValidationError(_("Boolean attribute should not be required."))
 
-    def _save_file(self, value_obj, value):
-        # File fields in Django are treated differently, see
-        # django.db.models.fields.FileField and method save_form_data
-        if value is None:
-            # No change
-            return
-        elif value is False:
-            # Delete file
-            value_obj.delete()
-        else:
-            # New uploaded file
-            value_obj.value = value
-            value_obj.save()
-
-    def _save_multi_option(self, value_obj, value):
-        # ManyToMany fields are handled separately
-        if value is None:
-            value_obj.delete()
-            return
-        try:
-            count = value.count()
-        except (AttributeError, TypeError):
-            count = len(value)
-        if count == 0:
-            value_obj.delete()
-        else:
-            value_obj.value = value
-            value_obj.save()
-
-    def _save_value(self, value_obj, value):
-        if value is None or value == "":
-            value_obj.delete()
-            return
-        if value != value_obj.value:
-            value_obj.value = value
-            value_obj.save()
-
     def _get_value_obj(self, product, value):
         try:
             return product.attribute_values.get(attribute=self)
@@ -1210,14 +1177,18 @@ class AbstractProductAttributeValue(models.Model):
     )
     _dirty = False
 
+    @cached_property
+    def type(self):
+        return self.attribute.type
+
     def _get_value(self):
-        value = getattr(self, "value_%s" % self.attribute.type)
+        value = getattr(self, "value_%s" % self.type)
         if hasattr(value, "all"):
             value = value.all()
         return value
 
     def _set_value(self, new_value):
-        attr_name = "value_%s" % self.attribute.type
+        attr_name = "value_%s" % self.type
 
         if self.attribute.is_option and isinstance(new_value, str):
             # Need to look up instance of AttributeOption
@@ -1261,7 +1232,7 @@ class AbstractProductAttributeValue(models.Model):
         e.g. image attribute values, declare a _image_as_text property and
         return something appropriate.
         """
-        property_name = "_%s_as_text" % self.attribute.type
+        property_name = "_%s_as_text" % self.type
         return getattr(self, property_name, self.value)
 
     @property
@@ -1298,7 +1269,7 @@ class AbstractProductAttributeValue(models.Model):
         return e.g. an ``<img>`` tag.  Defaults to the ``_as_text``
         representation.
         """
-        property_name = "_%s_as_html" % self.attribute.type
+        property_name = "_%s_as_html" % self.type
         return getattr(self, property_name, self.value_as_text)
 
     @property

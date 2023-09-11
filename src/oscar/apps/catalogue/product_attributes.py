@@ -1,6 +1,48 @@
 from copy import deepcopy
+from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.utils.functional import cached_property
+
+
+class QuerysetCache(dict):
+    def __init__(self, queryset, key_func):
+        self._key_func = key_func
+        self._queryset = queryset
+        self._queryset_iterator = queryset.iterator()
+
+    def queryset(self):
+        return self._queryset
+
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            for instance in self._queryset_iterator:
+                instance_key = self._key_func(instance)
+                self[instance_key] = instance
+                if instance_key == key:
+                    return instance
+
+        return default
+
+
+class AttributesQuerysetCache:
+    def __init__(self, product):
+        self.product = product
+
+    @cached_property
+    def attributes(self):
+        return QuerysetCache(
+            self.product.get_product_class().attributes.all(), lambda a: a.code
+        )
+
+    @cached_property
+    def attribute_values(self):
+        return QuerysetCache(
+            self.product.get_attribute_values().select_related("attribute"),
+            lambda v: v.attribute.code,
+        )
 
 
 class ProductAttributesContainer:
@@ -16,18 +58,43 @@ class ProductAttributesContainer:
         product.attr.refresh()
     """
 
+    RESERVED_ATTRIBUTES = {
+        "_cache",
+        "_dirty",
+        "initialized",
+        "_initialized",
+        "_product",
+        "get_all_attributes",
+        "get_attribute_by_code",
+        "get_value_by_attribute",
+        "get_values",
+        "initialize",
+        "product",
+        "refresh",
+        "save",
+        "set",
+        "update",
+        "validate_attributes",
+    }
+
     # pylint: disable=access-member-before-definition
     def __setstate__(self, state):
         self.__dict__.setdefault("_product", None)
         self.__dict__.setdefault("_initialized", False)
         self.__dict__.setdefault("_dirty", set())
+        self.__dict__.setdefault("_cache", {})
         self.__dict__ = state
 
     def __init__(self, product):
         # use __dict__ directly to avoid triggering __setattr__, which would
         # cause a recursion error on _initialized.
         self.__dict__.update(
-            {"_product": product, "_initialized": False, "_dirty": set()}
+            {
+                "_product": product,
+                "_initialized": False,
+                "_dirty": set(),
+                "_cache": None,
+            }
         )
 
     def __deepcopy__(self, memo):
@@ -36,7 +103,8 @@ class ProductAttributesContainer:
         if self.initialized:
             # Only copy attributes for initialized containers
             for key, value in self.__dict__.items():
-                cpy.__dict__[key] = deepcopy(value, memo)
+                if key != "_cache":
+                    cpy.__dict__[key] = deepcopy(value, memo)
 
         return cpy
 
@@ -48,21 +116,28 @@ class ProductAttributesContainer:
     def initialized(self):
         return self._initialized
 
-    @initialized.setter
-    def initialized(self, value):
-        # use __dict__ directly to avoid triggering __setattr__, which would
-        # cause a recursion error.
-        self.__dict__["_initialized"] = value
+    @property
+    def cache(self):
+        if self.__dict__["_cache"] is None:
+            self.__dict__["_cache"] = AttributesQuerysetCache(self.product)
+        return self.__dict__["_cache"]
 
     def initialize(self):
-        self.initialized = True
+        self.__dict__["_initialized"] = True
         # initialize should not overwrite any values that have allready been set
         attrs = self.__dict__
-        for v in self.get_values().select_related("attribute"):
+        for v in self.get_values():
             attrs.setdefault(v.attribute.code, v.value)
 
+    def invalidate(self):
+        "Invalidate any stored data, queried from the database"
+        self.__dict__["_cache"] = None
+        self.__dict__["_initialized"] = False
+
     def refresh(self):
-        for v in self.get_values().select_related("attribute"):
+        "Reload any queried data from the database, discarding local changes"
+        self.__dict__["_cache"] = None
+        for v in self.get_values():
             setattr(self, v.attribute.code, v.value)
 
     def __getattribute__(self, name):
@@ -83,8 +158,27 @@ class ProductAttributesContainer:
         )
 
     def __setattr__(self, name, value):
+        if name in self.RESERVED_ATTRIBUTES:
+            raise ValidationError(
+                "%s is a reserved name and cannot be used as an attribute"
+            )
+
         self._dirty.add(name)
         super().__setattr__(name, value)
+
+    def set(self, name, value):
+        if name.isidentifier():
+            self.__setattr__(name, value)
+        else:
+            raise ValidationError(
+                _(
+                    "%s is not a valid identifier, but attribute codes must be valid python identifiers"
+                )
+            )
+
+    def update(self, adict):
+        self._dirty.extend(adict.keys())
+        self.__dict__.update(adict)
 
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
@@ -105,16 +199,16 @@ class ProductAttributesContainer:
                     )
 
     def get_values(self):
-        return self.product.get_attribute_values()
+        return self.cache.attribute_values.queryset()
 
     def get_value_by_attribute(self, attribute):
-        return self.get_values().filter(attribute=attribute)[0]
+        return self.cache.attribute_values.get(attribute.code)
 
     def get_all_attributes(self):
-        return self.product.get_product_class().attributes.all()
+        return self.cache.attributes.queryset()
 
     def get_attribute_by_code(self, code):
-        return self.get_all_attributes().get(code=code)
+        return self.cache.attributes.get(code)
 
     def __iter__(self):
         return iter(self.get_values())
