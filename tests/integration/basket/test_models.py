@@ -46,7 +46,6 @@ class TestANewBasket(TestCase):
         self.assertFalse(self.basket.is_tax_known)
 
 
-
 class TestBasketLine(TestCase):
     def test_description(self):
         basket = BasketFactory()
