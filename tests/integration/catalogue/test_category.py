@@ -92,10 +92,11 @@ class TestMovingACategory(TestCase):
 
     def test_fix_tree(self):
         "fix_tree should rearrange the incorrect nodes and not cause any errors"
-        cat = Category.objects.get(pk=7)
+        cat = Category.objects.get(path="00010002")
+        pk = cat.pk
         self.assertEqual(cat.path, "00010002")
 
-        Category.objects.filter(pk=7).update(path="00010050")
+        Category.objects.filter(pk=pk).update(path="00010050")
         cat.refresh_from_db()
         self.assertEqual(cat.path, "00010050")
 
