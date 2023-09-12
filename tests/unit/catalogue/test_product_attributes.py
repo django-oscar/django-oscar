@@ -245,6 +245,13 @@ class ProductAttributeTest(TestCase):
         with self.assertRaises(ValidationError):
             self.product.attr.validate_attributes()
 
+    def get_attribute_by_code(self):
+        at = self.product.attr.get_attribute_by_code("weight")
+        self.assertEqual(at.code, "weight")
+        self.assertEqual(at.product, self.product)
+
+        self.assertIsNone(self.product.attr.get_attribute_by_code("stoubafluppie"))
+
 
 class ProductAttributeQuerysetTest(TestCase):
     fixtures = ["productattributes"]
