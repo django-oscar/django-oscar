@@ -75,14 +75,6 @@ class ProductAttributesContainer:
         "validate_attributes",
     }
 
-    # pylint: disable=access-member-before-definition
-    def __setstate__(self, state):
-        self.__dict__.setdefault("_product", None)
-        self.__dict__.setdefault("_initialized", False)
-        self.__dict__.setdefault("_dirty", set())
-        self.__dict__.setdefault("_cache", {})
-        self.__dict__ = state
-
     def __init__(self, product):
         # use __dict__ directly to avoid triggering __setattr__, which would
         # cause a recursion error on _initialized.
@@ -175,7 +167,7 @@ class ProductAttributesContainer:
             )
 
     def update(self, adict):
-        self._dirty.extend(adict.keys())
+        self._dirty.update(adict.keys())
         self.__dict__.update(adict)
 
     def validate_attributes(self):
