@@ -20,6 +20,7 @@ WHERE "CATALOGUE_CATEGORY_BASE"."id" IN (%(subquery)s))
 """
 
 
+# pylint: disable=abstract-method
 class ExpandUpwardsCategoryQueryset(Subquery):
     template = EXPAND_UPWARDS_CATEGORY_QUERY
 
@@ -27,6 +28,7 @@ class ExpandUpwardsCategoryQueryset(Subquery):
         return super().as_sql(compiler, connection, self.template[1:-1])
 
 
+# pylint: disable=abstract-method
 class ExpandDownwardsCategoryQueryset(Subquery):
     template = EXPAND_DOWNWARDS_CATEGORY_QUERY
 

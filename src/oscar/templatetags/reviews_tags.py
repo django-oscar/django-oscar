@@ -15,15 +15,15 @@ def as_stars(value):
     * Fails quietly
     """
     num_stars_to_class = {
-        0: '',
-        1: 'One',
-        2: 'Two',
-        3: 'Three',
-        4: 'Four',
-        5: 'Five',
+        0: "",
+        1: "One",
+        2: "Two",
+        3: "Three",
+        4: "Four",
+        5: "Five",
     }
     num_stars = int(round(value or 0.0))
-    return num_stars_to_class.get(num_stars, '')
+    return num_stars_to_class.get(num_stars, "")
 
 
 @register.filter

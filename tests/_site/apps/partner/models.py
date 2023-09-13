@@ -1,3 +1,4 @@
+# pylint: disable=wildcard-import, unused-wildcard-import
 from django.db import models
 
 from oscar.apps.partner import abstract_models

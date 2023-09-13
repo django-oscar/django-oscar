@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='option',
             name='help_text',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Help text'),
+            field=models.CharField(blank=True, help_text='Help text shown to the user on the add to basket form', max_length=255, null=True, verbose_name='Help text'),
         ),
         migrations.AddField(
             model_name='option',

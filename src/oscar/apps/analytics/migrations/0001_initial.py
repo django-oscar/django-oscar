@@ -2,8 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.utils.module_loading import import_string
 from django.conf import settings
 from decimal import Decimal
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 
 class Migration(migrations.Migration):
@@ -16,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductRecord',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('num_views', models.PositiveIntegerField(default=0, verbose_name='Views')),
                 ('num_basket_additions', models.PositiveIntegerField(default=0, verbose_name='Basket Additions')),
                 ('num_purchases', models.PositiveIntegerField(default=0, db_index=True, verbose_name='Purchases')),
@@ -33,7 +36,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProductView',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
             ],
             options={
@@ -46,7 +49,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserRecord',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('num_product_views', models.PositiveIntegerField(default=0, verbose_name='Product Views')),
                 ('num_basket_additions', models.PositiveIntegerField(default=0, verbose_name='Basket Additions')),
                 ('num_orders', models.PositiveIntegerField(default=0, db_index=True, verbose_name='Orders')),
@@ -67,7 +70,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserSearch',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('query', models.CharField(max_length=255, db_index=True, verbose_name='Search term')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
                 ('user', models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),

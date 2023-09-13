@@ -19,7 +19,8 @@ class AbstractAddress(models.Model):
     This is subclassed and extended to provide models for
     user, shipping and billing addresses.
     """
-    MR, MISS, MRS, MS, DR = ('Mr', 'Miss', 'Mrs', 'Ms', 'Dr')
+
+    MR, MISS, MRS, MS, DR = ("Mr", "Miss", "Mrs", "Ms", "Dr")
     TITLE_CHOICES = (
         (MR, _("Mr")),
         (MISS, _("Miss")),
@@ -28,229 +29,248 @@ class AbstractAddress(models.Model):
         (DR, _("Dr")),
     )
 
-    POSTCODE_REQUIRED = 'postcode' in settings.OSCAR_REQUIRED_ADDRESS_FIELDS
+    POSTCODE_REQUIRED = "postcode" in settings.OSCAR_REQUIRED_ADDRESS_FIELDS
 
     # Regex for each country. Not listed countries don't use postcodes
     # Based on http://en.wikipedia.org/wiki/List_of_postal_codes
     POSTCODES_REGEX = {
-        'AC': r'^[A-Z]{4}[0-9][A-Z]$',
-        'AD': r'^AD[0-9]{3}$',
-        'AF': r'^[0-9]{4}$',
-        'AI': r'^AI-2640$',
-        'AL': r'^[0-9]{4}$',
-        'AM': r'^[0-9]{4}$',
-        'AR': r'^([0-9]{4}|[A-Z][0-9]{4}[A-Z]{3})$',
-        'AS': r'^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$',
-        'AT': r'^[0-9]{4}$',
-        'AU': r'^[0-9]{4}$',
-        'AX': r'^[0-9]{5}$',
-        'AZ': r'^AZ[0-9]{4}$',
-        'BA': r'^[0-9]{5}$',
-        'BB': r'^BB[0-9]{5}$',
-        'BD': r'^[0-9]{4}$',
-        'BE': r'^[0-9]{4}$',
-        'BG': r'^[0-9]{4}$',
-        'BH': r'^[0-9]{3,4}$',
-        'BL': r'^[0-9]{5}$',
-        'BM': r'^[A-Z]{2}([0-9]{2}|[A-Z]{2})',
-        'BN': r'^[A-Z]{2}[0-9]{4}$',
-        'BO': r'^[0-9]{4}$',
-        'BR': r'^[0-9]{5}(-[0-9]{3})?$',
-        'BT': r'^[0-9]{3}$',
-        'BY': r'^[0-9]{6}$',
-        'CA': r'^[A-Z][0-9][A-Z][0-9][A-Z][0-9]$',
-        'CC': r'^[0-9]{4}$',
-        'CH': r'^[0-9]{4}$',
-        'CL': r'^([0-9]{7}|[0-9]{3}-[0-9]{4})$',
-        'CN': r'^[0-9]{6}$',
-        'CO': r'^[0-9]{6}$',
-        'CR': r'^[0-9]{4,5}$',
-        'CU': r'^[0-9]{5}$',
-        'CV': r'^[0-9]{4}$',
-        'CX': r'^[0-9]{4}$',
-        'CY': r'^[0-9]{4}$',
-        'CZ': r'^[0-9]{5}$',
-        'DE': r'^[0-9]{5}$',
-        'DK': r'^[0-9]{4}$',
-        'DO': r'^[0-9]{5}$',
-        'DZ': r'^[0-9]{5}$',
-        'EC': r'^EC[0-9]{6}$',
-        'EE': r'^[0-9]{5}$',
-        'EG': r'^[0-9]{5}$',
-        'ES': r'^[0-9]{5}$',
-        'ET': r'^[0-9]{4}$',
-        'FI': r'^[0-9]{5}$',
-        'FK': r'^[A-Z]{4}[0-9][A-Z]{2}$',
-        'FM': r'^[0-9]{5}(-[0-9]{4})?$',
-        'FO': r'^[0-9]{3}$',
-        'FR': r'^[0-9]{5}$',
-        'GA': r'^[0-9]{2}.*[0-9]{2}$',
-        'GB': r'^[A-Z][A-Z0-9]{1,3}[0-9][A-Z]{2}$',
-        'GE': r'^[0-9]{4}$',
-        'GF': r'^[0-9]{5}$',
-        'GG': r'^([A-Z]{2}[0-9]{2,3}[A-Z]{2})$',
-        'GI': r'^GX111AA$',
-        'GL': r'^[0-9]{4}$',
-        'GP': r'^[0-9]{5}$',
-        'GR': r'^[0-9]{5}$',
-        'GS': r'^SIQQ1ZZ$',
-        'GT': r'^[0-9]{5}$',
-        'GU': r'^[0-9]{5}$',
-        'GW': r'^[0-9]{4}$',
-        'HM': r'^[0-9]{4}$',
-        'HN': r'^[0-9]{5}$',
-        'HR': r'^[0-9]{5}$',
-        'HT': r'^[0-9]{4}$',
-        'HU': r'^[0-9]{4}$',
-        'ID': r'^[0-9]{5}$',
-        'IL': r'^([0-9]{5}|[0-9]{7})$',
-        'IM': r'^IM[0-9]{2,3}[A-Z]{2}$$',
-        'IN': r'^[0-9]{6}$',
-        'IO': r'^[A-Z]{4}[0-9][A-Z]{2}$',
-        'IQ': r'^[0-9]{5}$',
-        'IR': r'^[0-9]{5}-[0-9]{5}$',
-        'IS': r'^[0-9]{3}$',
-        'IT': r'^[0-9]{5}$',
-        'JE': r'^JE[0-9]{2}[A-Z]{2}$',
-        'JM': r'^JM[A-Z]{3}[0-9]{2}$',
-        'JO': r'^[0-9]{5}$',
-        'JP': r'^[0-9]{3}-?[0-9]{4}$',
-        'KE': r'^[0-9]{5}$',
-        'KG': r'^[0-9]{6}$',
-        'KH': r'^[0-9]{5}$',
-        'KR': r'^[0-9]{5}$',
-        'KY': r'^KY[0-9]-[0-9]{4}$',
-        'KZ': r'^[0-9]{6}$',
-        'LA': r'^[0-9]{5}$',
-        'LB': r'^[0-9]{8}$',
-        'LI': r'^[0-9]{4}$',
-        'LK': r'^[0-9]{5}$',
-        'LR': r'^[0-9]{4}$',
-        'LS': r'^[0-9]{3}$',
-        'LT': r'^(LT-)?[0-9]{5}$',
-        'LU': r'^[0-9]{4}$',
-        'LV': r'^LV-[0-9]{4}$',
-        'LY': r'^[0-9]{5}$',
-        'MA': r'^[0-9]{5}$',
-        'MC': r'^980[0-9]{2}$',
-        'MD': r'^MD-?[0-9]{4}$',
-        'ME': r'^[0-9]{5}$',
-        'MF': r'^[0-9]{5}$',
-        'MG': r'^[0-9]{3}$',
-        'MH': r'^[0-9]{5}$',
-        'MK': r'^[0-9]{4}$',
-        'MM': r'^[0-9]{5}$',
-        'MN': r'^[0-9]{5}$',
-        'MP': r'^[0-9]{5}$',
-        'MQ': r'^[0-9]{5}$',
-        'MT': r'^[A-Z]{3}[0-9]{4}$',
-        'MV': r'^[0-9]{4,5}$',
-        'MX': r'^[0-9]{5}$',
-        'MY': r'^[0-9]{5}$',
-        'MZ': r'^[0-9]{4}$',
-        'NA': r'^[0-9]{5}$',
-        'NC': r'^[0-9]{5}$',
-        'NE': r'^[0-9]{4}$',
-        'NF': r'^[0-9]{4}$',
-        'NG': r'^[0-9]{6}$',
-        'NI': r'^[0-9]{5}$',
-        'NL': r'^[0-9]{4}[A-Z]{2}$',
-        'NO': r'^[0-9]{4}$',
-        'NP': r'^[0-9]{5}$',
-        'NZ': r'^[0-9]{4}$',
-        'OM': r'^[0-9]{3}$',
-        'PA': r'^[0-9]{6}$',
-        'PE': r'^[0-9]{5}$',
-        'PF': r'^[0-9]{5}$',
-        'PG': r'^[0-9]{3}$',
-        'PH': r'^[0-9]{4}$',
-        'PK': r'^[0-9]{5}$',
-        'PL': r'^[0-9]{2}-?[0-9]{3}$',
-        'PM': r'^[0-9]{5}$',
-        'PN': r'^[A-Z]{4}[0-9][A-Z]{2}$',
-        'PR': r'^[0-9]{5}$',
-        'PT': r'^[0-9]{4}(-?[0-9]{3})?$',
-        'PW': r'^[0-9]{5}$',
-        'PY': r'^[0-9]{4}$',
-        'RE': r'^[0-9]{5}$',
-        'RO': r'^[0-9]{6}$',
-        'RS': r'^[0-9]{5}$',
-        'RU': r'^[0-9]{6}$',
-        'SA': r'^[0-9]{5}$',
-        'SD': r'^[0-9]{5}$',
-        'SE': r'^[0-9]{5}$',
-        'SG': r'^([0-9]{2}|[0-9]{4}|[0-9]{6})$',
-        'SH': r'^(STHL1ZZ|TDCU1ZZ)$',
-        'SI': r'^(SI-)?[0-9]{4}$',
-        'SK': r'^[0-9]{5}$',
-        'SM': r'^[0-9]{5}$',
-        'SN': r'^[0-9]{5}$',
-        'SV': r'^01101$',
-        'SZ': r'^[A-Z][0-9]{3}$',
-        'TC': r'^TKCA1ZZ$',
-        'TD': r'^[0-9]{5}$',
-        'TH': r'^[0-9]{5}$',
-        'TJ': r'^[0-9]{6}$',
-        'TM': r'^[0-9]{6}$',
-        'TN': r'^[0-9]{4}$',
-        'TR': r'^[0-9]{5}$',
-        'TT': r'^[0-9]{6}$',
-        'TW': r'^([0-9]{3}|[0-9]{5})$',
-        'UA': r'^[0-9]{5}$',
-        'US': r'^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$',
-        'UY': r'^[0-9]{5}$',
-        'UZ': r'^[0-9]{6}$',
-        'VA': r'^00120$',
-        'VC': r'^VC[0-9]{4}',
-        'VE': r'^[0-9]{4}[A-Z]?$',
-        'VG': r'^VG[0-9]{4}$',
-        'VI': r'^[0-9]{5}$',
-        'VN': r'^[0-9]{6}$',
-        'WF': r'^[0-9]{5}$',
-        'XK': r'^[0-9]{5}$',
-        'YT': r'^[0-9]{5}$',
-        'ZA': r'^[0-9]{4}$',
-        'ZM': r'^[0-9]{5}$',
+        "AC": r"^[A-Z]{4}[0-9][A-Z]$",
+        "AD": r"^AD[0-9]{3}$",
+        "AF": r"^[0-9]{4}$",
+        "AI": r"^AI-2640$",
+        "AL": r"^[0-9]{4}$",
+        "AM": r"^[0-9]{4}$",
+        "AR": r"^([0-9]{4}|[A-Z][0-9]{4}[A-Z]{3})$",
+        "AS": r"^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$",
+        "AT": r"^[0-9]{4}$",
+        "AU": r"^[0-9]{4}$",
+        "AX": r"^[0-9]{5}$",
+        "AZ": r"^AZ[0-9]{4}$",
+        "BA": r"^[0-9]{5}$",
+        "BB": r"^BB[0-9]{5}$",
+        "BD": r"^[0-9]{4}$",
+        "BE": r"^[0-9]{4}$",
+        "BG": r"^[0-9]{4}$",
+        "BH": r"^[0-9]{3,4}$",
+        "BL": r"^[0-9]{5}$",
+        "BM": r"^[A-Z]{2}([0-9]{2}|[A-Z]{2})",
+        "BN": r"^[A-Z]{2}[0-9]{4}$",
+        "BO": r"^[0-9]{4}$",
+        "BR": r"^[0-9]{5}(-[0-9]{3})?$",
+        "BT": r"^[0-9]{3}$",
+        "BY": r"^[0-9]{6}$",
+        "CA": r"^[A-Z][0-9][A-Z][0-9][A-Z][0-9]$",
+        "CC": r"^[0-9]{4}$",
+        "CH": r"^[0-9]{4}$",
+        "CL": r"^([0-9]{7}|[0-9]{3}-[0-9]{4})$",
+        "CN": r"^[0-9]{6}$",
+        "CO": r"^[0-9]{6}$",
+        "CR": r"^[0-9]{4,5}$",
+        "CU": r"^[0-9]{5}$",
+        "CV": r"^[0-9]{4}$",
+        "CX": r"^[0-9]{4}$",
+        "CY": r"^[0-9]{4}$",
+        "CZ": r"^[0-9]{5}$",
+        "DE": r"^[0-9]{5}$",
+        "DK": r"^[0-9]{4}$",
+        "DO": r"^[0-9]{5}$",
+        "DZ": r"^[0-9]{5}$",
+        "EC": r"^EC[0-9]{6}$",
+        "EE": r"^[0-9]{5}$",
+        "EG": r"^[0-9]{5}$",
+        "ES": r"^[0-9]{5}$",
+        "ET": r"^[0-9]{4}$",
+        "FI": r"^[0-9]{5}$",
+        "FK": r"^[A-Z]{4}[0-9][A-Z]{2}$",
+        "FM": r"^[0-9]{5}(-[0-9]{4})?$",
+        "FO": r"^[0-9]{3}$",
+        "FR": r"^[0-9]{5}$",
+        "GA": r"^[0-9]{2}.*[0-9]{2}$",
+        "GB": r"^[A-Z][A-Z0-9]{1,3}[0-9][A-Z]{2}$",
+        "GE": r"^[0-9]{4}$",
+        "GF": r"^[0-9]{5}$",
+        "GG": r"^([A-Z]{2}[0-9]{2,3}[A-Z]{2})$",
+        "GI": r"^GX111AA$",
+        "GL": r"^[0-9]{4}$",
+        "GP": r"^[0-9]{5}$",
+        "GR": r"^[0-9]{5}$",
+        "GS": r"^SIQQ1ZZ$",
+        "GT": r"^[0-9]{5}$",
+        "GU": r"^[0-9]{5}$",
+        "GW": r"^[0-9]{4}$",
+        "HM": r"^[0-9]{4}$",
+        "HN": r"^[0-9]{5}$",
+        "HR": r"^[0-9]{5}$",
+        "HT": r"^[0-9]{4}$",
+        "HU": r"^[0-9]{4}$",
+        "ID": r"^[0-9]{5}$",
+        "IL": r"^([0-9]{5}|[0-9]{7})$",
+        "IM": r"^IM[0-9]{2,3}[A-Z]{2}$$",
+        "IN": r"^[0-9]{6}$",
+        "IO": r"^[A-Z]{4}[0-9][A-Z]{2}$",
+        "IQ": r"^[0-9]{5}$",
+        "IR": r"^[0-9]{5}-[0-9]{5}$",
+        "IS": r"^[0-9]{3}$",
+        "IT": r"^[0-9]{5}$",
+        "JE": r"^JE[0-9]{2}[A-Z]{2}$",
+        "JM": r"^JM[A-Z]{3}[0-9]{2}$",
+        "JO": r"^[0-9]{5}$",
+        "JP": r"^[0-9]{3}-?[0-9]{4}$",
+        "KE": r"^[0-9]{5}$",
+        "KG": r"^[0-9]{6}$",
+        "KH": r"^[0-9]{5}$",
+        "KR": r"^[0-9]{5}$",
+        "KY": r"^KY[0-9]-[0-9]{4}$",
+        "KZ": r"^[0-9]{6}$",
+        "LA": r"^[0-9]{5}$",
+        "LB": r"^[0-9]{8}$",
+        "LI": r"^[0-9]{4}$",
+        "LK": r"^[0-9]{5}$",
+        "LR": r"^[0-9]{4}$",
+        "LS": r"^[0-9]{3}$",
+        "LT": r"^(LT-)?[0-9]{5}$",
+        "LU": r"^[0-9]{4}$",
+        "LV": r"^LV-[0-9]{4}$",
+        "LY": r"^[0-9]{5}$",
+        "MA": r"^[0-9]{5}$",
+        "MC": r"^980[0-9]{2}$",
+        "MD": r"^MD-?[0-9]{4}$",
+        "ME": r"^[0-9]{5}$",
+        "MF": r"^[0-9]{5}$",
+        "MG": r"^[0-9]{3}$",
+        "MH": r"^[0-9]{5}$",
+        "MK": r"^[0-9]{4}$",
+        "MM": r"^[0-9]{5}$",
+        "MN": r"^[0-9]{5}$",
+        "MP": r"^[0-9]{5}$",
+        "MQ": r"^[0-9]{5}$",
+        "MT": r"^[A-Z]{3}[0-9]{4}$",
+        "MV": r"^[0-9]{4,5}$",
+        "MX": r"^[0-9]{5}$",
+        "MY": r"^[0-9]{5}$",
+        "MZ": r"^[0-9]{4}$",
+        "NA": r"^[0-9]{5}$",
+        "NC": r"^[0-9]{5}$",
+        "NE": r"^[0-9]{4}$",
+        "NF": r"^[0-9]{4}$",
+        "NG": r"^[0-9]{6}$",
+        "NI": r"^[0-9]{5}$",
+        "NL": r"^[0-9]{4}[A-Z]{2}$",
+        "NO": r"^[0-9]{4}$",
+        "NP": r"^[0-9]{5}$",
+        "NZ": r"^[0-9]{4}$",
+        "OM": r"^[0-9]{3}$",
+        "PA": r"^[0-9]{6}$",
+        "PE": r"^[0-9]{5}$",
+        "PF": r"^[0-9]{5}$",
+        "PG": r"^[0-9]{3}$",
+        "PH": r"^[0-9]{4}$",
+        "PK": r"^[0-9]{5}$",
+        "PL": r"^[0-9]{2}-?[0-9]{3}$",
+        "PM": r"^[0-9]{5}$",
+        "PN": r"^[A-Z]{4}[0-9][A-Z]{2}$",
+        "PR": r"^[0-9]{5}$",
+        "PT": r"^[0-9]{4}(-?[0-9]{3})?$",
+        "PW": r"^[0-9]{5}$",
+        "PY": r"^[0-9]{4}$",
+        "RE": r"^[0-9]{5}$",
+        "RO": r"^[0-9]{6}$",
+        "RS": r"^[0-9]{5}$",
+        "RU": r"^[0-9]{6}$",
+        "SA": r"^[0-9]{5}$",
+        "SD": r"^[0-9]{5}$",
+        "SE": r"^[0-9]{5}$",
+        "SG": r"^([0-9]{2}|[0-9]{4}|[0-9]{6})$",
+        "SH": r"^(STHL1ZZ|TDCU1ZZ)$",
+        "SI": r"^(SI-)?[0-9]{4}$",
+        "SK": r"^[0-9]{5}$",
+        "SM": r"^[0-9]{5}$",
+        "SN": r"^[0-9]{5}$",
+        "SV": r"^01101$",
+        "SZ": r"^[A-Z][0-9]{3}$",
+        "TC": r"^TKCA1ZZ$",
+        "TD": r"^[0-9]{5}$",
+        "TH": r"^[0-9]{5}$",
+        "TJ": r"^[0-9]{6}$",
+        "TM": r"^[0-9]{6}$",
+        "TN": r"^[0-9]{4}$",
+        "TR": r"^[0-9]{5}$",
+        "TT": r"^[0-9]{6}$",
+        "TW": r"^([0-9]{3}|[0-9]{5})$",
+        "UA": r"^[0-9]{5}$",
+        "US": r"^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$",
+        "UY": r"^[0-9]{5}$",
+        "UZ": r"^[0-9]{6}$",
+        "VA": r"^00120$",
+        "VC": r"^VC[0-9]{4}",
+        "VE": r"^[0-9]{4}[A-Z]?$",
+        "VG": r"^VG[0-9]{4}$",
+        "VI": r"^[0-9]{5}$",
+        "VN": r"^[0-9]{6}$",
+        "WF": r"^[0-9]{5}$",
+        "XK": r"^[0-9]{5}$",
+        "YT": r"^[0-9]{5}$",
+        "ZA": r"^[0-9]{4}$",
+        "ZM": r"^[0-9]{5}$",
     }
 
     title = models.CharField(
         pgettext_lazy("Treatment Pronouns for the customer", "Title"),
-        max_length=64, choices=TITLE_CHOICES, blank=True)
+        max_length=64,
+        choices=TITLE_CHOICES,
+        blank=True,
+    )
     first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
 
     # We use quite a few lines of an address as they are often quite long and
     # it's easier to just hide the unnecessary ones than add extra ones.
     line1 = models.CharField(_("First line of address"), max_length=255)
-    line2 = models.CharField(
-        _("Second line of address"), max_length=255, blank=True)
-    line3 = models.CharField(
-        _("Third line of address"), max_length=255, blank=True)
+    line2 = models.CharField(_("Second line of address"), max_length=255, blank=True)
+    line3 = models.CharField(_("Third line of address"), max_length=255, blank=True)
     line4 = models.CharField(_("City"), max_length=255, blank=True)
     state = models.CharField(_("State/County"), max_length=255, blank=True)
-    postcode = UppercaseCharField(
-        _("Post/Zip-code"), max_length=64, blank=True)
+    postcode = UppercaseCharField(_("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey(
-        'address.Country',
-        on_delete=models.CASCADE,
-        verbose_name=_("Country"))
+        "address.Country", on_delete=models.CASCADE, verbose_name=_("Country")
+    )
 
     # A field only used for searching addresses - this contains all the
     # `search_fields`.  This is effectively a poor man's Solr text field.
     search_text = models.TextField(
-        _("Search text - used only for searching addresses"), editable=False)
-    search_fields = ['first_name', 'last_name', 'line1', 'line2', 'line3', 'line4', 'state', 'postcode', 'country']
+        _("Search text - used only for searching addresses"), editable=False
+    )
+    search_fields = [
+        "first_name",
+        "last_name",
+        "line1",
+        "line2",
+        "line3",
+        "line4",
+        "state",
+        "postcode",
+        "country",
+    ]
 
     # Fields, used for `summary` property definition and hash generation.
-    base_fields = hash_fields = ['salutation', 'line1', 'line2', 'line3', 'line4', 'state', 'postcode', 'country']
+    base_fields = hash_fields = [
+        "salutation",
+        "line1",
+        "line2",
+        "line3",
+        "line4",
+        "state",
+        "postcode",
+        "country",
+    ]
 
     def __str__(self):
         return self.summary
 
     class Meta:
         abstract = True
-        verbose_name = _('Address')
-        verbose_name_plural = _('Addresses')
+        verbose_name = _("Address")
+        verbose_name_plural = _("Addresses")
 
     # Saving
 
@@ -260,8 +280,16 @@ class AbstractAddress(models.Model):
 
     def clean(self):
         # Strip all whitespace
-        for field in ['first_name', 'last_name', 'line1', 'line2', 'line3',
-                      'line4', 'state', 'postcode']:
+        for field in [
+            "first_name",
+            "last_name",
+            "line1",
+            "line2",
+            "line3",
+            "line4",
+            "state",
+            "postcode",
+        ]:
             if self.__dict__[field]:
                 self.__dict__[field] = self.__dict__[field].strip()
 
@@ -276,27 +304,27 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
             if regex:
-                msg = _("Addresses in %(country)s require a valid postcode") \
-                    % {'country': self.country}
+                msg = _("Addresses in %(country)s require a valid postcode") % {
+                    "country": self.country
+                }
                 raise exceptions.ValidationError(msg)
 
         if self.postcode and self.country_id:
             # Ensure postcodes are always uppercase
-            postcode = self.postcode.upper().replace(' ', '')
+            postcode = self.postcode.upper().replace(" ", "")
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
 
             # Validate postcode against regex for the country if available
             if regex and not re.match(regex, postcode):
-                msg = _("The postcode '%(postcode)s' is not valid "
-                        "for %(country)s") \
-                    % {'postcode': self.postcode,
-                       'country': self.country}
-                raise exceptions.ValidationError(
-                    {'postcode': [msg]})
+                msg = _("The postcode '%(postcode)s' is not valid for %(country)s") % {
+                    "postcode": self.postcode,
+                    "country": self.country,
+                }
+                raise exceptions.ValidationError({"postcode": [msg]})
 
     def _update_search_text(self):
-        self.search_text = self.join_fields(self.search_fields, separator=' ')
+        self.search_text = self.join_fields(self.search_fields, separator=" ")
 
     # Properties
 
@@ -319,12 +347,12 @@ class AbstractAddress(models.Model):
         Name (including title)
         """
         return self.join_fields(
-            ('title', 'first_name', 'last_name'),
-            separator=" ").strip()
+            ("title", "first_name", "last_name"), separator=" "
+        ).strip()
 
     @property
     def name(self):
-        return self.join_fields(('first_name', 'last_name'), separator=" ")
+        return self.join_fields(("first_name", "last_name"), separator=" ")
 
     # Helpers
 
@@ -332,14 +360,14 @@ class AbstractAddress(models.Model):
         field_values = []
         for field in fields:
             # Title is special case
-            if field == 'title':
+            if field == "title":
                 value = self.get_title_display()
-            elif field == 'country':
+            elif field == "country":
                 try:
                     value = self.country.printable_name
                 except exceptions.ObjectDoesNotExist:
-                    value = ''
-            elif field == 'salutation':
+                    value = ""
+            elif field == "salutation":
                 value = self.salutation
             else:
                 value = getattr(self, field)
@@ -362,7 +390,7 @@ class AbstractAddress(models.Model):
         # Python 2 and 3 generates CRC checksum in different ranges, so
         # in order to generate platform-independent value we apply
         # `& 0xffffffff` expression.
-        return zlib.crc32(', '.join(field_values).upper().encode('UTF8')) & 0xffffffff
+        return zlib.crc32(", ".join(field_values).upper().encode("UTF8")) & 0xFFFFFFFF
 
     def join_fields(self, fields, separator=", "):
         """
@@ -379,10 +407,9 @@ class AbstractAddress(models.Model):
         This is used to convert a user address to a shipping address
         as part of the checkout process.
         """
-        destination_field_names = [
-            field.name for field in address_model._meta.fields]
+        destination_field_names = [field.name for field in address_model._meta.fields]
         for field_name in [field.name for field in self._meta.fields]:
-            if field_name in destination_field_names and field_name != 'id':
+            if field_name in destination_field_names and field_name != "id":
                 setattr(address_model, field_name, getattr(self, field_name))
 
     def active_address_fields(self):
@@ -401,32 +428,41 @@ class AbstractCountry(models.Model):
     The field names are a bit awkward, but kept for backwards compatibility.
     pycountry's syntax of alpha2, alpha3, name and official_name seems sane.
     """
+
     iso_3166_1_a2 = models.CharField(
-        _('ISO 3166-1 alpha-2'), max_length=2, primary_key=True)
-    iso_3166_1_a3 = models.CharField(
-        _('ISO 3166-1 alpha-3'), max_length=3, blank=True)
+        _("ISO 3166-1 alpha-2"), max_length=2, primary_key=True
+    )
+    iso_3166_1_a3 = models.CharField(_("ISO 3166-1 alpha-3"), max_length=3, blank=True)
     iso_3166_1_numeric = models.CharField(
-        _('ISO 3166-1 numeric'), blank=True, max_length=3)
+        _("ISO 3166-1 numeric"), blank=True, max_length=3
+    )
 
     #: The commonly used name; e.g. 'United Kingdom'
-    printable_name = models.CharField(_('Country name'), max_length=128, db_index=True)
+    printable_name = models.CharField(_("Country name"), max_length=128, db_index=True)
     #: The full official name of a country
     #: e.g. 'United Kingdom of Great Britain and Northern Ireland'
-    name = models.CharField(_('Official name'), max_length=128)
+    name = models.CharField(_("Official name"), max_length=128)
 
     display_order = models.PositiveSmallIntegerField(
-        _("Display order"), default=0, db_index=True,
-        help_text=_('Higher the number, higher the country in the list.'))
+        _("Display order"),
+        default=0,
+        db_index=True,
+        help_text=_("Higher the number, higher the country in the list."),
+    )
 
     is_shipping_country = models.BooleanField(
-        _("Is shipping country"), default=False, db_index=True)
+        _("Is shipping country"), default=False, db_index=True
+    )
 
     class Meta:
         abstract = True
-        app_label = 'address'
-        verbose_name = _('Country')
-        verbose_name_plural = _('Countries')
-        ordering = ('-display_order', 'printable_name',)
+        app_label = "address"
+        verbose_name = _("Country")
+        verbose_name_plural = _("Countries")
+        ordering = (
+            "-display_order",
+            "printable_name",
+        )
 
     def __str__(self):
         return self.printable_name or self.name
@@ -468,17 +504,20 @@ class AbstractShippingAddress(AbstractAddress):
     """
 
     phone_number = PhoneNumberField(
-        _("Phone number"), blank=True,
-        help_text=_("In case we need to call you about your order"))
+        _("Phone number"),
+        blank=True,
+        help_text=_("In case we need to call you about your order"),
+    )
     notes = models.TextField(
-        blank=True, verbose_name=_('Instructions'),
-        help_text=_("Tell us anything we should know when delivering "
-                    "your order."))
+        blank=True,
+        verbose_name=_("Instructions"),
+        help_text=_("Tell us anything we should know when delivering your order."),
+    )
 
     class Meta:
         abstract = True
         # ShippingAddress is registered in order/models.py
-        app_label = 'order'
+        app_label = "order"
         verbose_name = _("Shipping address")
         verbose_name_plural = _("Shipping addresses")
 
@@ -501,34 +540,41 @@ class AbstractUserAddress(AbstractShippingAddress):
     model, we allow users the ability to add/edit/delete from their address
     book without affecting orders already placed.
     """
+
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='addresses',
-        verbose_name=_("User"))
+        related_name="addresses",
+        verbose_name=_("User"),
+    )
 
     #: Whether this address is the default for shipping
     is_default_for_shipping = models.BooleanField(
-        _("Default shipping address?"), default=False)
+        _("Default shipping address?"), default=False
+    )
 
     #: Whether this address should be the default for billing.
     is_default_for_billing = models.BooleanField(
-        _("Default billing address?"), default=False)
+        _("Default billing address?"), default=False
+    )
 
     #: We keep track of the number of times an address has been used
     #: as a shipping address so we can show the most popular ones
     #: first at the checkout.
     num_orders_as_shipping_address = models.PositiveIntegerField(
-        _("Number of Orders as Shipping Address"), default=0)
+        _("Number of Orders as Shipping Address"), default=0
+    )
 
     #: Same as previous, but for billing address.
     num_orders_as_billing_address = models.PositiveIntegerField(
-        _("Number of Orders as Billing Address"), default=0)
+        _("Number of Orders as Billing Address"), default=0
+    )
 
     #: A hash is kept to try and avoid duplicate addresses being added
     #: to the address book.
-    hash = models.CharField(_("Address Hash"), max_length=255, db_index=True,
-                            editable=False)
+    hash = models.CharField(
+        _("Address Hash"), max_length=255, db_index=True, editable=False
+    )
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -546,40 +592,38 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     def _ensure_defaults_integrity(self):
         if self.is_default_for_shipping:
-            self.__class__._default_manager\
-                .filter(user=self.user, is_default_for_shipping=True)\
-                .update(is_default_for_shipping=False)
+            self.__class__._default_manager.filter(
+                user=self.user, is_default_for_shipping=True
+            ).update(is_default_for_shipping=False)
         if self.is_default_for_billing:
-            self.__class__._default_manager\
-                .filter(user=self.user, is_default_for_billing=True)\
-                .update(is_default_for_billing=False)
+            self.__class__._default_manager.filter(
+                user=self.user, is_default_for_billing=True
+            ).update(is_default_for_billing=False)
 
     class Meta:
         abstract = True
-        app_label = 'address'
+        app_label = "address"
         verbose_name = _("User address")
         verbose_name_plural = _("User addresses")
-        ordering = ['-num_orders_as_shipping_address']
-        unique_together = ('user', 'hash')
+        ordering = ["-num_orders_as_shipping_address"]
+        unique_together = ("user", "hash")
 
     def validate_unique(self, exclude=None):
         super().validate_unique(exclude)
-        qs = self.__class__.objects.filter(
-            user=self.user,
-            hash=self.generate_hash())
+        qs = self.__class__.objects.filter(user=self.user, hash=self.generate_hash())
         if self.id:
             qs = qs.exclude(id=self.id)
         if qs.exists():
-            raise exceptions.ValidationError({
-                '__all__': [_("This address is already in your address"
-                              " book")]})
+            raise exceptions.ValidationError(
+                {"__all__": [_("This address is already in your address book")]}
+            )
 
 
 class AbstractBillingAddress(AbstractAddress):
     class Meta:
         abstract = True
         # BillingAddress is registered in order/models.py
-        app_label = 'order'
+        app_label = "order"
         verbose_name = _("Billing address")
         verbose_name_plural = _("Billing addresses")
 
@@ -596,14 +640,16 @@ class AbstractPartnerAddress(AbstractAddress):
     A partner can have one or more addresses. This can be useful e.g. when
     determining US tax which depends on the origin of the shipment.
     """
+
     partner = models.ForeignKey(
-        'partner.Partner',
+        "partner.Partner",
         on_delete=models.CASCADE,
-        related_name='addresses',
-        verbose_name=_('Partner'))
+        related_name="addresses",
+        verbose_name=_("Partner"),
+    )
 
     class Meta:
         abstract = True
-        app_label = 'partner'
+        app_label = "partner"
         verbose_name = _("Partner address")
         verbose_name_plural = _("Partner addresses")

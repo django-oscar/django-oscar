@@ -7,6 +7,6 @@ class SlugField(DjangoSlugField):
         # not override parameter if it was passed explicitly,
         # so passed parameters takes precedence over the setting
         if settings.OSCAR_SLUG_ALLOW_UNICODE:
-            kwargs.setdefault('allow_unicode', settings.OSCAR_SLUG_ALLOW_UNICODE)
+            kwargs.setdefault("allow_unicode", settings.OSCAR_SLUG_ALLOW_UNICODE)
 
         super().__init__(*args, **kwargs)

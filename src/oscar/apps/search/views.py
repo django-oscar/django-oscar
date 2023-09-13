@@ -3,8 +3,8 @@ from haystack import views
 from oscar.apps.search.signals import user_search
 from oscar.core.loading import get_class, get_model
 
-Product = get_model('catalogue', 'Product')
-FacetMunger = get_class('search.facets', 'FacetMunger')
+Product = get_model("catalogue", "Product")
+FacetMunger = get_class("search.facets", "FacetMunger")
 
 
 class FacetedSearchView(views.FacetedSearchView):
@@ -15,7 +15,7 @@ class FacetedSearchView(views.FacetedSearchView):
     This takes place in the search application class.
 
     See https://django-haystack.readthedocs.io/en/v2.1.0/views_and_forms.html#facetedsearchform
-    """  # noqa
+    """
 
     # Haystack uses a different class attribute to CBVs
     template = "oscar/search/results.html"
@@ -26,8 +26,11 @@ class FacetedSearchView(views.FacetedSearchView):
 
         # Raise a signal for other apps to hook into for analytics
         self.search_signal.send(
-            sender=self, session=self.request.session,
-            user=self.request.user, query=self.query)
+            sender=self,
+            session=self.request.session,
+            user=self.request.user,
+            query=self.query,
+        )
 
         return response
 
@@ -43,22 +46,24 @@ class FacetedSearchView(views.FacetedSearchView):
             # Note, this triggers an extra call to the search backend
             suggestion = self.form.get_suggestion()
             if suggestion != self.query:
-                extra['suggestion'] = suggestion
+                extra["suggestion"] = suggestion
 
         # Convert facet data into a more useful data structure
-        if 'fields' in extra['facets']:
+        if "fields" in extra["facets"]:
             munger = FacetMunger(
                 self.request.get_full_path(),
                 self.form.selected_multi_facets,
-                self.results.facet_counts())
-            extra['facet_data'] = munger.facet_data()
-            has_facets = any([len(data['results']) for
-                              data in extra['facet_data'].values()])
-            extra['has_facets'] = has_facets
+                self.results.facet_counts(),
+            )
+            extra["facet_data"] = munger.facet_data()
+            has_facets = any(
+                [len(data["results"]) for data in extra["facet_data"].values()]
+            )
+            extra["has_facets"] = has_facets
 
         # Pass list of selected facets so they can be included in the sorting
         # form.
-        extra['selected_facets'] = self.request.GET.getlist('selected_facets')
+        extra["selected_facets"] = self.request.GET.getlist("selected_facets")
 
         return extra
 

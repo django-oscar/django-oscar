@@ -1,0 +1,12 @@
+[MASTER]
+jobs = 1
+load-plugins = pylint_django
+score = n
+ignore = migrations
+django-settings-module = sandbox.settings
+
+[MESSAGES CONTROL]
+disable = R,C,W5103,W0707,W0719,W0718,W0212,E5110
+
+[TYPECHECK]
+ignored-classes = responses

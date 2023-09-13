@@ -5,7 +5,11 @@ from django.db import models, migrations
 import oscar.models.fields.autoslugfield
 import django.db.models.deletion
 import oscar.models.fields
+from django.utils.module_loading import import_string
 from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
+
 
 
 class Migration(migrations.Migration):
@@ -24,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BillingAddress',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(verbose_name='Title', max_length=64, blank=True, choices=[('Mr', 'Mr'), ('Miss', 'Miss'), ('Mrs', 'Mrs'), ('Ms', 'Ms'), ('Dr', 'Dr')])),
                 ('first_name', models.CharField(max_length=255, verbose_name='First name', blank=True)),
                 ('last_name', models.CharField(max_length=255, verbose_name='Last name', blank=True)),
@@ -47,7 +51,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CommunicationEvent',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date')),
                 ('event_type', models.ForeignKey(verbose_name='Event Type', to='customer.CommunicationEventType', on_delete=models.CASCADE)),
             ],
@@ -62,7 +66,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Line',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('partner_name', models.CharField(max_length=128, verbose_name='Partner name', blank=True)),
                 ('partner_sku', models.CharField(max_length=128, verbose_name='Partner SKU')),
                 ('partner_line_reference', models.CharField(verbose_name='Partner reference', max_length=128, help_text='This is the item number that the partner uses within their system', blank=True)),
@@ -91,7 +95,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LineAttribute',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(max_length=128, verbose_name='Type')),
                 ('value', models.CharField(max_length=255, verbose_name='Value')),
                 ('line', models.ForeignKey(verbose_name='Line', related_name='attributes', to='order.Line', on_delete=models.CASCADE)),
@@ -107,7 +111,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LinePrice',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.PositiveIntegerField(default=1, verbose_name='Quantity')),
                 ('price_incl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Price (inc. tax)')),
                 ('price_excl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Price (excl. tax)')),
@@ -126,7 +130,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Order',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('number', models.CharField(max_length=128, unique=True, db_index=True, verbose_name='Order number')),
                 ('currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
                 ('total_incl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Order total (inc. tax)')),
@@ -152,7 +156,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderDiscount',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('category', models.CharField(default='Basket', max_length=64, verbose_name='Discount category', choices=[('Basket', 'Basket'), ('Shipping', 'Shipping'), ('Deferred', 'Deferred')])),
                 ('offer_id', models.PositiveIntegerField(blank=True, verbose_name='Offer ID', null=True)),
                 ('offer_name', models.CharField(max_length=128, db_index=True, verbose_name='Offer name', blank=True)),
@@ -173,7 +177,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderNote',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('note_type', models.CharField(max_length=128, verbose_name='Note Type', blank=True)),
                 ('message', models.TextField(verbose_name='Message')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
@@ -191,7 +195,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PaymentEvent',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('amount', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Amount')),
                 ('reference', models.CharField(max_length=128, verbose_name='Reference', blank=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
@@ -207,7 +211,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PaymentEventQuantity',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.PositiveIntegerField(verbose_name='Quantity')),
                 ('event', models.ForeignKey(verbose_name='Event', related_name='line_quantities', to='order.PaymentEvent', on_delete=models.CASCADE)),
                 ('line', models.ForeignKey(verbose_name='Line', related_name='payment_event_quantities', to='order.Line', on_delete=models.CASCADE)),
@@ -221,7 +225,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PaymentEventType',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(unique=True, max_length=128, verbose_name='Name')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Code', max_length=128, editable=False, blank=True)),
             ],
@@ -236,7 +240,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ShippingAddress',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(verbose_name='Title', max_length=64, blank=True, choices=[('Mr', 'Mr'), ('Miss', 'Miss'), ('Mrs', 'Mrs'), ('Ms', 'Ms'), ('Dr', 'Dr')])),
                 ('first_name', models.CharField(max_length=255, verbose_name='First name', blank=True)),
                 ('last_name', models.CharField(max_length=255, verbose_name='Last name', blank=True)),
@@ -261,7 +265,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ShippingEvent',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('notes', models.TextField(verbose_name='Event notes', help_text='This could be the dispatch reference, or a tracking number', blank=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
             ],
@@ -276,7 +280,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ShippingEventQuantity',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.PositiveIntegerField(verbose_name='Quantity')),
                 ('event', models.ForeignKey(verbose_name='Event', related_name='line_quantities', to='order.ShippingEvent', on_delete=models.CASCADE)),
                 ('line', models.ForeignKey(verbose_name='Line', related_name='shipping_event_quantities', to='order.Line', on_delete=models.CASCADE)),
@@ -290,7 +294,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ShippingEventType',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(unique=True, max_length=255, verbose_name='Name')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Code', max_length=128, editable=False, blank=True)),
             ],

@@ -117,7 +117,7 @@
 
                                                         {% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.option_group nolabel=True %}
                                                     </td>
-                                                    <td>{% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.required nolabel=True %}</td>
+                                                    <td>{% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.required nolabel=True %}{{ attribute_form.non_field_errors }}</td>
                                                     <td>{% include 'oscar/dashboard/partials/form_field.html' with field=attribute_form.DELETE nolabel=True %}</td>
                                                 </tr>
                                             {% endfor %}

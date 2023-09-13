@@ -101,7 +101,7 @@ var oscar = (function(o, $) {
                         {title: 'Heading', block: 'h2'},
                         {title: 'Subheading', block: 'h3'}
                     ],
-                    toolbar: "styleselect | bold italic blockquote | bullist numlist | link"
+                    toolbar: "styles | bold italic blockquote | bullist numlist | link"
                 }
             };
             o.dashboard.options = $.extend(true, defaults, options);

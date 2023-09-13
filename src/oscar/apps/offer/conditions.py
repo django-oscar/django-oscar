@@ -7,12 +7,10 @@ from django.utils.translation import ngettext
 from oscar.core.loading import get_classes, get_model
 from oscar.templatetags.currency_filters import currency
 
-Condition = get_model('offer', 'Condition')
-range_anchor, unit_price = get_classes('offer.utils', ['range_anchor', 'unit_price'])
+Condition = get_model("offer", "Condition")
+range_anchor, unit_price = get_classes("offer.utils", ["range_anchor", "unit_price"])
 
-__all__ = [
-    'CountCondition', 'CoverageCondition', 'ValueCondition'
-]
+__all__ = ["CountCondition", "CoverageCondition", "ValueCondition"]
 
 
 class CountCondition(Condition):
@@ -20,22 +18,25 @@ class CountCondition(Condition):
     An offer condition dependent on the NUMBER of matching items from the
     basket.
     """
+
     _description = _("Basket includes %(count)d item(s) from %(range)s")
 
     @property
     def name(self):
         return self._description % {
-            'count': self.value,
-            'range': str(self.range).lower()}
+            "count": self.value,
+            "range": str(self.range).lower(),
+        }
 
     @property
     def description(self):
         return self._description % {
-            'count': self.value,
-            'range': range_anchor(self.range)}
+            "count": self.value,
+            "range": range_anchor(self.range),
+        }
 
     class Meta:
-        app_label = 'offer'
+        app_label = "offer"
         proxy = True
         verbose_name = _("Count condition")
         verbose_name_plural = _("Count conditions")
@@ -53,12 +54,13 @@ class CountCondition(Condition):
         return False
 
     def _get_num_matches(self, basket, offer):
-        if hasattr(self, '_num_matches'):
-            return getattr(self, '_num_matches')
+        if hasattr(self, "_num_matches"):
+            return getattr(self, "_num_matches")
         num_matches = 0
         for line in basket.all_lines():
             if self.can_apply_condition(line):
                 num_matches += line.quantity_available_for_offer(offer)
+        # pylint: disable=W0201
         self._num_matches = num_matches
         return num_matches
 
@@ -71,10 +73,10 @@ class CountCondition(Condition):
         delta = self.value - num_matches
         if delta > 0:
             return ngettext(
-                'Buy %(delta)d more product from %(range)s',
-                'Buy %(delta)d more products from %(range)s',
-                int(delta)
-            ) % {'delta': delta, 'range': self.range}
+                "Buy %(delta)d more product from %(range)s",
+                "Buy %(delta)d more products from %(range)s",
+                int(delta),
+            ) % {"delta": delta, "range": self.range}
 
     def consume_items(self, offer, basket, affected_lines):
         """
@@ -94,7 +96,9 @@ class CountCondition(Condition):
         if to_consume == 0:
             return
 
-        for __, line in self.get_applicable_lines(offer, basket, most_expensive_first=True):
+        for __, line in self.get_applicable_lines(
+            offer, basket, most_expensive_first=True
+        ):
             num_consumed = line.consume(to_consume, offer=offer)
             to_consume -= num_consumed
             if to_consume == 0:
@@ -106,23 +110,25 @@ class CoverageCondition(Condition):
     An offer condition dependent on the number of DISTINCT matching items from
     the basket.
     """
-    _description = _("Basket includes %(count)d distinct item(s) from"
-                     " %(range)s")
+
+    _description = _("Basket includes %(count)d distinct item(s) from %(range)s")
 
     @property
     def name(self):
         return self._description % {
-            'count': self.value,
-            'range': str(self.range).lower()}
+            "count": self.value,
+            "range": str(self.range).lower(),
+        }
 
     @property
     def description(self):
         return self._description % {
-            'count': self.value,
-            'range': range_anchor(self.range)}
+            "count": self.value,
+            "range": range_anchor(self.range),
+        }
 
     class Meta:
-        app_label = 'offer'
+        app_label = "offer"
         proxy = True
         verbose_name = _("Coverage Condition")
         verbose_name_plural = _("Coverage Conditions")
@@ -136,8 +142,7 @@ class CoverageCondition(Condition):
             if not line.is_available_for_offer_discount(offer):
                 continue
             product = line.product
-            if (self.can_apply_condition(line) and product.id not in
-                    covered_ids):
+            if self.can_apply_condition(line) and product.id not in covered_ids:
                 covered_ids.append(product.id)
             if len(covered_ids) >= self.value:
                 return True
@@ -147,7 +152,10 @@ class CoverageCondition(Condition):
         covered_ids = set()
         for line in basket.all_lines():
             product = line.product
-            if self.can_apply_condition(line) and line.quantity_available_for_offer(offer) > 0:
+            if (
+                self.can_apply_condition(line)
+                and line.quantity_available_for_offer(offer) > 0
+            ):
                 covered_ids.add(product.id)
         return len(covered_ids)
 
@@ -155,10 +163,10 @@ class CoverageCondition(Condition):
         delta = self.value - self._get_num_covered_products(basket, offer)
         if delta > 0:
             return ngettext(
-                'Buy %(delta)d more product from %(range)s',
-                'Buy %(delta)d more products from %(range)s',
-                int(delta)
-            ) % {'delta': delta, 'range': self.range}
+                "Buy %(delta)d more product from %(range)s",
+                "Buy %(delta)d more products from %(range)s",
+                int(delta),
+            ) % {"delta": delta, "range": self.range}
 
     def is_partially_satisfied(self, offer, basket):
         return 0 < self._get_num_covered_products(basket, offer) < self.value
@@ -171,7 +179,7 @@ class CoverageCondition(Condition):
         # Determine products that have already been consumed by applying the
         # benefit
         consumed_products = []
-        for line, __, quantity in affected_lines:
+        for line, __, quantity in affected_lines:  # pylint: disable=W0612
             consumed_products.append(line.product)
 
         to_consume = max(0, self.value - len(consumed_products))
@@ -195,10 +203,9 @@ class CoverageCondition(Condition):
 
     def get_value_of_satisfying_items(self, offer, basket):
         covered_ids = []
-        value = D('0.00')
+        value = D("0.00")
         for line in basket.all_lines():
-            if (self.can_apply_condition(line) and line.product.id not in
-                    covered_ids):
+            if self.can_apply_condition(line) and line.product.id not in covered_ids:
                 covered_ids.append(line.product.id)
                 value += unit_price(offer, line)
             if len(covered_ids) >= self.value:
@@ -211,22 +218,25 @@ class ValueCondition(Condition):
     An offer condition dependent on the VALUE of matching items from the
     basket.
     """
+
     _description = _("Basket includes %(amount)s from %(range)s")
 
     @property
     def name(self):
         return self._description % {
-            'amount': currency(self.value),
-            'range': str(self.range).lower()}
+            "amount": currency(self.value),
+            "range": str(self.range).lower(),
+        }
 
     @property
     def description(self):
         return self._description % {
-            'amount': currency(self.value),
-            'range': range_anchor(self.range)}
+            "amount": currency(self.value),
+            "range": range_anchor(self.range),
+        }
 
     class Meta:
-        app_label = 'offer'
+        app_label = "offer"
         proxy = True
         verbose_name = _("Value condition")
         verbose_name_plural = _("Value conditions")
@@ -235,10 +245,12 @@ class ValueCondition(Condition):
         """
         Determine whether a given basket meets this condition
         """
-        value_of_matches = D('0.00')
+        value_of_matches = D("0.00")
         for line in basket.all_lines():
-            if (self.can_apply_condition(line)
-                    and line.quantity_without_offer_discount(offer) > 0):
+            if (
+                self.can_apply_condition(line)
+                and line.quantity_without_offer_discount(offer) > 0
+            ):
                 price = unit_price(offer, line)
                 value_of_matches += price * int(
                     line.quantity_without_offer_discount(offer)
@@ -248,27 +260,29 @@ class ValueCondition(Condition):
         return False
 
     def _get_value_of_matches(self, offer, basket):
-        if hasattr(self, '_value_of_matches'):
-            return getattr(self, '_value_of_matches')
-        value_of_matches = D('0.00')
+        if hasattr(self, "_value_of_matches"):
+            return getattr(self, "_value_of_matches")
+        value_of_matches = D("0.00")
         for line in basket.all_lines():
             if self.can_apply_condition(line):
                 price = unit_price(offer, line)
-                value_of_matches += price * int(line.quantity_available_for_offer(offer))
-        self._value_of_matches = value_of_matches
+                value_of_matches += price * int(
+                    line.quantity_available_for_offer(offer)
+                )
+        self._value_of_matches = value_of_matches  # pylint: disable=W0201
         return value_of_matches
 
     def is_partially_satisfied(self, offer, basket):
         value_of_matches = self._get_value_of_matches(offer, basket)
-        return D('0.00') < value_of_matches < self.value
+        return D("0.00") < value_of_matches < self.value
 
     def get_upsell_message(self, offer, basket):
         value_of_matches = self._get_value_of_matches(offer, basket)
         delta = self.value - value_of_matches
         if delta > 0:
-            return _('Spend %(value)s more from %(range)s') % {
-                'value': currency(delta, basket.currency),
-                'range': self.range,
+            return _("Spend %(value)s more from %(range)s") % {
+                "value": currency(delta, basket.currency),
+                "range": self.range,
             }
 
     def consume_items(self, offer, basket, affected_lines):
@@ -280,7 +294,7 @@ class ValueCondition(Condition):
         in a specific order.
         """
         # Determine value of items already consumed as part of discount
-        value_consumed = D('0.00')
+        value_consumed = D("0.00")
         for line, __, qty in affected_lines:
             price = unit_price(offer, line)
             value_consumed += price * qty
@@ -290,10 +304,12 @@ class ValueCondition(Condition):
             return
 
         for price, line in self.get_applicable_lines(
-                offer, basket, most_expensive_first=True):
+            offer, basket, most_expensive_first=True
+        ):
             quantity_to_consume = min(
                 line.quantity_without_offer_discount(offer),
-                (to_consume / price).quantize(D(1), ROUND_UP))
+                (to_consume / price).quantize(D(1), ROUND_UP),
+            )
             line.consume(quantity_to_consume, offer=offer)
             to_consume -= price * quantity_to_consume
             if to_consume <= 0:

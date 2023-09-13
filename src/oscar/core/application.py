@@ -10,6 +10,7 @@ class OscarConfigMixin(object):
     Base Oscar app configuration mixin, used to extend :py:class:`django.apps.AppConfig`
     to also provide URL configurations and permissions.
     """
+
     # Instance namespace for the URLs
     namespace = None
     login_url = None
@@ -34,14 +35,14 @@ class OscarConfigMixin(object):
             namespace: optionally specify the URL instance namespace
         """
         app_config_attrs = [
-            'name',
-            'module',
-            'apps',
-            'label',
-            'verbose_name',
-            'path',
-            'models_module',
-            'models',
+            "name",
+            "module",
+            "apps",
+            "label",
+            "verbose_name",
+            "path",
+            "models_module",
+            "models",
         ]
         # To ensure sub classes do not add kwargs that are used by
         # :py:class:`django.apps.AppConfig`
@@ -49,7 +50,8 @@ class OscarConfigMixin(object):
         if clashing_kwargs:
             raise ImproperlyConfigured(
                 "Passed in kwargs can't be named the same as properties of "
-                "AppConfig; clashing: %s." % ", ".join(clashing_kwargs))
+                "AppConfig; clashing: %s." % ", ".join(clashing_kwargs)
+            )
         super().__init__(app_name, app_module)
         if namespace is not None:
             self.namespace = namespace
@@ -63,6 +65,7 @@ class OscarConfigMixin(object):
         """
         return []
 
+    # pylint: disable=W0126, W0125
     def post_process_urls(self, urlpatterns):
         """
         Customise URL patterns.
@@ -83,7 +86,7 @@ class OscarConfigMixin(object):
             return []
 
         for pattern in urlpatterns:
-            if hasattr(pattern, 'url_patterns'):
+            if hasattr(pattern, "url_patterns"):
                 self.post_process_urls(pattern.url_patterns)
 
             if isinstance(pattern, URLPattern):
@@ -106,8 +109,8 @@ class OscarConfigMixin(object):
             list: A list of permission strings.
         """
         # url namespaced?
-        if url is not None and ':' in url:
-            view_name = url.split(':')[1]
+        if url is not None and ":" in url:
+            view_name = url.split(":")[1]
         else:
             view_name = url
         return self.permissions_map.get(view_name, self.default_permissions)
@@ -126,6 +129,7 @@ class OscarConfigMixin(object):
         See permissions_required decorator for details
         """
         from oscar.views.decorators import permissions_required
+
         permissions = self.get_permissions(pattern.name)
         if permissions:
             return permissions_required(permissions, login_url=self.login_url)
@@ -146,4 +150,4 @@ class OscarConfig(OscarConfigMixin, AppConfig):
 
 
 class OscarDashboardConfig(OscarConfig):
-    login_url = reverse_lazy('dashboard:login')
+    login_url = reverse_lazy("dashboard:login")

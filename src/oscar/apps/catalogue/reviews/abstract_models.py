@@ -10,7 +10,7 @@ from oscar.core import validators
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class
 
-ProductReviewQuerySet = get_class('catalogue.reviews.managers', 'ProductReviewQuerySet')
+ProductReviewQuerySet = get_class("catalogue.reviews.managers", "ProductReviewQuerySet")
 
 
 class AbstractProductReview(models.Model):
@@ -21,8 +21,8 @@ class AbstractProductReview(models.Model):
     """
 
     product = models.ForeignKey(
-        'catalogue.Product', related_name='reviews', null=True,
-        on_delete=models.CASCADE)
+        "catalogue.Product", related_name="reviews", null=True, on_delete=models.CASCADE
+    )
 
     # Scores are between 0 and 5
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
@@ -30,7 +30,9 @@ class AbstractProductReview(models.Model):
 
     title = models.CharField(
         verbose_name=pgettext_lazy("Product review title", "Title"),
-        max_length=255, validators=[validators.non_whitespace])
+        max_length=255,
+        validators=[validators.non_whitespace],
+    )
 
     body = models.TextField(_("Body"))
 
@@ -40,12 +42,13 @@ class AbstractProductReview(models.Model):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
-        related_name='reviews')
+        related_name="reviews",
+    )
 
     # Fields to be completed if user is anonymous
     name = models.CharField(
-        pgettext_lazy("Anonymous reviewer name", "Name"),
-        max_length=255, blank=True)
+        pgettext_lazy("Anonymous reviewer name", "Name"), max_length=255, blank=True
+    )
     email = models.EmailField(_("Email"), blank=True)
     homepage = models.URLField(_("URL"), blank=True)
 
@@ -57,13 +60,16 @@ class AbstractProductReview(models.Model):
     )
 
     status = models.SmallIntegerField(
-        _("Status"), choices=STATUS_CHOICES, default=get_default_review_status)
+        _("Status"), choices=STATUS_CHOICES, default=get_default_review_status
+    )
 
     # Denormalised vote totals
     total_votes = models.IntegerField(
-        _("Total Votes"), default=0)  # upvotes + down votes
+        _("Total Votes"), default=0
+    )  # upvotes + down votes
     delta_votes = models.IntegerField(
-        _("Delta Votes"), default=0, db_index=True)  # upvotes - down votes
+        _("Delta Votes"), default=0, db_index=True
+    )  # upvotes - down votes
 
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -72,19 +78,19 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
-        app_label = 'reviews'
-        ordering = ['-delta_votes', 'id']
-        unique_together = (('product', 'user'),)
-        verbose_name = _('Product review')
-        verbose_name_plural = _('Product reviews')
+        app_label = "reviews"
+        ordering = ["-delta_votes", "id"]
+        unique_together = (("product", "user"),)
+        verbose_name = _("Product review")
+        verbose_name_plural = _("Product reviews")
 
     def get_absolute_url(self):
         kwargs = {
-            'product_slug': self.product.slug,
-            'product_pk': self.product.id,
-            'pk': self.id
+            "product_slug": self.product.slug,
+            "product_pk": self.product.id,
+            "pk": self.id,
         }
-        return reverse('catalogue:reviews-detail', kwargs=kwargs)
+        return reverse("catalogue:reviews-detail", kwargs=kwargs)
 
     def __str__(self):
         return self.title
@@ -94,7 +100,8 @@ class AbstractProductReview(models.Model):
         self.body = self.body.strip()
         if not self.user and not (self.name and self.email):
             raise ValidationError(
-                _("Anonymous reviews must include a name and an email"))
+                _("Anonymous reviews must include a name and an email")
+            )
 
     def vote_up(self, user):
         self.votes.create(user=user, delta=AbstractVote.UP)
@@ -147,7 +154,7 @@ class AbstractProductReview(models.Model):
     def reviewer_name(self):
         if self.user:
             name = self.user.get_full_name()
-            return name if name else _('anonymous')
+            return name if name else _("anonymous")
         else:
             return self.name
 
@@ -157,10 +164,9 @@ class AbstractProductReview(models.Model):
         """
         Update total and delta votes
         """
-        result = self.votes.aggregate(
-            score=Sum('delta'), total_votes=Count('id'))
-        self.total_votes = result['total_votes'] or 0
-        self.delta_votes = result['score'] or 0
+        result = self.votes.aggregate(score=Sum("delta"), total_votes=Count("id"))
+        self.total_votes = result["total_votes"] or 0
+        self.delta_votes = result["score"] or 0
         self.save()
 
     def can_user_vote(self, user):
@@ -170,6 +176,7 @@ class AbstractProductReview(models.Model):
         """
         if not user.is_authenticated:
             return False, _("Only signed in users can vote")
+        # pylint: disable=no-member
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
@@ -185,44 +192,37 @@ class AbstractVote(models.Model):
     * Only signed-in users can vote.
     * Each user can vote only once.
     """
+
     review = models.ForeignKey(
-        'reviews.ProductReview',
-        on_delete=models.CASCADE,
-        related_name='votes')
-    user = models.ForeignKey(
-        AUTH_USER_MODEL,
-        related_name='review_votes',
-        on_delete=models.CASCADE)
-    UP, DOWN = 1, -1
-    VOTE_CHOICES = (
-        (UP, _("Up")),
-        (DOWN, _("Down"))
+        "reviews.ProductReview", on_delete=models.CASCADE, related_name="votes"
     )
-    delta = models.SmallIntegerField(_('Delta'), choices=VOTE_CHOICES)
+    user = models.ForeignKey(
+        AUTH_USER_MODEL, related_name="review_votes", on_delete=models.CASCADE
+    )
+    UP, DOWN = 1, -1
+    VOTE_CHOICES = ((UP, _("Up")), (DOWN, _("Down")))
+    delta = models.SmallIntegerField(_("Delta"), choices=VOTE_CHOICES)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True
-        app_label = 'reviews'
-        ordering = ['-date_created']
-        unique_together = (('user', 'review'),)
-        verbose_name = _('Vote')
-        verbose_name_plural = _('Votes')
+        app_label = "reviews"
+        ordering = ["-date_created"]
+        unique_together = (("user", "review"),)
+        verbose_name = _("Vote")
+        verbose_name_plural = _("Votes")
 
     def __str__(self):
         return "%s vote for %s" % (self.delta, self.review)
 
     def clean(self):
         if not self.review.is_anonymous and self.review.user == self.user:
-            raise ValidationError(_(
-                "You cannot vote on your own reviews"))
+            raise ValidationError(_("You cannot vote on your own reviews"))
         if not self.user.id:
-            raise ValidationError(_(
-                "Only signed-in users can vote on reviews"))
+            raise ValidationError(_("Only signed-in users can vote on reviews"))
         previous_votes = self.review.votes.filter(user=self.user)
         if len(previous_votes) > 0:
-            raise ValidationError(_(
-                "You can only vote once on a review"))
+            raise ValidationError(_("You can only vote once on a review"))
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
