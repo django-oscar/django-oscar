@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.messages import get_messages
 from django.http import HttpResponse
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -7,7 +8,6 @@ from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
 from oscar.test import factories
 from oscar.test.basket import add_product
-from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 
@@ -46,16 +46,16 @@ class TestBasketMiddleware(TestCase):
         self.assertEqual(None, cookie_basket)
         self.assertIn("oscar_open_basket", request.cookies_to_delete)
 
-
-class TestBasketMiddlewareMessage(TestBasketMiddleware, WebTestCase):
     def test_merged_basket_message(self):
         # add product to AnonymousUser's basket
         product = factories.create_product(num_in_stock=20)
         add_product(self.request.basket, D("100"), 4, product)
+        # create User
         username, email, password = "lucy", "lucy@example.com", "password"
-        user = User.objects.create_user(username, email, password)
-        response = self.get("/", status="*", user=user)
-        messages = response.context["messages"]
+        request = RequestFactory().get("/")
+        request.user = User.objects.create_user(username, email, password)
+        self.middleware(request)
+        messages = get_messages(request)
         message = (
             "We have merged 1 items from a previous session to "
             "your basket. Its content has changed."
