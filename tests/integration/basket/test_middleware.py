@@ -1,4 +1,3 @@
-from decimal import Decimal as D
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages import get_messages
 from django.http import HttpResponse
@@ -7,7 +6,6 @@ from django.test.client import RequestFactory
 from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
 from oscar.test import factories
-from oscar.test.basket import add_product
 
 User = get_user_model()
 
@@ -47,9 +45,7 @@ class TestBasketMiddleware(TestCase):
         self.assertIn("oscar_open_basket", request.cookies_to_delete)
 
     def test_merged_basket_message(self):
-        # add product to AnonymousUser's basket
-        product = factories.create_product(num_in_stock=20)
-        add_product(self.request.basket, D("100"), 4, product)
+        self.request.basket = factories.create_basket()
         # create User
         username, email, password = "lucy", "lucy@example.com", "password"
         request = RequestFactory().get("/")
