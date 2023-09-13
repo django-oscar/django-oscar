@@ -550,7 +550,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     )
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a percentage off of the product's value")),
-        (FIXED, _("Discount is a fixed amount off of the product's value")),
+        (FIXED, _("Discount is a fixed amount off of the basket's total")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
         (SHIPPING_ABSOLUTE, _("Discount is a fixed amount of the shipping cost")),
