@@ -13,6 +13,7 @@ from oscar.test.basket import add_product
 User = get_user_model()
 AccountAuthView = get_class("customer.views", "AccountAuthView")
 
+
 class TestBasketMiddleware(TestCase):
     @staticmethod
     def get_response_for_test(request):
