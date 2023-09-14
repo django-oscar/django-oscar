@@ -56,7 +56,7 @@ class TestBasketMiddlewareMessage(WebTestCase):
         detail_page = self.get(product.get_absolute_url())
         response = detail_page.forms["add_to_basket_form"].submit()
         self.assertIsRedirect(response)
-        
+
         # create User
         username, email, password = "lucy", "lucy@example.com", "password"
         User.objects.create_user(username, email, password)
