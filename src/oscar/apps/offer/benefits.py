@@ -20,6 +20,7 @@ range_anchor = get_class("offer.utils", "range_anchor")
 __all__ = [
     "PercentageDiscountBenefit",
     "AbsoluteDiscountBenefit",
+    "AbsoluteProductDiscountBenefit",
     "FixedPriceBenefit",
     "ShippingBenefit",
     "MultibuyDiscountBenefit",
