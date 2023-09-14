@@ -53,17 +53,17 @@ class TestBasketMiddleware(TestCase):
 
     def test_merged_basket_message(self):
         # add product to anonymous user's basket
-        basket = Basket()
-        add_product(basket, D("12.00"), 1)
-        basket.save()
-        # set cookie_basket
-        basket_hash = Signer().sign(basket.id)
         request_factory = RequestFactory()
+        basket = request_factory.basket
+        basket.save()
+        add_product(basket, D("12.00"), 1)
+        basket_hash = Signer().sign(basket.id)
         cookie_key = settings.OSCAR_BASKET_COOKIE_OPEN
         request_factory.cookies[cookie_key] = basket_hash
         request = request_factory.get("/")
         request.user = AnonymousUser()
-        request.cookies_to_delete = []
+
+        # test cookie_basket
         cookie_basket = self.middleware.get_cookie_basket(cookie_key, request, None)
         self.assertEqual(basket, cookie_basket)
 
@@ -76,8 +76,7 @@ class TestBasketMiddleware(TestCase):
         user = backend.authenticate(None, email, password)
         request = request_factory.get("/")
         request.user = user
-        # merge baskets
-        self.middleware(request)
+
         # call CatalogueView and get response
         view = CatalogueView.as_view()
         response = view(request)
