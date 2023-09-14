@@ -2,13 +2,13 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
-from django_webtest import WebTest
 from oscar.apps.basket import middleware
-from oscar.apps.customer.auth_backends import EmailBackend
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 from oscar.test import factories
+from oscar.test.testcases import WebTestCase
 from oscar.test.utils import RequestFactory
+
 
 Basket = get_model("basket", "Basket")
 CatalogueView = get_class("catalogue.views", "CatalogueView")
@@ -50,14 +50,13 @@ class TestBasketMiddleware(TestCase):
         self.assertIn("oscar_open_basket", request.cookies_to_delete)
 
 
-class TestBasketMiddlewareMessage(WebTest):
+class TestBasketMiddlewareMessage(WebTestCase):
     def test_merged_basket_message(self):
-        basket = factories.create_basket(empty=False)
-        request_factory = RequestFactory()
-        request = request_factory.get("/")
-        request.user = AnonymousUser()
-        request.basket = basket
-
+        product = factories.ProductFactory()
+        detail_page = self.get(product.get_absolute_url())
+        response = detail_page.forms["add_to_basket_form"].submit()
+        self.assertIsRedirect(response)
+        
         # create User
         username, email, password = "lucy", "lucy@example.com", "password"
         User.objects.create_user(username, email, password)
