@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.test import TestCase
+from django.urls import reverse
+from django_webtest import WebTest
 from oscar.apps.basket import middleware
 from oscar.apps.customer.auth_backends import EmailBackend
 from oscar.core.compat import get_user_model
@@ -47,6 +49,8 @@ class TestBasketMiddleware(TestCase):
         self.assertEqual(None, cookie_basket)
         self.assertIn("oscar_open_basket", request.cookies_to_delete)
 
+class TestBasketMiddlewareMessage(WebTest):
+
     def test_merged_basket_message(self):
         basket = factories.create_basket(empty=False)
         request_factory = RequestFactory()
@@ -58,14 +62,12 @@ class TestBasketMiddleware(TestCase):
         username, email, password = "lucy", "lucy@example.com", "password"
         User.objects.create_user(username, email, password)
 
-        # login as registered user
-        backend = EmailBackend()
-        request.user = backend.authenticate(None, email, password)
+        url = reverse("customer:login")
+        form = self.app.get(url).forms["login_form"]
+        form["login-username"] = email
+        form["login-password"] = "password"
+        response = form.submit("login_submit").follow()
 
-        # call CatalogueView and get response
-        view = CatalogueView.as_view()
-        response = view(request)
-        self.assertEqual(response.status_code, 200)
         messages = list(response.context["messages"])
         message = (
             "We have merged 1 items from a previous session to "
