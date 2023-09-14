@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.messages import get_messages
 from django.http import HttpResponse
 from django.test import TestCase
 from oscar.apps.basket import middleware
@@ -61,10 +60,7 @@ class TestBasketMiddleware(TestCase):
 
         # login as registered user
         backend = EmailBackend()
-        user = backend.authenticate(None, email, password)
-
-        request = request_factory.get("/")
-        request.user = user
+        request.user = backend.authenticate(None, email, password)
 
         # call CatalogueView and get response
         view = CatalogueView.as_view()
