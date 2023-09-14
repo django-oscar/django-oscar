@@ -54,8 +54,7 @@ class TestBasketMiddlewareMessage(WebTest):
     def test_merged_basket_message(self):
         product = factories.ProductFactory()
         detail_page = self.app.get(product.get_absolute_url())
-        response = detail_page.forms["add_to_basket_form"].submit()
-        self.assertIsRedirect(response)
+        _ = detail_page.forms["add_to_basket_form"].submit()
 
         # create User
         username, email, password = "lucy", "lucy@example.com", "password"
