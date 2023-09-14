@@ -1,8 +1,5 @@
-from decimal import Decimal as D
-from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages import get_messages
-from django.core.signing import Signer
 from django.http import HttpResponse
 from django.test import TestCase
 from oscar.apps.basket import middleware
@@ -10,7 +7,6 @@ from oscar.apps.customer.auth_backends import EmailBackend
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 from oscar.test import factories
-from oscar.test.basket import add_product
 from oscar.test.utils import RequestFactory
 
 Basket = get_model("basket", "Basket")
@@ -58,7 +54,6 @@ class TestBasketMiddleware(TestCase):
         request = request_factory.get("/")
         request.user = AnonymousUser()
         request.basket = basket
-        request.cookies_to_delete = []
         self.middleware(request)
 
         # create User
@@ -68,6 +63,7 @@ class TestBasketMiddleware(TestCase):
         # login as registered user
         backend = EmailBackend()
         user = backend.authenticate(None, email, password)
+
         request = request_factory.get("/")
         request.user = user
         request.cookies_to_delete = []
