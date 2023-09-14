@@ -49,8 +49,8 @@ class TestBasketMiddleware(TestCase):
         self.assertEqual(None, cookie_basket)
         self.assertIn("oscar_open_basket", request.cookies_to_delete)
 
-class TestBasketMiddlewareMessage(WebTest):
 
+class TestBasketMiddlewareMessage(WebTest):
     def test_merged_basket_message(self):
         basket = factories.create_basket(empty=False)
         request_factory = RequestFactory()
