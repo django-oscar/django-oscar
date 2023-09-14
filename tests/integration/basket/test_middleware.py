@@ -64,9 +64,7 @@ class TestBasketMiddleware(TestCase):
         request = request_factory.get("/")
         request.user = AnonymousUser()
         request.cookies_to_delete = []
-        cookie_basket = self.middleware.get_cookie_basket(
-            cookie_key, request, None
-        )
+        cookie_basket = self.middleware.get_cookie_basket(cookie_key, request, None)
         self.assertEqual(basket, cookie_basket)
 
         # create User
