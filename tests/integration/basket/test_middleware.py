@@ -1,17 +1,19 @@
 from decimal import Decimal as D
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages import get_messages
 from django.core.signing import Signer
 from django.http import HttpResponse
 from django.test import TestCase
-from oscar.test.utils import RequestFactory
 from oscar.apps.basket import middleware
+from oscar.apps.customer.auth_backends import EmailBackend
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 from oscar.test.basket import add_product
+from oscar.test.utils import RequestFactory
 
-AccountAuthView = get_class("customer.views", "AccountAuthView")
 Basket = get_model("basket", "Basket")
+CatalogueView = get_class("catalogue.views", "CatalogueView")
 User = get_user_model()
 
 
@@ -57,12 +59,13 @@ class TestBasketMiddleware(TestCase):
         # set cookie_basket
         basket_hash = Signer().sign(basket.id)
         request_factory = RequestFactory()
-        request_factory.cookies["oscar_open_basket"] = basket_hash
+        cookie_key = settings.OSCAR_BASKET_COOKIE_OPEN
+        request_factory.cookies[cookie_key] = basket_hash
         request = request_factory.get("/")
         request.user = AnonymousUser()
         request.cookies_to_delete = []
         cookie_basket = self.middleware.get_cookie_basket(
-            "oscar_open_basket", request, None
+            cookie_key, request, None
         )
         self.assertEqual(basket, cookie_basket)
 
@@ -71,12 +74,16 @@ class TestBasketMiddleware(TestCase):
         User.objects.create_user(username, email, password)
 
         # login as registered user
-        data = {"username": "lucy@example.com", "password": password}
-        request = request_factory.post("/", data=data)
-        request_factory.cookies["oscar_open_basket"] = basket_hash
-        view = AccountAuthView.as_view()
+        backend = EmailBackend()
+        user = backend.authenticate(None, email, password)
+        request = request_factory.get("/")
+        request.user = user
+        # merge baskets
+        self.middleware(request)
+        # call CatalogueView and get response
+        view = CatalogueView.as_view()
         response = view(request)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         messages = get_messages(request)
         message = (
             "We have merged 1 items from a previous session to "
