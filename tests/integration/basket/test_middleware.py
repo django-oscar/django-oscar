@@ -7,11 +7,12 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 from oscar.test.basket import add_product
 
-User = get_user_model()
 AccountAuthView = get_class("customer.views", "AccountAuthView")
+Basket = get_model("basket", "Basket")
+User = get_user_model()
 
 
 class TestBasketMiddleware(TestCase):
@@ -50,7 +51,7 @@ class TestBasketMiddleware(TestCase):
 
     def test_merged_basket_message(self):
         # add product to anonymous user's basket
-        basket = self.request.basket
+        basket = Basket()
         add_product(basket, D("12.00"), 1)
         basket.save()
         # set cookie_basket
