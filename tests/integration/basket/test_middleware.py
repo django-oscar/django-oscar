@@ -54,7 +54,6 @@ class TestBasketMiddleware(TestCase):
         request = request_factory.get("/")
         request.user = AnonymousUser()
         request.basket = basket
-        self.middleware(request)
 
         # create User
         username, email, password = "lucy", "lucy@example.com", "password"
@@ -66,14 +65,12 @@ class TestBasketMiddleware(TestCase):
 
         request = request_factory.get("/")
         request.user = user
-        request.cookies_to_delete = []
-        self.middleware(request)
 
         # call CatalogueView and get response
         view = CatalogueView.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 200)
-        messages = get_messages(request)
+        messages = list(response.context["messages"])
         message = (
             "We have merged 1 items from a previous session to "
             "your basket. Its content has changed."
