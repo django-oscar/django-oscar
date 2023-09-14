@@ -52,17 +52,17 @@ class TestBasketMiddleware(TestCase):
         self.assertIn("oscar_open_basket", request.cookies_to_delete)
 
     def test_merged_basket_message(self):
-        # add product to anonymous user's basket
         request_factory = RequestFactory()
-        basket = request_factory.basket
+        request = request_factory.get("/")
+        request.user = AnonymousUser()
+        self.middleware(request)
+        # add product to anonymous user's basket
+        basket = request.basket
         basket.save()
         add_product(basket, D("12.00"), 1)
         basket_hash = Signer().sign(basket.id)
         cookie_key = settings.OSCAR_BASKET_COOKIE_OPEN
         request_factory.cookies[cookie_key] = basket_hash
-        request = request_factory.get("/")
-        request.user = AnonymousUser()
-
         # test cookie_basket
         cookie_basket = self.middleware.get_cookie_basket(cookie_key, request, None)
         self.assertEqual(basket, cookie_basket)
