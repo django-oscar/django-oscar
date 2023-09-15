@@ -49,7 +49,7 @@ class BasketMiddlewareTest(TestCase):
 
         client = Client()
         client.force_login(user)
-        response = client.get(reverse('basket:summary'))
+        response = client.get(reverse("basket:summary"))
         messages = list(response.context["messages"], [])
         self.assertEqual(len(messages), 1)
         message = (
