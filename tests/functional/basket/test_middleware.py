@@ -1,18 +1,26 @@
 # from django.conf import settings
+from django.http import HttpResponse
 from django.test import Client, TestCase
 from django.urls import reverse
+from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
 from oscar.test.factories import create_product
+from oscar.test.utils import RequestFactory
 
 User = get_user_model()
 
 
 class BasketMiddlewareTest(TestCase):
+    @staticmethod
+    def get_response_for_test(request):
+        return HttpResponse()
+
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create(
             first_name="lucy", email="lucy@example.com", password="password"
         )
+        self.middleware = middleware.BasketMiddleware(self.get_response_for_test)
 
     def test_merged_basket_message(self):
         product = create_product()
@@ -23,6 +31,12 @@ class BasketMiddlewareTest(TestCase):
             "quantity": 1,
         }
         response = self.client.post(url, post_params, follow=True)
+        request_factory = RequestFactory()
+        request = request_factory.get("/")
+        cookie_basket = self.middleware.get_cookie_basket(
+            "oscar_open_basket", request, None
+        )
+        self.assertIsNotNone(cookie_basket)
 
         self.client.force_login(self.user)
         response = self.client.get(reverse("basket:summary"))
