@@ -2,9 +2,10 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
-# from django.urls import reverse
-from oscar.apps.basket import middleware
+from django.urls import reverse
+from oscar.apps.basket import middleware, views
 from oscar.core.compat import get_user_model
+from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.testcases import WebTestCase
 from oscar.test.utils import RequestFactory
@@ -19,11 +20,11 @@ class BasketMiddlewareTest(WebTestCase):
 
     def setUp(self):
         self.middleware = middleware.BasketMiddleware(self.get_response_for_test)
+        self.url = reverse("basket:summary")
         self.request = RequestFactory().get("/")
         self.request.user = AnonymousUser()
         self.middleware(self.request)
-        username, email, password = "lucy", "lucy@example.com", "password"
-        self.user = User.objects.create_user(username, email, password)
+        self.user = factories.UserFactory()
 
     def test_merged_basket_message(self):
         basket = self.middleware.get_basket(self.request)
@@ -34,14 +35,17 @@ class BasketMiddlewareTest(WebTestCase):
         self.assertEqual(basket, cookie_basket)
         self.assertEqual(cookie_basket.lines.count(), 1)
 
-        self.request.user = self.user
-        self.middleware(self.request)
+        basket_hash = self.middleware.get_basket_hash(basket.id)
 
-        basket = self.middleware.get_basket(self.request)
-        self.assertEqual(basket.owner, self.user)
-        # messages = list(response.context["messages"])
-        # message = (
-        #     "We have merged 1 items from a previous session to "
-        #     "your basket. Its content has changed."
-        # )
-        # self.assertEqual(messages[0].message, message)
+        request = RequestFactory().get(self.url, user=self.user)
+        request.COOKIES[settings.OSCAR_BASKET_COOKIE_OPEN] = basket_hash
+
+        view = views.BasketView(request=request)
+        response = view(request)
+        messages = list(response.context["messages"])
+        self.assertEqual(messages.length(), 1)
+        message = (
+            "We have merged 1 items from a previous session to "
+            "your basket. Its content has changed."
+        )
+        self.assertEqual(messages[0].message, message)
