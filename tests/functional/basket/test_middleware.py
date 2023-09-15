@@ -48,7 +48,7 @@ class BasketMiddlewareTest(WebTestCase):
         self.assertEqual(basket.lines.count(), 1)
 
         view = BasketView.as_view()
-        self.view.request = request
+        view.request = request
         response = view(request)
 
         messages = list(response.context["messages"], [])
