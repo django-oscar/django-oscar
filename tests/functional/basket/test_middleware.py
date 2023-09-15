@@ -2,9 +2,9 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
-from oscar.apps.basket import middleware, views
+from django.urls import reverse
+from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
-from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.testcases import WebTestCase
 from oscar.test.utils import RequestFactory
@@ -22,7 +22,7 @@ class BasketMiddlewareTest(WebTestCase):
         self.request = RequestFactory().get("/")
         self.request.user = AnonymousUser()
         self.middleware(self.request)
-        self.user = factories.UserFactory()
+        self.user = None
 
     def test_merged_basket_message(self):
         # add product to anonymous user's basket
@@ -35,8 +35,10 @@ class BasketMiddlewareTest(WebTestCase):
         request = RequestFactory().get("/", user=self.user)
         request.COOKIES[settings.OSCAR_BASKET_COOKIE_OPEN] = basket_hash
         # call BasketView and check messages from response.context
-        view = views.BasketView.as_view()
-        response = view(request)
+        self.user = self.create_user(self.username, self.email, self.password)
+        self.user.save()
+        response = self.get(reverse('basket:summary'), user=self.user)
+        self.assertEquals(response.status_code, 200)
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 1)
         message = (
