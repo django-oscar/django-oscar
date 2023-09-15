@@ -1,46 +1,25 @@
-from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
-from django.http import HttpResponse
-from django.test import Client, TestCase
+from decimal import Decimal as D
 from django.urls import reverse
-from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
 from oscar.test.factories import create_product
-from oscar.test.utils import RequestFactory
+from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 
+class TestBasketMiddlewareMessage(WebTestCase):
+    csrf_checks = False
+    is_anonymous = True
 
-class BasketMiddlewareTest(TestCase):
-    @staticmethod
-    def get_response_for_test(request):
-        return HttpResponse()
-
-    def setUp(self):
-        self.client = Client()
+    def test_merged_basket_message(self):
+        product = create_product(price=D("10.00"), num_in_stock=10)
+        url = reverse("basket:add", kwargs={"pk": product.pk})
+        post_params = {"product_id": self.product.id, "action": "add", "quantity": 1}
+        response = self.app.post(url, params=post_params)
+        self.assertTrue("oscar_open_basket" in response.test_app.cookies)
         self.user = User.objects.create(
             first_name="lucy", email="lucy@example.com", password="password"
         )
-        self.middleware = middleware.BasketMiddleware(self.get_response_for_test)
-        self.request = RequestFactory().get("/")
-        self.request.user = AnonymousUser()
-        self.middleware(self.request)
-
-    def test_merged_basket_message(self):
-        product = create_product()
-        url = reverse("basket:add", kwargs={"pk": product.pk})
-        post_params = {
-            "product_id": product.id,
-            "action": "add",
-            "quantity": 1,
-        }
-        response = self.client.post(url, post_params)
-        basket_cookie = response.cookies.get(settings.OSCAR_BASKET_COOKIE_OPEN, None)
-        self.assertIsNotNone(basket_cookie)
-
-        self.client.force_login(self.user)
-        response = self.client.get(reverse("basket:summary"))
-
+        response = self.app.get(reverse("basket:summary"))
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 1)
         message = (
