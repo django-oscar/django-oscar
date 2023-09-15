@@ -37,7 +37,7 @@ class BasketMiddlewareTest(WebTestCase):
         # call BasketView and check messages from response.context
         self.user = self.create_user(self.username, self.email, self.password)
         self.user.save()
-        response = self.get(reverse('basket:summary'), user=self.user)
+        response = self.get(reverse("basket:summary"), user=self.user)
         self.assertEquals(response.status_code, 200)
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 1)
