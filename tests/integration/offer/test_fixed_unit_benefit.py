@@ -10,7 +10,7 @@ from oscar.test import factories
 from oscar.test.basket import add_product, add_products
 
 
-class TestAbsoluteProductDiscountAppliedWithCountConditionOnDifferentRange(TestCase):
+class TestFixedUnitDiscountAppliedWithCountConditionOnDifferentRange(TestCase):
     def setUp(self):
         self.condition_product = factories.ProductFactory()
         condition_range = factories.RangeFactory()
@@ -55,7 +55,7 @@ class TestAbsoluteProductDiscountAppliedWithCountConditionOnDifferentRange(TestC
         self.assertEqual(discounts[0]["freq"], 1)
 
 
-class TestAbsoluteProductDiscountAppliedWithCountCondition(TestCase):
+class TestFixedUnitDiscountAppliedWithCountCondition(TestCase):
     def setUp(self):
         product_range = models.Range.objects.create(
             name="All products", includes_all_products=True
@@ -134,7 +134,7 @@ class TestAbsoluteProductDiscountAppliedWithCountCondition(TestCase):
         self.assertEqual(0, self.basket.num_items_without_discount)
 
 
-class TestAbsoluteProductDiscount(TestCase):
+class TestFixedUnitDiscount(TestCase):
     def setUp(self):
         product_range = models.Range.objects.create(
             name="All products", includes_all_products=True
@@ -157,7 +157,7 @@ class TestAbsoluteProductDiscount(TestCase):
         self.assertEqual(D("6.00"), result.discount)
 
 
-class TestAbsoluteProductDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
+class TestFixedUnitDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
     def setUp(self):
         product_range = models.Range.objects.create(
             name="All products", includes_all_products=True
@@ -204,7 +204,7 @@ class TestAbsoluteProductDiscountWithMaxItemsSetAppliedWithCountCondition(TestCa
         self.assertEqual(3, self.basket.num_items_without_discount)
 
 
-class TestAbsoluteProductDiscountAppliedWithValueCondition(TestCase):
+class TestFixedUnitDiscountAppliedWithValueCondition(TestCase):
     def setUp(self):
         product_range = models.Range.objects.create(
             name="All products", includes_all_products=True
@@ -255,7 +255,7 @@ class TestAbsoluteProductDiscountAppliedWithValueCondition(TestCase):
         self.assertEqual(0, self.basket.num_items_without_discount)
 
 
-class TestAbsoluteProductDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
+class TestFixedUnitDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
     def setUp(self):
         product_range = models.Range.objects.create(
             name="All products", includes_all_products=True
@@ -318,7 +318,7 @@ class TestAbsoluteProductDiscountWithMaxItemsSetAppliedWithValueCondition(TestCa
         self.assertEqual(5, self.basket.num_items_without_discount)
 
 
-class TestAbsoluteProductDiscountBenefit(TestCase):
+class TestFixedUnitDiscountBenefit(TestCase):
     def test_requires_a_benefit_value(self):
         rng = models.Range.objects.create(name="", includes_all_products=True)
         benefit = models.Benefit(type=models.Benefit.FIXED_UNIT, range=rng)
