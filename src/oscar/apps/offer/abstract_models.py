@@ -540,7 +540,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     PERCENTAGE, FIXED, FIXED_UNIT, MULTIBUY, FIXED_PRICE = (
         "Percentage",
         "Absolute",
-        "Absolute product",
+        "Fixed unit",
         "Multibuy",
         "Fixed price",
     )
@@ -598,9 +598,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         return {
             self.PERCENTAGE: get_class("offer.benefits", "PercentageDiscountBenefit"),
             self.FIXED: get_class("offer.benefits", "AbsoluteDiscountBenefit"),
-            self.FIXED_UNIT: get_class(
-                "offer.benefits", "AbsoluteProductDiscountBenefit"
-            ),
+            self.FIXED_UNIT: get_class("offer.benefits", "FixedUnitDiscountBenefit"),
             self.MULTIBUY: get_class("offer.benefits", "MultibuyDiscountBenefit"),
             self.FIXED_PRICE: get_class("offer.benefits", "FixedPriceBenefit"),
             self.SHIPPING_ABSOLUTE: get_class(

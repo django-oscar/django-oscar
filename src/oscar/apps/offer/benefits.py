@@ -20,7 +20,7 @@ range_anchor = get_class("offer.utils", "range_anchor")
 __all__ = [
     "PercentageDiscountBenefit",
     "AbsoluteDiscountBenefit",
-    "AbsoluteProductDiscountBenefit",
+    "FixedUnitDiscountBenefit",
     "FixedPriceBenefit",
     "ShippingBenefit",
     "MultibuyDiscountBenefit",
@@ -204,7 +204,7 @@ class AbsoluteDiscountBenefit(Benefit):
         return BasketDiscount(discount)
 
 
-class AbsoluteProductDiscountBenefit(AbsoluteDiscountBenefit):
+class FixedUnitDiscountBenefit(AbsoluteDiscountBenefit):
     """
     An offer benefit that gives an absolute discount on each applicable product.
     The value for this benefit refers to the maximum discount per product
@@ -214,8 +214,8 @@ class AbsoluteProductDiscountBenefit(AbsoluteDiscountBenefit):
     class Meta:
         app_label = "offer"
         proxy = True
-        verbose_name = _("Absolute product discount benefit")
-        verbose_name_plural = _("Absolute product discount benefits")
+        verbose_name = _("Fixed unit discount benefit")
+        verbose_name_plural = _("Fixed unit discount benefits")
 
     def get_lines_to_discount(self, offer, line_tuples):
         # Determine which lines can have the discount applied to them
