@@ -540,7 +540,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     PERCENTAGE, FIXED, FIXED_UNIT, MULTIBUY, FIXED_PRICE = (
         "Percentage",
         "Absolute",
-        "Fixed unit",
+        "Fixed",
         "Multibuy",
         "Fixed price",
     )
