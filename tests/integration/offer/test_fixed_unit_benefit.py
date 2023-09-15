@@ -78,7 +78,7 @@ class TestFixedUnitDiscountAppliedWithCountCondition(TestCase):
     def test_applies_correctly_to_basket_which_matches_condition_with_one_line(self):
         add_product(self.basket, price=D("12.00"), quantity=2)
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("3.00"), result.discount)
+        self.assertEqual(D("6.00"), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
@@ -111,7 +111,7 @@ class TestFixedUnitDiscountAppliedWithCountCondition(TestCase):
     def test_applies_correctly_to_basket_which_exceeds_condition(self):
         add_products(self.basket, [(D("12.00"), 2), (D("10.00"), 2)])
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("6.00"), result.discount)
+        self.assertEqual(D("12.00"), result.discount)
         self.assertEqual(4, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
@@ -120,7 +120,7 @@ class TestFixedUnitDiscountAppliedWithCountCondition(TestCase):
     ):
         add_products(self.basket, [(D("2.00"), 2), (D("4.00"), 1)])
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("6.00"), result.discount)
+        self.assertEqual(D("7.00"), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
@@ -129,7 +129,7 @@ class TestFixedUnitDiscountAppliedWithCountCondition(TestCase):
     ):
         add_products(self.basket, [(D("2.00"), 2), (D("4.00"), 2)])
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("6.00"), result.discount)
+        self.assertEqual(D("10.00"), result.discount)
         self.assertEqual(4, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
@@ -234,14 +234,14 @@ class TestFixedUnitDiscountAppliedWithValueCondition(TestCase):
     def test_applies_correctly_to_multi_item_basket_which_matches_condition(self):
         add_products(self.basket, [(D("5.00"), 2)])
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("3.00"), result.discount)
+        self.assertEqual(D("6.00"), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_exceeds_condition(self):
         add_products(self.basket, [(D("4.00"), 3)])
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("3.00"), result.discount)
+        self.assertEqual(D("9.00"), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
@@ -250,7 +250,7 @@ class TestFixedUnitDiscountAppliedWithValueCondition(TestCase):
     ):
         add_products(self.basket, [(D("5.00"), 3)])
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("3.00"), result.discount)
+        self.assertEqual(D("9.00"), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 

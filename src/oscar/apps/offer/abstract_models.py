@@ -740,7 +740,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         if errors:
             raise exceptions.ValidationError(errors)
 
-    def clean_fixed_unit(self):
+    def clean_fixed(self):
         errors = []
         if not self.range:
             errors.append(
