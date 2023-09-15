@@ -6,6 +6,7 @@ from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 
+
 class TestBasketMiddlewareMessage(WebTestCase):
     csrf_checks = False
     is_anonymous = True
