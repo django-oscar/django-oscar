@@ -2,17 +2,17 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
+from django.test import Client, TestCase
+from django.urls import reverse
 from oscar.apps.basket import middleware
-from oscar.apps.basket.views import BasketView
 from oscar.core.compat import get_user_model
 from oscar.test.basket import add_product
-from oscar.test.testcases import WebTestCase
 from oscar.test.utils import RequestFactory
 
 User = get_user_model()
 
 
-class BasketMiddlewareTest(WebTestCase):
+class BasketMiddlewareTest(TestCase):
     @staticmethod
     def get_response_for_test(request):
         return HttpResponse()
@@ -47,10 +47,9 @@ class BasketMiddlewareTest(WebTestCase):
         self.assertEqual(basket.owner, user)
         self.assertEqual(basket.lines.count(), 1)
 
-        view = BasketView.as_view()
-        view.request = request
-        response = view(request)
-
+        client = Client()
+        client.force_login(user)
+        response = client.get(reverse('basket:summary'))
         messages = list(response.context["messages"], [])
         self.assertEqual(len(messages), 1)
         message = (
