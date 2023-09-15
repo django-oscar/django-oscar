@@ -3,6 +3,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from oscar.core.compat import get_user_model
 from oscar.test.factories import create_product
+
 User = get_user_model()
 
 
@@ -13,7 +14,7 @@ class BasketMiddlewareTest(TestCase):
             first_name="lucy", email="lucy@example.com", password="password"
         )
 
-    def test_merged_basket_message(self):       
+    def test_merged_basket_message(self):
         product = create_product()
         url = reverse("basket:add", kwargs={"pk": product.pk})
         post_params = {
@@ -22,8 +23,7 @@ class BasketMiddlewareTest(TestCase):
             "quantity": 1,
         }
         response = self.client.post(url, post_params, follow=True)
-        cookie_key = response.cookies.get(
-            settings.OSCAR_BASKET_COOKIE_OPEN, None)
+        cookie_key = response.cookies.get(settings.OSCAR_BASKET_COOKIE_OPEN, None)
         self.assertIsNotNone(cookie_key)
 
         self.client.force_login(self.user)
