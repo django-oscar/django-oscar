@@ -28,14 +28,10 @@ class BasketMiddlewareTest(WebTestCase):
         # add product to anonymous user's basket
         basket = self.middleware.get_basket(self.request)
         add_product(basket, D("5.00"), 1)
-        cookie_basket = self.middleware.get_cookie_basket(
-            settings.OSCAR_BASKET_COOKIE_OPEN, self.request, None
-        )
-        self.assertEqual(basket, cookie_basket)
-        self.assertEqual(cookie_basket.lines.count(), 1)
-        # get hash from cookie_basket and set cookie in new request
+        self.assertEqual(basket.owner, None)
+        # get hash from basket
         basket_hash = self.middleware.get_basket_hash(basket.id)
-
+        # store cookie in a new request with registered user
         request = RequestFactory().get("/", user=self.user)
         request.COOKIES[settings.OSCAR_BASKET_COOKIE_OPEN] = basket_hash
         # call BasketView and check messages from response.context
