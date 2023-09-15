@@ -2,7 +2,7 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
-from django.urls import reverse
+# from django.urls import reverse
 from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
 from oscar.test.basket import add_product
@@ -34,6 +34,11 @@ class BasketMiddlewareTest(WebTestCase):
         self.assertEqual(basket, cookie_basket)
         self.assertEqual(cookie_basket.lines.count(), 1)
 
+        self.request.user = self.user
+        self.middleware(self.request)
+
+        basket = self.middleware.get_basket(self.request)
+        self.assertEqual(basket.owner, self.user)
         # messages = list(response.context["messages"])
         # message = (
         #     "We have merged 1 items from a previous session to "
