@@ -49,7 +49,7 @@ class BasketMiddlewareTest(TestCase):
         client = Client()
         client.force_login(user)
         response = client.get(reverse("basket:summary"))
-        messages = list(response.context["messages"], [])
+        messages = list(response.context["messages"])
         self.assertEqual(len(messages), 1)
         message = (
             "We have merged 1 items from a previous session to "
