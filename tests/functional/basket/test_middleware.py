@@ -41,6 +41,7 @@ class BasketMiddlewareTest(WebTestCase):
         request.user = user
         request.cookies_to_delete = []
 
+        self.middleware(request)
         # call get_basket() to merge baskets
         basket = self.middleware.get_basket(request)
         self.assertEqual(basket.owner, user)
