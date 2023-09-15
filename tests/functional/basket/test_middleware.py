@@ -36,7 +36,7 @@ class BasketMiddlewareTest(WebTestCase):
         # get hash from cookie_basket and set cookie in new request
         basket_hash = self.middleware.get_basket_hash(basket.id)
 
-        request = RequestFactory().get(self.url, user=self.user)
+        request = RequestFactory().get("/", user=self.user)
         request.COOKIES[settings.OSCAR_BASKET_COOKIE_OPEN] = basket_hash
         # call BasketView and check messages from response.context
         view = views.BasketView.as_view()
