@@ -598,7 +598,9 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         return {
             self.PERCENTAGE: get_class("offer.benefits", "PercentageDiscountBenefit"),
             self.FIXED: get_class("offer.benefits", "AbsoluteDiscountBenefit"),
-            self.FIXED_PRODUCT: get_class("offer.benefits", "AbsoluteProductDiscountBenefit"),
+            self.FIXED_PRODUCT: get_class(
+                "offer.benefits", "AbsoluteProductDiscountBenefit"
+            ),
             self.MULTIBUY: get_class("offer.benefits", "MultibuyDiscountBenefit"),
             self.FIXED_PRICE: get_class("offer.benefits", "FixedPriceBenefit"),
             self.SHIPPING_ABSOLUTE: get_class(
@@ -743,7 +745,9 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     def clean_absolute_product(self):
         errors = []
         if not self.range:
-            errors.append(_("Fixed product level discount benefits require a product range"))
+            errors.append(
+                _("Fixed product level discount benefits require a product range")
+            )
         if not self.value:
             errors.append(_("Fixed product level discount benefits require a value"))
 

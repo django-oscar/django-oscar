@@ -233,13 +233,21 @@ class AbsoluteProductDiscountBenefit(AbsoluteDiscountBenefit):
             num_affected_items += qty
         return lines_to_discount
 
-    def apply(self, basket, condition, offer, **kwargs):
+    def apply(
+        self,
+        basket,
+        condition,
+        offer,
+        discount_amount=None,
+        max_total_discount=None,
+        **kwargs
+    ):
         # Fetch basket lines that are in the range and available to be used in an offer.
         line_tuples = self.get_applicable_lines(offer, basket)
         lines_to_discount = self.get_lines_to_discount(offer, line_tuples)
 
         applied_discount = D("0.00")
-        for (line, price, qty) in lines_to_discount:
+        for line, price, qty in lines_to_discount:
             # If price is less than the fixed discount, then it will be free.
             line_discount = min(price * qty, self.value)
             apply_discount(line, line_discount, qty, offer)
