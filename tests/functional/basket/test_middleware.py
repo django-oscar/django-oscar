@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.test import Client, TestCase
 from django.urls import reverse
 from oscar.core.compat import get_user_model
@@ -16,10 +15,15 @@ class BasketMiddlewareTest(TestCase):
 
     def test_merged_basket_message(self):
         product = create_product()
-        response = self.client.get(reverse("basket:add", kwargs={"pk": product.id}))
-        self.assertEqual(response.status_code, 200)
-        basket_hash = response.cookies.get(settings.OSCAR_BASKET_COOKIE_OPEN, None)
-        self.assertNotEqual(basket_hash, None)
+        url = reverse("basket:add", kwargs={"pk": product.pk})
+        post_params = {
+            "product_id": self.product.id,
+            "action": "add",
+            "quantity": 1,
+        }
+        response = self.client.post(url, post_params, follow=True)
+        basket = response.context["basket"]
+        self.assertEqual(basket.lines.count(), 1)
 
         self.client.force_login(self.user)
         response = self.client.get(reverse("basket:summary"))
