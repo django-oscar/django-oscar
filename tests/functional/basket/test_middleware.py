@@ -6,8 +6,8 @@ from oscar.test.factories import create_product
 
 User = get_user_model()
 
-class BasketMiddlewareTest(TestCase):
 
+class BasketMiddlewareTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create(
@@ -16,15 +16,13 @@ class BasketMiddlewareTest(TestCase):
 
     def test_merged_basket_message(self):
         product = create_product()
-        response = self.client.get(
-            reverse('basket:add', kwargs={'pk': product.id}))
+        response = self.client.get(reverse("basket:add", kwargs={"pk": product.id}))
         self.assertEqual(response.status_code, 200)
-        basket_hash = response.cookies.get(
-            settings.OSCAR_BASKET_COOKIE_OPEN, None)
+        basket_hash = response.cookies.get(settings.OSCAR_BASKET_COOKIE_OPEN, None)
         self.assertNotEqual(basket_hash, None)
 
         self.client.force_login(self.user)
-        response = self.client.get(reverse('basket:summary'))
+        response = self.client.get(reverse("basket:summary"))
 
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 1)
