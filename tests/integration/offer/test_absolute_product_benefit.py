@@ -23,7 +23,7 @@ class TestAbsoluteProductDiscountAppliedWithCountConditionOnDifferentRange(TestC
         benefit_range = factories.RangeFactory()
         benefit_range.add_product(self.benefit_product)
         self.benefit = models.AbsoluteProductDiscountBenefit.objects.create(
-            range=benefit_range, type=models.Benefit.FIXED_PRODUCT, value=D("3.00")
+            range=benefit_range, type=models.Benefit.FIXED_UNIT, value=D("3.00")
         )
 
         self.offer = models.ConditionalOffer(
@@ -65,7 +65,7 @@ class TestAbsoluteProductDiscountAppliedWithCountCondition(TestCase):
         )
         self.offer = mock.Mock()
         self.benefit = models.AbsoluteProductDiscountBenefit.objects.create(
-            range=product_range, type=models.Benefit.FIXED_PRODUCT, value=D("3.00")
+            range=product_range, type=models.Benefit.FIXED_UNIT, value=D("3.00")
         )
         self.basket = factories.create_basket(empty=True)
 
@@ -143,7 +143,7 @@ class TestAbsoluteProductDiscount(TestCase):
             range=product_range, type=models.Condition.COUNT, value=2
         )
         self.benefit = models.AbsoluteProductDiscountBenefit.objects.create(
-            range=product_range, type=models.Benefit.FIXED_PRODUCT, value=D("4.00")
+            range=product_range, type=models.Benefit.FIXED_UNIT, value=D("4.00")
         )
         self.offer = mock.Mock()
         self.basket = factories.create_basket(empty=True)
@@ -167,7 +167,7 @@ class TestAbsoluteProductDiscountWithMaxItemsSetAppliedWithCountCondition(TestCa
         )
         self.benefit = models.AbsoluteProductDiscountBenefit.objects.create(
             range=product_range,
-            type=models.Benefit.FIXED_PRODUCT,
+            type=models.Benefit.FIXED_UNIT,
             value=D("3.00"),
             max_affected_items=1,
         )
@@ -213,7 +213,7 @@ class TestAbsoluteProductDiscountAppliedWithValueCondition(TestCase):
             range=product_range, type=models.Condition.VALUE, value=D("10.00")
         )
         self.benefit = models.AbsoluteProductDiscountBenefit.objects.create(
-            range=product_range, type=models.Benefit.FIXED_PRODUCT, value=D("3.00")
+            range=product_range, type=models.Benefit.FIXED_UNIT, value=D("3.00")
         )
         self.offer = mock.Mock()
         self.basket = factories.create_basket(empty=True)
@@ -265,7 +265,7 @@ class TestAbsoluteProductDiscountWithMaxItemsSetAppliedWithValueCondition(TestCa
         )
         self.benefit = models.AbsoluteProductDiscountBenefit.objects.create(
             range=product_range,
-            type=models.Benefit.FIXED_PRODUCT,
+            type=models.Benefit.FIXED_UNIT,
             value=D("3.00"),
             max_affected_items=1,
         )
@@ -321,12 +321,12 @@ class TestAbsoluteProductDiscountWithMaxItemsSetAppliedWithValueCondition(TestCa
 class TestAbsoluteProductDiscountBenefit(TestCase):
     def test_requires_a_benefit_value(self):
         rng = models.Range.objects.create(name="", includes_all_products=True)
-        benefit = models.Benefit(type=models.Benefit.FIXED_PRODUCT, range=rng)
+        benefit = models.Benefit(type=models.Benefit.FIXED_UNIT, range=rng)
         with self.assertRaises(ValidationError):
             benefit.clean()
 
     def test_requires_a_range(self):
-        benefit = models.Benefit(type=models.Benefit.FIXED_PRODUCT, value=10)
+        benefit = models.Benefit(type=models.Benefit.FIXED_UNIT, value=10)
         with self.assertRaises(ValidationError):
             benefit.clean()
 
@@ -334,10 +334,10 @@ class TestAbsoluteProductDiscountBenefit(TestCase):
         # absolute product benefit is larger than the line price
         rng = models.Range.objects.create(name="", includes_all_products=True)
         benefit1 = models.Benefit.objects.create(
-            type=models.Benefit.FIXED_PRODUCT, range=rng, value=D("100")
+            type=models.Benefit.FIXED_UNIT, range=rng, value=D("100")
         )
         benefit2 = models.Benefit.objects.create(
-            type=models.Benefit.FIXED_PRODUCT, range=rng, value=D("100")
+            type=models.Benefit.FIXED_UNIT, range=rng, value=D("100")
         )
         condition = models.ValueCondition.objects.create(
             range=rng, type=models.Condition.VALUE, value=D("10")

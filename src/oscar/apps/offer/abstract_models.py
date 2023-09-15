@@ -537,7 +537,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     )
 
     # Benefit types
-    PERCENTAGE, FIXED, FIXED_PRODUCT, MULTIBUY, FIXED_PRICE = (
+    PERCENTAGE, FIXED, FIXED_UNIT, MULTIBUY, FIXED_PRICE = (
         "Percentage",
         "Absolute",
         "Absolute product",
@@ -552,7 +552,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a percentage off of the product's value")),
         (FIXED, _("Discount is a fixed amount off of the basket's total")),
-        (FIXED_PRODUCT, _("Discount is a fixed amount off of the product's value")),
+        (FIXED_UNIT, _("Discount is a fixed amount off of the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
         (SHIPPING_ABSOLUTE, _("Discount is a fixed amount of the shipping cost")),
@@ -598,7 +598,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         return {
             self.PERCENTAGE: get_class("offer.benefits", "PercentageDiscountBenefit"),
             self.FIXED: get_class("offer.benefits", "AbsoluteDiscountBenefit"),
-            self.FIXED_PRODUCT: get_class(
+            self.FIXED_UNIT: get_class(
                 "offer.benefits", "AbsoluteProductDiscountBenefit"
             ),
             self.MULTIBUY: get_class("offer.benefits", "MultibuyDiscountBenefit"),
