@@ -27,4 +27,4 @@ class TestBasketMiddlewareMessage(WebTestCase):
             "We have merged 1 items from a previous session to "
             "your basket. Its content has changed."
         )
-        self.assertEqual(messages[1].message, message)
+        self.assertEqual(messages[0].message, message)
