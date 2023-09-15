@@ -23,6 +23,7 @@ class BasketMiddlewareTest(TestCase):
         }
         response = self.client.post(url, post_params, follow=True)
         basket = response.context["basket"]
+        basket.save()
         self.assertEqual(basket.lines.count(), 1)
 
         self.client.force_login(self.user)
