@@ -22,9 +22,9 @@ class TestBasketMiddlewareMessage(WebTestCase):
         )
         response = self.app.get(reverse("basket:summary"))
         messages = list(response.context["messages"])
-        self.assertEqual(len(messages), 1)
+        self.assertEqual(len(messages), 2)
         message = (
             "We have merged 1 items from a previous session to "
             "your basket. Its content has changed."
         )
-        self.assertEqual(messages[0].message, message)
+        self.assertEqual(messages[1].message, message)
