@@ -11,7 +11,6 @@ from oscar.test.utils import RequestFactory
 
 User = get_user_model()
 
-
 class BasketMiddlewareTest(TestCase):
     @staticmethod
     def get_response_for_test(request):
@@ -22,7 +21,6 @@ class BasketMiddlewareTest(TestCase):
         self.request = RequestFactory().get("/")
         self.request.user = AnonymousUser()
         self.middleware(self.request)
-        self.user = None
 
     def test_merged_basket_message(self):
         # add product to anonymous user's basket
@@ -32,7 +30,7 @@ class BasketMiddlewareTest(TestCase):
         # get hash from basket
         basket_hash = self.middleware.get_basket_hash(basket.id)
 
-        user = self.create_user(self.username, self.email, self.password)
+        user = User.objects.create("lucy", "lucy@example.com", "password")
         user.save()
 
         request_factory = RequestFactory()
