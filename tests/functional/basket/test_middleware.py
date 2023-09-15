@@ -17,7 +17,7 @@ class BasketMiddlewareTest(TestCase):
         product = create_product()
         url = reverse("basket:add", kwargs={"pk": product.pk})
         post_params = {
-            "product_id": self.product.id,
+            "product_id": product.id,
             "action": "add",
             "quantity": 1,
         }
