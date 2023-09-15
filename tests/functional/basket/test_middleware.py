@@ -37,8 +37,7 @@ class BasketMiddlewareTest(TestCase):
         response = self.client.post(url, post_params)
         self.assertIsRedirect(response)
 
-        basket_cookie = response.cookies.get(
-            settings.OSCAR_BASKET_COOKIE_OPEN, None)
+        basket_cookie = response.cookies.get(settings.OSCAR_BASKET_COOKIE_OPEN, None)
 
         self.assertIsNotNone(basket_cookie)
 
