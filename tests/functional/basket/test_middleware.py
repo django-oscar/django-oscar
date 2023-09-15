@@ -1,4 +1,5 @@
-# from django.conf import settings
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -21,6 +22,9 @@ class BasketMiddlewareTest(TestCase):
             first_name="lucy", email="lucy@example.com", password="password"
         )
         self.middleware = middleware.BasketMiddleware(self.get_response_for_test)
+        self.request = RequestFactory().get("/")
+        self.request.user = AnonymousUser()
+        self.middleware(self.request)
 
     def test_merged_basket_message(self):
         product = create_product()
@@ -30,13 +34,13 @@ class BasketMiddlewareTest(TestCase):
             "action": "add",
             "quantity": 1,
         }
-        response = self.client.post(url, post_params, follow=True)
-        request_factory = RequestFactory()
-        request = request_factory.get("/")
-        cookie_basket = self.middleware.get_cookie_basket(
-            "oscar_open_basket", request, None
-        )
-        self.assertIsNotNone(cookie_basket)
+        response = self.client.post(url, post_params)
+        self.assertIsRedirect(response)
+        
+        basket_cookie = response.cookies.get(
+            settings.OSCAR_BASKET_COOKIE_OPEN, None)
+
+        self.assertIsNotNone(basket_cookie)
 
         self.client.force_login(self.user)
         response = self.client.get(reverse("basket:summary"))
