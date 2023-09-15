@@ -537,9 +537,10 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     )
 
     # Benefit types
-    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
+    PERCENTAGE, FIXED, FIXED_UNIT, MULTIBUY, FIXED_PRICE = (
         "Percentage",
         "Absolute",
+        "Fixed",
         "Multibuy",
         "Fixed price",
     )
@@ -551,6 +552,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a percentage off of the product's value")),
         (FIXED, _("Discount is a fixed amount off of the basket's total")),
+        (FIXED_UNIT, _("Discount is a fixed amount off of the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
         (SHIPPING_ABSOLUTE, _("Discount is a fixed amount of the shipping cost")),
@@ -596,6 +598,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         return {
             self.PERCENTAGE: get_class("offer.benefits", "PercentageDiscountBenefit"),
             self.FIXED: get_class("offer.benefits", "AbsoluteDiscountBenefit"),
+            self.FIXED_UNIT: get_class("offer.benefits", "FixedUnitDiscountBenefit"),
             self.MULTIBUY: get_class("offer.benefits", "MultibuyDiscountBenefit"),
             self.FIXED_PRICE: get_class("offer.benefits", "FixedPriceBenefit"),
             self.SHIPPING_ABSOLUTE: get_class(
@@ -733,6 +736,18 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
             errors.append(_("Fixed discount benefits require a product range"))
         if not self.value:
             errors.append(_("Fixed discount benefits require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+    def clean_fixed(self):
+        errors = []
+        if not self.range:
+            errors.append(
+                _("Fixed product level discount benefits require a product range")
+            )
+        if not self.value:
+            errors.append(_("Fixed product level discount benefits require a value"))
 
         if errors:
             raise exceptions.ValidationError(errors)

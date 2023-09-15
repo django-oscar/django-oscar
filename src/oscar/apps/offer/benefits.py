@@ -20,6 +20,7 @@ range_anchor = get_class("offer.utils", "range_anchor")
 __all__ = [
     "PercentageDiscountBenefit",
     "AbsoluteDiscountBenefit",
+    "FixedUnitDiscountBenefit",
     "FixedPriceBenefit",
     "ShippingBenefit",
     "MultibuyDiscountBenefit",
@@ -201,6 +202,56 @@ class AbsoluteDiscountBenefit(Benefit):
             applied_discount += line_discount
 
         return BasketDiscount(discount)
+
+
+class FixedUnitDiscountBenefit(AbsoluteDiscountBenefit):
+    """
+    An offer benefit that gives an absolute discount on each applicable product.
+    """
+
+    class Meta:
+        app_label = "offer"
+        proxy = True
+        verbose_name = _("Fixed unit discount benefit")
+        verbose_name_plural = _("Fixed unit discount benefits")
+
+    def get_lines_to_discount(self, offer, line_tuples):
+        # Determine which lines can have the discount applied to them
+        max_affected_items = self._effective_max_affected_items()
+        num_affected_items = 0
+        lines_to_discount = []
+        for price, line in line_tuples:
+            if num_affected_items >= max_affected_items:
+                break
+            qty = min(
+                line.quantity_without_offer_discount(offer),
+                max_affected_items - num_affected_items,
+            )
+            lines_to_discount.append((line, price, qty))
+            num_affected_items += qty
+        return lines_to_discount
+
+    def apply(
+        self,
+        basket,
+        condition,
+        offer,
+        discount_amount=None,
+        max_total_discount=None,
+        **kwargs
+    ):
+        # Fetch basket lines that are in the range and available to be used in an offer.
+        line_tuples = self.get_applicable_lines(offer, basket)
+        lines_to_discount = self.get_lines_to_discount(offer, line_tuples)
+
+        applied_discount = D("0.00")
+        for line, price, qty in lines_to_discount:
+            # If price is less than the fixed discount, then it will be free.
+            line_discount = min(price * qty, self.value * qty)
+            apply_discount(line, line_discount, qty, offer)
+            applied_discount += line_discount
+
+        return BasketDiscount(applied_discount)
 
 
 class FixedPriceBenefit(Benefit):
