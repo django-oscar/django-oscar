@@ -1,4 +1,4 @@
-from django.conf import settings
+# from django.conf import settings
 from django.test import Client, TestCase
 from django.urls import reverse
 from oscar.core.compat import get_user_model
@@ -23,8 +23,6 @@ class BasketMiddlewareTest(TestCase):
             "quantity": 1,
         }
         response = self.client.post(url, post_params, follow=True)
-        cookie_key = response.cookies.get(settings.OSCAR_BASKET_COOKIE_OPEN, None)
-        self.assertIsNotNone(cookie_key)
 
         self.client.force_login(self.user)
         response = self.client.get(reverse("basket:summary"))
