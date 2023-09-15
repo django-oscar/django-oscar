@@ -207,8 +207,6 @@ class AbsoluteDiscountBenefit(Benefit):
 class FixedUnitDiscountBenefit(AbsoluteDiscountBenefit):
     """
     An offer benefit that gives an absolute discount on each applicable product.
-    The value for this benefit refers to the maximum discount per product
-    regardless of the quantity.
     """
 
     class Meta:
@@ -249,7 +247,7 @@ class FixedUnitDiscountBenefit(AbsoluteDiscountBenefit):
         applied_discount = D("0.00")
         for line, price, qty in lines_to_discount:
             # If price is less than the fixed discount, then it will be free.
-            line_discount = min(price * qty, self.value)
+            line_discount = min(price * qty, self.value * qty)
             apply_discount(line, line_discount, qty, offer)
             applied_discount += line_discount
 
