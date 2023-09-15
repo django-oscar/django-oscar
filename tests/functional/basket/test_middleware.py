@@ -1,8 +1,8 @@
 from decimal import Decimal as D
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.messages import get_messages
 from django.http import HttpResponse
-from django.urls import reverse
 from oscar.apps.basket import middleware
 from oscar.core.compat import get_user_model
 from oscar.test.basket import add_product
@@ -31,15 +31,22 @@ class BasketMiddlewareTest(WebTestCase):
         self.assertEqual(basket.owner, None)
         # get hash from basket
         basket_hash = self.middleware.get_basket_hash(basket.id)
-        # store cookie in a new request with registered user
-        request = RequestFactory().get("/", user=self.user)
-        request.COOKIES[settings.OSCAR_BASKET_COOKIE_OPEN] = basket_hash
-        # call BasketView and check messages from response.context
-        self.user = self.create_user(self.username, self.email, self.password)
-        self.user.save()
-        response = self.get(reverse("basket:summary"), user=self.user)
-        self.assertEquals(response.status_code, 200)
-        messages = list(response.context["messages"])
+
+        user = self.create_user(self.username, self.email, self.password)
+        user.save()
+
+        request_factory = RequestFactory()
+        request_factory.cookies[settings.OSCAR_BASKET_COOKIE_OPEN] = basket_hash
+        request = request_factory.get("/")
+        request.user = user
+        request.cookies_to_delete = []
+
+        # call get_basket() to merge baskets
+        basket = self.middleware.get_basket(request)
+        self.assertEqual(basket.owner, user)
+        self.assertEqual(basket.lines.count(), 1)
+
+        messages = get_messages(request)
         self.assertEqual(len(messages), 1)
         message = (
             "We have merged 1 items from a previous session to "
