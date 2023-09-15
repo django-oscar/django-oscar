@@ -14,7 +14,7 @@ class TestBasketMiddlewareMessage(WebTestCase):
     def test_merged_basket_message(self):
         product = create_product(price=D("10.00"), num_in_stock=10)
         url = reverse("basket:add", kwargs={"pk": product.pk})
-        post_params = {"product_id": self.product.id, "action": "add", "quantity": 1}
+        post_params = {"product_id": product.id, "action": "add", "quantity": 1}
         response = self.app.post(url, params=post_params)
         self.assertTrue("oscar_open_basket" in response.test_app.cookies)
         self.user = User.objects.create(
