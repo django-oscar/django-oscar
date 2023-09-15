@@ -11,6 +11,7 @@ from oscar.test.utils import RequestFactory
 
 User = get_user_model()
 
+
 class BasketMiddlewareTest(TestCase):
     @staticmethod
     def get_response_for_test(request):
@@ -30,9 +31,9 @@ class BasketMiddlewareTest(TestCase):
         # get hash from basket
         basket_hash = self.middleware.get_basket_hash(basket.id)
 
-        user = User.objects.create("lucy", "lucy@example.com", "password")
-        user.save()
-
+        user = User.objects.create(
+            first_name="lucy", email="lucy@example.com", password="password"
+        )
         request_factory = RequestFactory()
         request_factory.cookies[settings.OSCAR_BASKET_COOKIE_OPEN] = basket_hash
         request = request_factory.get("/")
