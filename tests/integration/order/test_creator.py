@@ -206,6 +206,9 @@ class TestShippingOfferForOrder(TestCase):
     def setUp(self):
         self.creator = OrderCreator()
         self.basket = factories.create_basket(empty=True)
+
+        # add the product now so we can calculate the correct surcharges
+        add_product(self.basket, D("12.00"))
         self.surcharges = SurchargeApplicator().get_applicable_surcharges(self.basket)
 
     def apply_20percent_shipping_offer(self):
@@ -221,7 +224,6 @@ class TestShippingOfferForOrder(TestCase):
         return offer
 
     def test_shipping_offer_is_applied(self):
-        add_product(self.basket, D("12.00"))
         offer = self.apply_20percent_shipping_offer()
 
         shipping = FixedPrice(D("5.00"), D("5.00"))
@@ -241,7 +243,6 @@ class TestShippingOfferForOrder(TestCase):
         self.assertEqual(D("38.00"), order.total_incl_tax)
 
     def test_zero_shipping_discount_is_not_created(self):
-        add_product(self.basket, D("12.00"))
         offer = self.apply_20percent_shipping_offer()
 
         shipping = Free()

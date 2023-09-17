@@ -465,9 +465,13 @@ class AbstractBasket(models.Model):
     @property
     def is_tax_known(self):
         """
-        Test if tax values are known for this basket
+        Test if tax values are known for this basket.
+
+        If the basket is empty, then tax values are unknown.
         """
-        return all([line.is_tax_known for line in self.all_lines()])
+        return (not self.is_empty) and all(
+            [line.is_tax_known for line in self.all_lines()]
+        )
 
     @property
     def total_excl_tax(self):
