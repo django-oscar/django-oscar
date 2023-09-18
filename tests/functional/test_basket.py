@@ -50,7 +50,11 @@ class AnonAddToBasketViewTests(WebTestCase):
     def setUp(self):
         self.product = create_product(price=D("10.00"), num_in_stock=10)
         self.url = reverse("basket:add", kwargs={"pk": self.product.pk})
-        self.post_params = {"product_id": self.product.id, "action": "add", "quantity": 1}
+        self.post_params = {
+            "product_id": self.product.id,
+            "action": "add",
+            "quantity": 1,
+        }
         self.response = self.app.post(self.url, params=self.post_params)
 
     def test_cookie_is_created(self):
