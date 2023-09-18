@@ -38,7 +38,9 @@ class CatalogueOnlyConfig(OscarConfig):
                 self.category_view.as_view(),
                 name="category",
             ),
-            path("ranges/<slug:slug>/", self.range_view.as_view(), name="range"),
+            re_path(
+                r"^ranges/(?P<slug>[\w-]+)/$", self.range_view.as_view(), name="range"
+            ),
         ]
         return self.post_process_urls(urls)
 
