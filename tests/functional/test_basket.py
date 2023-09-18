@@ -81,7 +81,7 @@ class AnonAddToBasketViewTests(WebTestCase):
         request.user = user
         request.cookies_to_delete = []
 
-        response = self.app.get(reverse('basket:summary'))
+        response = self.app.get(reverse("basket:summary"))
         messages = list(response.context["messages"])
         # first message: product has been added to anonymous user's basket
         # second message: basket total
