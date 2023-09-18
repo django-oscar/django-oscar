@@ -49,9 +49,9 @@ class AnonAddToBasketViewTests(WebTestCase):
 
     def setUp(self):
         self.product = create_product(price=D("10.00"), num_in_stock=10)
-        url = reverse("basket:add", kwargs={"pk": self.product.pk})
-        post_params = {"product_id": self.product.id, "action": "add", "quantity": 1}
-        self.response = self.app.post(url, params=post_params)
+        self.url = reverse("basket:add", kwargs={"pk": self.product.pk})
+        self.post_params = {"product_id": self.product.id, "action": "add", "quantity": 1}
+        self.response = self.app.post(self.url, params=self.post_params)
 
     def test_cookie_is_created(self):
         self.assertTrue("oscar_open_basket" in self.response.test_app.cookies)
@@ -73,15 +73,22 @@ class AnonAddToBasketViewTests(WebTestCase):
         user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
-        self.client.force_login(user)
+
         request_factory = RequestFactory()
+        request = request_factory.post(self.url, self.post_params)
+        request.user = None
+        request.session = self.client.session
+
+        self.client.force_login(user)
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 302)
+
         request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
         request = request_factory.get("/")
         request.session = self.client.session
         request.user = user
         request.cookies_to_delete = []
 
-        response = self.app.get(reverse("basket:summary"))
         messages = list(response.context["messages"])
         # first message: product has been added to anonymous user's basket
         # second message: basket total
