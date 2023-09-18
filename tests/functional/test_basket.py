@@ -6,7 +6,7 @@ from http.cookies import _unquote
 import django
 from django.contrib.messages.storage import cookie
 from django.core import signing
-from django.test import TestCase, override_settings
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils.translation import gettext
 
@@ -65,6 +65,33 @@ class AnonAddToBasketViewTests(WebTestCase):
         line = basket.lines.get(product=self.product)
         stockrecord = self.product.stockrecords.all()[0]
         self.assertEqual(stockrecord.price, line.price_excl_tax)
+
+    def test_merged_baskets_message(self):
+        oscar_open_basket_cookie = _unquote(
+            self.response.test_app.cookies["oscar_open_basket"]
+        )
+        user = User.objects.create(
+            username="lucy", email="lucy@example.com", password="password"
+        )
+        self.client.force_login(user)
+        request_factory = RequestFactory()
+        request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
+        request = request_factory.get("/")
+        request.session = self.client.session
+        request.user = user
+        request.cookies_to_delete = []
+
+        response = self.app.get(reverse('basket:summary'))
+        messages = list(response.context["messages"])
+        # first message: product has been added to anonymous user's basket
+        # second message: basket total
+        # third message merged items message
+        self.assertEqual(len(messages), 3)
+        message = (
+            "We have merged 1 items from a previous session to "
+            "your basket. Its content has changed."
+        )
+        self.assertEqual(messages[2].message, message)
 
 
 class BasketSummaryViewTests(WebTestCase):
