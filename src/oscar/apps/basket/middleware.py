@@ -164,8 +164,8 @@ class BasketMiddleware:
             basket.owner = request.user
 
             if cookie_basket:
-                # count number of items in the basket
-                num_items_merged = basket.num_items
+                # count number of items in the cookie_basket
+                num_items_merged = cookie_basket.num_items
                 self.merge_baskets(basket, cookie_basket)
                 request.cookies_to_delete.append(cookie_key)
 
