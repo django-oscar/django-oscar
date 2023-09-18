@@ -85,8 +85,8 @@ class AnonAddToBasketViewTests(WebTestCase):
 
         # log in as registered user
         self.client.force_login(user)
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 302)
+        response = self.app.get("/", follow=True)
+        self.assertEqual(response.status_code, 200)
 
         # set cookie from previous request in new request.cookies
         request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
