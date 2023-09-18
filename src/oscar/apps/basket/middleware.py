@@ -164,7 +164,7 @@ class BasketMiddleware:
             basket.owner = request.user
 
             if cookie_basket:
-                # count number of items in the cookie_basket
+                # count number of items in the basket
                 num_items_merged = cookie_basket.num_items
                 self.merge_baskets(basket, cookie_basket)
                 request.cookies_to_delete.append(cookie_key)
@@ -186,7 +186,7 @@ class BasketMiddleware:
                 request,
                 messages.WARNING,
                 _(
-                    "We have merged %(num_items_merged)d item(s) from a "
+                    "We have merged %(num_items_merged)d items from a "
                     "previous session to your basket. Its content has changed."
                 ),
             )

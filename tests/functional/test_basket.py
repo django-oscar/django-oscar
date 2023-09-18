@@ -93,12 +93,12 @@ class AnonAddToBasketViewTests(WebTestCase):
         # first message: product has been added to anonymous user's basket
         # second message: basket total
         # third message merged items message
-        self.assertEqual(len(messages), 2)
+        self.assertEqual(len(messages), 3)
         message = (
             "We have merged 1 items from a previous session to "
             "your basket. Its content has changed."
         )
-        self.assertEqual(messages[1].message, message)
+        self.assertEqual(messages[2].message, message)
 
 
 class BasketSummaryViewTests(WebTestCase):
