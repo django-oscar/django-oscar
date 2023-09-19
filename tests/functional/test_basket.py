@@ -107,6 +107,7 @@ class TestMergedBasketsMessage(WebTestCase):
             "We have merged %(num_items_merged)d items from a "
             "previous session to your basket. Its content has changed."
         ) % ({"num_items_merged": 1})
+
         if django.VERSION < (3, 2):
             self.assertIn(expected, response.test_app.cookies["messages"])
         else:
