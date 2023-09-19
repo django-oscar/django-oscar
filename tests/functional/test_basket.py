@@ -93,17 +93,17 @@ class TestMergedBasketsMessage(TestCase):
             username="lucy", email="lucy@example.com", password="password"
         )
 
-        self.client.force_login(user)
-        sess = self.client.session
-        sess["oscar_open_basket"] = oscar_open_basket_cookie
-        sess.save()
-        self.assertTrue("oscar_open_basket" in self.client.session)
-
         request_factory = RequestFactory()
         request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
         request = request_factory.get("/")
         request.user = user
         request.cookies_to_delete = []
+
+        self.client.force_login(user)
+        sess = self.client.session
+        sess["oscar_open_basket"] = oscar_open_basket_cookie
+        sess.save()
+        self.assertTrue("oscar_open_basket" in self.client.session)
 
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
