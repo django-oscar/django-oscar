@@ -6,7 +6,7 @@ from http.cookies import _unquote
 import django
 from django.contrib.messages.storage import cookie
 from django.core import signing
-from django.test import Client, RequestFactory, TestCase, override_settings
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils.translation import gettext
 
@@ -73,8 +73,6 @@ class AnonAddToBasketViewTests(WebTestCase):
 
 class TestMergedBasketsMessage(TestCase):
     def setUp(self):
-        self.client = Client()
-        self.session = self.client.session
         self.product = create_product(price=D("10.00"), num_in_stock=10)
         self.url = reverse("basket:add", kwargs={"pk": self.product.pk})
         self.post_params = {
@@ -90,21 +88,21 @@ class TestMergedBasketsMessage(TestCase):
         self.assertTrue("oscar_open_basket" in response.cookies)
         oscar_open_basket_cookie = response.cookies["oscar_open_basket"]
         # log in as registered user
-        self.user = User.objects.create(
+        user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
-        self.client.force_login(self.user)
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 302)
+        self.client.force_login(user)
+        response = self.client.get("/", follow=True)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context is not None)
 
-        # set cookie from previous request in new request.cookies
+        # set cookie from previous request in new request
         request_factory = RequestFactory()
         request = request_factory.get("/")
         request.session = self.client.session
         request.session["oscar_open_basket"] = oscar_open_basket_cookie
         request.session.save()
-        request.user = self.user
+        request.user = user
         request.cookies_to_delete = []
 
         messages = list(response.context["messages"])
