@@ -96,6 +96,7 @@ class TestMergedBasketsMessage(TestCase):
         self.client.force_login(self.user)
         response = self.client.get("/")
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.context is not None)
 
         # set cookie from previous request in new request.cookies
         request_factory = RequestFactory()
