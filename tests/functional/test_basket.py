@@ -91,12 +91,9 @@ class TestMergedBasketsMessage(TestCase):
         user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
-        # set basket cookie in new request
-        session = self.client.session
-        session["oscar_open_basket"] = oscar_open_basket_cookie
-        session.save()
 
         self.client.force_login(user)
+        self.client.cookies["oscar_open_basket"] = oscar_open_basket_cookie
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context is not None)
