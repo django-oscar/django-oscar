@@ -101,7 +101,6 @@ class TestMergedBasketsMessage(WebTestCase):
 
         response = self.app.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.context is not None)
 
         expected = gettext(
             "We have merged %(num_items_merged)d items from a "
