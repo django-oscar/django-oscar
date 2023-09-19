@@ -18,7 +18,6 @@ from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.factories import OptionFactory, create_product
 from oscar.test.testcases import WebTestCase
-from oscar.test.utils import RequestFactory
 
 User = get_user_model()
 
@@ -96,18 +95,12 @@ class TestMergedBasketsMessage(TestCase):
             username="lucy", email="lucy@example.com", password="password"
         )
 
-        request_factory = RequestFactory()
-        request_factory.cookies["oscar_open_basket"] = basket.pk
-        request = request_factory.get("/")
-        request.user = user
-        request.cookies_to_delete = []
-
-        self.client.force_login(user)
         sess = self.client.session
         sess["oscar_open_basket"] = oscar_open_basket_cookie
         sess.save()
         self.assertTrue("oscar_open_basket" in self.client.session)
 
+        self.client.force_login(user)
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context is not None)
