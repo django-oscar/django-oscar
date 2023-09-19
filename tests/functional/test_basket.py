@@ -99,8 +99,8 @@ class TestMergedBasketsMessage(WebTestCase):
             username="lucy", email="lucy@example.com", password="password"
         )
 
-        response = self.app.get("/", follow=True)
-        self.assertEqual(response.status_code, 200)
+        response = self.app.get("/")
+        self.assertEqual(response.status_code, 302)
 
         expected = gettext(
             "We have merged %(num_items_merged)d items from a "
