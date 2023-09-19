@@ -1,7 +1,9 @@
 from http import client as http_client
 
 from django.urls import reverse
+from django.test import TestCase
 
+from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 from oscar.test.factories import (
     CategoryFactory,
@@ -12,6 +14,7 @@ from oscar.test.factories import (
 )
 from oscar.test.testcases import WebTestCase, add_permissions
 
+User = get_user_model()
 Product = get_model("catalogue", "Product")
 ProductClass = get_model("catalogue", "ProductClass")
 ProductCategory = get_model("catalogue", "ProductCategory")
@@ -317,3 +320,15 @@ class TestANonStaffUser(TestAStaffUser):
 
     def test_cant_create_child_product_for_invalid_parents(self):
         pass
+
+
+class TestProductCreatePageWithUnicodeSlug(TestCase):
+    def setUp(self):
+        self.slug = "Ûul-wįth-weird-chars"
+        ProductClass.objects.create(name="Book", slug=self.slug)
+        self.user = User.objects.create(is_staff=True)
+        self.client.force_login(self.user)
+
+    def test_url_with_unicode_characters(self):
+        response = self.client.get(f"/dashboard/catalogue/products/create/{self.slug}/")
+        self.assertEqual(200, response.status_code)
