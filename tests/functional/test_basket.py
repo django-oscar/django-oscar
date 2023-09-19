@@ -71,7 +71,10 @@ class AnonAddToBasketViewTests(WebTestCase):
         self.assertEqual(stockrecord.price, line.price_excl_tax)
 
 
-class TestMergedBasketsMessage(TestCase):
+class TestMergedBasketsMessage(WebTestCase):
+    csrf_checks = False
+    is_anonymous = True
+
     def setUp(self):
         product = create_product(price=D("10.00"), num_in_stock=10)
         self.url = reverse("basket:add", args=(product.pk,))
@@ -83,38 +86,40 @@ class TestMergedBasketsMessage(TestCase):
 
     def test_merged_baskets_message(self):
         # add product to anonymous user's basket
-        response = self.client.post(self.url, self.post_params)
+        response = self.app.post(self.url, self.post_params)
         self.assertEqual(response.status_code, 302)
-        self.assertTrue("oscar_open_basket" in response.cookies)
+        self.assertIn("oscar_open_basket", response.test_app.cookies)
+        cookie = response.test_app.cookies["oscar_open_basket"]
+
         basket = response.context["basket"]
         self.assertEqual(basket.all_lines().count(), 1)
 
-        oscar_open_basket_cookie = response.cookies["oscar_open_basket"]
-        # log in as registered user
-        user = User.objects.create(
+        # set registered user
+        self.user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
 
-        sess = self.client.session
-        sess["oscar_open_basket"] = oscar_open_basket_cookie
-        sess.save()
-        self.assertTrue("oscar_open_basket" in self.client.session)
-
-        self.client.force_login(user)
-        response = self.client.get("/", follow=True)
+        response = self.app.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context is not None)
 
-        messages = list(response.context["messages"])
-        # first message: product has been added to anonymous user's basket
-        # second message: basket total
-        # third message merged items message
-        self.assertEqual(len(messages), 3)
-        message = (
-            "We have merged 1 items from a previous session to "
-            "your basket. Its content has changed."
-        )
-        self.assertEqual(messages[2].message, message)
+        expected = gettext(
+            "We have merged %(num_items_merged)d items from a "
+            "previous session to your basket. Its content has changed."
+        ) % ({"num_items_merged": 1})
+        if django.VERSION < (3, 2):
+            self.assertIn(expected, response.test_app.cookies["messages"])
+        else:
+            signer = signing.get_cookie_signer(salt="django.contrib.messages")
+            message_strings = [
+                m.message
+                # pylint: disable=no-member
+                for m in signer.unsign_object(
+                    response.test_app.cookies["messages"],
+                    serializer=cookie.MessageSerializer,
+                )
+            ]
+            self.assertIn(expected, message_strings)
 
 
 class BasketSummaryViewTests(WebTestCase):
