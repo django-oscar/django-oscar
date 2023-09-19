@@ -89,7 +89,6 @@ class TestMergedBasketsMessage(WebTestCase):
         response = self.app.post(self.url, self.post_params)
         self.assertEqual(response.status_code, 302)
         self.assertIn("oscar_open_basket", response.test_app.cookies)
-        cookie = response.test_app.cookies["oscar_open_basket"]
 
         basket = response.context["basket"]
         self.assertEqual(basket.all_lines().count(), 1)
