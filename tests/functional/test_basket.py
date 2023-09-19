@@ -97,8 +97,8 @@ class TestMergedBasketsMessage(TestCase):
         sess["oscar_open_basket"] = oscar_open_basket_cookie
         sess.save()
 
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 302)
+        response = self.client.get("/", follow=True)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context is not None)
 
         messages = list(response.context["messages"])
