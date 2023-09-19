@@ -102,7 +102,7 @@ class TestMergedBasketsMessage(TestCase):
         request_factory = RequestFactory()
         request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
         request = request_factory.get("/")
-        request.user = self.user
+        request.user = user
         request.cookies_to_delete = []
 
         response = self.client.get("/", follow=True)
