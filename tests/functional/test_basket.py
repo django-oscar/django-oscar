@@ -6,7 +6,7 @@ from http.cookies import _unquote
 import django
 from django.contrib.messages.storage import cookie
 from django.core import signing
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils.translation import gettext
 
@@ -91,25 +91,12 @@ class TestMergedBasketsMessage(TestCase):
         user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
-
-        request_factory = RequestFactory()
-        request = request_factory.post(self.url, self.post_params)
-        request.user = None
-        request.session = self.client.session
-
+        # set basket cookie in new request
+        self.client.session["oscar_open_basket"] = oscar_open_basket_cookie
         self.client.force_login(user)
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context is not None)
-
-        # set cookie from previous request in new request
-        request_factory = RequestFactory()
-        request = request_factory.get("/")
-        request.session = self.client.session
-        request.session["oscar_open_basket"] = oscar_open_basket_cookie
-        request.session.save()
-        request.user = user
-        request.cookies_to_delete = []
 
         messages = list(response.context["messages"])
         # first message: product has been added to anonymous user's basket
