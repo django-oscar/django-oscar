@@ -73,8 +73,8 @@ class AnonAddToBasketViewTests(WebTestCase):
 
 class TestMergedBasketsMessage(TestCase):
     def setUp(self):
-        self.product = create_product(price=D("10.00"), num_in_stock=10)
-        self.url = reverse("basket:add", kwargs={"pk": self.product.pk})
+        product = create_product(price=D("10.00"), num_in_stock=10)
+        self.url = reverse("basket:add", args=(product.pk,))
         self.post_params = {
             "product_id": self.product.id,
             "action": "add",
@@ -92,7 +92,10 @@ class TestMergedBasketsMessage(TestCase):
             username="lucy", email="lucy@example.com", password="password"
         )
         # set basket cookie in new request
-        self.client.session["oscar_open_basket"] = oscar_open_basket_cookie
+        session = self.client.session
+        session["oscar_open_basket"] = oscar_open_basket_cookie
+        session.save()
+
         self.client.force_login(user)
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
