@@ -76,7 +76,7 @@ class TestMergedBasketsMessage(TestCase):
         product = create_product(price=D("10.00"), num_in_stock=10)
         self.url = reverse("basket:add", args=(product.pk,))
         self.post_params = {
-            "product_id": self.product.id,
+            "product_id": product.id,
             "action": "add",
             "quantity": 1,
         }
