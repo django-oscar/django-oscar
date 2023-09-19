@@ -71,7 +71,7 @@ class AnonAddToBasketViewTests(WebTestCase):
         self.assertEqual(stockrecord.price, line.price_excl_tax)
 
 
-class TestMergedBasketsMessage(WebTestCase):
+class TestMergedBasketsMessage(TestCase):
     csrf_checks = False
     anonymous = True
 
@@ -85,16 +85,15 @@ class TestMergedBasketsMessage(WebTestCase):
             "action": "add",
             "quantity": 1,
         }
-        self.response = self.app.post(self.url, params=self.post_params)
 
     def test_merged_baskets_message(self):
         # add product to anonymous user's basket
         response = self.client.post(self.url, self.post_params)
         self.assertEqual(response.status_code, 302)
+        self.assertTrue("oscar_open_basket" in response.cookies)
         oscar_open_basket_cookie = _unquote(
-            self.response.test_app.cookies["oscar_open_basket"]
+            response.cookies["oscar_open_basket"]
         )
-        self.assertTrue("oscar_open_basket" in response.test_app.cookies)
         # log in as registered user
         self.user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
@@ -105,9 +104,10 @@ class TestMergedBasketsMessage(WebTestCase):
 
         # set cookie from previous request in new request.cookies
         request_factory = RequestFactory()
-        request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
         request = request_factory.get("/")
         request.session = self.client.session
+        request.session['oscar_open_basket'] = oscar_open_basket_cookie
+        request.session.save()
         request.user = self.user
         request.cookies_to_delete = []
 
