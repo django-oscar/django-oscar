@@ -18,6 +18,7 @@ from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.factories import OptionFactory, create_product
 from oscar.test.testcases import WebTestCase
+from oscar.test.utils import RequestFactory
 
 User = get_user_model()
 
@@ -96,6 +97,13 @@ class TestMergedBasketsMessage(TestCase):
         sess = self.client.session
         sess["oscar_open_basket"] = oscar_open_basket_cookie
         sess.save()
+        self.assertTrue("oscar_open_basket" in self.client.session)
+
+        request_factory = RequestFactory()
+        request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
+        request = request_factory.get("/")
+        request.user = self.user
+        request.cookies_to_delete = []
 
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
@@ -105,12 +113,12 @@ class TestMergedBasketsMessage(TestCase):
         # first message: product has been added to anonymous user's basket
         # second message: basket total
         # third message merged items message
-        self.assertEqual(len(messages), 2)
+        self.assertEqual(len(messages), 3)
         message = (
             "We have merged 1 items from a previous session to "
             "your basket. Its content has changed."
         )
-        self.assertEqual(messages[1].message, message)
+        self.assertEqual(messages[2].message, message)
 
 
 class BasketSummaryViewTests(WebTestCase):
