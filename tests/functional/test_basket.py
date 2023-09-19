@@ -87,6 +87,9 @@ class TestMergedBasketsMessage(TestCase):
         response = self.client.post(self.url, self.post_params)
         self.assertEqual(response.status_code, 302)
         self.assertTrue("oscar_open_basket" in response.cookies)
+        basket = response.context["basket"]
+        self.assertEqual(basket.all_lines().count(), 1)
+
         oscar_open_basket_cookie = response.cookies["oscar_open_basket"]
         # log in as registered user
         user = User.objects.create(
@@ -94,7 +97,7 @@ class TestMergedBasketsMessage(TestCase):
         )
 
         request_factory = RequestFactory()
-        request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
+        request_factory.cookies["oscar_open_basket"] = basket.pk
         request = request_factory.get("/")
         request.user = user
         request.cookies_to_delete = []
