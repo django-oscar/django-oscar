@@ -7,7 +7,7 @@ import django
 from django.contrib.messages import get_messages
 from django.contrib.messages.storage import cookie
 from django.core import signing
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import Client, RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils.translation import gettext
 
@@ -78,25 +78,26 @@ class AnonAddToBasketViewTests(WebTestCase):
         self.user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
+        client = Client()
 
         request_factory = RequestFactory()
         request = request_factory.post(self.url, self.post_params)
         request.user = None
-        request.session = self.client.session
+        request.session = client.session
 
         # log in as registered user
-        # self.client.force_login(user)
-        # response = self.app.get("/")
-        # self.assertEqual(response.status_code, 200)
+        client.force_login(self.user)
+        response = client.get("/")
+        self.assertEqual(response.status_code, 302)
 
         # set cookie from previous request in new request.cookies
         request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
         request = request_factory.get("/")
-        request.session = self.client.session
+        request.session = client.session
         request.user = self.user
         request.cookies_to_delete = []
 
-        messages = list(get_messages(request))
+        messages = list(response.context["messages"])
         # first message: product has been added to anonymous user's basket
         # second message: basket total
         # third message merged items message
