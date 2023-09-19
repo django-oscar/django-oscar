@@ -4,7 +4,6 @@ from http import client as http_client
 from http.cookies import _unquote
 
 import django
-from django.contrib.messages import get_messages
 from django.contrib.messages.storage import cookie
 from django.core import signing
 from django.test import Client, RequestFactory, TestCase, override_settings
@@ -71,29 +70,44 @@ class AnonAddToBasketViewTests(WebTestCase):
         stockrecord = self.product.stockrecords.all()[0]
         self.assertEqual(stockrecord.price, line.price_excl_tax)
 
+
+class TestMergedBasketsMessage(WebTestCase):
+    csrf_checks = False
+    anonymous = True
+
+    def setUp(self):
+        self.client = Client()
+        self.session = self.client.session
+        self.product = create_product(price=D("10.00"), num_in_stock=10)
+        self.url = reverse("basket:add", kwargs={"pk": self.product.pk})
+        self.post_params = {
+            "product_id": self.product.id,
+            "action": "add",
+            "quantity": 1,
+        }
+        self.response = self.app.post(self.url, params=self.post_params)
+
     def test_merged_baskets_message(self):
+        # add product to anonymous user's basket
+        response = self.client.post(self.url, self.post_params)
+        self.assertEqual(response.status_code, 302)
         oscar_open_basket_cookie = _unquote(
             self.response.test_app.cookies["oscar_open_basket"]
         )
+        self.assertTrue("oscar_open_basket" in response.test_app.cookies)
+        # log in as registered user
         self.user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
-        client = Client()
-
-        request_factory = RequestFactory()
-        request = request_factory.post(self.url, self.post_params)
-        request.user = None
-        request.session = client.session
-
-        # log in as registered user
-        client.force_login(self.user)
-        response = client.get("/")
+        self.client.force_login(self.user)
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 302)
 
         # set cookie from previous request in new request.cookies
+        request_factory = RequestFactory()
         request_factory.cookies["oscar_open_basket"] = oscar_open_basket_cookie
         request = request_factory.get("/")
-        request.session = client.session
+        request.session = self.client.session
         request.user = self.user
         request.cookies_to_delete = []
 
