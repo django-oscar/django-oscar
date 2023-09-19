@@ -91,6 +91,12 @@ class TestMergedBasketsMessage(TestCase):
         user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
         )
+
+        request_factory = RequestFactory()
+        request = request_factory.post(self.url, self.post_params)
+        request.user = None
+        request.session = self.client.session
+
         self.client.force_login(user)
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
