@@ -88,7 +88,7 @@ class TestMergedBasketsMessage(TestCase):
         response = self.client.post(self.url, self.post_params)
         self.assertEqual(response.status_code, 302)
         self.assertTrue("oscar_open_basket" in response.cookies)
-        oscar_open_basket_cookie = _unquote(response.cookies["oscar_open_basket"])
+        oscar_open_basket_cookie = response.cookies["oscar_open_basket"]
         # log in as registered user
         self.user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
