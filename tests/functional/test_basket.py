@@ -93,21 +93,24 @@ class TestMergedBasketsMessage(TestCase):
         )
 
         self.client.force_login(user)
-        self.client.cookies["oscar_open_basket"] = oscar_open_basket_cookie
-        response = self.client.get("/", follow=True)
-        self.assertEqual(response.status_code, 200)
+        sess = self.client.session
+        sess["oscar_open_basket"] = oscar_open_basket_cookie
+        sess.save()
+
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 302)
         self.assertTrue(response.context is not None)
 
         messages = list(response.context["messages"])
         # first message: product has been added to anonymous user's basket
         # second message: basket total
         # third message merged items message
-        self.assertEqual(len(messages), 2)
+        self.assertEqual(len(messages), 3)
         message = (
             "We have merged 1 items from a previous session to "
             "your basket. Its content has changed."
         )
-        self.assertEqual(messages[1].message, message)
+        self.assertEqual(messages[2].message, message)
 
 
 class BasketSummaryViewTests(WebTestCase):
