@@ -72,9 +72,6 @@ class AnonAddToBasketViewTests(WebTestCase):
 
 
 class TestMergedBasketsMessage(TestCase):
-    csrf_checks = False
-    anonymous = True
-
     def setUp(self):
         self.client = Client()
         self.session = self.client.session
@@ -91,9 +88,7 @@ class TestMergedBasketsMessage(TestCase):
         response = self.client.post(self.url, self.post_params)
         self.assertEqual(response.status_code, 302)
         self.assertTrue("oscar_open_basket" in response.cookies)
-        oscar_open_basket_cookie = _unquote(
-            response.cookies["oscar_open_basket"]
-        )
+        oscar_open_basket_cookie = _unquote(response.cookies["oscar_open_basket"])
         # log in as registered user
         self.user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
@@ -106,7 +101,7 @@ class TestMergedBasketsMessage(TestCase):
         request_factory = RequestFactory()
         request = request_factory.get("/")
         request.session = self.client.session
-        request.session['oscar_open_basket'] = oscar_open_basket_cookie
+        request.session["oscar_open_basket"] = oscar_open_basket_cookie
         request.session.save()
         request.user = self.user
         request.cookies_to_delete = []
