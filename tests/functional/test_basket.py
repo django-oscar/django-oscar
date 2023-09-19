@@ -4,6 +4,7 @@ from http import client as http_client
 from http.cookies import _unquote
 
 import django
+from django.contrib.messages import get_messages
 from django.contrib.messages.storage import cookie
 from django.core import signing
 from django.test import RequestFactory, TestCase, override_settings
@@ -85,7 +86,7 @@ class AnonAddToBasketViewTests(WebTestCase):
 
         # log in as registered user
         # self.client.force_login(user)
-        response = self.app.get("/")
+        # response = self.app.get("/")
         # self.assertEqual(response.status_code, 200)
 
         # set cookie from previous request in new request.cookies
@@ -95,7 +96,7 @@ class AnonAddToBasketViewTests(WebTestCase):
         request.user = self.user
         request.cookies_to_delete = []
 
-        messages = list(response.test_app.context["messages"])
+        messages = list(get_messages(request))
         # first message: product has been added to anonymous user's basket
         # second message: basket total
         # third message merged items message
