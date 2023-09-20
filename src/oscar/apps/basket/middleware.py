@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.signing import BadSignature, Signer
 from django.utils.functional import SimpleLazyObject, empty
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext_lazy
 
 from oscar.core.loading import get_class, get_model
 
@@ -185,10 +185,16 @@ class BasketMiddleware:
             messages.add_message(
                 request,
                 messages.WARNING,
-                _(
-                    "We have merged %s items from a previous session to your "
-                    "basket. Its content has changed." % num_items_merged
-                ),
+                ngettext_lazy(
+                    "We have merged %(num_items_merged)d item from a "
+                    "previous session to your basket. "
+                    "Its content has changed.",
+                    "We have merged %(num_items_merged)d items from a "
+                    "previous session to your basket. "
+                    "Its content has changed.",
+                    num_items_merged,
+                )
+                % {"num_items_merged": num_items_merged},
             )
 
         return basket
