@@ -111,29 +111,13 @@ class TestMergedBasketsMessage(TestCase):
         self.assertEqual(basket.owner, self.user)
         self.assertIn("messages", response.cookies)
 
-        expected = gettext(
-            "We have merged %(num_items_merged)d items from a "
-            "previous session to your basket. Its content has changed."
-        ) % ({"num_items_merged": 1})
-
+        expected = (
+            "We have merged 1 items from a previous session to your basket. "
+            "Its content has changed."
+        )
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 3)
         self.assertEqual(messages[2].message, expected)
-        '''
-        if django.VERSION < (3, 2):
-            self.assertIn(expected, response.cookies["messages"])
-        else:
-            signer = signing.get_cookie_signer(salt="django.contrib.messages")
-            message_strings = [
-                m.message
-                # pylint: disable=no-member
-                for m in signer.unsign_object(
-                    response.cookies["messages"],
-                    serializer=cookie.MessageSerializer,
-                )
-            ]
-            self.assertIn(expected, message_strings)
-        '''
 
 
 class BasketSummaryViewTests(WebTestCase):
