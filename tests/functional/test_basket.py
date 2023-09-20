@@ -99,6 +99,7 @@ class TestMergedBasketsMessage(WebTestCase):
         )
 
         response = self.app.get("/")
+        basket = response.context["basket"]
         self.assertEqual(response.status_code, 302)
         self.assertEqual(basket.all_lines().count(), 1)
         self.assertEqual(basket.owner, self.user)
