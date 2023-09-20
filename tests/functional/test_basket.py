@@ -98,7 +98,7 @@ class TestMergedBasketsMessage(TestCase):
         )
         self.client.force_login(self.user)
         sess = self.client.session
-        sess["shop22_open_basket"] = oscar_open_basket_cookie
+        sess["oscar_open_basket"] = oscar_open_basket_cookie
         sess.save()
         self.assertTrue("oscar_open_basket" in self.client.session)
 
