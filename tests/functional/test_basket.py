@@ -92,7 +92,7 @@ class TestMergedBasketsMessage(WebTestCase):
 
         basket = response.context["basket"]
         self.assertEqual(basket.all_lines().count(), 1)
-
+        self.assertIsNone(basket.owner)
         # set registered user
         self.user = User.objects.create(
             username="lucy", email="lucy@example.com", password="password"
@@ -100,6 +100,8 @@ class TestMergedBasketsMessage(WebTestCase):
 
         response = self.app.get("/")
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(basket.all_lines().count(), 1)
+        self.assertEqual(basket.owner, self.user)
 
         expected = gettext(
             "We have merged %(num_items_merged)d items from a "
