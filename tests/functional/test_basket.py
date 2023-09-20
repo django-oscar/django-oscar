@@ -116,6 +116,10 @@ class TestMergedBasketsMessage(TestCase):
             "previous session to your basket. Its content has changed."
         ) % ({"num_items_merged": 1})
 
+        messages = list(response.context["messages"])
+        self.assertEqual(len(messages), 3)
+        self.assertEqual(messages[2].message, expected)
+        '''
         if django.VERSION < (3, 2):
             self.assertIn(expected, response.cookies["messages"])
         else:
@@ -129,6 +133,7 @@ class TestMergedBasketsMessage(TestCase):
                 )
             ]
             self.assertIn(expected, message_strings)
+        '''
 
 
 class BasketSummaryViewTests(WebTestCase):
