@@ -80,6 +80,9 @@ class TestMergedBasketsMessage(TestCase):
             "action": "add",
             "quantity": 1,
         }
+        self.user = User.objects.create(
+            username="lucy", email="lucy@example.com", password="password"
+        )
 
     def test_merged_baskets_message(self):
         # add product to anonymous user's basket
@@ -94,9 +97,6 @@ class TestMergedBasketsMessage(TestCase):
         self.assertIsNone(basket.owner)
 
         # set registered user
-        self.user = User.objects.create(
-            username="lucy", email="lucy@example.com", password="password"
-        )
         self.client.force_login(self.user)
         sess = self.client.session
         sess["oscar_open_basket"] = oscar_open_basket_cookie
