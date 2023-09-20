@@ -72,7 +72,6 @@ class AnonAddToBasketViewTests(WebTestCase):
 
 
 class TestMergedBasketsMessage(TestCase):
-
     def setUp(self):
         product = create_product(price=D("10.00"), num_in_stock=10)
         self.url = reverse("basket:add", args=(product.pk,))
@@ -88,6 +87,7 @@ class TestMergedBasketsMessage(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("oscar_open_basket", response.cookies)
         oscar_open_basket_cookie = response.cookies["oscar_open_basket"]
+
         basket = response.context["basket"]
         self.assertEqual(basket.all_lines().count(), 1)
         self.assertIsNone(basket.owner)
@@ -104,9 +104,11 @@ class TestMergedBasketsMessage(TestCase):
 
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
+
         basket = response.context["basket"]
         self.assertEqual(basket.all_lines().count(), 1)
         self.assertEqual(basket.owner, self.user)
+        self.assertIn("messages", response.cookies)
 
         expected = gettext(
             "We have merged %(num_items_merged)d items from a "
@@ -114,14 +116,14 @@ class TestMergedBasketsMessage(TestCase):
         ) % ({"num_items_merged": 1})
 
         if django.VERSION < (3, 2):
-            self.assertIn(expected, response.test_app.cookies["messages"])
+            self.assertIn(expected, response.cookies["messages"])
         else:
             signer = signing.get_cookie_signer(salt="django.contrib.messages")
             message_strings = [
                 m.message
                 # pylint: disable=no-member
                 for m in signer.unsign_object(
-                    response.test_app.cookies["messages"],
+                    response.cookies["messages"],
                     serializer=cookie.MessageSerializer,
                 )
             ]
