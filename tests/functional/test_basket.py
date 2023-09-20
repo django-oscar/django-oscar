@@ -83,8 +83,9 @@ class TestMergedBasketsMessage(TestCase):
 
     def test_merged_baskets_message(self):
         # add product to anonymous user's basket
-        response = self.client.post(self.url, self.post_params, follow=True)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post(self.url, self.post_params)
+        self.assertEqual(response.status_code, 302)
+
         self.assertIn("oscar_open_basket", response.cookies)
         oscar_open_basket_cookie = response.cookies["oscar_open_basket"]
 
