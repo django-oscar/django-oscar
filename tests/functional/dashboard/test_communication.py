@@ -1,11 +1,14 @@
 from django.core import mail
 from django.urls import reverse
+from django.test import TestCase
 
+from oscar.core.compat import get_user_model
 from oscar.core.loading import get_model
 from oscar.test.factories import UserFactory
 from oscar.test.testcases import WebTestCase
 
 CommunicationEventType = get_model("communication", "CommunicationEventType")
+User = get_user_model()
 
 
 class TestAnAdmin(WebTestCase):
@@ -36,3 +39,19 @@ class TestAnAdmin(WebTestCase):
         form.submit("send_preview")
 
         assert len(mail.outbox) == 1
+
+
+class TestCommsUpdatePageWithUnicodeSlug(TestCase):
+    def setUp(self):
+        self.slug = "Ûul-wįth-weird-chars"
+        self.commtype = CommunicationEventType.objects.create(
+            name="comm-event",
+            category=CommunicationEventType.USER_RELATED,
+            code="Ûul-wįth-weird-chars",
+        )
+        self.user = User.objects.create(is_staff=True)
+        self.client.force_login(self.user)
+
+    def test_url_with_unicode_characters(self):
+        response = self.client.get(f"/dashboard/comms/{self.slug}/")
+        self.assertEqual(200, response.status_code)

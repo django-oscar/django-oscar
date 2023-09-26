@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarDashboardConfig
@@ -108,8 +108,8 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 self.product_create_redirect_view.as_view(),
                 name="catalogue-product-create",
             ),
-            path(
-                "products/create/<slug:product_class_slug>/",
+            re_path(
+                r"^products/create/(?P<product_class_slug>[\w-]+)/$",
                 self.product_createupdate_view.as_view(),
                 name="catalogue-product-create",
             ),
