@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.application import OscarDashboardConfig
@@ -22,6 +22,8 @@ class CommunicationsDashboardConfig(OscarDashboardConfig):
     def get_urls(self):
         urls = [
             path("", self.list_view.as_view(), name="comms-list"),
-            path("<slug:slug>/", self.update_view.as_view(), name="comms-update"),
+            re_path(
+                r"^(?P<slug>[\w-]+)/$", self.update_view.as_view(), name="comms-update"
+            ),
         ]
         return self.post_process_urls(urls)
