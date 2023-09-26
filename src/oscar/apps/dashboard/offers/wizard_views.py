@@ -60,11 +60,6 @@ class OfferWizardStepView(FormView):
         if product_range is not None:
             form_data["range"] = product_range.id
 
-        combinations = form_data.get("combinations")
-        if combinations is not None:
-            form_data["combination_ids"] = [x.id for x in combinations]
-            del form_data["combinations"]
-
         form_kwargs = {"data": form_data}
         json_data = json.dumps(form_kwargs, cls=DjangoJSONEncoder)
 
