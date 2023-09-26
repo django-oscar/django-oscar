@@ -35,7 +35,7 @@ class OfferWizardStepView(FormView):
                 request,
                 _("%s step not complete") % (self.previous_view.step_name.title(),),
             )
-            return HttpResponseRedirect(self.get_back_url())
+            return HttpResponseRedirect(reverse(self.previous_view.url_name))
         return super().dispatch(request, *args, **kwargs)
 
     def is_previous_step_complete(self, request):
@@ -130,15 +130,6 @@ class OfferWizardStepView(FormView):
         ctx["session_offer"] = self._fetch_session_offer()
         ctx["title"] = self.get_title()
         return ctx
-
-    def get_back_url(self):
-        if not self.previous_view:
-            return None
-        if self.update:
-            return reverse(
-                self.previous_view.url_name, kwargs={"pk": self.kwargs["pk"]}
-            )
-        return reverse(self.previous_view.url_name)
 
     def get_title(self):
         return self.step_name.title()
