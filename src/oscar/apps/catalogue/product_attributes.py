@@ -225,37 +225,44 @@ class ProductAttributesContainer:
                     # needed and should always be saved.
                     try:
                         attribute_value_current = self.get_value_by_attribute(attribute)
-                        if attribute_value_current.value == value:
+                        if (
+                            attribute_value_current is not None
+                            and attribute_value_current.value == value
+                        ):
                             continue  # no new value needs to be saved
                     except ObjectDoesNotExist:
                         pass  # there is no existing value, so a value needs to be saved.
 
-                value_obj = self.get_value_by_attribute(attribute)
-                if (
-                    value_obj is None or value_obj.product != self.product
-                ):  # it doesn't exist yet so should be created
-                    new_value_obj = ProductAttributeValue(
-                        attribute=attribute, product=self.product
-                    )
-                    bound_value_obj = attribute.bind_value(new_value_obj, value)
-                    if bound_value_obj is not None:
-                        assert not bound_value_obj.pk
-                        to_be_created.append(bound_value_obj)
+                if attribute.is_multi_option:  # multi_option can not be bulk saved
+                    attribute.save_value(self.product, value)
                 else:
-                    bound_value_obj = attribute.bind_value(value_obj, value)
-                    if bound_value_obj is None:
-                        to_be_deleted.append(value_obj.pk)
-                    else:
-                        if bound_value_obj.attribute.is_file:
-                            # with bulk_create the file is save just fine, but
-                            # with buld_update, it's not, so we have to performa
-                            # that manually
-                            bound_value_obj._meta.get_field(
-                                bound_value_obj.value_field_name
-                            ).pre_save(bound_value_obj, False)
+                    value_obj = self.get_value_by_attribute(attribute)
+                    if (
+                        value_obj is None or value_obj.product != self.product
+                    ):  # it doesn't exist yet so should be created
+                        new_value_obj = ProductAttributeValue(
+                            attribute=attribute, product=self.product
+                        )
 
-                        to_be_updated.append(bound_value_obj)
-                        update_fields.add(bound_value_obj.value_field_name)
+                        bound_value_obj = attribute.bind_value(new_value_obj, value)
+                        if bound_value_obj is not None:
+                            assert not bound_value_obj.pk
+                            to_be_created.append(bound_value_obj)
+                    else:
+                        bound_value_obj = attribute.bind_value(value_obj, value)
+                        if bound_value_obj is None:
+                            to_be_deleted.append(value_obj.pk)
+                        else:
+                            if bound_value_obj.attribute.is_file:
+                                # with bulk_create the file is save just fine, but
+                                # with buld_update, it's not, so we have to performa
+                                # that manually
+                                bound_value_obj._meta.get_field(
+                                    bound_value_obj.value_field_name
+                                ).pre_save(bound_value_obj, False)
+
+                            to_be_updated.append(bound_value_obj)
+                            update_fields.add(bound_value_obj.value_field_name)
 
         # now save all the attributes in bulk
         if to_be_deleted:

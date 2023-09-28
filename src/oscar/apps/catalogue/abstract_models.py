@@ -1236,8 +1236,11 @@ class AbstractProductAttributeValue(models.Model):
         e.g. image attribute values, declare a _image_as_text property and
         return something appropriate.
         """
-        property_name = "_%s_as_text" % self.type
-        return getattr(self, property_name, self.value)
+        try:
+            property_name = "_%s_as_text" % self.type
+            return getattr(self, property_name, self.value)
+        except ValueError:
+            return ""
 
     @property
     def _multi_option_as_text(self):
