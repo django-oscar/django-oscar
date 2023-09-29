@@ -125,6 +125,11 @@ class AbstractBasket(models.Model):
     def _set_strategy(self, strategy):
         self._strategy = strategy  # pylint: disable=W0201
 
+        # Update line stock records with the new strategy
+        for l in self.all_lines():
+            l.stockrecord = strategy.fetch_for_product(l.product).stockrecord
+            l.save()
+
     strategy = property(_get_strategy, _set_strategy)
 
     def all_lines(self):
