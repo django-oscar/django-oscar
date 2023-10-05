@@ -156,13 +156,14 @@ class ProductAttributesContainer:
         self._dirty.add(name)
         super().__setattr__(name, value)
 
-    def set(self, name, value):
-        if name.isidentifier():
+    def set(self, name, value, validate_identifier=True):
+        if not validate_identifier or name.isidentifier():
             self.__setattr__(name, value)
         else:
             raise ValidationError(
                 _(
                     "%s is not a valid identifier, but attribute codes must be valid python identifiers"
+                    % name
                 )
             )
 
