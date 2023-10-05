@@ -1199,6 +1199,12 @@ class AbstractProductAttributeValue(models.Model):
             new_value = self.attribute.option_group.options.get(option=new_value)
         elif self.attribute.is_multi_option:
             getattr(self, attr_name).set(new_value)
+            multi_option = getattr(self, attr_name)
+            if any((isinstance(g, str) for g in new_value)):
+                multi_option.set(self.attribute.option_group.options.filter(option__in=new_value))
+            else:
+                multi_option.set(new_value)
+
             self._dirty = True
             return
 
