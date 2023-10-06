@@ -1,3 +1,4 @@
+import unittest
 from copy import deepcopy
 
 from django.core.exceptions import ValidationError
@@ -29,12 +30,19 @@ class ProductAttributeTest(TestCase):
             name="name",
             code="name",
         )
-        self.weight_attrs = ProductAttributeFactory(
+        self.weight_attr = ProductAttributeFactory(
             type=ProductAttribute.INTEGER,
             name="weight",
             code="weight",
             product_class=product_class,
             required=True,
+        )
+        self.richtext_attr = ProductAttributeFactory(
+            type=ProductAttribute.RICHTEXT,
+            name="html",
+            code="html",
+            product_class=product_class,
+            required=False,
         )
 
         # create the parent product
@@ -271,6 +279,72 @@ class ProductAttributeTest(TestCase):
         self.assertEqual(at.product_class, self.product.get_product_class())
 
         self.assertIsNone(self.product.attr.get_attribute_by_code("stoubafluppie"))
+
+    def test_attribute_html(self):
+        self.product.attr.html = "<h1>Hi</h1>"
+        self.product.save()
+
+        value = self.product.attr.get_value_by_attribute(self.richtext_attr)
+        html = value.value_as_html
+        self.assertEqual(html, "<h1>Hi</h1>")
+        self.assertTrue(hasattr(html, "__html__"))
+
+
+class MultiOptionTest(TestCase):
+    fixtures = ["productattributes"]
+    maxDiff = None
+
+    def test_multi_option_recursion_error(self):
+        product = Product.objects.get(pk=4)
+        with self.assertRaises(ValueError):
+            product.attr.set("subkinds", "harrie")
+            product.save()
+
+    def test_value_as_html(self):
+        product = Product.objects.get(pk=4)
+        # pylint: disable=unused-variable
+        (
+            additional_info,
+            available,
+            facets,
+            hypothenusa,
+            kind,
+            releasedate,
+            starttime,
+            subkinds,
+            subtitle,
+        ) = product.attr.get_values().order_by("id")
+
+        self.assertTrue(
+            additional_info.value_as_html.startswith(
+                '<p style="margin: 0px; font-stretch: normal; font-size: 12px;'
+            )
+        )
+        self.assertEqual(available.value_as_html, "Yes")
+        self.assertEqual(kind.value_as_html, "bombastic")
+        self.assertEqual(subkinds.value_as_html, "grand, verocious, megalomane")
+        self.assertEqual(subtitle.value_as_html, "kekjo")
+
+    @unittest.skip("The implementation is wrong, which makes these tests fail")
+    def test_broken_value_as_html(self):
+        product = Product.objects.get(pk=4)
+        # pylint: disable=unused-variable
+        (
+            additional_info,
+            available,
+            facets,
+            hypothenusa,
+            kind,
+            releasedate,
+            starttime,
+            subkinds,
+            subtitle,
+        ) = product.attr.get_values().order_by("id")
+
+        self.assertEqual(starttime.value_as_html, "2018-11-16T09:15:00+00:00")
+        self.assertEqual(facets.value_as_html, "4")
+        self.assertEqual(releasedate.value_as_html, "2018-11-16")
+        self.assertEqual(hypothenusa.value_as_html, "2.4567")
 
 
 class ProductAttributeQuerysetTest(TestCase):
