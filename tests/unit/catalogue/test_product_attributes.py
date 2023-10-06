@@ -248,7 +248,7 @@ class ProductAttributeTest(TestCase):
     def test_get_attribute_by_code(self):
         at = self.product.attr.get_attribute_by_code("weight")
         self.assertEqual(at.code, "weight")
-        self.assertEqual(at.product, self.product)
+        self.assertEqual(at.product_class, self.product.get_product_class())
 
         self.assertIsNone(self.product.attr.get_attribute_by_code("stoubafluppie"))
 
