@@ -34,6 +34,7 @@ class ProductAttributeTest(TestCase):
             name="weight",
             code="weight",
             product_class=product_class,
+            required=True,
         )
 
         # create the parent product
@@ -211,6 +212,11 @@ class ProductAttributeTest(TestCase):
         p = Product.objects.get(pk=self.product.pk)
         with self.assertRaises(AttributeError):
             p.attr.weight  # pylint: disable=pointless-statement
+
+    def test_validate_attribute_value(self):
+        self.test_delete_attribute_value()
+        with self.assertRaises(ValidationError):
+            self.product.attr.validate_attributes()
 
     def test_deepcopy(self):
         "Deepcopy should not cause a recursion error"
