@@ -101,7 +101,7 @@ extract_translations: ## Extract strings and create source .po files
 	cd src/oscar; django-admin.py makemessages -a
 
 compile_translations: ## Compile translation files and create .mo files
-	cd src/oscar; django-admin.py compilemessages
+	cd src/oscar; django-admin compilemessages
 
 ######################
 # Project Management
