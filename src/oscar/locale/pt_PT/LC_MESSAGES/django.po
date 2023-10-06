@@ -7,7 +7,7 @@
 # diogosousa <diogofigueiredosousa@gmail.com>, 2014
 # diogosousa <diogofigueiredosousa@gmail.com>, 2014
 # Francisco Jesus <franciscocjesus@outlook.com>, 2020,2022
-# Francisco Jesus <franciscocjesus@outlook.com>, 2020,2022
+# Francisco Jesus <franciscocjesus@outlook.com>, 2020,2022-2023
 # Jaime Silva <yahiiiba@gmail.com>, 2019
 # José Durães <jdmduraes@gmail.com>, 2014
 # maloky <joky@maloky.com>, 2014
@@ -25,8 +25,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-30 10:56+0100\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
-"Last-Translator: Francisco Jesus <franciscocjesus@outlook.com>, 2020,2022\n"
-"Language-Team: Portuguese (Portugal) (http://www.transifex.com/codeinthehole/django-oscar/language/pt_PT/)\n"
+"Last-Translator: Francisco Jesus <franciscocjesus@outlook.com>, 2020,2022-2023\n"
+"Language-Team: Portuguese (Portugal) (http://app.transifex.com/codeinthehole/django-oscar/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1415,19 +1415,19 @@ msgstr "Seleccione"
 
 #: apps/catalogue/abstract_models.py:1250
 msgid "Radio"
-msgstr ""
+msgstr "Radio"
 
 #: apps/catalogue/abstract_models.py:1251
 msgid "Multi select"
-msgstr ""
+msgstr "Seleção múltipla"
 
 #: apps/catalogue/abstract_models.py:1252
 msgid "Checkbox"
-msgstr ""
+msgstr "Caixa de verificação"
 
 #: apps/catalogue/abstract_models.py:1256
 msgid "Skip this option"
-msgstr ""
+msgstr "Saltar esta opção"
 
 #: apps/catalogue/abstract_models.py:1261
 msgid "Is this option required?"
@@ -1435,29 +1435,29 @@ msgstr "Esta opção é necessária?"
 
 #: apps/catalogue/abstract_models.py:1272
 msgid "Help text"
-msgstr ""
+msgstr "Texto de ajuda"
 
 #: apps/catalogue/abstract_models.py:1273
 msgid "Help text shown to the user on the add to basket form"
-msgstr ""
+msgstr "Texto de ajuda mostrado ao utilizador no formulário de juntar ao carrinho"
 
 #: apps/catalogue/abstract_models.py:1276
 msgid "Ordering"
-msgstr ""
+msgstr "Ordenação"
 
 #: apps/catalogue/abstract_models.py:1279
 msgid "Controls the ordering of product options on product detail pages"
-msgstr ""
+msgstr "Controla a ordenação das opções de produto nas paginas de detalhe de produto"
 
 #: apps/catalogue/abstract_models.py:1321
 #, python-format
 msgid "Option Group is required for type %s"
-msgstr ""
+msgstr "Opção de grupo necessária para o tipo %s"
 
 #: apps/catalogue/abstract_models.py:1325
 #, python-format
 msgid "Option Group can not be used with type %s"
-msgstr ""
+msgstr "Opção de grupo não pode ser usada com o tipo %s"
 
 #: apps/catalogue/abstract_models.py:1391
 msgid "Original"
@@ -2266,13 +2266,13 @@ msgstr "Quantidades actualizadas."
 msgid ""
 "The shared accounts won't be able to access your wishlist because the "
 "visiblity is set to private."
-msgstr ""
+msgstr "Contas partilhadas não poderão aceder à sua lista de desejos uma vez que a visibilidade está definida como privada."
 
 #: apps/customer/wishlists/views.py:110
 msgid ""
 "You have added shared accounts to your wishlist but the visiblity is public,"
 " this means everyone with a link has access to it."
-msgstr ""
+msgstr "Adicionou contas partilhadas à sua lista de desejos mas a visibilidade está definida como publica, o que significa que qualquer pessoa com um link tem acesso à mesma."
 
 #: apps/customer/wishlists/views.py:146
 #: templates/oscar/customer/wishlists/wishlists_list.html:48
@@ -2434,7 +2434,7 @@ msgstr "Escolha uma opção de grupo"
 
 #: apps/dashboard/catalogue/forms.py:404
 msgid "An option group is required"
-msgstr ""
+msgstr "Uma opção de grupo é necessária"
 
 #: apps/dashboard/catalogue/formsets.py:96
 msgid ""
@@ -2756,7 +2756,7 @@ msgstr "Painel de ofertas"
 
 #: apps/dashboard/offers/forms.py:32
 msgid "This can only be changed if it has no vouchers attached to it"
-msgstr ""
+msgstr "Isto apenas pode ser alterado se não existirem vales de desconto associados"
 
 #: apps/dashboard/offers/forms.py:40 apps/offer/abstract_models.py:157
 #: templates/oscar/dashboard/offers/offer_list.html:90
@@ -2791,7 +2791,7 @@ msgstr "Por favor escolha uma lista, tipo e valor OU selecione uma condição pe
 
 #: apps/dashboard/offers/forms.py:134
 msgid "No other options can be set if you are using a custom condition"
-msgstr ""
+msgstr "Nenhumas opções podem ser definidas se estiver a usar condicionantes personalizadas."
 
 #: apps/dashboard/offers/forms.py:155
 msgid "Custom incentive"
@@ -2822,11 +2822,11 @@ msgstr "Está activo?"
 #: apps/dashboard/offers/forms.py:213
 #: templates/oscar/dashboard/offers/offer_list.html:86
 msgid "Offer type"
-msgstr ""
+msgstr "Tipo de oferta"
 
 #: apps/dashboard/offers/forms.py:214
 msgid "Has vouchers?"
-msgstr ""
+msgstr "Tem vales de desconto?"
 
 #: apps/dashboard/offers/forms.py:215 apps/dashboard/orders/forms.py:85
 #: apps/voucher/reports.py:18
@@ -2860,33 +2860,33 @@ msgstr "Preço"
 #: apps/dashboard/offers/views.py:61 apps/dashboard/vouchers/views.py:68
 #, python-format
 msgid "Name matches \"%s\""
-msgstr ""
+msgstr "Corresponde a \"%s\""
 
 #: apps/dashboard/offers/views.py:69 apps/dashboard/vouchers/views.py:79
 msgid "Is active"
-msgstr ""
+msgstr "Está ativo"
 
 #: apps/dashboard/offers/views.py:72 apps/dashboard/vouchers/views.py:82
 msgid "Is inactive"
-msgstr ""
+msgstr "Está Inativo"
 
 #: apps/dashboard/offers/views.py:75
 #, python-format
 msgid "Is of type \"%s\""
-msgstr ""
+msgstr "É do tipo \"%s\""
 
 #: apps/dashboard/offers/views.py:78
 msgid "Has vouchers"
-msgstr ""
+msgstr "Tem vales de desconto"
 
 #: apps/dashboard/offers/views.py:78
 msgid "Has no vouchers"
-msgstr ""
+msgstr "Não tem vales de desconto"
 
 #: apps/dashboard/offers/views.py:81
 #, python-format
 msgid "Voucher code matches \"%s\""
-msgstr ""
+msgstr "Código do vale de desconto corresponde a \"%s\""
 
 #: apps/dashboard/offers/views.py:109
 #, python-format
@@ -2905,7 +2905,7 @@ msgstr "Oferta '%s' criada!"
 
 #: apps/dashboard/offers/views.py:292
 msgid "Name, description and type"
-msgstr ""
+msgstr "Nome, descrição e tipo"
 
 #: apps/dashboard/offers/views.py:308
 #: templates/oscar/dashboard/offers/offer_detail.html:75
@@ -2927,7 +2927,7 @@ msgstr "Restrições"
 
 #: apps/dashboard/offers/views.py:349
 msgid "This offer can only be deleted if it has no vouchers attached to it"
-msgstr ""
+msgstr "Esta oferta apenas pode ser removida se não tiver quaisquer vales de desconto já associados"
 
 #: apps/dashboard/offers/views.py:354
 msgid "Offer deleted!"
@@ -3609,15 +3609,15 @@ msgstr "Painel de vouchers"
 
 #: apps/dashboard/vouchers/forms.py:22
 msgid "Which offers apply for this voucher?"
-msgstr ""
+msgstr "A que ofertas se aplica este vale de desconto?"
 
 #: apps/dashboard/vouchers/forms.py:49
 msgid "In voucher set?"
-msgstr ""
+msgstr "Vale de desconto atribuído?"
 
 #: apps/dashboard/vouchers/forms.py:50
 msgid "Has offers?"
-msgstr ""
+msgstr "Tem ofertas?"
 
 #: apps/dashboard/vouchers/forms.py:64 apps/voucher/abstract_models.py:111
 #: templates/oscar/dashboard/vouchers/partials/voucher_details_table.html:12
@@ -3627,40 +3627,40 @@ msgstr "Utilização"
 
 #: apps/dashboard/vouchers/forms.py:67
 msgid "Which offers apply for this voucher set?"
-msgstr ""
+msgstr "A que ofertas se aplica este conjunto de vales de desconto?"
 
 #: apps/dashboard/vouchers/forms.py:91
 #, python-format
 msgid ""
 "This cannot be used to delete vouchers (currently %s) in this set. You can "
 "do that on the <a href=\"%s\">detail</a> page."
-msgstr ""
+msgstr "Isto não pode ser usado para remover vales de desconto (correntemente %s) neste conjunto. Pode faze-lo, no entanto, na página <a href=\"%s\">detalhe</a> ."
 
 #: apps/dashboard/vouchers/views.py:48 apps/dashboard/vouchers/views.py:85
 msgid "Not in a set"
-msgstr ""
+msgstr "Não pertence a um conjunto"
 
 #: apps/dashboard/vouchers/views.py:71
 #, python-format
 msgid "Code is \"%s\""
-msgstr ""
+msgstr "O Código é \"%s\""
 
 #: apps/dashboard/vouchers/views.py:74
 #, python-format
 msgid "Offer name matches \"%s\""
-msgstr ""
+msgstr "O nome da oferta corresponde a \"%s\""
 
 #: apps/dashboard/vouchers/views.py:85
 msgid "In a set"
-msgstr ""
+msgstr "Pertence a um conjunto"
 
 #: apps/dashboard/vouchers/views.py:88
 msgid "Has offers"
-msgstr ""
+msgstr "Tem ofertas"
 
 #: apps/dashboard/vouchers/views.py:88
 msgid "Has no offers"
-msgstr ""
+msgstr "Não tem ofertas"
 
 #: apps/dashboard/vouchers/views.py:108
 #: templates/oscar/dashboard/vouchers/voucher_form.html:32
@@ -3673,7 +3673,7 @@ msgstr "Voucher criado"
 
 #: apps/dashboard/vouchers/views.py:150
 msgid "The voucher can only be edited as part of its set"
-msgstr ""
+msgstr "Este vale de desconto apenas pode ser editado como parte deste conjunto"
 
 #: apps/dashboard/vouchers/views.py:171 apps/dashboard/vouchers/views.py:237
 msgid "Voucher updated"
@@ -3695,7 +3695,7 @@ msgstr "Conjunto de vouchers criado"
 #: apps/dashboard/vouchers/views.py:280
 #, python-format
 msgid "Code matches \"%s\""
-msgstr ""
+msgstr "Código corresponde a \"%s\""
 
 #: apps/dashboard/vouchers/views.py:307
 #: templates/oscar/dashboard/vouchers/voucher_set_delete.html:8
@@ -3709,7 +3709,7 @@ msgstr "Conjuntos de vouchers"
 
 #: apps/dashboard/vouchers/views.py:337
 msgid "Voucher set deleted"
-msgstr ""
+msgstr "Conjunto de vales de desconto removido"
 
 #: apps/offer/abstract_models.py:88
 msgid "This is displayed within the customer's basket"
@@ -4016,27 +4016,27 @@ msgstr "Condições"
 
 #: apps/offer/abstract_models.py:747
 msgid "Count conditions require a product range"
-msgstr ""
+msgstr "Condições de contagem necessitam uma lista de produtos"
 
 #: apps/offer/abstract_models.py:750
 msgid "Count conditions require a value"
-msgstr ""
+msgstr "Condições de contagem necessitam um valor"
 
 #: apps/offer/abstract_models.py:759
 msgid "Value conditions require a product range"
-msgstr ""
+msgstr "Condições de valor necessitam uma lista de produtos"
 
 #: apps/offer/abstract_models.py:762
 msgid "Value conditions require a value"
-msgstr ""
+msgstr "Condições de valor necessitam de um valor"
 
 #: apps/offer/abstract_models.py:771
 msgid "Coverage conditions require a product range"
-msgstr ""
+msgstr "Condições de cobertura necessitam uma listagem de produtos"
 
 #: apps/offer/abstract_models.py:774
 msgid "Coverage conditions require a value"
-msgstr ""
+msgstr "Condições de cobertura necessitam um valor"
 
 #: apps/offer/abstract_models.py:845
 #: templates/oscar/dashboard/catalogue/product_update.html:285
@@ -5259,7 +5259,7 @@ msgstr "Linha da lista de desejos"
 
 #: apps/wishlists/abstract_models.py:170
 msgid "Wish list shared email"
-msgstr ""
+msgstr "E-mail partilhado para a lista de desejos"
 
 #: apps/wishlists/apps.py:11
 msgid "Wishlists"
@@ -5267,7 +5267,7 @@ msgstr "Wishlists"
 
 #: apps/wishlists/views.py:31
 msgid "You must be logged in to view the wish list"
-msgstr ""
+msgstr "Necessita ter sessão iniciada para ver a lista de desejos"
 
 #: core/validators.py:46
 #, python-format
@@ -5400,7 +5400,7 @@ msgstr "Não é um formato de telefone válido local nem internacional."
 
 #: forms/widgets.py:301
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: forms/widgets.py:302 templates/oscar/catalogue/partials/review.html:40
 #: templates/oscar/dashboard/offers/offer_list.html:114
@@ -6449,7 +6449,7 @@ msgstr "Se não foi você que alterou, por favor redefina a sua senha imediatame
 #: templates/oscar/communication/emails/commtype_password_changed_body.html:20
 #: templates/oscar/communication/emails/commtype_password_reset_body.html:20
 msgid "Reset password"
-msgstr ""
+msgstr "Repor a senha"
 
 #: templates/oscar/communication/emails/commtype_email_changed_body.html:26
 #: templates/oscar/communication/emails/commtype_email_changed_body.txt:10
@@ -6513,7 +6513,7 @@ msgstr "Morada para entrega:"
 msgid ""
 "You can view the status of this order by clicking <a "
 "href=\"%(absolute_status_url)s\" title=\"order status\">here</a>"
-msgstr ""
+msgstr "Pode ver o estado esta encomenda <a href=\"%(absolute_status_url)s\" title=\"order status\">aqui</a>"
 
 #: templates/oscar/communication/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -6537,7 +6537,7 @@ msgstr "preço:"
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(absolute_status_url)s"
-msgstr ""
+msgstr "Pode ver o estado desta encomenda no link abaixo:\n%(absolute_status_url)s"
 
 #: templates/oscar/communication/emails/commtype_order_placed_body.txt:25
 msgid "The team"
@@ -7136,14 +7136,14 @@ msgstr "\nDepois da sua lista de desejos ser criada, <strong>%(title)s</strong> 
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:45
 msgid "Share wishlist"
-msgstr ""
+msgstr "Partilhar lista de desejos"
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:47
 msgid ""
 "If you want to share your wishlist with others, you can add their email "
 "addresses below. The visibility must be set to shared in order for this to "
 "work."
-msgstr ""
+msgstr "Se pretender partilhar a sua lista de desejos com outras pessoas, pode adicionar o e-mail respetivo abaixo. A visibilidade deve ser definida como partilhada para funcionar."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -7155,7 +7155,7 @@ msgstr "Definições da lista de desejos"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:27
 msgid "Copy sharing link"
-msgstr ""
+msgstr "Copiar link de partilha"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:43
 msgid "You don't have any wish lists yet."
@@ -7750,7 +7750,7 @@ msgstr "Ofertas, vouchers"
 #: templates/oscar/dashboard/index.html:166
 #, python-format
 msgid "Active <em>%(offer_type)s</em> Offers"
-msgstr ""
+msgstr "Ofertas <em>%(offer_type)s</em> ativas"
 
 #: templates/oscar/dashboard/index.html:171
 msgid "Active <em>Vouchers</em>"
@@ -7876,11 +7876,11 @@ msgstr "Detalhes da oferta"
 #: templates/oscar/dashboard/offers/offer_detail.html:101
 #: templates/oscar/dashboard/offers/offer_list.html:88
 msgid "Num of vouchers"
-msgstr ""
+msgstr "Numero de vales de desconto"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:110
 msgid "Attached vouchers"
-msgstr ""
+msgstr "Vales de desconto associados"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:134
 #: templates/oscar/dashboard/vouchers/partials/voucher_set_details_table.html:40
@@ -7891,7 +7891,7 @@ msgstr "Inactivo"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:142
 msgid "No vouchers are attached to this offer."
-msgstr ""
+msgstr "Sem vales de desconto associados a esta oferta."
 
 #: templates/oscar/dashboard/offers/offer_detail.html:150
 msgid "Export to CSV"
@@ -7917,11 +7917,11 @@ msgstr "Pesquisa Avançada"
 
 #: templates/oscar/dashboard/offers/offer_list.html:78
 msgid "Offer Search Results"
-msgstr ""
+msgstr "Resultados de pesquisa para oferta"
 
 #: templates/oscar/dashboard/offers/offer_list.html:80
 msgid "All Offers"
-msgstr ""
+msgstr "Todas as ofertas"
 
 #: templates/oscar/dashboard/offers/offer_list.html:95
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:40
@@ -7954,7 +7954,7 @@ msgstr "Passos"
 #: templates/oscar/dashboard/offers/progress.html:11
 #: templates/oscar/dashboard/offers/progress.html:15
 msgid "1. Name, description and type"
-msgstr ""
+msgstr "1. Nome, descrição e tipo"
 
 #: templates/oscar/dashboard/offers/progress.html:22
 #: templates/oscar/dashboard/offers/progress.html:26
@@ -8110,7 +8110,7 @@ msgstr "Preço sem impostos (antes dos descontos)"
 #: templates/oscar/dashboard/orders/order_detail.html:261
 #, python-format
 msgid "Surcharge %(name)s"
-msgstr ""
+msgstr "Sobretaxa %(name)s"
 
 #: templates/oscar/dashboard/orders/order_detail.html:289
 msgid "With selected lines"
@@ -9034,7 +9034,7 @@ msgstr "Conjunto de vouchers"
 #: templates/oscar/dashboard/vouchers/partials/voucher_details_table.html:13
 #: templates/oscar/dashboard/vouchers/partials/voucher_set_details_table.html:31
 msgid "Number of offers"
-msgstr ""
+msgstr "Número de ofertas"
 
 #: templates/oscar/dashboard/vouchers/partials/voucher_set_details_table.html:15
 msgid "Start"
@@ -9057,12 +9057,12 @@ msgstr "Remover voucher '%(name)s'?"
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:11
 #, python-format
 msgid "Delete voucher '%(code)s'?"
-msgstr ""
+msgstr "Apagar vale de desconto '%(code)s' ?"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:30
 #, python-format
 msgid "Delete voucher '%(code)s' from set?"
-msgstr ""
+msgstr "Apagar vale de desconto '%(code)s' deste conjunto?"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:36
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:26
@@ -9072,11 +9072,11 @@ msgstr "Detalhes do voucher"
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:31
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:105
 msgid "Attached offers"
-msgstr ""
+msgstr "Ofertas associadas"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:80
 msgid "No offers are attached to this voucher."
-msgstr ""
+msgstr "Nenhumas ofertas estão associadas a este vale de desconto."
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:90
 msgid "Number of basket additions"
@@ -9093,12 +9093,12 @@ msgstr "Não foram feitas encomendas com este voucher."
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:131
 #: templates/oscar/dashboard/vouchers/voucher_list.html:147
 msgid "Edit set"
-msgstr ""
+msgstr "Editar conjunto"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:137
 #: templates/oscar/dashboard/vouchers/voucher_list.html:154
 msgid "Delete from set"
-msgstr ""
+msgstr "Remover do conjunto"
 
 #: templates/oscar/dashboard/vouchers/voucher_form.html:30
 msgid "Edit voucher"
@@ -9111,17 +9111,17 @@ msgstr "Criar voucher"
 #: templates/oscar/dashboard/vouchers/voucher_list.html:82
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
 msgid "Voucher Search Results"
-msgstr ""
+msgstr "Resultados de pesquisa por vale de desconto"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:84
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:60
 msgid "All Vouchers"
-msgstr ""
+msgstr "Todos os vales de desconto"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:93
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:38
 msgid "Num offers"
-msgstr ""
+msgstr "Numero de ofertas"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:94
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:66
@@ -9137,7 +9137,7 @@ msgstr "Encomendas Nºs"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:98
 msgid "Set"
-msgstr ""
+msgstr "Conjunto"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:166
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:99
@@ -9147,16 +9147,16 @@ msgstr "Não foram encontrados vouchers."
 #: templates/oscar/dashboard/vouchers/voucher_set_delete.html:8
 #, python-format
 msgid "Delete voucher set '%(name)s'?"
-msgstr ""
+msgstr "Apagar o conjunto de vales de desconto '%(name)s' ?"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_delete.html:23
 #, python-format
 msgid "Delete voucher set '%(name)s' and its %(count)s vouchers?"
-msgstr ""
+msgstr "Apagar o conjunto de vales de desconto '%(name)s' e os seus %(count)s vales?"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_delete.html:28
 msgid "Voucher set details"
-msgstr ""
+msgstr "Detalhes de conjunto de vales de desconto"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:24
 msgid "Download CSV"
@@ -9164,15 +9164,15 @@ msgstr "Descarregar CSV"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:36
 msgid "Search vouchers"
-msgstr ""
+msgstr "Procurar vales de desconto"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:154
 msgid "No offers are attached to this voucher set."
-msgstr ""
+msgstr "Nenhumas ofertas estão associadas a este conjunto de vales de desconto."
 
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:30
 msgid "Edit voucher set"
-msgstr ""
+msgstr "Editar conjunto de vales de desconto"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
 msgid "Create new voucher set"
@@ -9184,11 +9184,11 @@ msgstr "Núm"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:67
 msgid "Detail"
-msgstr ""
+msgstr "Detalhe"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:82
 msgid "No voucher sets found."
-msgstr ""
+msgstr "Nenhum vale de desconto encontrado."
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
@@ -9427,7 +9427,7 @@ msgstr "\nRefere-se a <a href=\"%(search_url)s?q=%(suggestion)s\">%(suggestion)s
 
 #: templates/oscar/wishlists/wishlist_detail.html:40
 msgid "This wish list is empty."
-msgstr ""
+msgstr "Esta lista de desejos está vazia."
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
