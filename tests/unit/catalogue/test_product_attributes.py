@@ -227,6 +227,20 @@ class ProductAttributeTest(TestCase):
 
         self.assertEqual(p.attr.weight, 101)
 
+    def test_set_error(self):
+        "set should only accept attributes which are valid python identifiers"
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("bina-weight", 101)
+
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("8_oepla", "oegaranos")
+
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("set", "validate_identifier=True")
+
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("save", "raise=True")
+
     def test_update(self):
         "Attributes should be updateble from a dictionary"
         self.product.attr.update({"weight": 808, "name": "a banana"})
