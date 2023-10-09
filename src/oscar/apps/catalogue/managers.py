@@ -101,16 +101,16 @@ class ProductQuerySet(models.query.QuerySet):
         product_options = Option.objects.filter(product=OuterRef("pk"))
         return (
             self.select_related("product_class")
+            .annotate(
+                has_product_class_options=Exists(product_class_options),
+                has_product_options=Exists(product_options),
+            )
             .prefetch_related(
                 "children",
                 "product_options",
                 "product_class__options",
                 "stockrecords",
                 "images",
-            )
-            .annotate(
-                has_product_class_options=Exists(product_class_options),
-                has_product_options=Exists(product_options),
             )
         )
 

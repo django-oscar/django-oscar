@@ -1,13 +1,16 @@
 import logging
 import os
 from datetime import date, datetime
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.finders import find
 from django.core.cache import cache
-from django.core.exceptions import ImproperlyConfigured, ValidationError
+from django.core.exceptions import (
+    ImproperlyConfigured,
+    ValidationError,
+    ObjectDoesNotExist,
+)
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
@@ -590,6 +593,10 @@ class AbstractProduct(models.Model):
         super().save(*args, **kwargs)
         self.attr.save()
 
+    def refresh_from_db(self, using=None, fields=None):
+        super().refresh_from_db(using, fields)
+        self.attr.invalidate()
+
     # Properties
 
     @property
@@ -968,63 +975,73 @@ class AbstractProductAttribute(models.Model):
         if self.type == self.BOOLEAN and self.required:
             raise ValidationError(_("Boolean attribute should not be required."))
 
-    def _save_file(self, value_obj, value):
-        # File fields in Django are treated differently, see
-        # django.db.models.fields.FileField and method save_form_data
+    def _get_value_obj(self, product, value):
+        try:
+            return product.attribute_values.get(attribute=self)
+        except ObjectDoesNotExist:
+            # FileField uses False for announcing deletion of the file
+            # not creating a new value
+            delete_file = self.is_file and value is False
+            if value is None or value == "" or delete_file:
+                return None
+            return product.attribute_values.create(attribute=self)
+
+    def _bind_value_file(self, value_obj, value):
         if value is None:
             # No change
-            return
+            return value_obj
         elif value is False:
-            # Delete file
-            value_obj.delete()
+            return None
         else:
             # New uploaded file
             value_obj.value = value
-            value_obj.save()
+            return value_obj
 
-    def _save_multi_option(self, value_obj, value):
+    def _bind_value_multi_option(self, value_obj, value):
         # ManyToMany fields are handled separately
         if value is None:
-            value_obj.delete()
-            return
+            return None
         try:
             count = value.count()
         except (AttributeError, TypeError):
             count = len(value)
         if count == 0:
-            value_obj.delete()
+            return None
         else:
             value_obj.value = value
-            value_obj.save()
+            return value_obj
 
-    def _save_value(self, value_obj, value):
+    def _bind_value(self, value_obj, value):
         if value is None or value == "":
-            value_obj.delete()
-            return
-        if value != value_obj.value:
-            value_obj.value = value
-            value_obj.save()
+            return None
+        value_obj.value = value
+        return value_obj
+
+    def bind_value(self, value_obj, value):
+        """
+        bind_value will bind the value passed to the value_obj, if the bind_value
+        return None, that means the value_obj is supposed to be deleted.
+        """
+        if self.is_file:
+            return self._bind_value_file(value_obj, value)
+        elif self.is_multi_option:
+            return self._bind_value_multi_option(value_obj, value)
+        else:
+            return self._bind_value(value_obj, value)
 
     def save_value(self, product, value):
-        ProductAttributeValue = get_model("catalogue", "ProductAttributeValue")
-        try:
-            value_obj = product.attribute_values.get(attribute=self)
-        except ProductAttributeValue.DoesNotExist:
-            # FileField uses False for announcing deletion of the file
-            # not creating a new value
-            delete_file = self.is_file and value is False
-            if value is None or value == "" or delete_file:
-                return
-            value_obj = ProductAttributeValue.objects.create(
-                product=product, attribute=self
-            )
+        value_obj = self._get_value_obj(product, value)
 
-        if self.is_file:
-            self._save_file(value_obj, value)
-        elif self.is_multi_option:
-            self._save_multi_option(value_obj, value)
-        else:
-            self._save_value(value_obj, value)
+        if value_obj is None:
+            return None
+
+        updated_value_obj = self.bind_value(value_obj, value)
+        if updated_value_obj is None:
+            value_obj.delete()
+        elif updated_value_obj.is_dirty:
+            updated_value_obj.save()
+
+        return updated_value_obj
 
     def validate_value(self, value):
         validator = getattr(self, "_validate_%s" % self.type)
@@ -1158,27 +1175,42 @@ class AbstractProductAttributeValue(models.Model):
     entity_object_id = models.PositiveIntegerField(
         null=True, blank=True, editable=False
     )
+    _dirty = False
+
+    @cached_property
+    def type(self):
+        return self.attribute.type
+
+    @property
+    def value_field_name(self):
+        return "value_%s" % self.type
 
     def _get_value(self):
-        value = getattr(self, "value_%s" % self.attribute.type)
+        value = getattr(self, self.value_field_name)
         if hasattr(value, "all"):
             value = value.all()
         return value
 
     def _set_value(self, new_value):
-        attr_name = "value_%s" % self.attribute.type
+        attr_name = self.value_field_name
 
         if self.attribute.is_option and isinstance(new_value, str):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(option=new_value)
         elif self.attribute.is_multi_option:
             getattr(self, attr_name).set(new_value)
+            self._dirty = True
             return
 
         setattr(self, attr_name, new_value)
+        self._dirty = True
         return
 
     value = property(_get_value, _set_value)
+
+    @property
+    def is_dirty(self):
+        return self._dirty
 
     class Meta:
         abstract = True
@@ -1204,8 +1236,11 @@ class AbstractProductAttributeValue(models.Model):
         e.g. image attribute values, declare a _image_as_text property and
         return something appropriate.
         """
-        property_name = "_%s_as_text" % self.attribute.type
-        return getattr(self, property_name, self.value)
+        try:
+            property_name = "_%s_as_text" % self.type
+            return getattr(self, property_name, self.value)
+        except ValueError:
+            return ""
 
     @property
     def _multi_option_as_text(self):
@@ -1241,7 +1276,7 @@ class AbstractProductAttributeValue(models.Model):
         return e.g. an ``<img>`` tag.  Defaults to the ``_as_text``
         representation.
         """
-        property_name = "_%s_as_html" % self.attribute.type
+        property_name = "_%s_as_html" % self.type
         return getattr(self, property_name, self.value_as_text)
 
     @property

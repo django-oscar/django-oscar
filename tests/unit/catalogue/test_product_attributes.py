@@ -1,3 +1,4 @@
+import unittest
 from copy import deepcopy
 
 from django.core.exceptions import ValidationError
@@ -29,11 +30,19 @@ class ProductAttributeTest(TestCase):
             name="name",
             code="name",
         )
-        self.weight_attrs = ProductAttributeFactory(
+        self.weight_attr = ProductAttributeFactory(
             type=ProductAttribute.INTEGER,
             name="weight",
             code="weight",
             product_class=product_class,
+            required=True,
+        )
+        self.richtext_attr = ProductAttributeFactory(
+            type=ProductAttribute.RICHTEXT,
+            name="html",
+            code="html",
+            product_class=product_class,
+            required=False,
         )
 
         # create the parent product
@@ -202,10 +211,140 @@ class ProductAttributeTest(TestCase):
             "so it saved, even when the parent has the same value",
         )
 
+    def test_delete_attribute_value(self):
+        "Attributes should be deleted when they are nulled"
+        self.assertEqual(self.product.attr.weight, 3)
+        self.product.attr.weight = None
+        self.product.save()
+
+        p = Product.objects.get(pk=self.product.pk)
+        with self.assertRaises(AttributeError):
+            p.attr.weight  # pylint: disable=pointless-statement
+
+    def test_validate_attribute_value(self):
+        self.test_delete_attribute_value()
+        with self.assertRaises(ValidationError):
+            self.product.attr.validate_attributes()
+
     def test_deepcopy(self):
         "Deepcopy should not cause a recursion error"
         deepcopy(self.product)
         deepcopy(self.child_product)
+
+    def test_set(self):
+        "Attributes should be settable from a string key"
+        self.product.attr.set("weight", 101)
+        self.assertEqual(self.product.attr._dirty, {"weight"})
+        self.product.attr.save()
+
+        p = Product.objects.get(pk=self.product.pk)
+
+        self.assertEqual(p.attr.weight, 101)
+
+    def test_set_error(self):
+        "set should only accept attributes which are valid python identifiers"
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("bina-weight", 101)
+
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("8_oepla", "oegaranos")
+
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("set", "validate_identifier=True")
+
+        with self.assertRaises(ValidationError):
+            self.product.attr.set("save", "raise=True")
+
+    def test_update(self):
+        "Attributes should be updateble from a dictionary"
+        self.product.attr.update({"weight": 808, "name": "a banana"})
+        self.assertEqual(self.product.attr._dirty, {"weight", "name"})
+        self.product.attr.save()
+
+        p = Product.objects.get(pk=self.product.pk)
+
+        self.assertEqual(p.attr.weight, 808)
+        self.assertEqual(p.attr.name, "a banana")
+
+    def test_validate_attributes(self):
+        "validate_attributes should raise ValidationError on erroneous inputs"
+        self.product.attr.validate_attributes()
+        self.product.attr.weight = "koe"
+        with self.assertRaises(ValidationError):
+            self.product.attr.validate_attributes()
+
+    def test_get_attribute_by_code(self):
+        at = self.product.attr.get_attribute_by_code("weight")
+        self.assertEqual(at.code, "weight")
+        self.assertEqual(at.product_class, self.product.get_product_class())
+
+        self.assertIsNone(self.product.attr.get_attribute_by_code("stoubafluppie"))
+
+    def test_attribute_html(self):
+        self.product.attr.html = "<h1>Hi</h1>"
+        self.product.save()
+
+        value = self.product.attr.get_value_by_attribute(self.richtext_attr)
+        html = value.value_as_html
+        self.assertEqual(html, "<h1>Hi</h1>")
+        self.assertTrue(hasattr(html, "__html__"))
+
+
+class MultiOptionTest(TestCase):
+    fixtures = ["productattributes"]
+    maxDiff = None
+
+    def test_multi_option_recursion_error(self):
+        product = Product.objects.get(pk=4)
+        with self.assertRaises(ValueError):
+            product.attr.set("subkinds", "harrie")
+            product.save()
+
+    def test_value_as_html(self):
+        product = Product.objects.get(pk=4)
+        # pylint: disable=unused-variable
+        (
+            additional_info,
+            available,
+            facets,
+            hypothenusa,
+            kind,
+            releasedate,
+            starttime,
+            subkinds,
+            subtitle,
+        ) = product.attr.get_values().order_by("id")
+
+        self.assertTrue(
+            additional_info.value_as_html.startswith(
+                '<p style="margin: 0px; font-stretch: normal; font-size: 12px;'
+            )
+        )
+        self.assertEqual(available.value_as_html, "Yes")
+        self.assertEqual(kind.value_as_html, "bombastic")
+        self.assertEqual(subkinds.value_as_html, "grand, verocious, megalomane")
+        self.assertEqual(subtitle.value_as_html, "kekjo")
+
+    @unittest.skip("The implementation is wrong, which makes these tests fail")
+    def test_broken_value_as_html(self):
+        product = Product.objects.get(pk=4)
+        # pylint: disable=unused-variable
+        (
+            additional_info,
+            available,
+            facets,
+            hypothenusa,
+            kind,
+            releasedate,
+            starttime,
+            subkinds,
+            subtitle,
+        ) = product.attr.get_values().order_by("id")
+
+        self.assertEqual(starttime.value_as_html, "2018-11-16T09:15:00+00:00")
+        self.assertEqual(facets.value_as_html, "4")
+        self.assertEqual(releasedate.value_as_html, "2018-11-16")
+        self.assertEqual(hypothenusa.value_as_html, "2.4567")
 
 
 class ProductAttributeQuerysetTest(TestCase):

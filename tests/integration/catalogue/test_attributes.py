@@ -235,8 +235,52 @@ class TestTextAttributes(TestCase):
 
 class TestFileAttributes(TestCase):
     def setUp(self):
-        self.attr = factories.ProductAttributeFactory(type="file")
+        self.attr = factories.ProductAttributeFactory(type="file", code="file")
 
     def test_validate_file_values(self):
         file_field = SimpleUploadedFile("test_file.txt", b"Test")
         self.assertIsNone(self.attr.validate_value(file_field))
+
+    def test_erase_file(self):
+        product = factories.ProductFactory()
+        product.product_class.attributes.add(self.attr)
+
+        # save file attribute
+        file_field = SimpleUploadedFile("test_file.txt", b"Test")
+        self.assertIsNone(self.attr.validate_value(file_field))
+        self.attr.save_value(product, file_field)
+        self.assertTrue(self.attr.is_file)
+
+        product = Product.objects.get(pk=product.pk)
+
+        self.assertIsNotNone(
+            product.attr.file, "There should be something saved into the file attribute"
+        )
+        self.assertIn(
+            file_field.name,
+            product.attr.file.name,
+            "The save file should have the correct filename",
+        )
+
+        # set file attribute to None, which does nothing
+        product.attr.file = None
+        product.attr.save()
+
+        product = Product.objects.get(pk=product.pk)
+        self.assertIsNotNone(
+            product.attr.file,
+            "There file should not be None, even though we set it to that",
+        )
+        self.assertIn(
+            file_field.name,
+            product.attr.file.name,
+            "The save file should still have the correct filename",
+        )
+
+        # set file attribute to False, which will erase it
+        product.attr.file = False
+        product.attr.save()
+
+        product = Product.objects.get(pk=product.pk)
+        with self.assertRaises(AttributeError):
+            self.assertIn(file_field.name, product.attr.file.name)
