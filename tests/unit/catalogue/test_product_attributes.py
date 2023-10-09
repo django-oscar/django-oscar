@@ -202,10 +202,55 @@ class ProductAttributeTest(TestCase):
             "so it saved, even when the parent has the same value",
         )
 
+    def test_delete_attribute_value(self):
+        "Attributes should be deleted when they are nulled"
+        self.assertEqual(self.product.attr.weight, 3)
+        self.product.attr.weight = None
+        self.product.save()
+
+        p = Product.objects.get(pk=self.product.pk)
+        with self.assertRaises(AttributeError):
+            p.attr.weight  # pylint: disable=pointless-statement
+
     def test_deepcopy(self):
         "Deepcopy should not cause a recursion error"
         deepcopy(self.product)
         deepcopy(self.child_product)
+
+    def test_set(self):
+        "Attributes should be settable from a string key"
+        self.product.attr.set("weight", 101)
+        self.assertEqual(self.product.attr._dirty, {"weight"})
+        self.product.attr.save()
+
+        p = Product.objects.get(pk=self.product.pk)
+
+        self.assertEqual(p.attr.weight, 101)
+
+    def test_update(self):
+        "Attributes should be updateble from a dictionary"
+        self.product.attr.update({"weight": 808, "name": "a banana"})
+        self.assertEqual(self.product.attr._dirty, {"weight", "name"})
+        self.product.attr.save()
+
+        p = Product.objects.get(pk=self.product.pk)
+
+        self.assertEqual(p.attr.weight, 808)
+        self.assertEqual(p.attr.name, "a banana")
+
+    def test_validate_attributes(self):
+        "validate_attributes should raise ValidationError on erroneous inputs"
+        self.product.attr.validate_attributes()
+        self.product.attr.weight = "koe"
+        with self.assertRaises(ValidationError):
+            self.product.attr.validate_attributes()
+
+    def get_attribute_by_code(self):
+        at = self.product.attr.get_attribute_by_code("weight")
+        self.assertEqual(at.code, "weight")
+        self.assertEqual(at.product, self.product)
+
+        self.assertIsNone(self.product.attr.get_attribute_by_code("stoubafluppie"))
 
 
 class ProductAttributeQuerysetTest(TestCase):
