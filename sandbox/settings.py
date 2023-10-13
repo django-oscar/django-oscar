@@ -226,8 +226,7 @@ LOGGING = {
             'propagate': True,
         },
         'django.db.backends': {
-            'level': 'DEBUG',
-            "handlers": ["console"]
+            'level': 'WARNING',
             'propagate': True,
         },
         'django.security.DisallowedHost': {
@@ -338,21 +337,13 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-
-# Simple backend setting
+# Woosh settings
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': location('whoosh_index'),
     },
 }
-
-# Woosh settings
-# HAYSTACK_CONNECTIONS = {
-#     'default': {
-#         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-#         'PATH': location('whoosh_index'),
-#     },
-# }
 
 # Here's a sample Haystack config for Solr 6.x (which is recommended)
 # HAYSTACK_CONNECTIONS = {
