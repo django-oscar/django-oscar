@@ -90,13 +90,12 @@
             </p>
         {% endif %}
     </form>
-
     {% if products %}
         <section>
             <div>
                 <ol class="row list-unstyled ml-0 pl-0">
                     {% for product in products %}
-                        <li class="col-sm-6 col-md-4 col-lg-3">{% render_product product %}</li>
+                        <li class="col-sm-6 col-md-4 col-lg-3">{% render_product product.object %}</li>
                     {% endfor %}
                 </ol>
                 {% include "oscar/partials/pagination.html" %}

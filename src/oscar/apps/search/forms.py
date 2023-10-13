@@ -111,13 +111,16 @@ class SearchForm(FacetedSearchForm):
             selected_multi_facets[field_name].append(value)
 
         return selected_multi_facets
+        
+    def get_base_search_queryset(self):
+        return super(FacetedSearchForm, self).search()
 
     def search(self):
         # We replace the 'search' method from FacetedSearchForm, so that we can
         # handle range queries
         # Note, we call super on a parent class as the default faceted view
         # escapes everything (which doesn't work for price range queries)
-        sqs = super(FacetedSearchForm, self).search()
+        sqs = self.get_base_search_queryset()
 
         # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:
@@ -139,6 +142,8 @@ class SearchForm(FacetedSearchForm):
             if sort_field:
                 sqs = sqs.order_by(sort_field)
 
+
+        print(sqs.__dict__)
         return sqs
 
 
@@ -147,9 +152,6 @@ class BrowseCategoryForm(SearchForm):
     Variant of SearchForm that returns all products (instead of none) if no
     query is specified.
     """
-
-    def no_query_found(self):
-        """
-        Return Queryset of all the results.
-        """
+    
+    def get_base_search_queryset():
         return self.searchqueryset

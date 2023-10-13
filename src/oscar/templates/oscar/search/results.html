@@ -44,7 +44,7 @@
 {% block content %}
     <form method="get">
         {# Render other search params as hidden inputs #}
-        {% for value in selected_facets %}
+        {% for value in form.selected_facets %}
             <input type="hidden" name="selected_facets" value="{{ value }}" />
         {% endfor %}
         <input type="hidden" name="q" value="{{ search_form.q.value }}" />
@@ -77,11 +77,11 @@
         {% endif %}
     </form>
 
-    {% if page.object_list %}
+    {% if results %}
         <section>
             <div>
                 <ol class="row list-unstyled ml-0 pl-0">
-                    {% for result in page.object_list %}
+                    {% for result in results %}
                         <li class="col-sm-4 col-md-3 col-lg-3">{% render_product result.object %}</li>
                     {% endfor %}
                 </ol>
