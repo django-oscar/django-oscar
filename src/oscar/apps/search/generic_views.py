@@ -2,37 +2,25 @@ from django.conf import settings
 
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 FacetMunger = get_class("search.facets", "FacetMunger")
+Product = get_model("catalogue", "Product")
 
 
 class FacetedSearchView(BaseFacetedSearchView):
     facet_fields = settings.OSCAR_SEARCH_FACETS["fields"].keys()
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
-    def __call__(self, request):
-        response = super().__call__(request)
-
-        # Raise a signal for other apps to hook into for analytics
-        user_search.send(
-            sender=self,
-            session=self.request.session,
-            user=self.request.user,
-            query=self.query,
-        )
-
-        return response
-        
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
-        #Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
+        # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
         # if there are some results, which seems a bit weird to me.
         if self.queryset.query.backend.include_spelling:
             # Note, this triggers an extra call to the search backend
-            suggestion = self.form.get_suggestion()
-            if suggestion != self.query:
+            suggestion = context["form"].get_suggestion()
+            if suggestion != context["query"]:
                 context["suggestion"] = suggestion
 
         # Convert facet data into a more useful data structure

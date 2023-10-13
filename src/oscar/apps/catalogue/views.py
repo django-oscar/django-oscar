@@ -1,15 +1,12 @@
 from urllib.parse import quote
 
 from haystack.generic_views import FacetedSearchView
-from haystack.query import SearchQuerySet
 
 from django.contrib import messages
-from django.core.paginator import InvalidPage
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, TemplateView
-from django.conf import settings
+from django.views.generic import DetailView
 
 from oscar.apps.catalogue.signals import product_viewed
 from oscar.core.loading import get_class, get_model
@@ -18,9 +15,6 @@ Product = get_model("catalogue", "product")
 Category = get_model("catalogue", "category")
 ProductAlert = get_model("customer", "ProductAlert")
 ProductAlertForm = get_class("customer.forms", "ProductAlertForm")
-# get_product_search_handler_class = get_class(
-#     "catalogue.search_handlers", "get_product_search_handler_class"
-# )
 BrowseSearchForm = get_class("search.forms", "BrowseSearchForm")
 CategorySearchForm = get_class("search.forms", "CategorySearchForm")
 FacetedSearchView = get_class("search.generic_views", "FacetedSearchView")
@@ -135,6 +129,14 @@ class CatalogueView(FacetedSearchView):
     enforce_paths = True
     form_class = BrowseSearchForm
 
+    def get(self, request, *args, **kwargs):
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            # Redirect to page one.
+            messages.error(request, _("The given page number was invalid."))
+            return redirect("catalogue:index")
+
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
         ctx["summary"] = _("All products")
@@ -147,18 +149,42 @@ class ProductCategoryView(FacetedSearchView):
     enforce_paths = True
     form_class = CategorySearchForm
 
-    def dispatch(self, request, *args, **kwargs):
-        self.category = self.get_category()
-        return super().dispatch(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        self.category = self.get_category()  # pylint: disable=W0201
+
+        # Allow staff members so they can test layout etc.
+        if not self.is_viewable(self.category, request):
+            raise Http404()
+
+        potential_redirect = self.redirect_if_necessary(request.path, self.category)
+        if potential_redirect is not None:
+            return potential_redirect
+
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            messages.error(request, _("The given page number was invalid."))
+            return redirect(self.category.get_absolute_url())
+
+    def is_viewable(self, category, request):
+        return category.is_public or request.user.is_staff
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["categories"] = self.category.get_descendants_and_self()
         return kwargs
 
+    def redirect_if_necessary(self, current_path, category):
+        if self.enforce_paths:
+            # Categories are fetched by primary key to allow slug changes.
+            # If the slug has changed, issue a redirect.
+            expected_path = category.get_absolute_url()
+            if expected_path != quote(current_path):
+                return HttpResponsePermanentRedirect(expected_path)
+
     def get_category(self):
         return get_object_or_404(Category, pk=self.kwargs["pk"])
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["category"] = self.category

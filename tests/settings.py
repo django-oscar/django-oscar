@@ -145,9 +145,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+
 HAYSTACK_CONNECTIONS = {
-    "default": {"ENGINE": "haystack.backends.simple_backend.SimpleEngine"}
+    "default": {
+        "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",
+        "PATH": location("whoosh_index"),
+    },
 }
+
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 ROOT_URLCONF = "tests._site.urls"
 LOGIN_REDIRECT_URL = "/accounts/"

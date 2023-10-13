@@ -4,7 +4,6 @@ from django import forms
 from django.conf import settings
 from django.forms.widgets import Input
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Q
 
 from haystack.forms import FacetedSearchForm
 from haystack.inputs import Exact
@@ -115,7 +114,7 @@ class SearchForm(FacetedSearchForm):
             selected_multi_facets[field_name].append(value)
 
         return selected_multi_facets
-        
+
     def get_base_search_queryset(self):
         return super(FacetedSearchForm, self).search()
 
@@ -154,7 +153,7 @@ class BrowseSearchForm(SearchForm):
     Variant of SearchForm that returns all products (instead of none) if no
     query is specified.
     """
-    
+
     def get_base_search_queryset(self):
         return self.searchqueryset
 
