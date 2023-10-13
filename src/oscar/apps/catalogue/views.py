@@ -1,6 +1,7 @@
 from urllib.parse import quote
 
 from haystack.generic_views import FacetedSearchView
+from haystack.query import SearchQuerySet
 
 from django.contrib import messages
 from django.core.paginator import InvalidPage
@@ -17,10 +18,11 @@ Product = get_model("catalogue", "product")
 Category = get_model("catalogue", "category")
 ProductAlert = get_model("customer", "ProductAlert")
 ProductAlertForm = get_class("customer.forms", "ProductAlertForm")
-get_product_search_handler_class = get_class(
-    "catalogue.search_handlers", "get_product_search_handler_class"
-)
-BrowseCategoryForm = get_class("search.forms", "SearchForm")
+# get_product_search_handler_class = get_class(
+#     "catalogue.search_handlers", "get_product_search_handler_class"
+# )
+BrowseSearchForm = get_class("search.forms", "BrowseSearchForm")
+CategorySearchForm = get_class("search.forms", "CategorySearchForm")
 FacetedSearchView = get_class("search.generic_views", "FacetedSearchView")
 
 
@@ -129,104 +131,35 @@ class ProductDetailView(DetailView):
 
 class CatalogueView(FacetedSearchView):
     context_object_name = "products"
-    template_name = "oscar/catalogue/category.html"
+    template_name = "oscar/catalogue/browse.html"
     enforce_paths = True
-    form_class = BrowseCategoryForm
+    form_class = BrowseSearchForm
 
-    
-
-# class CatalogueView(TemplateView):
-#     """
-#     Browse all products in the catalogue
-#     """
-#
-#     context_object_name = "products"
-#     template_name = "oscar/catalogue/browse.html"
-#
-#     def get(self, request, *args, **kwargs):
-#         try:
-#             # pylint: disable=attribute-defined-outside-init
-#             self.search_handler = self.get_search_handler(
-#                 self.request.GET, request.get_full_path(), []
-#             )
-#             response = super().get(request, *args, **kwargs)
-#         except InvalidPage:
-#             # Redirect to page one.
-#             messages.error(request, _("The given page number was invalid."))
-#             return redirect("catalogue:index")
-#         return response
-#
-#     def get_search_handler(self, *args, **kwargs):
-#         return get_product_search_handler_class()(*args, **kwargs)
-#
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
         ctx["summary"] = _("All products")
         return ctx
 
 
-class ProductCategoryView(TemplateView):
-    """
-    Browse products in a given category
-    """
-
+class ProductCategoryView(FacetedSearchView):
     context_object_name = "products"
     template_name = "oscar/catalogue/category.html"
     enforce_paths = True
+    form_class = CategorySearchForm
 
-    def get(self, request, *args, **kwargs):
-        # Fetch the category; return 404 or redirect as needed
-        # pylint: disable=attribute-defined-outside-init
+    def dispatch(self, request, *args, **kwargs):
         self.category = self.get_category()
+        return super().dispatch(request, *args, **kwargs)
 
-        # Allow staff members so they can test layout etc.
-        if not self.is_viewable(self.category, request):
-            raise Http404()
-
-        potential_redirect = self.redirect_if_necessary(request.path, self.category)
-        if potential_redirect is not None:
-            return potential_redirect
-
-        try:
-            # pylint: disable=attribute-defined-outside-init
-            self.search_handler = self.get_search_handler(
-                request.GET, request.get_full_path(), self.get_categories()
-            )
-            response = super().get(request, *args, **kwargs)
-        except InvalidPage:
-            messages.error(request, _("The given page number was invalid."))
-            return redirect(self.category.get_absolute_url())
-
-        return response
-
-    def is_viewable(self, category, request):
-        return category.is_public or request.user.is_staff
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["categories"] = self.category.get_descendants_and_self()
+        return kwargs
 
     def get_category(self):
         return get_object_or_404(Category, pk=self.kwargs["pk"])
-
-    def redirect_if_necessary(self, current_path, category):
-        if self.enforce_paths:
-            # Categories are fetched by primary key to allow slug changes.
-            # If the slug has changed, issue a redirect.
-            expected_path = category.get_absolute_url()
-            if expected_path != quote(current_path):
-                return HttpResponsePermanentRedirect(expected_path)
-
-    def get_search_handler(self, *args, **kwargs):
-        return get_product_search_handler_class()(*args, **kwargs)
-
-    def get_categories(self):
-        """
-        Return a list of the current category and its ancestors
-        """
-        return self.category.get_descendants_and_self()
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["category"] = self.category
-        search_context = self.search_handler.get_search_context_data(
-            self.context_object_name
-        )
-        context.update(search_context)
         return context

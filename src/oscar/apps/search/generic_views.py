@@ -9,7 +9,8 @@ FacetMunger = get_class("search.facets", "FacetMunger")
 
 class FacetedSearchView(BaseFacetedSearchView):
     facet_fields = settings.OSCAR_SEARCH_FACETS["fields"].keys()
-    
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+
     def __call__(self, request):
         response = super().__call__(request)
 

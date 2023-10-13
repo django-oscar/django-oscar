@@ -19,7 +19,6 @@ class SearchConfig(OscarConfig):
         # self.search_form = get_class("search.forms", "SearchForm")
 
     def get_urls(self):
-        from haystack.views import search_view_factory
 
         # The form class has to be passed to the __init__ method as that is how
         # Haystack works.  It's slightly different to normal CBVs.

@@ -226,7 +226,8 @@ LOGGING = {
             'propagate': True,
         },
         'django.db.backends': {
-            'level': 'WARNING',
+            'level': 'DEBUG',
+            "handlers": ["console"],
             'propagate': True,
         },
         'django.security.DisallowedHost': {
@@ -337,7 +338,15 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-# Haystack settings
+
+# Simple backend setting
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+#     },
+# }
+
+# Woosh settings
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',

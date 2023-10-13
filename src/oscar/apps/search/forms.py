@@ -4,11 +4,15 @@ from django import forms
 from django.conf import settings
 from django.forms.widgets import Input
 from django.utils.translation import gettext_lazy as _
-from haystack.forms import FacetedSearchForm
+from django.db.models import Q
 
-from oscar.core.loading import get_class
+from haystack.forms import FacetedSearchForm
+from haystack.inputs import Exact
+
+from oscar.core.loading import get_class, get_model
 
 is_solr_supported = get_class("search.features", "is_solr_supported")
+Product = get_model("catalogue", "Product")
 
 
 class SearchInput(Input):
@@ -142,16 +146,28 @@ class SearchForm(FacetedSearchForm):
             if sort_field:
                 sqs = sqs.order_by(sort_field)
 
-
-        print(sqs.__dict__)
         return sqs
 
 
-class BrowseCategoryForm(SearchForm):
+class BrowseSearchForm(SearchForm):
     """
     Variant of SearchForm that returns all products (instead of none) if no
     query is specified.
     """
     
-    def get_base_search_queryset():
+    def get_base_search_queryset(self):
         return self.searchqueryset
+
+
+class CategorySearchForm(BrowseSearchForm):
+    def __init__(self, categories, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.categories = categories
+
+    def search(self):
+        sqs = super().search()
+
+        for cat in self.categories:
+            sqs = sqs.filter_or(category=Exact(cat.pk))
+
+        return sqs
