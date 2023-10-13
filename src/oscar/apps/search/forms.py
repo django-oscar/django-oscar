@@ -165,7 +165,7 @@ class CategorySearchForm(BrowseSearchForm):
         self.categories = categories
 
     def search(self):
-        sqs = super().search()
+        sqs = self.get_base_search_queryset()
 
         for cat in self.categories:
             sqs = sqs.filter_or(category=Exact(cat.pk))
