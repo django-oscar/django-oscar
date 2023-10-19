@@ -4,6 +4,8 @@
 django-debug-toolbar>=2.2,<4.3
 django-extensions>=2.2,<3.3
 psycopg2-binary>=2.8,<2.10
+django~=4.2.0
+pytest~=7.4.2
 
 # Sandbox
 Whoosh>=2.7,<2.8
