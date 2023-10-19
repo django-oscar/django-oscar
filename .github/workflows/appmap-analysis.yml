@@ -1,12 +1,23 @@
-name: Tests
+name: appmap-analysis
 
 on:
+  pull_request:
   push:
     branches:
-      - master
+      - main # Change this to the name of the mainline branch
+  schedule:
+    - cron: '0 0 * * 0'
 
 permissions:
-  contents: read
+  # Read the baseline artifact in order to perform the AppMap comparison.
+  actions: read
+  # Commit the AppMap configuration.
+  # If the EndBug/add-and-commit is removed, this can be changed to 'read'.
+  contents: write
+  # Add check annotations to the source code when a problem is detected.
+  checks: write
+  # Add a comment to the pull request.
+  pull-requests: write
 
 jobs:
   test:
@@ -24,6 +35,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -37,6 +50,11 @@ jobs:
     - name: Install requirements.txt
       run: pip install -r requirements.txt
 
+    - name: Install AppMap tools
+      uses: getappmap/install-action@v1
+      with:
+        install-appmap-library: false
+        
     - name: Run tests
       env:
         DATABASE_USER: postgres
@@ -45,3 +63,8 @@ jobs:
         DATABASE_PORT: 5432
       run: |
         pytest
+
+    - name: Archive AppMaps
+      uses: getappmap/archive-action@v1
+      with:
+        revision: ${{ github.event.pull_request.base.sha }}

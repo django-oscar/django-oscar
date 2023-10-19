@@ -1,3 +1,4 @@
+appmap @ git+https://github.com/getappmap/appmap-python@excludes_20231025
 # These requirements are only necessary when developing on Oscar.
 
 # development
