@@ -30,7 +30,7 @@ Further reading:
 * `Docker image`_ on http://hub.docker.com/
 * `django-oscar group`_ - mailing list for questions and announcements
 * `Twitter account for news and updates`_
-* `Slack`_
+* `Discord`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
@@ -70,7 +70,7 @@ Docs status:
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
-.. _`Slack`: https://slack.oscarcommerce.com/
+.. _`Discord`: https://discord.gg/NMwfZuJnJZ
 
 Core team:
 
