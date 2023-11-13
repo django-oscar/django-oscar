@@ -254,6 +254,11 @@ class ProductAttributesContainer:
                         if bound_value_obj is None:
                             to_be_deleted.append(value_obj.pk)
                         else:
+                            if bound_value_obj.attribute.is_entity:
+                                # entities can be bulk_created, but not bulk_saved
+                                bound_value_obj.save()
+                                continue
+
                             if bound_value_obj.attribute.is_file:
                                 # with bulk_create the file is save just fine, but
                                 # with buld_update, it's not, so we have to performa

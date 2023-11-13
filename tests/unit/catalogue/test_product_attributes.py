@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from oscar.core.loading import get_model
 from oscar.test.factories import (
+    PartnerFactory,
     ProductAttributeFactory,
     ProductClassFactory,
     ProductFactory,
@@ -288,6 +289,48 @@ class ProductAttributeTest(TestCase):
         html = value.value_as_html
         self.assertEqual(html, "<h1>Hi</h1>")
         self.assertTrue(hasattr(html, "__html__"))
+
+    def test_entity_attributes(self):
+        unrelated_object = PartnerFactory()
+        _ = ProductAttributeFactory(
+            type="entity",
+            product_class=self.product_class,
+            name="entity",
+            code="entity",
+        )
+        self.product.attr.entity = unrelated_object
+        self.product.attr.weight = 3
+        self.product.save()
+
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.attr.entity, unrelated_object)
+
+        another_product = ProductFactory(
+            title="Aother",
+            stockrecords=None,
+            product_class=self.product_class,
+            structure="standalone",
+            upc="henk1239",
+        )
+
+        self.product.attr.entity = another_product
+        self.product.attr.weight = 5
+        self.product.save()
+
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.attr.entity, another_product)
+
+        self.product.attr.entity = None
+        self.product.save()
+
+        self.product.refresh_from_db()
+
+        self.assertEqual(self.product.attr.entity, None)
+
+        product = Product.objects.get(pk=self.product.pk)
+        with self.assertRaises(AttributeError):
+            # pylint: disable=pointless-statement
+            product.attr.entity
 
 
 class MultiOptionTest(TestCase):
