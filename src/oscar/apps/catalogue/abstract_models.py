@@ -968,6 +968,10 @@ class AbstractProductAttribute(models.Model):
     def is_file(self):
         return self.type in [self.FILE, self.IMAGE]
 
+    @property
+    def is_entity(self):
+        return self.type == self.ENTITY
+
     def __str__(self):
         return self.name
 
