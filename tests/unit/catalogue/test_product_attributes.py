@@ -320,6 +320,18 @@ class ProductAttributeTest(TestCase):
         self.product.refresh_from_db()
         self.assertEqual(self.product.attr.entity, another_product)
 
+        self.product.attr.entity = None
+        self.product.save()
+
+        self.product.refresh_from_db()
+
+        self.assertEqual(self.product.attr.entity, None)
+
+        product = Product.objects.get(pk=self.product.pk)
+        with self.assertRaises(AttributeError):
+            # pylint: disable=pointless-statement
+            product.attr.entity
+
 
 class MultiOptionTest(TestCase):
     fixtures = ["productattributes"]
