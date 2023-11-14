@@ -84,8 +84,6 @@ setup(
     keywords="E-commerce, Django, domain-driven",
     license='BSD',
     platforms=['linux'],
-    package_dir={'': 'src'},
-    packages=find_packages('src'),
     include_package_data=True,
     python_requires='>=3.8',
     install_requires=install_requires,
