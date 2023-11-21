@@ -264,7 +264,7 @@ you will also need to include Django's i18n URLs:
 
 
 Create database
----------------
+===============
 
 Oscar ships with migrations. Django's migration framework will detect them
 automatically and will do the right thing.
