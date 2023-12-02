@@ -4283,7 +4283,7 @@ msgstr "Условия стоимости"
 #: apps/offer/conditions.py:269
 #, python-format
 msgid "Spend %(value)s more from %(range)s"
-msgstr "Потрачено %(value)s больше из %(range)s"
+msgstr "Потратьте на %(value)s больше из %(range)s"
 
 #: apps/offer/reports.py:22 apps/voucher/abstract_models.py:122
 #: apps/voucher/reports.py:21
