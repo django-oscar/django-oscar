@@ -160,7 +160,11 @@ class TaxExclusiveOfferDiscount(OfferDiscount):
             base_charge.excl_tax, base_charge.currency
         )
         excl_tax = base_charge.excl_tax - discount
-        return prices.Price(currency=base_charge.currency, excl_tax=excl_tax)
+        return prices.Price(
+            currency=base_charge.currency,
+            excl_tax=excl_tax,
+            tax_code=base_charge.tax_code,
+        )
 
     def discount(self, basket):
         base_charge = self.method.calculate(basket)
@@ -180,7 +184,10 @@ class TaxInclusiveOfferDiscount(OfferDiscount):
         incl_tax = base_charge.incl_tax - discount
         excl_tax = self.calculate_excl_tax(base_charge, incl_tax)
         return prices.Price(
-            currency=base_charge.currency, excl_tax=excl_tax, incl_tax=incl_tax
+            currency=base_charge.currency,
+            excl_tax=excl_tax,
+            incl_tax=incl_tax,
+            tax_code=base_charge.tax_code,
         )
 
     def calculate_excl_tax(self, base_charge, incl_tax):

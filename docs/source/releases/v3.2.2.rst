@@ -1,5 +1,5 @@
 ========================================
-Oscar 3.2.1 release notes
+Oscar 3.2.2 release notes
 ========================================
 
 :release: TBD
@@ -9,18 +9,18 @@ Oscar 3.2.1 release notes
     :depth: 1
 
 
-.. _compatibility_of_3.2.1:
+.. _compatibility_of_3.2.2:
 
 Compatibility
 ~~~~~~~~~~~~~
 
-Oscar 3.2.1 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
+Oscar 3.2.2 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
 
 Support for Django 3.1 has been dropped. Support for Python 3.7 has been dropped.
 
-.. _new_in_3.2.1:
+.. _new_in_3.2.2:
 
-What's new in Oscar 3.2.1?
+What's new in Oscar 3.2.2?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Bump eslint from 8.22.0 to 8.33.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4047
@@ -107,4 +107,4 @@ New Contributors
 * @hertogjan-bier made their first contribution in https://github.com/django-oscar/django-oscar/pull/4126
 * @patrick-agbokou made their first contribution in https://github.com/django-oscar/django-oscar/pull/4127
 
-**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2...3.2.1a
+**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2...3.2.2

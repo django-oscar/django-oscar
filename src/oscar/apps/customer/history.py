@@ -13,6 +13,7 @@ class CustomerHistoryManager:
         "max_age": settings.OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME,
         "secure": settings.OSCAR_RECENTLY_VIEWED_COOKIE_SECURE,
         "httponly": True,
+        "samesite": settings.SESSION_COOKIE_SAMESITE,
     }
     max_products = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 

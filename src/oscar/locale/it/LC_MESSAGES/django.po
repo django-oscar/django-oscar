@@ -13,12 +13,12 @@
 # joppa_mediaon <gecarrara@gmail.com>, 2013
 # joppa_mediaon <gecarrara@gmail.com>, 2013
 # Luciano Castelnuovo <l.castelnuovo@gmail.com>, 2018
-# Marco Badan <marco.badan@gmail.com>, 2013-2017
+# Marco Badan <marco.badan@gmail.com>, 2013-2017,2023
 # marcominutoli <info@marcominutoli.it>, 2013
 # marcominutoli <info@marcominutoli.it>, 2013
 # marcominutoli <info@marcominutoli.it>, 2013
 # Michael van Tellingen <michaelvantellingen@gmail.com>, 2016
-# Nicola Marangon <nicolamarangon@gmail.com>, 2013,2016,2020
+# Nicola Marangon <nicolamarangon@gmail.com>, 2013,2016,2020,2023
 # Nicola Marangon <nicolamarangon@gmail.com>, 2013
 # Samir Shah <solaris.smoke@gmail.com>, 2018
 # Simone Cittadini <>, 2013
@@ -29,8 +29,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-30 10:56+0100\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
-"Last-Translator: Viktor Holovin <holovin@mail.com>, 2020\n"
-"Language-Team: Italian (http://www.transifex.com/codeinthehole/django-oscar/language/it/)\n"
+"Last-Translator: Marco Badan <marco.badan@gmail.com>, 2013-2017,2023\n"
+"Language-Team: Italian (http://app.transifex.com/codeinthehole/django-oscar/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -944,11 +944,11 @@ msgstr "Descrizione"
 
 #: apps/catalogue/abstract_models.py:131 apps/catalogue/abstract_models.py:380
 msgid "Meta title"
-msgstr ""
+msgstr "Meta title"
 
 #: apps/catalogue/abstract_models.py:132 apps/catalogue/abstract_models.py:381
 msgid "Meta description"
-msgstr ""
+msgstr "Meta description"
 
 #: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:851
 #: apps/dashboard/catalogue/tables.py:22
@@ -1152,7 +1152,7 @@ msgstr "Un prodotto figlio non può avere opzioni"
 
 #: apps/catalogue/abstract_models.py:534
 msgid "A parent product can't have stockrecords."
-msgstr "Non si possono assegnare scorte magazzino ad un prodotto genitore."
+msgstr "Non si possono assegnare voci di magazzino ad un prodotto genitore."
 
 #: apps/catalogue/abstract_models.py:562
 msgid "The specified parent product is a child product."
@@ -1160,17 +1160,17 @@ msgstr "Il prodotto genitore specificato è un prodotto figlio"
 
 #: apps/catalogue/abstract_models.py:565
 msgid "One can't add a child product to a product with stock records."
-msgstr "Non si può aggiungere un prodotto figlio a un prodotto con scorte magazzino"
+msgstr "Non si può aggiungere un prodotto figlio a un prodotto con voci di magazzino"
 
 #: apps/catalogue/abstract_models.py:631
 msgctxt "Product meta title"
 msgid "Meta title"
-msgstr ""
+msgstr "Meta title"
 
 #: apps/catalogue/abstract_models.py:638
 msgctxt "Product meta description"
 msgid "Meta description"
-msgstr ""
+msgstr "Meta description"
 
 #: apps/catalogue/abstract_models.py:783
 msgid "Primary product"
@@ -1386,12 +1386,12 @@ msgstr "Valori attributo prodotto"
 #: apps/catalogue/abstract_models.py:1148
 msgctxt "Product attribute value"
 msgid "Yes"
-msgstr ""
+msgstr "Sì"
 
 #: apps/catalogue/abstract_models.py:1149
 msgctxt "Product attribute value"
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: apps/catalogue/abstract_models.py:1182
 msgid "Attribute option group"
@@ -1415,23 +1415,23 @@ msgstr "Opzioni attributo"
 
 #: apps/catalogue/abstract_models.py:1249
 msgid "Select"
-msgstr ""
+msgstr "Select"
 
 #: apps/catalogue/abstract_models.py:1250
 msgid "Radio"
-msgstr ""
+msgstr "Radio"
 
 #: apps/catalogue/abstract_models.py:1251
 msgid "Multi select"
-msgstr ""
+msgstr "Multi select"
 
 #: apps/catalogue/abstract_models.py:1252
 msgid "Checkbox"
-msgstr ""
+msgstr "Checkbox"
 
 #: apps/catalogue/abstract_models.py:1256
 msgid "Skip this option"
-msgstr ""
+msgstr "Salta questa opzione"
 
 #: apps/catalogue/abstract_models.py:1261
 msgid "Is this option required?"
@@ -1439,7 +1439,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1272
 msgid "Help text"
-msgstr ""
+msgstr "Testo di aiuto"
 
 #: apps/catalogue/abstract_models.py:1273
 msgid "Help text shown to the user on the add to basket form"
@@ -2469,7 +2469,7 @@ msgstr "Varianti"
 #: apps/dashboard/catalogue/tables.py:35 apps/partner/abstract_models.py:153
 #: templates/oscar/dashboard/catalogue/product_update.html:284
 msgid "Stock records"
-msgstr "Scorte magazzino"
+msgstr "Voci di magazzino"
 
 #: apps/dashboard/catalogue/tables.py:39 apps/dashboard/catalogue/tables.py:88
 #: apps/dashboard/catalogue/tables.py:108
@@ -3236,7 +3236,7 @@ msgstr "Impossibile creare un evento pagamento: %s"
 
 #: apps/dashboard/orders/views.py:721
 msgid "Payment event created"
-msgstr "Evento Pagamento creato"
+msgstr "Evento pagamento creato"
 
 #: apps/dashboard/orders/views.py:774
 #, python-format
@@ -4804,7 +4804,7 @@ msgstr "%s non è leggibile"
 #: templates/oscar/dashboard/orders/order_detail.html:566
 #: templates/oscar/dashboard/orders/order_detail.html:600
 msgid "Source"
-msgstr "Origine"
+msgstr "Fonte"
 
 #: apps/payment/abstract_models.py:45
 #, python-format
@@ -4822,7 +4822,7 @@ msgstr "Transazioni"
 
 #: apps/payment/abstract_models.py:78 apps/payment/abstract_models.py:218
 msgid "Source Type"
-msgstr "Tipo di origine"
+msgstr "Tipo di Fonte"
 
 #: apps/payment/abstract_models.py:84
 msgid "Amount Allocated"
@@ -4842,12 +4842,12 @@ msgstr "Etichetta"
 
 #: apps/payment/abstract_models.py:113
 msgid "Sources"
-msgstr "Origini"
+msgstr "Fonti"
 
 #: apps/payment/abstract_models.py:116
 #, python-format
 msgid "Allocation of %(amount)s from type %(type)s"
-msgstr "Addebito di %(amount)s dal tipo %(type)s"
+msgstr "Importo riservato di %(amount)s dal tipo %(type)s"
 
 #: apps/payment/abstract_models.py:120
 #, python-format
@@ -4860,7 +4860,7 @@ msgstr "Questo è utilizzato all'interno dei moduli per identificare questo tipo
 
 #: apps/payment/abstract_models.py:219
 msgid "Source Types"
-msgstr "Tipi di origine"
+msgstr "Tipo di Fonte di Pagamento"
 
 #: apps/payment/abstract_models.py:249
 msgid "Card Type"
@@ -6345,7 +6345,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr "\nPagamento di %(amount)s tramite %(type)s (riferimento: %(reference)s)\n                            "
+msgstr "\nImporto riservato di %(amount)s tramite %(type)s (riferimento: %(reference)s)\n                            "
 
 #: templates/oscar/checkout/thank_you.html:86
 #, python-format
@@ -6353,7 +6353,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr "\nPagamento di %(amount)s tramite %(type)s\n                            "
+msgstr "\nImporto riservato di %(amount)s tramite %(type)s\n                            "
 
 #: templates/oscar/checkout/thank_you.html:93
 msgid "No payment was required for this order."
@@ -7147,7 +7147,7 @@ msgid ""
 "If you want to share your wishlist with others, you can add their email "
 "addresses below. The visibility must be set to shared in order for this to "
 "work."
-msgstr ""
+msgstr "Se vuoi condividere la tua lista desideri con altri, puoi aggiungere i loro indirizzi email qui sotto. La visibilità dev'essere impostata su condivisa.\n\nIf you want to share your wishlist with others, you can add their email addresses below. The visibility must be set to shared in order for this to work."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -7569,7 +7569,7 @@ msgstr "Salva il prodotto prima di provare ad aggiungere delle varianti."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:314
 msgid "This is likely because this product still has stock records."
-msgstr "Questo molto probabilmente perché il prodotto ha scorte magazzino."
+msgstr "Questo molto probabilmente perché il prodotto ha voci di magazzino."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:376
 msgid "Save and add another variant"
@@ -8147,7 +8147,7 @@ msgstr "con riferimento"
 
 #: templates/oscar/dashboard/orders/order_detail.html:332
 msgid "Create payment event"
-msgstr "Crea pagamento"
+msgstr "Crea evento pagamento"
 
 #: templates/oscar/dashboard/orders/order_detail.html:345
 msgid "with amount"
@@ -8212,7 +8212,7 @@ msgstr "quantità"
 
 #: templates/oscar/dashboard/orders/order_detail.html:489
 msgid "No payment events."
-msgstr "Nessun pagamento."
+msgstr "Nessun evento pagamento."
 
 #: templates/oscar/dashboard/orders/order_detail.html:505
 msgid "Method name"
@@ -8232,11 +8232,11 @@ msgstr "Spese (IVA esclusa)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:560
 msgid "Payment sources"
-msgstr "Pagamenti."
+msgstr "Fonti di pagamento"
 
 #: templates/oscar/dashboard/orders/order_detail.html:567
 msgid "Allocation"
-msgstr "Addebito"
+msgstr "Importo riservato"
 
 #: templates/oscar/dashboard/orders/order_detail.html:568
 msgid "Amount debited"
@@ -8248,7 +8248,7 @@ msgstr "Importo rimborsato"
 
 #: templates/oscar/dashboard/orders/order_detail.html:587
 msgid "No payment sources found for this order."
-msgstr "Nessuna sorgente pagamento trovata per questo ordine"
+msgstr "Nessuna fonte di pagamento trovata per questo ordine"
 
 #: templates/oscar/dashboard/orders/order_detail.html:667
 msgid "No discounts were applied to this order."
@@ -9066,7 +9066,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:30
 #, python-format
 msgid "Delete voucher '%(code)s' from set?"
-msgstr ""
+msgstr "Elimina il voucher '%(code)s' dal gruppo?"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:36
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:26
@@ -9076,7 +9076,7 @@ msgstr "Dettagli voucher"
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:31
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:105
 msgid "Attached offers"
-msgstr ""
+msgstr "Offerte collegate"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:80
 msgid "No offers are attached to this voucher."
@@ -9172,11 +9172,11 @@ msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:154
 msgid "No offers are attached to this voucher set."
-msgstr ""
+msgstr "Nessuna offerta collegata a questo gruppo voucher"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:30
 msgid "Edit voucher set"
-msgstr ""
+msgstr "Modifica gruppo voucher"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
 msgid "Create new voucher set"

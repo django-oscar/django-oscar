@@ -90,6 +90,20 @@ class TestMovingACategory(TestCase):
         gothic = Category.objects.get(name="Gothic")
         self.assertEqual("Books > Non-fiction > Horror > Gothic", gothic.full_name)
 
+    def test_fix_tree(self):
+        "fix_tree should rearrange the incorrect nodes and not cause any errors"
+        cat = Category.objects.get(path="00010002")
+        pk = cat.pk
+        self.assertEqual(cat.path, "00010002")
+
+        Category.objects.filter(pk=pk).update(path="00010050")
+        cat.refresh_from_db()
+        self.assertEqual(cat.path, "00010050")
+
+        Category.fix_tree(fix_paths=True)
+        cat.refresh_from_db()
+        self.assertEqual(cat.path, "00010003")
+
 
 class TestCategoryFactory(TestCase):
     def test_can_create_single_level_category(self):
