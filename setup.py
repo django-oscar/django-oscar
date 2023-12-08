@@ -18,13 +18,13 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=3.2,<4.3',
+    'django>=3.2,<5.1',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=6.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
     'django-extra-views>=0.13,<0.15',
-    # Search support
-    'django-haystack>=3.0b1',
+    # Search support  # We NEED a production release!!!
+    'django-haystack @ git+https://github.com/django-haystack/django-haystack.git',
     # Treebeard is used for categories
     'django-treebeard>=4.3.0',
     # Babel is used for currency formatting
