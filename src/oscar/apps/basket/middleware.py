@@ -153,7 +153,7 @@ class BasketMiddleware:
                 old_baskets = list(manager.filter(owner=request.user))
                 basket = old_baskets[0]
                 for other_basket in old_baskets[1:]:
-                    self.merge_baskets(basket, other_basket)
+                    self.merge_baskets(basket, other_basket, strategy=request.strategy)
                     num_baskets_merged += 1
 
             # Assign user onto basket to prevent further SQL queries when
@@ -161,7 +161,7 @@ class BasketMiddleware:
             basket.owner = request.user
 
             if cookie_basket:
-                self.merge_baskets(basket, cookie_basket)
+                self.merge_baskets(basket, cookie_basket, strategy=request.strategy)
                 num_baskets_merged += 1
                 request.cookies_to_delete.append(cookie_key)
 
@@ -188,13 +188,13 @@ class BasketMiddleware:
 
         return basket
 
-    def merge_baskets(self, master, slave):
+    def merge_baskets(self, master, slave, strategy=None):
         """
         Merge one basket into another.
 
         This is its own method to allow it to be overridden
         """
-        master.merge(slave, add_quantities=False)
+        master.merge(slave, add_quantities=False, strategy=strategy)
 
     # pylint: disable=unused-argument
     def get_cookie_basket(self, cookie_key, request, manager):

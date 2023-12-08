@@ -125,11 +125,6 @@ class AbstractBasket(models.Model):
     def _set_strategy(self, strategy):
         self._strategy = strategy  # pylint: disable=W0201
 
-        # Update line stock records with the new strategy
-        for l in self.all_lines():
-            l.stockrecord = strategy.fetch_for_product(l.product).stockrecord
-            l.save()
-
     strategy = property(_get_strategy, _set_strategy)
 
     def all_lines(self):
@@ -329,7 +324,7 @@ class AbstractBasket(models.Model):
         self.offer_applications = OfferApplications()
         self._lines = None
 
-    def merge_line(self, line, add_quantities=True):
+    def merge_line(self, line, add_quantities=True, strategy=None):
         """
         For transferring a line from another basket to this one.
 
@@ -340,6 +335,8 @@ class AbstractBasket(models.Model):
         except ObjectDoesNotExist:
             # Line does not already exist - reassign its basket
             line.basket = self
+            if strategy:
+                line.stockrecord = strategy.fetch_for_product(line.product).stockrecord
             line.save()
         else:
             # Line already exists - assume the max quantity is correct and
@@ -355,7 +352,7 @@ class AbstractBasket(models.Model):
 
     merge_line.alters_data = True
 
-    def merge(self, basket, add_quantities=True):
+    def merge(self, basket, add_quantities=True, strategy=None):
         """
         Merges another basket with this one.
 
@@ -365,7 +362,7 @@ class AbstractBasket(models.Model):
         # Use basket.lines.all instead of all_lines as this function is called
         # before a strategy has been assigned.
         for line_to_merge in basket.lines.all():
-            self.merge_line(line_to_merge, add_quantities)
+            self.merge_line(line_to_merge, add_quantities=add_quantities, strategy=strategy)
         basket.status = self.MERGED
         basket.date_merged = now()
         basket._lines = None
