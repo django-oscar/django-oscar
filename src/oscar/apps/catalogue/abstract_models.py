@@ -733,6 +733,9 @@ class AbstractProduct(models.Model):
     get_categories.short_description = _("Categories")
 
     def get_attribute_values(self):
+        if not self.pk:
+            return self.attribute_values.model.objects.none()
+
         attribute_values = self.attribute_values.all()
         if self.is_child:
             parent_attribute_values = self.parent.attribute_values.exclude(
