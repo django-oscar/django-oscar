@@ -207,9 +207,9 @@ class ProductAttributesContainer:
 
     def prepare_save(self):
         to_be_updated = []
-        update_fields = set()
-        to_be_deleted = []
         to_be_created = []
+        to_be_deleted = []
+        update_fields = set()
 
         if not self.initialized and not self._dirty:
             # no need to save untouched attr lists
@@ -273,10 +273,10 @@ class ProductAttributesContainer:
                             to_be_updated.append(bound_value_obj)
                             update_fields.add(bound_value_obj.value_field_name)
 
-        return (to_be_deleted, update_fields, to_be_updated, to_be_created)
+        return (to_be_updated, to_be_created, to_be_deleted, update_fields)
 
     def save(self):
-        to_be_deleted, update_fields, to_be_updated, to_be_created = self.prepare_save()
+        to_be_updated, to_be_created, to_be_deleted, update_fields = self.prepare_save()
 
         # now save all the attributes in bulk
         if to_be_deleted:
