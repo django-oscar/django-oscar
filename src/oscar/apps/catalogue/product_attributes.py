@@ -213,7 +213,7 @@ class ProductAttributesContainer:
 
         if not self.initialized and not self._dirty:
             # no need to save untouched attr lists
-            return (to_be_deleted, update_fields, to_be_updated, to_be_created)
+            return (to_be_updated, to_be_created, to_be_deleted, update_fields)
 
         ProductAttributeValue = self.product.attribute_values.model
 
