@@ -14,12 +14,13 @@ from django.utils.translation import gettext_lazy as _
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes
 from oscar.core.utils import get_default_currency, round_half_up
+from oscar.core.decorators import deprecated
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
 OfferApplications = get_class("offer.results", "OfferApplications")
 Unavailable = get_class("partner.availability", "Unavailable")
-LineOfferConsumer = get_class("basket.utils", "LineOfferConsumer")
+LineDiscountRegistry = get_class("basket.utils", "LineDiscountRegistry")
 OpenBasketManager, SavedBasketManager = get_classes(
     "basket.managers", ["OpenBasketManager", "SavedBasketManager"]
 )
@@ -726,10 +727,7 @@ class AbstractLine(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Instance variables used to persist discount information
-        self._discount_excl_tax = D("0.00")
-        self._discount_incl_tax = D("0.00")
-        self.consumer = LineOfferConsumer(self)
+        self.discounts = LineDiscountRegistry(self)
 
     class Meta:
         abstract = True
@@ -739,6 +737,11 @@ class AbstractLine(models.Model):
         unique_together = ("basket", "line_reference")
         verbose_name = _("Basket line")
         verbose_name_plural = _("Basket lines")
+
+    @property
+    @deprecated
+    def consumer(self):
+        return self.discounts
 
     def __str__(self):
         return _(
@@ -764,29 +767,25 @@ class AbstractLine(models.Model):
         """
         Remove any discounts from this line.
         """
-        self._discount_excl_tax = D("0.00")
-        self._discount_incl_tax = D("0.00")
-        self.consumer = LineOfferConsumer(self)
+        self.discounts = LineDiscountRegistry(self)
 
     def discount(self, discount_value, affected_quantity, incl_tax=True, offer=None):
         """
         Apply a discount to this line
         """
         if incl_tax:
-            if self._discount_excl_tax > 0:
+            if self.discounts.excl_tax > 0:
                 raise RuntimeError(
                     "Attempting to discount the tax-inclusive price of a line "
                     "when tax-exclusive discounts are already applied"
                 )
-            self._discount_incl_tax += discount_value
         else:
-            if self._discount_incl_tax > 0:
+            if self.discounts.incl_tax > 0:
                 raise RuntimeError(
                     "Attempting to discount the tax-exclusive price of a line "
                     "when tax-inclusive discounts are already applied"
                 )
-            self._discount_excl_tax += discount_value
-        self.consume(affected_quantity, offer=offer)
+        self.discounts.discount(discount_value, affected_quantity, incl_tax, offer)
 
     def consume(self, quantity, offer=None):
         """
@@ -794,7 +793,7 @@ class AbstractLine(models.Model):
 
         Consumed items are no longer available to be used in offers.
         """
-        return self.consumer.consume(quantity, offer=offer)
+        return self.discounts.consume(quantity, offer=offer)
 
     def get_price_breakdown(self):
         """
@@ -815,14 +814,16 @@ class AbstractLine(models.Model):
         else:
             # Need to split the discount among the affected quantity
             # of products.
-            item_incl_tax_discount = self.discount_value / int(self.consumer.consumed())
+            item_incl_tax_discount = self.discount_value / int(
+                self.discounts.num_consumed()
+            )
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
             item_excl_tax_discount = round_half_up(item_excl_tax_discount)
             prices.append(
                 (
                     self.unit_price_incl_tax - item_incl_tax_discount,
                     self.unit_price_excl_tax - item_excl_tax_discount,
-                    self.consumer.consumed(),
+                    self.discounts.num_consumed(),
                 )
             )
             if self.quantity_without_discount:
@@ -841,6 +842,14 @@ class AbstractLine(models.Model):
 
     @property
     def _tax_ratio(self):
+        # this function tries to computate the tax ratio based on the incl tax price
+        # versus the excl tax price. Since these values are allready rounded, this will
+        # NOT return the exact ratio corresponding to your tax rate.
+        # if this is a problem you need to provide your own implementation of _tax_ratio
+        # that returns the ratio based on the exact tax percentage in use.
+        # one way to make this value correct is to use 4 decimals for all prices everywhere,
+        # and round only at the last moment when presenting the values to the user.
+        # that would make this value precise and correct because there would be no rounding
         if not self.unit_price_incl_tax:
             return 0
         return self.unit_price_excl_tax / self.unit_price_incl_tax
@@ -850,16 +859,16 @@ class AbstractLine(models.Model):
     # ===============
 
     def has_offer_discount(self, offer):
-        return self.consumer.consumed(offer) > 0
+        return self.discounts.num_consumed(offer) > 0
 
     def quantity_with_offer_discount(self, offer):
-        return self.consumer.consumed(offer)
+        return self.discounts.num_consumed(offer)
 
     def quantity_without_offer_discount(self, offer):
-        return self.consumer.available(offer)
+        return self.discounts.available(offer)
 
     def is_available_for_offer_discount(self, offer):
-        return self.consumer.available(offer) > 0
+        return self.discounts.available(offer) > 0
 
     def quantity_available_for_offer(self, offer):
         return self.quantity_without_offer_discount(
@@ -871,21 +880,38 @@ class AbstractLine(models.Model):
     # ==========
 
     @property
+    @deprecated
+    def _discount_incl_tax(self):
+        return self.discounts.incl_tax
+
+    @_discount_incl_tax.setter
+    def _discount_incl_tax(self, value):
+        raise Exception("You can not set _discount_incl_tax")
+
+    @property
+    @deprecated
+    def _discount_excl_tax(self):
+        return self.discounts.excl_tax
+
+    @_discount_excl_tax.setter
+    def _discount_excl_tax(self, value):
+        raise Exception("You can not set _discount_excl_tax")
+
+    @property
     def has_discount(self):
-        return bool(self.consumer.consumed())
+        return bool(self.discounts.num_consumed())
 
     @property
     def quantity_with_discount(self):
-        return self.consumer.consumed()
+        return self.discounts.num_consumed()
 
     @property
     def quantity_without_discount(self):
-        return self.consumer.available()
+        return self.discounts.available()
 
     @property
     def discount_value(self):
-        # Only one of the incl- and excl- discounts should be non-zero
-        return max(self._discount_incl_tax, self._discount_excl_tax)
+        return self.discounts.total
 
     # pylint: disable=W0201
     @property
@@ -928,34 +954,55 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax_incl_discounts(self):
-        if self._discount_excl_tax and self.line_price_excl_tax is not None:
-            return max(0, self.line_price_excl_tax - self._discount_excl_tax)
-        if self._discount_incl_tax and self.line_price_incl_tax is not None:
-            # This is a tricky situation.  We know the discount as calculated
-            # against tax inclusive prices but we need to guess how much of the
-            # discount applies to tax-exclusive prices.  We do this by
-            # assuming a linear tax and scaling down the original discount.
-            return max(
-                0,
-                self.line_price_excl_tax
-                - round_half_up(self._tax_ratio * self._discount_incl_tax),
-            )
+        if self.line_price_excl_tax is None:
+            return None
+
+        excl_tax_discounts = self.discounts.excl_tax
+        if excl_tax_discounts:
+            # these are discounts that return a value excluding tax, we can simply
+            # subtract this value from line_price_excl_tax to get to line_price_excl_tax_incl_discounts
+            return max(0, self.line_price_excl_tax - excl_tax_discounts)
+
+        # This is a tricky situation.  We know the discount as calculated
+        # against tax inclusive prices but we need to guess how much of the
+        # discount applies to tax-exclusive prices.  We do this by
+        # assuming a linear tax and scaling down the original discount.
+        # Please refer to the _tax_ratio method for more details on how
+        # to make this calculation more precise.
+
+        incl_tax_discounts = self.discounts.incl_tax
+        if incl_tax_discounts and self._tax_ratio:
+            if self.line_price_excl_tax is not None:
+                # if we got a precise line_price_excl_tax use that first, if _tax_ratio is off,
+                # this will create the smallest deviation becaise incl_tax_discounts is usually
+                # smaller than line_price_excl_tax
+                return max(
+                    0,
+                    self.line_price_excl_tax
+                    - round_half_up(self._tax_ratio * incl_tax_discounts),
+                )
+            elif self.line_price_incl_tax is not None:
+                # when all else fails, compute based on line_price_incl_tax
+                return max(
+                    0, self._tax_ratio * (self.line_price_incl_tax - incl_tax_discounts)
+                )
+
+        # there are no discounts so just return the line_price_excl_tax
         return self.line_price_excl_tax
 
     @property
     def line_price_incl_tax_incl_discounts(self):
+        excl_tax_discounts = self.discounts.excl_tax
+        incl_tax_discounts = self.discounts.incl_tax
+
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
         # including tax
-        if self.line_price_incl_tax is not None and self._discount_incl_tax:
-            return max(0, self.line_price_incl_tax - self._discount_incl_tax)
-        elif self.line_price_excl_tax is not None and self._discount_excl_tax:
-            return max(
-                0,
-                round_half_up(
-                    (self.line_price_excl_tax - self._discount_excl_tax)
-                    / self._tax_ratio
-                ),
+        if self.line_price_incl_tax is not None and incl_tax_discounts:
+            return max(0, self.line_price_incl_tax - incl_tax_discounts)
+        elif self.line_price_excl_tax is not None and excl_tax_discounts:
+            return round_half_up(
+                self.line_price_excl_tax_incl_discounts / self._tax_ratio
             )
 
         return self.line_price_incl_tax
