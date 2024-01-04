@@ -842,6 +842,14 @@ class AbstractLine(models.Model):
 
     @property
     def _tax_ratio(self):
+        # this function tries to computate the tax ratio based on the incl tax price
+        # versus the excl tax price. Since these values are allready rounded, this will
+        # NOT return the exact ratio corresponding to your tax rate.
+        # if this is a problem you need to provide your own implementation of _tax_ratio
+        # that returns the ratio based on the exact tax percentage in use.
+        # one way to make this value correct is to use 4 decimals for all prices everywhere,
+        # and round only at the last moment when presenting the values to the user.
+        # that would make this value precise and correct because there would be no rounding
         if not self.unit_price_incl_tax:
             return 0
         return self.unit_price_excl_tax / self.unit_price_incl_tax
@@ -950,18 +958,36 @@ class AbstractLine(models.Model):
             return None
 
         excl_tax_discounts = self.discounts.excl_tax
-        incl_tax_discounts = self.discounts.incl_tax
-
-        if excl_tax_discounts and self.line_price_excl_tax is not None:
+        if excl_tax_discounts:
+            # there are discounts that return a value excluding tax, we can simply
+            # subtract this value from line_price_excl_tax to get to line_price_excl_tax_incl_discounts
             return max(0, self.line_price_excl_tax - excl_tax_discounts)
 
-        if incl_tax_discounts and self.line_price_incl_tax is not None:
-            return max(
-                0,
-                self.line_price_excl_tax
-                - round_half_up(self._tax_ratio * incl_tax_discounts),
-            )
+        # This is a tricky situation.  We know the discount as calculated
+        # against tax inclusive prices but we need to guess how much of the
+        # discount applies to tax-exclusive prices.  We do this by
+        # assuming a linear tax and scaling down the original discount.
+        # Please refer to the _tax_ratio method for more details on how
+        # to make this calculation more precise.
 
+        incl_tax_discounts = self.discounts.incl_tax
+        if incl_tax_discounts and self._tax_ratio:
+            if self.line_price_excl_tax is not None:
+                # if we got a precise line_price_excl_tax use that first, if _tax_ratio is off,
+                # this will create the smallest deviation becaise incl_tax_discounts is usually
+                # smaller than line_price_excl_tax
+                return max(
+                    0,
+                    self.line_price_excl_tax
+                    - round_half_up(self._tax_ratio * incl_tax_discounts),
+                )
+            elif self.line_price_incl_tax is not None:
+                # when all else fails, compute based on line_price_incl_tax
+                return max(
+                    0, self._tax_ratio * (self.line_price_incl_tax - incl_tax_discounts)
+                )
+
+        # there are no discounts so just return the line_price_excl_tax
         return self.line_price_excl_tax
 
     @property
