@@ -572,9 +572,11 @@ class AbstractProduct(models.Model):
         """
         Validates a child product
         """
-        if not self.parent_id:
+        has_parent = self.parent or self.parent_id
+
+        if not has_parent:
             raise ValidationError(_("A child product needs a parent."))
-        if self.parent_id and not self.parent.is_parent:
+        if has_parent and not self.parent.is_parent:
             raise ValidationError(
                 _("You can only assign child products to parent products.")
             )
