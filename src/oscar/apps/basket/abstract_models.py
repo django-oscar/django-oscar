@@ -959,7 +959,7 @@ class AbstractLine(models.Model):
 
         excl_tax_discounts = self.discounts.excl_tax
         if excl_tax_discounts:
-            # there are discounts that return a value excluding tax, we can simply
+            # these are discounts that return a value excluding tax, we can simply
             # subtract this value from line_price_excl_tax to get to line_price_excl_tax_incl_discounts
             return max(0, self.line_price_excl_tax - excl_tax_discounts)
 
