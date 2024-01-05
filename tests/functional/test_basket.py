@@ -111,9 +111,7 @@ class TestMergedBasketsMessage(TestCase):
         self.assertEqual(basket.owner, self.user)
         self.assertIn("messages", response.cookies)
 
-        expected = (
-            "We have merged 1 item from a previous session to your basket."
-        )
+        expected = "We have merged 1 item from a previous session to your basket."
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 3)
         self.assertEqual(messages[2].message, expected)
