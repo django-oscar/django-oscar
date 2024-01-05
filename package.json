@@ -16,7 +16,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-rename": "^2.0.0",
     "inputmask": "^5.0.8",
-    "jquery": "^3.7.0",
+    "jquery": "^3.7.1",
     "jquery-mousewheel": "^3.1.13",
     "jquery-sortable": "^0.9.13",
     "nan": "^2.18.0",
