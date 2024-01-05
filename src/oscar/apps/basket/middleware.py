@@ -187,11 +187,9 @@ class BasketMiddleware:
                 messages.WARNING,
                 ngettext_lazy(
                     "We have merged %(num_items_merged)d item from a "
-                    "previous session to your basket. "
-                    "Its content has changed.",
+                    "previous session to your basket.",
                     "We have merged %(num_items_merged)d items from a "
-                    "previous session to your basket. "
-                    "Its content has changed.",
+                    "previous session to your basket.",
                     num_items_merged,
                 )
                 % {"num_items_merged": num_items_merged},
