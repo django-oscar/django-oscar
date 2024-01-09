@@ -1,0 +1,30 @@
+========================================
+Oscar 3.2.3 release notes
+========================================
+
+:release: 2024-09-01
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2.3:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.2.3 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
+
+.. _new_in_3.2.3:
+
+What's new in Oscar 3.2.3?
+~~~~~~~~~~~~~~~~~~~~~~~~
+s://github.com/django-oscar/django-oscar/pull/4136
+
+
+.. new_contributors:
+
+New Contributors
+~~~~~~~~~~~~~~~~
+
