@@ -64,7 +64,7 @@ Docs status:
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: https://latest.oscarcommerce.com
 .. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
-.. _`Documentation`: https://django-oscar.readthedocs.io/en/stable/
+.. _`Documentation`: https://docs.oscarcommerce.com/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
