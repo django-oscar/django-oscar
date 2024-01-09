@@ -49,9 +49,13 @@ class AnonAddToBasketViewTests(WebTestCase):
 
     def setUp(self):
         self.product = create_product(price=D("10.00"), num_in_stock=10)
-        url = reverse("basket:add", kwargs={"pk": self.product.pk})
-        post_params = {"product_id": self.product.id, "action": "add", "quantity": 1}
-        self.response = self.app.post(url, params=post_params)
+        self.url = reverse("basket:add", kwargs={"pk": self.product.pk})
+        self.post_params = {
+            "product_id": self.product.id,
+            "action": "add",
+            "quantity": 1,
+        }
+        self.response = self.app.post(self.url, params=self.post_params)
 
     def test_cookie_is_created(self):
         self.assertTrue("oscar_open_basket" in self.response.test_app.cookies)
@@ -65,6 +69,52 @@ class AnonAddToBasketViewTests(WebTestCase):
         line = basket.lines.get(product=self.product)
         stockrecord = self.product.stockrecords.all()[0]
         self.assertEqual(stockrecord.price, line.price_excl_tax)
+
+
+class TestMergedBasketsMessage(TestCase):
+    def setUp(self):
+        product = create_product(price=D("10.00"), num_in_stock=10)
+        self.url = reverse("basket:add", args=(product.pk,))
+        self.post_params = {
+            "product_id": product.id,
+            "action": "add",
+            "quantity": 1,
+        }
+        self.user = User.objects.create(
+            username="lucy", email="lucy@example.com", password="password"
+        )
+
+    def test_merged_baskets_message(self):
+        # add product to anonymous user's basket
+        response = self.client.post(self.url, self.post_params)
+        self.assertEqual(response.status_code, 302)
+
+        self.assertIn("oscar_open_basket", response.cookies)
+        oscar_open_basket_cookie = response.cookies["oscar_open_basket"]
+
+        basket = response.context["basket"]
+        self.assertEqual(basket.all_lines().count(), 1)
+        self.assertIsNone(basket.owner)
+
+        # set registered user
+        self.client.force_login(self.user)
+        sess = self.client.session
+        sess["oscar_open_basket"] = oscar_open_basket_cookie
+        sess.save()
+        self.assertTrue("oscar_open_basket" in self.client.session)
+
+        response = self.client.get("/", follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        basket = response.context["basket"]
+        self.assertEqual(basket.all_lines().count(), 1)
+        self.assertEqual(basket.owner, self.user)
+        self.assertIn("messages", response.cookies)
+
+        expected = "We have merged 1 item from a previous session to your basket."
+        messages = list(response.context["messages"])
+        self.assertEqual(len(messages), 3)
+        self.assertEqual(messages[2].message, expected)
 
 
 class BasketSummaryViewTests(WebTestCase):

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.signing import BadSignature, Signer
 from django.utils.functional import SimpleLazyObject, empty
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext_lazy
 
 from oscar.core.loading import get_class, get_model
 
@@ -100,6 +100,7 @@ class BasketMiddleware:
             )
         return response
 
+    # pylint: disable=unused-argument
     def get_cookie_key(self, request):
         """
         Returns the cookie name to use for storing a cookie basket.
@@ -133,10 +134,11 @@ class BasketMiddleware:
         """
         Return the open basket for this request
         """
+        # pylint: disable=protected-access
         if request._basket_cache is not None:
             return request._basket_cache
 
-        num_baskets_merged = 0
+        num_items_merged = 0
         manager = Basket.open
         cookie_key = self.get_cookie_key(request)
         cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
@@ -154,15 +156,17 @@ class BasketMiddleware:
                 basket = old_baskets[0]
                 for other_basket in old_baskets[1:]:
                     self.merge_baskets(basket, other_basket)
-                    num_baskets_merged += 1
+                    # count number of items that have been merged
+                    num_items_merged += other_basket.num_items
 
             # Assign user onto basket to prevent further SQL queries when
             # basket.owner is accessed.
             basket.owner = request.user
 
             if cookie_basket:
+                # count number of items in the basket
+                num_items_merged += cookie_basket.num_items
                 self.merge_baskets(basket, cookie_basket)
-                num_baskets_merged += 1
                 request.cookies_to_delete.append(cookie_key)
 
         elif cookie_basket:
@@ -176,14 +180,19 @@ class BasketMiddleware:
         # Cache basket instance for the during of this request
         request._basket_cache = basket
 
-        if num_baskets_merged > 0:
+        if num_items_merged > 0:
+            # show warning only if items have been merged
             messages.add_message(
                 request,
                 messages.WARNING,
-                _(
-                    "We have merged a basket from a previous session. Its contents "
-                    "might have changed."
-                ),
+                ngettext_lazy(
+                    "We have merged %(num_items_merged)d item from a "
+                    "previous session to your basket.",
+                    "We have merged %(num_items_merged)d items from a "
+                    "previous session to your basket.",
+                    num_items_merged,
+                )
+                % {"num_items_merged": num_items_merged},
             )
 
         return basket

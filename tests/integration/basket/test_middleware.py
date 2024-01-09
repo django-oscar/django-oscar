@@ -1,9 +1,8 @@
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.test import TestCase
-from django.test.client import RequestFactory
-
 from oscar.apps.basket import middleware
+from oscar.test.utils import RequestFactory
 
 
 class TestBasketMiddleware(TestCase):
