@@ -6,6 +6,7 @@
 # Alexander Gritsenko <forsashka@gmail.com>, 2013
 # Alexey, 2022
 # alien <dejavy@inbox.ru>, 2014
+# Andre Sukharev, 2023
 # Eugene <eugene.mechanism@gmail.com>, 2013
 # Eugene Fedyushin <eugene.itcon@gmail.com>, 2020
 # Eugene <eugene.mechanism@gmail.com>, 2013
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-30 10:56+0100\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
-"Last-Translator: Сергей С <sechins01@yandex.ru>, 2020\n"
+"Last-Translator: Andre Sukharev, 2023\n"
 "Language-Team: Russian (Russia) (http://app.transifex.com/codeinthehole/django-oscar/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1389,12 +1390,12 @@ msgstr "Значения атрибутов товара"
 #: apps/catalogue/abstract_models.py:1148
 msgctxt "Product attribute value"
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: apps/catalogue/abstract_models.py:1149
 msgctxt "Product attribute value"
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: apps/catalogue/abstract_models.py:1182
 msgid "Attribute option group"
@@ -1442,7 +1443,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1272
 msgid "Help text"
-msgstr ""
+msgstr "Вспомогательный текст"
 
 #: apps/catalogue/abstract_models.py:1273
 msgid "Help text shown to the user on the add to basket form"
@@ -2265,7 +2266,7 @@ msgstr "К сожалению, мы не доставляем товары в э
 #: templates/oscar/customer/wishlists/wishlists_detail.html:16
 #: templates/oscar/customer/wishlists/wishlists_form.html:14
 msgid "Wish Lists"
-msgstr "Списки желаемого"
+msgstr "Списки желаний"
 
 #: apps/customer/wishlists/views.py:81
 msgid "Quantities updated."
@@ -2286,7 +2287,7 @@ msgstr ""
 #: apps/customer/wishlists/views.py:146
 #: templates/oscar/customer/wishlists/wishlists_list.html:48
 msgid "Create a new wish list"
-msgstr "Создать новый список желаемого"
+msgstr "Создать новый список желаний"
 
 #: apps/customer/wishlists/views.py:156
 msgid "The requested product no longer exists"
@@ -2295,21 +2296,21 @@ msgstr "Запрошенный товар больше не существует
 #: apps/customer/wishlists/views.py:184
 #, python-format
 msgid "Your wishlist has been created and '%(name)s has been added"
-msgstr "Список желаемого был создан и в него добавлен товар: '%(name)s"
+msgstr "Список желаний был создан и в него добавлен товар: '%(name)s"
 
 #: apps/customer/wishlists/views.py:188
 msgid "Your wishlist has been created"
-msgstr "Список создан"
+msgstr "Список желаний создан"
 
 #: apps/customer/wishlists/views.py:211
 #, python-format
 msgid "%(title)s has been added to your wishlist"
-msgstr "Товар под названием %(title)s добавлен в список желаемых покупок"
+msgstr "Товар под названием %(title)s добавлен в список желаний"
 
 #: apps/customer/wishlists/views.py:246
 #, python-format
 msgid "Your '%s' wishlist has been updated"
-msgstr "Список '%s' был обновлен"
+msgstr "Список желаний '%s' был обновлён"
 
 #: apps/customer/wishlists/views.py:260
 #, python-format
@@ -2319,12 +2320,12 @@ msgstr "Удалить %s"
 #: apps/customer/wishlists/views.py:268
 #, python-format
 msgid "Your '%s' wish list has been deleted"
-msgstr "Список '%s' был удален"
+msgstr "Список желаний '%s' был удалён"
 
 #: apps/customer/wishlists/views.py:312
 #, python-format
 msgid "'%s' was added to your wish list."
-msgstr "'%s' теперь в списке желаемого."
+msgstr "'%s' теперь в списке желаний."
 
 #: apps/customer/wishlists/views.py:358
 #, python-format
@@ -2419,7 +2420,7 @@ msgstr "Панель"
 
 #: apps/dashboard/catalogue/forms.py:53
 msgid "Leave blank to generate from category name"
-msgstr ""
+msgstr "Оставьте пустым, чтобы сгенерировать из имени категории"
 
 #: apps/dashboard/catalogue/forms.py:62
 msgid "Create a new product of type"
@@ -2435,7 +2436,7 @@ msgstr "Название товара"
 
 #: apps/dashboard/catalogue/forms.py:240
 msgid "Leave blank to generate from product title"
-msgstr ""
+msgstr "Оставьте пустым, чтобы сгенерировать из заголовка товара"
 
 #: apps/dashboard/catalogue/forms.py:385
 msgid "Select an option group"
@@ -2834,7 +2835,7 @@ msgstr "Действует?"
 #: apps/dashboard/offers/forms.py:213
 #: templates/oscar/dashboard/offers/offer_list.html:86
 msgid "Offer type"
-msgstr ""
+msgstr "Тип предложения"
 
 #: apps/dashboard/offers/forms.py:214
 msgid "Has vouchers?"
@@ -2917,7 +2918,7 @@ msgstr "Предложение '%s' создано"
 
 #: apps/dashboard/offers/views.py:292
 msgid "Name, description and type"
-msgstr ""
+msgstr "Имя, описание и тип"
 
 #: apps/dashboard/offers/views.py:308
 #: templates/oscar/dashboard/offers/offer_detail.html:75
@@ -3724,7 +3725,7 @@ msgstr "Наборы купонов"
 
 #: apps/dashboard/vouchers/views.py:337
 msgid "Voucher set deleted"
-msgstr ""
+msgstr "Набор купонов удалён"
 
 #: apps/offer/abstract_models.py:88
 msgid "This is displayed within the customer's basket"
@@ -4283,7 +4284,7 @@ msgstr "Условия стоимости"
 #: apps/offer/conditions.py:269
 #, python-format
 msgid "Spend %(value)s more from %(range)s"
-msgstr "Потратьте на %(value)s больше из %(range)s"
+msgstr "Потрачено %(value)s больше из %(range)s"
 
 #: apps/offer/reports.py:22 apps/voucher/abstract_models.py:122
 #: apps/voucher/reports.py:21
@@ -5248,7 +5249,7 @@ msgstr "По умолчанию"
 
 #: apps/wishlists/abstract_models.py:35
 msgid "Private - Only the owner can see the wish list"
-msgstr "Частный - только владелец может видеть список желаемых покупок"
+msgstr "Частный - только владелец может видеть список"
 
 #: apps/wishlists/abstract_models.py:36
 msgid ""
@@ -5258,7 +5259,7 @@ msgstr "Поделиться - только владелец и люди, обл
 
 #: apps/wishlists/abstract_models.py:38
 msgid "Public - Everybody can see the wish list"
-msgstr "Общее - все смогут увидеть, что вы хотите купить"
+msgstr "Общее - все смогут видеть список"
 
 #: apps/wishlists/abstract_models.py:40
 msgid "Visibility"
@@ -5267,11 +5268,11 @@ msgstr "Доступность"
 #: apps/wishlists/abstract_models.py:88 apps/wishlists/abstract_models.py:124
 #: apps/wishlists/abstract_models.py:161
 msgid "Wish List"
-msgstr "Список желаемого"
+msgstr "Список желаний"
 
 #: apps/wishlists/abstract_models.py:149
 msgid "Wish list line"
-msgstr "Строка в списке желаемого"
+msgstr "Строка в списке желаний"
 
 #: apps/wishlists/abstract_models.py:170
 msgid "Wish list shared email"
@@ -5279,11 +5280,11 @@ msgstr ""
 
 #: apps/wishlists/apps.py:11
 msgid "Wishlists"
-msgstr "Списки желаемого"
+msgstr "Списки желаний"
 
 #: apps/wishlists/views.py:31
 msgid "You must be logged in to view the wish list"
-msgstr ""
+msgstr "Вы должны войти на сайт, чтобы посмотреть этот список желаний"
 
 #: core/validators.py:46
 #, python-format
@@ -5989,11 +5990,11 @@ msgid ""
 "\n"
 "                                        Add to '%(name)s' wish list\n"
 "                                    "
-msgstr ""
+msgstr "\n\t                                        Добавить в список желаний '%(name)s'\n\t                                    "
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:26
 msgid "Create a new wishlist"
-msgstr "Создать новый список желаемого"
+msgstr "Создать новый список желаний"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:42
 #, python-format
@@ -6001,7 +6002,7 @@ msgid ""
 "\n"
 "                    <span class=\"float-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
+msgstr "\n                    <span class=\"pull-left\">Товар в списке желаний <a href=\"%(url)s\">'%(name)s'</a>.</span>\n                "
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:45
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:34
@@ -6011,7 +6012,7 @@ msgstr "Удаление..."
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:50
 msgid "Please login to add products to a wish list."
-msgstr "Пожалуйста, войдите на сайт под своим именем, чтобы добавлять товары к списку желаемого."
+msgstr "Пожалуйста, войдите на сайт под своим именем, чтобы добавлять товары к списку желаний."
 
 #: templates/oscar/catalogue/partials/gallery.html:22
 msgid "Previous"
@@ -7144,7 +7145,7 @@ msgstr "Создать"
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:33
 msgid "What should your new wish list be called?"
-msgstr "Как бы вы назвали новый список желаемого?"
+msgstr "Как бы вы назвали новый список желаний?"
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:38
 #, python-format
@@ -7156,14 +7157,14 @@ msgstr "\n                    После создания списка в нег
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:45
 msgid "Share wishlist"
-msgstr ""
+msgstr "Поделиться списком желаний"
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:47
 msgid ""
 "If you want to share your wishlist with others, you can add their email "
 "addresses below. The visibility must be set to shared in order for this to "
 "work."
-msgstr ""
+msgstr "Если вы хотите поделиться списком желаний с другими людьми, добавьте их адреса электронной почты ниже. Чтобы это сработало, не забудьте поставить Доступность в режим \"Поделиться\"."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -7171,7 +7172,7 @@ msgstr "Количество товаров"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:23
 msgid "Wish list settings"
-msgstr "Настройки списка желаемого"
+msgstr "Настройки списка желаний"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:27
 msgid "Copy sharing link"
@@ -7179,7 +7180,7 @@ msgstr ""
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:43
 msgid "You don't have any wish lists yet."
-msgstr "У вас пока нет ни одного списка желаемых покупок."
+msgstr "У вас пока нет ни одного списка желаний."
 
 #: templates/oscar/dashboard/catalogue/attribute_option_group_delete.html:5
 #: templates/oscar/dashboard/catalogue/attribute_option_group_form.html:5
@@ -7266,7 +7267,7 @@ msgstr "\n            <p>Удаление категории <strong>%(name)s</s
 #: templates/oscar/dashboard/catalogue/category_form.html:43
 #: templates/oscar/dashboard/catalogue/category_form.html:62
 msgid "Category details"
-msgstr ""
+msgstr "Информация о категории"
 
 #: templates/oscar/dashboard/catalogue/category_form.html:48
 #: templates/oscar/dashboard/catalogue/category_form.html:82
@@ -7402,15 +7403,15 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/option_list.html:20
 msgid "Create new Option"
-msgstr ""
+msgstr "Создать новую Опцию"
 
 #: templates/oscar/dashboard/catalogue/option_list.html:34
 msgid "No Option found."
-msgstr ""
+msgstr "Опция не найдена."
 
 #: templates/oscar/dashboard/catalogue/option_row_actions.html:10
 msgid "Edit Option"
-msgstr ""
+msgstr "Изменить Опцию"
 
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:11
 msgid "Delete product type?"
@@ -7765,7 +7766,7 @@ msgstr "<em>Закрытые</em> складские уведомления"
 
 #: templates/oscar/dashboard/index.html:163
 msgid "Offers, vouchers"
-msgstr ""
+msgstr "Предложения, купоны"
 
 #: templates/oscar/dashboard/index.html:166
 #, python-format
@@ -7941,7 +7942,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:80
 msgid "All Offers"
-msgstr ""
+msgstr "Все предложения"
 
 #: templates/oscar/dashboard/offers/offer_list.html:95
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:40
@@ -9057,7 +9058,7 @@ msgstr "Набор купонов"
 #: templates/oscar/dashboard/vouchers/partials/voucher_details_table.html:13
 #: templates/oscar/dashboard/vouchers/partials/voucher_set_details_table.html:31
 msgid "Number of offers"
-msgstr ""
+msgstr "Кол-во предложений"
 
 #: templates/oscar/dashboard/vouchers/partials/voucher_set_details_table.html:15
 msgid "Start"
@@ -9139,7 +9140,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:84
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:60
 msgid "All Vouchers"
-msgstr ""
+msgstr "Все Купоны"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:93
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:38
@@ -9195,7 +9196,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_form.html:30
 msgid "Edit voucher set"
-msgstr ""
+msgstr "Изменить набор купонов"
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:21
 msgid "Create new voucher set"
@@ -9211,7 +9212,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_set_list.html:82
 msgid "No voucher sets found."
-msgstr ""
+msgstr "Наборы купонов не найдены."
 
 #: templates/oscar/dashboard/widgets/popup_response.html:3
 msgid "Popup closing..."
@@ -9451,7 +9452,7 @@ msgstr "\n                        Возможно, вы имели в виду 
 
 #: templates/oscar/wishlists/wishlist_detail.html:40
 msgid "This wish list is empty."
-msgstr ""
+msgstr "Этот список желаний пуст."
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
