@@ -152,6 +152,8 @@ The following extensions are stable and ready for use:
 
 * django-oscar-api_ - RESTful JSON API for django-oscar
 
+* django-oscar-odin_ - Odin Resources and mappings to Oscar models
+
 * django-oscar-adyen_ - Integration with the Adyen payment gateway
 
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
@@ -176,6 +178,7 @@ The following extensions are stable and ready for use:
   Oscar
 
 .. _django-oscar-api: https://github.com/django-oscar/django-oscar-api
+.. _django-oscar-odin: https://github.com/django-oscar/django-oscar-odin
 .. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/django-oscar/django-oscar-paymentexpress
