@@ -27,3 +27,7 @@ ipython>=7.12,<9
 
 # Country data
 pycountry
+
+#Django Rest Framework
+djangorestframework==3.12.2
+djangorestframework-jwt
