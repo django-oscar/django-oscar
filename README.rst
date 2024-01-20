@@ -108,7 +108,7 @@ The currently supported versions of Oscar are:
 | 2.2 LTS | August 2023    |
 +---------+----------------+
 
-Supported verions are eligible for fixes for data loss bugs and security issues. Releases designated as
+Supported versions are eligible for fixes for data loss bugs and security issues. Releases designated as
 Long-term support (LTS) releases will receive support for an extended period of 3 years from their release date.
 
 
