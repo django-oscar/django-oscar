@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, timezone as datetime_timezone
 
 from django.urls import reverse
 from django.utils import timezone
@@ -84,7 +84,7 @@ class ReviewsDashboardTests(WebTestCase):
             ProductReviewSearchForm doesn't recognize the timezone notation.
             """
             return timezone.make_naive(
-                now - timedelta(days=days), timezone=timezone.utc
+                now - timedelta(days=days), timezone=datetime_timezone.utc
             )
 
         now = timezone.now()
