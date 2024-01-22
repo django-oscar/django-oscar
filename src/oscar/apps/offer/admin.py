@@ -8,14 +8,17 @@ Benefit = get_model("offer", "Benefit")
 Range = get_model("offer", "Range")
 
 
+@admin.register(Condition)
 class ConditionAdmin(admin.ModelAdmin):
     list_display = ("type", "value", "range")
 
 
+@admin.register(Benefit)
 class BenefitAdmin(admin.ModelAdmin):
     list_display = ("__str__", "type", "value", "range")
 
 
+@admin.register(ConditionalOffer)
 class ConditionalOfferAdmin(admin.ModelAdmin):
     list_display = (
         "name",
@@ -48,7 +51,4 @@ class ConditionalOfferAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(ConditionalOffer, ConditionalOfferAdmin)
-admin.site.register(Condition, ConditionAdmin)
-admin.site.register(Benefit, BenefitAdmin)
 admin.site.register(Range)

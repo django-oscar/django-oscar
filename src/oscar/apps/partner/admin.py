@@ -6,10 +6,10 @@ Partner = get_model("partner", "Partner")
 StockRecord = get_model("partner", "StockRecord")
 
 
+@admin.register(StockRecord)
 class StockRecordAdmin(admin.ModelAdmin):
     list_display = ("product", "partner", "partner_sku", "price", "num_in_stock")
     list_filter = ("partner",)
 
 
 admin.site.register(Partner)
-admin.site.register(StockRecord, StockRecordAdmin)

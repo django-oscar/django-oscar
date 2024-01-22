@@ -6,6 +6,7 @@ Voucher = get_model("voucher", "Voucher")
 VoucherApplication = get_model("voucher", "VoucherApplication")
 
 
+@admin.register(Voucher)
 class VoucherAdmin(admin.ModelAdmin):
     list_display = (
         "name",
@@ -23,10 +24,9 @@ class VoucherAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(VoucherApplication)
 class VoucherApplicationAdmin(admin.ModelAdmin):
     list_display = ("voucher", "user", "order", "date_created")
     readonly_fields = ("voucher", "user", "order")
 
 
-admin.site.register(Voucher, VoucherAdmin)
-admin.site.register(VoucherApplication, VoucherApplicationAdmin)

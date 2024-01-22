@@ -25,6 +25,7 @@ class LineInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     raw_id_fields = [
         "user",
@@ -50,14 +51,17 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [LineInline]
 
 
+@admin.register(Line)
 class LineAdmin(admin.ModelAdmin):
     list_display = ("order", "product", "stockrecord", "quantity")
 
 
+@admin.register(LinePrice)
 class LinePriceAdmin(admin.ModelAdmin):
     list_display = ("order", "line", "price_incl_tax", "quantity")
 
 
+@admin.register(ShippingEventType)
 class ShippingEventTypeAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
@@ -67,6 +71,7 @@ class PaymentEventQuantityInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(PaymentEvent)
 class PaymentEventAdmin(admin.ModelAdmin):
     list_display = (
         "order",
@@ -78,10 +83,12 @@ class PaymentEventAdmin(admin.ModelAdmin):
     inlines = [PaymentEventQuantityInline]
 
 
+@admin.register(PaymentEventType)
 class PaymentEventTypeAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(OrderDiscount)
 class OrderDiscountAdmin(admin.ModelAdmin):
     readonly_fields = (
         "order",
@@ -95,22 +102,15 @@ class OrderDiscountAdmin(admin.ModelAdmin):
     list_display = ("order", "category", "offer", "voucher", "voucher_code", "amount")
 
 
+@admin.register(Surcharge)
 class SurchargeAdmin(admin.ModelAdmin):
     raw_id_fields = ("order",)
 
 
-admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderNote)
 admin.site.register(OrderStatusChange)
 admin.site.register(ShippingAddress)
-admin.site.register(Line, LineAdmin)
-admin.site.register(LinePrice, LinePriceAdmin)
 admin.site.register(ShippingEvent)
-admin.site.register(ShippingEventType, ShippingEventTypeAdmin)
-admin.site.register(PaymentEvent, PaymentEventAdmin)
-admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
 admin.site.register(LineAttribute)
-admin.site.register(OrderDiscount, OrderDiscountAdmin)
 admin.site.register(CommunicationEvent)
 admin.site.register(BillingAddress)
-admin.site.register(Surcharge, SurchargeAdmin)

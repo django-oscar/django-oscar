@@ -157,19 +157,16 @@ class BasketThresholdTest(WebTestCase):
             "than %(threshold)d items in one order. Your basket currently "
             "has %(basket)d items."
         ) % ({"threshold": 3, "basket": 2})
-        if django.VERSION < (3, 2):
-            self.assertIn(expected, response.test_app.cookies["messages"])
-        else:
-            signer = signing.get_cookie_signer(salt="django.contrib.messages")
-            message_strings = [
-                m.message
-                # pylint: disable=no-member
-                for m in signer.unsign_object(
-                    response.test_app.cookies["messages"],
-                    serializer=cookie.MessageSerializer,
-                )
-            ]
-            self.assertIn(expected, message_strings)
+        signer = signing.get_cookie_signer(salt="django.contrib.messages")
+        message_strings = [
+            m.message
+            # pylint: disable=no-member
+            for m in signer.unsign_object(
+                response.test_app.cookies["messages"],
+                serializer=cookie.MessageSerializer,
+            )
+        ]
+        self.assertIn(expected, message_strings)
 
 
 class BasketReportTests(TestCase):

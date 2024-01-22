@@ -68,4 +68,3 @@ INSTALLED_APPS = [
 ]
 
 
-default_app_config = "oscar.config.Shop"

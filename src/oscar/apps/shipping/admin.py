@@ -7,6 +7,7 @@ WeightBand = get_model("shipping", "WeightBand")
 WeightBased = get_model("shipping", "WeightBased")
 
 
+@admin.register(OrderAndItemCharges)
 class OrderChargesAdmin(admin.ModelAdmin):
     filter_horizontal = ("countries",)
     list_display = (
@@ -22,10 +23,9 @@ class WeightBandInline(admin.TabularInline):
     model = WeightBand
 
 
+@admin.register(WeightBased)
 class WeightBasedAdmin(admin.ModelAdmin):
     filter_horizontal = ("countries",)
     inlines = [WeightBandInline]
 
 
-admin.site.register(OrderAndItemCharges, OrderChargesAdmin)
-admin.site.register(WeightBased, WeightBasedAdmin)
