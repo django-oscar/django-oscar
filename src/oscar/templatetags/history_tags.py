@@ -37,7 +37,7 @@ def get_back_button(context):
     if not request:
         raise Exception("Cannot get request from context")
 
-    referrer = request.headers.get("referer", None)
+    referrer = request.META.get("HTTP_REFERER", None)
     if not referrer:
         return None
 
