@@ -1,4 +1,5 @@
 import os
+
 import environ
 import oscar
 
@@ -304,6 +305,9 @@ INSTALLED_APPS = [
     # 3rd-party apps that the sandbox depends on
     'django_extensions',
     'debug_toolbar',
+
+    'rest_framework',
+    'blog',
 ]
 
 # Add Oscar's custom auth backend so users can sign in using their email
@@ -333,6 +337,7 @@ APPEND_SLASH = True
 # ====================
 
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }

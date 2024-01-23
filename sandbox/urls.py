@@ -1,4 +1,5 @@
 import django
+from apps.sitemaps import base_sitemaps
 from django.apps import apps
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
@@ -7,8 +8,6 @@ from django.contrib import admin
 from django.contrib.sitemaps import views
 from django.urls import include, path
 from oscar.views import handler403, handler404, handler500
-
-from apps.sitemaps import base_sitemaps
 
 admin.autodiscover()
 
@@ -25,7 +24,8 @@ urlpatterns = [
         {'sitemaps': base_sitemaps}),
     path('sitemap-<slug:section>.xml', views.sitemap,
         {'sitemaps': base_sitemaps},
-        name='django.contrib.sitemaps.views.sitemap')
+        name='django.contrib.sitemaps.views.sitemap'),
+    path('api/blog/', include("blog.urls")),
 ]
 
 # Prefix Oscar URLs with language codes
