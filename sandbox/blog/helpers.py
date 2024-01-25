@@ -1,4 +1,4 @@
-from blog.models import Post, Category
+from blog.models import Post, Category, Comment
 from typing import List, Union
 
 def get_blog_posts(limit: int = 10, offset: int = 0) -> list[Post]:
@@ -30,6 +30,22 @@ def get_post_by_id(post_id: int) -> Post:
         return Post.objects.get(pk=post_id)
     except Post.DoesNotExist:
         return None
+
+
+def post_details(post_id: int) -> dict:
+    """
+    Retrieve a post with its comments.
+    
+    Parameters:
+        post_id (int): The ID of the post to retrieve.
+        
+    Returns:
+        dict: A dictionary containing the post and its comments.
+    """
+    post = get_post_by_id(post_id)
+    comments = get_comments(post_id)
+    return {'post': post, 'comments': comments}
+
 
 
 def insert_post(post_data: dict) -> Post:
@@ -137,3 +153,61 @@ def delete_category(category_id: int) -> bool:
         return True
     except Category.DoesNotExist:
         return False
+
+def get_comments(post_id: int) -> List[Comment]:
+    """
+    This function returns all comments of a post.
+
+    Parameters:
+        post_id (int): The id of the post.
+
+    Returns:
+        List[Comment]: A list of Comment objects representing all comments of the post.
+    """
+    return Comment.objects.filter(post_id=post_id)
+
+
+def insert_comment(post_id: int, user_id: int, text: str) -> Comment:
+    """
+    This function inserts a new comment into the database.
+
+    Parameters:
+        post_id (int): The id of the post to which the comment is being added.
+        user_id (int): The id of the user who is adding the comment.
+        text (str): The text of the comment.
+
+    Returns:
+        Comment: The newly created Comment object.
+    """
+    comment = Comment(post_id=post_id, user_id=user_id, content=text)
+    comment.save()
+    return comment
+
+
+
+def update_comment(comment_id: int, text: str) -> Comment:
+    """
+    This function updates the text of a comment.
+
+    Parameters:
+        comment_id (int): The id of the comment to be updated.
+        text (str): The new text of the comment.
+
+    Returns:
+        Comment: The updated Comment object.
+    """
+    comment = Comment.objects.get(pk=comment_id)
+    comment.content = text
+    comment.save()
+    return comment
+
+def delete_comment(comment_id: int) -> None:
+    """
+    This function deletes a comment from the database.
+
+    Parameters:
+        comment_id (int): The id of the comment to be deleted.
+    """
+    comment = Comment.objects.get(pk=comment_id)
+    comment.delete()
+

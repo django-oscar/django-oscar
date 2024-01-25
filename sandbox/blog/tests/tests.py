@@ -1,6 +1,17 @@
 from django.test import TestCase
-from .models import Post, Category
-from .helpers import get_blog_posts, get_post_by_id, insert_post, update_post, get_categories, get_category_by_id, insert_category, update_category, delete_category
+from ..models import Post, Category
+from ..helpers import (
+    get_blog_posts,
+    get_post_by_id,
+    insert_post,
+    update_post,
+    get_categories,
+    get_category_by_id,
+    insert_category,
+    update_category,
+    delete_category
+)
+
 
 # Create your tests here.
 
@@ -87,3 +98,5 @@ class CategoryInsertUpdateDeleteTests(TestCase):
         delete_category(self.category.id)
         with self.assertRaises(Category.DoesNotExist):
             Category.objects.get(pk=self.category.id)
+
+

@@ -14,3 +14,10 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, related_name='posts')
+
+class Comment(models.Model):
+    content = models.TextField()
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    user_id = models.IntegerField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

@@ -26,6 +26,7 @@ urlpatterns = [
         {'sitemaps': base_sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
     path('api/blog/', include("blog.urls")),
+    path('api/newsletter/', include("newsletter.urls")),
 ]
 
 # Prefix Oscar URLs with language codes
