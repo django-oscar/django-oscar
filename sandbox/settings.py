@@ -308,6 +308,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'blog',
+    'newsletter',
 ]
 
 # Add Oscar's custom auth backend so users can sign in using their email
