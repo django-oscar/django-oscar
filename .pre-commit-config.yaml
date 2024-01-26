@@ -1,16 +1,23 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_language_version:
+    python: python3.8
+
+
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
-    hooks:
-    -   id: trailing-whitespace
-        language_version: python3
--   repo: https://github.com/PyCQA/flake8
-    rev: 3.8.3
-    hooks:
-    -   id: flake8
-        language_version: python3
-        exclude: migrations
--   repo: https://github.com/PyCQA/isort
-    rev: 5.7.0
-    hooks:
-    -   id: isort
+- repo: local
+  hooks:
+    - id: black
+      name: black
+      language: system
+      types: [python]
+      entry: black
+      args: [--check, oscar_odin/]
+      pass_filenames: false
+    - id: pylint
+      name: pylint
+      entry: pylint
+      args: [oscar_odin/]
+      language: system
+      types: [python]
+      pass_filenames: false
