@@ -2,7 +2,7 @@
 Oscar 3.2.3 release notes
 ========================================
 
-:release: 2024-09-01
+:release: 2024-02-02
 
 .. contents::
     :local:

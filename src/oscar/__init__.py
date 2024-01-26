@@ -1,5 +1,5 @@
 # Use 'alpha', 'beta', 'rc' or 'final' as the 4th element to indicate release type.
-VERSION = (3, 2, 3, "alpha", 1)
+VERSION = (3, 2, 3, "rc", 3)
 
 
 def get_short_version():
@@ -13,7 +13,7 @@ def get_version():
         version = "%s.%s" % (version, VERSION[2])
 
     if VERSION[3] != "final":
-        mapping = {"alpha": "a", "beta": "b", "rc": "c"}
+        mapping = {"alpha": "a", "beta": "b", "rc": "rc"}
         version = "%s%s" % (version, mapping[VERSION[3]])
         if len(VERSION) == 5:
             version = "%s%s" % (version, VERSION[4])
