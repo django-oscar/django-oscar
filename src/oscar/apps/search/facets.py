@@ -14,6 +14,8 @@ def base_sqs():
     for facet in settings.OSCAR_SEARCH_FACETS["queries"].values():
         for query in facet["queries"]:
             sqs = sqs.query_facet(facet["field"], query[1])
+
+    sqs = sqs.filter_and(is_public=True, structure__in=["standalone", "parent"])
     return sqs
 
 

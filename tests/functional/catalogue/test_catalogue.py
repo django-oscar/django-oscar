@@ -103,21 +103,16 @@ class TestProductListView(WebTestCase):
         self.assertContains(page, "Page 1 of 2")
 
     def test_is_public_on(self):
-        product = create_product(
-            upc="grote-bats", is_public=True, structure="standalone"
-        )
-        call_command("rebuild_index", "--noinput")
+        product = create_product(upc="grote-bats", is_public=True)
         page = self.app.get(reverse("catalogue:index"))
         products_on_page = list(page.context["products"])
         products_on_page = [prd.object for prd in products_on_page]
         self.assertEqual(products_on_page, [product])
 
     def test_is_public_off(self):
-        create_product(upc="kleine-bats", is_public=False)
-        call_command("rebuild_index", "--noinput")
+        product = create_product(upc="kleine-bats", is_public=False)
         page = self.app.get(reverse("catalogue:index"))
         products_on_page = list(page.context["products"])
-        products_on_page = [prd.object for prd in products_on_page]
         self.assertEqual(products_on_page, [])
 
     def test_invalid_page_redirects_to_index(self):

@@ -5,12 +5,16 @@ from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from oscar.core.loading import get_class, get_model
 
 FacetMunger = get_class("search.facets", "FacetMunger")
+base_sqs = get_class("search.facets", "base_sqs")
 Product = get_model("catalogue", "Product")
 
 
 class BaseSearchView(BaseFacetedSearchView):
     facet_fields = settings.OSCAR_SEARCH_FACETS["fields"].keys()
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+
+    def get_queryset(self):
+        return base_sqs()
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

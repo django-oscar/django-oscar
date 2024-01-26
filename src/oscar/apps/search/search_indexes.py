@@ -32,6 +32,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     date_created = indexes.DateTimeField(model_attr="date_created")
     date_updated = indexes.DateTimeField(model_attr="date_updated")
 
+    is_public = indexes.BooleanField(model_attr="is_public")
+    structure = indexes.CharField(model_attr="structure")
+
     _strategy = None
 
     def get_model(self):
@@ -42,13 +45,13 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().objects.browsable().order_by("-date_updated")
 
     def read_queryset(self, using=None):
-        return self.get_model().objects.browsable()
+        return self.get_model().objects.browsable().base_queryset()
 
     def prepare_product_class(self, obj):
         return obj.get_product_class().name
 
     def prepare_category(self, obj):
-        return [category.pk for category in obj.categories.all()] or None
+        return obj.categories.values_list("pk", flat=True) or None
 
     def prepare_rating(self, obj):
         if obj.rating is not None:
