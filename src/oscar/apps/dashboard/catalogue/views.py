@@ -77,7 +77,6 @@ Option = get_model("catalogue", "Option")
 
 
 class ProductListView(PartnerProductFilterMixin, SingleTableView):
-
     """
     Dashboard view of the product list.
     Supports the permission-based dashboard.
