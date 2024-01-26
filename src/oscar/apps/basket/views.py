@@ -350,9 +350,9 @@ class BasketAddView(FormView):
         # if the SESSION_SERIALIZER has been configured to 'django.contrib.sessions.serializers.PickleSerializer'.
         # see: https://docs.djangoproject.com/en/3.2/topics/http/sessions/#cookie-session-backend
         serialized_data = JSONSerializer().dumps(self.request.POST)
-        self.request.session[
-            "add_to_basket_form_post_data_%s" % self.product.pk
-        ] = serialized_data.decode("latin-1")
+        self.request.session["add_to_basket_form_post_data_%s" % self.product.pk] = (
+            serialized_data.decode("latin-1")
+        )
 
         return redirect_to_referrer(self.request, "basket:summary")
 

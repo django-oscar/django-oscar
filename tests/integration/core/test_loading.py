@@ -60,9 +60,9 @@ class TestClassLoading(TestCase):
         replaced_app_idx = installed_apps.index(
             "tests._site.apps.catalogue.apps.CatalogueConfig"
         )
-        installed_apps[
-            replaced_app_idx
-        ] = "tests._site.import_error_app.catalogue.apps.CatalogueConfig"
+        installed_apps[replaced_app_idx] = (
+            "tests._site.import_error_app.catalogue.apps.CatalogueConfig"
+        )
         with override_settings(INSTALLED_APPS=installed_apps):
             with self.assertRaises(ImportError):
                 get_class("catalogue.import_error_module", "ImportErrorClass")
@@ -74,9 +74,9 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
         replaced_app_idx = self.installed_apps.index(
             "oscar.apps.shipping.apps.ShippingConfig"
         )
-        self.installed_apps[
-            replaced_app_idx
-        ] = "tests._site.apps.shipping.apps.ShippingConfig"
+        self.installed_apps[replaced_app_idx] = (
+            "tests._site.apps.shipping.apps.ShippingConfig"
+        )
 
     def test_loading_class_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
@@ -133,9 +133,9 @@ class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):
         replaced_app_idx = self.installed_apps.index(
             "oscar.apps.shipping.apps.ShippingConfig"
         )
-        self.installed_apps[
-            replaced_app_idx
-        ] = "tests._site.apps.shipping.apps.ShippingConfig"
+        self.installed_apps[replaced_app_idx] = (
+            "tests._site.apps.shipping.apps.ShippingConfig"
+        )
 
     def test_loading_class_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):

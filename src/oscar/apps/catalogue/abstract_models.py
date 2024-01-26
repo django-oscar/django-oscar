@@ -1498,7 +1498,6 @@ class AbstractOption(models.Model):
 
 
 class MissingProductImage(object):
-
     """
     Mimics a Django file field by having a name property.
 
