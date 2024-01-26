@@ -15,11 +15,6 @@ BrowseSearchForm = get_class("search.forms", "BrowseSearchForm")
 CategorySearchForm = get_class("search.forms", "CategorySearchForm")
 
 
-# Import catalogue and category view from search app
-CatalogueView = get_class("search.views", "CatalogueView")
-ProductCategoryView = get_class("search.views", "ProductCategoryView")
-
-
 class ProductDetailView(DetailView):
     context_object_name = "product"
     model = Product
@@ -121,3 +116,8 @@ class ProductDetailView(DetailView):
             % (self.template_folder, self.object.get_product_class().slug),
             "oscar/%s/detail.html" % self.template_folder,
         ]
+
+
+# Import catalogue and category view from search app
+CatalogueView = get_class("search.views", "CatalogueView")
+ProductCategoryView = get_class("search.views", "ProductCategoryView")

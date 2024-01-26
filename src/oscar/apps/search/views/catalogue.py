@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
-from oscar.apps.search.signals import user_search
 
 SearchForm = get_class("search.forms", "SearchForm")
 Product = get_model("catalogue", "product")
@@ -16,30 +15,15 @@ ProductAlert = get_model("customer", "ProductAlert")
 ProductAlertForm = get_class("customer.forms", "ProductAlertForm")
 BrowseSearchForm = get_class("search.forms", "BrowseSearchForm")
 CategorySearchForm = get_class("search.forms", "CategorySearchForm")
-BaseFacetedSearchView = get_class("search.generic_views", "FacetedSearchView")
+BaseSearchView = get_class("search.views.base", "BaseSearchView")
 
 
-class BaseSearchView:
-    template_name = "oscar/search/results.html"
-    context_object_name = "results"
+class CatalogueView(BaseSearchView):
+    """
+    Browse all products in the catalogue
+    """
 
-    def dispatch(self, request, *args, **kwargs):
-        # Raise a signal for other apps to hook into for analytics
-        user_search.send(
-            sender=self,
-            session=self.request.session,
-            user=self.request.user,
-            query=self.request.GET.get("q"),
-        )
-
-        return super().dispatch(request, *args, **kwargs)
-
-
-class FacetedSearchView(BaseSearchView, BaseFacetedSearchView):
-    form_class = SearchForm
-
-
-class BaseCatalogueView:
+    form_class = BrowseSearchForm
     context_object_name = "products"
     template_name = "oscar/catalogue/browse.html"
     enforce_paths = True
@@ -58,21 +42,19 @@ class BaseCatalogueView:
         return ctx
 
 
-class CatalogueView(BaseCatalogueView, BaseFacetedSearchView):
+class ProductCategoryView(BaseSearchView):
     """
-    Browse all products in the catalogue
+    Browse products in a given category
     """
 
-    form_class = BrowseSearchForm
-
-
-class BaseProductCategoryView:
+    form_class = CategorySearchForm
     enforce_paths = True
     context_object_name = "products"
     template_name = "oscar/catalogue/category.html"
 
     def get(self, request, *args, **kwargs):
-        self.category = self.get_category()  # pylint: disable=W0201
+        # pylint: disable=W0201
+        self.category = self.get_category()
 
         # Allow staff members so they can test layout etc.
         if not self.is_viewable(self.category, request):
@@ -106,14 +88,6 @@ class BaseProductCategoryView:
         context = super().get_context_data(**kwargs)
         context["category"] = self.category
         return context
-
-
-class ProductCategoryView(BaseProductCategoryView, BaseFacetedSearchView):
-    """
-    Browse products in a given category
-    """
-
-    form_class = CategorySearchForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
