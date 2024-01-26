@@ -110,7 +110,7 @@ class TestProductListView(WebTestCase):
         self.assertEqual(products_on_page, [product])
 
     def test_is_public_off(self):
-        product = create_product(upc="kleine-bats", is_public=False)
+        create_product(upc="kleine-bats", is_public=False)
         page = self.app.get(reverse("catalogue:index"))
         products_on_page = list(page.context["products"])
         self.assertEqual(products_on_page, [])
