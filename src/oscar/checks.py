@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 @register()
-def startup_check(app_configs, **kwargs):
+def startup_check(*args, **kwargs):
     errors = []
 
     if (

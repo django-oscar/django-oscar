@@ -8,10 +8,9 @@ from django.utils.translation import gettext_lazy as _
 from haystack.forms import FacetedSearchForm
 from haystack.inputs import Exact
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class
 
 is_solr_supported = get_class("search.features", "is_solr_supported")
-Product = get_model("catalogue", "Product")
 
 
 class SearchInput(Input):
