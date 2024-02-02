@@ -20,8 +20,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     title_exact = indexes.CharField(model_attr="title", null=True, indexed=False)
 
     # Fields for faceting
-    product_class = indexes.CharField(null=True, faceted=True)
-    category = indexes.MultiValueField(null=True, faceted=True)
+    product_class = indexes.CharField(null=True, faceted=False)
+    categories = indexes.MultiValueField(null=True, faceted=True)
     price = indexes.FloatField(null=True, faceted=True)
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
     rating = indexes.IntegerField(null=True, faceted=True)
@@ -50,8 +50,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_product_class(self, obj):
         return obj.get_product_class().name
 
-    def prepare_category(self, obj):
-        return obj.categories.values_list("pk", flat=True) or None
+    def prepare_categories(self, obj):
+        return list(obj.get_categories().values_list("pk", flat=True)) or []
 
     def prepare_rating(self, obj):
         if obj.rating is not None:

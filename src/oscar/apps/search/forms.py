@@ -6,7 +6,6 @@ from django.forms.widgets import Input
 from django.utils.translation import gettext_lazy as _
 
 from haystack.forms import FacetedSearchForm
-from haystack.inputs import Exact
 
 from oscar.core.loading import get_class
 
@@ -114,15 +113,12 @@ class SearchForm(FacetedSearchForm):
 
         return selected_multi_facets
 
-    def get_base_search_queryset(self):
-        return super(FacetedSearchForm, self).search()
-
     def search(self):
         # We replace the 'search' method from FacetedSearchForm, so that we can
         # handle range queries
         # Note, we call super on a parent class as the default faceted view
         # escapes everything (which doesn't work for price range queries)
-        sqs = self.get_base_search_queryset()
+        sqs = super(FacetedSearchForm, self).search()
 
         # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:
@@ -147,25 +143,29 @@ class SearchForm(FacetedSearchForm):
         return sqs
 
 
-class BrowseSearchForm(SearchForm):
+class BrowseCategoryForm(SearchForm):
     """
     Variant of SearchForm that returns all products (instead of none) if no
     query is specified.
     """
 
-    def get_base_search_queryset(self):
+    def no_query_found(self):
+        """
+        Return Queryset of all the results.
+        """
         return self.searchqueryset
 
 
-class CategorySearchForm(BrowseSearchForm):
+class CategoryForm(BrowseCategoryForm):
     def __init__(self, categories, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.categories = categories
 
-    def search(self):
-        sqs = self.get_base_search_queryset()
+    def no_query_found(self):
+        """
+        Return Queryset of all the results.
+        """
+        sqs = super().no_query_found()
 
-        for cat in self.categories:
-            sqs = sqs.filter_or(category=Exact(cat.pk))
-
-        return sqs
+        category_ids = list(self.categories.values_list("pk", flat=True))
+        return sqs.filter(categories__in=category_ids)

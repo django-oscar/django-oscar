@@ -8,14 +8,10 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
 
-SearchForm = get_class("search.forms", "SearchForm")
-Product = get_model("catalogue", "product")
-Category = get_model("catalogue", "category")
-ProductAlert = get_model("customer", "ProductAlert")
-ProductAlertForm = get_class("customer.forms", "ProductAlertForm")
-BrowseSearchForm = get_class("search.forms", "BrowseSearchForm")
-CategorySearchForm = get_class("search.forms", "CategorySearchForm")
+BrowseCategoryForm = get_class("search.forms", "BrowseCategoryForm")
+CategoryForm = get_class("search.forms", "CategoryForm")
 BaseSearchView = get_class("search.views.base", "BaseSearchView")
+Category = get_model("catalogue", "Category")
 
 
 class CatalogueView(BaseSearchView):
@@ -23,7 +19,7 @@ class CatalogueView(BaseSearchView):
     Browse all products in the catalogue
     """
 
-    form_class = BrowseSearchForm
+    form_class = BrowseCategoryForm
     context_object_name = "products"
     template_name = "oscar/catalogue/browse.html"
     enforce_paths = True
@@ -47,7 +43,7 @@ class ProductCategoryView(BaseSearchView):
     Browse products in a given category
     """
 
-    form_class = CategorySearchForm
+    form_class = CategoryForm
     enforce_paths = True
     context_object_name = "products"
     template_name = "oscar/catalogue/category.html"

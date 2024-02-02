@@ -1,15 +1,9 @@
 from django.utils.translation import gettext_lazy as _
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class
 from oscar.apps.search.signals import user_search
 
 SearchForm = get_class("search.forms", "SearchForm")
-Product = get_model("catalogue", "product")
-Category = get_model("catalogue", "category")
-ProductAlert = get_model("customer", "ProductAlert")
-ProductAlertForm = get_class("customer.forms", "ProductAlertForm")
-BrowseSearchForm = get_class("search.forms", "BrowseSearchForm")
-CategorySearchForm = get_class("search.forms", "CategorySearchForm")
 BaseSearchView = get_class("search.views.base", "BaseSearchView")
 
 

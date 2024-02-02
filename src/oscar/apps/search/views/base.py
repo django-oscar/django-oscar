@@ -2,11 +2,10 @@ from django.conf import settings
 
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class
 
 FacetMunger = get_class("search.facets", "FacetMunger")
 base_sqs = get_class("search.facets", "base_sqs")
-Product = get_model("catalogue", "Product")
 
 
 class BaseSearchView(BaseFacetedSearchView):

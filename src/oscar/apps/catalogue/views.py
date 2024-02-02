@@ -11,8 +11,6 @@ Product = get_model("catalogue", "product")
 Category = get_model("catalogue", "category")
 ProductAlert = get_model("customer", "ProductAlert")
 ProductAlertForm = get_class("customer.forms", "ProductAlertForm")
-BrowseSearchForm = get_class("search.forms", "BrowseSearchForm")
-CategorySearchForm = get_class("search.forms", "CategorySearchForm")
 
 
 class ProductDetailView(DetailView):
