@@ -12,7 +12,7 @@ def startup_check(app_configs, **kwargs):
     ):
         errors.append(
             Error(
-                "OSCAR_PRODUCT_SEARCH_HANDLER is removed since django-oscar==3.2.4.",
+                "The OSCAR_PRODUCT_SEARCH_HANDLER is removed since django-oscar==3.2.4.",
                 hint="Use the new class based haystack views instead located in search.views. Any customizations that has been done to the search handler should be moved there.",
                 id="django-oscar.E001",
             )
