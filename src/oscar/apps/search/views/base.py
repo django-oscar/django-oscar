@@ -18,7 +18,7 @@ class BaseSearchView(BaseFacetedSearchView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        
+
         form = context[self.form_name]
 
         # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
