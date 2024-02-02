@@ -18,12 +18,14 @@ class BaseSearchView(BaseFacetedSearchView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        
+        form = context[self.form_name]
 
         # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
         # if there are some results, which seems a bit weird to me.
         if self.queryset.query.backend.include_spelling:
             # Note, this triggers an extra call to the search backend
-            suggestion = context["form"].get_suggestion()
+            suggestion = form.get_suggestion()
             if suggestion != context["query"]:
                 context["suggestion"] = suggestion
 
@@ -31,7 +33,7 @@ class BaseSearchView(BaseFacetedSearchView):
         if "fields" in context["facets"]:
             munger = FacetMunger(
                 self.request.get_full_path(),
-                context[self.form_name].selected_multi_facets,
+                form.selected_multi_facets,
                 self.queryset.facet_counts(),
             )
             context["facet_data"] = munger.facet_data()
@@ -39,5 +41,8 @@ class BaseSearchView(BaseFacetedSearchView):
                 [len(data["results"]) for data in context["facet_data"].values()]
             )
             context["has_facets"] = has_facets
+
+        context["selected_facets"] = form.selected_facets
+        context[self.page_kwarg] = context["page_obj"]
 
         return context
