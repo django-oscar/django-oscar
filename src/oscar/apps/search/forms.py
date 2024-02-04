@@ -26,7 +26,7 @@ class SearchInput(Input):
 # Build a dict of valid queries
 VALID_FACET_QUERIES = defaultdict(list)
 for facet in settings.OSCAR_SEARCH_FACETS["queries"].values():
-    name = "%s_exact" % facet["field"]
+    name = facet["field"]
     queries = [t[1] for t in facet["queries"]]
     VALID_FACET_QUERIES[name].extend(queries)
 
