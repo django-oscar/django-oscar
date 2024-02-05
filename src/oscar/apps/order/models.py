@@ -126,7 +126,7 @@ if not is_model_registered("order", "OrderLineDiscount"):
     class OrderLineDiscount(AbstractOrderLineDiscount):
         pass
 
-    __all__.append("OrderDiscount")
+    __all__.append("OrderLineDiscount")
 
 
 if not is_model_registered("order", "Surcharge"):
