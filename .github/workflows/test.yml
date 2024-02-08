@@ -50,7 +50,7 @@ jobs:
         DATABASE_HOST: localhost
         DATABASE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
       run: |
-        python manage.py migrate
+        python sandbox/manage.py migrate
     - name: Run tests
       env:
         DATABASE_USER: postgres
