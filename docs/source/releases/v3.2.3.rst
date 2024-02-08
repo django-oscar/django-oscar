@@ -76,4 +76,4 @@ New Contributors
 * @Ajaysainisd made their first contribution in https://github.com/django-oscar/django-oscar/pull/4207
 * @frlnx made their first contribution in https://github.com/django-oscar/django-oscar/pull/4223
 
-**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2.2...3.2.3a1
+**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2.2...3.2.3

@@ -9,6 +9,7 @@ Release notes for each version of Oscar published to PyPI.
 .. toctree::
     :maxdepth: 1
 
+    v3.2.4
     v3.2.3
     v3.2.2
     v3.2
