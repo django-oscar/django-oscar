@@ -1,6 +1,11 @@
 from django.conf import settings
 from haystack.query import SearchQuerySet
-from haystack.backends.whoosh_backend import WhooshSearchQuery
+from haystack.exceptions import MissingDependency
+try:
+    from haystack.backends.whoosh_backend import WhooshSearchQuery
+except MissingDependency:
+    WhooshSearchQuery = None
+
 from purl import URL
 
 
