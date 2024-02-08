@@ -1,6 +1,7 @@
 from django.conf import settings
 from haystack.query import SearchQuerySet
 from haystack.exceptions import MissingDependency
+
 try:
     from haystack.backends.whoosh_backend import WhooshSearchQuery
 except MissingDependency:
