@@ -34,6 +34,7 @@ class BaseSearchView(BaseFacetedSearchView):
                 self.request.get_full_path(),
                 form.selected_multi_facets,
                 self.queryset.facet_counts(),
+                query_type=type(self.queryset.query),
             )
             context["facet_data"] = munger.facet_data()
             has_facets = any(

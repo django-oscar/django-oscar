@@ -1,5 +1,6 @@
 from django.conf import settings
 from haystack.query import SearchQuerySet
+from haystack.backends.whoosh_backend import WhooshSearchQuery
 from purl import URL
 
 
@@ -15,15 +16,16 @@ def base_sqs():
         for query in facet["queries"]:
             sqs = sqs.query_facet(facet["field"], query[1])
 
-    sqs = sqs.filter_and(is_public=True, structure__in=["standalone", "parent"])
+    sqs = sqs.filter_and(is_public="true", structure__in=["standalone", "parent"])
     return sqs
 
 
 class FacetMunger(object):
-    def __init__(self, path, selected_multi_facets, facet_counts):
+    def __init__(self, path, selected_multi_facets, facet_counts, query_type=None):
         self.base_url = URL(path)
         self.selected_facets = selected_multi_facets
         self.facet_counts = facet_counts
+        self.query_type = query_type
 
     def facet_data(self):
         facet_data = {}
@@ -31,7 +33,10 @@ class FacetMunger(object):
         # isn't running. Skip facet munging in that case.
         if self.facet_counts:
             self.munge_field_facets(facet_data)
-            self.munge_query_facets(facet_data)
+            if self.query_type is not None and self.query_type not in [
+                WhooshSearchQuery
+            ]:
+                self.munge_query_facets(facet_data)
         return facet_data
 
     def munge_field_facets(self, clean_data):

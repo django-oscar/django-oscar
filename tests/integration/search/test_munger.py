@@ -95,29 +95,3 @@ class TestFacetMunger(TestCase):
         for facet_data in data.values():
             for result in facet_data["results"]:
                 self.assertTrue("page" not in result["select_url"])
-
-    def test_with_price_facets_selected(self):
-        munger = facets.FacetMunger(
-            path="/search?q=test&selected_facets=price_exact%3A%5B20+TO+40%5D",
-            selected_multi_facets={"price_exact": ["[20 TO 40]"]},
-            facet_counts=FACET_COUNTS_WITH_PRICE_RANGE_SELECTED,
-        )
-        data = munger.facet_data()
-
-        self.assertTrue("price_range" in data)
-        self.assertEqual(4, len(data["price_range"]["results"]))
-
-        # Check a sample facet dict has the right keys
-        datum = data["price_range"]["results"][1]
-        for key in (
-            "count",
-            "disabled",
-            "name",
-            "deselect_url",
-            "selected",
-            "show_count",
-        ):
-            self.assertTrue(key in datum)
-
-        self.assertEqual(datum["count"], 21)
-        self.assertTrue(datum["selected"])

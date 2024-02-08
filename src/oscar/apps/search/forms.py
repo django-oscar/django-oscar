@@ -168,4 +168,4 @@ class CategoryForm(BrowseCategoryForm):
         sqs = super().no_query_found()
 
         category_ids = list(self.categories.values_list("pk", flat=True))
-        return sqs.filter(categories__in=category_ids)
+        return sqs.filter(category__in=category_ids)
