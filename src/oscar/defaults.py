@@ -252,10 +252,10 @@ OSCAR_SEARCH_FACETS = {
     },
 }
 
-OSCAR_PRODUCT_SEARCH_HANDLER = None
-
 OSCAR_THUMBNAILER = "oscar.core.thumbnails.SorlThumbnail"
 
 OSCAR_URL_SCHEMA = "http"
 
 OSCAR_SAVE_SENT_EMAILS_TO_DB = True
+
+HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"

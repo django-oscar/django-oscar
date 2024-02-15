@@ -1,11 +1,8 @@
 from urllib.parse import quote
 
-from django.contrib import messages
-from django.core.paginator import InvalidPage
 from django.http import Http404, HttpResponsePermanentRedirect
-from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView
 
 from oscar.apps.catalogue.signals import product_viewed
 from oscar.core.loading import get_class, get_model
@@ -14,9 +11,6 @@ Product = get_model("catalogue", "product")
 Category = get_model("catalogue", "category")
 ProductAlert = get_model("customer", "ProductAlert")
 ProductAlertForm = get_class("customer.forms", "ProductAlertForm")
-get_product_search_handler_class = get_class(
-    "catalogue.search_handlers", "get_product_search_handler_class"
-)
 
 
 class ProductDetailView(DetailView):
@@ -122,102 +116,6 @@ class ProductDetailView(DetailView):
         ]
 
 
-class CatalogueView(TemplateView):
-    """
-    Browse all products in the catalogue
-    """
-
-    context_object_name = "products"
-    template_name = "oscar/catalogue/browse.html"
-
-    def get(self, request, *args, **kwargs):
-        try:
-            # pylint: disable=attribute-defined-outside-init
-            self.search_handler = self.get_search_handler(
-                self.request.GET, request.get_full_path(), []
-            )
-            response = super().get(request, *args, **kwargs)
-        except InvalidPage:
-            # Redirect to page one.
-            messages.error(request, _("The given page number was invalid."))
-            return redirect("catalogue:index")
-        return response
-
-    def get_search_handler(self, *args, **kwargs):
-        return get_product_search_handler_class()(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        ctx = {}
-        ctx["summary"] = _("All products")
-        search_context = self.search_handler.get_search_context_data(
-            self.context_object_name
-        )
-        ctx.update(search_context)
-        return ctx
-
-
-class ProductCategoryView(TemplateView):
-    """
-    Browse products in a given category
-    """
-
-    context_object_name = "products"
-    template_name = "oscar/catalogue/category.html"
-    enforce_paths = True
-
-    def get(self, request, *args, **kwargs):
-        # Fetch the category; return 404 or redirect as needed
-        # pylint: disable=attribute-defined-outside-init
-        self.category = self.get_category()
-
-        # Allow staff members so they can test layout etc.
-        if not self.is_viewable(self.category, request):
-            raise Http404()
-
-        potential_redirect = self.redirect_if_necessary(request.path, self.category)
-        if potential_redirect is not None:
-            return potential_redirect
-
-        try:
-            # pylint: disable=attribute-defined-outside-init
-            self.search_handler = self.get_search_handler(
-                request.GET, request.get_full_path(), self.get_categories()
-            )
-            response = super().get(request, *args, **kwargs)
-        except InvalidPage:
-            messages.error(request, _("The given page number was invalid."))
-            return redirect(self.category.get_absolute_url())
-
-        return response
-
-    def is_viewable(self, category, request):
-        return category.is_public or request.user.is_staff
-
-    def get_category(self):
-        return get_object_or_404(Category, pk=self.kwargs["pk"])
-
-    def redirect_if_necessary(self, current_path, category):
-        if self.enforce_paths:
-            # Categories are fetched by primary key to allow slug changes.
-            # If the slug has changed, issue a redirect.
-            expected_path = category.get_absolute_url()
-            if expected_path != quote(current_path):
-                return HttpResponsePermanentRedirect(expected_path)
-
-    def get_search_handler(self, *args, **kwargs):
-        return get_product_search_handler_class()(*args, **kwargs)
-
-    def get_categories(self):
-        """
-        Return a list of the current category and its ancestors
-        """
-        return self.category.get_descendants_and_self()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["category"] = self.category
-        search_context = self.search_handler.get_search_context_data(
-            self.context_object_name
-        )
-        context.update(search_context)
-        return context
+# Import catalogue and category view from search app
+CatalogueView = get_class("search.views", "CatalogueView")
+ProductCategoryView = get_class("search.views", "ProductCategoryView")

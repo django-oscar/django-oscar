@@ -1,5 +1,12 @@
 from django.conf import settings
 from haystack.query import SearchQuerySet
+from haystack.exceptions import MissingDependency
+
+try:
+    from haystack.backends.whoosh_backend import WhooshSearchQuery
+except MissingDependency:
+    WhooshSearchQuery = None
+
 from purl import URL
 
 
@@ -14,14 +21,17 @@ def base_sqs():
     for facet in settings.OSCAR_SEARCH_FACETS["queries"].values():
         for query in facet["queries"]:
             sqs = sqs.query_facet(facet["field"], query[1])
+
+    sqs = sqs.filter_and(is_public="true", structure__in=["standalone", "parent"])
     return sqs
 
 
 class FacetMunger(object):
-    def __init__(self, path, selected_multi_facets, facet_counts):
+    def __init__(self, path, selected_multi_facets, facet_counts, query_type=None):
         self.base_url = URL(path)
         self.selected_facets = selected_multi_facets
         self.facet_counts = facet_counts
+        self.query_type = query_type
 
     def facet_data(self):
         facet_data = {}
@@ -29,7 +39,10 @@ class FacetMunger(object):
         # isn't running. Skip facet munging in that case.
         if self.facet_counts:
             self.munge_field_facets(facet_data)
-            self.munge_query_facets(facet_data)
+            if self.query_type is not None and self.query_type not in [
+                WhooshSearchQuery
+            ]:
+                self.munge_query_facets(facet_data)
         return facet_data
 
     def munge_field_facets(self, clean_data):
@@ -39,7 +52,7 @@ class FacetMunger(object):
     def munge_field_facet(self, key, facet, clean_data):
         clean_data[key] = {"name": facet["name"], "results": []}
         for field_value, count in self.facet_counts["fields"][key]:
-            field_name = "%s_exact" % facet["field"]
+            field_name = facet["field"]
             is_faceted_already = field_name in self.selected_facets
             datum = {
                 "name": field_value,
@@ -75,7 +88,7 @@ class FacetMunger(object):
         # Loop over the queries in OSCAR_SEARCH_FACETS rather than the returned
         # facet information from the search backend.
         for field_value, query in facet["queries"]:
-            field_name = "%s_exact" % facet["field"]
+            field_name = facet["field"]
             is_faceted_already = field_name in self.selected_facets
 
             match = "%s:%s" % (field_name, query)
