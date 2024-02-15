@@ -115,7 +115,7 @@ class AbstractProductClass(models.Model):
         verbose_name_plural = _("Product classes")
 
     def __str__(self):
-        return self.name
+        return self.name or self.slug
 
     @property
     def has_attributes(self):
