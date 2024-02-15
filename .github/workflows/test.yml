@@ -52,7 +52,7 @@ jobs:
       run: |
         coverage run --parallel -m pytest -x
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1.5.2
+      uses: codecov/codecov-action@v4.0.1
       with:
         fail_ci_if_error: false
   lint_python:
@@ -73,9 +73,9 @@ jobs:
   lint_js:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up NodeJS
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: '16'
     - name: Install dependencies
