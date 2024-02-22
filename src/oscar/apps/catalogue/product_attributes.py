@@ -249,7 +249,8 @@ class ProductAttributesContainer:
                         )
 
                         bound_value_obj = attribute.bind_value(new_value_obj, value)
-                        if bound_value_obj is not None:
+                        # don't create attributevalues that wheren't even set at all.
+                        if bound_value_obj is not None and bound_value_obj.is_dirty:
                             assert not bound_value_obj.pk
                             to_be_created.append(bound_value_obj)
                     else:
