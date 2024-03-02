@@ -1,12 +1,17 @@
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 from django.contrib import messages
 from django.template.loader import render_to_string
 
 from oscar.core.loading import get_class, get_model
+from oscar.core.decorators import deprecated
 
 Applicator = get_class("offer.applicator", "Applicator")
 ConditionalOffer = get_model("offer", "ConditionalOffer")
+
+DiscountApplication = namedtuple(
+    "DiscountApplication", ["amount", "quantity", "incl_tax", "offer"]
+)
 
 
 class BasketMessageGenerator(object):
@@ -125,7 +130,11 @@ class LineOfferConsumer(object):
             self._consumptions[offer.pk] += num_consumed
         return num_consumed
 
+    @deprecated
     def consumed(self, offer=None):
+        return self.num_consumed(offer)
+
+    def num_consumed(self, offer=None):
         """
         check how many items on this line have been
         consumed by an offer
@@ -145,7 +154,7 @@ class LineOfferConsumer(object):
 
     @property
     def consumers(self):
-        return [x for x in self._offers.values() if self.consumed(x)]
+        return [x for x in self._offers.values() if self.num_consumed(x)]
 
     def available(self, offer=None) -> int:
         """
@@ -172,7 +181,9 @@ class LineOfferConsumer(object):
                         ):
                             # Exclusive offers cannot be applied if any other exclusive
                             # offer with higher priority is active already.
-                            max_affected_items = max_affected_items - self.consumed(a)
+                            max_affected_items = max_affected_items - self.num_consumed(
+                                a
+                            )
                             if max_affected_items == 0:
                                 return 0
 
@@ -191,4 +202,46 @@ class LineOfferConsumer(object):
                 if check and offer not in x.combined_offers:
                     return 0
 
-        return max_affected_items - self.consumed(offer)
+        return max_affected_items - self.num_consumed(offer)
+
+
+class LineDiscountRegistry(LineOfferConsumer):
+    def __init__(self, line):
+        super().__init__(line)
+        self._discounts = []
+        self._discount_excl_tax = None
+        self._discount_incl_tax = None
+
+    def discount(self, amount, quantity, incl_tax=True, offer=None):
+        self._discounts.append(DiscountApplication(amount, quantity, incl_tax, offer))
+        self.consume(quantity, offer=offer)
+        if incl_tax:
+            self._discount_incl_tax = None
+        else:
+            self._discount_excl_tax = None
+
+    @property
+    def excl_tax(self):
+        if self._discount_excl_tax is None:
+            self._discount_excl_tax = sum(
+                [d.amount for d in self._discounts if not d.incl_tax], 0
+            )
+        return self._discount_excl_tax
+
+    @property
+    def incl_tax(self):
+        if self._discount_incl_tax is None:
+            self._discount_incl_tax = sum(
+                [d.amount for d in self._discounts if d.incl_tax], 0
+            )
+        return self._discount_incl_tax
+
+    @property
+    def total(self):
+        return sum([d.amount for d in self._discounts], 0)
+
+    def all(self):
+        return self._discounts
+
+    def __iter__(self):
+        return iter(self._discounts)

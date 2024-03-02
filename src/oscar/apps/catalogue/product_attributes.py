@@ -69,6 +69,7 @@ class ProductAttributesContainer:
         "initialize",
         "product",
         "refresh",
+        "prepare_save",
         "save",
         "set",
         "update",
@@ -204,16 +205,18 @@ class ProductAttributesContainer:
     def __iter__(self):
         return iter(self.get_values())
 
-    def save(self):
+    def prepare_save(self):
+        to_be_updated = []
+        to_be_created = []
+        to_be_deleted = []
+        update_fields = set()
+
         if not self.initialized and not self._dirty:
-            return  # no need to save untouched attr lists
+            # no need to save untouched attr lists
+            return (to_be_updated, to_be_created, to_be_deleted, update_fields)
 
         ProductAttributeValue = self.product.attribute_values.model
 
-        to_be_updated = []
-        update_fields = set()
-        to_be_deleted = []
-        to_be_created = []
         for attribute in self.get_all_attributes():
             if hasattr(self, attribute.code):
                 value = getattr(self, attribute.code)
@@ -246,7 +249,8 @@ class ProductAttributesContainer:
                         )
 
                         bound_value_obj = attribute.bind_value(new_value_obj, value)
-                        if bound_value_obj is not None:
+                        # don't create attributevalues that wheren't even set at all.
+                        if bound_value_obj is not None and bound_value_obj.is_dirty:
                             assert not bound_value_obj.pk
                             to_be_created.append(bound_value_obj)
                     else:
@@ -269,6 +273,11 @@ class ProductAttributesContainer:
 
                             to_be_updated.append(bound_value_obj)
                             update_fields.add(bound_value_obj.value_field_name)
+
+        return (to_be_updated, to_be_created, to_be_deleted, update_fields)
+
+    def save(self):
+        to_be_updated, to_be_created, to_be_deleted, update_fields = self.prepare_save()
 
         # now save all the attributes in bulk
         if to_be_deleted:

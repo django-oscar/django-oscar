@@ -4,6 +4,7 @@ from django import forms
 from django.conf import settings
 from django.forms.widgets import Input
 from django.utils.translation import gettext_lazy as _
+
 from haystack.forms import FacetedSearchForm
 
 from oscar.core.loading import get_class
@@ -25,7 +26,7 @@ class SearchInput(Input):
 # Build a dict of valid queries
 VALID_FACET_QUERIES = defaultdict(list)
 for facet in settings.OSCAR_SEARCH_FACETS["queries"].values():
-    name = "%s_exact" % facet["field"]
+    name = facet["field"]
     queries = [t[1] for t in facet["queries"]]
     VALID_FACET_QUERIES[name].extend(queries)
 
@@ -153,3 +154,18 @@ class BrowseCategoryForm(SearchForm):
         Return Queryset of all the results.
         """
         return self.searchqueryset
+
+
+class CategoryForm(BrowseCategoryForm):
+    def __init__(self, categories, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.categories = categories
+
+    def no_query_found(self):
+        """
+        Return Queryset of all the results.
+        """
+        sqs = super().no_query_found()
+
+        category_ids = list(self.categories.values_list("pk", flat=True))
+        return sqs.filter(category__in=category_ids)

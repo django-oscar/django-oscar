@@ -2,6 +2,7 @@ import io
 import os
 import pathlib
 import tempfile
+import shutil
 
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -18,7 +19,7 @@ class OscarForkStaticsTestCase(TestCase):
         self.oscar_static_dir_path = pathlib.Path(
             os.path.dirname(oscar.__file__), "static"
         )
-        self.oscar_static_dir_path.mkdir()
+        self.oscar_static_dir_path.mkdir(exist_ok=True)
         self.oscar_static_file_path = pathlib.Path(
             self.oscar_static_dir_path, "name.css"
         )
@@ -32,7 +33,10 @@ class OscarForkStaticsTestCase(TestCase):
     def tearDown(self):
         # Delete dummy Oscar static-files directory
         self.oscar_static_file_path.unlink()
-        self.oscar_static_dir_path.rmdir()
+        try:
+            self.oscar_static_dir_path.rmdir()
+        except OSError:
+            pass
 
     def test_command_with_already_existing_directory(self):
         project_static_dir_path = pathlib.Path(self.project_base_dir_path, "static")
@@ -45,7 +49,7 @@ class OscarForkStaticsTestCase(TestCase):
             "The folder %s already exists - aborting!" % project_static_dir_path,
         )
 
-        project_static_dir_path.rmdir()
+        shutil.rmtree(project_static_dir_path.rmdir(), ignore_errors=True)
 
     def test_command_with_default_target_path(self):
         project_static_dir_path = pathlib.Path(self.project_base_dir_path, "static")
@@ -64,8 +68,7 @@ class OscarForkStaticsTestCase(TestCase):
             "picked up" % project_static_dir_path,
         )
 
-        project_static_file_path.unlink()
-        project_static_dir_path.rmdir()
+        shutil.rmtree(project_static_dir_path)
 
     def test_command_with_relative_target_path(self):
         project_static_dir_path = pathlib.Path(
@@ -86,8 +89,7 @@ class OscarForkStaticsTestCase(TestCase):
             "picked up" % project_static_dir_path,
         )
 
-        project_static_file_path.unlink()
-        project_static_dir_path.rmdir()
+        shutil.rmtree(project_static_dir_path)
         project_static_dir_path.parent.rmdir()
 
     def test_command_with_absolute_target_path(self):
@@ -109,6 +111,5 @@ class OscarForkStaticsTestCase(TestCase):
             "picked up" % project_static_dir_path,
         )
 
-        project_static_file_path.unlink()
-        project_static_dir_path.rmdir()
+        shutil.rmtree(project_static_dir_path)
         project_static_dir_path.parent.rmdir()

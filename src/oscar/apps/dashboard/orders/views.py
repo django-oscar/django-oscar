@@ -388,9 +388,9 @@ class OrderListView(EventHandlerMixin, BulkEditMixin, ListView):
 
     def download_selected_orders(self, request, orders):
         response = HttpResponse(content_type="text/csv")
-        response[
-            "Content-Disposition"
-        ] = "attachment; filename=%s" % self.get_download_filename(request)
+        response["Content-Disposition"] = (
+            "attachment; filename=%s" % self.get_download_filename(request)
+        )
         writer = UnicodeCSVWriter(open_file=response)
 
         writer.writerow(self.CSV_COLUMNS.values())

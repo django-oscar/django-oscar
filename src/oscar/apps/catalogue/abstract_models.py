@@ -115,7 +115,7 @@ class AbstractProductClass(models.Model):
         verbose_name_plural = _("Product classes")
 
     def __str__(self):
-        return self.name
+        return self.name or self.slug
 
     @property
     def has_attributes(self):
@@ -136,6 +136,13 @@ class AbstractCategory(MP_Node):
     COMPARISON_FIELDS = ("pk", "path", "depth")
 
     name = models.CharField(_("Name"), max_length=255, db_index=True)
+    code = NullCharField(
+        _("Code"),
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+    )
     description = models.TextField(_("Description"), blank=True)
     meta_title = models.CharField(
         _("Meta title"), max_length=255, blank=True, null=True
@@ -565,9 +572,11 @@ class AbstractProduct(models.Model):
         """
         Validates a child product
         """
-        if not self.parent_id:
+        has_parent = self.parent or self.parent_id
+
+        if not has_parent:
             raise ValidationError(_("A child product needs a parent."))
-        if self.parent_id and not self.parent.is_parent:
+        if has_parent and not self.parent.is_parent:
             raise ValidationError(
                 _("You can only assign child products to parent products.")
             )
@@ -733,6 +742,9 @@ class AbstractProduct(models.Model):
     get_categories.short_description = _("Categories")
 
     def get_attribute_values(self):
+        if not self.pk:
+            return self.attribute_values.model.objects.none()
+
         attribute_values = self.attribute_values.all()
         if self.is_child:
             parent_attribute_values = self.parent.attribute_values.exclude(
@@ -1297,6 +1309,13 @@ class AbstractAttributeOptionGroup(models.Model):
     """
 
     name = models.CharField(_("Name"), max_length=128)
+    code = NullCharField(
+        _("Unique identifier"),
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+    )
 
     def __str__(self):
         return self.name
@@ -1326,6 +1345,13 @@ class AbstractAttributeOption(models.Model):
         verbose_name=_("Group"),
     )
     option = models.CharField(_("Option"), max_length=255)
+    code = NullCharField(
+        _("Unique identifier"),
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+    )
 
     def __str__(self):
         return self.option
@@ -1472,7 +1498,6 @@ class AbstractOption(models.Model):
 
 
 class MissingProductImage(object):
-
     """
     Mimics a Django file field by having a name property.
 
@@ -1531,6 +1556,13 @@ class AbstractProductImage(models.Model):
         on_delete=models.CASCADE,
         related_name="images",
         verbose_name=_("Product"),
+    )
+    code = NullCharField(
+        _("Code"),
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
     )
     original = models.ImageField(
         _("Original"), upload_to=get_image_upload_path, max_length=255

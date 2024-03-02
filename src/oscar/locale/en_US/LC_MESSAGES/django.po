@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Andre Sukharev, 2023
 # john.parton <john.parton.iv@gmail.com>, 2016-2017
 # john.parton <john.parton.iv@gmail.com>, 2016
 # john.parton <john.parton.iv@gmail.com>, 2016
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-30 10:56+0100\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
-"Last-Translator: xiao chen <xiaochen2993@gmail.com>, 2020\n"
+"Last-Translator: Andre Sukharev, 2023\n"
 "Language-Team: English (United States) (http://app.transifex.com/codeinthehole/django-oscar/language/en_US/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -930,11 +931,11 @@ msgstr "Description"
 
 #: apps/catalogue/abstract_models.py:131 apps/catalogue/abstract_models.py:380
 msgid "Meta title"
-msgstr ""
+msgstr "Meta title"
 
 #: apps/catalogue/abstract_models.py:132 apps/catalogue/abstract_models.py:381
 msgid "Meta description"
-msgstr ""
+msgstr "Meta description"
 
 #: apps/catalogue/abstract_models.py:133 apps/catalogue/abstract_models.py:851
 #: apps/dashboard/catalogue/tables.py:22
@@ -947,15 +948,15 @@ msgstr "Is public"
 
 #: apps/catalogue/abstract_models.py:141
 msgid "Show this category in search results and catalogue listings."
-msgstr ""
+msgstr "Show this category in search results and catalogue listings."
 
 #: apps/catalogue/abstract_models.py:144
 msgid "Ancestor categories are public"
-msgstr ""
+msgstr "Ancestor categories are public"
 
 #: apps/catalogue/abstract_models.py:147
 msgid "The ancestors of this category are public"
-msgstr ""
+msgstr "The ancestors of this category are public"
 
 #: apps/catalogue/abstract_models.py:290 apps/catalogue/abstract_models.py:311
 #: apps/communication/abstract_models.py:78
@@ -1151,12 +1152,12 @@ msgstr "One can't add a child product to a product with stock records."
 #: apps/catalogue/abstract_models.py:631
 msgctxt "Product meta title"
 msgid "Meta title"
-msgstr ""
+msgstr "Meta title"
 
 #: apps/catalogue/abstract_models.py:638
 msgctxt "Product meta description"
 msgid "Meta description"
-msgstr ""
+msgstr "Meta description"
 
 #: apps/catalogue/abstract_models.py:783
 msgid "Primary product"
@@ -1286,7 +1287,7 @@ msgstr "Product attributes"
 
 #: apps/catalogue/abstract_models.py:892
 msgid "Boolean attribute should not be required."
-msgstr ""
+msgstr "Boolean attribute should not be required."
 
 #: apps/catalogue/abstract_models.py:959
 msgid "Must be str"
@@ -1372,12 +1373,12 @@ msgstr "Product attribute values"
 #: apps/catalogue/abstract_models.py:1148
 msgctxt "Product attribute value"
 msgid "Yes"
-msgstr ""
+msgstr "Yes"
 
 #: apps/catalogue/abstract_models.py:1149
 msgctxt "Product attribute value"
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: apps/catalogue/abstract_models.py:1182
 msgid "Attribute option group"
@@ -1401,39 +1402,39 @@ msgstr "Attribute options"
 
 #: apps/catalogue/abstract_models.py:1249
 msgid "Select"
-msgstr ""
+msgstr "Select"
 
 #: apps/catalogue/abstract_models.py:1250
 msgid "Radio"
-msgstr ""
+msgstr "Radio"
 
 #: apps/catalogue/abstract_models.py:1251
 msgid "Multi select"
-msgstr ""
+msgstr "Multi select"
 
 #: apps/catalogue/abstract_models.py:1252
 msgid "Checkbox"
-msgstr ""
+msgstr "Checkbox"
 
 #: apps/catalogue/abstract_models.py:1256
 msgid "Skip this option"
-msgstr ""
+msgstr "Skip this option"
 
 #: apps/catalogue/abstract_models.py:1261
 msgid "Is this option required?"
-msgstr ""
+msgstr "Is this option required?"
 
 #: apps/catalogue/abstract_models.py:1272
 msgid "Help text"
-msgstr ""
+msgstr "Help text"
 
 #: apps/catalogue/abstract_models.py:1273
 msgid "Help text shown to the user on the add to basket form"
-msgstr ""
+msgstr "Help text shown to the user on the add to cart form"
 
 #: apps/catalogue/abstract_models.py:1276
 msgid "Ordering"
-msgstr ""
+msgstr "Ordering"
 
 #: apps/catalogue/abstract_models.py:1279
 msgid "Controls the ordering of product options on product detail pages"
@@ -1740,7 +1741,7 @@ msgstr "A problem occurred while processing payment for this order - no payment 
 msgid ""
 "A problem occurred while placing this order. Please contact customer "
 "services."
-msgstr ""
+msgstr "A problem occurred while placing this order. Please contact customer services."
 
 #: apps/communication/abstract_models.py:24
 msgid "Email Address"
@@ -1858,7 +1859,7 @@ msgstr "Notifications"
 
 #: apps/communication/apps.py:9 apps/communication/config.py:8
 msgid "Communication"
-msgstr ""
+msgstr "Communication"
 
 #: apps/communication/notifications/views.py:90
 #, python-format
@@ -2807,7 +2808,7 @@ msgstr "Is active?"
 #: apps/dashboard/offers/forms.py:213
 #: templates/oscar/dashboard/offers/offer_list.html:86
 msgid "Offer type"
-msgstr ""
+msgstr "Offer type"
 
 #: apps/dashboard/offers/forms.py:214
 msgid "Has vouchers?"
@@ -2849,11 +2850,11 @@ msgstr ""
 
 #: apps/dashboard/offers/views.py:69 apps/dashboard/vouchers/views.py:79
 msgid "Is active"
-msgstr ""
+msgstr "Is active"
 
 #: apps/dashboard/offers/views.py:72 apps/dashboard/vouchers/views.py:82
 msgid "Is inactive"
-msgstr ""
+msgstr "Is inactive"
 
 #: apps/dashboard/offers/views.py:75
 #, python-format
@@ -2862,16 +2863,16 @@ msgstr ""
 
 #: apps/dashboard/offers/views.py:78
 msgid "Has vouchers"
-msgstr ""
+msgstr "Has vouchers"
 
 #: apps/dashboard/offers/views.py:78
 msgid "Has no vouchers"
-msgstr ""
+msgstr "Has no vouchers"
 
 #: apps/dashboard/offers/views.py:81
 #, python-format
 msgid "Voucher code matches \"%s\""
-msgstr ""
+msgstr "Voucher code matches \"%s\""
 
 #: apps/dashboard/offers/views.py:109
 #, python-format
@@ -2890,7 +2891,7 @@ msgstr "Offer '%s' created!"
 
 #: apps/dashboard/offers/views.py:292
 msgid "Name, description and type"
-msgstr ""
+msgstr "Name, description and type"
 
 #: apps/dashboard/offers/views.py:308
 #: templates/oscar/dashboard/offers/offer_detail.html:75
@@ -3595,11 +3596,11 @@ msgstr ""
 
 #: apps/dashboard/vouchers/forms.py:49
 msgid "In voucher set?"
-msgstr ""
+msgstr "In voucher set?"
 
 #: apps/dashboard/vouchers/forms.py:50
 msgid "Has offers?"
-msgstr ""
+msgstr "Has offers?"
 
 #: apps/dashboard/vouchers/forms.py:64 apps/voucher/abstract_models.py:111
 #: templates/oscar/dashboard/vouchers/partials/voucher_details_table.html:12
@@ -3620,12 +3621,12 @@ msgstr ""
 
 #: apps/dashboard/vouchers/views.py:48 apps/dashboard/vouchers/views.py:85
 msgid "Not in a set"
-msgstr ""
+msgstr "Not in a set"
 
 #: apps/dashboard/vouchers/views.py:71
 #, python-format
 msgid "Code is \"%s\""
-msgstr ""
+msgstr "Code is \"%s\""
 
 #: apps/dashboard/vouchers/views.py:74
 #, python-format
@@ -3634,15 +3635,15 @@ msgstr ""
 
 #: apps/dashboard/vouchers/views.py:85
 msgid "In a set"
-msgstr ""
+msgstr "In a set"
 
 #: apps/dashboard/vouchers/views.py:88
 msgid "Has offers"
-msgstr ""
+msgstr "Has offers"
 
 #: apps/dashboard/vouchers/views.py:88
 msgid "Has no offers"
-msgstr ""
+msgstr "Has no offers"
 
 #: apps/dashboard/vouchers/views.py:108
 #: templates/oscar/dashboard/vouchers/voucher_form.html:32
@@ -3691,7 +3692,7 @@ msgstr "Voucher sets"
 
 #: apps/dashboard/vouchers/views.py:337
 msgid "Voucher set deleted"
-msgstr ""
+msgstr "Voucher set deleted"
 
 #: apps/offer/abstract_models.py:88
 msgid "This is displayed within the customer's basket"
@@ -5381,7 +5382,7 @@ msgstr "This is not a valid local or international phone format."
 
 #: forms/widgets.py:301
 msgid "---------"
-msgstr ""
+msgstr "---------"
 
 #: forms/widgets.py:302 templates/oscar/catalogue/partials/review.html:40
 #: templates/oscar/dashboard/offers/offer_list.html:114
@@ -5497,7 +5498,7 @@ msgid ""
 "\n"
 "        Your basket total is now <strong>%(total)s</strong>\n"
 "        "
-msgstr ""
+msgstr "\n        Your cart total is now <strong>%(total)s</strong>\n        "
 
 #: templates/oscar/basket/messages/new_total.html:20
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5976,11 +5977,11 @@ msgstr "Please login to add products to a wish list."
 
 #: templates/oscar/catalogue/partials/gallery.html:22
 msgid "Previous"
-msgstr ""
+msgstr "Previous"
 
 #: templates/oscar/catalogue/partials/gallery.html:26
 msgid "Next"
-msgstr ""
+msgstr "Next"
 
 #: templates/oscar/catalogue/partials/review.html:23
 #, python-format
@@ -6426,7 +6427,7 @@ msgstr "If it wasn't you who changed it, please reset your password immediately 
 #: templates/oscar/communication/emails/commtype_password_changed_body.html:20
 #: templates/oscar/communication/emails/commtype_password_reset_body.html:20
 msgid "Reset password"
-msgstr ""
+msgstr "Reset password"
 
 #: templates/oscar/communication/emails/commtype_email_changed_body.html:26
 #: templates/oscar/communication/emails/commtype_email_changed_body.txt:10
@@ -7113,7 +7114,7 @@ msgstr "\n                    After your wishlist is created, <strong>%(title)s<
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:45
 msgid "Share wishlist"
-msgstr ""
+msgstr "Share wish list"
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:47
 msgid ""
@@ -7132,7 +7133,7 @@ msgstr "Wish list settings"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:27
 msgid "Copy sharing link"
-msgstr ""
+msgstr "Copy sharing link"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:43
 msgid "You don't have any wish lists yet."

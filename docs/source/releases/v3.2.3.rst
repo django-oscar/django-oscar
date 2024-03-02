@@ -1,0 +1,79 @@
+========================================
+Oscar 3.2.3 release notes
+========================================
+
+:release: 2024-02-02
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2.3:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.2.3 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
+
+.. _new_in_3.2.3:
+
+What's new in Oscar 3.2.3?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Always use sphin-rtd-theme in docs by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4165
+* Correct typo in README.rst by @blondelg in https://github.com/django-oscar/django-oscar/pull/4151
+* Update django-debug-toolbar requirement from <4.2,>=2.2 to >=2.2,<4.3 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4160
+* Update redis requirement from <4.6,>=3.5 to >=3.5,<5.1 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4158
+* Bump eslint from 8.43.0 to 8.48.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4157
+* Update django-redis requirement from <5.3,>=4.12 to >=4.12,<5.4 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4132
+* Update whitenoise requirement from <6.5,>=5.2 to >=5.2,<6.6 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4131
+* Bug AbsoluteDiscountBenefit by @ebottos94 in https://github.com/django-oscar/django-oscar/pull/3954
+* [FEAT] Absolute discount benefit applied on each product by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4168
+* Return True in is_tax_known() when the basket is empty by @TopDevPros in https://github.com/django-oscar/django-oscar/pull/4166
+* [Tests] Verify basket total amount after rounding by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4173
+* [FIX] Offer's slug doesn't support unicode by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4172
+* Update Dockerfile by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4175
+* Bulk attributes save by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4167
+* Add Bootstrap responsive image class by @jamesp9 in https://github.com/django-oscar/django-oscar/pull/4192
+* Entity attribute update by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4205
+* Pass the tax code trough to the shipping discounts by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4204
+* setuptools recognises src these days, no config is needed. by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4206
+* Wrong translation.  by @Asp1ro in https://github.com/django-oscar/django-oscar/pull/4208
+* Fix broken Font Awesome links by @jamesp9 in https://github.com/django-oscar/django-oscar/pull/4179
+* Fixes #3844 suspend offer doesn't display with is_active 'NO' by @vallabhtiwari in https://github.com/django-oscar/django-oscar/pull/4184
+* Fixes broken migration of attribute values by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4214
+* Add prepare save method to make it possible to bulk save attributes by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4209
+* Add codes to unidentifiable catalogue models by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4216
+* Return no attribute values if the product has not yet been saved by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4217
+* Register discounts per line by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4138
+* [Refactor] Move OfferWizardStepView to separate file by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4174
+* Bump node-sass from 8.0.0 to 9.0.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4113
+* Register the Notification model to Django admin by @IslamMesha in https://github.com/django-oscar/django-oscar/pull/4186
+* Bump tinymce from 6.4.2 to 6.8.1 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4210
+* Bump @fortawesome/fontawesome-free from 6.4.0 to 6.5.1 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4212
+* Bump eslint from 8.48.0 to 8.54.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4211
+* Bump sass from 1.62.1 to 1.69.5 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4193
+* fixed "Create database" indentation by @Ajaysainisd in https://github.com/django-oscar/django-oscar/pull/4207
+* Bump nan from 2.17.0 to 2.18.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4176
+* Bump jquery from 3.7.0 to 3.7.1 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4155
+* Update django-environ requirement from <0.11,>=0.4 to >=0.4,<0.12 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4159
+* Speedup Range.product_queryset(): exclude child Products in a join by @gwaidacher in https://github.com/django-oscar/django-oscar/pull/4222
+* fix link to documentation in the README.rst by @frlnx in https://github.com/django-oscar/django-oscar/pull/4223
+* Update BasketMiddleware.get_basket() to show warning only if items have been merged by @gwaidacher in https://github.com/django-oscar/django-oscar/pull/4145
+
+
+.. new_contributors:
+
+New Contributors
+~~~~~~~~~~~~~~~~
+* @blondelg made their first contribution in https://github.com/django-oscar/django-oscar/pull/4151
+* @ebottos94 made their first contribution in https://github.com/django-oscar/django-oscar/pull/3954
+* @TopDevPros made their first contribution in https://github.com/django-oscar/django-oscar/pull/4166
+* @Asp1ro made their first contribution in https://github.com/django-oscar/django-oscar/pull/4208
+* @vallabhtiwari made their first contribution in https://github.com/django-oscar/django-oscar/pull/4184
+* @IslamMesha made their first contribution in https://github.com/django-oscar/django-oscar/pull/4186
+* @Ajaysainisd made their first contribution in https://github.com/django-oscar/django-oscar/pull/4207
+* @frlnx made their first contribution in https://github.com/django-oscar/django-oscar/pull/4223
+
+**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2.2...3.2.3

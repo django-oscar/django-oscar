@@ -13,6 +13,7 @@ from django.utils import timezone
 from oscar.apps.catalogue.models import Product, ProductClass
 from oscar.apps.checkout import calculators
 from oscar.apps.offer.utils import Applicator
+from oscar.apps.offer import models
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import FixedPrice, Free
@@ -27,6 +28,7 @@ Range = get_class("offer.models", "Range")
 Benefit = get_class("offer.models", "Benefit")
 
 SurchargeApplicator = get_class("checkout.applicator", "SurchargeApplicator")
+UK = get_class("partner.strategy", "UK")
 
 
 def place_order(creator, **kwargs):
@@ -261,6 +263,56 @@ class TestShippingOfferForOrder(TestCase):
         self.assertEqual(0, len(order.shipping_discounts))
         self.assertEqual(D("0.00"), order.shipping_incl_tax)
         self.assertEqual(D("34.00"), order.total_incl_tax)
+
+
+class TestOrderOfferCreation(TestCase):
+    def setUp(self):
+        self.creator = OrderCreator()
+        self.basket = factories.create_basket(empty=True)
+        self.basket.strategy = UK()
+        self.surcharges = SurchargeApplicator().get_applicable_surcharges(self.basket)
+        product_range = Range.objects.create(
+            name="All products range", includes_all_products=True
+        )
+        condition = models.CountCondition.objects.create(
+            range=product_range, type=models.Condition.COUNT, value=1
+        )
+        benefit = models.PercentageDiscountBenefit.objects.create(
+            range=product_range,
+            type=models.Benefit.PERCENTAGE,
+            value=20,
+        )
+        self.offer = models.ConditionalOffer(
+            name="Test",
+            offer_type=models.ConditionalOffer.SITE,
+            condition=condition,
+            benefit=benefit,
+        )
+        self.offer.save()
+        self.applicator = Applicator()
+
+    def test_multi_lines_discount(self):
+        add_product(self.basket, D(10))
+        add_product(self.basket, D(20))
+
+        self.applicator.apply_offers(self.basket, [self.offer])
+
+        place_order(
+            self.creator,
+            surcharges=self.surcharges,
+            basket=self.basket,
+            order_number="klatsieknoekie666",
+        )
+
+        order = Order.objects.get(number="klatsieknoekie666")
+
+        discount = order.discounts.first()
+        self.assertEqual(discount.amount, D("7.20"))
+        self.assertEqual(discount.discount_lines.count(), 2)
+        self.assertEqual(
+            discount.amount,
+            sum([discount.amount for discount in discount.discount_lines.all()]),
+        )
 
 
 class TestMultiSiteOrderCreation(TestCase):

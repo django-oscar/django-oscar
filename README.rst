@@ -64,7 +64,7 @@ Docs status:
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: https://latest.oscarcommerce.com
 .. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
-.. _`Documentation`: https://django-oscar.readthedocs.io/en/stable/
+.. _`Documentation`: https://docs.oscarcommerce.com/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
@@ -108,7 +108,7 @@ The currently supported versions of Oscar are:
 | 2.2 LTS | August 2023    |
 +---------+----------------+
 
-Supported verions are eligible for fixes for data loss bugs and security issues. Releases designated as
+Supported versions are eligible for fixes for data loss bugs and security issues. Releases designated as
 Long-term support (LTS) releases will receive support for an extended period of 3 years from their release date.
 
 
@@ -152,6 +152,8 @@ The following extensions are stable and ready for use:
 
 * django-oscar-api_ - RESTful JSON API for django-oscar
 
+* django-oscar-odin_ - Odin Resources and mappings to Oscar models
+
 * django-oscar-adyen_ - Integration with the Adyen payment gateway
 
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
@@ -176,6 +178,7 @@ The following extensions are stable and ready for use:
   Oscar
 
 .. _django-oscar-api: https://github.com/django-oscar/django-oscar-api
+.. _django-oscar-odin: https://github.com/django-oscar/django-oscar-odin
 .. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/django-oscar/django-oscar-paymentexpress

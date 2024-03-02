@@ -3,6 +3,7 @@ from http import client as http_client
 from django.conf import settings
 from django.urls import reverse
 from django.utils.translation import gettext
+from django.core.management import call_command
 
 from oscar.apps.catalogue.models import Category
 from oscar.test.factories import create_product
@@ -74,6 +75,9 @@ class TestProductDetailView(WebTestCase):
 
 
 class TestProductListView(WebTestCase):
+    def setUp(self):
+        call_command("rebuild_index", "--noinput")
+
     def test_shows_add_to_basket_button_for_available_product(self):
         product = create_product(num_in_stock=1)
         page = self.app.get(reverse("catalogue:index"))
@@ -101,13 +105,14 @@ class TestProductListView(WebTestCase):
     def test_is_public_on(self):
         product = create_product(upc="grote-bats", is_public=True)
         page = self.app.get(reverse("catalogue:index"))
-        products_on_page = list(page.context["products"].all())
+        products_on_page = list(page.context["products"])
+        products_on_page = [prd.object for prd in products_on_page]
         self.assertEqual(products_on_page, [product])
 
     def test_is_public_off(self):
         create_product(upc="kleine-bats", is_public=False)
         page = self.app.get(reverse("catalogue:index"))
-        products_on_page = list(page.context["products"].all())
+        products_on_page = list(page.context["products"])
         self.assertEqual(products_on_page, [])
 
     def test_invalid_page_redirects_to_index(self):
