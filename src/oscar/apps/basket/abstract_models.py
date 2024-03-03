@@ -346,6 +346,9 @@ class AbstractBasket(models.Model):
                 existing_line.quantity += line.quantity
             else:
                 existing_line.quantity = max(existing_line.quantity, line.quantity)
+
+            if strategy:
+                existing_line.stockrecord = strategy.fetch_for_product(existing_line.product).stockrecord
             existing_line.save()
             line.delete()
         finally:

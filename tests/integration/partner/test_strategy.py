@@ -2,13 +2,11 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
+from oscar.apps.basket.models import Basket
 from oscar.apps.basket.models import Line
 from oscar.apps.catalogue import models
 from oscar.apps.partner import strategy
 from oscar.test import factories
-
-from oscar.apps.basket.models import Basket
-from oscar.test.basket import add_product
 
 
 class TestDefaultStrategy(TestCase):
@@ -62,12 +60,41 @@ class TestDefaultStrategy(TestCase):
         info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
 
-    def test_strategy_change_upon_login(self):
-        product_class = factories.ProductClassFactory(track_stock=False)
-        product = factories.ProductFactory(product_class=product_class, stockrecords=[])
-        factories.StockRecordFactory(price=None, product=product)
-        info = self.strategy.fetch_for_product(product)
-        self.assertTrue(info.availability.is_available_to_buy)
+
+class UK2(strategy.UK):
+    def select_stockrecord(self, product):
+        try:
+            return product.stockrecords.all()[1]
+        except IndexError:
+            pass
+
+
+class TestStrategyChange(TestCase):
+    basket = None
+    product = None
+    strategy = None
+
+    def setUp(self):
+        self.product = factories.create_product()
+        factories.create_stockrecord(product=self.product, partner_sku="1", price=1)
+        factories.create_stockrecord(product=self.product, partner_sku="2", price=2)
+        self.strategy = strategy.Default()
+        self.basket = Basket.objects.create()
+        self.basket.strategy = strategy.UK()
+        self.basket.add_product(self.product, 1)
+
+    def test_basket_price_changes_when_strategy_does(self):
+        self.assertEqual(self.basket.all_lines()[0].stockrecord.partner_sku, "1")
+        self.basket.strategy = UK2()
+        self.basket.freeze()
+        self.assertEqual(self.basket.total_excl_tax, 2)
+
+    def test_basket_stockrecord_does_not_change_when_strategy_does(self):
+        self.assertEqual(self.basket.all_lines()[0].stockrecord.partner_sku, "1")
+        self.basket.strategy = UK2()
+        self.basket.freeze()
+        self.assertEqual(self.basket.all_lines()[0].stockrecord.partner_sku, "1")
+        self.assertEqual(self.basket.total_excl_tax, 2)
 
 
 class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCase):
@@ -140,11 +167,3 @@ class TestDeferredTax(TestCase):
         factories.StockRecordFactory(price=None, product=product)
         info = strategy.US().fetch_for_product(product)
         self.assertFalse(info.price.exists)
-
-
-class UK2(strategy.UK):
-    def select_stockrecord(self, product):
-        try:
-            return product.stockrecords.all()[1]
-        except IndexError:
-            pass
