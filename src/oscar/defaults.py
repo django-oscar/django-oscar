@@ -133,6 +133,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 "label": _("Options"),
                 "url_name": "dashboard:catalogue-option-list",
             },
+            {
+                "label": _("Attribute Option Groups"),
+                "url_name": "dashboard:catalogue-attribute-option-group-list",
+            },
         ],
     },
     {
