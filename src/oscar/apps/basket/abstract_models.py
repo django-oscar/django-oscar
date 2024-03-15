@@ -331,6 +331,10 @@ class AbstractBasket(models.Model):
 
         This is used with the "Saved" basket functionality.
         """
+        # TODO: If the login causes the strategy to be None, the line won't save.
+        # IntegrityError at /checkout/
+        # (1048, "Column 'stockrecord_id' cannot be null")
+        # We'll need to display a message if that's the case.
         try:
             existing_line = self.lines.get(line_reference=line.line_reference)
         except ObjectDoesNotExist:
