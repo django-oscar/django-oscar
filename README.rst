@@ -141,7 +141,7 @@ The sandbox site is also available to browse at https://latest.oscarcommerce.com
 The sandbox site can be set-up locally `in 5 commands`_.  Want to
 make changes?  Check out the `contributing guidelines`_.
 
-.. _`in 5 commands`: https://django-oscar.readthedocs.io/en/latest/internals/sandbox.html#running-the-sandbox-locally
+.. _`in 5 commands`: https://django-oscar.readthedocs.io/en/latest/internals/sandbox.html#run-the-sandbox-locally
 .. _`contributing guidelines`: https://django-oscar.readthedocs.io/en/latest/internals/contributing/index.html
 
 
