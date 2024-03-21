@@ -623,8 +623,8 @@ class AbstractLine(models.Model):
         _("Number allocated"), blank=True, null=True
     )
 
-    # Checks whether previously consumed line was restocked or not
-    restocked = models.BooleanField(default=False)
+    # Checks whether line allocation was cancelled or not
+    allocation_cancelled = models.BooleanField(default=False)
 
     #: Order status pipeline.  This should be a dict where each (key, value)
     #: corresponds to a status and the possible statuses that can follow that
@@ -880,7 +880,7 @@ class AbstractLine(models.Model):
         return self.stockrecord.can_track_allocations
 
     def is_allocation_consumption_possible(self, quantity):
-        if self.restocked:
+        if self.allocation_cancelled:
             return False
 
         return quantity <= self.num_allocated
@@ -913,7 +913,7 @@ class AbstractLine(models.Model):
             )
             if locked_self.num_allocated == quantity:
                 locked_self.num_allocated = 0
-                locked_self.restocked = True
+                locked_self.allocation_cancelled = True
             else:
                 locked_self.num_allocated -= quantity
 
@@ -921,7 +921,7 @@ class AbstractLine(models.Model):
             if locked_self.stockrecord:
                 locked_self.stockrecord.cancel_allocation(quantity)
 
-        self.refresh_from_db(fields=["num_allocated", "restocked"])
+        self.refresh_from_db(fields=["num_allocated", "allocation_cancelled"])
 
     cancel_allocation.alters_data = True
 
