@@ -202,7 +202,8 @@ class TestEventHandler(TestCase):
         line.refresh_from_db(fields=["num_allocated"])
         stockrecord.refresh_from_db(fields=["num_allocated", "num_in_stock"])
         self.assertEqual(
-            line.num_allocated, 3,
+            line.num_allocated,
+            3,
             "Allocated line stock should have decreased, but didn't.",
         )
         self.assertEqual(
@@ -221,7 +222,8 @@ class TestEventHandler(TestCase):
         stockrecord.refresh_from_db(fields=["num_allocated", "num_in_stock"])
         self.assertEqual(line.allocation_cancelled, False)
         self.assertEqual(
-            line.num_allocated, 1,
+            line.num_allocated,
+            1,
             "Allocated line stock should have decreased, but didn't.",
         )
         self.assertEqual(
@@ -239,7 +241,8 @@ class TestEventHandler(TestCase):
         line.refresh_from_db(fields=["num_allocated", "allocation_cancelled"])
         self.assertEqual(line.allocation_cancelled, True)
         self.assertEqual(
-            line.num_allocated, 0,
+            line.num_allocated,
+            0,
             "Allocated line stock should have decreased, but didn't.",
         )
 
