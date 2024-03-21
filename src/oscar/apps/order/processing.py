@@ -197,8 +197,7 @@ class EventHandler(object):
         This is okay, as calling consume_stock_allocations() has no effect for
         non-stock-tracking lines.
         """
-        for line, qty in zip(lines, line_quantities):
-            record = line.stockrecord
+        for record, qty in zip(lines, line_quantities):
             if not record:
                 return False
             if not record.can_track_allocations:
@@ -218,8 +217,7 @@ class EventHandler(object):
         if not line_quantities:
             line_quantities = [line.quantity for line in lines]
         for line, qty in zip(lines, line_quantities):
-            if line.stockrecord:
-                line.stockrecord.consume_allocation(qty)
+            line.consume_allocation(qty)
 
     def cancel_stock_allocations(self, order, lines=None, line_quantities=None):
         """
@@ -232,8 +230,7 @@ class EventHandler(object):
         if not line_quantities:
             line_quantities = [line.quantity for line in lines]
         for line, qty in zip(lines, line_quantities):
-            if line.stockrecord:
-                line.stockrecord.cancel_allocation(qty)
+            line.cancel_allocation(qty)
 
     # Model instance creation
     # -----------------------

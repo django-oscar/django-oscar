@@ -220,6 +220,7 @@ class OrderCreator(object):
             "unit_price_incl_tax": basket_line.unit_price_incl_tax,
             "unit_price_excl_tax": basket_line.unit_price_excl_tax,
             "tax_code": basket_line.tax_code,
+            "num_allocated": basket_line.quantity,
         }
         extra_line_fields = extra_line_fields or {}
         if hasattr(settings, "OSCAR_INITIAL_LINE_STATUS"):
