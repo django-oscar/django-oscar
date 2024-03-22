@@ -23,6 +23,17 @@ class RangeQuerySet(models.query.QuerySet):
             )
         return ~models.Q(excluded_products=product)
 
+    def _excluded_categories_clause(self, product):
+        if product.structure == product.CHILD:
+            # child products are excluded from a range if their parent contains
+            # category that is excluded
+            return ~(
+                models.Q(
+                    excluded_categories__id__in=product.parent.categories.values("id")
+                )
+            )
+        return ~models.Q(excluded_categories__id__in=product.categories.values("id"))
+
     def _included_products_clause(self, product):
         if product.structure == product.CHILD:
             # child products are included in a range if either they are
@@ -56,10 +67,13 @@ class RangeQuerySet(models.query.QuerySet):
         # turned on, we only need to look at explicit exclusions, the other
         # mechanism for adding a product to a range don't need to be checked
         wide = self.filter(
-            self._excluded_products_clause(product), includes_all_products=True
+            self._excluded_products_clause(product),
+            self._excluded_categories_clause(product),
+            includes_all_products=True,
         )
         narrow = self.filter(
             self._excluded_products_clause(product),
+            self._excluded_categories_clause(product),
             self._included_products_clause(product)
             | models.Q(
                 included_categories__in=ExpandUpwardsCategoryQueryset(
