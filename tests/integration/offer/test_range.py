@@ -11,6 +11,9 @@ class TestWholeSiteRange(TestCase):
             name="All products", includes_all_products=True
         )
         self.prod = create_product()
+        self.child = create_product(structure="child", parent=self.prod)
+        self.category = catalogue_models.Category.add_root(name="root")
+        self.prod.categories.add(self.category)
 
     def test_all_products_range(self):
         self.assertTrue(self.range.contains_product(self.prod))
@@ -29,6 +32,15 @@ class TestWholeSiteRange(TestCase):
         self.range.excluded_products.add(self.prod)
         self.assertFalse(self.range.contains_product(self.prod))
         self.assertNotIn(self.prod, self.range.all_products())
+
+    def test_category_blacklisting(self):
+        self.range.excluded_categories.add(self.category)
+        self.assertNotIn(self.range, models.Range.objects.contains_product(self.prod))
+        self.assertNotIn(self.range, models.Range.objects.contains_product(self.child))
+        self.assertFalse(self.range.contains_product(self.prod))
+        self.assertFalse(self.range.contains_product(self.child))
+        self.assertNotIn(self.prod, self.range.all_products())
+        self.assertNotIn(self.child, self.range.all_products())
 
 
 class TestChildRange(TestCase):

@@ -22,6 +22,7 @@ class RangeForm(forms.ModelForm):
             "is_public",
             "includes_all_products",
             "included_categories",
+            "excluded_categories",
         ]
 
 
