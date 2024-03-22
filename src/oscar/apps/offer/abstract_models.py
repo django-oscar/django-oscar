@@ -1003,6 +1003,16 @@ class AbstractRange(models.Model):
         blank=True,
         verbose_name=_("Included Categories"),
     )
+    excluded_categories = models.ManyToManyField(
+        "catalogue.Category",
+        related_name="excludes",
+        blank=True,
+        verbose_name=_("Excluded Categories"),
+        help_text=_(
+            "Products with these categories are excluded from the range when "
+            "Includes all products is checked"
+        ),
+    )
 
     # Allow a custom range instance to be specified
     proxy_class = fields.NullCharField(
@@ -1112,8 +1122,23 @@ class AbstractRange(models.Model):
         Product = self.included_products.model
 
         if self.includes_all_products:
+            _filter = Q(id__in=self.excluded_products.values("id"))
+            # extend filter if excluded_categories exist
+            if self.excluded_categories.exists():
+                expanded_range_categories = ExpandDownwardsCategoryQueryset(
+                    self.excluded_categories.values("id")
+                )
+                _filter |= Q(categories__in=expanded_range_categories)
+                # extend filter for parent categories, exclude parent = None
+                if (
+                    Product.objects.exclude(parent=None)
+                    .filter(parent__categories__in=expanded_range_categories)
+                    .exists()
+                ):
+                    _filter |= Q(parent__categories__in=expanded_range_categories)
+
             # Filter out blacklisted
-            return Product.objects.exclude(id__in=self.excluded_products.values("id"))
+            return Product.objects.exclude(_filter)
 
         # start with filter clause that always applies
         _filter = Q(includes=self)
@@ -1162,7 +1187,11 @@ class AbstractRange(models.Model):
         """
         Test whether products for the range can be re-ordered.
         """
-        return not (self.included_categories.exists() or self.classes.exists())
+        return not (
+            self.included_categories.exists()
+            or self.classes.exists()
+            or (self.excluded_categories.exists() and self.includes_all_products)
+        )
 
 
 class AbstractRangeProduct(models.Model):
