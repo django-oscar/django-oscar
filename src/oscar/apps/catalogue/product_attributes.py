@@ -99,6 +99,19 @@ class ProductAttributesContainer:
 
         return cpy
 
+    def __getstate__(self):
+        # Allow everything to go into the pickle except for _cache (which can't
+        # be pickled since it contains a generator)
+        d = {}
+        d.update(self.__dict__)
+        d["_cache"] = None
+        return d
+
+    def __setstate__(self, d):
+        # Update __dict__ instead of setting it to avoid triggering __setattr__,
+        # which causes a recursion error.
+        self.__dict__.update(d)
+
     @property
     def product(self):
         return self._product

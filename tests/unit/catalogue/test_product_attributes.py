@@ -1,3 +1,4 @@
+import pickle
 import unittest
 from copy import deepcopy
 
@@ -331,6 +332,31 @@ class ProductAttributeTest(TestCase):
         with self.assertRaises(AttributeError):
             # pylint: disable=pointless-statement
             product.attr.entity
+
+    def test_can_be_pickled_when_initialized(self):
+        """Should be able to pickle and unpickle an initialized ProductAttributesContainer"""
+        product = Product.objects.get(pk=self.product.pk)
+
+        self.assertEqual(product.attr.weight, 3)
+        self.assertTrue(product.attr.initialized)
+
+        pickled_attrs = pickle.dumps(product.attr)
+        attrs = pickle.loads(pickled_attrs)
+
+        self.assertTrue(attrs.initialized)
+        self.assertEqual(attrs.weight, 3)
+
+    def test_can_be_pickled_when_not_initialized(self):
+        """Should be able to pickle and unpickle an uninitialized ProductAttributesContainer"""
+        product = Product.objects.get(pk=self.product.pk)
+
+        self.assertFalse(product.attr.initialized)
+
+        pickled_attrs = pickle.dumps(product.attr)
+        attrs = pickle.loads(pickled_attrs)
+
+        self.assertFalse(attrs.initialized)
+        self.assertEqual(attrs.weight, 3)
 
 
 class MultiOptionTest(TestCase):
