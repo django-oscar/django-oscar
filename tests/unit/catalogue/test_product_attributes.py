@@ -3,7 +3,7 @@ import unittest
 from copy import deepcopy
 
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 
 from oscar.core.loading import get_model
 from oscar.test.factories import (
@@ -18,7 +18,7 @@ ProductAttribute = get_model("catalogue", "ProductAttribute")
 ProductAttributeValue = get_model("catalogue", "ProductAttributeValue")
 
 
-class ProductAttributeTest(TestCase):
+class ProductAttributeTest(TransactionTestCase):
     def setUp(self):
         super().setUp()
 

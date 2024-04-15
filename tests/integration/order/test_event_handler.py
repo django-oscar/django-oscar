@@ -184,6 +184,68 @@ class TestEventHandler(TestCase):
             "Stock should have decreased, but didn't.",
         )
 
+    def test_line_allocations(self):
+        product_class = factories.ProductClassFactory(
+            requires_shipping=False, track_stock=True
+        )
+        product = factories.ProductFactory(product_class=product_class)
+        basket = factories.create_basket(empty=True)
+        add_product(basket, D("10.00"), 5, product=product)
+        order = factories.create_order(basket=basket)
+
+        line = order.lines.get()
+        stockrecord = product.stockrecords.get()
+        num_in_stock = stockrecord.num_in_stock
+        stock_num_allocated = stockrecord.num_allocated
+
+        line.consume_allocation(2)
+        line.refresh_from_db(fields=["num_allocated"])
+        stockrecord.refresh_from_db(fields=["num_allocated", "num_in_stock"])
+        self.assertEqual(
+            line.num_allocated,
+            3,
+            "Allocated line stock should have decreased, but didn't.",
+        )
+        self.assertEqual(
+            stockrecord.num_allocated,
+            stock_num_allocated - 2,
+            "Allocated stock should have decreased, but didn't.",
+        )
+        self.assertEqual(
+            stockrecord.num_in_stock,
+            num_in_stock - 2,
+            "Stock should have decreased, but didn't.",
+        )
+
+        line.cancel_allocation(2)
+        line.refresh_from_db(fields=["num_allocated", "allocation_cancelled"])
+        stockrecord.refresh_from_db(fields=["num_allocated", "num_in_stock"])
+        self.assertEqual(line.allocation_cancelled, False)
+        self.assertEqual(
+            line.num_allocated,
+            1,
+            "Allocated line stock should have decreased, but didn't.",
+        )
+        self.assertEqual(
+            stockrecord.num_allocated,
+            stock_num_allocated - 4,
+            "Allocated stock should have decreased, but didn't.",
+        )
+        self.assertEqual(
+            stockrecord.num_in_stock,
+            num_in_stock - 2,
+            "Stock should have decreased, but didn't.",
+        )
+
+        line.cancel_allocation(1)
+        line.refresh_from_db(fields=["num_allocated", "allocation_cancelled"])
+        self.assertEqual(line.allocation_cancelled, True)
+        self.assertEqual(
+            line.num_allocated,
+            0,
+            "Allocated line stock should have decreased, but didn't.",
+        )
+
     def test_cancel_stock_allocations_track_stock_on(self):
         product_class = factories.ProductClassFactory(
             requires_shipping=False, track_stock=True

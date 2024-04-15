@@ -5,8 +5,9 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import BadSignature, Signer
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.utils.crypto import constant_time_compare
 from django.utils.timezone import now
@@ -14,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.order.signals import order_line_status_changed, order_status_changed
+from oscar.apps.partner.exceptions import InvalidStockAdjustment
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
 from oscar.core.utils import get_default_currency
@@ -617,6 +619,13 @@ class AbstractLine(models.Model):
     # own business processes.
     status = models.CharField(_("Status"), max_length=255, blank=True)
 
+    num_allocated = models.PositiveIntegerField(
+        _("Number allocated"), blank=True, null=True
+    )
+
+    # Checks whether line allocation was cancelled or not
+    allocation_cancelled = models.BooleanField(default=False)
+
     #: Order status pipeline.  This should be a dict where each (key, value)
     #: corresponds to a status and the possible statuses that can follow that
     #: one.
@@ -865,6 +874,56 @@ class AbstractLine(models.Model):
         if not is_available:
             return False, reason
         return True, None
+
+    @property
+    def can_track_allocations(self):
+        return self.stockrecord.can_track_allocations
+
+    def is_allocation_consumption_possible(self, quantity):
+        if self.allocation_cancelled:
+            return False
+
+        return quantity <= self.num_allocated
+
+    def consume_allocation(self, quantity):
+        if not self.can_track_allocations:
+            return
+        if not self.is_allocation_consumption_possible(quantity):
+            raise InvalidStockAdjustment(_("Invalid stock consumption request"))
+
+        with transaction.atomic():
+            self.__class__.objects.filter(pk=self.pk).update(
+                num_allocated=(Coalesce(models.F("num_allocated"), 0) - quantity),
+            )
+            if self.stockrecord:
+                self.stockrecord.consume_allocation(quantity)
+        self.refresh_from_db(fields=["num_allocated"])
+
+    consume_allocation.alters_data = True
+
+    def cancel_allocation(self, quantity):
+        if not self.can_track_allocations:
+            return
+        if not self.is_allocation_consumption_possible(quantity):
+            return
+
+        with transaction.atomic():
+            locked_self = (
+                self.__class__.objects.filter(pk=self.pk).select_for_update().get()
+            )
+            if locked_self.num_allocated == quantity:
+                locked_self.num_allocated = 0
+                locked_self.allocation_cancelled = True
+            else:
+                locked_self.num_allocated -= quantity
+
+            locked_self.save()
+            if locked_self.stockrecord:
+                locked_self.stockrecord.cancel_allocation(quantity)
+
+        self.refresh_from_db(fields=["num_allocated", "allocation_cancelled"])
+
+    cancel_allocation.alters_data = True
 
 
 class AbstractLineAttribute(models.Model):
