@@ -187,7 +187,10 @@ class ProductAttributesContainer:
 
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
-            value = getattr(self, attribute.code, None)
+            if attribute.code in self.__dict__:
+                value = getattr(self, attribute.code, None)
+            else:
+                value = None
             if value is None:
                 if attribute.required:
                     raise ValidationError(
