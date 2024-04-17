@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+    tty: true
