@@ -166,21 +166,27 @@ class LineTests(TestCase):
     def tearDown(self):
         ShippingEventType.objects.all().delete()
 
-    def test_is_allocation_consumption_possible_when_num_allocated_is_greater_than_quantity(self):
+    def test_is_allocation_consumption_possible_when_num_allocated_is_greater_than_quantity(
+        self,
+    ):
         self.line.num_allocated = 2
 
         actual = self.line.is_allocation_consumption_possible(1)
 
         self.assertTrue(actual)
 
-    def test_is_allocation_consumption_possible_when_num_allocated_is_lower_than_quantity(self):
+    def test_is_allocation_consumption_possible_when_num_allocated_is_lower_than_quantity(
+        self,
+    ):
         self.line.num_allocated = 0
 
         actual = self.line.is_allocation_consumption_possible(1)
 
         self.assertFalse(actual)
 
-    def test_is_allocation_consumption_possible_when_num_allocated_is_equal_to_quantity(self):
+    def test_is_allocation_consumption_possible_when_num_allocated_is_equal_to_quantity(
+        self,
+    ):
         self.line.num_allocated = 1
 
         actual = self.line.is_allocation_consumption_possible(1)

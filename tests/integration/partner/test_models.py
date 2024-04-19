@@ -17,21 +17,27 @@ class TestStockRecord(TestCase):
             self.product, price=D("10.00"), num_in_stock=10
         )
 
-    def test_is_allocation_consumption_possible_when_num_allocated_is_greater_than_quantity(self):
+    def test_is_allocation_consumption_possible_when_num_allocated_is_greater_than_quantity(
+        self,
+    ):
         self.stockrecord.num_allocated = 2
 
         actual = self.stockrecord.is_allocation_consumption_possible(1)
 
         self.assertTrue(actual)
 
-    def test_is_allocation_consumption_possible_when_num_allocated_is_lower_than_quantity(self):
+    def test_is_allocation_consumption_possible_when_num_allocated_is_lower_than_quantity(
+        self,
+    ):
         self.stockrecord.num_allocated = 0
 
         actual = self.stockrecord.is_allocation_consumption_possible(1)
 
         self.assertFalse(actual)
 
-    def test_is_allocation_consumption_possible_when_num_allocated_is_equal_to_quantity(self):
+    def test_is_allocation_consumption_possible_when_num_allocated_is_equal_to_quantity(
+        self,
+    ):
         self.stockrecord.num_allocated = 1
 
         actual = self.stockrecord.is_allocation_consumption_possible(1)
