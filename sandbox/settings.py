@@ -337,11 +337,14 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-# Haystack settings
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+# Woosh settings
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         'PATH': location('whoosh_index'),
+        'INCLUDE_SPELLING': True,
     },
 }
 

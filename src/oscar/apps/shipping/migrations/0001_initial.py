@@ -5,6 +5,10 @@ from django.db import models, migrations
 import oscar.models.fields.autoslugfield
 from decimal import Decimal
 import django.core.validators
+from django.utils.module_loading import import_string
+from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 
 class Migration(migrations.Migration):
@@ -17,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderAndItemCharges',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Slug', max_length=128, editable=False, blank=True)),
                 ('name', models.CharField(unique=True, max_length=128, verbose_name='Name')),
                 ('description', models.TextField(verbose_name='Description', blank=True)),
@@ -37,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WeightBand',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('upper_limit', models.DecimalField(verbose_name='Upper Limit', decimal_places=3, validators=[django.core.validators.MinValueValidator(Decimal('0.00'))], help_text='Enter upper limit of this weight band in kg. The lower limit will be determined by the other weight bands.', max_digits=12)),
                 ('charge', models.DecimalField(max_digits=12, decimal_places=2, validators=[django.core.validators.MinValueValidator(Decimal('0.00'))], verbose_name='Charge')),
             ],
@@ -52,7 +56,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WeightBased',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Slug', max_length=128, editable=False, blank=True)),
                 ('name', models.CharField(unique=True, max_length=128, verbose_name='Name')),
                 ('description', models.TextField(verbose_name='Description', blank=True)),

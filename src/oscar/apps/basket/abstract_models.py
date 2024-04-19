@@ -4,6 +4,7 @@ from operator import itemgetter
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import Sum
 from django.utils.encoding import smart_str
@@ -13,33 +14,43 @@ from django.utils.translation import gettext_lazy as _
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes
 from oscar.core.utils import get_default_currency, round_half_up
+from oscar.core.decorators import deprecated
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
-OfferApplications = get_class('offer.results', 'OfferApplications')
-Unavailable = get_class('partner.availability', 'Unavailable')
-LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
-OpenBasketManager, SavedBasketManager = get_classes('basket.managers', ['OpenBasketManager', 'SavedBasketManager'])
+OfferApplications = get_class("offer.results", "OfferApplications")
+Unavailable = get_class("partner.availability", "Unavailable")
+LineDiscountRegistry = get_class("basket.utils", "LineDiscountRegistry")
+OpenBasketManager, SavedBasketManager = get_classes(
+    "basket.managers", ["OpenBasketManager", "SavedBasketManager"]
+)
 
 
 class AbstractBasket(models.Model):
     """
     Basket object
     """
+
     # Baskets can be anonymously owned - hence this field is nullable.  When a
     # anon user signs in, their two baskets are merged.
     owner = models.ForeignKey(
         AUTH_USER_MODEL,
         null=True,
-        related_name='baskets',
+        related_name="baskets",
         on_delete=models.CASCADE,
-        verbose_name=_("Owner"))
+        verbose_name=_("Owner"),
+    )
 
     # Basket statuses
     # - Frozen is for when a basket is in the process of being submitted
     #   and we need to prevent any changes to it.
     OPEN, MERGED, SAVED, FROZEN, SUBMITTED = (
-        "Open", "Merged", "Saved", "Frozen", "Submitted")
+        "Open",
+        "Merged",
+        "Saved",
+        "Frozen",
+        "Submitted",
+    )
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
@@ -48,27 +59,28 @@ class AbstractBasket(models.Model):
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
     status = models.CharField(
-        _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
+        _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES
+    )
 
     # A basket can have many vouchers attached to it.  However, it is common
     # for sites to only allow one voucher per basket - this will need to be
     # enforced in the project's codebase.
     vouchers = models.ManyToManyField(
-        'voucher.Voucher', verbose_name=_("Vouchers"), blank=True)
+        "voucher.Voucher", verbose_name=_("Vouchers"), blank=True
+    )
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
-    date_submitted = models.DateTimeField(_("Date submitted"), null=True,
-                                          blank=True)
+    date_submitted = models.DateTimeField(_("Date submitted"), null=True, blank=True)
 
     # Only if a basket is in one of these statuses can it be edited
     editable_statuses = (OPEN, SAVED)
 
     class Meta:
         abstract = True
-        app_label = 'basket'
-        verbose_name = _('Basket')
-        verbose_name_plural = _('Baskets')
+        app_label = "basket"
+        verbose_name = _("Basket")
+        verbose_name_plural = _("Baskets")
 
     objects = models.Manager()
     open = OpenBasketManager()
@@ -86,11 +98,11 @@ class AbstractBasket(models.Model):
         self.offer_applications = OfferApplications()
 
     def __str__(self):
-        return _(
-            "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
-            % {'status': self.status,
-               'owner': self.owner,
-               'num_lines': self.num_lines}
+        return _("%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") % {
+            "status": self.status,
+            "owner": self.owner,
+            "num_lines": self.num_lines,
+        }
 
     # ========
     # Strategy
@@ -98,7 +110,7 @@ class AbstractBasket(models.Model):
 
     @property
     def has_strategy(self):
-        return hasattr(self, '_strategy')
+        return hasattr(self, "_strategy")
 
     def _get_strategy(self):
         if not self.has_strategy:
@@ -112,7 +124,7 @@ class AbstractBasket(models.Model):
         return self._strategy
 
     def _set_strategy(self, strategy):
-        self._strategy = strategy
+        self._strategy = strategy  # pylint: disable=W0201
 
     strategy = property(_get_strategy, _set_strategy)
 
@@ -125,14 +137,13 @@ class AbstractBasket(models.Model):
         lost.
         """
         if self.id is None:
-            return self.lines.none()
+            return self.lines.model.objects.none()  # pylint: disable=E1101
         if self._lines is None:
             self._lines = (
-                self.lines
-                .select_related('product', 'stockrecord')
-                .prefetch_related(
-                    'attributes', 'product__images')
-                .order_by(self._meta.pk.name))
+                self.lines.select_related("product", "stockrecord")
+                .prefetch_related("attributes", "product__images")
+                .order_by(self._meta.pk.name)
+            )
         return self._lines
 
     def max_allowed_quantity(self):
@@ -147,19 +158,54 @@ class AbstractBasket(models.Model):
             return max_allowed, basket_threshold
         return None, None
 
-    def is_quantity_allowed(self, qty):
+    def is_quantity_allowed(self, qty, line=None):
         """
         Test whether the passed quantity of items can be added to the basket
         """
         # We enforce a max threshold to prevent a DOS attack via the offers
         # system.
         max_allowed, basket_threshold = self.max_allowed_quantity()
+
+        if line is not None:
+            (
+                line_purchase_permitted,
+                reason,
+            ) = line.purchase_info.availability.is_purchase_permitted(qty)
+
+            if not line_purchase_permitted:
+                return line_purchase_permitted, reason
+
+            # Also check if it's permitted with potentional other lines of the same product & stocrecord
+            total_lines_quantity = self.basket_quantity(line) + qty
+            (
+                line_purchase_permitted,
+                reason,
+            ) = line.purchase_info.availability.is_purchase_permitted(
+                total_lines_quantity
+            )
+
+            if not line_purchase_permitted:
+                return line_purchase_permitted, _(
+                    "Available stock is only %(max)d, which has been exceeded because "
+                    "multiple lines contain the same product."
+                ) % {"max": line.purchase_info.availability.num_available}
+
         if max_allowed is not None and qty > max_allowed:
             return False, _(
                 "Due to technical limitations we are not able "
-                "to ship more than %(threshold)d items in one order.") \
-                % {'threshold': basket_threshold}
+                "to ship more than %(threshold)d items in one order."
+            ) % {"threshold": basket_threshold}
+
         return True, None
+
+    def basket_quantity(self, line):
+        """Return the quantity of similar lines in the basket.
+        The basket can contain multiple lines with the same product and
+        stockrecord, but different options. Those quantities are summed up.
+        """
+        matching_lines = self.lines.filter(stockrecord=line.stockrecord)
+        quantity = matching_lines.aggregate(Sum("quantity"))["quantity__sum"]
+        return quantity or 0
 
     # ============
     # Manipulation
@@ -174,6 +220,7 @@ class AbstractBasket(models.Model):
         self.lines.all().delete()
         self._lines = None
 
+    # pylint: disable=unused-argument
     def get_stock_info(self, product, options):
         """
         Hook for implementing strategies that depend on product options
@@ -205,44 +252,52 @@ class AbstractBasket(models.Model):
         stock_info = self.get_stock_info(product, options)
 
         if not stock_info.price.exists:
-            raise ValueError(
-                "Strategy hasn't found a price for product %s" % product)
+            raise ValueError("Strategy hasn't found a price for product %s" % product)
 
         if price_currency and stock_info.price.currency != price_currency:
-            raise ValueError((
-                "Basket lines must all have the same currency. Proposed "
-                "line has currency %s, while basket has currency %s")
-                % (stock_info.price.currency, price_currency))
+            raise ValueError(
+                (
+                    "Basket lines must all have the same currency. Proposed "
+                    "line has currency %s, while basket has currency %s"
+                )
+                % (stock_info.price.currency, price_currency)
+            )
 
         if stock_info.stockrecord is None:
-            raise ValueError((
-                "Basket lines must all have stock records. Strategy hasn't "
-                "found any stock record for product %s") % product)
+            raise ValueError(
+                (
+                    "Basket lines must all have stock records. Strategy hasn't "
+                    "found any stock record for product %s"
+                )
+                % product
+            )
 
         # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
-        line_ref = self._create_line_reference(
-            product, stock_info.stockrecord, options)
+        line_ref = self._create_line_reference(product, stock_info.stockrecord, options)
 
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
         defaults = {
-            'quantity': quantity,
-            'price_excl_tax': stock_info.price.excl_tax,
-            'price_currency': stock_info.price.currency,
+            "quantity": quantity,
+            "price_excl_tax": stock_info.price.excl_tax,
+            "price_currency": stock_info.price.currency,
+            "tax_code": stock_info.price.tax_code,
         }
         if stock_info.price.is_tax_known:
-            defaults['price_incl_tax'] = stock_info.price.incl_tax
+            defaults["price_incl_tax"] = stock_info.price.incl_tax
 
         line, created = self.lines.get_or_create(
             line_reference=line_ref,
             product=product,
             stockrecord=stock_info.stockrecord,
-            defaults=defaults)
+            defaults=defaults,
+        )
         if created:
             for option_dict in options:
-                line.attributes.create(option=option_dict['option'],
-                                       value=option_dict['value'])
+                line.attributes.create(
+                    option=option_dict["option"], value=option_dict["value"]
+                )
         else:
             line.quantity = max(0, line.quantity + quantity)
             line.save()
@@ -250,6 +305,7 @@ class AbstractBasket(models.Model):
 
         # Returning the line is useful when overriding this method.
         return line, created
+
     add_product.alters_data = True
     add = add_product
 
@@ -287,12 +343,12 @@ class AbstractBasket(models.Model):
             if add_quantities:
                 existing_line.quantity += line.quantity
             else:
-                existing_line.quantity = max(existing_line.quantity,
-                                             line.quantity)
+                existing_line.quantity = max(existing_line.quantity, line.quantity)
             existing_line.save()
             line.delete()
         finally:
             self._lines = None
+
     merge_line.alters_data = True
 
     def merge(self, basket, add_quantities=True):
@@ -314,6 +370,7 @@ class AbstractBasket(models.Model):
         for voucher in basket.vouchers.all():
             basket.vouchers.remove(voucher)
             self.vouchers.add(voucher)
+
     merge.alters_data = True
 
     def freeze(self):
@@ -322,6 +379,7 @@ class AbstractBasket(models.Model):
         """
         self.status = self.FROZEN
         self.save()
+
     freeze.alters_data = True
 
     def thaw(self):
@@ -330,6 +388,7 @@ class AbstractBasket(models.Model):
         """
         self.status = self.OPEN
         self.save()
+
     thaw.alters_data = True
 
     def submit(self):
@@ -339,6 +398,7 @@ class AbstractBasket(models.Model):
         self.status = self.SUBMITTED
         self.date_submitted = now()
         self.save()
+
     submit.alters_data = True
 
     # Kept for backwards compatibility
@@ -363,23 +423,25 @@ class AbstractBasket(models.Model):
         Returns a reference string for a line based on the item
         and its options.
         """
-        base = '%s_%s' % (product.id, stockrecord.id)
+        base = "%s_%s" % (product.id, stockrecord.id)
         if not options:
             return base
-        repr_options = [{'option': repr(option['option']),
-                         'value': repr(option['value'])} for option in options]
-        repr_options.sort(key=itemgetter('option'))
-        return "%s_%s" % (base, zlib.crc32(repr(repr_options).encode('utf8')))
+        repr_options = [
+            {"option": repr(option["option"]), "value": repr(option["value"])}
+            for option in options
+        ]
+        repr_options.sort(key=itemgetter("option"))
+        return "%s_%s" % (base, zlib.crc32(repr(repr_options).encode("utf8")))
 
-    def _get_total(self, property):
+    def _get_total(self, model_property):
         """
         For executing a named method on each line of the basket
         and returning the total.
         """
-        total = D('0.00')
+        total = D("0.00")
         for line in self.all_lines():
             try:
-                total += getattr(line, property)
+                total += getattr(line, model_property)
             except ObjectDoesNotExist:
                 # Handle situation where the product may have been deleted
                 pass
@@ -388,7 +450,6 @@ class AbstractBasket(models.Model):
                 info = self.get_stock_info(line.product, line.attributes.all())
                 if info.availability.is_available_to_buy:
                     raise
-                pass
         return total
 
     # ==========
@@ -405,39 +466,43 @@ class AbstractBasket(models.Model):
     @property
     def is_tax_known(self):
         """
-        Test if tax values are known for this basket
+        Test if tax values are known for this basket.
+
+        If the basket is empty, then tax values are unknown.
         """
-        return all([line.is_tax_known for line in self.all_lines()])
+        return (not self.is_empty) and all(
+            [line.is_tax_known for line in self.all_lines()]
+        )
 
     @property
     def total_excl_tax(self):
         """
         Return total line price excluding tax
         """
-        return self._get_total('line_price_excl_tax_incl_discounts')
+        return self._get_total("line_price_excl_tax_incl_discounts")
 
     @property
     def total_tax(self):
         """Return total tax for a line"""
-        return self._get_total('line_tax')
+        return self._get_total("line_tax")
 
     @property
     def total_incl_tax(self):
         """
         Return total price inclusive of tax and discounts
         """
-        return self._get_total('line_price_incl_tax_incl_discounts')
+        return self._get_total("line_price_incl_tax_incl_discounts")
 
     @property
     def total_incl_tax_excl_discounts(self):
         """
         Return total price inclusive of tax but exclusive discounts
         """
-        return self._get_total('line_price_incl_tax')
+        return self._get_total("line_price_incl_tax")
 
     @property
     def total_discount(self):
-        return self._get_total('discount_value')
+        return self._get_total("discount_value")
 
     @property
     def offer_discounts(self):
@@ -485,7 +550,7 @@ class AbstractBasket(models.Model):
         """
         Return total price excluding tax and discounts
         """
-        return self._get_total('line_price_excl_tax')
+        return self._get_total("line_price_excl_tax")
 
     @property
     def num_lines(self):
@@ -495,7 +560,7 @@ class AbstractBasket(models.Model):
     @property
     def num_items(self):
         """Return number of items"""
-        return sum(line.quantity for line in self.lines.all())
+        return sum(line.quantity for line in self.all_lines())
 
     @property
     def num_items_without_discount(self):
@@ -571,9 +636,12 @@ class AbstractBasket(models.Model):
         The basket can contain multiple lines with the same product, but
         different options and stockrecords. Those quantities are summed up.
         """
-        matching_lines = self.lines.filter(product=product)
-        quantity = matching_lines.aggregate(Sum('quantity'))['quantity__sum']
-        return quantity or 0
+        if self.id:
+            matching_lines = self.lines.filter(product=product)
+            quantity = matching_lines.aggregate(Sum("quantity"))["quantity__sum"]
+            return quantity or 0
+
+        return 0
 
     def line_quantity(self, product, stockrecord, options=None):
         """
@@ -607,76 +675,88 @@ class AbstractLine(models.Model):
            their primary key, so no changes should be necessary there.
 
     """
+
     basket = models.ForeignKey(
-        'basket.Basket',
+        "basket.Basket",
         on_delete=models.CASCADE,
-        related_name='lines',
-        verbose_name=_("Basket"))
+        related_name="lines",
+        verbose_name=_("Basket"),
+    )
 
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
     # which should be treated as separate lines.  Set as a
     # SlugField as it is included in the path for certain views.
-    line_reference = SlugField(
-        _("Line Reference"), max_length=128, db_index=True)
+    line_reference = SlugField(_("Line Reference"), max_length=128, db_index=True)
 
     product = models.ForeignKey(
-        'catalogue.Product',
+        "catalogue.Product",
         on_delete=models.CASCADE,
-        related_name='basket_lines',
-        verbose_name=_("Product"))
+        related_name="basket_lines",
+        verbose_name=_("Product"),
+    )
 
     # We store the stockrecord that should be used to fulfil this line.
     stockrecord = models.ForeignKey(
-        'partner.StockRecord',
-        on_delete=models.CASCADE,
-        related_name='basket_lines')
+        "partner.StockRecord", on_delete=models.CASCADE, related_name="basket_lines"
+    )
 
-    quantity = models.PositiveIntegerField(_('Quantity'), default=1)
+    quantity = models.PositiveIntegerField(_("Quantity"), default=1)
 
     # We store the unit price incl tax of the product when it is first added to
     # the basket.  This allows us to tell if a product has changed price since
     # a person first added it to their basket.
     price_currency = models.CharField(
-        _("Currency"), max_length=12, default=get_default_currency)
+        _("Currency"), max_length=12, default=get_default_currency
+    )
     price_excl_tax = models.DecimalField(
-        _('Price excl. Tax'), decimal_places=2, max_digits=12,
-        null=True)
+        _("Price excl. Tax"), decimal_places=2, max_digits=12, null=True
+    )
     price_incl_tax = models.DecimalField(
-        _('Price incl. Tax'), decimal_places=2, max_digits=12, null=True)
+        _("Price incl. Tax"), decimal_places=2, max_digits=12, null=True
+    )
+    tax_code = models.CharField(
+        _("VAT rate code"), max_length=64, blank=True, null=True
+    )
 
     # Track date of first addition
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True, db_index=True)
+    date_created = models.DateTimeField(
+        _("Date Created"), auto_now_add=True, db_index=True
+    )
     date_updated = models.DateTimeField(_("Date Updated"), auto_now=True, db_index=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Instance variables used to persist discount information
-        self._discount_excl_tax = D('0.00')
-        self._discount_incl_tax = D('0.00')
-        self.consumer = LineOfferConsumer(self)
+        self.discounts = LineDiscountRegistry(self)
 
     class Meta:
         abstract = True
-        app_label = 'basket'
+        app_label = "basket"
         # Enforce sorting by order of creation.
-        ordering = ['date_created', 'pk']
+        ordering = ["date_created", "pk"]
         unique_together = ("basket", "line_reference")
-        verbose_name = _('Basket line')
-        verbose_name_plural = _('Basket lines')
+        verbose_name = _("Basket line")
+        verbose_name_plural = _("Basket lines")
+
+    @property
+    @deprecated
+    def consumer(self):
+        return self.discounts
 
     def __str__(self):
         return _(
-            "Basket #%(basket_id)d, Product #%(product_id)d, quantity"
-            " %(quantity)d") % {'basket_id': self.basket.pk,
-                                'product_id': self.product.pk,
-                                'quantity': self.quantity}
+            "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
+        ) % {
+            "basket_id": self.basket.pk,
+            "product_id": self.product.pk,
+            "quantity": self.quantity,
+        }
 
     def save(self, *args, **kwargs):
         if not self.basket.can_be_edited:
             raise PermissionDenied(
-                _("You cannot modify a %s basket") % (
-                    self.basket.status.lower(),))
+                _("You cannot modify a %s basket") % (self.basket.status.lower(),)
+            )
         return super().save(*args, **kwargs)
 
     # =============
@@ -687,28 +767,25 @@ class AbstractLine(models.Model):
         """
         Remove any discounts from this line.
         """
-        self._discount_excl_tax = D('0.00')
-        self._discount_incl_tax = D('0.00')
-        self.consumer = LineOfferConsumer(self)
+        self.discounts = LineDiscountRegistry(self)
 
-    def discount(self, discount_value, affected_quantity, incl_tax=True,
-                 offer=None):
+    def discount(self, discount_value, affected_quantity, incl_tax=True, offer=None):
         """
         Apply a discount to this line
         """
         if incl_tax:
-            if self._discount_excl_tax > 0:
+            if self.discounts.excl_tax > 0:
                 raise RuntimeError(
                     "Attempting to discount the tax-inclusive price of a line "
-                    "when tax-exclusive discounts are already applied")
-            self._discount_incl_tax += discount_value
+                    "when tax-exclusive discounts are already applied"
+                )
         else:
-            if self._discount_incl_tax > 0:
+            if self.discounts.incl_tax > 0:
                 raise RuntimeError(
                     "Attempting to discount the tax-exclusive price of a line "
-                    "when tax-inclusive discounts are already applied")
-            self._discount_excl_tax += discount_value
-        self.consume(affected_quantity, offer=offer)
+                    "when tax-inclusive discounts are already applied"
+                )
+        self.discounts.discount(discount_value, affected_quantity, incl_tax, offer)
 
     def consume(self, quantity, offer=None):
         """
@@ -716,7 +793,7 @@ class AbstractLine(models.Model):
 
         Consumed items are no longer available to be used in offers.
         """
-        return self.consumer.consume(quantity, offer=offer)
+        return self.discounts.consume(quantity, offer=offer)
 
     def get_price_breakdown(self):
         """
@@ -726,26 +803,37 @@ class AbstractLine(models.Model):
         tuples.
         """
         if not self.is_tax_known:
-            raise RuntimeError("A price breakdown can only be determined "
-                               "when taxes are known")
+            raise RuntimeError(
+                "A price breakdown can only be determined when taxes are known"
+            )
         prices = []
         if not self.discount_value:
-            prices.append((self.unit_price_incl_tax, self.unit_price_excl_tax,
-                           self.quantity))
+            prices.append(
+                (self.unit_price_incl_tax, self.unit_price_excl_tax, self.quantity)
+            )
         else:
             # Need to split the discount among the affected quantity
             # of products.
-            item_incl_tax_discount = (
-                self.discount_value / int(self.consumer.consumed()))
+            item_incl_tax_discount = self.discount_value / int(
+                self.discounts.num_consumed()
+            )
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
             item_excl_tax_discount = round_half_up(item_excl_tax_discount)
-            prices.append((self.unit_price_incl_tax - item_incl_tax_discount,
-                           self.unit_price_excl_tax - item_excl_tax_discount,
-                           self.consumer.consumed()))
+            prices.append(
+                (
+                    self.unit_price_incl_tax - item_incl_tax_discount,
+                    self.unit_price_excl_tax - item_excl_tax_discount,
+                    self.discounts.num_consumed(),
+                )
+            )
             if self.quantity_without_discount:
-                prices.append((self.unit_price_incl_tax,
-                               self.unit_price_excl_tax,
-                               self.quantity_without_discount))
+                prices.append(
+                    (
+                        self.unit_price_incl_tax,
+                        self.unit_price_excl_tax,
+                        self.quantity_without_discount,
+                    )
+                )
         return prices
 
     # =======
@@ -754,6 +842,14 @@ class AbstractLine(models.Model):
 
     @property
     def _tax_ratio(self):
+        # this function tries to computate the tax ratio based on the incl tax price
+        # versus the excl tax price. Since these values are allready rounded, this will
+        # NOT return the exact ratio corresponding to your tax rate.
+        # if this is a problem you need to provide your own implementation of _tax_ratio
+        # that returns the ratio based on the exact tax percentage in use.
+        # one way to make this value correct is to use 4 decimals for all prices everywhere,
+        # and round only at the last moment when presenting the values to the user.
+        # that would make this value precise and correct because there would be no rounding
         if not self.unit_price_incl_tax:
             return 0
         return self.unit_price_excl_tax / self.unit_price_incl_tax
@@ -763,50 +859,69 @@ class AbstractLine(models.Model):
     # ===============
 
     def has_offer_discount(self, offer):
-        return self.consumer.consumed(offer) > 0
+        return self.discounts.num_consumed(offer) > 0
 
     def quantity_with_offer_discount(self, offer):
-        return self.consumer.consumed(offer)
+        return self.discounts.num_consumed(offer)
 
     def quantity_without_offer_discount(self, offer):
-        return self.consumer.available(offer)
+        return self.discounts.available(offer)
 
     def is_available_for_offer_discount(self, offer):
-        return self.consumer.available(offer) > 0
+        return self.discounts.available(offer) > 0
 
     def quantity_available_for_offer(self, offer):
-        return self.quantity_without_offer_discount(offer) + self.quantity_with_offer_discount(offer)
+        return self.quantity_without_offer_discount(
+            offer
+        ) + self.quantity_with_offer_discount(offer)
 
     # ==========
     # Properties
     # ==========
 
     @property
+    @deprecated
+    def _discount_incl_tax(self):
+        return self.discounts.incl_tax
+
+    @_discount_incl_tax.setter
+    def _discount_incl_tax(self, value):
+        raise Exception("You can not set _discount_incl_tax")
+
+    @property
+    @deprecated
+    def _discount_excl_tax(self):
+        return self.discounts.excl_tax
+
+    @_discount_excl_tax.setter
+    def _discount_excl_tax(self, value):
+        raise Exception("You can not set _discount_excl_tax")
+
+    @property
     def has_discount(self):
-        return bool(self.consumer.consumed())
+        return bool(self.discounts.num_consumed())
 
     @property
     def quantity_with_discount(self):
-        return self.consumer.consumed()
+        return self.discounts.num_consumed()
 
     @property
     def quantity_without_discount(self):
-        return self.consumer.available()
+        return self.discounts.available()
 
     @property
     def discount_value(self):
-        # Only one of the incl- and excl- discounts should be non-zero
-        return max(self._discount_incl_tax, self._discount_excl_tax)
+        return self.discounts.total
 
+    # pylint: disable=W0201
     @property
     def purchase_info(self):
         """
         Return the stock/price info
         """
-        if not hasattr(self, '_info'):
+        if not hasattr(self, "_info"):
             # Cache the PurchaseInfo instance.
-            self._info = self.basket.strategy.fetch_for_line(
-                self, self.stockrecord)
+            self._info = self.basket.strategy.fetch_for_line(self, self.stockrecord)
         return self._info
 
     @property
@@ -839,34 +954,66 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax_incl_discounts(self):
-        if self._discount_excl_tax and self.line_price_excl_tax is not None:
-            return max(0, self.line_price_excl_tax - self._discount_excl_tax)
-        if self._discount_incl_tax and self.line_price_incl_tax is not None:
-            # This is a tricky situation.  We know the discount as calculated
-            # against tax inclusive prices but we need to guess how much of the
-            # discount applies to tax-exclusive prices.  We do this by
-            # assuming a linear tax and scaling down the original discount.
-            return max(0, self.line_price_excl_tax - round_half_up(
-                self._tax_ratio * self._discount_incl_tax
-            ))
+        if self.line_price_excl_tax is None:
+            return None
+
+        excl_tax_discounts = self.discounts.excl_tax
+        if excl_tax_discounts:
+            # these are discounts that return a value excluding tax, we can simply
+            # subtract this value from line_price_excl_tax to get to line_price_excl_tax_incl_discounts
+            return max(0, self.line_price_excl_tax - excl_tax_discounts)
+
+        # This is a tricky situation.  We know the discount as calculated
+        # against tax inclusive prices but we need to guess how much of the
+        # discount applies to tax-exclusive prices.  We do this by
+        # assuming a linear tax and scaling down the original discount.
+        # Please refer to the _tax_ratio method for more details on how
+        # to make this calculation more precise.
+
+        incl_tax_discounts = self.discounts.incl_tax
+        if incl_tax_discounts and self._tax_ratio:
+            if self.line_price_excl_tax is not None:
+                # if we got a precise line_price_excl_tax use that first, if _tax_ratio is off,
+                # this will create the smallest deviation becaise incl_tax_discounts is usually
+                # smaller than line_price_excl_tax
+                return max(
+                    0,
+                    self.line_price_excl_tax
+                    - round_half_up(self._tax_ratio * incl_tax_discounts),
+                )
+            elif self.line_price_incl_tax is not None:
+                # when all else fails, compute based on line_price_incl_tax
+                return max(
+                    0, self._tax_ratio * (self.line_price_incl_tax - incl_tax_discounts)
+                )
+
+        # there are no discounts so just return the line_price_excl_tax
         return self.line_price_excl_tax
 
     @property
     def line_price_incl_tax_incl_discounts(self):
+        excl_tax_discounts = self.discounts.excl_tax
+        incl_tax_discounts = self.discounts.incl_tax
+
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
         # including tax
-        if self.line_price_incl_tax is not None and self._discount_incl_tax:
-            return max(0, self.line_price_incl_tax - self._discount_incl_tax)
-        elif self.line_price_excl_tax is not None and self._discount_excl_tax:
-            return max(0, round_half_up((self.line_price_excl_tax - self._discount_excl_tax) / self._tax_ratio))
+        if self.line_price_incl_tax is not None and incl_tax_discounts:
+            return max(0, self.line_price_incl_tax - incl_tax_discounts)
+        elif self.line_price_excl_tax is not None and excl_tax_discounts:
+            return round_half_up(
+                self.line_price_excl_tax_incl_discounts / self._tax_ratio
+            )
 
         return self.line_price_incl_tax
 
     @property
     def line_tax(self):
         if self.is_tax_known:
-            return self.line_price_incl_tax_incl_discounts - self.line_price_excl_tax_incl_discounts
+            return (
+                self.line_price_incl_tax_incl_discounts
+                - self.line_price_excl_tax_incl_discounts
+            )
 
     @property
     def line_price_incl_tax(self):
@@ -878,7 +1025,14 @@ class AbstractLine(models.Model):
         d = smart_str(self.product)
         ops = []
         for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+            value = attribute.value
+            if isinstance(value, list):
+                ops.append(
+                    "%s = '%s'"
+                    % (attribute.option.name, (", ".join([str(v) for v in value])))
+                )
+            else:
+                ops.append("%s = '%s'" % (attribute.option.name, value))
         if ops:
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
@@ -891,7 +1045,7 @@ class AbstractLine(models.Model):
         """
         if isinstance(self.purchase_info.availability, Unavailable):
             msg = "'%(product)s' is no longer available"
-            return _(msg) % {'product': self.product.get_title()}
+            return _(msg) % {"product": self.product.get_title()}
 
         if not self.price_incl_tax:
             return
@@ -902,19 +1056,23 @@ class AbstractLine(models.Model):
         current_price_incl_tax = self.purchase_info.price.incl_tax
         if current_price_incl_tax != self.price_incl_tax:
             product_prices = {
-                'product': self.product.get_title(),
-                'old_price': currency(self.price_incl_tax, self.price_currency),
-                'new_price': currency(current_price_incl_tax, self.price_currency)
+                "product": self.product.get_title(),
+                "old_price": currency(self.price_incl_tax, self.price_currency),
+                "new_price": currency(current_price_incl_tax, self.price_currency),
             }
             if current_price_incl_tax > self.price_incl_tax:
-                warning = _("The price of '%(product)s' has increased from"
-                            " %(old_price)s to %(new_price)s since you added"
-                            " it to your basket")
+                warning = _(
+                    "The price of '%(product)s' has increased from"
+                    " %(old_price)s to %(new_price)s since you added"
+                    " it to your basket"
+                )
                 return warning % product_prices
             else:
-                warning = _("The price of '%(product)s' has decreased from"
-                            " %(old_price)s to %(new_price)s since you added"
-                            " it to your basket")
+                warning = _(
+                    "The price of '%(product)s' has decreased from"
+                    " %(old_price)s to %(new_price)s since you added"
+                    " it to your basket"
+                )
                 return warning % product_prices
 
 
@@ -922,19 +1080,20 @@ class AbstractLineAttribute(models.Model):
     """
     An attribute of a basket line
     """
+
     line = models.ForeignKey(
-        'basket.Line',
+        "basket.Line",
         on_delete=models.CASCADE,
-        related_name='attributes',
-        verbose_name=_("Line"))
+        related_name="attributes",
+        verbose_name=_("Line"),
+    )
     option = models.ForeignKey(
-        'catalogue.Option',
-        on_delete=models.CASCADE,
-        verbose_name=_("Option"))
-    value = models.CharField(_("Value"), max_length=255)
+        "catalogue.Option", on_delete=models.CASCADE, verbose_name=_("Option")
+    )
+    value = models.JSONField(_("Value"), encoder=DjangoJSONEncoder)
 
     class Meta:
         abstract = True
-        app_label = 'basket'
-        verbose_name = _('Line attribute')
-        verbose_name_plural = _('Line attributes')
+        app_label = "basket"
+        verbose_name = _("Line attribute")
+        verbose_name_plural = _("Line attributes")

@@ -5,20 +5,20 @@ from django.test import TestCase
 from oscar.core.loading import get_model
 from oscar.test import factories
 
-Partner = get_model('partner', 'Partner')
-PartnerAddress = get_model('partner', 'PartnerAddress')
-Country = get_model('address', 'Country')
+Partner = get_model("partner", "Partner")
+PartnerAddress = get_model("partner", "PartnerAddress")
+Country = get_model("address", "Country")
 
 
 class TestStockRecord(TestCase):
-
     def setUp(self):
         self.product = factories.create_product()
         self.stockrecord = factories.create_stockrecord(
-            self.product, price=D('10.00'), num_in_stock=10)
+            self.product, price=D("10.00"), num_in_stock=10
+        )
 
     def test_get_price_excl_tax_returns_correct_value(self):
-        self.assertEqual(D('10.00'), self.stockrecord.price)
+        self.assertEqual(D("10.00"), self.stockrecord.price)
 
     def test_net_stock_level_with_no_allocation(self):
         self.assertEqual(10, self.stockrecord.net_stock_level)
@@ -56,15 +56,16 @@ class TestStockRecord(TestCase):
 
 
 class TestStockRecordNoStockTrack(TestCase):
-
     def setUp(self):
         self.product_class = factories.ProductClassFactory(
-            requires_shipping=False, track_stock=False)
+            requires_shipping=False, track_stock=False
+        )
 
     def test_allocate_does_nothing(self):
         product = factories.ProductFactory(product_class=self.product_class)
         stockrecord = factories.create_stockrecord(
-            product, price=D('10.00'), num_in_stock=10)
+            product, price=D("10.00"), num_in_stock=10
+        )
 
         self.assertFalse(stockrecord.can_track_allocations)
         stockrecord.allocate(5)
@@ -72,11 +73,14 @@ class TestStockRecordNoStockTrack(TestCase):
 
     def test_allocate_does_nothing_for_child_product(self):
         parent_product = factories.ProductFactory(
-            structure='parent', product_class=self.product_class)
+            structure="parent", product_class=self.product_class
+        )
         child_product = factories.ProductFactory(
-            parent=parent_product, product_class=None, structure='child')
+            parent=parent_product, product_class=None, structure="child"
+        )
         stockrecord = factories.create_stockrecord(
-            child_product, price=D('10.00'), num_in_stock=10)
+            child_product, price=D("10.00"), num_in_stock=10
+        )
 
         self.assertFalse(stockrecord.can_track_allocations)
         stockrecord.allocate(5)
@@ -84,19 +88,19 @@ class TestStockRecordNoStockTrack(TestCase):
 
 
 class TestPartnerAddress(TestCase):
-
     def setUp(self):
-        self.partner = Partner._default_manager.create(
-            name="Dummy partner")
+        self.partner = Partner._default_manager.create(name="Dummy partner")
         self.country = Country._default_manager.create(
-            iso_3166_1_a2='GB', name="UNITED KINGDOM")
+            iso_3166_1_a2="GB", name="UNITED KINGDOM"
+        )
         self.address = PartnerAddress._default_manager.create(
             title="Dr",
             first_name="Barry",
             last_name="Barrington",
             country=self.country,
             postcode="LS1 2HA",
-            partner=self.partner)
+            partner=self.partner,
+        )
 
     def test_can_get_primary_address(self):
         self.assertEqual(self.partner.primary_address, self.address)
@@ -108,6 +112,6 @@ class TestPartnerAddress(TestCase):
             last_name="Barrington",
             postcode="LS1 2HA",
             country=self.country,
-            partner=self.partner)
-        self.assertRaises(
-            NotImplementedError, getattr, self.partner, 'primary_address')
+            partner=self.partner,
+        )
+        self.assertRaises(NotImplementedError, getattr, self.partner, "primary_address")

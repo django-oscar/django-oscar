@@ -1,5 +1,16 @@
 [
 {
+    "model": "catalogue.productclass",
+    "pk": 1,
+    "fields": {
+        "name": "Spullen",
+        "slug": "dik-products",
+        "requires_shipping": true,
+        "track_stock": false,
+        "options": []
+    }
+},
+{
     "model": "catalogue.product",
     "pk": 2,
     "fields": {
@@ -33,17 +44,6 @@
         "date_updated": "2018-08-22T13:25:58.500Z",
         "is_discountable": true,
         "product_options": []
-    }
-},
-{
-    "model": "catalogue.productclass",
-    "pk": 1,
-    "fields": {
-        "name": "Spullen",
-        "slug": "dik-products",
-        "requires_shipping": true,
-        "track_stock": false,
-        "options": []
     }
 },
 {

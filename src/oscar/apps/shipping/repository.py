@@ -5,10 +5,20 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_classes
 
-(Free, NoShippingRequired,
- TaxExclusiveOfferDiscount, TaxInclusiveOfferDiscount) \
-    = get_classes('shipping.methods', ['Free', 'NoShippingRequired',
-                                       'TaxExclusiveOfferDiscount', 'TaxInclusiveOfferDiscount'])
+(
+    Free,
+    NoShippingRequired,
+    TaxExclusiveOfferDiscount,
+    TaxInclusiveOfferDiscount,
+) = get_classes(
+    "shipping.methods",
+    [
+        "Free",
+        "NoShippingRequired",
+        "TaxExclusiveOfferDiscount",
+        "TaxInclusiveOfferDiscount",
+    ],
+)
 
 
 class Repository(object):
@@ -35,30 +45,30 @@ class Repository(object):
             return [NoShippingRequired()]
 
         methods = self.get_available_shipping_methods(
-            basket=basket, shipping_addr=shipping_addr, **kwargs)
+            basket=basket, shipping_addr=shipping_addr, **kwargs
+        )
         if basket.has_shipping_discounts:
             methods = self.apply_shipping_offers(basket, methods)
         return methods
 
-    def get_default_shipping_method(self, basket, shipping_addr=None,
-                                    **kwargs):
+    def get_default_shipping_method(self, basket, shipping_addr=None, **kwargs):
         """
         Return a 'default' shipping method to show on the basket page to give
         the customer an indication of what their order will cost.
         """
         shipping_methods = self.get_shipping_methods(
-            basket, shipping_addr=shipping_addr, **kwargs)
+            basket, shipping_addr=shipping_addr, **kwargs
+        )
         if len(shipping_methods) == 0:
-            raise ImproperlyConfigured(
-                _("You need to define some shipping methods"))
+            raise ImproperlyConfigured(_("You need to define some shipping methods"))
 
         # Assume first returned method is default
         return shipping_methods[0]
 
     # Helpers
 
-    def get_available_shipping_methods(
-            self, basket, shipping_addr=None, **kwargs):
+    # pylint: disable=unused-argument
+    def get_available_shipping_methods(self, basket, shipping_addr=None, **kwargs):
         """
         Return a list of all applicable shipping method instances for a given
         basket, address etc. This method is intended to be overridden.
@@ -70,9 +80,8 @@ class Repository(object):
         Apply shipping offers to the passed set of methods
         """
         # We default to only applying the first shipping discount.
-        offer = basket.shipping_discounts[0]['offer']
-        return [self.apply_shipping_offer(basket, method, offer)
-                for method in methods]
+        offer = basket.shipping_discounts[0]["offer"]
+        return [self.apply_shipping_offer(basket, method, offer) for method in methods]
 
     def apply_shipping_offer(self, basket, method, offer):
         """
@@ -83,7 +92,7 @@ class Repository(object):
         # method with a decorating class that applies the offer discount to the
         # shipping charge.
         charge = method.calculate(basket)
-        if charge.excl_tax == D('0.00'):
+        if charge.excl_tax == D("0.00"):
             # No need to wrap zero shipping charges
             return method
 

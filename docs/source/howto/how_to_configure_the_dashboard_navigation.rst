@@ -127,8 +127,8 @@ The class is of the ``<i>`` is defined by the *icon* setting in the
 configuration of your dashboard navigation above.
 
 
-.. _`Font Awesome`: http://fortawesome.github.com/Font-Awesome/
-.. _`this icon list`: http://fortawesome.github.com/Font-Awesome/#all-icons
+.. _`Font Awesome`: https://fontawesome.com/
+.. _`this icon list`: https://fontawesome.com/icons
 
 Conditionally registering menu
 ------------------------------

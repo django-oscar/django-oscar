@@ -1,0 +1,41 @@
+========================================
+Oscar 3.2.4 release notes
+========================================
+
+:release: 2024-08-02
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2.4:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.2.4 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
+
+.. _new_in_3.2.4:
+
+What's new in Oscar 3.2.4?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+3.2.3 contains a major bug when overriding the OrderDiscount. It caused the following Exception:
+
+```
+  File "/usr/local/lib/python3.11/site-packages/oscar/core/loading.py", line 260, in get_model
+    import_module("%s.%s" % (app_config.name, MODELS_MODULE_NAME))
+  File "/usr/local/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<FOO>/order/models.py", line 1081, in <module>
+    from oscar.apps.order.models import *  # NOQA
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'oscar.apps.order.models' has no attribute 'OrderDiscount'. Did you mean: 'OrderLineDiscount'?
+```
+
+This minor version fixes the issue
+
+
+**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2.3...3.2.4

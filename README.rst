@@ -20,7 +20,7 @@ Contents:
     :target: http://oscarcommerce.com
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/readthedocs.thumb.png
-    :target: https://django-oscar.readthedocs.io/en/stable/
+    :target: https://django-oscar.readthedocs.io/en/latest/
 
 Further reading:
 
@@ -30,7 +30,7 @@ Further reading:
 * `Docker image`_ on http://hub.docker.com/
 * `django-oscar group`_ - mailing list for questions and announcements
 * `Twitter account for news and updates`_
-* `Slack`_
+* `Discord`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
@@ -64,13 +64,13 @@ Docs status:
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: https://latest.oscarcommerce.com
 .. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
-.. _`Documentation`: https://django-oscar.readthedocs.io/en/stable/
+.. _`Documentation`: https://docs.oscarcommerce.com/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
-.. _`Slack`: https://slack.oscarcommerce.com/
+.. _`Discord`: https://discord.gg/NMwfZuJnJZ
 
 Core team:
 
@@ -99,6 +99,8 @@ The currently supported versions of Oscar are:
 +---------+----------------+
 | Version | End of support |
 +=========+================+
+| 3.2 LTS | January 2026   |
++---------+----------------+
 | 3.1     | April 2022     |
 +---------+----------------+
 | 3.0     | May 2021       |
@@ -106,7 +108,7 @@ The currently supported versions of Oscar are:
 | 2.2 LTS | August 2023    |
 +---------+----------------+
 
-Supported verions are eligible for fixes for data loss bugs and security issues. Releases designated as
+Supported versions are eligible for fixes for data loss bugs and security issues. Releases designated as
 Long-term support (LTS) releases will receive support for an extended period of 3 years from their release date.
 
 
@@ -139,8 +141,8 @@ The sandbox site is also available to browse at https://latest.oscarcommerce.com
 The sandbox site can be set-up locally `in 5 commands`_.  Want to
 make changes?  Check out the `contributing guidelines`_.
 
-.. _`in 5 commands`: https://django-oscar.readthedocs.io/en/stable/internals/sandbox.html#running-the-sandbox-locally
-.. _`contributing guidelines`: https://django-oscar.readthedocs.io/en/stable/internals/contributing/index.html
+.. _`in 5 commands`: https://django-oscar.readthedocs.io/en/latest/internals/sandbox.html#run-the-sandbox-locally
+.. _`contributing guidelines`: https://django-oscar.readthedocs.io/en/latest/internals/contributing/index.html
 
 
 Extensions
@@ -149,6 +151,8 @@ Extensions
 The following extensions are stable and ready for use:
 
 * django-oscar-api_ - RESTful JSON API for django-oscar
+
+* django-oscar-odin_ - Odin Resources and mappings to Oscar models
 
 * django-oscar-adyen_ - Integration with the Adyen payment gateway
 
@@ -174,6 +178,7 @@ The following extensions are stable and ready for use:
   Oscar
 
 .. _django-oscar-api: https://github.com/django-oscar/django-oscar-api
+.. _django-oscar-odin: https://github.com/django-oscar/django-oscar-odin
 .. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/django-oscar/django-oscar-paymentexpress
@@ -223,6 +228,8 @@ The following are community-written extensions:
 * django-oscar-wfrs_ - Oscar WFRS is a plugin for django-oscar-api-checkout_
   that makes it possible to use `Wells Fargo Retail Services`_ as an order
   payment method.
+  
+* django-oscar-zarinpal-gateway_ - Payment gateway integration for Zarinpal Payments in django-oscar. Zarinpal Payments is a large payment gateway based in The I.R. Iran .
 
 Let us know if you're writing a new one!
 
@@ -239,6 +246,8 @@ Let us know if you're writing a new one!
 .. _`CyberSource Secure Acceptance Silent Order Post`: https://www.cybersource.com/products/payment_security/secure_acceptance_silent_order_post/
 .. _django-oscar-wfrs: https://github.com/thelabnyc/django-oscar-wfrs
 .. _`Wells Fargo Retail Services`: https://retailservices.wellsfargo.com/
+.. _django-oscar-zarinpal-gateway: https://github.com/mojtabaakbari221b/django-oscar-zarinpal-gateway
+
 
 Videos
 ------
@@ -263,6 +272,63 @@ Oscar is released under the permissive `New BSD license`_ (see summary_).
 
 .. _`New BSD license`: https://github.com/django-oscar/django-oscar/blob/master/LICENSE
 
+Contributing to the Project
+---------------------------
+
+We welcome contributions to the project! Whether it's a bug fix, a new feature, or just some documentation improvements, your contributions are greatly appreciated.
+
+To contribute, please follow these steps:
+
+Fork the project repository on GitHub.
+Clone your forked repository to your local machine.
+Create a new branch for your changes.
+Make your changes, and commit them with clear commit messages.
+Push your changes to your forked repository.
+Open a pull request on the original project repository, explaining your changes.
+Please note that all contributions are subject to review, and may be modified or rejected if they do not meet the project's standards.
+
+Code of Conduct
+---------------
+
+We want everyone involved in the project to feel safe and respected, regardless of their background or identity. As such, we have adopted the following Code of Conduct:
+
+Our Pledge 
+----------
+
+In the interest of fostering an open and welcoming environment, we pledge to:
+
+Be friendly and welcoming to all contributors.
+Respect differing viewpoints and experiences.
+Accept constructive criticism and feedback graciously.
+Focus on what is best for the community and the project.
+
+Our Standards
+-------------
+
+We expect all contributors to:
+
+Use welcoming and inclusive language.
+Be respectful of differing viewpoints and experiences.
+Gracefully accept constructive criticism.
+Focus on what is best for the community and the project.
+
+Our Responsibilities
+--------------------
+
+Project maintainers are responsible for:
+
+Enforcing the Code of Conduct.
+Investigating and addressing reported violations of the Code of Conduct.
+Making clear and fair decisions about disciplinary actions for violations of the Code of Conduct.
+Scope
+This Code of Conduct applies to all contributors, both online and offline, in all project spaces, including but not limited to project forums, mailing lists, GitHub repositories, and in-person events.
+
+Enforcement
+-----------
+
+If you witness or experience unacceptable behavior, or have any other concerns, please notify the project maintainers at viggo@highbiza.nl & joey@highbiza.nl. All reports will be kept confidential, and the project maintainers will work with you to determine a resolution.
+
+We reserve the right to take any action deemed necessary to enforce this Code of Conduct, including but not limited to warning the offender, banning the offender from the project's spaces, or reporting the offender to relevant authorities.
 Case studies
 ------------
 

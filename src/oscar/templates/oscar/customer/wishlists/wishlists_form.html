@@ -27,6 +27,8 @@
 {% block tabcontent %}
     <form method="post" data-behaviours="lock">
         {% csrf_token %}
+        {{ shared_emails_formset.management_form }}
+
         {% if not wishlist %}
             <p>{% trans "What should your new wish list be called?" %}</p>
         {% endif %}
@@ -38,6 +40,16 @@
                 {% endblocktrans %}
             </p>
         {% endif %}
+
+        <div class="wishlist-shared-emails mt-5">
+            <h3>{% trans "Share wishlist" %}</h3>
+            <small>
+                {% trans "If you want to share your wishlist with others, you can add their email addresses below. The visibility must be set to shared in order for this to work." %}
+            </small>
+            {% for form in shared_emails_formset %}
+                {% include "oscar/partials/form_fields.html" with form=form %}
+            {% endfor %}
+        </div>
         <div class="form-group">
             <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
             {% trans "or" %} <a href="#" onclick="history.go(-1);return false" >{% trans "cancel" %}</a>.

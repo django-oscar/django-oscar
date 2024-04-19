@@ -3,16 +3,15 @@ from decimal import Decimal as D
 
 from oscar.core.loading import get_class
 
-Unavailable = get_class('partner.availability', 'Unavailable')
-Available = get_class('partner.availability', 'Available')
-StockRequiredAvailability = get_class('partner.availability', 'StockRequired')
-UnavailablePrice = get_class('partner.prices', 'Unavailable')
-FixedPrice = get_class('partner.prices', 'FixedPrice')
-TaxInclusiveFixedPrice = get_class('partner.prices', 'TaxInclusiveFixedPrice')
+Unavailable = get_class("partner.availability", "Unavailable")
+Available = get_class("partner.availability", "Available")
+StockRequiredAvailability = get_class("partner.availability", "StockRequired")
+UnavailablePrice = get_class("partner.prices", "Unavailable")
+FixedPrice = get_class("partner.prices", "FixedPrice")
+TaxInclusiveFixedPrice = get_class("partner.prices", "TaxInclusiveFixedPrice")
 
 # A container for policies
-PurchaseInfo = namedtuple(
-    'PurchaseInfo', ['price', 'availability', 'stockrecord'])
+PurchaseInfo = namedtuple("PurchaseInfo", ["price", "availability", "stockrecord"])
 
 
 class Selector(object):
@@ -34,6 +33,7 @@ class Selector(object):
 
     """
 
+    # pylint: disable=unused-argument
     def strategy(self, request=None, user=None, **kwargs):
         """
         Return an instantiated strategy instance
@@ -43,6 +43,7 @@ class Selector(object):
         return Default(request)
 
 
+# pylint: disable=unused-argument
 class Base(object):
     """
     The base strategy class
@@ -126,24 +127,25 @@ class Structured(Base):
         return PurchaseInfo(
             price=self.pricing_policy(product, stockrecord),
             availability=self.availability_policy(product, stockrecord),
-            stockrecord=stockrecord)
+            stockrecord=stockrecord,
+        )
 
     def fetch_for_parent(self, product):
         # Select children and associated stockrecords
         children_stock = self.select_children_stockrecords(product)
         return PurchaseInfo(
             price=self.parent_pricing_policy(product, children_stock),
-            availability=self.parent_availability_policy(
-                product, children_stock),
-            stockrecord=None)
+            availability=self.parent_availability_policy(product, children_stock),
+            stockrecord=None,
+        )
 
     def select_stockrecord(self, product):
         """
         Select the appropriate stockrecord
         """
         raise NotImplementedError(
-            "A structured strategy class must define a "
-            "'select_stockrecord' method")
+            "A structured strategy class must define a 'select_stockrecord' method"
+        )
 
     def select_children_stockrecords(self, product):
         """
@@ -160,42 +162,46 @@ class Structured(Base):
         Return the appropriate pricing policy
         """
         raise NotImplementedError(
-            "A structured strategy class must define a "
-            "'pricing_policy' method")
+            "A structured strategy class must define a 'pricing_policy' method"
+        )
 
     def parent_pricing_policy(self, product, children_stock):
         raise NotImplementedError(
             "A structured strategy class must define a "
-            "'parent_pricing_policy' method")
+            "'parent_pricing_policy' method"
+        )
 
     def availability_policy(self, product, stockrecord):
         """
         Return the appropriate availability policy
         """
         raise NotImplementedError(
-            "A structured strategy class must define a "
-            "'availability_policy' method")
+            "A structured strategy class must define a 'availability_policy' method"
+        )
 
     def parent_availability_policy(self, product, children_stock):
         raise NotImplementedError(
             "A structured strategy class must define a "
-            "'parent_availability_policy' method")
+            "'parent_availability_policy' method"
+        )
 
 
 # Mixins - these can be used to construct the appropriate strategy class
 
 
-class UseFirstStockRecord(object):
+class UseFirstStockRecord:
     """
     Stockrecord selection mixin for use with the ``Structured`` base strategy.
     This mixin picks the first (normally only) stockrecord to fulfil a product.
-
-    This is backwards compatible with Oscar<0.6 where only one stockrecord per
-    product was permitted.
     """
 
     def select_stockrecord(self, product):
-        return product.stockrecords.first()
+        # We deliberately fetch by index here, to ensure that no additional database queries are made
+        # when stockrecords have already been prefetched in a queryset annotated using ProductQuerySet.base_queryset
+        try:
+            return product.stockrecords.all()[0]
+        except IndexError:
+            pass
 
 
 class StockRequired(object):
@@ -211,8 +217,7 @@ class StockRequired(object):
         if not product.get_product_class().track_stock:
             return Available()
         else:
-            return StockRequiredAvailability(
-                stockrecord.net_stock_level)
+            return StockRequiredAvailability(stockrecord.net_stock_level)
 
     def parent_availability_policy(self, product, children_stock):
         # A parent product is available if one of its children is
@@ -237,7 +242,8 @@ class NoTax(object):
         return FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price,
-            tax=D('0.00'))
+            tax=D("0.00"),
+        )
 
     def parent_pricing_policy(self, product, children_stock):
         stockrecords = [x[1] for x in children_stock if x[1] is not None]
@@ -248,7 +254,8 @@ class NoTax(object):
         return FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price,
-            tax=D('0.00'))
+            tax=D("0.00"),
+        )
 
 
 class FixedRateTax(object):
@@ -258,8 +265,9 @@ class FixedRateTax(object):
     stockrecord.  The price_incl_tax is quantized to two decimal places.
     Rounding behaviour is Decimal's default
     """
-    rate = D('0')  # Subclass and specify the correct rate
-    exponent = D('0.01')  # Default to two decimal places
+
+    rate = D("0")  # Subclass and specify the correct rate
+    exponent = D("0.01")  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
         if not stockrecord or stockrecord.price is None:
@@ -268,9 +276,8 @@ class FixedRateTax(object):
         exponent = self.get_exponent(stockrecord)
         tax = (stockrecord.price * rate).quantize(exponent)
         return TaxInclusiveFixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price,
-            tax=tax)
+            currency=stockrecord.price_currency, excl_tax=stockrecord.price, tax=tax
+        )
 
     def parent_pricing_policy(self, product, children_stock):
         stockrecords = [x[1] for x in children_stock if x[1] is not None]
@@ -284,9 +291,8 @@ class FixedRateTax(object):
         tax = (stockrecord.price * rate).quantize(exponent)
 
         return FixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price,
-            tax=tax)
+            currency=stockrecord.price_currency, excl_tax=stockrecord.price, tax=tax
+        )
 
     def get_rate(self, product, stockrecord):
         """
@@ -318,8 +324,8 @@ class DeferredTax(object):
         if not stockrecord or stockrecord.price is None:
             return UnavailablePrice()
         return FixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price)
+            currency=stockrecord.price_currency, excl_tax=stockrecord.price
+        )
 
     def parent_pricing_policy(self, product, children_stock):
         stockrecords = [x[1] for x in children_stock if x[1] is not None]
@@ -330,8 +336,8 @@ class DeferredTax(object):
         stockrecord = stockrecords[0]
 
         return FixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price)
+            currency=stockrecord.price_currency, excl_tax=stockrecord.price
+        )
 
 
 # Example strategy composed of above mixins.  For real projects, it's likely
@@ -360,8 +366,9 @@ class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
     recommended to be used in production, especially as the tax rate is
     hard-coded.
     """
+
     # Use UK VAT rate (as of December 2013)
-    rate = D('0.20')
+    rate = D("0.20")
 
 
 class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):

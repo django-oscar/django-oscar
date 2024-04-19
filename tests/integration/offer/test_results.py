@@ -7,7 +7,6 @@ from oscar.test.factories import ConditionalOfferFactory, VoucherFactory
 
 
 class TestOfferApplicationsObject(TestCase):
-
     def setUp(self):
         self.applications = results.OfferApplications()
         self.offer = models.ConditionalOffer()
@@ -21,7 +20,7 @@ class TestOfferApplicationsObject(TestCase):
         self.assertEqual(1, len(self.applications.shipping_discounts))
 
     def test_can_filter_offer_discounts(self):
-        result = models.BasketDiscount(D('2.00'))
+        result = models.BasketDiscount(D("2.00"))
         self.applications.add(self.offer, result)
         self.assertEqual(1, len(self.applications.offer_discounts))
 
@@ -32,13 +31,13 @@ class TestOfferApplicationsObject(TestCase):
 
     def test_grouped_voucher_discounts(self):
         voucher = VoucherFactory()
-        offer1 = ConditionalOfferFactory(name='offer1')
+        offer1 = ConditionalOfferFactory(name="offer1")
         offer1.set_voucher(voucher)
-        result1 = models.BasketDiscount(D('2.00'))
+        result1 = models.BasketDiscount(D("2.00"))
 
-        offer2 = ConditionalOfferFactory(name='offer2')
+        offer2 = ConditionalOfferFactory(name="offer2")
         offer2.set_voucher(voucher)
-        result2 = models.BasketDiscount(D('1.00'))
+        result2 = models.BasketDiscount(D("1.00"))
 
         self.applications.add(offer1, result1)
         self.applications.add(offer2, result2)
@@ -48,5 +47,5 @@ class TestOfferApplicationsObject(TestCase):
         discounts = self.applications.grouped_voucher_discounts
         discounts = [x for x in discounts]
         assert len(discounts) == 1
-        assert discounts[0]['voucher'] == voucher
-        assert discounts[0]['discount'] == D('3.00')
+        assert discounts[0]["voucher"] == voucher
+        assert discounts[0]["discount"] == D("3.00")

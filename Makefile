@@ -3,7 +3,7 @@ PYTEST = $(PWD)/$(VENV)/bin/py.test
 
 # These targets are not files
 .PHONY: build_sandbox clean compile_translations coverage css docs extract_translations help install install-python \
- install-test install-js lint release retest sandbox_clean sandbox_image sandbox test todo venv
+ install-test install-js lint release retest sandbox_clean sandbox_image sandbox test todo venv package
 
 help: ## Display this help message
 	@echo "Please use \`make <target>\` where <target> is one of"
@@ -80,10 +80,16 @@ retest: venv ## Run failed tests only
 coverage: venv ## Generate coverage report
 	$(PYTEST) --cov=oscar --cov-report=term-missing
 
-lint: ## Run flake8 and isort checks
-	flake8 src/oscar/
-	flake8 tests/
-	isort -c -q --diff src/ tests/
+lint:
+	@black --check --exclude "migrations/*" src/oscar/
+	@black --check --exclude "migrations/*" tests/
+	@pylint setup.py src/oscar/
+	@pylint setup.py tests/
+
+
+black:
+	@black --exclude "migrations/*" src/oscar/
+	@black --exclude "migrations/*" tests/
 
 test_migrations: install-migrations-testing-requirements ## Tests migrations
 	cd sandbox && ./test_migrations.sh
@@ -95,7 +101,7 @@ extract_translations: ## Extract strings and create source .po files
 	cd src/oscar; django-admin.py makemessages -a
 
 compile_translations: ## Compile translation files and create .mo files
-	cd src/oscar; django-admin.py compilemessages
+	cd src/oscar; django-admin compilemessages
 
 ######################
 # Project Management
@@ -112,10 +118,15 @@ todo: ## Look for areas of the code that need updating when some event has taken
 	-grep -rnH TODO src/oscar/apps/
 	-grep -rnH "django.VERSION" src/oscar/apps
 
-release: clean ## Creates release
-	pip install twine wheel
-	rm -rf dist/*
-	rm -rf src/oscar/static/*
+package: clean
+	pip install --upgrade pip twine wheel
+	npm ci
+	rm -rf src/oscar/static/
+	rm -rf dist/
+	rm -rf build/
 	npm run build
+	python setup.py clean --all
 	python setup.py sdist bdist_wheel
+
+release: package ## Creates release
 	twine upload -s dist/*

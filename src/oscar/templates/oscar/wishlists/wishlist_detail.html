@@ -1,0 +1,43 @@
+{% extends "oscar/layout.html" %}
+
+{% load i18n product_tags %}
+
+{% block title %}
+    {{ wishlist_title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ homepage_url }}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ wishlist_title }}</li>
+        </ol>
+    </nav>
+{% endblock breadcrumbs %}
+
+{% block headertext %}
+    {{ wishlist_title }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if page_obj %}
+            <section>
+                <div>
+                    <ol class="row list-unstyled ml-0 pl-0">
+                        {% for line in page_obj %}
+                            {% if line.product %}
+                                <li class="col-sm-6 col-md-4 col-lg-3">
+                                    {% render_product line.product %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+                    {% include "oscar/partials/pagination.html" %}
+                </div>
+            </section>
+        {% else %}
+            <p class="nonefound">{% trans "This wish list is empty." %}</p>
+        {% endif %}
+    </div>
+{% endblock %}

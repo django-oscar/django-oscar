@@ -277,6 +277,23 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.customer = {
+        wishlists: {
+            init: function() {
+                $('.clipboard-item').on( "click", function(event) {
+                    o.customer.wishlists.copyHrefToClipboard($(this));
+                    event.preventDefault();
+                });
+            },
+            copyHrefToClipboard: function(el) {
+                var href = window.location.origin + $(el).attr('href');
+                navigator.clipboard.writeText(href).catch(function(err) {
+                    console.log('Something went wrong while copying: ' + err);
+                });
+            }
+        }
+    };
+
 
     o.init = function() {
         o.forms.init();

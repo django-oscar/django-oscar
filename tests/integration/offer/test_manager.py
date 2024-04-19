@@ -8,7 +8,6 @@ from oscar.test import factories
 
 
 class TestActiveOfferManager(TestCase):
-
     def test_includes_offers_in_date_range(self):
         now = timezone.now()
         start = now - datetime.timedelta(days=1)
@@ -59,7 +58,6 @@ class TestActiveOfferManager(TestCase):
 
     def test_filters_out_suspended_offers(self):
         # Create offer that is available but with the wrong status
-        factories.create_offer(
-            status=models.ConditionalOffer.SUSPENDED)
+        factories.create_offer(status=models.ConditionalOffer.SUSPENDED)
         filtered_offers = models.ConditionalOffer.active.all()
         self.assertEqual(0, len(filtered_offers))

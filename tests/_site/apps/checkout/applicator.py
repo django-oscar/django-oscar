@@ -1,7 +1,8 @@
 from decimal import Decimal as D
 
 from oscar.apps.checkout.applicator import (
-    SurchargeApplicator as BaseSurchargeApplicator)
+    SurchargeApplicator as BaseSurchargeApplicator,
+)
 from oscar.apps.checkout.surcharges import FlatCharge
 
 

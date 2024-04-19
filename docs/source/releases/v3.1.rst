@@ -43,7 +43,7 @@ Changes to ``dashboard.offers`` and ``dashboard.vouchers`` apps
 The ``dashboard.offers`` and ``dashboard.vouchers`` apps have been reworked significantly. There have also been changes
 to the related models, signals, and utility functions in the ``offer`` and ``voucher`` apps.
 
-You should review these changes [we'll insert a link to the commit here once it is merged], especially if you have made customisations that depends on these apps, as some are backwards incompatible. The functional changes are summarised below.
+You should review `these changes <https://github.com/django-oscar/django-oscar/commit/004d7ac808fa1a5fd8a303c3e6530eaa90417f14>`_, especially if you have made customisations that depends on these apps, as some are backwards incompatible. The functional changes are summarised below.
 
 - The dashboard offer list view now displays all types of offer (previously voucher offers were hidden), with the
   ability to filter the list based on type.

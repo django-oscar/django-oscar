@@ -1,6 +1,6 @@
 from oscar.core.loading import get_class
 
-EventHandler = get_class('order.processing', 'EventHandler')
+EventHandler = get_class("order.processing", "EventHandler")
 
 
 class EventHandlerMixin:

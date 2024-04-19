@@ -1,5 +1,6 @@
 {% extends "oscar/catalogue/detail.html" %}
 {% load i18n %}
+{% load reviews_tags %}
 
 {% block product_review %}
     <div id="addreview" class="review_add card card-body bg-light">
@@ -16,7 +17,7 @@
                     </label>
                     <div class="controls">
                         {{ form.score }}
-                        <div class="star-rating {% if form.score.value == '1' %}One{% elif form.score.value == '2' %}Two{% elif form.score.value == '3' %}Three{% elif form.score.value == '4' %}Four{% elif form.score.value == '5' %}Five{% endif %}">
+                        <div class="star-rating {{ form.score.value|as_stars }}">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
