@@ -222,7 +222,7 @@ class AbstractStockRecord(models.Model):
         """
         Test if a proposed stock consumption is permitted
         """
-        return quantity <= min(self.num_allocated, self.num_in_stock)
+        return quantity <= min(self.num_allocated or 0, self.num_in_stock)
 
     def consume_allocation(self, quantity):
         """

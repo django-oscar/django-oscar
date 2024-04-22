@@ -883,7 +883,7 @@ class AbstractLine(models.Model):
         if self.allocation_cancelled:
             return False
 
-        return quantity <= self.num_allocated
+        return quantity <= (self.num_allocated or 0)
 
     def consume_allocation(self, quantity):
         if not self.can_track_allocations:

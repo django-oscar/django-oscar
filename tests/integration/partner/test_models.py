@@ -17,6 +17,40 @@ class TestStockRecord(TestCase):
             self.product, price=D("10.00"), num_in_stock=10
         )
 
+    def test_is_allocation_consumption_possible_when_num_allocated_is_greater_than_quantity(
+        self,
+    ):
+        self.stockrecord.num_allocated = 2
+
+        actual = self.stockrecord.is_allocation_consumption_possible(1)
+
+        self.assertTrue(actual)
+
+    def test_is_allocation_consumption_possible_when_num_allocated_is_lower_than_quantity(
+        self,
+    ):
+        self.stockrecord.num_allocated = 0
+
+        actual = self.stockrecord.is_allocation_consumption_possible(1)
+
+        self.assertFalse(actual)
+
+    def test_is_allocation_consumption_possible_when_num_allocated_is_equal_to_quantity(
+        self,
+    ):
+        self.stockrecord.num_allocated = 1
+
+        actual = self.stockrecord.is_allocation_consumption_possible(1)
+
+        self.assertTrue(actual)
+
+    def test_is_allocation_consumption_possible_when_num_allocated_is_null(self):
+        self.stockrecord.num_allocated = None
+
+        actual = self.stockrecord.is_allocation_consumption_possible(1)
+
+        self.assertFalse(actual)
+
     def test_get_price_excl_tax_returns_correct_value(self):
         self.assertEqual(D("10.00"), self.stockrecord.price)
 
