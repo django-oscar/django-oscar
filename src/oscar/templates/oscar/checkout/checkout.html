@@ -118,34 +118,34 @@
         {% for line in basket.all_lines %}
             {% purchase_info_for_line request line as session %}
             <div class="basket-items">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="image_container w-100">
-                            {% with image=line.product.primary_image %}
+                {% with image=line.product.primary_image url=line.product.get_absolute_url %}
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="image_container w-100">
                                 {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
-                                <a href="{{ form.instance.product.get_absolute_url }}">
-                                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="img-thumbnail w-auto mx-auto my-0">
+                                <a href="{{ url }}">
+                                    <img src="{{ thumb.url }}" alt="{{ line.product.get_title }}" class="img-thumbnail w-auto mx-auto my-0">
                                 </a>
-                            {% endwith %}
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <h3><a href="{{ url }}">{{ line.description }}</a></h3>
+                            <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            {{ line.quantity }}
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <p class="price_color">
+                                {% if not show_tax_separately and line.is_tax_known %}
+                                    {{ line.line_price_incl_tax|currency:basket.currency }}
+                                {% else %}
+                                    {{ line.line_price_excl_tax|currency:basket.currency }}
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
-                    <div class="col-sm-7">
-                        <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
-                        <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
-                    </div>
-                    <div class="col-sm-1 text-center">
-                        {{ line.quantity }}
-                    </div>
-                    <div class="col-sm-2 text-right">
-                        <p class="price_color">
-                            {% if not show_tax_separately and line.is_tax_known %}
-                                {{ line.line_price_incl_tax|currency:basket.currency }}
-                            {% else %}
-                                {{ line.line_price_excl_tax|currency:basket.currency }}
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
+                {% endwith %}
             </div>
         {% endfor %}
 
