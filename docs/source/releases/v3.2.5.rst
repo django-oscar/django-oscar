@@ -1,0 +1,53 @@
+========================================
+Oscar 3.2.5 release notes
+========================================
+
+:release: 2024-04-22
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2.5:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.2.5 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
+
+.. _new_in_3.2.5:
+
+What's new in Oscar 3.2.5?
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There were a couple of major changes in django-oscar 3.2.5
+
+
+==========
+Search app
+==========
+
+The search app was completely overhauled, haystack was upgraded to the newest version and we removed the search handlers and are now working with the haystack class based views.
+
+This change has made it possible to update our django-oscar-elasticsearch package to have a much better and adjustable implementation with Elasticsearch 8.13. 
+
+When upgrading to this version you will have to change you search customisations to now be done in the search views instead of the search handlers.
+
+The catalogue views (CatalogueView and ProductCategoryView) definitions are now moved to the search app for easier overriding and customising in projects (you only have to fork 1 app instead of 2) 
+
+See: https://github.com/django-oscar/django-oscar/commit/45adecde1945098dae75599d8cbcc35b56a0608e for everything that has changed.
+
+================
+Stock allocation
+================
+
+Stock allocations are now also tracked on the Order.Line model. It was possible to cancel an order so the stock was re-allocated to the stock record, then manually set the order to paid and then re-cancel the order which will re-allocate the stock again which has not been allocated again after manually setting the order to paid.
+
+
+================================
+Excluding categories from ranges
+================================
+
+It's now also possible to exclude a category from a range.
+If you would have to select hundreds of categories in the included categories the queries would become really slow and it required lots of maintenance from the site owner to keep all new categories in this list.
