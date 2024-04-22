@@ -1044,8 +1044,9 @@ class AbstractLine(models.Model):
         This could be things like the price has changed
         """
         if isinstance(self.purchase_info.availability, Unavailable):
-            msg = "'%(product)s' is no longer available"
-            return _(msg) % {"product": self.product.get_title()}
+            return _("'%(product)s' is no longer available") % {
+                "product": self.product.get_title()
+            }
 
         if not self.price_incl_tax:
             return
