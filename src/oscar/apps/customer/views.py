@@ -347,7 +347,7 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
         user = self.request.user
         extra_context = {
             "user": user,
-            "reset_url": get_password_reset_url(old_user),
+            "reset_url": get_password_reset_url(user),
             "new_email": new_email,
             "request": self.request,
         }
