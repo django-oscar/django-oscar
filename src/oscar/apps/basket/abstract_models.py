@@ -203,6 +203,8 @@ class AbstractBasket(models.Model):
         The basket can contain multiple lines with the same product and
         stockrecord, but different options. Those quantities are summed up.
         """
+        if self.id is None:
+            return 0
         matching_lines = self.lines.filter(stockrecord=line.stockrecord)
         quantity = matching_lines.aggregate(Sum("quantity"))["quantity__sum"]
         return quantity or 0
@@ -590,7 +592,7 @@ class AbstractBasket(models.Model):
 
     @property
     def contains_a_voucher(self):
-        if not self.id:
+        if self.id is None:
             return False
         return self.vouchers.exists()
 
@@ -636,17 +638,18 @@ class AbstractBasket(models.Model):
         The basket can contain multiple lines with the same product, but
         different options and stockrecords. Those quantities are summed up.
         """
-        if self.id:
-            matching_lines = self.lines.filter(product=product)
-            quantity = matching_lines.aggregate(Sum("quantity"))["quantity__sum"]
-            return quantity or 0
-
-        return 0
+        if self.id is None:
+            return 0
+        matching_lines = self.lines.filter(product=product)
+        quantity = matching_lines.aggregate(Sum("quantity"))["quantity__sum"]
+        return quantity or 0
 
     def line_quantity(self, product, stockrecord, options=None):
         """
         Return the current quantity of a specific product and options
         """
+        if self.id is None:
+            return 0
         ref = self._create_line_reference(product, stockrecord, options)
         try:
             return self.lines.get(line_reference=ref).quantity
