@@ -39,7 +39,7 @@ class Importer(object):
             for filename in filenames:
                 try:
                     lookup_value = self._get_lookup_value_from_filename(filename)
-                    self._process_image(image_dir, filename, lookup_value)
+                    self._process_image(image_dir, filename)
                     stats["num_processed"] += 1
                 except Product.MultipleObjectsReturned:
                     self.logger.warning(
@@ -121,13 +121,12 @@ class Importer(object):
         # unknown archive - perhaps this should be treated differently
         return ""
 
-    def _process_image(self, dirname, filename, lookup_value):
+    def _process_image(self, dirname, filename):
         file_path = os.path.join(dirname, filename)
         trial_image = Image.open(file_path)
         trial_image.verify()
 
-        kwargs = {self._field: lookup_value}
-        item = Product._default_manager.get(**kwargs)
+        item = self._fetch_item(filename)
 
         new_data = open(file_path, "rb").read()
         next_index = 0
