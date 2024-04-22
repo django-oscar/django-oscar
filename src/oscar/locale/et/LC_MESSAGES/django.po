@@ -6,8 +6,8 @@
 # Alan Kesselmann <alan.kesselmann@gmail.com>, 2014
 # Andres Kepler <kepsic@gmail.com>, 2017
 # Chris Laas <chris@magmatech.ee>, 2019-2020
-# Erlend <debcf78e@opayq.com>, 2022
-# Erlend <debcf78e@opayq.com>, 2022
+# Erlend Eelmets <debcf78e@opayq.com>, 2022
+# Erlend Eelmets <debcf78e@opayq.com>, 2022
 # Keijo Laas <keijo@magmatech.ee>, 2020
 # Lauri Elias, 2017
 # Lauri Elias, 2017

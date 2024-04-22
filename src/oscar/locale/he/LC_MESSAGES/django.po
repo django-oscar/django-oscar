@@ -9,7 +9,7 @@
 # Dan Raviv <dan.raviv@gmail.com>, 2019
 # idoivri <idoivri@gmail.com>, 2015
 # idoivri <idoivri@gmail.com>, 2015
-# Mor Rubinstein <morchickit@gmail.com>, 2015
+# morchickit <morchickit@gmail.com>, 2015
 # Paul Walsh <pauywalsh@gmail.com>, 2014
 # yaniv14 <yanivmirel@gmail.com>, 2014
 # yaniv14 <yanivmirel@gmail.com>, 2014
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
@@ -1873,7 +1873,6 @@ msgid_plural "%(count)d notifications archived"
 msgstr[0] "%(count)d הודעה הועברה לארכיון"
 msgstr[1] "%(count)d הודעות הועברו לארכיון"
 msgstr[2] "%(count)d הודעות הועברו לארכיון"
-msgstr[3] "%(count)d הודעות הועברו לארכיון"
 
 #: apps/communication/notifications/views.py:100
 #, python-format
@@ -1882,7 +1881,6 @@ msgid_plural "%(count)d notifications deleted"
 msgstr[0] "%(count)d הודעה בוטלה"
 msgstr[1] "%(count)d הודעות בוטלו"
 msgstr[2] "%(count)d הודעות בוטלו"
-msgstr[3] "%(count)d הודעות בוטלו"
 
 #: apps/customer/abstract_models.py:49
 msgid "email address"
@@ -2498,7 +2496,6 @@ msgid_plural "%s Categories"
 msgstr[0] "%s קטגוריה"
 msgstr[1] "%s קטגוריות"
 msgstr[2] "%s קטגוריות"
-msgstr[3] "%s קטגוריות"
 
 #: apps/dashboard/catalogue/tables.py:84
 msgid "Option summary"
@@ -2511,7 +2508,6 @@ msgid_plural "%s Attribute Option Groups"
 msgstr[0] "%s קבוצת אפשרויות תכונה"
 msgstr[1] "%s קבוצות אפשרויות תכונה"
 msgstr[2] "%s קבוצות אפשרויות תכונה"
-msgstr[3] "%s קבוצות אפשרויות תכונה"
 
 #: apps/dashboard/catalogue/tables.py:113
 #, python-format
@@ -2520,7 +2516,6 @@ msgid_plural "%s Options"
 msgstr[0] "אפשרות %s"
 msgstr[1] "אפשרויות %s"
 msgstr[2] "אפשרויות %s"
-msgstr[3] "אפשרויות %s"
 
 #: apps/dashboard/catalogue/views.py:90
 msgid "Product search results"
@@ -3427,7 +3422,6 @@ msgid_plural "Removed %d products from range"
 msgstr[0] "הוסר %d מוצר מהתחום"
 msgstr[1] "הוסרו%d מוצרים מהתחום"
 msgstr[2] "הוסרו%d מוצרים מהתחום"
-msgstr[3] "הוסרו%d מוצרים מהתחום"
 
 #: apps/dashboard/ranges/views.py:160
 #, python-format
@@ -3436,7 +3430,6 @@ msgid_plural "%d products added to range"
 msgstr[0] "%d מוצר נוסף לתחום"
 msgstr[1] "%d מוצרים נוספו לתחום"
 msgstr[2] "%d מוצרים נוספו לתחום"
-msgstr[3] "%d מוצרים נוספו לתחום"
 
 #: apps/dashboard/ranges/views.py:173
 #, python-format
@@ -3548,7 +3541,6 @@ msgid_plural "%d Rows"
 msgstr[0] "שורה %d "
 msgstr[1] "%d שורות"
 msgstr[2] "%d שורות"
-msgstr[3] "%d שורות"
 
 #: apps/dashboard/users/apps.py:11
 msgid "Users dashboard"
@@ -4241,7 +4233,6 @@ msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] "רכישת%(delta)d מוצר נוסף מ %(range)s"
 msgstr[1] "רכישת%(delta)d מוצרים נוספים מ %(range)s"
 msgstr[2] "רכישת%(delta)d מוצרים נוספים מ %(range)s"
-msgstr[3] "רכישת%(delta)d מוצרים נוספים מ %(range)s"
 
 #: apps/offer/conditions.py:109
 #, python-format
@@ -5843,7 +5834,6 @@ msgid_plural ""
 msgstr[0] "\n                    <strong>%(num_results)s</strong> תוצאה - מראה<strong>%(start)s</strong> עד<strong>%(end)s</strong>.\n                "
 msgstr[1] "\n                    <strong>%(num_results)s</strong> תוצאות - מראה <strong>%(start)s</strong> עד<strong>%(end)s</strong>.\n                "
 msgstr[2] "\n                    <strong>%(num_results)s</strong> תוצאות - מראה <strong>%(start)s</strong> עד<strong>%(end)s</strong>.\n                "
-msgstr[3] "\n                    <strong>%(num_results)s</strong> תוצאות - מראה <strong>%(start)s</strong> עד<strong>%(end)s</strong>.\n                "
 
 #: templates/oscar/catalogue/browse.html:76
 #, python-format
@@ -5858,7 +5848,6 @@ msgid_plural ""
 msgstr[0] "\n                    <strong>%(num_results)s</strong> תוצאה.\n                "
 msgstr[1] "\n                    <strong>%(num_results)s</strong> תוצאות.\n                "
 msgstr[2] "\n                    <strong>%(num_results)s</strong> תוצאות.\n                "
-msgstr[3] "\n                    <strong>%(num_results)s</strong> תוצאות.\n                "
 
 #: templates/oscar/catalogue/browse.html:89
 msgid "<strong>0</strong> results."
@@ -6047,7 +6036,6 @@ msgid_plural ""
 msgstr[0] "\n            <strong>%(num_up_votes)s</strong> מ%(num_votes)s מהלקוחות מצא/ה זאת כמועיל\n            "
 msgstr[1] "\n            <strong>%(num_up_votes)s</strong> מ %(num_votes)s לקוחות מצאו זאת כמועיל\n            "
 msgstr[2] "\n            <strong>%(num_up_votes)s</strong> מ %(num_votes)s לקוחות מצאו זאת כמועיל\n            "
-msgstr[3] "\n            <strong>%(num_up_votes)s</strong> מ %(num_votes)s לקוחות מצאו זאת כמועיל\n            "
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -6070,7 +6058,6 @@ msgid_plural ""
 msgstr[0] "\n                    %(num_reviews)s סקירת לקוח\n                "
 msgstr[1] "\n                    %(num_reviews)s סקירות לקוחות\n                "
 msgstr[2] "\n                    %(num_reviews)s סקירות לקוחות\n                "
-msgstr[3] "\n                    %(num_reviews)s סקירות לקוחות\n                "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:83
@@ -8530,7 +8517,6 @@ msgid_plural ""
 msgstr[0] "\n                <strong>%(n)s</strong> מוצר נוסף\n            "
 msgstr[1] "\n                <strong>%(n)s</strong> מוצרים נוספו\n            "
 msgstr[2] "\n                <strong>%(n)s</strong> מוצרים נוספו\n            "
-msgstr[3] "\n                <strong>%(n)s</strong> מוצרים נוספו\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 #, python-format
@@ -8545,7 +8531,6 @@ msgid_plural ""
 msgstr[0] "\n                נמצא <strong>%(n)s</strong> מוצר כפול בקובץ\n            "
 msgstr[1] "\n                נמצאו <strong>%(n)s</strong> מוצרים כפולים בקובץ\n            "
 msgstr[2] "\n                נמצאו <strong>%(n)s</strong> מוצרים כפולים בקובץ\n            "
-msgstr[3] "\n                נמצאו <strong>%(n)s</strong> מוצרים כפולים בקובץ\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:27
 #, python-format
@@ -8560,7 +8545,6 @@ msgid_plural ""
 msgstr[0] "\n                נמצא <strong>%(n)s</strong> מוצר בקובץ שאינו בקטלוג\n            "
 msgstr[1] "\n                נמצאו <strong>%(n)s</strong> מוצרים בקובץ שאינם בקטלוג\n            "
 msgstr[2] "\n                נמצאו <strong>%(n)s</strong> מוצרים בקובץ שאינם בקטלוג\n            "
-msgstr[3] "\n                נמצאו <strong>%(n)s</strong> מוצרים בקובץ שאינם בקטלוג\n            "
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:36
 msgid "Edit range metadata"
@@ -9424,7 +9408,6 @@ msgid_plural ""
 msgstr[0] "\n                    נמצאה<strong>%(num_results)s</strong> תוצאה.\n                "
 msgstr[1] "\n                    נמצאו<strong>%(num_results)s</strong> תוצאות.\n                "
 msgstr[2] "\n                    נמצאו<strong>%(num_results)s</strong> תוצאות.\n                "
-msgstr[3] "\n                    נמצאו<strong>%(num_results)s</strong> תוצאות.\n                "
 
 #: templates/oscar/search/results.html:69
 msgid "Found <strong>0</strong> results."
