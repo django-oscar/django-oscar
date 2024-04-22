@@ -178,7 +178,7 @@
                 <ol class="list-unstyled review-list">
                     {% for review in product.reviews.approved.all|slice:":3" %}
                         <li>
-                        {% include 'oscar/catalogue/partials/review.html' %}
+                        {% include 'oscar/catalogue/reviews/partials/review.html' %}
                         </li>
                     {% endfor %}
                 </ol>
