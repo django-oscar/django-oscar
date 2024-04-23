@@ -42,6 +42,13 @@ class AttributesQuerysetCache:
             .annotate(code=models.F("attribute__code"))
         )
 
+    def set_attributes(self, attributes):
+        """
+        Used in oscar odin to prefetch attributes instead of fetching against each
+        product.
+        """
+        self.__dict__["attributes"] = QuerysetCache(attributes)
+
 
 class ProductAttributesContainer:
     """
