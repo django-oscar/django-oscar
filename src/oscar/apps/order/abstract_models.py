@@ -443,7 +443,7 @@ class AbstractOrderStatusChange(models.Model):
         "order.Order",
         on_delete=models.CASCADE,
         related_name="status_changes",
-        verbose_name=_("Order Status Changes"),
+        verbose_name=_("Order"),
     )
     old_status = models.CharField(_("Old Status"), max_length=100, blank=True)
     new_status = models.CharField(_("New Status"), max_length=100, blank=True)
@@ -970,7 +970,7 @@ class AbstractLinePrice(models.Model):
         "order.Order",
         on_delete=models.CASCADE,
         related_name="line_prices",
-        verbose_name=_("Option"),
+        verbose_name=_("Order"),
     )
     line = models.ForeignKey(
         "order.Line",
@@ -1377,10 +1377,10 @@ class AbstractSurcharge(models.Model):
         "order.Order",
         on_delete=models.CASCADE,
         related_name="surcharges",
-        verbose_name=_("Surcharges"),
+        verbose_name=_("Order"),
     )
 
-    name = models.CharField(_("Surcharge"), max_length=128)
+    name = models.CharField(_("Name"), max_length=128)
 
     code = models.CharField(_("Surcharge code"), max_length=128)
 
