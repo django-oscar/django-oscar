@@ -25,30 +25,32 @@ def _update_counter(model, field_name, filter_kwargs, increment=1):
     Efficiently updates a counter field by a given increment. Uses Django's
     update() call to fetch and update in one query.
 
-    TODO: This has a race condition, we should use UPSERT here
-
     :param model: The model class of the recording model
     :param field_name: The name of the field to update
     :param filter_kwargs: Parameters to the ORM's filter() function to get the
                           correct instance
     """
-    try:
-        record = model.objects.filter(**filter_kwargs)
-        affected = record.update(**{field_name: F(field_name) + increment})
-        if not affected:
-            filter_kwargs[field_name] = increment
+    record = model.objects.filter(**filter_kwargs)
+    affected = record.update(**{field_name: F(field_name) + increment})
+    if not affected:
+        filter_kwargs[field_name] = increment
+        try:
             model.objects.create(**filter_kwargs)
-    except IntegrityError:  # pragma: no cover
-        # get_or_create has a race condition (we should use upsert in supported)
-        # databases. For now just ignore these errors
-        logger.error("IntegrityError when updating analytics counter for %s", model)
+        except IntegrityError:  # pragma: no cover
+            # can happen in rare race condition
+            logger.warning(
+                "IntegrityError when updating analytics counter for %s", model
+            )
+            record.update(**{field_name: F(field_name) + increment})
 
 
 def _record_products_in_order(order):
-    # surely there's a way to do this without causing a query for each line?
     for line in order.lines.all():
         _update_counter(
-            ProductRecord, "num_purchases", {"product": line.product}, line.quantity
+            ProductRecord,
+            "num_purchases",
+            {"product_id": line.product_id},
+            line.quantity,
         )
 
 
