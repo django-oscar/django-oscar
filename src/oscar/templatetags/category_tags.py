@@ -97,6 +97,7 @@ def get_annotated_list(depth=None, parent=None):
 
     info = CheapCategoryInfo(parent, url="")
 
+    node_depth = 0
     for node in categories:
         node_depth = node.get_depth()
         if start_depth is None:
@@ -130,6 +131,6 @@ def get_annotated_list(depth=None, parent=None):
     if prev_depth is not None:
         # close last leaf
         info["num_to_close"] = list(range(0, prev_depth - start_depth))
-        info["has_children"] = prev_depth > prev_depth
+        info["has_children"] = node_depth > prev_depth
 
     return annotated_categories
