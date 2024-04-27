@@ -43,11 +43,7 @@ class AttributesQuerysetCache:
         )
 
     def set_attributes(self, attributes):
-        """
-        Used in oscar odin to prefetch attributes instead of fetching against each
-        product.
-        """
-        self.__dict__["attributes"] = QuerysetCache(attributes)
+        self.__dict__["attributes"] = attributes
 
 
 class ProductAttributesContainer:
