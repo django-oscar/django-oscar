@@ -42,6 +42,9 @@ class AttributesQuerysetCache:
             .annotate(code=models.F("attribute__code"))
         )
 
+    def set_attributes(self, attributes):
+        self.__dict__["attributes"] = attributes
+
 
 class ProductAttributesContainer:
     """
