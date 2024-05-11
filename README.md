@@ -12,6 +12,30 @@ customised to suit the needs of your project.  This allows a wide range of
 e-commerce requirements to be handled, from large-scale B2C sites to complex B2B
 sites rich in domain-specific business logic.
 
+Fast start:
+Installation
+Before installing the files from the project, ensure that your operating system contains these applications:
+
+- NodeJS including [npm](https://nodejs.org/en).
+- Python including pip.
+
+```bash
+$ git clone https://github.com/django-oscar/django-oscar.git
+$ cd django-oscar
+python3 -m venv oscar
+source oscar/bin/activate
+rm -r ~/Library/Caches/pip/selfcheck/
+pip install --upgrade pip
+make sandbox
+sandbox/manage.py runserver
+```
+
+```text
+username: superuser
+email: superuser@example.com
+password: testing
+```
+
 Contents:
 
 .. contents:: :local:
