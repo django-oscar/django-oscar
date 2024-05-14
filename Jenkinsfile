@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent 'GEITENPETRA'
+    agent { label 'GEITENPETRA' }
     options { disableConcurrentBuilds() }
 
     stages {
