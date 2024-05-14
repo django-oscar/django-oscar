@@ -10,7 +10,7 @@ import os
 import re
 import sys
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 PROJECT_DIR = os.path.dirname(__file__)
 
@@ -88,6 +88,7 @@ setup(
     license="BSD",
     platforms=["linux"],
     include_package_data=True,
+    packages=find_packages(),
     python_requires=">=3.8",
     install_requires=install_requires,
     extras_require={
