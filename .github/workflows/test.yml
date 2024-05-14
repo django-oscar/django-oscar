@@ -16,10 +16,19 @@ jobs:
     name: Python ${{ matrix.python-version }}, Django ${{ matrix.django-version }}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
-      matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
-        django-version: ['3.2', '4.0', '4.1', '4.2']
+      fail-fast: false
+      matrix:  # https://docs.djangoproject.com/en/stable/faq/install/#what-python-version-can-i-use-with-django
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        django-version: ['3.2', '4.2', '5.0']
+        exclude:
+          - django-version: "3.2"
+            python-version: "3.11"
+          - django-version: "3.2"
+            python-version: "3.12"
+          - django-version: "5.0"
+            python-version: "3.8"
+          - django-version: "5.0"
+            python-version: "3.9"
     services:
       postgres:
         image: postgres:14
@@ -62,7 +71,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -91,7 +100,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: Build sandbox
       run: |
         python -m pip install --upgrade pip
@@ -103,7 +112,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: Build docs
       run: |
         make docs
