@@ -10,7 +10,7 @@ import os
 import re
 import sys
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 PROJECT_DIR = os.path.dirname(__file__)
 
@@ -18,6 +18,7 @@ sys.path.append(os.path.join(PROJECT_DIR, "src"))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
+    "setuptools>=51.3.3",
     "django>=3.2,<4.3",
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     "pillow>=6.0",
@@ -87,6 +88,8 @@ setup(
     license="BSD",
     platforms=["linux"],
     include_package_data=True,
+    package_dir={'': 'src'},
+    packages=find_packages('src'),
     python_requires=">=3.8",
     install_requires=install_requires,
     extras_require={

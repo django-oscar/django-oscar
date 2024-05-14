@@ -1,14 +1,16 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent any
+    agent { label 'GEITENPETRA' }
     options { disableConcurrentBuilds() }
 
     stages {
         stage('Build') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    pysh "make"
+                    withEnv(['DATABASE_USER=django_oscar', 'DATABASE_PASSWORD=django_oscar', 'DATABASE_PORT=5432', 'DATABASE_HOST=localhost']) {
+                        pysh "make install"
+                    }
                 }
             }
         }
@@ -22,7 +24,7 @@ pipeline {
         stage('Test') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    withEnv(['OSCAR_ELASTICSEARCH_SERVER_URLS=https://eden.highbiza.nl:9200/']) {
+                    withEnv(['DATABASE_USER=django_oscar', 'DATABASE_PASSWORD=django_oscar', 'DATABASE_PORT=5432', 'DATABASE_HOST=localhost']) {
                         pysh "make test"
                     }
                 }
