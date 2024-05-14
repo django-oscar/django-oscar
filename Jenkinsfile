@@ -1,14 +1,14 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent any
+    agent 'GEITENPETRA'
     options { disableConcurrentBuilds() }
 
     stages {
         stage('Build') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    pysh "make install-test"
+                    pysh "make install"
                 }
             }
         }
