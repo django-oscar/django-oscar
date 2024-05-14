@@ -8,9 +8,7 @@ pipeline {
         stage('Build') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    withEnv(['PIP_INDEX_URL=https://pypi.uwkm.nl/voxyan/testing/+simple/']) {
-                        pysh "make install"
-                    }
+                    pysh "make install"
                 }
             }
         }
@@ -24,9 +22,7 @@ pipeline {
         stage('Test') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    withEnv(['OSCAR_ELASTICSEARCH_SERVER_URLS=https://eden.highbiza.nl:9200/']) {
-                        pysh "make test"
-                    }
+                    pysh "make test"
                 }
             }
             post {
