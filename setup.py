@@ -88,7 +88,8 @@ setup(
     license="BSD",
     platforms=["linux"],
     include_package_data=True,
-    packages=find_packages(),
+    package_dir={'': 'src'},
+    packages=find_packages('src'),
     python_requires=">=3.8",
     install_requires=install_requires,
     extras_require={
