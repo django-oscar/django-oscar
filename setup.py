@@ -18,6 +18,7 @@ sys.path.append(os.path.join(PROJECT_DIR, "src"))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
+    "setuptools>=51.3.3",
     "django>=3.2,<4.3",
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     "pillow>=6.0",
