@@ -8,7 +8,7 @@ pipeline {
         stage('Build') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    pysh "make"
+                    pysh "make install-test"
                 }
             }
         }
