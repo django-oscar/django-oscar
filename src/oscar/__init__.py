@@ -12,7 +12,7 @@ def get_version():
     if VERSION[2]:
         version = "%s.%s" % (version, VERSION[2])
 
-    if VERSION[3] != "final":
+    if len(VERSION) > 3 and VERSION[3] != "final":
         mapping = {"alpha": "a", "beta": "b", "rc": "rc"}
         version = "%s%s" % (version, mapping[VERSION[3]])
         if len(VERSION) == 5:
