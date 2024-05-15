@@ -8,7 +8,11 @@ To release a new version to PyPi:
 """
 import os
 import re
+import subprocess
 import sys
+
+# pylint: disable=deprecated-module
+from distutils.command import build as build_module
 
 from setuptools import setup, find_packages
 
@@ -16,6 +20,14 @@ PROJECT_DIR = os.path.dirname(__file__)
 
 sys.path.append(os.path.join(PROJECT_DIR, "src"))
 from oscar import get_version  # noqa isort:skip
+
+
+class BuildNPM(build_module.build):
+    def run(self):
+        subprocess.check_call(["npm", "install"])
+        subprocess.check_call(["npm", "run", "build"])
+        super().run()
+
 
 install_requires = [
     "setuptools>=51.3.3",
@@ -88,8 +100,8 @@ setup(
     license="BSD",
     platforms=["linux"],
     include_package_data=True,
-    package_dir={'': 'src'},
-    packages=find_packages('src'),
+    package_dir={"": "src"},
+    packages=find_packages("src"),
     python_requires=">=3.8",
     install_requires=install_requires,
     extras_require={
@@ -98,6 +110,7 @@ setup(
         "sorl-thumbnail": [sorl_thumbnail_version],
         "easy-thumbnails": [easy_thumbnails_version],
     },
+    cmdclass={"build": BuildNPM},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
