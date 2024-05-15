@@ -472,6 +472,7 @@ class AbstractConditionalOffer(models.Model):
 
         if self.start_datetime or self.end_datetime:
             today = now()
+            is_satisfied = False
             if self.start_datetime and self.end_datetime:
                 desc = _("Available between %(start)s and %(end)s") % {
                     "start": hide_time_if_zero(self.start_datetime),
