@@ -8,7 +8,9 @@ pipeline {
         stage('Build') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    pysh "make install"
+                    withEnv(['DATABASE_USER=django_oscar', 'DATABASE_PASSWORD=django_oscar', 'DATABASE_PORT=5432', 'DATABASE_HOST=localhost']) {
+                        pysh "make install"
+                    }
                 }
             }
         }
@@ -22,7 +24,9 @@ pipeline {
         stage('Test') {
             steps {
                 withPythonEnv('System-CPython-3.10') {
-                    pysh "make test"
+                    withEnv(['DATABASE_USER=django_oscar', 'DATABASE_PASSWORD=django_oscar', 'DATABASE_PORT=5432', 'DATABASE_HOST=localhost']) {
+                        pysh "make test"
+                    }
                 }
             }
             post {
