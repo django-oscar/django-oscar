@@ -6,55 +6,73 @@ from oscar.core.loading import get_class
 
 
 class ShippingDashboardConfig(OscarDashboardConfig):
-    label = 'shipping_dashboard'
-    name = 'oscar.apps.dashboard.shipping'
-    verbose_name = _('Shipping dashboard')
+    label = "shipping_dashboard"
+    name = "oscar.apps.dashboard.shipping"
+    verbose_name = _("Shipping dashboard")
 
-    default_permissions = ['is_staff']
+    default_permissions = ["is_staff"]
 
+    # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.weight_method_list_view = get_class(
-            'dashboard.shipping.views', 'WeightBasedListView')
+            "dashboard.shipping.views", "WeightBasedListView"
+        )
         self.weight_method_create_view = get_class(
-            'dashboard.shipping.views', 'WeightBasedCreateView')
+            "dashboard.shipping.views", "WeightBasedCreateView"
+        )
         self.weight_method_edit_view = get_class(
-            'dashboard.shipping.views', 'WeightBasedUpdateView')
+            "dashboard.shipping.views", "WeightBasedUpdateView"
+        )
         self.weight_method_delete_view = get_class(
-            'dashboard.shipping.views', 'WeightBasedDeleteView')
+            "dashboard.shipping.views", "WeightBasedDeleteView"
+        )
         # This doubles as the weight_band create view
         self.weight_method_detail_view = get_class(
-            'dashboard.shipping.views', 'WeightBasedDetailView')
+            "dashboard.shipping.views", "WeightBasedDetailView"
+        )
         self.weight_band_edit_view = get_class(
-            'dashboard.shipping.views', 'WeightBandUpdateView')
+            "dashboard.shipping.views", "WeightBandUpdateView"
+        )
         self.weight_band_delete_view = get_class(
-            'dashboard.shipping.views', 'WeightBandDeleteView')
+            "dashboard.shipping.views", "WeightBandDeleteView"
+        )
 
     def get_urls(self):
         urlpatterns = [
-            path('weight-based/', self.weight_method_list_view.as_view(), name='shipping-method-list'),
             path(
-                'weight-based/create/',
+                "weight-based/",
+                self.weight_method_list_view.as_view(),
+                name="shipping-method-list",
+            ),
+            path(
+                "weight-based/create/",
                 self.weight_method_create_view.as_view(),
-                name='shipping-method-create'),
+                name="shipping-method-create",
+            ),
             path(
-                'weight-based/<int:pk>/',
+                "weight-based/<int:pk>/",
                 self.weight_method_detail_view.as_view(),
-                name='shipping-method-detail'),
+                name="shipping-method-detail",
+            ),
             path(
-                'weight-based/<int:pk>/edit/',
+                "weight-based/<int:pk>/edit/",
                 self.weight_method_edit_view.as_view(),
-                name='shipping-method-edit'),
+                name="shipping-method-edit",
+            ),
             path(
-                'weight-based/<int:pk>/delete/',
+                "weight-based/<int:pk>/delete/",
                 self.weight_method_delete_view.as_view(),
-                name='shipping-method-delete'),
+                name="shipping-method-delete",
+            ),
             path(
-                'weight-based/<int:method_pk>/bands/<int:pk>/',
+                "weight-based/<int:method_pk>/bands/<int:pk>/",
                 self.weight_band_edit_view.as_view(),
-                name='shipping-method-band-edit'),
+                name="shipping-method-band-edit",
+            ),
             path(
-                'weight-based/<int:method_pk>/bands/<int:pk>/delete/',
+                "weight-based/<int:method_pk>/bands/<int:pk>/delete/",
                 self.weight_band_delete_view.as_view(),
-                name='shipping-method-band-delete'),
+                name="shipping-method-band-delete",
+            ),
         ]
         return self.post_process_urls(urlpatterns)

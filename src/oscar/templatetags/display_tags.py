@@ -10,25 +10,30 @@ def get_parameters(context, except_field):
     """
     Renders current get parameters except for the specified parameter
     """
-    getvars = context['request'].GET.copy()
+    getvars = context["request"].GET.copy()
     getvars.pop(except_field, None)
     if len(getvars.keys()) > 0:
         return "%s&" % getvars.urlencode()
 
-    return ''
+    return ""
 
 
 @register.tag()
 def iffeature(parser, token):
-    nodelist = parser.parse(('endiffeature',))
+    nodelist = parser.parse(("endiffeature",))
     try:
-        tag_name, app_name, = token.split_contents()
+        (
+            tag_name,
+            app_name,
+        ) = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            "%r tag requires a single argument" % token.contents.split()[0])
+            "%r tag requires a single argument" % token.contents.split()[0]
+        )
     if not (app_name[0] == app_name[-1] and app_name[0] in ('"', "'")):
         raise template.TemplateSyntaxError(
-            "%r tag's argument should be in quotes" % tag_name)
+            "%r tag's argument should be in quotes" % tag_name
+        )
     parser.delete_first_token()
     return ConditionalOutputNode(nodelist, app_name[1:-1])
 
@@ -43,4 +48,4 @@ class ConditionalOutputNode(template.Node):
             output = self.nodelist.render(context)
             return output
         else:
-            return ''
+            return ""

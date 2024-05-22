@@ -8,7 +8,7 @@ Testing requirements
 You'll need:
 
 - A running SQL server (PostgreSQL, or SQLite with `--sqlite` parameters)
-- python3.6 or python3.7
+- python3.7 or higher.
 
 Running tests
 -------------

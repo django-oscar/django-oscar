@@ -1,0 +1,141 @@
+========================================
+Oscar 3.2 release notes
+========================================
+
+:release: 2022-23-12
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.2 is compatible with Django 3.1 and Django 3.2 and Python versions 3.7 to 3.9.
+
+Support for Django 2.2 has been dropped. Support for Python 3.6 has been dropped.
+
+.. _new_in_3.2:
+
+What's new in Oscar 3.2?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+- ``oscar.order.mixins.EventHandlerMixin`` was created for easily using the EventHandler without manually create the handler every time.
+
+- Added more product option types:
+    - Select
+    - Radio
+    - Multi select
+    - Checkbox
+
+- Wishlists are now shareable, inside your account you can make your wishlist private(default), public or shared. Public wishlists are available for everyone, shared wishlists only for the emails the user allowed access to.
+
+.. _backwards_incompatible_in_3.2:
+
+Backwards incompatible changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The interface for the OPTION_FIELD_FACTORIES has changed and now receives the
+  form, the product and the option. Update your overrides as required.
+
+- The ``value`` field on the ``BasketLineAttribute`` and ``OrderLineAttribute`` models is a JSONField now. If you have overridden the ``description`` property on the ``BasketLine`` and ``OrderLine`` models, you'll need to change this to make sure options/multi options are displayed normally in the basket and order.
+
+- The wishlist create and update view now inherits from a new mixin that shares functionality. If you've overrides on those views, you should check to see if everything works as intended.
+
+.. _removal_of_deprecated_features_in_3.2:
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- ``url_has_allowed_host_and_scheme`` is no longer present in ``oscar.core.compat`` and should be directly imported as ``django.utils.http.url_has_allowed_host_and_scheme``
+
+.. _minor_changes_in_3.2:
+
+Minor changes
+~~~~~~~~~~~~~
+
+- Added a new helper ``core.utils.is_ajax`` which replicates the logic of Django's ``HttpRequest.is_ajax``
+  method that was deprecated in Django 3.1.
+  
+- Persisted ``OrderFactory.date_placed`` to the database when set, instead of just setting it on the object without saving it.
+
+- Fixed getting non public categories with ``get_categories`` by only returning browsable categories.
+
+- Reviews can now only be viewed and placed when the product is public.
+
+- The title has been removed by default from all address forms in Oscar. The database field is still present, and projects that wish to retain this field in their forms should add it back by overriding the fields property of the Meta    class for applicable forms.
+
+- Changed ``PartnerProductFilterMixin`` queryset to also include child products for the partner user.
+
+- Changed ``RangeDetailView`` to respect the ``OSCAR_PRODUCTS_PER_PAGE`` setting for pagination.
+
+- Fixed the output of the ``OfferReportGenerator`` and generated it's data more efficiently.
+
+- Avoid ``KeyError`` in ``BulkEditMixin`` if objects matching filters no longer exist.
+
+- Changed the order of ``check_skip_conditions`` and ``check_pre_conditions``.
+
+- Made it easier to pass custom arguments to order processing ``EventHandler``.
+
+- Fixed the handling of ``InvalidPage`` exceptions in ``CatalogueView``.
+
+- Added ``search_fields`` to ``AbstractAddress`` model.
+
+- Added a uniqueness constraint across ``code`` and ``product_class`` for the ``ProductAttribute`` model to prevent duplicate attribute codes. This comes with a migration that will remove duplicate codes before applying the unique constraint migration.
+
+- Implemented a more efficient approach for range queries. This will make (for example) multiple offers in your site a lot faster.
+
+- Made the attribute codes unique per product class
+
+- Changed the review form to as_stars filter instead of if statements
+
+- Prevent unnecessary database query in UseFirstStockRecord strategy
+
+- Fix the issue where html5 validation errors were not shown in the dashboard.
+
+- Changed the stock to be consumed and allocated in an atomic state.
+
+- Fixed not requiring a range when choosing a custom condition
+
+- Changed the basket to be readonly in the django-admin
+
+- The request is now passed to all the communication event type messages, so emails can be sent from the correct site in case of a multisite project.
+
+- Added basket post data back to the form when invalid
+
+.. _dependency_changes_in_3.2:
+
+Dependency changes
+~~~~~~~~~~~~~~~~~~
+
+Python package dependencies:
+
+- Upgraded ``django-treebeard`` to version >=4.3.0
+- Upgraded ``django-phonenumber-field`` to version >=4.0.0,<7.0.0
+- Upgraded ``django-extra-views`` to version >=0.13,<0.15
+
+
+Javascript and CSS dependencies:
+
+- Upgraded ``@fortawesome/fontawesome-free`` to version 6.1.1.
+- Upgraded ``bootstrap`` to version 4.6.1.
+- Upgraded ``inputmask`` to version 5.0.7.
+- Upgraded ``tinymce`` to version 6.0.3.
+- Upgraded ``eslint`` to version 8.16.0.
+- Upgraded ``nan`` to version 2.16.0.
+- Upgraded ``sass`` to version 1.52.1.
+- Upgraded ``tempusdominus-bootstrap-4`` to version 5.39.2.
+
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+- The ``annotate_form_field`` template tag is deprecated. It's functionality of annotating form fields with
+  their widget type is now built in to Django.
+
+- In the ORDER_PLACED email templates, the variable ``status_url`` should not be used anymore. Please use
+  ``status_path`` in conjunction with the ``absolute_url`` template tag instead. It will be removed in a future
+  version of Oscar.

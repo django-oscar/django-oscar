@@ -15,12 +15,14 @@ class StockRecordFormTextCase(TestCase):
         form_field_names = [f.name for f in form.visible_fields()]
 
         self.assertIn(
-            'num_in_stock', form_field_names,
-            "num_in_stock should be a field in the form"
+            "num_in_stock",
+            form_field_names,
+            "num_in_stock should be a field in the form",
         )
         self.assertIn(
-            'low_stock_threshold', form_field_names,
-            "low_stock_threshold should be a field in the form"
+            "low_stock_threshold",
+            form_field_names,
+            "low_stock_threshold should be a field in the form",
         )
 
     def test_stockrecord_form_has_less_fields_when_not_tracking_stock(self):
@@ -31,10 +33,12 @@ class StockRecordFormTextCase(TestCase):
         form_field_names = [f.name for f in form.visible_fields()]
 
         self.assertNotIn(
-            'num_in_stock', form_field_names,
-            "num_in_stock should NOT be a field in the form"
+            "num_in_stock",
+            form_field_names,
+            "num_in_stock should NOT be a field in the form",
         )
         self.assertNotIn(
-            'low_stock_threshold', form_field_names,
-            "low_stock_threshold should NOT be a field in the form"
+            "low_stock_threshold",
+            form_field_names,
+            "low_stock_threshold should NOT be a field in the form",
         )

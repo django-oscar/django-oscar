@@ -1,4 +1,4 @@
-{% load currency_filters i18n %}{% blocktrans with order_number=order.number %}Hello,
+{% load currency_filters i18n url_tags %}{% blocktrans with order_number=order.number %}Hello,
 
 We are pleased to confirm your order {{ order_number }} has been received and
 will be processed shortly.{% endblocktrans %}
@@ -17,8 +17,9 @@ will be processed shortly.{% endblocktrans %}
 {% endfor %}
 
 {% if status_url %}
+{% absolute_url site.domain status_path as absolute_status_url %}
 {% blocktrans %}You can view the status of this order at the below URL:
-{{ status_url }}{% endblocktrans %}
+{{ absolute_status_url }}{% endblocktrans %}
 {% endif %}
 
 {% blocktrans %}The team{% endblocktrans %}

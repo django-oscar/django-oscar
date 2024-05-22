@@ -10,7 +10,6 @@ from oscar.core.compat import AUTH_USER_MODEL
 
 
 class UserManager(auth_models.BaseUserManager):
-
     def create_user(self, email, password=None, **extra_fields):
         """
         Creates and saves a User with the given email and
@@ -18,12 +17,17 @@ class UserManager(auth_models.BaseUserManager):
         """
         now = timezone.now()
         if not email:
-            raise ValueError('The given email must be set')
+            raise ValueError("The given email must be set")
         email = UserManager.normalize_email(email)
         user = self.model(
-            email=email, is_staff=False, is_active=True,
+            email=email,
+            is_staff=False,
+            is_active=True,
             is_superuser=False,
-            last_login=now, date_joined=now, **extra_fields)
+            last_login=now,
+            date_joined=now,
+            **extra_fields
+        )
 
         user.set_password(password)
         user.save(using=self._db)
@@ -38,38 +42,40 @@ class UserManager(auth_models.BaseUserManager):
         return u
 
 
-class AbstractUser(auth_models.AbstractBaseUser,
-                   auth_models.PermissionsMixin):
+class AbstractUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     """
     An abstract base user suitable for use in Oscar projects.
 
     This is basically a copy of the core AbstractUser model but without a
     username field
     """
-    email = models.EmailField(_('email address'), unique=True)
-    first_name = models.CharField(
-        _('First name'), max_length=255, blank=True)
-    last_name = models.CharField(
-        _('Last name'), max_length=255, blank=True)
+
+    email = models.EmailField(_("email address"), unique=True)
+    first_name = models.CharField(_("First name"), max_length=255, blank=True)
+    last_name = models.CharField(_("Last name"), max_length=255, blank=True)
     is_staff = models.BooleanField(
-        _('Staff status'), default=False,
-        help_text=_('Designates whether the user can log into this admin '
-                    'site.'))
+        _("Staff status"),
+        default=False,
+        help_text=_("Designates whether the user can log into this admin site."),
+    )
     is_active = models.BooleanField(
-        _('Active'), default=True,
-        help_text=_('Designates whether this user should be treated as '
-                    'active. Unselect this instead of deleting accounts.'))
-    date_joined = models.DateTimeField(_('date joined'),
-                                       default=timezone.now)
+        _("Active"),
+        default=True,
+        help_text=_(
+            "Designates whether this user should be treated as "
+            "active. Unselect this instead of deleting accounts."
+        ),
+    )
+    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
 
     class Meta:
         abstract = True
-        verbose_name = _('User')
-        verbose_name_plural = _('Users')
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
 
     def clean(self):
         super().clean()
@@ -79,7 +85,7 @@ class AbstractUser(auth_models.AbstractBaseUser,
         """
         Return the first_name plus the last_name, with a space in between.
         """
-        full_name = '%s %s' % (self.first_name, self.last_name)
+        full_name = "%s %s" % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):
@@ -99,10 +105,12 @@ class AbstractUser(auth_models.AbstractBaseUser,
         Transfer any active alerts linked to a user's email address to the
         newly registered user.
         """
+        # pylint: disable=no-member
         ProductAlert = self.alerts.model
         alerts = ProductAlert.objects.filter(
-            email=self.email, status=ProductAlert.ACTIVE)
-        alerts.update(user=self, key='', email='')
+            email=self.email, status=ProductAlert.ACTIVE
+        )
+        alerts.update(user=self, key="", email="")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -117,9 +125,8 @@ class AbstractProductAlert(models.Model):
     """
     An alert for when a product comes back in stock
     """
-    product = models.ForeignKey(
-        'catalogue.Product',
-        on_delete=models.CASCADE)
+
+    product = models.ForeignKey("catalogue.Product", on_delete=models.CASCADE)
 
     # A user is only required if the notification is created by a
     # registered user, anonymous users will only have an email address
@@ -130,7 +137,8 @@ class AbstractProductAlert(models.Model):
         null=True,
         on_delete=models.CASCADE,
         related_name="alerts",
-        verbose_name=_('User'))
+        verbose_name=_("User"),
+    )
     email = models.EmailField(_("Email"), db_index=True, blank=True)
 
     # This key are used to confirm and cancel alerts for anon users
@@ -143,29 +151,34 @@ class AbstractProductAlert(models.Model):
     # the first time and can be used to confirm and unsubscribe the
     # notifications.
     UNCONFIRMED, ACTIVE, CANCELLED, CLOSED = (
-        'Unconfirmed', 'Active', 'Cancelled', 'Closed')
-    STATUS_CHOICES = (
-        (UNCONFIRMED, _('Not yet confirmed')),
-        (ACTIVE, _('Active')),
-        (CANCELLED, _('Cancelled')),
-        (CLOSED, _('Closed')),
+        "Unconfirmed",
+        "Active",
+        "Cancelled",
+        "Closed",
     )
-    status = models.CharField(_("Status"), max_length=20,
-                              choices=STATUS_CHOICES, default=ACTIVE)
+    STATUS_CHOICES = (
+        (UNCONFIRMED, _("Not yet confirmed")),
+        (ACTIVE, _("Active")),
+        (CANCELLED, _("Cancelled")),
+        (CLOSED, _("Closed")),
+    )
+    status = models.CharField(
+        _("Status"), max_length=20, choices=STATUS_CHOICES, default=ACTIVE
+    )
 
-    date_created = models.DateTimeField(_("Date created"), auto_now_add=True, db_index=True)
-    date_confirmed = models.DateTimeField(_("Date confirmed"), blank=True,
-                                          null=True)
-    date_cancelled = models.DateTimeField(_("Date cancelled"), blank=True,
-                                          null=True)
+    date_created = models.DateTimeField(
+        _("Date created"), auto_now_add=True, db_index=True
+    )
+    date_confirmed = models.DateTimeField(_("Date confirmed"), blank=True, null=True)
+    date_cancelled = models.DateTimeField(_("Date cancelled"), blank=True, null=True)
     date_closed = models.DateTimeField(_("Date closed"), blank=True, null=True)
 
     class Meta:
         abstract = True
-        app_label = 'customer'
-        ordering = ['-date_created']
-        verbose_name = _('Product alert')
-        verbose_name_plural = _('Product alerts')
+        app_label = "customer"
+        ordering = ["-date_created"]
+        verbose_name = _("Product alert")
+        verbose_name_plural = _("Product alerts")
 
     @property
     def is_anonymous(self):
@@ -191,18 +204,21 @@ class AbstractProductAlert(models.Model):
         self.status = self.ACTIVE
         self.date_confirmed = timezone.now()
         self.save()
+
     confirm.alters_data = True
 
     def cancel(self):
         self.status = self.CANCELLED
         self.date_cancelled = timezone.now()
         self.save()
+
     cancel.alters_data = True
 
     def close(self):
         self.status = self.CLOSED
         self.date_closed = timezone.now()
         self.save()
+
     close.alters_data = True
 
     def get_email_address(self):
@@ -219,8 +235,7 @@ class AbstractProductAlert(models.Model):
         # calls save, and doesn't call the methods cancel(), confirm() etc).
         if self.status == self.CANCELLED and self.date_cancelled is None:
             self.date_cancelled = timezone.now()
-        if not self.user and self.status == self.ACTIVE \
-                and self.date_confirmed is None:
+        if not self.user and self.status == self.ACTIVE and self.date_confirmed is None:
             self.date_confirmed = timezone.now()
         if self.status == self.CLOSED and self.date_closed is None:
             self.date_closed = timezone.now()
@@ -228,10 +243,12 @@ class AbstractProductAlert(models.Model):
         return super().save(*args, **kwargs)
 
     def get_random_key(self):
-        return get_random_string(length=40, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789')
+        return get_random_string(
+            length=40, allowed_chars="abcdefghijklmnopqrstuvwxyz0123456789"
+        )
 
     def get_confirm_url(self):
-        return reverse('customer:alerts-confirm', kwargs={'key': self.key})
+        return reverse("customer:alerts-confirm", kwargs={"key": self.key})
 
     def get_cancel_url(self):
-        return reverse('customer:alerts-cancel-by-key', kwargs={'key': self.key})
+        return reverse("customer:alerts-cancel-by-key", kwargs={"key": self.key})

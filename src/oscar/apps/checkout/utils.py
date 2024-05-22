@@ -10,7 +10,8 @@ class CheckoutSessionData(object):
     organise checkout form data until it is required to write out the final
     order.
     """
-    SESSION_KEY = 'checkout_data'
+
+    SESSION_KEY = "checkout_data"
 
     def __init__(self, request):
         self.request = request
@@ -67,10 +68,10 @@ class CheckoutSessionData(object):
     # ==============
 
     def set_guest_email(self, email):
-        self._set('guest', 'email', email)
+        self._set("guest", "email", email)
 
     def get_guest_email(self):
-        return self._get('guest', 'email')
+        return self._get("guest", "email")
 
     # Shipping address
     # ================
@@ -80,39 +81,39 @@ class CheckoutSessionData(object):
     # 3. Ship to an address book address (address chosen from list)
 
     def reset_shipping_data(self):
-        self._flush_namespace('shipping')
+        self._flush_namespace("shipping")
 
     def ship_to_user_address(self, address):
         """
         Use an user address (from an address book) as the shipping address.
         """
         self.reset_shipping_data()
-        self._set('shipping', 'user_address_id', address.id)
+        self._set("shipping", "user_address_id", address.id)
 
     def ship_to_new_address(self, address_fields):
         """
         Use a manually entered address as the shipping address
         """
-        self._unset('shipping', 'new_address_fields')
-        phone_number = address_fields.get('phone_number')
+        self._unset("shipping", "new_address_fields")
+        phone_number = address_fields.get("phone_number")
         if phone_number:
             # Phone number is stored as a PhoneNumber instance. As we store
             # strings in the session, we need to serialize it.
             address_fields = address_fields.copy()
-            address_fields['phone_number'] = phone_number.as_international
-        self._set('shipping', 'new_address_fields', address_fields)
+            address_fields["phone_number"] = phone_number.as_international
+        self._set("shipping", "new_address_fields", address_fields)
 
     def new_shipping_address_fields(self):
         """
         Return shipping address fields
         """
-        return self._get('shipping', 'new_address_fields')
+        return self._get("shipping", "new_address_fields")
 
     def shipping_user_address_id(self):
         """
         Return user address id
         """
-        return self._get('shipping', 'user_address_id')
+        return self._get("shipping", "user_address_id")
 
     # Legacy accessor
     user_address_id = shipping_user_address_id
@@ -136,19 +137,20 @@ class CheckoutSessionData(object):
         """
         Set "free shipping" code to session
         """
-        self._set('shipping', 'method_code', '__free__')
+        self._set("shipping", "method_code", "__free__")
 
     def use_shipping_method(self, code):
         """
         Set shipping method code to session
         """
-        self._set('shipping', 'method_code', code)
+        self._set("shipping", "method_code", code)
 
+    # pylint: disable=unused-argument
     def shipping_method_code(self, basket):
         """
         Return the shipping method code
         """
-        return self._get('shipping', 'method_code')
+        return self._get("shipping", "method_code")
 
     def is_shipping_method_set(self, basket):
         """
@@ -168,14 +170,14 @@ class CheckoutSessionData(object):
         """
         Store address fields for a billing address.
         """
-        self._unset('billing', 'new_address_fields')
-        phone_number = address_fields.get('phone_number')
+        self._unset("billing", "new_address_fields")
+        phone_number = address_fields.get("phone_number")
         if phone_number and isinstance(phone_number, PhoneNumber):
             # Phone number is stored as a PhoneNumber instance. As we store
             # strings in the session, we need to serialize it.
             address_fields = address_fields.copy()
-            address_fields['phone_number'] = phone_number.as_international
-        self._set('billing', 'new_address_fields', address_fields)
+            address_fields["phone_number"] = phone_number.as_international
+        self._set("billing", "new_address_fields", address_fields)
 
     def bill_to_user_address(self, address):
         """
@@ -183,34 +185,34 @@ class CheckoutSessionData(object):
 
         :address: The address object
         """
-        self._flush_namespace('billing')
-        self._set('billing', 'user_address_id', address.id)
+        self._flush_namespace("billing")
+        self._set("billing", "user_address_id", address.id)
 
     def bill_to_shipping_address(self):
         """
         Record fact that the billing address is to be the same as
         the shipping address.
         """
-        self._flush_namespace('billing')
-        self._set('billing', 'billing_address_same_as_shipping', True)
+        self._flush_namespace("billing")
+        self._set("billing", "billing_address_same_as_shipping", True)
 
     # Legacy method name
     billing_address_same_as_shipping = bill_to_shipping_address
 
     def is_billing_address_same_as_shipping(self):
-        return self._get('billing', 'billing_address_same_as_shipping', False)
+        return self._get("billing", "billing_address_same_as_shipping", False)
 
     def billing_user_address_id(self):
         """
         Return the ID of the user address being used for billing
         """
-        return self._get('billing', 'user_address_id')
+        return self._get("billing", "user_address_id")
 
     def new_billing_address_fields(self):
         """
         Return fields for a billing address
         """
-        return self._get('billing', 'new_address_fields')
+        return self._get("billing", "new_address_fields")
 
     def is_billing_address_set(self):
         """
@@ -230,22 +232,22 @@ class CheckoutSessionData(object):
     # ===============
 
     def pay_by(self, method):
-        self._set('payment', 'method', method)
+        self._set("payment", "method", method)
 
     def payment_method(self):
-        return self._get('payment', 'method')
+        return self._get("payment", "method")
 
     # Submission methods
     # ==================
 
     def set_order_number(self, order_number):
-        self._set('submission', 'order_number', order_number)
+        self._set("submission", "order_number", order_number)
 
     def get_order_number(self):
-        return self._get('submission', 'order_number')
+        return self._get("submission", "order_number")
 
     def set_submitted_basket(self, basket):
-        self._set('submission', 'basket_id', basket.id)
+        self._set("submission", "basket_id", basket.id)
 
     def get_submitted_basket_id(self):
-        return self._get('submission', 'basket_id')
+        return self._get("submission", "basket_id")

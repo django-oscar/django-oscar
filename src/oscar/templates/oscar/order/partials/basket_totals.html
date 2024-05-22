@@ -97,7 +97,7 @@
                 {% for charge in surcharges %}
                 <tr>
                         <th class="total">{{ charge.name }}</th>
-                        <th class="total align-right"> 
+                        <th class="total text-right"> 
                             {% if show_tax_separately %}
                                 {{ charge.excl_tax|currency:order.currency }}
                             {% else %}

@@ -6,7 +6,6 @@ from oscar.apps.shipping import methods, repository
 
 
 class TestDefaultShippingRepository(TestCase):
-
     def setUp(self):
         self.repo = repository.Repository()
 
@@ -15,8 +14,7 @@ class TestDefaultShippingRepository(TestCase):
         basket.is_shipping_required = mock.Mock(return_value=True)
         basket.has_shipping_discounts = False
 
-        available_methods = self.repo.get_shipping_methods(
-            basket=basket)
+        available_methods = self.repo.get_shipping_methods(basket=basket)
 
         self.assertEqual(1, len(available_methods))
         method = available_methods[0]
@@ -27,8 +25,7 @@ class TestDefaultShippingRepository(TestCase):
         basket.is_shipping_required = mock.Mock(return_value=False)
         basket.has_shipping_discounts = False
 
-        available_methods = self.repo.get_shipping_methods(
-            basket=basket)
+        available_methods = self.repo.get_shipping_methods(basket=basket)
 
         self.assertEqual(1, len(available_methods))
         method = available_methods[0]
@@ -39,7 +36,6 @@ class TestDefaultShippingRepository(TestCase):
         basket.is_shipping_required = mock.Mock(return_value=True)
         basket.has_shipping_discounts = False
 
-        method = self.repo.get_default_shipping_method(
-            basket=basket)
+        method = self.repo.get_default_shipping_method(basket=basket)
 
         self.assertTrue(isinstance(method, methods.Free))

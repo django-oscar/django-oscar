@@ -1,7 +1,6 @@
+# pylint: disable=E5142, E5141
 import csv
-import re
 
-from django import template
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
@@ -9,20 +8,13 @@ from django.core.exceptions import ImproperlyConfigured
 from oscar.core.loading import get_model
 
 # A setting that can be used in foreign key declarations
-AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+AUTH_USER_MODEL = getattr(settings, "AUTH_USER_MODEL", "auth.User")
 try:
-    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit('.', 1)
+    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit(".", 1)
 except ValueError:
-    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
-                               " 'app_label.model_name'")
-
-
-# Backward-compatible import for url_has_allowed_host_and_scheme.
-try:
-    # Django 3.0 and above
-    from django.utils.http import url_has_allowed_host_and_scheme  # noqa F401
-except ImportError:
-    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme  # noqa F401 isort:skip
+    raise ImproperlyConfigured(
+        "AUTH_USER_MODEL must be of the form 'app_label.model_name'"
+    )
 
 
 def get_user_model():
@@ -45,7 +37,8 @@ def get_user_model():
         # original get_user_model method in Django.
         raise ImproperlyConfigured(
             "AUTH_USER_MODEL refers to model '%s' that has not been installed"
-            % settings.AUTH_USER_MODEL)
+            % settings.AUTH_USER_MODEL
+        )
 
     # Test if user model has any custom fields and add attributes to the _meta
     # class
@@ -88,11 +81,14 @@ class UnicodeCSVWriter:
       with UnicodeCSVWriter(filename=filename) as writer:
           ...
     """
-    def __init__(self, filename=None, open_file=None, dialect=csv.excel,
-                 encoding="utf-8", **kw):
+
+    def __init__(
+        self, filename=None, open_file=None, dialect=csv.excel, encoding="utf-8", **kw
+    ):
         if filename is open_file is None:
             raise ImproperlyConfigured(
-                "You need to specify either a filename or an open file")
+                "You need to specify either a filename or an open file"
+            )
         self.filename = filename
         self.f = open_file
         self.dialect = dialect
@@ -105,21 +101,23 @@ class UnicodeCSVWriter:
 
     def __enter__(self):
         assert self.filename is not None
-        self.f = open(self.filename, 'wt', encoding=self.encoding, newline='')
+        self.f = open(self.filename, "wt", encoding=self.encoding, newline="")
         self.add_bom(self.f)
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exception_type, exception_value, exception_traceback):
         assert self.filename is not None
         if self.filename is not None:
             self.f.close()
 
+    # pylint: disable=unused-argument
     def add_bom(self, f):
         # If encoding is UTF-8, insert a Byte Order Mark at the start of the
         # file for compatibility with MS Excel.
-        if (self.encoding == 'utf-8'
-                and getattr(settings, 'OSCAR_CSV_INCLUDE_BOM', False)):
-            self.f.write('\ufeff')
+        if self.encoding == "utf-8" and getattr(
+            settings, "OSCAR_CSV_INCLUDE_BOM", False
+        ):
+            self.f.write("\ufeff")
 
     def writerow(self, row):
         if self.writer is None:
@@ -129,19 +127,3 @@ class UnicodeCSVWriter:
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
-
-
-class FormFieldNode(template.Node):
-    """"
-    Add the widget type to a BoundField. Until 3.1, Django did not make this available by default.
-
-    Used by `oscar.templatetags.form_tags.annotate_form_field`
-    """
-    def __init__(self, field_str):
-        self.field = template.Variable(field_str)
-
-    def render(self, context):
-        field = self.field.resolve(context)
-        if not hasattr(field, 'widget_type') and hasattr(field, 'field'):
-            field.widget_type = re.sub(r'widget$|input$', '', field.field.widget.__class__.__name__.lower())
-        return ''

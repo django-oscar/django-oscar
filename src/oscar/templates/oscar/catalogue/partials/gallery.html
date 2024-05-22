@@ -13,7 +13,7 @@
                 {% for image in all_images %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
-                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                        <img src="{{ thumb.url }}" class="img-fluid" alt="{{ product.get_title }}" />
                     </div>
                 {% endfor %}
                 </div>
@@ -31,7 +31,7 @@
                 {% for image in all_images %}
                     <li data-target="#product_gallery" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}">
                         {% oscar_thumbnail image.original "65x55" crop="center" as thumb %}
-                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                        <img src="{{ thumb.url }}" class="img-fluid" alt="{{ product.get_title }}" />
                     </li>
                 {% endfor %}
             </ol>
@@ -46,7 +46,7 @@
                     <div class="carousel-item active">
                     {% with image=product.primary_image %}
                         {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
-                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                        <img src="{{ thumb.url }}" class="img-fluid" alt="{{ product.get_title }}" />
                     {% endwith %}
                     </div>
                 </div>

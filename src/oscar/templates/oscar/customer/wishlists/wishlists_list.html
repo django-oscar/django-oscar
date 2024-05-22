@@ -22,6 +22,11 @@
                                     <a href="{% url 'customer:wishlists-update' key=wishlist.key %}" class="dropdown-item">
                                         {% trans 'Wish list settings' %}
                                     </a>
+                                    {% if wishlist.is_shareable %}
+                                    <a href="{{ wishlist.get_shared_url }}" class="dropdown-item clipboard-item">
+                                        {% trans 'Copy sharing link' %}
+                                    </a>
+                                    {% endif %}
                                     <a href="{% url 'customer:wishlists-delete' key=wishlist.key %}" class="dropdown-item">
                                         {% trans 'Delete' %}
                                     </a>
@@ -44,3 +49,8 @@
     </p>
 
 {% endblock tabcontent %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.customer.wishlists.init();
+{% endblock %}

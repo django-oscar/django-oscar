@@ -1,30 +1,29 @@
 # These requirements are only necessary when developing on Oscar.
 
 # development
-Werkzeug>=1.0,<2.1
-django-debug-toolbar>=2.2,<3.3
-django-extensions>=2.2,<3.2
+django-debug-toolbar>=2.2,<4.3
+django-extensions>=2.2,<3.3
 psycopg2-binary>=2.8,<2.10
 
 # Sandbox
 Whoosh>=2.7,<2.8
-django-environ>=0.4,<0.5
-django-redis>=4.12,<5.1
+django-environ>=0.4,<0.12
+django-redis>=4.12,<5.4
 pysolr>=3.9,<3.10
-redis>=3.5,<3.6
+redis>=3.5,<5.1
 requests>=2.25,<3
-uWSGI>=2.0.19,<2.1
-whitenoise>=5.2,<5.3
+uWSGI>=2.0.19
+whitenoise>=5.2,<6.6
 
 # Linting
-flake8==3.9.2
-flake8-debugger==4.0.0
-isort==5.9.1
+pylint>=2.17.4
+pylint-django>=2.5.3
+black>=23.3.0
 
 # Helpers
 pyprof2calltree>=1.4,<1.5
 ipdb>=0.13,<0.14
-ipython>=7.12,<8
+ipython>=7.12,<9
 
 # Country data
 pycountry

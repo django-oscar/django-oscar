@@ -8,7 +8,7 @@ from django.urls import resolve, reverse
 from oscar.core.application import OscarDashboardConfig
 from oscar.views.decorators import check_permissions
 
-logger = logging.getLogger('oscar.dashboard')
+logger = logging.getLogger("oscar.dashboard")
 
 
 class Node(object):
@@ -16,8 +16,15 @@ class Node(object):
     A node in the dashboard navigation menu
     """
 
-    def __init__(self, label, url_name=None, url_args=None, url_kwargs=None,
-                 access_fn=None, icon=None):
+    def __init__(
+        self,
+        label,
+        url_name=None,
+        url_args=None,
+        url_kwargs=None,
+        access_fn=None,
+        icon=None,
+    ):
         self.label = label
         self.icon = icon
         self.url_name = url_name
@@ -32,23 +39,26 @@ class Node(object):
 
     @property
     def url(self):
-        return reverse(self.url_name, args=self.url_args,
-                       kwargs=self.url_kwargs)
+        return reverse(self.url_name, args=self.url_args, kwargs=self.url_kwargs)
 
     def add_child(self, node):
         self.children.append(node)
 
     def is_visible(self, user):
         return self.access_fn is None or self.access_fn(
-            user, self.url_name, self.url_args, self.url_kwargs)
+            user, self.url_name, self.url_args, self.url_kwargs
+        )
 
     def filter(self, user):
         if not self.is_visible(user):
             return None
         node = Node(
-            label=self.label, url_name=self.url_name, url_args=self.url_args,
-            url_kwargs=self.url_kwargs, access_fn=self.access_fn,
-            icon=self.icon
+            label=self.label,
+            url_name=self.url_name,
+            url_args=self.url_args,
+            url_kwargs=self.url_kwargs,
+            access_fn=self.access_fn,
+            icon=self.icon,
         )
         for child in self.children:
             if child.is_visible(user):
@@ -71,7 +81,7 @@ def _dashboard_url_names_to_config():
         for url in config.urls[0]:
             # includes() don't have a name attribute
             # We skipped them because they come from other AppConfigs
-            name = getattr(url, 'name', None)
+            name = getattr(url, "name", None)
             if not name:
                 continue
 

@@ -1,5 +1,4 @@
-from oscar.apps.customer.views import (
-    AccountSummaryView as OscarAccountSummaryView)
+from oscar.apps.customer.views import AccountSummaryView as OscarAccountSummaryView
 
 
 class AccountSummaryView(OscarAccountSummaryView):

@@ -3,9 +3,9 @@ from django.dispatch import receiver
 
 from oscar.core.loading import get_model
 
-ConditionalOffer = get_model('offer', 'ConditionalOffer')
-Condition = get_model('offer', 'Condition')
-Benefit = get_model('offer', 'Benefit')
+ConditionalOffer = get_model("offer", "ConditionalOffer")
+Condition = get_model("offer", "Condition")
+Benefit = get_model("offer", "Benefit")
 
 
 @receiver(post_delete, sender=ConditionalOffer)
@@ -18,7 +18,7 @@ def delete_unused_related_conditions_and_benefits(instance, **kwargs):
         pass
     else:
         # Only delete if not using a proxy, and not used by other offers
-        if condition.proxy_class == '' and not condition.offers.exists():
+        if condition.proxy_class == "" and not condition.offers.exists():
             condition.delete()
 
     try:
@@ -27,5 +27,5 @@ def delete_unused_related_conditions_and_benefits(instance, **kwargs):
         pass
     else:
         # Only delete if not using a proxy, and not used by other offers
-        if benefit.proxy_class == '' and not benefit.offers.exists():
+        if benefit.proxy_class == "" and not benefit.offers.exists():
             benefit.delete()

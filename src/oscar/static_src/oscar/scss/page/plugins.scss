@@ -69,7 +69,7 @@
       height: auto;
       display: block;
       float: left;
-      margin: $base-margin-bottom/4;
+      margin: calc($base-margin-bottom / 4);
       text-indent: 0;
       background-color: $white;
       opacity: .50;

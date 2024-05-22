@@ -1,0 +1,28 @@
+=======================
+Oscar 2.2 release notes
+=======================
+
+:release: 2021-11-02
+
+Welcome to Oscar 2.1! This is a compatibility release which adds support to Oscar version 2.x for Django 3.2 LTS.
+
+.. contents::
+    :local:
+    :depth: 1
+
+.. _compatibility_of_2.1:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 2.1 is compatible with Django versions 2.2 and 3.2, and Python versions 3.6, 3.7 and 3.8.
+
+
+Backwards incompatible changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The ``annotate_form_field`` template tag will now set the ``widget_type`` in `the format used by Django 3.1`_: so no longer
+  ``CheckboxInput``, but just ``checkbox``.
+
+
+.. _`the format used by Django 3.1`: https://docs.djangoproject.com/en/3.1/ref/forms/api/#django.forms.BoundField.widget_type

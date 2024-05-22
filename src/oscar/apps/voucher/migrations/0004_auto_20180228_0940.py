@@ -4,6 +4,10 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django.utils.module_loading import import_string
+from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 
 class Migration(migrations.Migration):
@@ -17,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VoucherSet',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Name')),
                 ('count', models.IntegerField(verbose_name='Number of vouchers')),
                 ('code_length', models.IntegerField(default=12, verbose_name='Length of Code')),

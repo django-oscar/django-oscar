@@ -11,13 +11,12 @@ from oscar.apps.customer.abstract_models import AbstractUser
 
 
 class CustomUserManager(BaseUserManager):
-
     def create_user(self, username, email, password):
         """
         Creates and saves a User with the given email and password.
         """
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
 
         user = self.model(
             email=CustomUserManager.normalize_email(email),
@@ -41,17 +40,24 @@ class User(AbstractUser):
     """
     Custom user based on Oscar's AbstractUser
     """
+
     username = models.CharField(
-        _('username'), max_length=30, unique=True,
-        help_text=_('Required. 30 characters or fewer. Letters, numbers and '
-                    '@/./+/-/_ characters'),
+        _("username"),
+        max_length=30,
+        unique=True,
+        help_text=_(
+            "Required. 30 characters or fewer. Letters, numbers and "
+            "@/./+/-/_ characters"
+        ),
         validators=[
-            validators.RegexValidator(re.compile(r'^[\w.@+-]+$'), _('Enter a valid username.'), 'invalid')
-        ])
-    extra_field = models.CharField(
-        _('Nobody needs me'), max_length=5, blank=True)
+            validators.RegexValidator(
+                re.compile(r"^[\w.@+-]+$"), _("Enter a valid username."), "invalid"
+            )
+        ],
+    )
+    extra_field = models.CharField(_("Nobody needs me"), max_length=5, blank=True)
 
     objects = CustomUserManager()
 
     class Meta:
-        app_label = 'myauth'
+        app_label = "myauth"

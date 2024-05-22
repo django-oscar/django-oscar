@@ -1,1 +1,1 @@
-default_app_config = 'tests._site.apps.customer.apps.CustomerConfig'
+default_app_config = "tests._site.apps.customer.apps.CustomerConfig"

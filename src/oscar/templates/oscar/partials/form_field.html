@@ -1,4 +1,3 @@
-{% load form_tags %}
 {% load widget_tweaks %}
 
 {% if field.is_hidden %}
@@ -8,7 +7,6 @@
         Make the field widget type available to templates so we can mark-up
         checkbox and radio inputs differently to other widgets.
     {% endcomment %}
-    {% annotate_form_field field %}
 
     {% block control_group %}
         <div class="form-group{% if style == "horizontal" %} row{% endif %}">
