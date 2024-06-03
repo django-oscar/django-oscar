@@ -196,9 +196,8 @@ class LineTests(TestCase):
     def test_is_allocation_consumption_possible_when_num_allocated_is_null(self):
         self.line.num_allocated = None
 
-        actual = self.line.is_allocation_consumption_possible(1)
-
-        self.assertFalse(actual)
+        with self.assertRaises(ValueError):
+            self.line.is_allocation_consumption_possible(1)
 
     def event(self, event_type, quantity=None):
         """

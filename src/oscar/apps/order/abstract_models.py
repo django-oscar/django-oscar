@@ -889,7 +889,7 @@ class AbstractLine(models.Model):
             return False
 
         if self.num_allocated is None:
-            return False
+            raise ValueError(_("num_allocated should not be None"))
         return quantity <= self.num_allocated
 
     def consume_allocation(self, quantity):
