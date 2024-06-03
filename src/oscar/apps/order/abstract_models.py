@@ -888,7 +888,9 @@ class AbstractLine(models.Model):
         if self.allocation_cancelled:
             return False
 
-        return quantity <= (self.num_allocated or 0)
+        if self.num_allocated is None:
+            return False
+        return quantity <= self.num_allocated
 
     def consume_allocation(self, quantity):
         if not self.can_track_allocations:
@@ -916,7 +918,10 @@ class AbstractLine(models.Model):
             locked_self = (
                 self.__class__.objects.filter(pk=self.pk).select_for_update().get()
             )
-            if locked_self.num_allocated == quantity:
+            if (
+                locked_self.num_allocated is None
+                or locked_self.num_allocated == quantity
+            ):
                 locked_self.num_allocated = 0
                 locked_self.allocation_cancelled = True
             else:
