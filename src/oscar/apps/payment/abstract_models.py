@@ -136,9 +136,7 @@ class AbstractSource(models.Model):
             for txn in self.deferred_txns:
                 self._create_transaction(*txn)
 
-    def create_deferred_transaction(
-        self, txn_type, amount, reference=None, status=None
-    ):
+    def create_deferred_transaction(self, txn_type, amount, reference="", status=""):
         """
         Register the data for a transaction that can't be created yet due to FK
         constraints.  This happens at checkout where create an payment source
