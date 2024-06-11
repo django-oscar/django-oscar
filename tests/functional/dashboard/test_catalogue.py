@@ -228,6 +228,10 @@ class TestAStaffUser(WebTestCase):
         self.assertRedirects(page, expected_url)
         self.assertEqual(Product.objects.count(), 1)
 
+        # if last child is deleted, it must turn parent product into a stand-alone product
+        parent_product.refresh_from_db()
+        self.assertEqual(parent_product.structure, "standalone")
+
     def test_can_list_her_products(self):
         product1 = create_product(
             partner_users=[
