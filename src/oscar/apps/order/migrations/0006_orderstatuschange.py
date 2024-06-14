@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('old_status', models.CharField(blank=True, max_length=100, verbose_name='Old Status')),
                 ('new_status', models.CharField(blank=True, max_length=100, verbose_name='New Status')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='status_changes', to='order.Order', verbose_name='Order Status Changes')),
+                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='status_changes', to='order.Order', verbose_name='Order')),
             ],
             options={
                 'verbose_name': 'Order Status Change',

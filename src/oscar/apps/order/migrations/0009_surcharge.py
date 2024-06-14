@@ -23,11 +23,11 @@ class Migration(migrations.Migration):
             name='Surcharge',
             fields=[
                 ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='Surcharge')),
+                ('name', models.CharField(max_length=128, verbose_name='Name')),
                 ('code', models.CharField(max_length=128, verbose_name='Surcharge code')),
                 ('incl_tax', models.DecimalField(decimal_places=2, default=0, max_digits=12, verbose_name='Surcharge (inc. tax)')),
                 ('excl_tax', models.DecimalField(decimal_places=2, default=0, max_digits=12, verbose_name='Surcharge (excl. tax)')),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='surcharges', to='order.Order', verbose_name='Surcharges')),
+                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='surcharges', to='order.Order', verbose_name='Order')),
             ],
             options={
                 'abstract': False,
