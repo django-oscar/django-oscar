@@ -440,8 +440,12 @@ class OrderTests(TestCase):
     def test_shipping_status(self):
         order = OrderFactory()
 
-        line_1 = OrderLineFactory(order=order, partner_sku="SKU1234", quantity=2)
-        line_2 = OrderLineFactory(order=order, partner_sku="SKU5678", quantity=1)
+        line_1 = OrderLineFactory(
+            order=order, partner_sku="SKU1234", quantity=2, num_allocated=2
+        )
+        line_2 = OrderLineFactory(
+            order=order, partner_sku="SKU5678", quantity=1, num_allocated=1
+        )
         self.assertEqual(order.shipping_status, "")
 
         event_1 = ShippingEventFactory(order=order, event_type__name="Shipped")
