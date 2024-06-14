@@ -623,9 +623,7 @@ class AbstractLine(models.Model):
     # own business processes.
     status = models.CharField(_("Status"), max_length=255, blank=True)
 
-    num_allocated = models.PositiveIntegerField(
-        _("Number allocated"), blank=True, null=True
-    )
+    num_allocated = models.PositiveIntegerField(_("Number allocated"))
 
     # Checks whether line allocation was cancelled or not
     allocation_cancelled = models.BooleanField(default=False)
@@ -888,8 +886,6 @@ class AbstractLine(models.Model):
         if self.allocation_cancelled:
             return False
 
-        if self.num_allocated is None:
-            raise ValueError(_("num_allocated should not be None"))
         return quantity <= self.num_allocated
 
     def consume_allocation(self, quantity):
@@ -918,10 +914,7 @@ class AbstractLine(models.Model):
             locked_self = (
                 self.__class__.objects.filter(pk=self.pk).select_for_update().get()
             )
-            if (
-                locked_self.num_allocated is None
-                or locked_self.num_allocated == quantity
-            ):
+            if locked_self.num_allocated == quantity:
                 locked_self.num_allocated = 0
                 locked_self.allocation_cancelled = True
             else:

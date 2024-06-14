@@ -193,12 +193,6 @@ class LineTests(TestCase):
 
         self.assertTrue(actual)
 
-    def test_is_allocation_consumption_possible_when_num_allocated_is_null(self):
-        self.line.num_allocated = None
-
-        with self.assertRaises(ValueError):
-            self.line.is_allocation_consumption_possible(1)
-
     def event(self, event_type, quantity=None):
         """
         Creates a shipping event for the test line
