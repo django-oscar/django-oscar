@@ -1516,6 +1516,9 @@ class MissingProductImage(object):
             self.symlink_missing_image(media_file_path)
 
     def symlink_missing_image(self, media_file_path):
+        if os.path.islink(media_file_path):
+            # broken link, remove it to create it anew
+            os.unlink(media_file_path)
         static_file_path = find("oscar/img/%s" % self.name)
         if static_file_path is not None:
             try:
