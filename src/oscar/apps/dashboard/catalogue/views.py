@@ -493,7 +493,10 @@ class ProductDeleteView(PartnerProductFilterMixin, generic.DeleteView):
             ctx["title"] = _("Delete product?")
         return ctx
 
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
         # We override the core delete method and don't call super in order to
         # apply more sophisticated logic around handling child products.
         # Calling super makes it difficult to test if the product being deleted
