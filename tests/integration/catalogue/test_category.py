@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.core.cache import cache
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -231,6 +233,31 @@ class TestCategoryTemplateTags(TestCase):
         )
         for trail in breadcrumbs:
             create_from_breadcrumbs(trail)
+
+    def test_category_extra_info(self):
+        annotated_list = get_annotated_list(depth=3)
+
+        expected_categories_info = {
+            "Books": {"has_children": True, "len_num_to_close": 0},
+            "Fiction": {"has_children": True, "len_num_to_close": 0},
+            "Horror": {"has_children": False, "len_num_to_close": 0},
+            "Comedy": {"has_children": False, "len_num_to_close": 1},
+            "Non-fiction": {"has_children": True, "len_num_to_close": 0},
+            "Biography": {"has_children": False, "len_num_to_close": 0},
+            "Programming": {"has_children": False, "len_num_to_close": 1},
+            "Children": {"has_children": False, "len_num_to_close": 1},
+        }
+        actual_categories_info = {
+            category.name: {
+                "has_children": category.get("has_children", False),
+                "len_num_to_close": len(category["num_to_close"]),
+            }
+            for category, _ in annotated_list
+        }
+        # json.dumps provide an easy way to compare nested dict
+        self.assertEqual(
+            json.dumps(expected_categories_info), json.dumps(actual_categories_info)
+        )
 
     def get_category_names(self, depth=None, parent=None):
         """
