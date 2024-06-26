@@ -127,14 +127,14 @@ Oscar tries to guess the correct handler based on your Haystack settings.
 
 Default::  ``None``
 
-.. _OSCAR_DASHBOARD_NAVIGATION:
+.. _OSCAR_DEFAULT_NAVIGATION_MENU_POSITION_INCREMENTER:
 
-``OSCAR_DASHBOARD_NAVIGATION``
+``OSCAR_DEFAULT_NAVIGATION_MENU_POSITION_INCREMENTER``
 ------------------------------
 
-Default: see ``oscar.defaults`` (too long to include here).
+Default:: ``10``
 
-A list of dashboard navigation elements. Usage is explained in
+The value used internally to set default dashboard menu position. Usage is explained in
 :doc:`/howto/how_to_configure_the_dashboard_navigation`.
 
 ``OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION``
