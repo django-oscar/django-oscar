@@ -59,6 +59,7 @@
         "unit_price_incl_tax": "7.99",
         "partner": 3,
         "order": 1,
+        "num_allocated": 1,
         "quantity": 1
     },
     "model": "order.line",

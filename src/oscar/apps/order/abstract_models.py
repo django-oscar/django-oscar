@@ -623,9 +623,7 @@ class AbstractLine(models.Model):
     # own business processes.
     status = models.CharField(_("Status"), max_length=255, blank=True)
 
-    num_allocated = models.PositiveIntegerField(
-        _("Number allocated"), blank=True, null=True
-    )
+    num_allocated = models.PositiveIntegerField(_("Number allocated"))
 
     # Checks whether line allocation was cancelled or not
     allocation_cancelled = models.BooleanField(default=False)
@@ -888,7 +886,7 @@ class AbstractLine(models.Model):
         if self.allocation_cancelled:
             return False
 
-        return quantity <= (self.num_allocated or 0)
+        return quantity <= self.num_allocated
 
     def consume_allocation(self, quantity):
         if not self.can_track_allocations:
