@@ -325,17 +325,23 @@ class AbstractBasket(models.Model):
         self.offer_applications = OfferApplications()
         self._lines = None
 
-    def merge_line(self, line, add_quantities=True):
+    def merge_line(self, line, add_quantities=True, strategy=None):
         """
         For transferring a line from another basket to this one.
 
         This is used with the "Saved" basket functionality.
         """
+        # TODO: If the login causes the strategy to be None, the line won't save.
+        # IntegrityError at /checkout/
+        # (1048, "Column 'stockrecord_id' cannot be null")
+        # We'll need to display a message if that's the case.
         try:
             existing_line = self.lines.get(line_reference=line.line_reference)
         except ObjectDoesNotExist:
             # Line does not already exist - reassign its basket
             line.basket = self
+            if strategy:
+                line.stockrecord = strategy.fetch_for_product(line.product).stockrecord
             line.save()
         else:
             # Line already exists - assume the max quantity is correct and
@@ -344,6 +350,9 @@ class AbstractBasket(models.Model):
                 existing_line.quantity += line.quantity
             else:
                 existing_line.quantity = max(existing_line.quantity, line.quantity)
+
+            if strategy:
+                existing_line.stockrecord = strategy.fetch_for_product(existing_line.product).stockrecord
             existing_line.save()
             line.delete()
         finally:
@@ -351,7 +360,7 @@ class AbstractBasket(models.Model):
 
     merge_line.alters_data = True
 
-    def merge(self, basket, add_quantities=True):
+    def merge(self, basket, add_quantities=True, strategy=None):
         """
         Merges another basket with this one.
 
@@ -361,7 +370,7 @@ class AbstractBasket(models.Model):
         # Use basket.lines.all instead of all_lines as this function is called
         # before a strategy has been assigned.
         for line_to_merge in basket.lines.all():
-            self.merge_line(line_to_merge, add_quantities)
+            self.merge_line(line_to_merge, add_quantities=add_quantities, strategy=strategy)
         basket.status = self.MERGED
         basket.date_merged = now()
         basket._lines = None
