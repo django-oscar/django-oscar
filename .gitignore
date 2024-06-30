@@ -60,3 +60,9 @@ settings_local.py
 
 # test stuff
 /tests/whoosh_index/
+
+# Navie
+appmap.log
+notebooks/*/*
+tmp/appmap
+
