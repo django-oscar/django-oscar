@@ -1,0 +1,7 @@
+appmap_dir: tmp/appmap
+language: python
+name: django-oscar__django-oscar
+packages:
+- path: oscar
+- path: tests
+- path: sandbox
