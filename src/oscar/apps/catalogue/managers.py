@@ -100,7 +100,7 @@ class ProductQuerySet(models.query.QuerySet):
         )
         product_options = Option.objects.filter(product=OuterRef("pk"))
         return (
-            self.select_related("product_class")
+            self.select_related("product_class")  # pylint:disable=E1102
             .annotate(
                 has_product_class_options=Exists(product_class_options),
                 has_product_options=Exists(product_options),
