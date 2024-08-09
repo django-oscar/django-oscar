@@ -258,9 +258,9 @@ class AbstractAddress(models.Model):
         "line1",
         "line2",
         "line3",
+        "postcode",
         "line4",
         "state",
-        "postcode",
         "country",
     ]
 

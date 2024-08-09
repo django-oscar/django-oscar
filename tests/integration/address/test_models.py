@@ -67,11 +67,12 @@ class TestUserAddress(TestCase):
             first_name="Barry",
             last_name="Barrington",
             line1="1 King Road",
-            line4="London",
             postcode="SW1 9RE",
+            line4="London",
+            
         )
         self.assertEqual(
-            "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
+            "Dr Barry Barrington, 1 King Road, SW1 9RE, London, UNITED KINGDOM",
             a.summary,
         )
 
