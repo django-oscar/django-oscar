@@ -18,7 +18,7 @@ class FacetedSearchView(BaseSearchView):
             sender=self,
             session=self.request.session,
             user=self.request.user,
-            query=self.request.GET.get("q"),
+            query=self.request.GET.get("q", ""),
         )
 
         return super().dispatch(request, *args, **kwargs)
