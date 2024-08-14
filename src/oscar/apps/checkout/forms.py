@@ -84,11 +84,13 @@ class GatewayForm(AuthenticationForm):
                 if User._default_manager.filter(email__iexact=email).exists():
                     msg = _("A user with that email address already exists")
                     self._errors["username"] = self.error_class([msg])
+
+                    # change the value of the 'options' in the submitted data,
+                    # which will be used to render the form
+                    options_field = self.add_prefix("options")
                     self.data = self.data.copy()
-                    options_field = "options"
-                    if self.prefix:
-                        options_field = f"{self.prefix}-{options_field}"
                     self.data[options_field] = self.EXISTING
+
             return self.cleaned_data
         return super().clean()
 
