@@ -107,6 +107,29 @@ class TestIndexView(
         page = self.get(reverse("checkout:index"))
         self.assertEqual(email, page.form["username"].value)
 
+    def test_auto_select_existing_user(self):
+        email = "forgetfulguest@test.com"
+        self.create_user(email, email, self.password)
+
+        self.add_product_to_basket()
+
+        # select guest checkout
+        page = self.get(reverse("checkout:index"))
+        form = page.form
+        form["options"].select(GatewayForm.GUEST)
+        form["username"].value = email
+
+        response = form.submit()
+
+        # since this user allready exists
+        self.assertEqual(email, response.form["username"].value)
+        self.assertEqual(
+            GatewayForm.EXISTING,
+            response.form["options"].value,
+            "Since this user has an account, the GatewayForm should "
+            "be changed to existing, so the user can enter his password",
+        )
+
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
 class TestShippingAddressView(
