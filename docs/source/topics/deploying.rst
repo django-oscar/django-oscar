@@ -43,9 +43,6 @@ Oscar relies on the Django framework for security measures and therefore no
 Oscar specific configurations with regard to security are in place. See
 `Django's guidelines for security`_ for more information.
 
-`django-secure`_ is a nice app that comes with a few sanity checks for
-deployments behind SSL.
-
 Search Engine Optimisation
 --------------------------
 
