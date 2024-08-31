@@ -18,11 +18,15 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
-        django-version: ['3.2', '4.0', '4.1', '4.2']
+        python-version: ['3.10', '3.11', '3.12']
+        django-version: ['4.2', '5.0', '5.1']
+        include:
+          - python-version: ['3.8', '3.9']
+            django-version: '4.2'
+            
     services:
       postgres:
-        image: postgres:14
+        image: postgres:16
         ports:
           - 5432/tcp
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -62,7 +66,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -77,7 +81,7 @@ jobs:
     - name: Set up NodeJS
       uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '20'
     - name: Install dependencies
       run: |
         npm ci
@@ -91,7 +95,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: Build sandbox
       run: |
         python -m pip install --upgrade pip
@@ -103,7 +107,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: Build docs
       run: |
         make docs
