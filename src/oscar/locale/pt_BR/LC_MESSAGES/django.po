@@ -22,6 +22,7 @@
 # Lindolfo Alves <lalves@yacows.com.br>, 2013
 # Leonardo Arroyo <contato@leonardoarroyo.com>, 2017
 # Lindolfo Alves <lalves@yacows.com.br>, 2013
+# Luiz Cavalcanti, 2024
 # Matheus Vieira <eu@matheusvieira.info>, 2016
 # Paulo Borges <pauloborgesfilho@gmail.com>, 2015
 # Raphael Suzuki <raphaelsuzuki@daijoubu.ws>, 2013
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-30 10:56+0100\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
-"Last-Translator: Yuri Heupa <yurihernaniheupa@gmail.com>, 2015\n"
+"Last-Translator: Luiz Cavalcanti, 2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/codeinthehole/django-oscar/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1397,12 +1398,12 @@ msgstr "Valores de atributos de produto"
 #: apps/catalogue/abstract_models.py:1148
 msgctxt "Product attribute value"
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 #: apps/catalogue/abstract_models.py:1149
 msgctxt "Product attribute value"
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #: apps/catalogue/abstract_models.py:1182
 msgid "Attribute option group"
@@ -1454,7 +1455,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1273
 msgid "Help text shown to the user on the add to basket form"
-msgstr ""
+msgstr "Texto contextual mostrado ao usuário no formulário de adição ao carrinho"
 
 #: apps/catalogue/abstract_models.py:1276
 msgid "Ordering"
@@ -1462,7 +1463,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1279
 msgid "Controls the ordering of product options on product detail pages"
-msgstr ""
+msgstr "Controla a ordenação das opções de produto nas páginas de detalhe de produto"
 
 #: apps/catalogue/abstract_models.py:1321
 #, python-format
@@ -6684,7 +6685,7 @@ msgid ""
 "            The %(site)s Team\n"
 "        </p>\n"
 "    "
-msgstr ""
+msgstr "\nOlá,\n\nAlguém (esperamos que você) solicitou um alerta por e-mail quando\n'%(title)s' estivesse disponível em estoque. Clique no link a seguir\npara confirmar: %(confirm_url)s\n\nVocê pode cancelar este alerta a qualquer momento, clicando no link a seguir:\n%(cancel_url)s\n\nAgradecemos pelo interesse,\nEquipe %(site)s"
 
 #: templates/oscar/communication/emails/commtype_product_alert_confirmation_body.txt:5
 #, python-format
@@ -7151,14 +7152,14 @@ msgstr "\nApós sua lista de desejos ser criada, <strong>%(title)s</strong> ser�
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:45
 msgid "Share wishlist"
-msgstr ""
+msgstr "Compartilhar lista de desejos"
 
 #: templates/oscar/customer/wishlists/wishlists_form.html:47
 msgid ""
 "If you want to share your wishlist with others, you can add their email "
 "addresses below. The visibility must be set to shared in order for this to "
 "work."
-msgstr ""
+msgstr "Se pretender compartilhar a sua lista de desejos com outras pessoas, pode adicionar o e-mail respectivo abaixo. A visibilidade deve ser definida como compartilhada para funcionar."
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
