@@ -95,6 +95,7 @@ var oscar = (function(o, $) {
                     entity_encoding: 'raw',
                     statusbar: false,
                     menubar: false,
+                    convert_urls: false,
                     plugins: "link lists",
                     style_formats: [
                         {title: 'Text', block: 'p'},
