@@ -11,9 +11,7 @@ import re
 import subprocess
 import sys
 
-# pylint: disable=deprecated-module
-from distutils.command import build as build_module
-
+from setuptools.command import build as build_module
 from setuptools import setup, find_packages
 
 PROJECT_DIR = os.path.dirname(__file__)
@@ -129,6 +127,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Software Development :: Libraries :: Application Frameworks",
     ],
 )

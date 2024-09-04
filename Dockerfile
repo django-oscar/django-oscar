@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.12
 ENV PYTHONUNBUFFERED 1
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
