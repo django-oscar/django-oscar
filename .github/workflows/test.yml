@@ -77,7 +77,7 @@ jobs:
     - name: Set up NodeJS
       uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '20'
     - name: Install dependencies
       run: |
         npm ci
