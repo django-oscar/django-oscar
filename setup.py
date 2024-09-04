@@ -29,7 +29,7 @@ class BuildNPM(build_module.build):
 
 install_requires = [
     "setuptools>=51.3.3",
-    "django>=3.2,<5.1",
+    "django>=3.2,<5.2",
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     "pillow>=6.0",
     # We use the ModelFormSetView from django-extra-views for the basket page
@@ -119,6 +119,7 @@ setup(
         "Framework :: Django :: 4.1",
         "Framework :: Django :: 4.2",
         "Framework :: Django :: 5.0",
+        "Framework :: Django :: 5.1",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: Unix",

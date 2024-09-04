@@ -19,7 +19,18 @@ jobs:
       fail-fast: true
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
-        django-version: ['3.2', '4.0', '4.1', '4.2', '5.0']
+        django-version: ['3.2', '4.0', '4.1', '4.2', '5.0', '5.1']
+        exclude:
+          # Django 5.0 doesn't support Py3{8,9}
+          - django-version: '5.0'
+            python-version: '3.8'
+          - django-version: '5.0'
+            python-version: '3.9'
+          # Django 5.1 doesn't support Py3{8,9}
+          - django-version: '5.1'
+            python-version: '3.8'
+          - django-version: '5.1'
+            python-version: '3.9'
     services:
       postgres:
         image: postgres:14

@@ -58,6 +58,7 @@ class AnonAddToBasketViewTests(WebTestCase):
         self.response = self.app.post(self.url, params=self.post_params)
 
     def test_cookie_is_created(self):
+        # pylint: disable=E1101
         self.assertTrue("oscar_open_basket" in self.response.test_app.cookies)
 
     def test_price_is_recorded(self):

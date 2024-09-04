@@ -602,8 +602,8 @@ class AbstractProduct(models.Model):
         super().save(*args, **kwargs)
         self.attr.save()
 
-    def refresh_from_db(self, using=None, fields=None):
-        super().refresh_from_db(using, fields)
+    def refresh_from_db(self, *args, **kwargs):
+        super().refresh_from_db(*args, **kwargs)
         self.attr.invalidate()
 
     # Properties
