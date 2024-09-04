@@ -29,7 +29,7 @@ class BuildNPM(build_module.build):
 
 install_requires = [
     "setuptools>=51.3.3",
-    "django>=3.2,<4.3",
+    "django>=3.2,<5.1",
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     "pillow>=6.0",
     # We use the ModelFormSetView from django-extra-views for the basket page
@@ -44,11 +44,11 @@ install_requires = [
     "purl>=0.7",
     # For phone number field
     "phonenumbers",
-    "django-phonenumber-field>=4.0.0,<7.0.0",
+    "django-phonenumber-field>=4.0.0,<9.0.0",
     # Used for oscar.test.factories
-    "factory-boy>=3.0,<3.3",
+    "factory-boy>=3.3.1,<4.0.0",
     # Used for automatically building larger HTML tables
-    "django-tables2>=2.3,<2.4",
+    "django-tables2>=2.3,<2.8",
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     "django-widget-tweaks>=1.4.1",
@@ -118,6 +118,7 @@ setup(
         "Framework :: Django :: 4.0",
         "Framework :: Django :: 4.1",
         "Framework :: Django :: 4.2",
+        "Framework :: Django :: 5.0",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: Unix",
