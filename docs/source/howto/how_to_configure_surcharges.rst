@@ -60,7 +60,7 @@ For more complex logic, override the ``is_applicable`` method:
 
        def is_applicable(self, surcharge, basket, **kwargs):
            payment_method_code = kwargs.get("payment_method_code", None)
-           if payment_method is not None and payment_method_code == "paypal":
+           if payment_method_code is not None and payment_method_code == "paypal":
                return True
            else:
                return False
