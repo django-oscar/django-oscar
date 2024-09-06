@@ -279,7 +279,7 @@ class AbstractBasket(models.Model):
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
         defaults = {
-            "quantity": quantity,
+            "quantity": max(0, quantity),
             "price_excl_tax": stock_info.price.excl_tax,
             "price_currency": stock_info.price.currency,
             "tax_code": stock_info.price.tax_code,
