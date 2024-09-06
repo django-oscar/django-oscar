@@ -1,6 +1,7 @@
 import os
 import sys
 import tempfile
+from pathlib import Path
 from os.path import exists, join
 
 import pytest
@@ -10,7 +11,9 @@ from django.test import TestCase, override_settings
 from oscar.core import customisation
 from tests import delete_from_import_cache
 
-VALID_FOLDER_PATH = "tests/_site/apps"
+VALID_FOLDER_PATH = str(
+    (Path(__file__).parent.parent.parent.parent / "tests/_site/apps").absolute()
+)
 
 
 class TestUtilities(TestCase):

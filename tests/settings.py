@@ -177,5 +177,8 @@ OSCAR_LINE_STATUS_PIPELINE = {"a": ("b",), "b": ()}
 
 SECRET_KEY = "notverysecret"
 
+# easy-thumbnail. See https://github.com/SmileyChris/easy-thumbnails/issues/641#issuecomment-2291098096
+THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
+
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
 FIXTURE_DIRS = [location("unit/fixtures")]

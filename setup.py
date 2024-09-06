@@ -11,9 +11,7 @@ import re
 import subprocess
 import sys
 
-# pylint: disable=deprecated-module
-from distutils.command import build as build_module
-
+from setuptools.command import build as build_module
 from setuptools import setup, find_packages
 
 PROJECT_DIR = os.path.dirname(__file__)
@@ -31,7 +29,7 @@ class BuildNPM(build_module.build):
 
 install_requires = [
     "setuptools>=51.3.3",
-    "django>=3.2,<4.3",
+    "django>=3.2,<5.2",
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     "pillow>=6.0",
     # We use the ModelFormSetView from django-extra-views for the basket page
@@ -46,18 +44,18 @@ install_requires = [
     "purl>=0.7",
     # For phone number field
     "phonenumbers",
-    "django-phonenumber-field>=4.0.0,<7.0.0",
+    "django-phonenumber-field>=4.0.0,<9.0.0",
     # Used for oscar.test.factories
-    "factory-boy>=3.0,<3.3",
+    "factory-boy>=3.3.1,<4.0.0",
     # Used for automatically building larger HTML tables
-    "django-tables2>=2.3,<2.4",
+    "django-tables2>=2.3,<2.8",
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     "django-widget-tweaks>=1.4.1",
 ]
 
-sorl_thumbnail_version = "sorl-thumbnail>=12.9,<12.10"
-easy_thumbnails_version = "easy-thumbnails>=2.7,<2.8.6"
+sorl_thumbnail_version = "sorl-thumbnail>=12.10.0,<13.0.0"
+easy_thumbnails_version = "easy-thumbnails>=2.9,<3.0"
 
 docs_requires = [
     "Sphinx>=5.0",
@@ -69,14 +67,15 @@ docs_requires = [
 ]
 
 test_requires = [
-    "WebTest>=2.0,<2.1",
-    "coverage>=5.4,<5.5",
+    "Whoosh>=2.7,<2.8",
+    "WebTest>=3.0.0,<4.0.0",
+    "coverage>=7.6.1,<8.0.0",
     "django-webtest>=1.9,<1.10",
     "psycopg2-binary>=2.8,<2.10",
-    "pytest-django>=3.7,<3.9",
-    "pytest-xdist>=2.2,<3",
-    "tox>=3.21,<4",
-    "freezegun>=1.1,<2",
+    "pytest-django>=4.9.0,<5.0",
+    "pytest-xdist>=3.6.1,<4.0.0",
+    "tox>=4.18.0,<5.0.0",
+    "freezegun>=1.5.1,<2.0.0",
     "pytz",
     "vdt.versionplugin.wheel",
     sorl_thumbnail_version,
@@ -119,6 +118,8 @@ setup(
         "Framework :: Django :: 4.0",
         "Framework :: Django :: 4.1",
         "Framework :: Django :: 4.2",
+        "Framework :: Django :: 5.0",
+        "Framework :: Django :: 5.1",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: Unix",
@@ -128,6 +129,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Software Development :: Libraries :: Application Frameworks",
     ],
 )
