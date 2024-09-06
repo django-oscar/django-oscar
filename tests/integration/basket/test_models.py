@@ -27,6 +27,8 @@ class TestANewBasket(TestCase):
         self.assertEqual(0, self.basket.num_items)
 
     def test_doesnt_contain_vouchers(self):
+        # assert no exception on unsaved basket
+        self.assertFalse(Basket().contains_a_voucher)
         self.assertFalse(self.basket.contains_a_voucher)
 
     def test_can_be_edited(self):
@@ -165,7 +167,13 @@ class TestANonEmptyBasket(TestCase):
         self.assertEqual(self.basket.num_items, 0)
 
     def test_returns_correct_product_quantity(self):
+        # assert no exception on unsaved basket
+        self.assertEqual(0, Basket().product_quantity(self.product))
         self.assertEqual(10, self.basket.product_quantity(self.product))
+
+    def test_returns_correct_line_quantity_for_unsaved_basket(self):
+        # assert no exception on unsaved basket
+        self.assertEqual(0, Basket().line_quantity(self.product, self.record))
 
     def test_returns_correct_line_quantity_for_existing_product_and_stockrecord(self):
         self.assertEqual(10, self.basket.line_quantity(self.product, self.record))
@@ -259,6 +267,10 @@ class TestANonEmptyBasket(TestCase):
 
     def test_is_quantity_allowed(self):
         with self.settings(OSCAR_MAX_BASKET_QUANTITY_THRESHOLD=20):
+            # assert no exception on unsaved basket
+            allowed, message = Basket().is_quantity_allowed(1)
+            self.assertTrue(allowed)
+            self.assertIsNone(message)
             # 7 or below is possible
             allowed, message = self.basket.is_quantity_allowed(qty=7)
             self.assertTrue(allowed)
