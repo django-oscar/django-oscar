@@ -1,6 +1,8 @@
 from collections import namedtuple
 from decimal import Decimal as D
 
+from django.db.models import QuerySet
+
 from oscar.core.loading import get_class
 
 Unavailable = get_class("partner.availability", "Unavailable")
@@ -152,7 +154,15 @@ class Structured(Base):
         Select appropriate stock record for all children of a product
         """
         records = []
-        for child in product.children.public():
+
+        public_children = product.get_public_children()
+
+        # It's possible that the get_public_children() returns a list (if it was prefetched)
+        # if it's not prefetched, prefetch the stockrecords to avoid N+1 queries.
+        if isinstance(public_children, QuerySet):
+            public_children = public_children.prefetch_related("stockrecords")
+
+        for child in public_children:
             # Use tuples of (child product, stockrecord)
             records.append((child, self.select_stockrecord(child)))
         return records

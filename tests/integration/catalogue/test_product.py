@@ -136,8 +136,35 @@ class ChildProductTests(ProductTests):
         product = Product.objects.get(pk=product.pk)
         parent = Product.objects.get(pk=self.parent.pk)
 
-        self.assertEqual(parent.get_attribute_values().count(), 1)
-        self.assertEqual(product.get_attribute_values().count(), 2)
+        with self.assertNumQueries(3):
+            self.assertEqual(parent.get_attribute_values().count(), 1)
+            self.assertEqual(product.get_attribute_values().count(), 2)
+
+        self.assertTrue(hasattr(parent.attr, "first_attribute"))
+        self.assertFalse(hasattr(parent.attr, "second_attribute"))
+        self.assertTrue(hasattr(product.attr, "first_attribute"))
+        self.assertTrue(hasattr(product.attr, "second_attribute"))
+
+    def test_child_products_attribute_values_with_prefetch(self):
+        product = Product.objects.create(
+            title="child",
+            product_class=self.product_class,
+            parent=self.parent,
+            structure=Product.CHILD,
+        )
+
+        self.parent.attr.first_attribute = "klats"
+        product.attr.second_attribute = "henk"
+        self.parent.save()
+        product.save()
+
+        product = Product.objects.prefetch_attribute_values().get(pk=product.pk)
+        parent = Product.objects.prefetch_attribute_values().get(pk=self.parent.pk)
+
+        with self.assertNumQueries(0):
+            self.assertEqual(len(parent.get_attribute_values()), 1)
+            self.assertEqual(len(product.get_attribute_values()), 2)
+
         self.assertTrue(hasattr(parent.attr, "first_attribute"))
         self.assertFalse(hasattr(parent.attr, "second_attribute"))
         self.assertTrue(hasattr(product.attr, "first_attribute"))

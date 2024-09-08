@@ -8,7 +8,13 @@ from django.utils.functional import cached_property
 class QuerysetCache(dict):
     def __init__(self, queryset):
         self._queryset = queryset
-        self._queryset_iterator = queryset.iterator()
+
+        # It's possible the queryset is prefetched with prefetch_attribute_values.
+        # In this case the queryset is actually a list, and thus we can't use .iterator(),
+        if isinstance(queryset, list):
+            self._queryset_iterator = queryset
+        else:
+            self._queryset_iterator = queryset.iterator()
 
     def queryset(self):
         return self._queryset
@@ -36,6 +42,12 @@ class AttributesQuerysetCache:
 
     @cached_property
     def attribute_values(self):
+        # This means this product comes from a prefetched queryset with the
+        # prefetch_attribute_values method. Which selects the attribute and
+        # annotates the attribute code. This avoids the need of extra queries.
+        if hasattr(self.product, "_prefetched_attribute_values"):
+            return QuerysetCache(self.product.get_attribute_values())
+
         return QuerysetCache(
             self.product.get_attribute_values()
             .select_related("attribute")

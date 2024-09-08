@@ -244,7 +244,7 @@ class AddToBasketForm(forms.Form):
         """
         choices = []
         disabled_values = []
-        for child in product.children.public():
+        for child in product.get_public_children():
             # Build a description of the child, including any pertinent
             # attributes
             attr_summary = child.attribute_summary
