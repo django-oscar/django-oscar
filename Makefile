@@ -29,7 +29,7 @@ assets: ## Install static assets
 	npm run build
 
 venv: ## Create a virtual env and install test and production requirements
-	$(shell which python3) -m venv $(VENV)
+	$(shell which python3) -m venv $(VENV) --upgrade-deps
 	$(VENV)/bin/pip install -e .[test]
 	$(VENV)/bin/pip install -r docs/requirements.txt
 
