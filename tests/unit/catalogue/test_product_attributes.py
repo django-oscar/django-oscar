@@ -2,8 +2,10 @@ import pickle
 import unittest
 from copy import deepcopy
 
+from django.db import connection
 from django.core.exceptions import ValidationError
 from django.test import TestCase, TransactionTestCase
+from django.test.utils import CaptureQueriesContext
 
 from oscar.core.loading import get_model
 from oscar.test.factories import (
@@ -18,7 +20,7 @@ ProductAttribute = get_model("catalogue", "ProductAttribute")
 ProductAttributeValue = get_model("catalogue", "ProductAttributeValue")
 
 
-class ProductAttributeTest(TransactionTestCase):
+class ProductAttributeTest(TestCase):
     def setUp(self):
         super().setUp()
 
@@ -75,7 +77,7 @@ class ProductAttributeTest(TransactionTestCase):
         Attributes preseent on the parent should not be copied to the child
         when title of the child is modified
         """
-        with self.assertNumQueries(num_queries):
+        with CaptureQueriesContext(connection) as queries:
             self.assertEqual(
                 ProductAttributeValue.objects.filter(
                     product_id=self.product.pk
@@ -111,6 +113,10 @@ class ProductAttributeTest(TransactionTestCase):
                 "The child has no attributes",
             )
 
+            # In some django versions, transactions are not in the capture queries context
+            # That's why we have the +2 margin.
+            self.assertEqual(len(queries), num_queries)
+
     def test_update_child_with_attributes_with_prefetched_attribute_values(self):
         """
         Attributes preseent on the parent should not be copied to the child
@@ -124,12 +130,12 @@ class ProductAttributeTest(TransactionTestCase):
         )
         self.test_update_child_with_attributes(num_queries=10)
 
-    def test_update_child_attributes(self, num_queries=14):
+    def test_update_child_attributes(self, num_queries=12):
         """
         Attributes preseent on the parent should not be copied to the child
         when the child attributes are modified
         """
-        with self.assertNumQueries(num_queries):
+        with CaptureQueriesContext(connection) as queries:
             self.assertEqual(
                 ProductAttributeValue.objects.filter(
                     product_id=self.product.pk
@@ -166,6 +172,10 @@ class ProductAttributeTest(TransactionTestCase):
                 "The child now has 1 attribute",
             )
 
+            # In some django versions, transactions are not in the capture queries context
+            # That's why we have the +2 margin.
+            self.assertEqual(len(queries), num_queries)
+
     def test_update_child_attributes_with_prefetched_attribute_values(self):
         """
         Attributes preseent on the parent should not be copied to the child
@@ -177,14 +187,14 @@ class ProductAttributeTest(TransactionTestCase):
         self.child_product = Product.objects.prefetch_attribute_values().get(
             pk=self.child_product.pk
         )
-        self.test_update_child_attributes(num_queries=13)
+        self.test_update_child_attributes(num_queries=11)
 
-    def test_update_attributes_to_parent_and_child(self, num_queries=31):
+    def test_update_attributes_to_parent_and_child(self, num_queries=25):
         """
         Attributes present on the parent should not be copied to the child
         ever, not even newly added attributes
         """
-        with self.assertNumQueries(num_queries):
+        with CaptureQueriesContext(connection) as queries:
             self.assertEqual(
                 ProductAttributeValue.objects.filter(
                     product_id=self.product.pk
@@ -233,6 +243,10 @@ class ProductAttributeTest(TransactionTestCase):
                 "The child now has 1 attribute",
             )
 
+            # In some django versions, transactions are not in the capture queries context
+            # That's why we have the +2 margin.
+            self.assertEqual(len(queries), num_queries)
+
     def test_update_attributes_to_parent_and_child_with_prefetched_attribute_values(
         self,
     ):
@@ -246,10 +260,10 @@ class ProductAttributeTest(TransactionTestCase):
         self.child_product = Product.objects.prefetch_attribute_values().get(
             pk=self.child_product.pk
         )
-        self.test_update_attributes_to_parent_and_child(num_queries=22)
+        self.test_update_attributes_to_parent_and_child(num_queries=18)
 
-    def test_explicit_identical_child_attribute(self, num_queries=17):
-        with self.assertNumQueries(num_queries):
+    def test_explicit_identical_child_attribute(self, num_queries=15):
+        with CaptureQueriesContext(connection) as queries:
             self.assertEqual(self.product.attr.weight, 3, "parent product has weight 3")
             self.assertEqual(
                 self.child_product.attr.weight, 3, "chiuld product also has weight 3"
@@ -281,6 +295,10 @@ class ProductAttributeTest(TransactionTestCase):
                 "so it saved, even when the parent has the same value",
             )
 
+            # In some django versions, transactions are not in the capture queries context
+            # That's why we have the +2 margin.
+            self.assertEqual(len(queries), num_queries)
+
     def test_explicit_identical_child_attribute_with_prefetched_attribute_values(self):
         self.product = Product.objects.prefetch_attribute_values().get(
             pk=self.product.pk
@@ -288,7 +306,7 @@ class ProductAttributeTest(TransactionTestCase):
         self.child_product = Product.objects.prefetch_attribute_values().get(
             pk=self.child_product.pk
         )
-        self.test_explicit_identical_child_attribute(num_queries=16)
+        self.test_explicit_identical_child_attribute(num_queries=14)
 
     def test_delete_attribute_value(self):
         "Attributes should be deleted when they are nulled"
