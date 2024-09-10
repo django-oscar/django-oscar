@@ -245,7 +245,9 @@ class ProductAttributeTest(TransactionTestCase):
 
             # In some django versions, the query count is a bit different because the
             # transactions aren't included in the count.
-            self.assertTrue(num_queries <= len(queries) <= num_queries + 4)
+            print("num_queries: ", num_queries)
+            print("len(queries): ", len(queries))
+            self.assertTrue(len(queries) <= num_queries + 4)
 
     def test_update_attributes_to_parent_and_child_with_prefetched_attribute_values(
         self,
