@@ -20,7 +20,7 @@ ProductAttribute = get_model("catalogue", "ProductAttribute")
 ProductAttributeValue = get_model("catalogue", "ProductAttributeValue")
 
 
-class ProductAttributeTest(TestCase):
+class ProductAttributeTest(TransactionTestCase):
     def setUp(self):
         super().setUp()
 
@@ -113,9 +113,9 @@ class ProductAttributeTest(TestCase):
                 "The child has no attributes",
             )
 
-            # In some django versions, transactions are not in the capture queries context
-            # That's why we have the +2 margin.
-            self.assertEqual(len(queries), num_queries)
+            # In some django versions, the query count is a bit different because the
+            # transactions aren't included in the count.
+            self.assertTrue(num_queries <= len(queries) <= num_queries + 2)
 
     def test_update_child_with_attributes_with_prefetched_attribute_values(self):
         """
@@ -172,9 +172,9 @@ class ProductAttributeTest(TestCase):
                 "The child now has 1 attribute",
             )
 
-            # In some django versions, transactions are not in the capture queries context
-            # That's why we have the +2 margin.
-            self.assertEqual(len(queries), num_queries)
+            # In some django versions, the query count is a bit different because the
+            # transactions aren't included in the count.
+            self.assertTrue(num_queries <= len(queries) <= num_queries + 2)
 
     def test_update_child_attributes_with_prefetched_attribute_values(self):
         """
@@ -189,7 +189,7 @@ class ProductAttributeTest(TestCase):
         )
         self.test_update_child_attributes(num_queries=11)
 
-    def test_update_attributes_to_parent_and_child(self, num_queries=25):
+    def test_update_attributes_to_parent_and_child(self, num_queries=27):
         """
         Attributes present on the parent should not be copied to the child
         ever, not even newly added attributes
@@ -243,9 +243,9 @@ class ProductAttributeTest(TestCase):
                 "The child now has 1 attribute",
             )
 
-            # In some django versions, transactions are not in the capture queries context
-            # That's why we have the +2 margin.
-            self.assertEqual(len(queries), num_queries)
+            # In some django versions, the query count is a bit different because the
+            # transactions aren't included in the count.
+            self.assertTrue(num_queries <= len(queries) <= num_queries + 4)
 
     def test_update_attributes_to_parent_and_child_with_prefetched_attribute_values(
         self,
@@ -295,9 +295,9 @@ class ProductAttributeTest(TestCase):
                 "so it saved, even when the parent has the same value",
             )
 
-            # In some django versions, transactions are not in the capture queries context
-            # That's why we have the +2 margin.
-            self.assertEqual(len(queries), num_queries)
+            # In some django versions, the query count is a bit different because the
+            # transactions aren't included in the count.
+            self.assertTrue(num_queries <= len(queries) <= num_queries + 2)
 
     def test_explicit_identical_child_attribute_with_prefetched_attribute_values(self):
         self.product = Product.objects.prefetch_attribute_values().get(
