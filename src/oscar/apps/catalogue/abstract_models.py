@@ -720,6 +720,25 @@ class AbstractProduct(models.Model):
 
     get_product_class.short_description = _("Product class")
 
+    def get_public_children(self):
+        """
+        Retrieve public children of the product efficiently.
+
+        This method optimizes querying for public children by utilizing prefetched data
+        when available. It's particularly useful in scenarios where multiple products
+        are being iterated over and their public children need to be accessed, as it
+        can significantly reduce the number of database queries.
+
+        Returns:
+            QuerySet or list: A queryset of public children if not prefetched,
+                              or a list of prefetched public children.
+        """
+        if hasattr(self, "_prefetched_public_children"):
+            return self._prefetched_public_children
+
+        # pylint: disable=no-member
+        return self.children.public()
+
     @deprecated
     def get_is_discountable(self):
         """
@@ -733,15 +752,31 @@ class AbstractProduct(models.Model):
     def get_categories(self):
         """
         Return a product's public categories or parent's if there is a parent product.
+        It also supports prefetching by checking whether _prefetched_browsable_categories
+        is been set as attribute on the product.
         """
         if self.is_child:
+            # It's prefetched with the prefetch_browsable_categories method.
+            if hasattr(self.parent, "_prefetched_browsable_categories"):
+                return self.parent._prefetched_browsable_categories
             return self.parent.categories.browsable()
         else:
+            # It's prefetched with the prefetch_browsable_categories method.
+            if hasattr(self, "_prefetched_browsable_categories"):
+                return self._prefetched_browsable_categories
             return self.categories.browsable()
 
     get_categories.short_description = _("Categories")
 
     def get_attribute_values(self):
+        # This means the prefetch_attribute_values method was called. and thus no database queries are needed.
+        if hasattr(self, "_prefetched_attribute_values"):
+            if self.is_child:
+                return list(self._prefetched_attribute_values) + list(
+                    self.parent._prefetched_parent_attribute_values
+                )
+            return self._prefetched_attribute_values
+
         if not self.pk:
             return self.attribute_values.model.objects.none()
 

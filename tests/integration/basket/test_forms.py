@@ -18,9 +18,11 @@ from oscar.test.factories import (
     OptionFactory,
     RangeFactory,
 )
+from oscar.test.factories.catalogue import ProductFactory
 
 Line = get_model("basket", "Line")
 Option = get_model("catalogue", "Option")
+Product = get_model("catalogue", "Product")
 
 
 class TestBasketLineForm(TestCase):
@@ -248,6 +250,41 @@ class TestAddToBasketForm(TestCase):
             "This product cannot be added to the basket because a price "
             "could not be determined for it.",
         )
+
+    def test_add_to_basket_with_children(self):
+        parent = ProductFactory(structure=Product.PARENT)
+        for i in range(5):
+            if i == 0:
+                ProductFactory(structure=Product.CHILD, parent=parent, is_public=False)
+                continue
+            ProductFactory(structure=Product.CHILD, parent=parent)
+
+        random_child = ProductFactory(
+            structure=Product.CHILD, parent=ProductFactory(structure=Product.PARENT)
+        )
+
+        basket = factories.BasketFactory()
+
+        form = forms.AddToBasketForm(basket=basket, product=parent)
+        self.assertEqual(len(form.fields["child_id"].choices), 4)
+        choices_child_ids = [choice[0] for choice in form.fields["child_id"].choices]
+        self.assertEqual(
+            choices_child_ids, [child.id for child in parent.get_public_children()]
+        )
+
+        # Without child id, it should not be valid
+        data = {"quantity": 1}
+        form = forms.AddToBasketForm(basket=basket, product=parent, data=data)
+        self.assertFalse(form.is_valid())
+
+        data = {"quantity": 1, "child_id": parent.children.first().id}
+        form = forms.AddToBasketForm(basket=basket, product=parent, data=data)
+        self.assertTrue(form.is_valid())
+
+        # With random child id, it should not be valid
+        data = {"quantity": 1, "child_id": random_child.id}
+        form = forms.AddToBasketForm(basket=basket, product=parent, data=data)
+        self.assertFalse(form.is_valid())
 
 
 class TestAddToBasketWithOptionForm(TestCase):
