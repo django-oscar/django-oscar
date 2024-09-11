@@ -54,14 +54,6 @@ jobs:
         pip install -e .[test]
         pip install -r requirements.txt
         pip install "django~=${{ matrix.django-version }}.0"
-    - name: Run migrations
-      env:
-        DATABASE_USER: postgres
-        DATABASE_PASSWORD: postgres
-        DATABASE_HOST: localhost
-        DATABASE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
-      run: |
-        python sandbox/manage.py migrate
     - name: Run tests
       env:
         DATABASE_USER: postgres
