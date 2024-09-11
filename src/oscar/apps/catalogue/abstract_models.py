@@ -11,6 +11,7 @@ from django.core.exceptions import (
     ValidationError,
     ObjectDoesNotExist,
 )
+from django.core.validators import MinValueValidator
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
@@ -426,12 +427,15 @@ class AbstractProduct(models.Model):
     )
     meta_description = models.TextField(_("Meta description"), blank=True, null=True)
 
-    priority = models.PositiveSmallIntegerField(
+    priority = models.SmallIntegerField(
         _("Priority"),
         null=False,
         default=0,
         db_index=True,
-        help_text=_("The highest priority products are shown first"),
+        help_text=_(
+            "The highest priority products are shown first, use -1 to make products less important"
+        ),
+        validators=[MinValueValidator(-1)],
     )
 
     #: "Kind" of product, e.g. T-Shirt, Book, etc.
