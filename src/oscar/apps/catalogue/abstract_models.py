@@ -426,6 +426,14 @@ class AbstractProduct(models.Model):
     )
     meta_description = models.TextField(_("Meta description"), blank=True, null=True)
 
+    priority = models.PositiveSmallIntegerField(
+        _("Priority"),
+        null=False,
+        default=0,
+        db_index=True,
+        help_text=_("The highest priority products are shown first"),
+    )
+
     #: "Kind" of product, e.g. T-Shirt, Book, etc.
     #: None for child products, they inherit their parent's product class
     product_class = models.ForeignKey(
