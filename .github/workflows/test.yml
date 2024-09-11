@@ -54,6 +54,9 @@ jobs:
         pip install -e .[test]
         pip install -r requirements.txt
         pip install "django~=${{ matrix.django-version }}.0"
+    - name: Run migrations
+        run: |
+          ./sandbox/manage.py migrate
     - name: Run tests
       env:
         DATABASE_USER: postgres
