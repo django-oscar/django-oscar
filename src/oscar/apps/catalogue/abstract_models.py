@@ -432,9 +432,7 @@ class AbstractProduct(models.Model):
         null=False,
         default=0,
         db_index=True,
-        help_text=_(
-            "The highest priority products are shown first"
-        ),
+        help_text=_("The highest priority products are shown first"),
         validators=[MinValueValidator(-1)],
     )
 
