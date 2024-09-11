@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             field=models.SmallIntegerField(
                 db_index=True,
                 default=0,
-                help_text="The highest priority products are shown first, use -1 to make products less important",
+                help_text="The highest priority products are shown first",
                 validators=[django.core.validators.MinValueValidator(-1)],
                 verbose_name="Priority",
             ),
