@@ -54,9 +54,6 @@ jobs:
         pip install -e .[test]
         pip install -r requirements.txt
         pip install "django~=${{ matrix.django-version }}.0"
-    - name: Run migrations
-      run: |
-        ./sandbox/manage.py migrate
     - name: Run tests
       env:
         DATABASE_USER: postgres
@@ -64,6 +61,7 @@ jobs:
         DATABASE_HOST: localhost
         DATABASE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
       run: |
+        ./sandbox/manage.py migrate
         coverage run --parallel -m pytest -x
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4.5.0
