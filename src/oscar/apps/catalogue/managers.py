@@ -199,19 +199,6 @@ class ProductQuerySet(models.query.QuerySet):
             .annotate(code=F("attribute__code"))
         )
 
-        # Subquery to get the child's attribute codes
-        child_attribute_codes = ProductAttributeValue.objects.filter(
-            product=OuterRef("product__children")
-        ).values("attribute__code")
-
-        parent_prefetch_queryset = prefetch_queryset.exclude(
-            Exists(
-                child_attribute_codes.filter(
-                    attribute__code=OuterRef("attribute__code")
-                )
-            )
-        )
-
         # pylint: disable=not-callable
         queryset = self.select_related(
             "product_class", "parent__product_class"
@@ -223,7 +210,7 @@ class ProductQuerySet(models.query.QuerySet):
             ),
             Prefetch(
                 "parent__attribute_values",
-                queryset=parent_prefetch_queryset,
+                queryset=prefetch_queryset,
                 to_attr="_prefetched_parent_attribute_values",
             ),
             # The AttributesQuerysetCache retrieves the attributes for the product class, prefetch those too.
@@ -246,7 +233,7 @@ class ProductQuerySet(models.query.QuerySet):
                 ),
                 Prefetch(
                     "children__parent__attribute_values",
-                    queryset=parent_prefetch_queryset,
+                    queryset=prefetch_queryset,
                     to_attr="_prefetched_parent_attribute_values",
                 ),
             )

@@ -3,7 +3,11 @@ import pytest
 from django.test import TestCase
 
 from oscar.apps.catalogue.models import Product
-from oscar.test.factories import ProductFactory, ProductAttributeValueFactory
+from oscar.test.factories import (
+    ProductFactory,
+    ProductAttributeValueFactory,
+    ProductAttributeFactory,
+)
 
 
 @pytest.mark.django_db
@@ -90,12 +94,13 @@ class ProductQuerysetPrefetchTestCase(TestCase):
 
         # With prefetching, this should result in just 4 queries
         # (1) - for getting all products with their attribute values
-        # (1) - for getting all the value_multi_option (m2m relation)
         # (1) - for getting all the attribute values for the product itself
+        # (1) - for getting all the value_multi_option for above attribute values (m2m relation)
         # (1) - for getting all the attribute values for the parent product
+        # (1) - for getting all the value_multi_option for above attribute values (m2m relation)
         # (1) - To get the attributes from the product class
         # (1) - To get the attribute from the parents' product class
-        with self.assertNumQueries(6):
+        with self.assertNumQueries(7):
             products = Product.objects.prefetch_attribute_values()
             for product in products:
                 list(product.get_attribute_values())
@@ -159,14 +164,15 @@ class ProductQuerysetPrefetchTestCase(TestCase):
         # With prefetching, but not yet including the child attributes, it's less queries, but still quite
         # a few as it will need to do a query for each child product's attribute values.
         # (1) - for getting all products with their attribute values
-        # (1) - for getting all the value_multi_option (m2m relation)
         # (1) - for getting all the attribute values for the product itself
+        # (1) - for getting all the value_multi_option for the above attribute values (m2m relation)
         # (1) - for getting all the attribute values for the parent product
+        # (1) - for getting all the value_multi_option for the above attribute values (m2m relation)
         # (1) - To get the attributes from the product class
         # (1) - To get the attribute from the parents' product class
         # (30) - 5 for getting the parent of the children (again, django is smart enough to cache this),
         # + 25 for getting the attribute values for the children (including the parent's attribute values)
-        with self.assertNumQueries(36):
+        with self.assertNumQueries(37):
             products = Product.objects.prefetch_attribute_values()
 
             for product in products:
@@ -175,18 +181,20 @@ class ProductQuerysetPrefetchTestCase(TestCase):
                     for child in product.children.all():
                         list(child.get_attribute_values())
 
-        # With prefetching, including the child attributes, it should result in just 8 queries
+        # With prefetching, including the child attributes, it should result in just 12 queries
         # (1) - for getting all products with their attribute values
-        # (1) - for getting all the value_multi_option (m2m relation)
         # (1) - for getting all the attribute values for the product itself
+        # (1) - for getting all the value_multi_option (m2m relation) for the product
         # (1) - for getting all the attribute values for the parent product
+        # (1) - for getting all the value_multi_option (m2m relation) for the parent product
         # (1) - To get the attributes from the product class
-        # (1) - To get the attribute from the parents' product class
+        # (1) - To get the attributes from the parents' product class
         # (1) - for getting the children of the parents
         # (1) - for getting all the attribute values for the child
-        # (1) - for getting all the attribute values for the parent of the child
-        # (1) - for getting all the value_multi_option for the parent of the child
-        with self.assertNumQueries(10):
+        # (1) - for getting all the value_multi_option (m2m relation) for the child
+        # (1) - for getting all the attribute values for the parent of the child (which is the original product)
+        # (1) - for getting all the value_multi_option (m2m relation) for the parent of the child
+        with self.assertNumQueries(12):
             products = Product.objects.prefetch_attribute_values(
                 include_parent_children_attributes=True
             )
@@ -245,3 +253,78 @@ class ProductQuerysetPrefetchTestCase(TestCase):
                         self.assertEqual(
                             combined_attr_codes, own_attr_codes.union(child_attr_codes)
                         )
+
+    def test_get_attribute_values_prefetch_specific_child_behavior(self):
+        parent = ProductFactory(structure="parent", stockrecords=[])
+        attr1 = ProductAttributeFactory(name="attr1", code="attr1", type="text")
+        attr2 = ProductAttributeFactory(name="attr2", code="attr2", type="text")
+        attr3 = ProductAttributeFactory(name="attr3", code="attr3", type="text")
+
+        # Assign all attributes to parent with specific values
+        ProductAttributeValueFactory(
+            product=parent, attribute=attr1, value_text="parent_attr1"
+        )
+        ProductAttributeValueFactory(
+            product=parent, attribute=attr2, value_text="parent_attr2"
+        )
+        ProductAttributeValueFactory(
+            product=parent, attribute=attr3, value_text="parent_attr3"
+        )
+
+        # Create 3 child products
+        child1 = ProductFactory(structure="child", parent=parent, stockrecords=[])
+        child2 = ProductFactory(structure="child", parent=parent, stockrecords=[])
+        child3 = ProductFactory(structure="child", parent=parent, stockrecords=[])
+
+        # Assign attributes to children with specific values:
+        ProductAttributeValueFactory(
+            product=child1, attribute=attr1, value_text="child1_attr1"
+        )
+        ProductAttributeValueFactory(
+            product=child2, attribute=attr2, value_text="child2_attr2"
+        )
+        ProductAttributeValueFactory(
+            product=child3, attribute=attr3, value_text="child3_attr3"
+        )
+
+        prefetched_products = Product.objects.prefetch_attribute_values()
+        # No .get() cause then the prefetch is gone.
+        parent = next(p for p in prefetched_products if p.id == parent.id)
+        prefetched_child1 = next(p for p in prefetched_products if p.id == child1.id)
+        prefetched_child2 = next(p for p in prefetched_products if p.id == child2.id)
+        prefetched_child3 = next(p for p in prefetched_products if p.id == child3.id)
+
+        # Test child1
+        child1_attr_values = {
+            av.attribute.code: av.value_text
+            for av in prefetched_child1.get_attribute_values()
+        }
+        self.assertEqual(
+            child1_attr_values["attr1"], "child1_attr1"
+        )  # Its own override
+        self.assertEqual(child1_attr_values["attr2"], "parent_attr2")  # From parent
+        self.assertEqual(child1_attr_values["attr3"], "parent_attr3")  # From parent
+
+        # Test child2
+        child2_attr_values = {
+            av.attribute.code: av.value_text
+            for av in prefetched_child2.get_attribute_values()
+        }
+        print("child2_attr_values: ", child2_attr_values, "\n")
+        self.assertEqual(child2_attr_values["attr1"], "parent_attr1")  # From parent
+        self.assertEqual(
+            child2_attr_values["attr2"], "child2_attr2"
+        )  # Its own override
+        self.assertEqual(child2_attr_values["attr3"], "parent_attr3")  # From parent
+
+        # Test child3
+        child3_attr_values = {
+            av.attribute.code: av.value_text
+            for av in prefetched_child3.get_attribute_values()
+        }
+        print("child3_attr_values: ", child3_attr_values, "\n")
+        self.assertEqual(child3_attr_values["attr1"], "parent_attr1")  # From parent
+        self.assertEqual(child3_attr_values["attr2"], "parent_attr2")  # From parent
+        self.assertEqual(
+            child3_attr_values["attr3"], "child3_attr3"
+        )  # Its own override
