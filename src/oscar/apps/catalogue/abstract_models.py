@@ -782,9 +782,19 @@ class AbstractProduct(models.Model):
         # This means the prefetch_attribute_values method was called. and thus no database queries are needed.
         if hasattr(self, "_prefetched_attribute_values"):
             if self.is_child:
-                return list(self._prefetched_attribute_values) + list(
-                    self.parent._prefetched_parent_attribute_values
-                )
+                # Combine parent and child attribute values where the child values override parent values.
+                # This can not be done in the prefetch itself, because prefetches are separate queries and have no
+                # knowledge of the base query where the prefetch happens on.
+                attribute_values = {
+                    item.attribute.code: item
+                    for item in self.parent._prefetched_parent_attribute_values
+                }
+
+                # Update (override) the dictionary with child attribute values
+                for item in self._prefetched_attribute_values:
+                    attribute_values[item.attribute.code] = item
+
+                return list(attribute_values.values())
             return self._prefetched_attribute_values
 
         if not self.pk:
