@@ -55,7 +55,7 @@ install_requires = [
 ]
 
 sorl_thumbnail_version = "sorl-thumbnail>=12.10.0,<13.0.0"
-easy_thumbnails_version = "easy-thumbnails>=2.9,<3.0"
+easy_thumbnails_version = "easy-thumbnails>=2.9,<2.10"
 
 docs_requires = [
     "Sphinx>=5.0",
