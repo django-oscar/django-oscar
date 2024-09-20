@@ -52,7 +52,7 @@ Excluding categories from ranges
 It's now also possible to exclude a category from a range.
 If you would have to select hundreds of categories in the included categories the queries would become really slow and it required lots of maintenance from the site owner to keep all new categories in this list.
 
-
+==================
 What's Changed
 ==================
 - Bump the github_actions group with 5 updates by @dependabot in https://github.com/django-oscar/django-oscar/pull/4244
@@ -99,8 +99,10 @@ What's Changed
 - [FEAT] Auto select existing user when an account already exists by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4325
 - Turn off converting urls in tinymce by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4343
 
+==================
 New Contributors
 ==================
+
 - @JulienPalard made their first contribution in https://github.com/django-oscar/django-oscar/pull/4257
 - @sgerrand made their first contribution in https://github.com/django-oscar/django-oscar/pull/4259
 - @svandeneertwegh made their first contribution in https://github.com/django-oscar/django-oscar/pull/4269
