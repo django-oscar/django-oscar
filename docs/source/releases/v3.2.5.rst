@@ -24,9 +24,9 @@ What's new in Oscar 3.2.5?
 There were a couple of major changes in django-oscar 3.2.5
 
 
-==========
+
 Search app
-==========
+~~~~~~~~~~
 
 The search app was completely overhauled, haystack was upgraded to the newest version and we removed the search handlers and are now working with the haystack class based views.
 
@@ -38,23 +38,21 @@ The catalogue views (CatalogueView and ProductCategoryView) definitions are now 
 
 See: https://github.com/django-oscar/django-oscar/commit/45adecde1945098dae75599d8cbcc35b56a0608e for everything that has changed.
 
-================
 Stock allocation
-================
+~~~~~~~~~~~~~~~~
 
 Stock allocations are now also tracked on the Order.Line model. It was possible to cancel an order so the stock was re-allocated to the stock record, then manually set the order to paid and then re-cancel the order which will re-allocate the stock again which has not been allocated again after manually setting the order to paid.
 
 
-================================
+
 Excluding categories from ranges
-================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It's now also possible to exclude a category from a range.
 If you would have to select hundreds of categories in the included categories the queries would become really slow and it required lots of maintenance from the site owner to keep all new categories in this list.
 
-==================
 What's Changed
-==================
+~~~~~~~~~~~~~~
 - Bump the github_actions group with 5 updates by @dependabot in https://github.com/django-oscar/django-oscar/pull/4244
 - Use new haystack views and remove the now unused search handlers by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4187
 - django.utils.timezone.utc was removed in Django 5.0 by @cclauss in https://github.com/django-oscar/django-oscar/pull/4231
@@ -99,9 +97,9 @@ What's Changed
 - [FEAT] Auto select existing user when an account already exists by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4325
 - Turn off converting urls in tinymce by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4343
 
-==================
+
 New Contributors
-==================
+~~~~~~~~~~~~~~~~
 
 - @JulienPalard made their first contribution in https://github.com/django-oscar/django-oscar/pull/4257
 - @sgerrand made their first contribution in https://github.com/django-oscar/django-oscar/pull/4259
