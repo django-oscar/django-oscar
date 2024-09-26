@@ -251,6 +251,10 @@ class AbstractCategory(MP_Node):
         # Correctly populate ancestors_are_public
         self.refresh_from_db()
 
+    def get_public_children(self):
+        children = self.get_children()
+        return children.filter(is_public=True)
+
     @classmethod
     def fix_tree(cls, destructive=False, fix_paths=False):
         super().fix_tree(destructive, fix_paths)
