@@ -2,7 +2,7 @@ from oscar.apps.address.abstract_models import AbstractPartnerAddress
 from oscar.apps.partner.abstract_models import (
     AbstractPartner,
     AbstractStockAlert,
-    AbstractStockRecord,
+    AbstractStockRecord, AbstractArea,
 )
 from oscar.core.loading import is_model_registered
 
@@ -39,3 +39,10 @@ if not is_model_registered("partner", "StockAlert"):
         pass
 
     __all__.append("StockAlert")
+
+if not is_model_registered("area", "Area"):
+
+    class Area(AbstractArea):
+        pass
+
+    __all__.append("Area")

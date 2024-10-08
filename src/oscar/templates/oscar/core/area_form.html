@@ -1,0 +1,40 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block title %}
+    {{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:core-area-list' %}">{% trans "Area" %}</a>
+            </li>
+            <li class="breadcrumb-item">
+                {{ title }}
+            </li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block headertext %}
+    {{ title }}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="card card-body">
+        <form method="post" enctype="multipart/form-data" class="form-horizontal">
+            {% csrf_token %}
+            {% include 'oscar/dashboard/partials/form_fields.html' with form=form %}
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-2">
+                    <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock dashboard_content %}

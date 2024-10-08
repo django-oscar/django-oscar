@@ -22,20 +22,35 @@ class PartnersDashboardConfig(OscarDashboardConfig):
         self.delete_view = get_class("dashboard.partners.views", "PartnerDeleteView")
 
         self.user_link_view = get_class(
-            "dashboard.partners.views", "PartnerUserLinkView"
+            "dashboard.partners.views",
+            "PartnerUserLinkView"
         )
         self.user_unlink_view = get_class(
-            "dashboard.partners.views", "PartnerUserUnlinkView"
+            "dashboard.partners.views",
+            "PartnerUserUnlinkView"
         )
         self.user_create_view = get_class(
-            "dashboard.partners.views", "PartnerUserCreateView"
+            "dashboard.partners.views",
+            "PartnerUserCreateView"
         )
         self.user_select_view = get_class(
-            "dashboard.partners.views", "PartnerUserSelectView"
+            "dashboard.partners.views",
+            "PartnerUserSelectView"
         )
         self.user_update_view = get_class(
-            "dashboard.partners.views", "PartnerUserUpdateView"
+            "dashboard.partners.views",
+            "PartnerUserUpdateView"
         )
+        self.area_list_view = get_class("dashboard.partners.views",
+                                        "AreaListView")
+        self.area_create_view = get_class(
+            "dashboard.partners.views", "AreaCreateView"
+        )
+        self.area_update_view = get_class(
+            "dashboard.partners.views", "AreaUpdateView"
+        )
+        self.area_delete_view = get_class(
+            'dashboard.partners.views', 'AreaDeleteView')
 
     def get_urls(self):
         urls = [
@@ -67,6 +82,24 @@ class PartnersDashboardConfig(OscarDashboardConfig):
                 "<int:partner_pk>/users/<int:user_pk>/update/",
                 self.user_update_view.as_view(),
                 name="partner-user-update",
+            ),
+            path(
+                "areas/", self.area_list_view.as_view(), name="core-area-list"
+            ),
+            path(
+                "area/create/",
+                self.area_create_view.as_view(),
+                name="core-area-create",
+            ),
+            path(
+                "area/<int:pk>/update/",
+                self.area_update_view.as_view(),
+                name="core-area-update",
+            ),
+            path(
+                "area/<int:pk>/delete/",
+                self.area_delete_view.as_view(),
+                name="core-area-delete",
             ),
         ]
         return self.post_process_urls(urls)
