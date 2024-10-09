@@ -241,9 +241,6 @@ class MapWidget(TextInput):
         return f"{input_html}{map_html}"
 
 
-#     AIzaSyDAmC_TzhcF0FHiYGlvbABCRmV4__krq3M
-#  center: {{ lat: 25.276987, lng: 55.296249 }}, Dubai
-
 
 class AreaForm(forms.ModelForm):
     kml_file = forms.FileField(required=False, label="Upload KML File")
