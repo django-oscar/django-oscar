@@ -12,6 +12,16 @@ from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
 
 
+class AbstractArea(models.Model):
+    name = models.CharField(_("Name"), max_length=255, null=True, blank=True)
+    location = models.URLField(max_length=300, null=True, blank=True)
+    coordinates = models.JSONField(blank=True, null=True)
+    is_active = models.BooleanField(_("Is active"), default=True)
+
+    def __str__(self):
+        return self.name
+
+
 class AbstractPartner(models.Model):
     """
     A fulfilment partner. An individual or company who can fulfil products.
@@ -23,7 +33,8 @@ class AbstractPartner(models.Model):
     """
 
     code = AutoSlugField(
-        _("Code"), max_length=128, unique=True, db_index=True, populate_from="name"
+        _("Code"), max_length=128, unique=True, db_index=True,
+        populate_from="name"
     )
     name = models.CharField(
         pgettext_lazy("Partner's name", "Name"),
@@ -35,7 +46,8 @@ class AbstractPartner(models.Model):
     #: A partner can have users assigned to it. This is used
     #: for access modelling in the permission-based dashboard
     users = models.ManyToManyField(
-        AUTH_USER_MODEL, related_name="partners", blank=True, verbose_name=_("Users")
+        AUTH_USER_MODEL, related_name="partners", blank=True,
+        verbose_name=_("Users")
     )
 
     @property
@@ -138,7 +150,8 @@ class AbstractStockRecord(models.Model):
     #: stock system.  A typical stock update process will set the
     #: :py:attr:`.num_in_stock` variable to a new value and reset
     #: :py:attr:`.num_allocated` to zero.
-    num_allocated = models.IntegerField(_("Number allocated"), blank=True, null=True)
+    num_allocated = models.IntegerField(_("Number allocated"), blank=True,
+                                        null=True)
 
     #: Threshold for low-stock alerts.  When stock goes beneath this threshold,
     #: an alert is triggered so warehouse managers can order more.
@@ -148,7 +161,8 @@ class AbstractStockRecord(models.Model):
 
     # Date information
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
-    date_updated = models.DateTimeField(_("Date updated"), auto_now=True, db_index=True)
+    date_updated = models.DateTimeField(_("Date updated"), auto_now=True,
+                                        db_index=True)
 
     def __str__(self):
         msg = "Partner: %s, product: %s" % (
@@ -234,7 +248,8 @@ class AbstractStockRecord(models.Model):
         if not self.can_track_allocations:
             return
         if not self.is_allocation_consumption_possible(quantity):
-            raise InvalidStockAdjustment(_("Invalid stock consumption request"))
+            raise InvalidStockAdjustment(
+                _("Invalid stock consumption request"))
 
         # send the pre save signal
         self.pre_save_signal()
@@ -266,7 +281,8 @@ class AbstractStockRecord(models.Model):
         (
             self.__class__.objects.filter(pk=self.pk).update(
                 num_allocated=Coalesce(F("num_allocated"), 0)
-                - Least(Coalesce(F("num_allocated"), 0), quantity),
+                              - Least(Coalesce(F("num_allocated"), 0),
+                                      quantity),
             )
         )
 

@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.utils import normalise_email
+from oscar.apps.partner.models import Area
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_classes, get_model
 from oscar.views import sort_queryset
@@ -83,7 +84,8 @@ class PartnerCreateView(generic.CreateView):
 
     def get_success_url(self):
         messages.success(
-            self.request, _("Partner '%s' was created successfully.") % self.object.name
+            self.request,
+            _("Partner '%s' was created successfully.") % self.object.name
         )
         return reverse("dashboard:partner-list")
 
@@ -131,7 +133,8 @@ class PartnerDeleteView(generic.DeleteView):
 
     def get_success_url(self):
         messages.success(
-            self.request, _("Partner '%s' was deleted successfully.") % self.object.name
+            self.request,
+            _("Partner '%s' was deleted successfully.") % self.object.name
         )
         return reverse("dashboard:partner-list")
 
@@ -147,7 +150,8 @@ class PartnerUserCreateView(generic.CreateView):
     form_class = NewUserForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.partner = get_object_or_404(Partner, pk=kwargs.get("partner_pk", None))
+        self.partner = get_object_or_404(Partner,
+                                         pk=kwargs.get("partner_pk", None))
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -163,7 +167,8 @@ class PartnerUserCreateView(generic.CreateView):
 
     def get_success_url(self):
         name = self.object.get_full_name() or self.object.email
-        messages.success(self.request, _("User '%s' was created successfully.") % name)
+        messages.success(self.request,
+                         _("User '%s' was created successfully.") % name)
         return reverse("dashboard:partner-list")
 
 
@@ -173,7 +178,8 @@ class PartnerUserSelectView(generic.ListView):
     context_object_name = "users"
 
     def dispatch(self, request, *args, **kwargs):
-        self.partner = get_object_or_404(Partner, pk=kwargs.get("partner_pk", None))
+        self.partner = get_object_or_404(Partner,
+                                         pk=kwargs.get("partner_pk", None))
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -292,7 +298,8 @@ class PartnerUserUpdateView(generic.UpdateView):
     def get_object(self, queryset=None):
         self.partner = get_object_or_404(Partner, pk=self.kwargs["partner_pk"])
         return get_object_or_404(
-            User, pk=self.kwargs["user_pk"], partners__pk=self.kwargs["partner_pk"]
+            User, pk=self.kwargs["user_pk"],
+            partners__pk=self.kwargs["partner_pk"]
         )
 
     def get_context_data(self, **kwargs):
@@ -304,5 +311,96 @@ class PartnerUserUpdateView(generic.UpdateView):
 
     def get_success_url(self):
         name = self.object.get_full_name() or self.object.email
-        messages.success(self.request, _("User '%s' was updated successfully.") % name)
+        messages.success(self.request,
+                         _("User '%s' was updated successfully.") % name)
         return reverse("dashboard:partner-list")
+
+
+# Create your views here.
+from django.shortcuts import get_object_or_404
+
+from oscar.apps.dashboard.partners.forms import AreaForm, AreaSearchForm
+from django.views import generic
+from django.urls import reverse
+
+from django.utils.translation import gettext_lazy as _
+
+
+class AreaCreateView(generic.CreateView):
+    template_name = "oscar/core/area_form.html"
+    model = Area
+    form_class = AreaForm
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx["title"] = _("Add a new area")
+        return ctx
+
+    def get_object(self):
+        return None
+
+    def get_success_url(self):
+        return reverse("dashboard:core-area-list")
+
+
+class AreaUpdateView(generic.UpdateView):
+    template_name = "oscar/core/area_form.html"
+    model = Area
+    form_class = AreaForm
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx["title"] = _("Update area '%s'") % self.object.name
+        return ctx
+
+    def get_object(self):
+        area = get_object_or_404(Area, pk=self.kwargs["pk"])
+        return area
+
+    def get_success_url(self):
+        return reverse("dashboard:core-area-list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if 'kml_file' in self.request.FILES:
+            cleaned_data = form.clean()
+            self.object.coordinates = cleaned_data['polygon_coordinates']
+            self.object.save()
+
+        return response
+
+
+class AreaListView(generic.ListView):
+    template_name = "oscar/core/area_list.html"
+    context_object_name = "areas"
+    form_class = AreaSearchForm
+
+    def get_queryset(self):
+        queryset = Area.objects.all()
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return queryset
+        data = self.form.cleaned_data
+        name = data.get('name')
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx["title"] = _("Areas")
+        ctx["form"] = self.form
+        return ctx
+
+
+class AreaDeleteView(generic.DeleteView):
+    template_name = "oscar/core/area_delete.html"
+    model = Area
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx["title"] = _("Delete area '%s'") % self.object.name
+        return ctx
+
+    def get_success_url(self):
+        return reverse("dashboard:core-area-list")

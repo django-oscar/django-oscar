@@ -165,6 +165,16 @@ OSCAR_DASHBOARD_NAVIGATION = [
             # },
         ],
     },
+{
+        "label": _("Fencing"),
+        "icon": "fas fa-location-arrow",
+        "children": [
+            {
+                "label": _("Areas"),
+                "url_name": "dashboard:core-area-list",
+            },
+        ],
+    },
     {
         "label": _("Customers"),
         "icon": "fas fa-users",

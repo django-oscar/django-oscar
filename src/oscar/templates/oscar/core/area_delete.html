@@ -1,0 +1,39 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:core-area-list' %}">{% trans "Area" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Delete area?" %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block headertext %}
+    {{ title }}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        <h2>{% trans "Delete area" %}</h2>
+    </div>
+    <form method="post" class="card card-body bg-light">
+        {% csrf_token %}
+        {{ form }}
+        <p>
+            {% blocktrans with name=object.name %}Delete area <strong>{{ name }}</strong> - are you sure?{% endblocktrans %}
+        </p>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+        {% trans "or" %} <a href="{% url 'dashboard:core-area-list' %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load sorting_tags %}
+{% load i18n %}
+
+{% block title %}
+    {{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Area" %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <a href="{% url 'dashboard:core-area-create' %}" class="btn btn-primary float-right">
+            <i class="fas fa-plus-circle"></i> {% trans "Create new area" %}</a>
+        <h1>{% trans "Areas" %}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+{% block search_areas %}
+    <div class="table-header">
+        <h3><i class="fas fa-search"></i> {% trans "Search Areas" %}</h3>
+    </div>
+    <div class="card card-body">
+        <form method="get" class="form-inline">
+            {% for name, value in request.GET.items %}
+                {% if name not in form.fields %}
+                    <input type="hidden" name="{{ name }}" value="{{ value }}"/>
+                {% endif %}
+            {% endfor %}
+
+            {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}"><i class="fas fa-search"></i> {% trans "Search" %}</button>
+            <a href="{% url 'dashboard:core-area-list' %}" class="btn btn-secondary ml-2">{% trans 'Reset' %}</a>
+        </form>
+    </div>
+{% endblock %}
+
+{% if areas %}
+    <table class="table table-striped table-bordered table-hover">
+        <caption><i class="fas fa-sitemap"></i> {% trans 'Areas' %}</caption>
+        <thead>
+            <tr>
+                <th style="border-right: 4px solid #dee2e6">{% anchor 'id' _('ID') %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Location" %}</th>
+                <th>{% trans "Is Active" %}</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for area in areas %}
+                <tr>
+                    <td style="{% if area.city.color %}border-right: 4px solid {{ area.city.color }};{% endif %}">
+                        {{ area.id }}
+                    </td>
+                    <td>
+                        <a href="{% url 'dashboard:core-area-update' area.id %}">
+                            {{ area.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ area.location|default:"-" }}
+                    </td>
+
+                    <td>
+                        {% if area.is_active %}
+                            <span class="true">✔</span>
+                        {% else %}
+                            <span class="false">✘</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-toolbar">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+                                    id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false">
+                                    {% trans "Actions" %}
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item"
+                                        href="{% url 'dashboard:core-area-update' pk=area.id %}">
+                                        {% trans "Edit area" %}
+                                    </a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'dashboard:core-area-delete' pk=area.id %}">
+                                        {% trans "Delete" %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include "oscar/dashboard/partials/pagination.html" %}
+{% else %}
+    <p>{% trans "There are no areas." %}</p>
+{% endif %}
+
+<script>
+    var map;
+    var drawingManager;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 8
+        });
+
+        drawingManager = new google.maps.drawing.DrawingManager({
+            drawingMode: google.maps.drawing.OverlayType.POLYGON,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: ['polygon']
+            }
+        });
+        drawingManager.setMap(map);
+
+        google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+            var coordinates = polygon.getPath().getArray().map(function(latLng) {
+                return {lat: latLng.lat(), lng: latLng.lng()};
+            });
+            document.getElementById('id_polygon_coordinates').value = JSON.stringify(coordinates);
+        });
+    }
+</script>
+{% endblock dashboard_content %}
