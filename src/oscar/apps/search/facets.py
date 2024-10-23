@@ -1,4 +1,5 @@
 from django.conf import settings
+from oscar.core.loading import get_class
 from haystack.query import SearchQuerySet
 from haystack.exceptions import MissingDependency
 
@@ -9,6 +10,7 @@ except MissingDependency:
 
 from purl import URL
 
+is_solr_supported = get_class("search.features", "is_solr_supported")
 
 def base_sqs():
     """
@@ -92,7 +94,10 @@ class FacetMunger(object):
             is_faceted_already = field_name in self.selected_facets
 
             match = "%s:%s" % (field_name, query)
-            if match not in self.facet_counts["queries"]:
+            match_exact = (
+                f"{field_name}_exact:{query}" if is_solr_supported() else match
+            )
+            if match_exact not in self.facet_counts["queries"]:
                 # This query was not returned
                 datum = {
                     "name": field_value,
@@ -101,7 +106,7 @@ class FacetMunger(object):
                     "disabled": True,
                 }
             else:
-                count = self.facet_counts["queries"][match]
+                count = self.facet_counts["queries"][match_exact]
                 datum = {
                     "name": field_value,
                     "count": count,
