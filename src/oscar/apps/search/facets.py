@@ -12,6 +12,7 @@ from purl import URL
 
 is_solr_supported = get_class("search.features", "is_solr_supported")
 
+
 def base_sqs():
     """
     Return the base SearchQuerySet for Haystack searches.
