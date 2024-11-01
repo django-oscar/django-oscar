@@ -1,16 +1,13 @@
 import os
-import environ
 import oscar
-
-env = environ.Env()
 
 # Path helper
 location = lambda x: os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), x)
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))), x)
 
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = True
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -26,10 +23,6 @@ DATABASES = {
         'PORT': os.environ.get('DATABASE_PORT', None),
         'ATOMIC_REQUESTS': True
     }
-}
-
-CACHES = {
-    'default': env.cache(default='locmemcache://'),
 }
 
 
@@ -117,7 +110,7 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = env.str('SECRET_KEY', default='UajFCuyjDKmWHe29neauXzHi9eZoRXr6RMbT5JyAdPiACBP6Cra2')
+SECRET_KEY = 'UajFCuyjDKmWHe29neauXzHi9eZoRXr6RMbT5JyAdPiACBP6Cra2'
 
 TEMPLATES = [
     {
@@ -301,7 +294,6 @@ INSTALLED_APPS = [
     'haystack',
     'treebeard',
     'sorl.thumbnail',
-    'easy_thumbnails',
     'django_tables2',
 
     # Django apps that the sandbox depends on
@@ -411,10 +403,8 @@ OSCAR_ORDER_STATUS_CASCADE = {
 
 THUMBNAIL_DEBUG = DEBUG
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
-THUMBNAIL_KVSTORE = env(
-    'THUMBNAIL_KVSTORE',
-    default='sorl.thumbnail.kvstores.cached_db_kvstore.KVStore')
-THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
+THUMBNAIL_REDIS_URL = None
 
 # easy-thumbnail. See https://github.com/SmileyChris/easy-thumbnails/issues/641#issuecomment-2291098096
 THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
@@ -426,8 +416,8 @@ THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # Security
-SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
-SECURE_HSTS_SECONDS = env.int('SECURE_HSTS_SECONDS', default=0)
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 0
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 
