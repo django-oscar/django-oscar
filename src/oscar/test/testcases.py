@@ -18,10 +18,11 @@ def add_permissions(user, permissions):
     """
     for permission in permissions:
         app_label, __, codename = permission.partition(".")
-        perm = Permission.objects.get(
-            content_type__app_label=app_label, codename=codename
-        )
-        user.user_permissions.add(perm)
+        if codename:
+            perm = Permission.objects.get(
+                content_type__app_label=app_label, codename=codename
+            )
+            user.user_permissions.add(perm)
 
 
 class WebTestCase(WebTest):

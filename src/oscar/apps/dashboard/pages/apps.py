@@ -14,12 +14,23 @@ class PagesDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "page-list": DashboardPermission.flat_page,
+            "page-create": DashboardPermission.flat_page,
+            "page-update": DashboardPermission.flat_page,
+            "page-delete": DashboardPermission.flat_page,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.list_view = get_class("dashboard.pages.views", "PageListView")
         self.create_view = get_class("dashboard.pages.views", "PageCreateView")
         self.update_view = get_class("dashboard.pages.views", "PageUpdateView")
         self.delete_view = get_class("dashboard.pages.views", "PageDeleteView")
+        self.configure_permissions()
 
     def get_urls(self):
         """

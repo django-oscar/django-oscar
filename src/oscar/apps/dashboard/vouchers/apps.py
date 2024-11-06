@@ -14,6 +14,23 @@ class VouchersDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "voucher-list": DashboardPermission.voucher,
+            "voucher-create": DashboardPermission.voucher,
+            "voucher-update": DashboardPermission.voucher,
+            "voucher-delete": DashboardPermission.voucher,
+            "voucher-stats": DashboardPermission.voucher,
+            "voucher-set-list": DashboardPermission.voucher,
+            "voucher-set-create": DashboardPermission.voucher,
+            "voucher-set-update": DashboardPermission.voucher,
+            "voucher-set-detail": DashboardPermission.voucher,
+            "voucher-set-download": DashboardPermission.voucher,
+            "voucher-set-delete": DashboardPermission.voucher,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.list_view = get_class("dashboard.vouchers.views", "VoucherListView")
@@ -38,6 +55,7 @@ class VouchersDashboardConfig(OscarDashboardConfig):
         self.set_delete_view = get_class(
             "dashboard.vouchers.views", "VoucherSetDeleteView"
         )
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [
