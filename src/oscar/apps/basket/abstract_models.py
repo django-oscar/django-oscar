@@ -411,6 +411,8 @@ class AbstractBasket(models.Model):
         Test whether the basket contains physical products that require
         shipping.
         """
+        if not self.all_lines():
+            return True  
         for line in self.all_lines():
             if line.product.is_shipping_required:
                 return True
