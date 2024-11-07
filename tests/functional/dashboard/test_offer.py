@@ -12,7 +12,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 class TestAnAdmin(testcases.WebTestCase):
     # New version of offer tests buy using WebTest
     is_staff = True
-    permissions = DashboardPermission.get("partner_dashboard_access", "offer")
+    permissions = DashboardPermission.offer
 
     def setUp(self):
         super().setUp()
