@@ -78,6 +78,9 @@ icon class for the icon to your menu heading::
         },
     ]
 
+
+
+
 You are not restricted to use `Font Awesome`_ icons for you menu heading. Other
 web fonts will work as well as long as they support the same markup::
 
