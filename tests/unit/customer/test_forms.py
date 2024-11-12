@@ -67,3 +67,57 @@ class TestOrderSearchForm(TestCase):
                 "number__contains": "100",
             },
         )
+
+    def test_orders_descriptions(self):
+        form = OrderSearchForm(data={"date_from": "2023-01-01", "date_to": "2023-01-02", "order_number": "100"})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.description(),
+            "Orders placed between 2023-01-01 and 2023-01-02 and order number containing 100",
+        )
+
+        form = OrderSearchForm(data={"date_from": "2023-01-01", "date_to": "2023-01-02", "order_number": ""})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.description(),
+            "Orders placed between 2023-01-01 and 2023-01-02",
+        )
+
+        form = OrderSearchForm(data={"date_from": "2023-01-01", "date_to": "", "order_number": "100"})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.description(),
+            "Orders placed since 2023-01-01 and order number containing 100",
+        )
+
+        form = OrderSearchForm(data={"date_from": "2023-01-01", "date_to": "", "order_number": ""})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.description(),
+            "Orders placed since 2023-01-01",
+        )
+
+        form = OrderSearchForm(data={"date_from": "", "date_to": "2023-01-02", "order_number": "100"})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.description(),
+            "Orders placed until 2023-01-02 and order number containing 100",
+        )
+
+        form = OrderSearchForm(data={"date_from": "", "date_to": "2023-01-02", "order_number": ""})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.description(),
+            "Orders placed since 2023-01-02",
+        )
+
+        form = OrderSearchForm(data={"date_from": "", "date_to": "", "order_number": "100"})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.description(),
+            "Orders with order number containing 100",
+        )
+
+        form = OrderSearchForm(data={"date_from": "", "date_to": "", "order_number": ""})
+        self.assertTrue(form.is_valid())
+        self.assertIsNone(form.description())
