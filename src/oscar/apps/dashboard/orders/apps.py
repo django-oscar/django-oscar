@@ -13,14 +13,36 @@ class OrdersDashboardConfig(OscarDashboardConfig):
     default_permissions = [
         "is_staff",
     ]
-    permissions_map = {
-        "order-list": (["is_staff"], ["partner.dashboard_access"]),
-        "order-stats": (["is_staff"], ["partner.dashboard_access"]),
-        "order-detail": (["is_staff"], ["partner.dashboard_access"]),
-        "order-detail-note": (["is_staff"], ["partner.dashboard_access"]),
-        "order-line-detail": (["is_staff"], ["partner.dashboard_access"]),
-        "order-shipping-address": (["is_staff"], ["partner.dashboard_access"]),
-    }
+
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "order-list": (
+                DashboardPermission.order,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "order-stats": (
+                DashboardPermission.order,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "order-detail": (
+                DashboardPermission.order,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "order-detail-note": (
+                DashboardPermission.order,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "order-line-detail": (
+                DashboardPermission.order,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "order-shipping-address": (
+                DashboardPermission.order,
+                DashboardPermission.partner_dashboard_access,
+            ),
+        }
 
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
@@ -31,6 +53,7 @@ class OrdersDashboardConfig(OscarDashboardConfig):
         )
         self.line_detail_view = get_class("dashboard.orders.views", "LineDetailView")
         self.order_stats_view = get_class("dashboard.orders.views", "OrderStatsView")
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

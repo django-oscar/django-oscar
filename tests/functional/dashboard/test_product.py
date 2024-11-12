@@ -9,7 +9,7 @@ from webtest import Upload
 
 from oscar.apps.catalogue.models import Product, ProductAttribute
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from oscar.test import factories
 from oscar.test.factories import (
     CategoryFactory,
@@ -21,6 +21,7 @@ from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 ProductImage = get_model("catalogue", "ProductImage")
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 def generate_test_image():
@@ -37,13 +38,7 @@ def media_file_path(path):
 
 class ProductWebTest(WebTestCase):
     is_staff = True
-
-    def setUp(self):
-        self.user = User.objects.create_user(
-            username="testuser", email="test@email.com", password="somefancypassword"
-        )
-        self.user.is_staff = self.is_staff
-        self.user.save()
+    permissions = DashboardPermission.product
 
     def get(self, url, **kwargs):
         kwargs["user"] = self.user

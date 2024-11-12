@@ -12,9 +12,16 @@ class DashboardConfig(OscarDashboardConfig):
     verbose_name = _("Dashboard")
 
     namespace = "dashboard"
-    permissions_map = {
-        "index": (["is_staff"], ["partner.dashboard_access"]),
-    }
+
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "index": (
+                DashboardPermission.staff,
+                DashboardPermission.partner_dashboard_access,
+            ),
+        }
 
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
@@ -33,6 +40,7 @@ class DashboardConfig(OscarDashboardConfig):
         self.vouchers_app = apps.get_app_config("vouchers_dashboard")
         self.comms_app = apps.get_app_config("communications_dashboard")
         self.shipping_app = apps.get_app_config("shipping_dashboard")
+        self.configure_permissions()
 
     def get_urls(self):
         from django.contrib.auth import views as auth_views

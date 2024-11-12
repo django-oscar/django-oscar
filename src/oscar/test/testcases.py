@@ -18,10 +18,11 @@ def add_permissions(user, permissions):
     """
     for permission in permissions:
         app_label, __, codename = permission.partition(".")
-        perm = Permission.objects.get(
-            content_type__app_label=app_label, codename=codename
-        )
-        user.user_permissions.add(perm)
+        if codename:
+            perm = Permission.objects.get(
+                content_type__app_label=app_label, codename=codename
+            )
+            user.user_permissions.add(perm)
 
 
 class WebTestCase(WebTest):
@@ -92,14 +93,14 @@ class WebTestCase(WebTest):
             location = location.replace(unwanted, "")
         self.assertEqual(reverse(url_name, kwargs=kwargs), location)
 
-    def assertNoAccess(self, response):
+    def assertNoAccess(self, response, msg=None):
         self.assertContext(response)
         self.assertTrue(
-            response.status_code in (http_client.NOT_FOUND, http_client.FORBIDDEN)
+            response.status_code in (http_client.NOT_FOUND, http_client.FORBIDDEN), msg
         )
 
-    def assertIsOk(self, response):
-        self.assertEqual(http_client.OK, response.status_code)
+    def assertIsOk(self, response, msg=None):
+        self.assertEqual(http_client.OK, response.status_code, msg)
 
     def assertContext(self, response):
         self.assertTrue(response.context is not None, "No context was returned")
