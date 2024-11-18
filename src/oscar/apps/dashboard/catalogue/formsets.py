@@ -4,6 +4,8 @@ from django.forms.models import inlineformset_factory
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_classes, get_model
+from server.apps.catalogue.models import Category
+from server.apps.vendor.models import Vendor
 
 Product = get_model("catalogue", "Product")
 ProductClass = get_model("catalogue", "ProductClass")
@@ -43,7 +45,9 @@ BaseStockRecordFormSet = inlineformset_factory(
 class StockRecordFormSet(BaseStockRecordFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         self.user = user
-        self.require_user_stockrecord = not user.is_staff
+        self.require_user_stockrecord = not (
+            user.is_staff or Vendor.objects.filter(users=user).exists()
+        )
         self.product_class = product_class
 
         if not user.is_staff and "instance" in kwargs and "queryset" not in kwargs:
@@ -111,10 +115,18 @@ BaseProductCategoryFormSet = inlineformset_factory(
 
 
 class ProductCategoryFormSet(BaseProductCategoryFormSet):
-    # pylint: disable=unused-argument
     def __init__(self, product_class, user, *args, **kwargs):
-        # This function just exists to drop the extra arguments
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)  # Ensure the formset is fully initialized first
+
+        # Check if the user has an associated vendor
+        self.vendor = Vendor.objects.filter(users=user).first()
+        if not self.vendor:
+            raise ValueError("The user does not have an associated vendor.")
+
+        # Apply vendor-related queryset filtering only after initializing the formset
+        for form in self.forms:
+            form.fields['category'].queryset = Category.objects.filter(vendor=self.vendor)
+
 
     def clean(self):
         if not self.instance.is_child and self.get_num_categories() == 0:
@@ -158,10 +170,29 @@ BaseProductRecommendationFormSet = inlineformset_factory(
 
 
 class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
-    # pylint: disable=unused-argument
     def __init__(self, product_class, user, *args, **kwargs):
+        # Retrieve the vendor associated with the user
+        self.user = user
+        self.vendor = Vendor.objects.filter(users=user).first()
+        if not self.vendor:
+            raise ValueError("The user does not have an associated vendor.")
+        
+        # Initialize the formset after setting vendor
         super().__init__(*args, **kwargs)
+        
+        # Initially set an empty queryset for the recommendation field
+        for form in self.forms:
+            form.fields["recommendation"].queryset = Product.objects.none()
+            # Debug: print to confirm the initial empty state
+            # print("Initial empty recommendation queryset:", form.fields["recommendation"].queryset)
 
+        # Fetch vendor-specific products and apply to recommendation fields if available
+        vendor_products = Product.objects.filter(vendor=self.vendor)
+        if vendor_products.exists():
+            for form in self.forms:
+                form.fields["recommendation"].queryset = vendor_products
+                # Debug: print to confirm vendor-specific queryset is applied
+                # print("Vendor-specific recommendation queryset:", form.fields["recommendation"].queryset)
 
 ProductAttributesFormSet = inlineformset_factory(
     ProductClass, ProductAttribute, form=ProductAttributesForm, extra=3

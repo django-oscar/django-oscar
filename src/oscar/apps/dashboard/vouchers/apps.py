@@ -11,7 +11,7 @@ class VouchersDashboardConfig(OscarDashboardConfig):
     verbose_name = _("Vouchers dashboard")
 
     default_permissions = [
-        "is_staff",
+        # "is_staff",
     ]
 
     # pylint: disable=attribute-defined-outside-init

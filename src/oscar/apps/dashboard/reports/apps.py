@@ -11,7 +11,7 @@ class ReportsDashboardConfig(OscarDashboardConfig):
     verbose_name = _("Reports dashboard")
 
     default_permissions = [
-        "is_staff",
+        # "is_staff",
     ]
 
     # pylint: disable=attribute-defined-outside-init

@@ -11,7 +11,7 @@ class PagesDashboardConfig(OscarDashboardConfig):
     verbose_name = _("Pages dashboard")
 
     default_permissions = [
-        "is_staff",
+        # "is_staff",
     ]
 
     # pylint: disable=attribute-defined-outside-init

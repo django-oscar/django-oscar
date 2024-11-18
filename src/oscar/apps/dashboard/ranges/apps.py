@@ -11,7 +11,7 @@ class RangesDashboardConfig(OscarDashboardConfig):
     verbose_name = _("Ranges dashboard")
 
     default_permissions = [
-        "is_staff",
+        # "is_staff",
     ]
 
     # pylint: disable=attribute-defined-outside-init

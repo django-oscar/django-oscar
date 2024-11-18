@@ -9,9 +9,12 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
-
+from stores.models import Store
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views.generic import ObjectLookupView
+from server.apps.dashboard.catalogue.forms import ProductBranchFormSet
+from server.apps.vendor.mixins import VendorMixin
+from server.apps.vendor.models import Vendor
 
 (
     ProductForm,
@@ -90,8 +93,13 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        # Extract product_class from GET and pass a single value to the form
+        product_class = self.request.GET.get("product_class")
         ctx["form"] = self.form
-        ctx["productclass_form"] = self.productclass_form_class()
+        ctx["productclass_form"] = self.productclass_form_class(
+            user=self.request.user,  # Pass the user for vendor filtering
+            initial={'product_class': product_class}  # Set initial value if available
+        )
         return ctx
 
     def get_description(self, form):
