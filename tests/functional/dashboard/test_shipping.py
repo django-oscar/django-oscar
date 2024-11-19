@@ -3,11 +3,15 @@ from decimal import Decimal as D
 from django.urls import reverse
 
 from oscar.apps.shipping import models
+from oscar.core.loading import get_class
 from oscar.test.testcases import WebTestCase
+
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestShippingMethodDashboard(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.shipping_method
 
     def test_for_smoke(self):
         list_page = self.get(reverse("dashboard:shipping-method-list"))

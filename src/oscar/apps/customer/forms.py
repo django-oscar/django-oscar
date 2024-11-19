@@ -208,7 +208,7 @@ class OrderSearchForm(forms.Form):
                     "%(order_number)s"
                 )
             else:
-                desc = _("Orders placed between %(date_from)s and% (date_to)s")
+                desc = _("Orders placed between %(date_from)s and %(date_to)s")
         elif date_from:
             if order_number:
                 desc = _(

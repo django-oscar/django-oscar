@@ -13,13 +13,52 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
     default_permissions = [
         "is_staff",
     ]
-    permissions_map = _map = {
-        "catalogue-product": (["is_staff"], ["partner.dashboard_access"]),
-        "catalogue-product-create": (["is_staff"], ["partner.dashboard_access"]),
-        "catalogue-product-list": (["is_staff"], ["partner.dashboard_access"]),
-        "catalogue-product-delete": (["is_staff"], ["partner.dashboard_access"]),
-        "catalogue-product-lookup": (["is_staff"], ["partner.dashboard_access"]),
-    }
+
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "catalogue-product": (
+                DashboardPermission.product,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "catalogue-product-create": (
+                DashboardPermission.product,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "catalogue-product-list": (
+                DashboardPermission.product,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "catalogue-product-delete": (
+                DashboardPermission.product,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "catalogue-product-lookup": (
+                DashboardPermission.product,
+                DashboardPermission.partner_dashboard_access,
+            ),
+            "catalogue-product-create-child": DashboardPermission.product,
+            "stock-alert-list": DashboardPermission.stockalert,
+            "catalogue-category-list": DashboardPermission.category,
+            "catalogue-category-detail-list": DashboardPermission.category,
+            "catalogue-category-create": DashboardPermission.category,
+            "catalogue-category-create-child": DashboardPermission.category,
+            "catalogue-category-update": DashboardPermission.category,
+            "catalogue-category-delete": DashboardPermission.category,
+            "catalogue-class-create": DashboardPermission.product_class,
+            "catalogue-class-list": DashboardPermission.product_class,
+            "catalogue-class-update": DashboardPermission.product_class,
+            "catalogue-class-delete": DashboardPermission.product_class,
+            "catalogue-attribute-option-group-create": DashboardPermission.attribute_option_group,
+            "catalogue-attribute-option-group-list": DashboardPermission.attribute_option_group,
+            "catalogue-attribute-option-group-update": DashboardPermission.attribute_option_group,
+            "catalogue-attribute-option-group-delete": DashboardPermission.attribute_option_group,
+            "catalogue-option-list": DashboardPermission.option,
+            "catalogue-option-create": DashboardPermission.option,
+            "catalogue-option-update": DashboardPermission.option,
+            "catalogue-option-delete": DashboardPermission.option,
+        }
 
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
@@ -95,6 +134,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         self.option_delete_view = get_class(
             "dashboard.catalogue.views", "OptionDeleteView"
         )
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

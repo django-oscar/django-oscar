@@ -1,10 +1,14 @@
 from django.urls import reverse
 
+from oscar.core.loading import get_class
 from oscar.test.testcases import WebTestCase
+
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestVoucherListSearch(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.voucher
 
     TEST_CASES = [
         ({}, ["Not in a set"]),

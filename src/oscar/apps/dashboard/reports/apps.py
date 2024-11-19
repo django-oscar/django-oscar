@@ -14,9 +14,17 @@ class ReportsDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "reports-index": DashboardPermission.user_record,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.index_view = get_class("dashboard.reports.views", "IndexView")
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

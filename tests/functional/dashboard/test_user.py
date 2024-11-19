@@ -4,18 +4,20 @@ from django.utils.translation import gettext_lazy as _
 from webtest import AppError
 
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from oscar.test.factories import ProductAlertFactory, UserFactory
 from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 ProductAlert = get_model("customer", "ProductAlert")
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class IndexViewTests(WebTestCase):
     is_staff = True
     active_users_ids = []
     inactive_users_ids = []
+    permissions = DashboardPermission.user
 
     csrf_checks = False
 
@@ -55,6 +57,7 @@ class IndexViewTests(WebTestCase):
 
 class DetailViewTests(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.user
 
     def test_user_detail_view(self):
         response = self.get(
@@ -66,6 +69,7 @@ class DetailViewTests(WebTestCase):
 
 class TestDetailViewForStaffUser(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.user
 
     def setUp(self):
         self.customer = UserFactory(
@@ -106,6 +110,7 @@ class TestDetailViewForStaffUser(WebTestCase):
 class SearchTests(WebTestCase):
     is_staff = True
     url = reverse_lazy("dashboard:users-index")
+    permissions = DashboardPermission.user
 
     def setUp(self):
         UserFactory(
@@ -161,6 +166,7 @@ class SearchTests(WebTestCase):
 
 class ProductAlertListViewTestCase(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.user
 
     def test_list_view_get_queryset_ordering(self):
         ProductAlertFactory.create_batch(3)
