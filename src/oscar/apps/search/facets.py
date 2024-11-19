@@ -95,6 +95,7 @@ class FacetMunger(object):
             is_faceted_already = field_name in self.selected_facets
 
             match = "%s:%s" % (field_name, query)
+            # Solr expects "_exact" in field names
             match_exact = (
                 f"{field_name}_exact:{query}" if is_solr_supported() else match
             )
