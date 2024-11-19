@@ -128,7 +128,7 @@ class TestOrderSearchForm(TestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(
             form.description(),
-            "Orders placed since 2023-01-02",
+            "Orders placed until 2023-01-02",
         )
 
         form = OrderSearchForm(
