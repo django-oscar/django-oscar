@@ -143,5 +143,6 @@ class TestOrderSearchForm(TestCase):
         form = OrderSearchForm(
             data={"date_from": "", "date_to": "", "order_number": ""}
         )
-        self.assertTrue(form.is_valid())
+        # at least one field is required!
+        self.assertFalse(form.is_valid())
         self.assertIsNone(form.description())
