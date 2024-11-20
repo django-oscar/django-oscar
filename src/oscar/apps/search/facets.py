@@ -93,7 +93,6 @@ class FacetMunger(object):
         for field_value, query in facet["queries"]:
             field_name = facet["field"]
             is_faceted_already = field_name in self.selected_facets
-
             match = "%s:%s" % (field_name, query)
             # Solr expects "_exact" in field names
             match_exact = (
