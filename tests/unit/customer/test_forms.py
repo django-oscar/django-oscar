@@ -146,6 +146,4 @@ class TestOrderSearchForm(TestCase):
         # at least one field is required!
         self.assertFalse(form.is_valid())
         # if form is not valid, description = "All orders"
-        self.assertEqual(
-            form.description(),
-            "All orders")
+        self.assertEqual(form.description(), "All orders")
