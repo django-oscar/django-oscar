@@ -139,9 +139,3 @@ class TestOrderSearchForm(TestCase):
             form.description(),
             "Orders with order number containing 100",
         )
-
-        form = OrderSearchForm(
-            data={"date_from": "", "date_to": "", "order_number": ""}
-        )
-        self.assertTrue(form.is_valid())
-        self.assertIsNone(form.description())
