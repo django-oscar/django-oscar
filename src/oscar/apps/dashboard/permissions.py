@@ -1,5 +1,7 @@
 """Permissions used for different dashboard views."""
 
+import functools
+
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -167,5 +169,23 @@ class DashboardPermission:
         permissions = set()
         for arg in args:
             permissions.update(getattr(cls, arg))
+        permissions.remove("is_staff")
+        return permissions
+
+    @classmethod
+    @functools.lru_cache(maxsize=None)
+    def has_dashboard_perms(cls):
+        """
+        Retrieve set of unique permissions defined in this class excluding the
+        "is_staff" permission.
+        """
+        permissions = set(
+            [
+                permission
+                for attr in dir(cls)
+                if not attr.startswith("_") and isinstance(getattr(cls, attr), list)
+                for permission in getattr(cls, attr)
+            ]
+        )
         permissions.remove("is_staff")
         return permissions
