@@ -8,7 +8,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class TestVoucherListSearch(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.voucher
+    permissions = DashboardPermission.get("voucher")
 
     TEST_CASES = [
         ({}, ["Not in a set"]),
