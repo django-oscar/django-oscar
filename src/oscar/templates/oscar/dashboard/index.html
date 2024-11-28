@@ -32,7 +32,7 @@
         </aside>
         <div class="col-md-9">
             <div id="order_graph">
-                <div class="bar-caption"><h2>{% trans "Latest Orders (last 24 hours)" %}</h2></div>
+                <div class="bar-caption"><h2>{% trans "Latest Orders <span>(last 24 hours)" %}</span></h2></div>
                 <div class="bar-y-axis">
                     <ul>
                     {% for y_value in hourly_report_dict.y_range %}
@@ -58,7 +58,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover dashboard-tables">
             <caption><i class="fas fa-shopping-cart"></i> {% trans "Orders - Last 24 Hours" %}</caption>
             <tr>
                 <th class="col-md-10">{% trans "Total orders" %}</th>
@@ -80,7 +80,7 @@
     </div>
 
     <div class="col-md-4">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover dashboard-tables">
             <caption>
                 <a href="{% url 'dashboard:order-list' %}" class="btn btn-secondary float-right">
                     <i class="fas fa-shopping-cart"></i> {% trans "Manage" %}
@@ -107,7 +107,7 @@
     </div>
 
     <div class="col-md-4">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover dashboard-tables">
             <caption><i class="fas fa-users"></i> {% trans "Customers" %}</caption>
             <tr>
                 <th class="col-md-10">{% trans "Total customers" %}</th>
@@ -127,7 +127,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover dashboard-tables">
             <caption>
                 <div class="btn-toolbar float-right">
                     <div class="btn-group">
@@ -159,7 +159,7 @@
     </div>
     <div class="col-md-6">
         {% if user.is_staff %}
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover dashboard-tables">
             <caption><i class="fas fa-gift"></i> {% trans "Offers, vouchers" %}</caption>
             {% for offer_map in offer_maps %}
             <tr>

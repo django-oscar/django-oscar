@@ -35,7 +35,161 @@
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.eot');
+  src: local('Saans TRIAL Bold Italic'), local('SaansTRIAL-BoldItalic'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.eot');
+  src: local('Saans TRIAL Heavy'), local('SaansTRIAL-Heavy'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.eot');
+  src: local('Saans TRIAL Bold'), local('SaansTRIAL-Bold'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.eot');
+  src: local('Saans TRIAL Light Italic'), local('SaansTRIAL-LightItalic'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.eot');
+  src: local('Saans TRIAL Light'), local('SaansTRIAL-Light'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.eot');
+  src: local('Saans TRIAL Heavy Italic'), local('SaansTRIAL-HeavyItalic'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.eot');
+  src: local('Saans TRIAL SemiBold Italic'), local('SaansTRIAL-SemiBoldItalic'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.eot');
+  src: local('Saans TRIAL Regular Italic'), local('SaansTRIAL-RegularItalic'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.eot');
+  src: local('Saans TRIAL Regular'), local('SaansTRIAL-Regular'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.eot');
+  src: local('Saans TRIAL SemiBold'), local('SaansTRIAL-SemiBold'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.eot');
+  src: local('Saans TRIAL Medium'), local('SaansTRIAL-Medium'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Saans TRIAL';
+  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.eot');
+  src: local('Saans TRIAL Medium Italic'), local('SaansTRIAL-MediumItalic'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.eot?#iefix') format('embedded-opentype'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.woff2') format('woff2'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.woff') format('woff'),
+      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
 *,
 *::before,
 *::after {
@@ -17540,6 +17694,16 @@ h3.app-ico:before {
   padding: 0 0 10px 0;
   margin: 20px 0 0 0;
 }
+.page-header h1{
+ 
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 28.8px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
 
 .content-block {
   border: 1px solid #ced4da;
@@ -17757,35 +17921,46 @@ h3.app-ico:before {
   padding-right: 5px;
 }
 .navbar.navbar-accounts {
-  background-image: linear-gradient(to bottom, #343a40 0%, #212529 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 255, 0.7) 0%, #0000FF 100%);
+
   background-repeat: repeat-x;
 }
 .navbar.navbar-accounts .navbar-brand {
-  background: url("../img/ui/dashboard/logo_oscar.png") no-repeat scroll 0 0 transparent;
+  background: url("../img/ui/dashboard/jaylogo.svg") no-repeat scroll 0 0 transparent;
   text-indent: -9999px;
   display: block;
-  width: 60px;
+  background-size: contain;
+  width: 100px;
   height: 38px;
   padding: 0;
   margin: 0.5rem;
 }
 .navbar.navbar-primary {
-  border-top: 1px solid #000;
+  border-bottom: 1px solid #F5F5F5;
+  background: white;
 }
 .navbar.navbar-primary #bottom_nav_bar {
-  border-top: 1px solid #495057;
+  border-bottom: 1px solid #F5F5F5;
 }
 .navbar.navbar-primary .navbar-nav .nav-link {
   padding: 0.75rem 1rem;
-  border-left: 1px solid #495057;
-  border-right: 1px solid #212529;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+  font-family: 'Saans TRIAL', sans-serif ;
+
 }
 .navbar.navbar-primary .navbar-nav .nav-link i {
   padding-right: 12px;
 }
 .navbar.navbar-primary .navbar-nav .nav-link:hover {
-  background-image: linear-gradient(to bottom, #212529 0%, #343a40 100%);
+  background: #EF39240D;
   background-repeat: repeat-x;
+  color: #FF2E00;
 }
 
 .col-form-label.required:after {
@@ -17863,13 +18038,30 @@ h3.app-ico:before {
   font-weight: 900;
   content: "\f078";
 }
-
+.page-content{
+  background: white;
+}
 .table-header {
   display: flow-root;
+  padding: 20px ;
+  border-width: 1px 1px 0px 1px;
+  border-style: solid;
+  border-color: #CFCFFF;
+  background: linear-gradient(0deg, rgba(158, 140, 255, 0.05), rgba(158, 140, 255, 0.05)) ;
+  border-radius: 8px 8px 0 0;  
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 18px;
+  font-family: 'Saans TRIAL', sans-serif;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
 }
-
-caption,
-.table-header {
+.table-header i{
+  color: #0000FF;
+}
+caption {
   font-weight: bold;
   border: 1px solid #ced4da;
   border-bottom: none;
@@ -17920,6 +18112,18 @@ caption {
   color: #212529;
   font-weight: bold;
   text-transform: uppercase;
+}
+.bar-caption h2{
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19.2px;
+  text-align: center;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  font-family: 'Saans TRIAL', sans-serif !important;
+}
+.bar-caption h2 span{
+  color: #FF2E00;
 }
 #order_graph .bar-y-axis {
   position: absolute;
@@ -17991,12 +18195,112 @@ caption {
 
 .order-graph-details label {
   cursor: default;
-  background-color: #f8f9fa;
-  border: 1px solid #ced4da;
+  font-family: 'Saans TRIAL', sans-serif;
+
   display: block;
   margin-bottom: 15px;
   padding: 12px;
-  color: #212529;
+
+} 
+.order-graph-details label span{
+  font-family: 'Saans TRIAL', sans-serif;
+
+}
+.order-graph-details label:nth-child(1){
+  border: 1px solid #FF2E0033;
+  background: #FF2E000D;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(1) span{
+  font-size: 12.8px;
+  font-weight: 700;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(1) span i{
+  color: #FF2E00;
+}
+.order-graph-details label:nth-child(2){
+  background: #00AB000D;
+  border: 1px solid #00AB0033;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(2) span{
+  font-size: 12.8px;
+  font-weight: 700;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(2) span i{
+  color: #00AB00;
+}
+.order-graph-details label:nth-child(3){
+  background: #593D2B0D;
+  border: 1px solid #593D2B33;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(3) span{
+  font-size: 12.8px;
+  font-weight: 700;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(3) span i{
+  color: #593D2B;
+}
+.order-graph-details label:nth-child(4){
+  background: #FA8FEB0D;
+  border: 1px solid #FA8FEB33;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(4) span{
+  font-size: 12.8px;
+  font-weight: 700;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000;
+}
+.order-graph-details label:nth-child(4) span i{
+  color: #FA8FEB;
 }
 .order-graph-details label::after {
   display: block;

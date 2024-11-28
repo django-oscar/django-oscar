@@ -1,0 +1,156 @@
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-BoldItalic.eot');
+    src: local('Saans TRIAL Bold Italic'), local('SaansTRIAL-BoldItalic'),
+        url('SaansTRIAL-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-BoldItalic.woff2') format('woff2'),
+        url('SaansTRIAL-BoldItalic.woff') format('woff'),
+        url('SaansTRIAL-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-Heavy.eot');
+    src: local('Saans TRIAL Heavy'), local('SaansTRIAL-Heavy'),
+        url('SaansTRIAL-Heavy.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-Heavy.woff2') format('woff2'),
+        url('SaansTRIAL-Heavy.woff') format('woff'),
+        url('SaansTRIAL-Heavy.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-Bold.eot');
+    src: local('Saans TRIAL Bold'), local('SaansTRIAL-Bold'),
+        url('SaansTRIAL-Bold.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-Bold.woff2') format('woff2'),
+        url('SaansTRIAL-Bold.woff') format('woff'),
+        url('SaansTRIAL-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-LightItalic.eot');
+    src: local('Saans TRIAL Light Italic'), local('SaansTRIAL-LightItalic'),
+        url('SaansTRIAL-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-LightItalic.woff2') format('woff2'),
+        url('SaansTRIAL-LightItalic.woff') format('woff'),
+        url('SaansTRIAL-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-Light.eot');
+    src: local('Saans TRIAL Light'), local('SaansTRIAL-Light'),
+        url('SaansTRIAL-Light.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-Light.woff2') format('woff2'),
+        url('SaansTRIAL-Light.woff') format('woff'),
+        url('SaansTRIAL-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-HeavyItalic.eot');
+    src: local('Saans TRIAL Heavy Italic'), local('SaansTRIAL-HeavyItalic'),
+        url('SaansTRIAL-HeavyItalic.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-HeavyItalic.woff2') format('woff2'),
+        url('SaansTRIAL-HeavyItalic.woff') format('woff'),
+        url('SaansTRIAL-HeavyItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-SemiBoldItalic.eot');
+    src: local('Saans TRIAL SemiBold Italic'), local('SaansTRIAL-SemiBoldItalic'),
+        url('SaansTRIAL-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-SemiBoldItalic.woff2') format('woff2'),
+        url('SaansTRIAL-SemiBoldItalic.woff') format('woff'),
+        url('SaansTRIAL-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-RegularItalic.eot');
+    src: local('Saans TRIAL Regular Italic'), local('SaansTRIAL-RegularItalic'),
+        url('SaansTRIAL-RegularItalic.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-RegularItalic.woff2') format('woff2'),
+        url('SaansTRIAL-RegularItalic.woff') format('woff'),
+        url('SaansTRIAL-RegularItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-Regular.eot');
+    src: local('Saans TRIAL Regular'), local('SaansTRIAL-Regular'),
+        url('SaansTRIAL-Regular.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-Regular.woff2') format('woff2'),
+        url('SaansTRIAL-Regular.woff') format('woff'),
+        url('SaansTRIAL-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-SemiBold.eot');
+    src: local('Saans TRIAL SemiBold'), local('SaansTRIAL-SemiBold'),
+        url('SaansTRIAL-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-SemiBold.woff2') format('woff2'),
+        url('SaansTRIAL-SemiBold.woff') format('woff'),
+        url('SaansTRIAL-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-Medium.eot');
+    src: local('Saans TRIAL Medium'), local('SaansTRIAL-Medium'),
+        url('SaansTRIAL-Medium.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-Medium.woff2') format('woff2'),
+        url('SaansTRIAL-Medium.woff') format('woff'),
+        url('SaansTRIAL-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Saans TRIAL';
+    src: url('SaansTRIAL-MediumItalic.eot');
+    src: local('Saans TRIAL Medium Italic'), local('SaansTRIAL-MediumItalic'),
+        url('SaansTRIAL-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('SaansTRIAL-MediumItalic.woff2') format('woff2'),
+        url('SaansTRIAL-MediumItalic.woff') format('woff'),
+        url('SaansTRIAL-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
