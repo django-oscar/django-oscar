@@ -359,6 +359,7 @@ class BasketAddView(FormView):
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
 
+        # pylint: disable=W0201
         self.line, self.line_created = self.request.basket.add_product(
             form.product, form.cleaned_data["quantity"], form.cleaned_options()
         )
