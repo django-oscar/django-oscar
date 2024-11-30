@@ -5,7 +5,7 @@ from django.urls import reverse
 from oscar.apps.dashboard.views import IndexView
 from oscar.apps.order.models import Order
 from oscar.core import prices
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from oscar.test.factories import (
     UserFactory,
     create_basket,
@@ -15,6 +15,7 @@ from oscar.test.factories import (
 from oscar.test.testcases import WebTestCase
 
 StockAlert = get_model("partner", "StockAlert")
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 GENERIC_STATS_KEYS = (
@@ -51,6 +52,7 @@ class TestDashboardIndexForAnonUser(WebTestCase):
 
 class TestDashboardIndexForStaffUser(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.get("order", "user")
 
     def test_is_available(self):
         urls = (
@@ -98,7 +100,7 @@ class TestDashboardIndexForStaffUser(WebTestCase):
 
 
 class TestDashboardIndexForPartnerUser(WebTestCase):
-    permissions = ["partner.dashboard_access"]
+    permissions = DashboardPermission.partner_dashboard_access
 
     def test_is_available(self):
         urls = ("dashboard:index", "dashboard:order-list")
@@ -127,7 +129,7 @@ class TestDashboardIndexForPartnerUser(WebTestCase):
 
 
 class TestDashboardIndexStatsForNonStaffUser(WebTestCase):
-    permissions = ["partner.dashboard_access"]
+    permissions = DashboardPermission.partner_dashboard_access
 
     def setUp(self):
         super().setUp()

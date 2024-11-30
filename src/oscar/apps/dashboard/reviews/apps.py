@@ -14,11 +14,21 @@ class ReviewsDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "reviews-list": DashboardPermission.product_review,
+            "reviews-update": DashboardPermission.product_review,
+            "reviews-delete": DashboardPermission.product_review,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.list_view = get_class("dashboard.reviews.views", "ReviewListView")
         self.update_view = get_class("dashboard.reviews.views", "ReviewUpdateView")
         self.delete_view = get_class("dashboard.reviews.views", "ReviewDeleteView")
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

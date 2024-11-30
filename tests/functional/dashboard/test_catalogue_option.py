@@ -15,10 +15,12 @@ from .testcases import (
 
 Option = get_model("catalogue", "Option")
 OptionForm = get_class("dashboard.catalogue.forms", "OptionForm")
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestOptionListView(ListViewMixin, WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.option
     url_name = "dashboard:catalogue-option-list"
 
     def _create_object(self, idx):
@@ -29,6 +31,7 @@ class TestOptionListView(ListViewMixin, WebTestCase):
 
 class TestOptionCreateView(PopUpObjectCreateMixin, WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.option
     model = Option
     form = OptionForm
     page_title = gettext("Add a new Option")
@@ -47,6 +50,7 @@ class TestOptionCreateView(PopUpObjectCreateMixin, WebTestCase):
 
 class TestOptionUpdateView(PopUpObjectUpdateMixin, WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.option
     model = Option
     form = OptionForm
     page_title = None
@@ -71,6 +75,7 @@ class TestOptionUpdateView(PopUpObjectUpdateMixin, WebTestCase):
 
 class TestOptionDeleteView(PopUpObjectDeleteMixin, WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.option
     model = Option
     page_title = None
     url_name = "dashboard:catalogue-option-delete"

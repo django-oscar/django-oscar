@@ -14,6 +14,18 @@ class UsersDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "users-index": DashboardPermission.user,
+            "user-detail": DashboardPermission.user,
+            "user-password-reset": DashboardPermission.user,
+            "user-alert-list": DashboardPermission.user,
+            "user-alert-delete": DashboardPermission.user,
+            "user-alert-update": DashboardPermission.user,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.index_view = get_class("dashboard.users.views", "IndexView")
@@ -30,6 +42,7 @@ class UsersDashboardConfig(OscarDashboardConfig):
         self.alert_delete_view = get_class(
             "dashboard.users.views", "ProductAlertDeleteView"
         )
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

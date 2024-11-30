@@ -3,12 +3,16 @@ from django.test import TestCase
 from django.urls import reverse
 
 from oscar.apps.dashboard.pages.forms import PageUpdateForm
+from oscar.core.loading import get_class
 from oscar.test.testcases import WebTestCase
+
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestPageDashboard(WebTestCase):
     is_anonymous = False
     is_staff = True
+    permissions = DashboardPermission.flat_page
 
     def setUp(self):
         self.flatpage_1 = FlatPage.objects.create(

@@ -12,6 +12,19 @@ class ShippingDashboardConfig(OscarDashboardConfig):
 
     default_permissions = ["is_staff"]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "shipping-method-list": DashboardPermission.shipping_method,
+            "shipping-method-create": DashboardPermission.shipping_method,
+            "shipping-method-detail": DashboardPermission.shipping_method,
+            "shipping-method-edit": DashboardPermission.shipping_method,
+            "shipping-method-delete": DashboardPermission.shipping_method,
+            "shipping-method-band-edit": DashboardPermission.shipping_method,
+            "shipping-method-band-delete": DashboardPermission.shipping_method,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.weight_method_list_view = get_class(
@@ -36,6 +49,7 @@ class ShippingDashboardConfig(OscarDashboardConfig):
         self.weight_band_delete_view = get_class(
             "dashboard.shipping.views", "WeightBandDeleteView"
         )
+        self.configure_permissions()
 
     def get_urls(self):
         urlpatterns = [

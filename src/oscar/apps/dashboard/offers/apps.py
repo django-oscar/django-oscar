@@ -14,6 +14,19 @@ class OffersDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "offer-list": DashboardPermission.offer,
+            "offer-metadata": DashboardPermission.offer,
+            "offer-condition": DashboardPermission.offer,
+            "offer-benefit": DashboardPermission.offer,
+            "offer-restrictions": DashboardPermission.offer,
+            "offer-delete": DashboardPermission.offer,
+            "offer-detail": DashboardPermission.offer,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.list_view = get_class("dashboard.offers.views", "OfferListView")
@@ -25,6 +38,7 @@ class OffersDashboardConfig(OscarDashboardConfig):
         )
         self.delete_view = get_class("dashboard.offers.views", "OfferDeleteView")
         self.detail_view = get_class("dashboard.offers.views", "OfferDetailView")
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

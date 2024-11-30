@@ -3,17 +3,19 @@ from django.urls import reverse
 from django.test import TestCase
 
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from oscar.test.factories import UserFactory
-from oscar.test.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase, add_permissions
 
-CommunicationEventType = get_model("communication", "CommunicationEventType")
 User = get_user_model()
+CommunicationEventType = get_model("communication", "CommunicationEventType")
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestAnAdmin(WebTestCase):
     def setUp(self):
         self.staff = UserFactory(is_staff=True, username="1234")
+        add_permissions(self.staff, DashboardPermission.communication_event_type)
         self.commtype = CommunicationEventType.objects.create(
             name="Password reset", category=CommunicationEventType.USER_RELATED
         )
@@ -50,6 +52,7 @@ class TestCommsUpdatePageWithUnicodeSlug(TestCase):
             code="Ûul-wįth-weird-chars",
         )
         self.user = User.objects.create(is_staff=True)
+        add_permissions(self.user, DashboardPermission.communication_event_type)
         self.client.force_login(self.user)
 
     def test_url_with_unicode_characters(self):

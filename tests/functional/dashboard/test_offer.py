@@ -3,12 +3,16 @@ from django.utils import timezone
 
 from oscar.apps.offer import models
 from oscar.apps.order.models import OrderDiscount
+from oscar.core.loading import get_class
 from oscar.test import factories, testcases
+
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestAnAdmin(testcases.WebTestCase):
     # New version of offer tests buy using WebTest
     is_staff = True
+    permissions = DashboardPermission.offer
 
     def setUp(self):
         super().setUp()
@@ -278,6 +282,7 @@ class TestAnAdmin(testcases.WebTestCase):
 
 class TestOfferListSearch(testcases.WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.offer
 
     TEST_CASES = [
         ({}, []),

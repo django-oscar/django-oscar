@@ -14,6 +14,18 @@ class RangesDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "range-list": DashboardPermission.range,
+            "range-create": DashboardPermission.range,
+            "range-update": DashboardPermission.range,
+            "range-delete": DashboardPermission.range,
+            "range-products": DashboardPermission.range,
+            "range-reorder": DashboardPermission.range,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.list_view = get_class("dashboard.ranges.views", "RangeListView")
@@ -22,6 +34,7 @@ class RangesDashboardConfig(OscarDashboardConfig):
         self.delete_view = get_class("dashboard.ranges.views", "RangeDeleteView")
         self.products_view = get_class("dashboard.ranges.views", "RangeProductListView")
         self.reorder_view = get_class("dashboard.ranges.views", "RangeReorderView")
+        self.configure_permissions()
 
     def get_urls(self):
         urlpatterns = [

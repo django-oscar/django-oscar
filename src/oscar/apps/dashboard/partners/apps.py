@@ -14,6 +14,21 @@ class PartnersDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "partner-list": DashboardPermission.partner,
+            "partner-create": DashboardPermission.partner,
+            "partner-manage": DashboardPermission.partner,
+            "partner-delete": DashboardPermission.partner,
+            "partner-user-create": DashboardPermission.partner,
+            "partner-user-select": DashboardPermission.partner,
+            "partner-user-link": DashboardPermission.partner,
+            "partner-user-unlink": DashboardPermission.partner,
+            "partner-user-update": DashboardPermission.partner,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.list_view = get_class("dashboard.partners.views", "PartnerListView")
@@ -36,6 +51,7 @@ class PartnersDashboardConfig(OscarDashboardConfig):
         self.user_update_view = get_class(
             "dashboard.partners.views", "PartnerUserUpdateView"
         )
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

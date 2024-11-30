@@ -2,13 +2,17 @@ from django.urls import reverse
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.apps.catalogue.models import Category
+from oscar.core.loading import get_class
 from oscar.test.factories import UserFactory
-from oscar.test.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase, add_permissions
+
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestCategoryDashboard(WebTestCase):
     def setUp(self):
         self.staff = UserFactory(is_staff=True)
+        add_permissions(self.staff, DashboardPermission.category)
         create_from_breadcrumbs("A > B > C")
 
     def test_redirects_to_main_dashboard_after_creating_top_level_category(self):

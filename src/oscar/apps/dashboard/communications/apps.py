@@ -14,10 +14,19 @@ class CommunicationsDashboardConfig(OscarDashboardConfig):
         "is_staff",
     ]
 
+    def configure_permissions(self):
+        DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+
+        self.permissions_map = {
+            "comms-list": DashboardPermission.communication_event_type,
+            "comms-update": DashboardPermission.communication_event_type,
+        }
+
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.list_view = get_class("dashboard.communications.views", "ListView")
         self.update_view = get_class("dashboard.communications.views", "UpdateView")
+        self.configure_permissions()
 
     def get_urls(self):
         urls = [

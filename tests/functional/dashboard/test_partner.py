@@ -1,11 +1,15 @@
 from django.urls import reverse
 
 from oscar.apps.partner import models
+from oscar.core.loading import get_class
 from oscar.test.testcases import WebTestCase
+
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestPartnerDashboard(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.partner
 
     def test_allows_a_partner_user_to_be_created(self):
         partner = models.Partner.objects.create(name="Acme Ltd")

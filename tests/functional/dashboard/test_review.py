@@ -4,16 +4,18 @@ from django.urls import reverse
 from django.utils import timezone
 
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from oscar.test.factories import ProductReviewFactory, UserFactory
 from oscar.test.testcases import WebTestCase
 
-ProductReview = get_model("reviews", "productreview")
 User = get_user_model()
+ProductReview = get_model("reviews", "productreview")
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class ReviewsDashboardTests(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.product_review
 
     def test_reviews_dashboard_is_accessible_to_staff(self):
         url = reverse("dashboard:reviews-list")

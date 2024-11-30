@@ -7,8 +7,11 @@ from webtest.forms import Upload
 
 from oscar.apps.dashboard.ranges import forms
 from oscar.apps.offer.models import Range, RangeProductFileUpload
+from oscar.core.loading import get_class
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
+
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class RangeProductFormTests(TestCase):
@@ -65,6 +68,7 @@ class RangeProductFormTests(TestCase):
 
 class RangeProductViewTest(WebTestCase):
     is_staff = True
+    permissions = DashboardPermission.range
 
     def setUp(self):
         super().setUp()
@@ -377,6 +381,7 @@ class RangeProductViewTest(WebTestCase):
 class RangeReorderViewTest(WebTestCase):
     is_staff = True
     csrf_checks = False
+    permissions = DashboardPermission.range
 
     def setUp(self):
         super().setUp()
