@@ -46,6 +46,11 @@ class ProductDetailView(DetailView):
         return response
 
     def is_viewable(self, product, request):
+        if product.is_child:
+            return (
+                product.is_public and product.parent.is_public
+            ) or request.user.is_staff
+
         return product.is_public or request.user.is_staff
 
     def get_object(self, queryset=None):
