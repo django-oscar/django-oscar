@@ -511,6 +511,16 @@ class AbstractProduct(models.Model):
         ),
     )
 
+    code = models.CharField(
+        _(
+            "Code can be used to store a secondary unique identifier, when upc isn't sufficient"
+        ),
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+    )
+
     objects = ProductQuerySet.as_manager()
 
     class Meta:
