@@ -151,8 +151,6 @@ TEMPLATES = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
@@ -308,10 +306,6 @@ INSTALLED_APPS = [
 
     # Django apps that the sandbox depends on
     'django.contrib.sitemaps',
-
-    # 3rd-party apps that the sandbox depends on
-    'django_extensions',
-    'debug_toolbar',
 ]
 
 # Add Oscar's custom auth backend so users can sign in using their email
