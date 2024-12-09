@@ -71,7 +71,7 @@ class PercentageDiscountBenefit(Benefit):
         offer,
         discount_percent=None,
         max_total_discount=None,
-        **kwargs
+        **kwargs,
     ):
         if discount_percent is None:
             discount_percent = self.value
@@ -148,7 +148,7 @@ class AbsoluteDiscountBenefit(Benefit):
         offer,
         discount_amount=None,
         max_total_discount=None,
-        **kwargs
+        **kwargs,
     ):
         if discount_amount is None:
             discount_amount = self.value
@@ -238,7 +238,7 @@ class FixedUnitDiscountBenefit(AbsoluteDiscountBenefit):
         offer,
         discount_amount=None,
         max_total_discount=None,
-        **kwargs
+        **kwargs,
     ):
         # Fetch basket lines that are in the range and available to be used in an offer.
         line_tuples = self.get_applicable_lines(offer, basket)

@@ -54,7 +54,7 @@ class OrderCreator(object):
         status=None,
         request=None,
         surcharges=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Placing an order involves creating all the relevant models based on the
@@ -87,7 +87,7 @@ class OrderCreator(object):
                 order_number,
                 status,
                 request,
-                **kwargs
+                **kwargs,
             )
             for voucher in basket.vouchers.select_for_update():
                 if not voucher.is_active():  # basket ignores inactive vouchers
@@ -142,7 +142,7 @@ class OrderCreator(object):
         status,
         request=None,
         surcharges=None,
-        **extra_order_fields
+        **extra_order_fields,
     ):
         """Create an order model."""
         order_data = {
