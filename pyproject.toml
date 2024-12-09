@@ -72,6 +72,10 @@ test = [
     "freezegun>=1.5.1,<2.0.0",
     "pytz",
     "vdt.versionplugin.wheel",
+    "pylint>=3.2.4",
+    "pylint-django>=2.5.5",
+    "black>=24.4.2",
+    "psycopg2-binary>=2.8,<2.10",
 ]
 sorl-thumbnail = [
     "sorl-thumbnail>=12.10.0,<13.0.0",
