@@ -672,7 +672,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
                 billing_address,
                 order_total,
                 surcharges=surcharges,
-                **order_kwargs
+                **order_kwargs,
             )
         except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to

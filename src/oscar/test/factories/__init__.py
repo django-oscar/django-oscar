@@ -96,7 +96,7 @@ def create_product(
     num_in_stock=None,
     attributes=None,
     partner_users=None,
-    **kwargs
+    **kwargs,
 ):
     """
     Helper method for creating products that are used in tests.
@@ -170,7 +170,7 @@ def create_order(
     shipping_method=None,
     billing_address=None,
     total=None,
-    **kwargs
+    **kwargs,
 ):
     """
     Helper method for creating an order for testing
@@ -199,7 +199,7 @@ def create_order(
         shipping_charge=shipping_charge,
         billing_address=billing_address,
         total=total,
-        **kwargs
+        **kwargs,
     )
     basket.set_as_submitted()
     return order

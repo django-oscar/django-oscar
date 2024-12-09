@@ -13,12 +13,7 @@ help: ## Display this help message
 ##################
 # Install commands
 ##################
-install: install-python install-test assets ## Install requirements for local development and production
-
-install-python: ## Install python requirements
-	pip install -r requirements.txt --upgrade --upgrade-strategy=eager
-
-install-test: ## Install test requirements
+install: assets ## Install requirements for local development and production
 	pip install -e .[test] --upgrade --upgrade-strategy=eager
 
 install-migrations-testing-requirements: ## Install migrations testing requirements
