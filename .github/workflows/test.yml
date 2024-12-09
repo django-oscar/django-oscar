@@ -77,6 +77,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[test]
+        pip install -r requirements.txt
     - name: Run linters
       run: make lint
   lint_js:
