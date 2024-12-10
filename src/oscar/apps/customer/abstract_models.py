@@ -26,7 +26,7 @@ class UserManager(auth_models.BaseUserManager):
             is_superuser=False,
             last_login=now,
             date_joined=now,
-            **extra_fields
+            **extra_fields,
         )
 
         user.set_password(password)

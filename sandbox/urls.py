@@ -34,7 +34,6 @@ urlpatterns += i18n_patterns(
 )
 
 if settings.DEBUG:
-    import debug_toolbar
 
     # Server statics and uploaded media
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -43,5 +42,4 @@ if settings.DEBUG:
         path('403', handler403, {'exception': Exception()}),
         path('404', handler404, {'exception': Exception()}),
         path('500', handler500),
-        path('__debug__/', include(debug_toolbar.urls)),
     ]

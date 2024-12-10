@@ -1,0 +1,94 @@
+[build-system]
+requires = ["setuptools>=62.4.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-oscar"
+description = "A domain-driven e-commerce framework for Django"
+readme = "README.rst"
+license = { text = "BSD" }
+requires-python = ">=3.8"
+authors = [
+    { name = "David Winterbottom", email = "david.winterbottom@gmail.com" }
+]
+dynamic = ["version"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: BSD License"
+]
+keywords = ["E-commerce", "Django", "domain-driven"]
+dependencies = [
+    "django>=4.2,<5.2",
+    # PIL is required for image fields, Pillow is the "friendly" PIL fork
+    "pillow>=6.0",
+    # We use the ModelFormSetView from django-extra-views for the basket page
+    "django-extra-views>=0.13,<0.15",
+    # Search support
+    "django-haystack>=3.0b1",
+    # Treebeard is used for categories
+    "django-treebeard>=4.3.0",
+    # Babel is used for currency formatting
+    "Babel>=1.0,<3.0",
+    # For manipulating search URLs
+    "purl>=0.7",
+    # For phone number field
+    "phonenumbers",
+    "django-phonenumber-field>=4.0.0,<9.0.0",
+    # Used for oscar.test.factories
+    "factory-boy>=3.3.1,<4.0.0",
+    # Used for automatically building larger HTML tables
+    "django-tables2>=2.3,<2.8",
+    # Used for manipulating form field attributes in templates (eg: add a css class)
+    "django-widget-tweaks>=1.4.1",
+]
+
+[project.optional-dependencies]
+docs = [
+    "Sphinx>=5.0",
+    "sphinxcontrib-spelling==7.5.1",
+    "sphinx_rtd_theme==1.0.0",
+    "sphinx-issues==3.0.1",
+    "sorl-thumbnail>=12.10.0,<13.0.0",
+    "easy-thumbnails>=2.9,<2.10",
+]
+test = [
+    "Whoosh>=2.7,<2.8",
+    "WebTest>=3.0.0,<4.0.0",
+    "coverage>=7.6.1,<8.0.0",
+    "django-webtest>=1.9,<1.10",
+    "psycopg2-binary>=2.8,<2.10",
+    "pytest-django>=4.9.0,<5.0",
+    "pytest-xdist>=3.6.1,<4.0.0",
+    "tox>=4.18.0,<5.0.0",
+    "freezegun>=1.5.1,<2.0.0",
+    "pytz",
+    "vdt.versionplugin.wheel",
+    "pylint>=3.2.4",
+    "pylint-django>=2.5.5",
+    "black>=24.4.2",
+    "psycopg2-binary>=2.8,<2.10",
+    "sorl-thumbnail>=12.10.0,<13.0.0",
+    "easy-thumbnails>=2.9,<2.10",
+    "django-environ>=0.4,<0.12",
+    "whitenoise>=6.7.0,<6.9",
+    "pycountry"
+]
+sorl-thumbnail = [
+    "sorl-thumbnail>=12.10.0,<13.0.0",
+]
+easy-thumbnails = [
+    "easy-thumbnails>=2.9,<2.10",
+]
+
+
+[tool.setuptools.dynamic]
+version = {attr = "oscar.__version__"}

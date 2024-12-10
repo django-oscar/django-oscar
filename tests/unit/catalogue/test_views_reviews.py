@@ -17,7 +17,7 @@ class TestAddVoteView(TestCase):
                 "title": "Awesome!",
                 "score": 5,
                 "body": "Wonderful product",
-            }
+            },
         )
         path = reverse(
             "catalogue:reviews-vote",
@@ -40,7 +40,7 @@ class TestAddVoteView(TestCase):
                 "title": "Awesome!",
                 "score": 5,
                 "body": "Wonderful product",
-            }
+            },
         )
         path = reverse(
             "catalogue:reviews-vote",
@@ -131,7 +131,7 @@ class TestProductReviewDetail(TestCase):
                 "title": "Awesome!",
                 "score": 5,
                 "body": "Wonderful product",
-            }
+            },
         )
         path = reverse(
             "catalogue:reviews-detail",
@@ -154,7 +154,7 @@ class TestProductReviewDetail(TestCase):
                 "title": "Awesome!",
                 "score": 5,
                 "body": "Wonderful product",
-            }
+            },
         )
         path = reverse(
             "catalogue:reviews-detail",
