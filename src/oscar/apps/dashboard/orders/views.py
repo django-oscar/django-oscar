@@ -295,27 +295,31 @@ class OrderListView(EventHandlerMixin, BulkEditMixin, ListView):
             )
 
         if data.get("date_from") and data.get("date_to"):
+            dto = datetime_combine(data["date_to"], datetime.time.max)
+            dfrom = datetime_combine(data["date_from"], datetime.time.min)
             descriptions.append(
                 # Translators: This string refers to orders in an online
                 # store that were made within a particular date range.
                 _("Placed between {start_date} and {end_date}").format(
-                    start_date=data["date_from"], end_date=data["date_to"]
+                    start_date=format_datetime(dfrom), end_date=format_datetime(dto)
                 )
             )
 
         elif data.get("date_from"):
+            dfrom = datetime_combine(data["date_from"], datetime.time.min)
             descriptions.append(
                 # Translators: This string refers to orders in an online store
                 # that were made after a particular date.
-                _("Placed after {start_date}").format(start_date=data["date_from"])
+                _("Placed after {start_date}").format(start_date=format_datetime(dfrom))
             )
 
         elif data.get("date_to"):
             end_date = data["date_to"] + datetime.timedelta(days=1)
+            dto = datetime_combine(data["date_to"], datetime.time.max)
             descriptions.append(
                 # Translators: This string refers to orders in an online store
                 # that were made before a particular date.
-                _("Placed before {end_date}").format(end_date=end_date)
+                _("Placed before {end_date}").format(end_date=format_datetime(dto))
             )
 
         if data.get("voucher"):
