@@ -16,13 +16,13 @@ class ShippingDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "shipping-method-list": DashboardPermission.shipping_method,
-            "shipping-method-create": DashboardPermission.shipping_method,
-            "shipping-method-detail": DashboardPermission.shipping_method,
-            "shipping-method-edit": DashboardPermission.shipping_method,
-            "shipping-method-delete": DashboardPermission.shipping_method,
-            "shipping-method-band-edit": DashboardPermission.shipping_method,
-            "shipping-method-band-delete": DashboardPermission.shipping_method,
+            "shipping-method-list": DashboardPermission.get("shipping_method"),
+            "shipping-method-create": DashboardPermission.get("shipping_method"),
+            "shipping-method-detail": DashboardPermission.get("shipping_method"),
+            "shipping-method-edit": DashboardPermission.get("shipping_method"),
+            "shipping-method-delete": DashboardPermission.get("shipping_method"),
+            "shipping-method-band-edit": DashboardPermission.get("shipping_method"),
+            "shipping-method-band-delete": DashboardPermission.get("shipping_method"),
         }
 
     # pylint: disable=attribute-defined-outside-init
