@@ -139,3 +139,11 @@ class TestOrderSearchForm(TestCase):
             form.description(),
             "Orders with order number containing 100",
         )
+
+        form = OrderSearchForm(
+            data={"date_from": "", "date_to": "", "order_number": ""}
+        )
+        # at least one field is required!
+        self.assertFalse(form.is_valid())
+        # if form is not valid, description = "All orders"
+        self.assertEqual(form.description(), "All orders")
