@@ -1,1 +1,6 @@
-{% load i18n %}<p>{% trans 'Thank you for registering.' %}</p>
+{% extends "oscar/communication/emails/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <p>{% trans 'Thank you for registering.' %}</p>
+{% endblock %}
