@@ -149,14 +149,14 @@ class RemoteSelectTestCase(TestCase):
         return forms.ModelChoiceField(
             queryset=Product.objects.all(),
             widget=widgets.RemoteSelect(lookup_url=self.url),
-            **kwargs
+            **kwargs,
         )
 
     def _get_multiselect_form_field(self, **kwargs):
         return forms.ModelChoiceField(
             queryset=Product.objects.all(),
             widget=widgets.MultipleRemoteSelect(lookup_url=self.url),
-            **kwargs
+            **kwargs,
         )
 
     def test_remote_url_required(self):

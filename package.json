@@ -6,13 +6,13 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@fortawesome/fontawesome-free": "^6.7.1",
     "bootstrap": "^4.6.2",
     "eslint": "^8.56.0",
     "extend": ">=3.0.2",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
-    "gulp-sass": "^5.1.0",
+    "gulp-sass": "^6.0.0",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-rename": "^2.0.0",
     "inputmask": "^5.0.9",
@@ -23,11 +23,11 @@
     "node-sass": "^9.0.0",
     "popper.js": "^1.16.1",
     "pump": "^3.0.0",
-    "sass": "^1.80.6",
+    "sass": "^1.81.0",
     "select2": "4.0.13",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tempusdominus-bootstrap-4": "^5.39.2",
-    "tinymce": "^7.5.0",
+    "tinymce": "^7.5.1",
     "@tinymce/tinymce-jquery": "^2.1.0"
   },
   "scripts": {

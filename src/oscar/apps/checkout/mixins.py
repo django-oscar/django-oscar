@@ -98,7 +98,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         billing_address,
         order_total,
         surcharges=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Write out the order models and return the appropriate HTTP response
@@ -117,7 +117,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             order_total=order_total,
             billing_address=billing_address,
             surcharges=surcharges,
-            **kwargs
+            **kwargs,
         )
         basket.submit()
         return self.handle_successful_order(order)
@@ -133,7 +133,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order_total,
         billing_address=None,
         surcharges=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Writes the order out to the DB including the payment models
@@ -171,7 +171,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             status=status,
             request=request,
             surcharges=surcharges,
-            **kwargs
+            **kwargs,
         )
         self.save_payment_details(order)
         return order
