@@ -21,7 +21,7 @@ class Shop(OscarConfig):
         self.basket_app = apps.get_app_config("basket")
         self.checkout_app = apps.get_app_config("checkout")
         self.search_app = apps.get_app_config("search")
-        self.dashboard_app = apps.get_app_config("dashboard")
+        # self.dashboard_app = apps.get_app_config("dashboard")
         self.offer_app = apps.get_app_config("offer")
         self.wishlists_app = apps.get_app_config("wishlists")
 
@@ -40,7 +40,7 @@ class Shop(OscarConfig):
             path("checkout/", self.checkout_app.urls),
             path("accounts/", self.customer_app.urls),
             path("search/", self.search_app.urls),
-            path("dashboard/", self.dashboard_app.urls),
+            # path("dashboard/", self.dashboard_app.urls),
             path("offers/", self.offer_app.urls),
             path("wishlists/", self.wishlists_app.urls),
             # Password reset - as we're using Django's default view functions,
