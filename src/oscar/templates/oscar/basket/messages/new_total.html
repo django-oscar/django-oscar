@@ -2,20 +2,19 @@
 {% load currency_filters %}
 
 {% block message_content %}
-    {% if basket.is_empty %}
-        {% trans "Your basket is now empty" %}
+{% if basket.is_empty %}
+    {% trans "Your basket is now empty" %}
+{% else %}
+    {% if basket.is_tax_known %}
+        {% blocktrans with total=basket.total_incl_tax|currency:basket.currency %}
+        Your basket total is now <strong>{{ total }}</strong>
+        {% endblocktrans %}
     {% else %}
-        {% if basket.is_tax_known %}
-            {% blocktrans with total=basket.total_incl_tax|currency:basket.currency %}
-            Your basket total is now <strong>{{ total }}</strong>
-            {% endblocktrans %}
-        {% else %}
-            {% blocktrans with total=basket.total_excl_tax|currency:basket.currency %}
-            Your basket total is now <strong>{{ total }}</strong>
-            {% endblocktrans %}
-        {% endif %}
+        {% blocktrans with total=basket.total_excl_tax|currency:basket.currency %}
+        Your basket total is now <strong>{{ total }}</strong>
+        {% endblocktrans %}
     {% endif %}
-    
+{% endif %}
 {% endblock message_content %}
 
 {% if include_buttons %}

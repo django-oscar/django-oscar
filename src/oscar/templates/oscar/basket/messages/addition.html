@@ -1,16 +1,17 @@
 {% load i18n %}
 
 {% block message_content %}
-    {% if quantity == 1 %}
-        {% blocktrans with title=product.get_title %}
-            <strong>{{ title }}</strong> has been added to your basket.
-        {% endblocktrans %}
+{% if quantity == 1 %}
+    {% blocktrans with title=product.get_title %}
+    <strong>{{ title }}</strong> has been added to your basket.
+    {% endblocktrans %}
     {% else %}
-        {% blocktrans with title=product.get_title quantity=quantity %}
-            <strong>{{ quantity }}</strong> copies of <strong>{{ title }}</strong>
-            have been added to your basket.
-        {% endblocktrans %}
-    {% endif %}
+
+    {% blocktrans with title=product.get_title quantity=quantity %}
+    <strong>{{ quantity }}</strong> copies of <strong>{{ title }}</strong>
+    have been added to your basket.
+    {% endblocktrans %}
+{% endif %}
 {% endblock message_content %}
 
 {% block analytics_scripts %}{% endblock analytics_scripts %}

@@ -1,9 +1,9 @@
 {% load i18n %}
 
 {% block message_content %}
-    {% blocktrans with title=line.product.get_title %}
-    <strong>{{ title }}</strong> has been saved for later
-    {% endblocktrans %}
+{% blocktrans with title=line.product.get_title %}
+<strong>{{ title }}</strong> has been saved for later
+{% endblocktrans %}
 {% endblock message_content %}
 
 {% block analytics_scripts %}{% endblock analytics_scripts %}
