@@ -68,7 +68,7 @@ class RangeProductFormTests(TestCase):
 
 class RangeProductViewTest(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.range
+    permissions = DashboardPermission.get("range")
 
     def setUp(self):
         super().setUp()
@@ -381,7 +381,7 @@ class RangeProductViewTest(WebTestCase):
 class RangeReorderViewTest(WebTestCase):
     is_staff = True
     csrf_checks = False
-    permissions = DashboardPermission.range
+    permissions = DashboardPermission.get("range")
 
     def setUp(self):
         super().setUp()
