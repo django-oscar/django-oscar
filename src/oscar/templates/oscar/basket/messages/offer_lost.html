@@ -1,10 +1,10 @@
 {% load i18n %}
 
 {% block message_content %}
-    {% blocktrans with name=offer.name %}
-    Your basket no longer qualifies for the
-    <strong>{{ name }}</strong> offer.
-    {% endblocktrans %}
+{% blocktrans with name=offer.name %}
+Your basket no longer qualifies for the
+<strong>{{ name }}</strong> offer.
+{% endblocktrans %}
 {% endblock message_content %}
 
 {% block analytics_scripts %}{% endblock analytics_scripts %}
