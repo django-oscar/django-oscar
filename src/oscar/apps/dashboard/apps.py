@@ -13,7 +13,7 @@ class DashboardConfig(OscarDashboardConfig):
 
     namespace = "dashboard"
     permissions_map = {
-        "index": (["is_staff"], ["partner.dashboard_access"]),
+        # "index": (["is_staff"], ["partner.dashboard_access"]),
     }
 
     # pylint: disable=attribute-defined-outside-init

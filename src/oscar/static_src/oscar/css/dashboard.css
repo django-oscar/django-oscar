@@ -37,12 +37,12 @@
 }
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.eot');
+  src: url('../webfonts/SaansTRIAL-BoldItalic.eot');
   src: local('Saans TRIAL Bold Italic'), local('SaansTRIAL-BoldItalic'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-BoldItalic.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-BoldItalic.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-BoldItalic.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-BoldItalic.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-BoldItalic.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
   font-display: swap;
@@ -50,12 +50,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.eot');
+  src: url('../webfonts/SaansTRIAL-Heavy.eot');
   src: local('Saans TRIAL Heavy'), local('SaansTRIAL-Heavy'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Heavy.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-Heavy.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-Heavy.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-Heavy.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-Heavy.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -63,12 +63,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.eot');
+  src: url('../webfonts/SaansTRIAL-Bold.eot');
   src: local('Saans TRIAL Bold'), local('SaansTRIAL-Bold'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Bold.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-Bold.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-Bold.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-Bold.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -76,12 +76,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.eot');
+  src: url('../webfonts/SaansTRIAL-LightItalic.eot');
   src: local('Saans TRIAL Light Italic'), local('SaansTRIAL-LightItalic'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-LightItalic.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-LightItalic.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-LightItalic.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-LightItalic.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-LightItalic.ttf') format('truetype');
   font-weight: 300;
   font-style: italic;
   font-display: swap;
@@ -89,12 +89,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.eot');
+  src: url('../webfonts/SaansTRIAL-Light.eot');
   src: local('Saans TRIAL Light'), local('SaansTRIAL-Light'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Light.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-Light.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-Light.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-Light.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -102,12 +102,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.eot');
+  src: url('../webfonts/SaansTRIAL-HeavyItalic.eot');
   src: local('Saans TRIAL Heavy Italic'), local('SaansTRIAL-HeavyItalic'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-HeavyItalic.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-HeavyItalic.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-HeavyItalic.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-HeavyItalic.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-HeavyItalic.ttf') format('truetype');
   font-weight: 900;
   font-style: italic;
   font-display: swap;
@@ -115,12 +115,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.eot');
+  src: url('../webfonts/SaansTRIAL-SemiBoldItalic.eot');
   src: local('Saans TRIAL SemiBold Italic'), local('SaansTRIAL-SemiBoldItalic'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBoldItalic.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-SemiBoldItalic.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-SemiBoldItalic.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-SemiBoldItalic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
   font-display: swap;
@@ -128,12 +128,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.eot');
+  src: url('../webfonts/SaansTRIAL-RegularItalic.eot');
   src: local('Saans TRIAL Regular Italic'), local('SaansTRIAL-RegularItalic'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-RegularItalic.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-RegularItalic.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-RegularItalic.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-RegularItalic.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-RegularItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -141,12 +141,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.eot');
+  src: url('../webfonts/SaansTRIAL-Regular.eot');
   src: local('Saans TRIAL Regular'), local('SaansTRIAL-Regular'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Regular.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-Regular.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-Regular.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-Regular.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -154,12 +154,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.eot');
+  src: url('../webfonts/SaansTRIAL-SemiBold.eot');
   src: local('Saans TRIAL SemiBold'), local('SaansTRIAL-SemiBold'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-SemiBold.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-SemiBold.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-SemiBold.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-SemiBold.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -167,12 +167,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.eot');
+  src: url('../webfonts/SaansTRIAL-Medium.eot');
   src: local('Saans TRIAL Medium'), local('SaansTRIAL-Medium'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-Medium.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-Medium.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-Medium.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-Medium.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -180,12 +180,12 @@
 
 @font-face {
   font-family: 'Saans TRIAL';
-  src: url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.eot');
+  src: url('../webfonts/SaansTRIAL-MediumItalic.eot');
   src: local('Saans TRIAL Medium Italic'), local('SaansTRIAL-MediumItalic'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.eot?#iefix') format('embedded-opentype'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.woff2') format('woff2'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.woff') format('woff'),
-      url('../../../static_src/oscar/webfonts/SaansTRIAL-MediumItalic.ttf') format('truetype');
+      url('../webfonts/SaansTRIAL-MediumItalic.eot?#iefix') format('embedded-opentype'),
+      url('../webfonts/SaansTRIAL-MediumItalic.woff2') format('woff2'),
+      url('../webfonts/SaansTRIAL-MediumItalic.woff') format('woff'),
+      url('../webfonts/SaansTRIAL-MediumItalic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
   font-display: swap;

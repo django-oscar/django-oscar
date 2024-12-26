@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
-from stores.models import Store
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 from server.apps.dashboard.catalogue.forms import ProductBranchFormSet
@@ -306,12 +305,24 @@ class ProductCreateUpdateView(PartnerProductFilterMixin, generic.UpdateView):
         ctx["product_class"] = self.product_class
         ctx["parent"] = self.parent
         ctx["title"] = self.get_page_title()
+        vendor = Vendor.objects.filter(users=self.request.user).first()
+        # Include category details in context
+        ctx["categories"] = Category.objects.filter(vendor=vendor)
 
         for ctx_name, formset_class in self.formsets.items():
             if ctx_name not in ctx:
                 ctx[ctx_name] = formset_class(
                     self.product_class, self.request.user, instance=self.object
                 )
+
+        # Debug category formset to ensure categories are passed
+        if "category_formset" in ctx:
+            for form in ctx["category_formset"]:
+                if "category" in form.fields:
+                    categories = form.fields["category"].queryset
+                    print("Categories passed to template:")
+                    for category in categories:
+                        print(f" - {category.name}: {category.description}")
         return ctx
 
     def get_page_title(self):
@@ -392,6 +403,15 @@ class ProductCreateUpdateView(PartnerProductFilterMixin, generic.UpdateView):
         When creating the first child product, this method also sets the new
         parent's structure accordingly.
         """
+        self.object = form.save()
+
+        branches = form.cleaned_data.get('branches')
+        if branches:
+            self.object.branches.set(branches)  # Update ManyToManyField
+        else:
+            self.object.branches.clear()
+
+
         if self.creating:
             self.handle_adding_child(self.parent)
         else:
