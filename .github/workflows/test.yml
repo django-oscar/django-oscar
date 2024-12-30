@@ -62,7 +62,7 @@ jobs:
       run: |
         coverage run --parallel -m pytest -x
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5.0.7
+      uses: codecov/codecov-action@v5.1.2
       with:
         fail_ci_if_error: false
   lint_python:
