@@ -206,7 +206,7 @@ class ProductCreateRedirectView(generic.RedirectView):
             return self.get_invalid_product_class_url()
 
 
-class ProductCreateUpdateView(PartnerProductFilterMixin, generic.UpdateView):
+class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.UpdateView):
     """
     Dashboard view that is can both create and update products of all kinds.
     It can be used in three different ways, each of them with a unique URL
@@ -305,7 +305,7 @@ class ProductCreateUpdateView(PartnerProductFilterMixin, generic.UpdateView):
         ctx["product_class"] = self.product_class
         ctx["parent"] = self.parent
         ctx["title"] = self.get_page_title()
-        vendor = Vendor.objects.filter(users=self.request.user).first()
+        vendor = self.get_vendor()
         # Include category details in context
         ctx["categories"] = Category.objects.filter(vendor=vendor)
 

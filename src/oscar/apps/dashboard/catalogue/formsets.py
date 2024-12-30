@@ -180,7 +180,7 @@ class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         # Retrieve the vendor associated with the user
         self.user = user
-        self.vendor = Vendor.objects.filter(users=user).first()
+        self.vendor = Vendor.objects.filter(user=user).first()
         if not self.vendor:
             raise ValueError("The user does not have an associated vendor.")
         
