@@ -22,7 +22,7 @@
 
 {% block layout %}
     {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-accounts">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-accounts ">
             <a class="navbar-brand" href="#">{{ shop_name }}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top_nav_bar" aria-controls="top_nav_bar" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
@@ -31,19 +31,37 @@
             <div class="collapse navbar-collapse" id="top_nav_bar">
                 <ul class="navbar-nav mr-auto"></ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link disabled" href="#">
                             {% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ homepage_url }}"><i class="fas fa-home"></i> {% trans "Return to site" %}</a>
+                        <a class="nav-link" href="{{ homepage_url }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_225_60)">
+                            <path d="M16.9976 3.03756C15.214 1.61069 14.3222 0.897251 13.3332 0.623642C12.4608 0.382299 11.5392 0.382299 10.6668 0.623642C9.67783 0.897251 8.78603 1.61069 7.00244 3.03756L4.25244 5.23756C3.14986 6.11963 2.59857 6.56066 2.20174 7.10808C1.8502 7.59304 1.58865 8.13722 1.42957 8.71468C1.25 9.36652 1.25 10.0725 1.25 11.4845V17.5833C1.25 17.7381 1.25 17.8154 1.25171 17.8809C1.32134 20.5397 3.4603 22.6786 6.11912 22.7483C6.18455 22.75 6.26192 22.75 6.41667 22.75V22.75C6.49404 22.75 6.53273 22.75 6.56544 22.7491C7.89485 22.7143 8.96433 21.6448 8.99914 20.3154C9 20.2827 9 20.244 9 20.1666V16C9 14.3431 10.3431 13 12 13V13C13.6569 13 15 14.3431 15 16V20.1666C15 20.244 15 20.2827 15.0009 20.3154C15.0357 21.6448 16.1051 22.7143 17.4346 22.7491C17.4673 22.75 17.506 22.75 17.5833 22.75V22.75C17.7381 22.75 17.8155 22.75 17.8809 22.7483C20.5397 22.6786 22.6787 20.5397 22.7483 17.8809C22.75 17.8154 22.75 17.7381 22.75 17.5833V11.4845C22.75 10.0725 22.75 9.36652 22.5704 8.71468C22.4113 8.13722 22.1498 7.59304 21.7983 7.10808C21.4014 6.56066 20.8501 6.11963 19.7476 5.23756L16.9976 3.03756Z" fill="white"/>
+                            </g>
+                            <defs>
+                            <clipPath id="clip0_225_60">
+                            <rect width="24" height="24" fill="white"/>
+                            </clipPath>
+                            </defs>
+                            </svg>
+                             {% trans "Return to site" %}</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customer:summary' %}"><i class="fas fa-user"></i> {% trans "Account" %}</a>
+                    <a class="nav-link" href="{% url 'customer:summary' %}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.25 6C7.25 3.37665 9.37665 1.25 12 1.25C14.6234 1.25 16.75 3.37665 16.75 6C16.75 8.62335 14.6234 10.75 12 10.75C9.37665 10.75 7.25 8.62335 7.25 6Z" fill="white"/>
+                        <path d="M8.95 13.25C8.29989 13.25 7.97483 13.25 7.70133 13.2802C5.3743 13.5371 3.5371 15.3743 3.2802 17.7013C3.25 17.9748 3.25 18.2999 3.25 18.95V18.95C3.25 19.3834 3.25 19.6001 3.27013 19.7824C3.4414 21.3338 4.6662 22.5586 6.21755 22.7299C6.39989 22.75 6.61659 22.75 7.05 22.75H16.95C17.3834 22.75 17.6001 22.75 17.7824 22.7299C19.3338 22.5586 20.5586 21.3338 20.7299 19.7824C20.75 19.6001 20.75 19.3834 20.75 18.95V18.95C20.75 18.2999 20.75 17.9748 20.7198 17.7013C20.4629 15.3743 18.6257 13.5371 16.2987 13.2802C16.0252 13.25 15.7001 13.25 15.05 13.25H8.95Z" fill="white"/>
+                        </svg>
+                        
+                         {% trans "Account" %}</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'dashboard:logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans "Log out" %}</a>
+                    <a class="nav-link btn-LogOut" href="{% url 'dashboard:logout' %}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 8C1.25 4.27208 4.27208 1.25 8 1.25C11.7279 1.25 14.75 4.27208 14.75 8V11.25L8 11.25C7.58579 11.25 7.25 11.5858 7.25 12C7.25 12.4143 7.58579 12.75 8 12.75L14.75 12.75V16C14.75 19.7279 11.7279 22.75 8 22.75C4.27208 22.75 1.25 19.7279 1.25 16L1.25 8ZM14.75 12.75L20.1895 12.75L17.4698 15.4697C17.1769 15.7626 17.1769 16.2375 17.4698 16.5304C17.7627 16.8233 18.2376 16.8233 18.5305 16.5304L22.5305 12.5304C22.8233 12.2375 22.8233 11.7626 22.5305 11.4697L18.5305 7.46971C18.2376 7.17682 17.7627 7.17682 17.4698 7.46971C17.1769 7.7626 17.1769 8.23748 17.4698 8.53037L20.1895 11.25L14.75 11.25V12.75Z" fill="white"/>
+                        </svg>
+                         {% trans "Log out" %}</a>
                   </li>
                 </ul>
           </div>
@@ -65,7 +83,10 @@
                                href="{% if item.is_heading %}#{% else %}{{ item.url }}{% endif %}"
                                {% if item.has_children %}id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}
                             >
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
+                            
+                            {% if item.icon %}
+                                {{ item.icon|safe }}
+                            {% endif %}
                                 {{ item.label }}
                             </a>
 
@@ -110,7 +131,7 @@
                 {% endblock content %}
             </div>
         </div>
-    </div><!-- /container -->
+    </div>
 
 {% endblock %}
 

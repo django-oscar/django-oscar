@@ -209,7 +209,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: 'Saans TRIAL';
   font-size: 0.8rem;
   font-weight: 400;
   line-height: 1.5;
@@ -1655,10 +1655,10 @@ pre code {
 .table-borderless tbody + tbody {
   border: 0;
 }
-
+/* 
 .table-striped tbody tr:nth-of-type(odd) {
   background-color: rgba(0, 0, 0, 0.05);
-}
+} */
 
 .table-hover tbody tr:hover {
   color: #212529;
@@ -17904,7 +17904,7 @@ h3.app-ico:before {
   z-index: 2000;
 }
 .navbar.navbar-accounts, .navbar.navbar-primary {
-  padding: 0;
+  padding: 0 15px;
 }
 .navbar.navbar-accounts .navbar-toggler, .navbar.navbar-primary .navbar-toggler {
   border: none;
@@ -17952,7 +17952,20 @@ h3.app-ico:before {
   text-decoration-skip-ink: none;
   color: #000000;
   font-family: 'Saans TRIAL', sans-serif ;
+  display: flex;
+    align-items: center;
+    gap: 10px;
 
+}
+
+.navbar.navbar-primary .navbar-nav .nav-item .nav-link svg path{
+  stroke: #000;
+
+}
+
+.navbar.navbar-primary .navbar-nav .nav-item .nav-link:hover svg path{
+  stroke: #FF2E00;
+  
 }
 .navbar.navbar-primary .navbar-nav .nav-link i {
   padding-right: 12px;
@@ -18042,7 +18055,9 @@ h3.app-ico:before {
   background: white;
 }
 .table-header {
-  display: flow-root;
+  display: flex;
+  gap: 5px;
+  align-items: center;
   padding: 20px ;
   border-width: 1px 1px 0px 1px;
   border-style: solid;
@@ -18151,6 +18166,42 @@ caption {
   width: 98%;
   height: 300px;
 }
+.dashboard-tables caption{
+  
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: left;
+  background: 
+  linear-gradient(0deg, rgba(158, 140, 255, 0.05), rgba(158, 140, 255, 0.05));
+  padding: 10px;
+  border-color: #CFCFFF;
+  
+}
+.dashboard-tables th{
+  border-color: #CFCFFF;
+  
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #000000CC;
+}
+.dashboard-tables td{
+  border-color: #CFCFFF;
+  
+  font-size: 12.8px;
+  font-weight: 400;
+  line-height: 19.2px;
+  text-align: left;
+  color: #212529;
+
+}
+.dashboard-tables caption i{
+  color: #0000FF;
+}
 #order_graph .bar-chart dd {
   position: relative;
   float: left;
@@ -18163,7 +18214,36 @@ caption {
   bottom: -2em;
   right: 0;
   font-style: inherit;
-  color: #adb5bd;
+  font-family: 'Saans TRIAL';
+  font-size: 12.8px;
+  font-weight: 400;
+  line-height: 19.2px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #00000080;
+
+}
+#top_nav_bar .nav-link{
+  font-family: 'Saans TRIAL' ;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 18px !important;
+  text-align: left ;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #DEE2E6 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+#top_nav_bar .btn-LogOut{
+  background: #FF2E00;
+  border-radius: 8px;
+  width: 120px;
+  height: 40px;
+
 }
 #order_graph .bar-chart span {
   position: absolute;
@@ -18197,13 +18277,16 @@ caption {
   cursor: default;
   font-family: 'Saans TRIAL', sans-serif;
 
-  display: block;
+  display: flex;
   margin-bottom: 15px;
   padding: 12px;
 
 } 
 .order-graph-details label span{
   font-family: 'Saans TRIAL', sans-serif;
+  display: flex !important;
+  align-items: center;
+  gap: 5px;
 
 }
 .order-graph-details label:nth-child(1){
