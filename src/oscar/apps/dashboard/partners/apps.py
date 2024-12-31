@@ -11,7 +11,7 @@ class PartnersDashboardConfig(OscarDashboardConfig):
     verbose_name = _("Partners dashboard")
 
     default_permissions = [
-        "is_staff",
+        # "is_staff",
     ]
 
     # pylint: disable=attribute-defined-outside-init

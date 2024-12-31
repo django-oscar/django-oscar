@@ -215,7 +215,6 @@ class PopUpWindowCreateUpdateMixin(PopUpWindowMixin):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-
         if self.is_popup:
             ctx["to_field"] = self.to_field
             ctx["to_field_var"] = self.to_field_var

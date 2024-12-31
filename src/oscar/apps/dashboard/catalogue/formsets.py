@@ -127,6 +127,13 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
         for form in self.forms:
             form.fields['category'].queryset = Category.objects.filter(vendor=self.vendor)
 
+        # Add category details for debugging (optional)
+        for form in self.forms:
+            if 'category' in form.fields:
+                categories = form.fields['category'].queryset
+                for category in categories:
+                    print(f"Category Name: {category.name}, Description: {category.description}")
+
 
     def clean(self):
         if not self.instance.is_child and self.get_num_categories() == 0:
@@ -173,7 +180,7 @@ class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         # Retrieve the vendor associated with the user
         self.user = user
-        self.vendor = Vendor.objects.filter(users=user).first()
+        self.vendor = Vendor.objects.filter(user=user).first()
         if not self.vendor:
             raise ValueError("The user does not have an associated vendor.")
         
