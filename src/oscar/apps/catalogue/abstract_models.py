@@ -845,7 +845,7 @@ class AbstractProduct(models.Model):
         only display one product image, e.g. in a list of products.
         """
         images = self.get_all_images()
-        ordering = self.images.model.Meta.ordering
+        ordering = self.images.model._meta.ordering
         if not ordering or ordering[0] != "display_order":
             # Only apply order_by() if a custom model doesn't use default
             # ordering. Applying order_by() busts the prefetch cache of
