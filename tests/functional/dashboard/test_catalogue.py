@@ -111,7 +111,7 @@ class TestCatalogueViews(WebTestCase):
 
 class TestAStaffUser(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.product
+    permissions = DashboardPermission.get("product")
 
     def setUp(self):
         super().setUp()
@@ -332,7 +332,7 @@ class TestProductCreatePageWithUnicodeSlug(TestCase):
         self.slug = "Ûul-wįth-weird-chars"
         ProductClass.objects.create(name="Book", slug=self.slug)
         self.user = User.objects.create(is_staff=True)
-        add_permissions(self.user, DashboardPermission.product)
+        add_permissions(self.user, DashboardPermission.get("product"))
         self.client.force_login(self.user)
 
     def test_url_with_unicode_characters(self):

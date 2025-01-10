@@ -15,7 +15,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 class TestAnAdmin(WebTestCase):
     def setUp(self):
         self.staff = UserFactory(is_staff=True, username="1234")
-        add_permissions(self.staff, DashboardPermission.communication_event_type)
+        add_permissions(self.staff, DashboardPermission.get("communication_event_type"))
         self.commtype = CommunicationEventType.objects.create(
             name="Password reset", category=CommunicationEventType.USER_RELATED
         )
@@ -52,7 +52,7 @@ class TestCommsUpdatePageWithUnicodeSlug(TestCase):
             code="Ûul-wįth-weird-chars",
         )
         self.user = User.objects.create(is_staff=True)
-        add_permissions(self.user, DashboardPermission.communication_event_type)
+        add_permissions(self.user, DashboardPermission.get("communication_event_type"))
         self.client.force_login(self.user)
 
     def test_url_with_unicode_characters(self):

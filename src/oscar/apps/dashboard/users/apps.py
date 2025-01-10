@@ -18,12 +18,12 @@ class UsersDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "users-index": DashboardPermission.user,
-            "user-detail": DashboardPermission.user,
-            "user-password-reset": DashboardPermission.user,
-            "user-alert-list": DashboardPermission.user,
-            "user-alert-delete": DashboardPermission.user,
-            "user-alert-update": DashboardPermission.user,
+            "users-index": DashboardPermission.get("user"),
+            "user-detail": DashboardPermission.get("user"),
+            "user-password-reset": DashboardPermission.get("user"),
+            "user-alert-list": DashboardPermission.get("user"),
+            "user-alert-delete": DashboardPermission.get("user"),
+            "user-alert-update": DashboardPermission.get("user"),
         }
 
     # pylint: disable=attribute-defined-outside-init
