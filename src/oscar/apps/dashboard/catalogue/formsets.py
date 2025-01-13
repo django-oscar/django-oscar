@@ -46,7 +46,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         self.user = user
         self.require_user_stockrecord = not (
-            user.is_staff or Vendor.objects.filter(users=user).exists()
+            user.is_staff or Vendor.objects.filter(user=user).exists()
         )
         self.product_class = product_class
 
@@ -119,7 +119,7 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
         super().__init__(*args, **kwargs)  # Ensure the formset is fully initialized first
 
         # Check if the user has an associated vendor
-        self.vendor = Vendor.objects.filter(users=user).first()
+        self.vendor = Vendor.objects.filter(user=user).first()
         if not self.vendor:
             raise ValueError("The user does not have an associated vendor.")
 
