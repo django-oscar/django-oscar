@@ -28,11 +28,14 @@ ProductSelect = get_class("dashboard.catalogue.widgets", "ProductSelect")
 BaseCategoryForm = movenodeform_factory(
     Category,
     fields=[
-        "name",
+        "name_en",
+        "name_ar",
         "slug",
-        "description",
+        "description_en",
+        "description_ar",
         "image",
         "is_public",
+        "order",
         "meta_title",
         "meta_description",
     ],
@@ -59,13 +62,16 @@ class SEOFormMixin:
 
 
 class CategoryForm(SEOFormMixin, BaseCategoryForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if "slug" in self.fields:
-            self.fields["slug"].required = False
-            self.fields["slug"].help_text = _(
-                "Leave blank to generate from category name"
+    def clean_order(self):
+        order = self.cleaned_data['order']
+        vendor = self.instance.vendor
+        is_public = self.cleaned_data['is_public']
+
+        if Category.objects.filter(vendor=vendor, is_public=is_public, order=order).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError(
+                f"A category with order {order} already exists for this vendor."
             )
+        return order
 
 
 class ProductClassSelectForm(forms.Form):

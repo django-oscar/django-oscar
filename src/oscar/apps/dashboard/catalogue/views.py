@@ -14,6 +14,9 @@ from oscar.views.generic import ObjectLookupView
 from server.apps.dashboard.catalogue.forms import ProductBranchFormSet
 from server.apps.vendor.mixins import VendorMixin
 from server.apps.vendor.models import Vendor
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 (
     ProductForm,
@@ -600,6 +603,36 @@ class StockAlertListView(generic.ListView):
             self.form = StockAlertSearchForm()
         return self.model.objects.all()
 
+@require_POST
+@csrf_exempt  # Use this only if you are not managing CSRF tokens in your frontend
+def toggle_is_public(request, pk):
+    try:
+        category = Category.objects.get(pk=pk)
+        new_is_public = not category.is_public
+
+        # Check for existing category with the same order, vendor, and new is_public value
+        conflict = Category.objects.filter(
+            vendor=category.vendor,
+            is_public=new_is_public,
+            order=category.order,
+        ).exclude(pk=pk).first()
+
+        if conflict:
+            # If conflict exists, shift the conflicting category's order
+            # Increase its order by 1 to make room
+            conflict.order += 1
+            conflict.save()
+
+        # Update the is_public value of the current category
+        category.is_public = new_is_public
+        category.save()
+
+        return JsonResponse({"success": True, "is_public": category.is_public})
+
+    except Category.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Category not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 class CategoryListView(SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"

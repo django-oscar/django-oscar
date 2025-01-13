@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from oscar.core.application import OscarDashboardConfig
 from oscar.core.loading import get_class
 
-
 class CatalogueDashboardConfig(OscarDashboardConfig):
     label = "catalogue_dashboard"
     name = "oscar.apps.dashboard.catalogue"
@@ -97,6 +96,8 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         )
 
     def get_urls(self):
+        from .views import toggle_is_public
+
         urls = [
             path(
                 "products/<int:pk>/",
@@ -226,5 +227,6 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 self.option_delete_view.as_view(),
                 name="catalogue-option-delete",
             ),
+            path('toggle-is-public/<int:pk>/', toggle_is_public, name='toggle-is-public'),
         ]
         return self.post_process_urls(urls)

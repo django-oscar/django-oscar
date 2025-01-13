@@ -85,14 +85,26 @@ class CategoryTable(DashboardTable):
         template_name="oscar/dashboard/catalogue/category_row_actions.html",
         orderable=False,
     )
+    is_public = TemplateColumn(
+        template_code='''
+        <input type="checkbox" data-id="{{ record.id }}" class="is-public-toggle" {% if record.is_public %}checked{% endif %}>
+        ''',
+        verbose_name=_("Is Public"),
+        orderable=True,
+    )
+    order = TemplateColumn(
+        template_code='''{{ record.order }}''',
+        verbose_name=_("Order"),
+        orderable=True,  # Enable ordering by this column
+    )
 
     icon = "sitemap"
     caption = ngettext_lazy("%s Category", "%s Categories")
 
     class Meta(DashboardTable.Meta):
         model = Category
-        fields = ("name", "description", "is_public")
-        sequence = ("name", "description", "...", "is_public", "actions")
+        fields = ("name", "description", "is_public", "order")
+        sequence = ("name", "description", "...", "is_public", "order", "actions")
 
 
 class AttributeOptionGroupTable(DashboardTable):
