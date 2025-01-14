@@ -22,7 +22,6 @@ RUN pip install poetry uwsgi
 RUN pip install -e .[test]
 
 RUN make install
-RUN make assets
 RUN make build_sandbox
 RUN cp --remove-destination /app/src/oscar/static/oscar/img/image_not_found.jpg /app/sandbox/public/media/
 
