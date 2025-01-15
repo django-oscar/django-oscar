@@ -62,16 +62,17 @@ class SEOFormMixin:
 
 
 class CategoryForm(SEOFormMixin, BaseCategoryForm):
-    def clean_order(self):
-        order = self.cleaned_data['order']
-        vendor = self.instance.vendor
-        is_public = self.cleaned_data['is_public']
+    def __init__(self, *args, **kwargs):
+        self.vendor = kwargs.pop('vendor', None)
+        super().__init__(*args, **kwargs)
 
-        if Category.objects.filter(vendor=vendor, is_public=is_public, order=order).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError(
-                f"A category with order {order} already exists for this vendor."
-            )
-        return order
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.vendor:
+            instance.vendor = self.vendor
+        if commit:
+            instance.save()
+        return instance
 
 
 class ProductClassSelectForm(forms.Form):

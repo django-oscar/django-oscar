@@ -1,18 +1,25 @@
 from django.utils.translation import ngettext_lazy
 from django_tables2 import Table
-
+from django.utils.safestring import mark_safe
 
 class DashboardTable(Table):
-    caption = ngettext_lazy("%d Row", "%d Rows")
+    caption = None  # Keep default caption as None
+    icon_svg = None
 
     def get_caption_display(self):
-        # Allow overriding the caption with an arbitrary string that we cannot
-        # interpolate the number of rows in
         try:
-            return self.caption % self.paginator.count
+            if hasattr(self, 'caption_text'):
+                caption = self.caption_text
+            else:
+                caption = str(self.caption) if self.caption else ''
+                
+            count = f"<span>({self.paginator.count})</span>" if self.paginator else "<span>(0)</span>"
+            
+            if self.icon_svg:
+                return mark_safe(f'{self.icon_svg}&nbsp;&nbsp;{caption}&nbsp;{count}')
+            return f'{caption} {count}'
         except TypeError:
-            pass
-        return self.caption
+            return self.caption
 
     class Meta:
         template_name = "oscar/dashboard/table.html"
