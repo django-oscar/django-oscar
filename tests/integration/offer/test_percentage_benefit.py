@@ -209,3 +209,43 @@ class TestAPercentageDiscountBenefit(TestCase):
         benefit = models.Benefit(type=models.Benefit.PERCENTAGE, value=40)
         with self.assertRaises(ValidationError):
             benefit.clean()
+
+
+class TestPercentageBenefitDiscountAccuracy(TestCase):
+    def setUp(self):
+        product_range = models.Range.objects.create(
+            name="All products", includes_all_products=True
+        )
+        self.condition = models.ValueCondition.objects.create(
+            range=product_range, type=models.Condition.COUNT, value=D("1.00")
+        )
+        self.benefit = models.PercentageDiscountBenefit.objects.create(
+            range=product_range,
+            type=models.Benefit.PERCENTAGE,
+            value=D("3.00")
+        )
+        self.offer = models.ConditionalOffer(
+            offer_type=models.ConditionalOffer.SITE,
+            condition=self.condition,
+            benefit=self.benefit,
+        )
+        self.basket = factories.create_basket(empty=True)
+        add_product(self.basket, D("2.37"), 6)
+        add_product(self.basket, D("3.28"), 1)
+
+    def test_discount_value(self):
+        """
+        price = 2.37 * 6 + 3.28 = 17.5
+        discount = 17.5 * 0.03 = 0.525 = round(0.525) = 0.52
+        """
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
+        self.assertEqual(D("0.52"), result.discount)
+
+    def test_discount_value_round_up(self):
+        """
+        price = 2.37 * 6 + 3.28 = 17.5
+        discount = 17.5 * 0.05 = 0.875 = round(0.875) = 0.88
+        """
+        self.benefit.value = D("5.00")
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
+        self.assertEqual(D("0.88"), result.discount)
