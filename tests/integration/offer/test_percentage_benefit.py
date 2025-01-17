@@ -220,9 +220,7 @@ class TestPercentageBenefitDiscountAccuracy(TestCase):
             range=product_range, type=models.Condition.COUNT, value=D("1.00")
         )
         self.benefit = models.PercentageDiscountBenefit.objects.create(
-            range=product_range,
-            type=models.Benefit.PERCENTAGE,
-            value=D("3.00")
+            range=product_range, type=models.Benefit.PERCENTAGE, value=D("3.00")
         )
         self.offer = models.ConditionalOffer(
             offer_type=models.ConditionalOffer.SITE,
