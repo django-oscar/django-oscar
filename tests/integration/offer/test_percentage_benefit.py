@@ -239,11 +239,11 @@ class TestPercentageBenefitDiscountAccuracy(TestCase):
         result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D("0.52"), result.discount)
 
-    def test_discount_value_round_up(self):
+    def test_discount_value_round_down(self):
         """
         price = 2.37 * 6 + 3.28 = 17.5
-        discount = 17.5 * 0.05 = 0.875 = round(0.875) = 0.88
+        discount = 17.5 * 0.05 = 0.875 = round(0.875) = 0.87
         """
         self.benefit.value = D("5.00")
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D("0.88"), result.discount)
+        self.assertEqual(D("0.87"), result.discount)

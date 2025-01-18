@@ -97,9 +97,8 @@ class PercentageDiscountBenefit(Benefit):
             if quantity_affected <= 0:
                 break
 
-            line_discount = self.round(
-                discount_percent / D("100.0") * price * int(quantity_affected),
-                basket.currency,
+            line_discount = (
+                discount_percent / D("100.0") * price * int(quantity_affected)
             )
 
             if discount_amount_available is not None:
@@ -111,7 +110,7 @@ class PercentageDiscountBenefit(Benefit):
             affected_items += quantity_affected
             discount += line_discount
 
-        return BasketDiscount(discount)
+        return BasketDiscount(self.round(discount, basket.currency))
 
 
 class AbsoluteDiscountBenefit(Benefit):
