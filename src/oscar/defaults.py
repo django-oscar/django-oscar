@@ -308,3 +308,14 @@ OSCAR_URL_SCHEMA = "http"
 OSCAR_SAVE_SENT_EMAILS_TO_DB = True
 
 HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+
+DASHBOARD_SETTINGS_CHILDREN =[
+        {
+            "label": _("Profile"),
+            "url": reverse_lazy("customer:summary"),
+        },
+        {
+            "label": _("Subscriptions"),
+            "url": reverse_lazy("dashboard:subscription-view"),
+        },
+    ]

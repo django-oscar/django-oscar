@@ -41,13 +41,6 @@ class CustomerConfig(OscarConfig):
         self.logout_view = get_class("customer.views", "LogoutView")
         self.register_view = get_class("customer.views", "AccountRegistrationView")
         self.profile_view = get_class("customer.views", "ProfileView")
-        self.subscription_view = get_class("customer.views", "SubscriptionsListView")
-        self.cancel_subscription_view = get_class("customer.views", "CancelSubscriptionView")
-        self.reactivate_subscription_view = get_class("customer.views", "ReactivateSubscriptionView")
-        self.cancel_subscription = get_class("customer.views", "CancelSubscription")
-        self.subscripe_view = get_class("customer.views", "SubscribeView")
-        self.change_subscription_view = get_class("customer.views", "ChangeSubscriptionView")
-        self.renew_subscription_view = get_class("customer.views", "RenewSubscriptionView")
         self.profile_update_view = get_class("customer.views", "ProfileUpdateView")
         self.profile_delete_view = get_class("customer.views", "ProfileDeleteView")
         self.change_password_view = get_class("customer.views", "ChangePasswordView")
@@ -134,42 +127,7 @@ class CustomerConfig(OscarConfig):
                 login_required(self.profile_delete_view.as_view()),
                 name="profile-delete",
             ),
-            # subscription 
-            path(
-                "subscription/",
-                login_required(self.subscription_view.as_view()),
-                name="subscription-view",
-            ),
-            path(
-                "subscription/cancel/",
-                login_required(self.cancel_subscription_view.as_view()),
-                name="cancel-subscription-view",
-            ),
-            path(
-                "subscription/cancel/confirm/",
-                login_required(self.cancel_subscription.as_view()),
-                name="cancel-subscription",
-            ),
-            path(
-                "subscription/reactivate/",
-                login_required(self.reactivate_subscription_view.as_view()),
-                name="reactivate-subscription-view",
-            ),
-            path(
-                "subscription/subscribe/",
-                login_required(self.subscripe_view.as_view()),
-                name="subscribe-view",
-            ),
-            path(
-                "subscription/change/",
-                login_required(self.change_subscription_view.as_view()),
-                name="change-subscription-view",
-            ),
-            path(
-                "subscription/renew/",
-                login_required(self.renew_subscription_view.as_view()),
-                name="renew-subscription-view",
-            ),
+
             # Order history
             path(
                 "orders/",
