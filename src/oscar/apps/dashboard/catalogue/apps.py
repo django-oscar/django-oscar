@@ -28,6 +28,9 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         self.product_lookup_view = get_class(
             "dashboard.catalogue.views", "ProductLookupView"
         )
+        self.create_option = get_class(
+            "dashboard.catalogue.views", "create_option"
+        )
         self.product_create_redirect_view = get_class(
             "dashboard.catalogue.views", "ProductCreateRedirectView"
         )
@@ -93,6 +96,10 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         )
         self.option_delete_view = get_class(
             "dashboard.catalogue.views", "OptionDeleteView"
+        )
+        self.default_product_create_redirect_view = get_class(
+            "dashboard.catalogue.views",
+            "DefaultProductCreateRedirectView"
         )
 
     def get_urls(self):
@@ -228,5 +235,11 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 name="catalogue-option-delete",
             ),
             path('toggle-is-public/<int:pk>/', toggle_is_public, name='toggle-is-public'),
+            path(
+                "products/create-default/",
+                self.default_product_create_redirect_view.as_view(),
+                name="catalogue-product-create-default",
+            ),
+            path('create-option/', self.create_option, name='create_option'),
         ]
         return self.post_process_urls(urls)

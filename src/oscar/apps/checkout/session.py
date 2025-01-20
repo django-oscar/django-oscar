@@ -147,15 +147,15 @@ class CheckoutSessionMixin(object):
             )
 
     def check_shipping_data_is_captured(self, request):
-        if not request.basket.is_shipping_required():
-            # Even without shipping being required, we still need to check that
-            # a shipping method code has been set.
-            if not self.checkout_session.is_shipping_method_set(self.request.basket):
-                raise exceptions.FailedPreCondition(
-                    url=reverse("checkout:shipping-method"),
-                )
-            return
-
+        # if not request.basket.is_shipping_required():
+        #     # Even without shipping being required, we still need to check that
+        #     # a shipping method code has been set.
+        #     if not self.checkout_session.is_shipping_method_set(self.request.basket):
+        #         raise exceptions.FailedPreCondition(
+        #             url=reverse("checkout:shipping-method"),
+        #         )
+        #     return
+        return
         # Basket requires shipping: check address and method are captured and
         # valid.
         self.check_a_valid_shipping_address_is_captured()
@@ -215,11 +215,12 @@ class CheckoutSessionMixin(object):
     def skip_unless_basket_requires_shipping(self, request):
         # Check to see that a shipping address is actually required.  It may
         # not be if the basket is purely downloads
-        if not request.basket.is_shipping_required():
-            raise exceptions.PassedSkipCondition(
-                url=reverse("checkout:shipping-method")
-            )
-
+        # if not request.basket.is_shipping_required():
+        #     raise exceptions.PassedSkipCondition(
+        #         url=reverse("checkout:shipping-method")
+        #     )
+        return
+    
     def skip_unless_payment_is_required(self, request):
         # Check to see if payment is actually required for this order.
         shipping_address = self.get_shipping_address(request.basket)
@@ -333,8 +334,8 @@ class CheckoutSessionMixin(object):
         The ``OrderPlacementMixin.create_shipping_address`` method is
         responsible for saving a shipping address when an order is placed.
         """
-        if not basket.is_shipping_required():
-            return None
+        # if not basket.is_shipping_required():
+        #     return None
 
         addr_data = self.checkout_session.new_shipping_address_fields()
         if addr_data:

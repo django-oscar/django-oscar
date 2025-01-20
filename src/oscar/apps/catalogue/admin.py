@@ -1,4 +1,5 @@
 from django.contrib import admin
+from server.apps.catalogue.models import ProductBranch
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
@@ -38,9 +39,14 @@ class ProductAttributeInline(admin.TabularInline):
 
 
 class ProductClassAdmin(admin.ModelAdmin):
-    list_display = ("name", "requires_shipping", "track_stock")
+    list_display = ("name", "track_stock")
     inlines = [ProductAttributeInline]
 
+class ProductBranchInline(admin.TabularInline):
+    model = ProductBranch
+    extra = 1
+    verbose_name = "Branch"
+    verbose_name_plural = "Branches"
 
 class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = "date_created"
@@ -48,13 +54,13 @@ class ProductAdmin(admin.ModelAdmin):
         "get_title",
         "upc",
         "get_product_class",
-        "structure",
+        # "structure",
         "attribute_summary",
         "date_created",
     )
-    list_filter = ["structure", "is_discountable"]
+    # list_filter = [ "is_discountable"]
     raw_id_fields = ["parent"]
-    inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
+    inlines = [AttributeInline, CategoryInline, ProductRecommendationInline, ProductBranchInline]
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ["upc", "title"]
 

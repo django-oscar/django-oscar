@@ -4,8 +4,11 @@ from django.forms.models import inlineformset_factory
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_classes, get_model
-from server.apps.catalogue.models import Category
+from server.apps.catalogue.models import Category, ProductBranch
+from server.apps.dashboard.catalogue.forms import ProductBranchForm
 from server.apps.vendor.models import Vendor
+from stores.models import Store
+
 
 Product = get_model("catalogue", "Product")
 ProductClass = get_model("catalogue", "ProductClass")
@@ -16,6 +19,8 @@ ProductImage = get_model("catalogue", "ProductImage")
 ProductRecommendation = get_model("catalogue", "ProductRecommendation")
 AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 AttributeOption = get_model("catalogue", "AttributeOption")
+Option = get_model('catalogue', 'Option')
+Store = get_model("stores", "Store")
 
 (
     StockRecordForm,
@@ -38,7 +43,7 @@ AttributeOption = get_model("catalogue", "AttributeOption")
 
 
 BaseStockRecordFormSet = inlineformset_factory(
-    Product, StockRecord, form=StockRecordForm, extra=1
+    Product, StockRecord, form=StockRecordForm, extra=10
 )
 
 
@@ -110,7 +115,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
 
 
 BaseProductCategoryFormSet = inlineformset_factory(
-    Product, ProductCategory, form=ProductCategoryForm, extra=1, can_delete=True
+    Product, ProductCategory, form=ProductCategoryForm, extra=10, can_delete=True
 )
 
 
@@ -131,14 +136,14 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
         for form in self.forms:
             if 'category' in form.fields:
                 categories = form.fields['category'].queryset
-                for category in categories:
-                    print(f"Category Name: {category.name}, Description: {category.description}")
+                # for category in categories:
+                    # print(f"Category Name: {category.name}, Description: {category.description}")
 
 
     def clean(self):
         if not self.instance.is_child and self.get_num_categories() == 0:
             raise forms.ValidationError(
-                _("Stand-alone and parent products must have at least one category")
+                _("products must have at least one category")
             )
         if self.instance.is_child and self.get_num_categories() > 0:
             raise forms.ValidationError(_("A child product should not have categories"))
@@ -157,7 +162,7 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
 
 BaseProductImageFormSet = inlineformset_factory(
-    Product, ProductImage, form=ProductImageForm, extra=2
+    Product, ProductImage, form=ProductImageForm, extra=5
 )
 
 
@@ -209,3 +214,94 @@ ProductAttributesFormSet = inlineformset_factory(
 AttributeOptionFormSet = inlineformset_factory(
     AttributeOptionGroup, AttributeOption, form=AttributeOptionForm, extra=3
 )
+
+
+BaseProductBranchFormSet = inlineformset_factory(
+    # The parent model
+    parent_model=Product,
+    # The model that points to Product via a ForeignKey
+    model=ProductBranch,
+    form=ProductBranchForm,
+    extra=1,            # Number of empty forms to display
+    can_delete=True,    # Allow deleting existing relations
+)
+
+
+
+class ProductBranchFormSet(BaseProductBranchFormSet):
+    """
+    Inline formset for linking Products to Branches (Stores).
+    """
+    def __init__(self, product_class, user, *args, **kwargs):
+        """
+        product_class and user are passed in so we can do
+        filtering on the user's vendor, similar to how StockRecordFormSet 
+        or ProductCategoryFormSet are initialized.
+        """
+        super().__init__(*args, **kwargs)
+
+        # Get the vendor associated with the user
+        self.vendor = Vendor.objects.filter(user=user).first()
+        if not self.vendor:
+            raise ValueError("The user does not have an associated vendor.")
+
+        # Restrict branch queryset to only those belonging to the vendor
+        for form in self.forms:
+            if "branch" in form.fields:
+                form.fields["branch"].queryset = Store.objects.filter(vendor=self.vendor)
+
+    def clean(self):
+        """
+        Optionally enforce any additional business logic:
+          - For example, if the product is a child product,
+            you might disallow any branches.
+        """
+        super().clean()
+
+        num_branches = 0
+        for form in self.forms:
+            if (
+                hasattr(form, 'cleaned_data')
+                and form.cleaned_data.get('branch') is not None
+                and not form.cleaned_data.get('DELETE', False)
+            ):
+                num_branches += 1
+
+        # if self.instance.is_child:
+        #     # Child products should not have branches
+        #     if num_branches > 0:
+        #         raise forms.ValidationError(
+        #             _("A child product should not have branches assigned.")
+        #         )
+        # else:
+        #     # Parent products must have at least one branch
+        #     if num_branches == 0:
+        #         raise forms.ValidationError(
+        #             _("Products must have at least one branch assigned.")
+        #         )
+
+
+# Inline formset for the M2M "through" relationship between Product and Option.
+BaseProductOptionFormSet = inlineformset_factory(
+    parent_model=Product,
+    model=Product.product_options.through,  # the implicit "through" table behind product->option
+    fields=['option'],
+    extra=2,
+    can_delete=True
+)
+
+
+class ProductOptionFormSet(BaseProductOptionFormSet):
+    """
+    Manage Product->Option many-to-many relationships in the dashboard.
+    If you want to restrict which Options are visible, you can tweak 
+    the queryset in __init__.
+    """
+    def __init__(self, product_class, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Example: if you only want to show Options that belong to 
+        # some vendor or some condition, filter here:
+        #
+        # for form in self.forms:
+        #     if 'option' in form.fields:
+        #         form.fields['option'].queryset = Option.objects.filter(...)

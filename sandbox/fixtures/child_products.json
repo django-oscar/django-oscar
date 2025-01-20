@@ -453,7 +453,7 @@
     "pk": 1,
     "model": "partner.stockrecord",
     "fields": {
-        "price_currency": "GBP",
+        "price_currency": "SAR",
         "product": 6,
         "partner_sku": "clf-large",
         "date_updated": "2013-12-13T11:37:08.232Z",
@@ -469,7 +469,7 @@
     "pk": 2,
     "model": "partner.stockrecord",
     "fields": {
-        "price_currency": "GBP",
+        "price_currency": "SAR",
         "product": 7,
         "partner_sku": "clf-med",
         "date_updated": "2013-12-13T11:37:45.928Z",
@@ -485,7 +485,7 @@
     "pk": 3,
     "model": "partner.stockrecord",
     "fields": {
-        "price_currency": "GBP",
+        "price_currency": "SAR",
         "product": 9,
         "partner_sku": "tng-small",
         "date_updated": "2013-12-13T11:38:49.858Z",
@@ -501,7 +501,7 @@
     "pk": 4,
     "model": "partner.stockrecord",
     "fields": {
-        "price_currency": "GBP",
+        "price_currency": "SAR",
         "product": 10,
         "partner_sku": "tng-med",
         "date_updated": "2013-12-13T11:39:12.947Z",
@@ -517,7 +517,7 @@
     "pk": 5,
     "model": "partner.stockrecord",
     "fields": {
-        "price_currency": "GBP",
+        "price_currency": "SAR",
         "product": 11,
         "partner_sku": "tng-large",
         "date_updated": "2013-12-13T11:39:53.162Z",

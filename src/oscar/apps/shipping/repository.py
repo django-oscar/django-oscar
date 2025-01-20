@@ -39,10 +39,10 @@ class Repository(object):
         Return a list of all applicable shipping method instances for a given
         basket, address etc.
         """
-        if not basket.is_shipping_required():
-            # Special case! Baskets that don't require shipping get a special
-            # shipping method.
-            return [NoShippingRequired()]
+        # if not basket.is_shipping_required():
+        #     # Special case! Baskets that don't require shipping get a special
+        #     # shipping method.
+        #     return [NoShippingRequired()]
 
         methods = self.get_available_shipping_methods(
             basket=basket, shipping_addr=shipping_addr, **kwargs

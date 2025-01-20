@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('partner_sku', models.CharField(max_length=128, verbose_name='Partner SKU')),
-                ('price_currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
+                ('price_currency', models.CharField(default='SAR', max_length=12, verbose_name='Currency')),
                 ('price_excl_tax', models.DecimalField(max_digits=12, decimal_places=2, blank=True, verbose_name='Price (excl. tax)', null=True)),
                 ('price_retail', models.DecimalField(max_digits=12, decimal_places=2, blank=True, verbose_name='Price (retail)', null=True)),
                 ('cost_price', models.DecimalField(max_digits=12, decimal_places=2, blank=True, verbose_name='Cost Price', null=True)),

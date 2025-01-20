@@ -406,15 +406,15 @@ class AbstractBasket(models.Model):
     # Kept for backwards compatibility
     set_as_submitted = submit
 
-    def is_shipping_required(self):
-        """
-        Test whether the basket contains physical products that require
-        shipping.
-        """
-        for line in self.all_lines():
-            if line.product.is_shipping_required:
-                return True
-        return False
+    # def is_shipping_required(self):
+    #     """
+    #     Test whether the basket contains physical products that require
+    #     shipping.
+    #     """
+    #     for line in self.all_lines():
+    #         if line.product.is_shipping_required:
+    #             return True
+    #     return False
 
     # =======
     # Helpers

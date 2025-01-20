@@ -94,7 +94,7 @@ class AbstractProductClass(models.Model):
 
     #: Some product type don't require shipping (e.g. digital products) - we use
     #: this field to take some shortcuts in the checkout.
-    requires_shipping = models.BooleanField(_("Requires shipping?"), default=True)
+    # requires_shipping = models.BooleanField(_("Requires shipping?"), default=True)
 
     #: Digital products generally don't require their stock levels to be
     #: tracked.
@@ -503,13 +503,13 @@ class AbstractProduct(models.Model):
     #: merchants from avoiding discounting such products
     #: Note that this flag is ignored for child products; they inherit from
     #: the parent product.
-    is_discountable = models.BooleanField(
-        _("Is discountable?"),
-        default=True,
-        help_text=_(
-            "This flag indicates if this product can be used in an offer or not"
-        ),
-    )
+    # is_discountable = models.BooleanField(
+    #     _("Is discountable?"),
+    #     default=True,
+    #     help_text=_(
+    #         "This flag indicates if this product can be used in an offer or not"
+    #     ),
+    # )
 
     objects = ProductQuerySet.as_manager()
 
@@ -668,9 +668,9 @@ class AbstractProduct(models.Model):
             return has_product_class_options or has_product_options
         return self.options.exists()
 
-    @property
-    def is_shipping_required(self):
-        return self.get_product_class().requires_shipping
+    # @property
+    # def is_shipping_required(self):
+    #     return self.get_product_class().requires_shipping
 
     @property
     def has_stockrecords(self):
@@ -753,14 +753,14 @@ class AbstractProduct(models.Model):
         # pylint: disable=no-member
         return self.children.public()
 
-    @deprecated
-    def get_is_discountable(self):
-        """
-        It used to be that, :py:attr:`.is_discountable` couldn't be set individually for child
-        products; so they had to inherit it from their parent. This is nolonger the case because
-        ranges can include child products as well. That make this method useless.
-        """
-        return self.is_discountable
+    # @deprecated
+    # def get_is_discountable(self):
+    #     """
+    #     It used to be that, :py:attr:`.is_discountable` couldn't be set individually for child
+    #     products; so they had to inherit it from their parent. This is nolonger the case because
+    #     ranges can include child products as well. That make this method useless.
+    #     """
+    #     return self.is_discountable
 
     # pylint: disable=no-member
     def get_categories(self):

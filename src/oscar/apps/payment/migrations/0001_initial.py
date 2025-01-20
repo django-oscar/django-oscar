@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
             name='Source',
             fields=[
                 ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
+                ('currency', models.CharField(default='SAR', max_length=12, verbose_name='Currency')),
                 ('amount_allocated', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Allocated')),
                 ('amount_debited', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Debited')),
                 ('amount_refunded', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Refunded')),

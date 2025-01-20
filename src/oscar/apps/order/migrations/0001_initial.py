@@ -132,7 +132,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('number', models.CharField(max_length=128, unique=True, db_index=True, verbose_name='Order number')),
-                ('currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
+                ('currency', models.CharField(default='SAR', max_length=12, verbose_name='Currency')),
                 ('total_incl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Order total (inc. tax)')),
                 ('total_excl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Order total (excl. tax)')),
                 ('shipping_incl_tax', models.DecimalField(default=0, max_digits=12, decimal_places=2, verbose_name='Shipping charge (inc. tax)')),

@@ -101,7 +101,7 @@ class TestBasketLine(TestCase):
             """A test strategy where the tax is not known"""
 
             def pricing_policy(self, product, stockrecord):
-                return prices.FixedPrice("GBP", stockrecord.price, tax=None)
+                return prices.FixedPrice("SAR", stockrecord.price, tax=None)
 
         basket = Basket()
         basket.strategy = UnknownTaxStrategy()
@@ -118,7 +118,7 @@ class TestAddingAProductToABasket(TestCase):
         self.basket.strategy = strategy.Default()
         self.product = factories.create_product()
         self.record = factories.create_stockrecord(
-            currency="GBP", product=self.product, price=D("10.00")
+            currency="SAR", product=self.product, price=D("10.00")
         )
         self.purchase_info = factories.create_purchase_info(self.record)
         self.basket.add(self.product)

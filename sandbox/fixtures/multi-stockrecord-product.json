@@ -78,7 +78,7 @@
     "pk": 1,
     "model": "partner.stockrecord",
     "fields": {
-        "price_currency": "GBP",
+        "price_currency": "SAR",
         "product": 1,
         "partner_sku": "a1",
         "date_updated": "2013-07-18T12:25:41.107Z",
@@ -94,7 +94,7 @@
     "pk": 2,
     "model": "partner.stockrecord",
     "fields": {
-        "price_currency": "GBP",
+        "price_currency": "SAR",
         "product": 1,
         "partner_sku": "a2",
         "date_updated": "2013-07-18T12:25:49.939Z",

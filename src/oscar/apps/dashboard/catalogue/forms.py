@@ -1,12 +1,15 @@
 from django import forms
 from django.core import exceptions
 from django.utils.translation import gettext_lazy as _
+from server.apps.catalogue.models import ProductBranch
+from server.apps.vendor.models import Vendor
 from treebeard.forms import movenodeform_factory
 
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.forms.widgets import DateTimePickerInput, ImageInput
 
+Store = get_model('stores', 'Store')
 Product = get_model("catalogue", "Product")
 ProductClass = get_model("catalogue", "ProductClass")
 ProductAttribute = get_model("catalogue", "ProductAttribute")
@@ -114,9 +117,17 @@ class StockRecordForm(forms.ModelForm):
         self.user = user
         super().__init__(*args, **kwargs)
 
+        vendor = Vendor.objects.filter(user=user).first()
+        if vendor:
+            # For example, only show the user’s own branches
+            self.fields['branch'].queryset = Store.objects.filter(vendor=vendor)
+
+        # If you want it required, etc.
+        self.fields['branch'].required = True
+        
         # Restrict accessible partners for non-staff users
-        if not self.user.is_staff:
-            self.fields["partner"].queryset = self.user.partners.all()
+        # if not self.user.is_staff:
+        #     self.fields["store"].queryset = self.user.partners.all()
 
         # If not tracking stock, we hide the fields
         if not product_class.track_stock:
@@ -124,17 +135,18 @@ class StockRecordForm(forms.ModelForm):
                 if field_name in self.fields:
                     del self.fields[field_name]
         else:
-            for field_name in ["price", "num_in_stock"]:
+            # for field_name in ["price", "num_in_stock"]:
+            for field_name in ["num_in_stock"]:
                 if field_name in self.fields:
                     self.fields[field_name].required = True
 
     class Meta:
         model = StockRecord
         fields = [
-            "partner",
-            "partner_sku",
-            "price_currency",
-            "price",
+            "branch",
+            # "partner_sku",
+            # "price_currency",
+            # "price",
             "num_in_stock",
             "low_stock_threshold",
         ]
@@ -233,15 +245,20 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            "title",
+            "title_en",
+            "title_ar",
             "upc",
-            "description",
+            "description_en",
+            "description_ar",
             "is_public",
-            "is_discountable",
+            # "is_discountable",
             "structure",
             "slug",
             "meta_title",
             "meta_description",
+            "original_price",
+            "selling_price",
+            "price_currency",
         ]
         widgets = {
             "structure": forms.HiddenInput(),
@@ -325,7 +342,7 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
         Deletes any fields not needed for child products. Override this if
         you want to e.g. keep the description field.
         """
-        for field_name in ["description", "is_discountable"]:
+        for field_name in ["description"]:
             if field_name in self.fields:
                 del self.fields[field_name]
 
@@ -398,7 +415,7 @@ class ProductClassForm(forms.ModelForm):
 
     class Meta:
         model = ProductClass
-        fields = ["name", "requires_shipping", "track_stock", "options"]
+        fields = ["name", "track_stock", "options"]
 
 
 class ProductAttributesForm(forms.ModelForm):
@@ -443,16 +460,100 @@ class ProductAttributesForm(forms.ModelForm):
 class AttributeOptionGroupForm(forms.ModelForm):
     class Meta:
         model = AttributeOptionGroup
-        fields = ["name"]
+        fields = ["name_en", "name_ar"]
 
 
 class AttributeOptionForm(forms.ModelForm):
     class Meta:
         model = AttributeOption
-        fields = ["option"]
+        fields = ["option_en", "option_ar", "price"]
 
 
 class OptionForm(forms.ModelForm):
     class Meta:
         model = Option
-        fields = ["name", "type", "required", "order", "help_text", "option_group"]
+        fields = ["name_en", "name_ar", "type", "required", "order", "help_text", "option_group"]
+
+class ProductBranchForm(forms.ModelForm):
+    """
+    Simple form for handling ProductBranch relationships
+    between Product and Store.
+    """
+    class Meta:
+        model = ProductBranch
+        fields = ['branch']
+
+
+class ProductOptionThroughModelForm(forms.ModelForm):
+    """
+    A form for the through-model (Product.product_options.through).
+    Instead of a simple dropdown for 'option', we embed the needed Option fields.
+    """
+
+    # Fields from the Option model that you want users to manage inline:
+    name = forms.CharField(label=_("Name"), required=True)
+    type = forms.ChoiceField(
+        label=_("Type"),
+        choices=Option.TYPE_CHOICES,
+        required=True,
+    )
+    required = forms.BooleanField(label=_("Required?"), required=False)
+    help_text = forms.CharField(
+        label=_("Help text"), required=False,
+        widget=forms.TextInput()
+    )
+    order = forms.IntegerField(label=_("Order"), required=False, min_value=0)
+
+    class Meta:
+        model = Product.product_options.through
+        # We do NOT include 'option' in fields, we manually handle it in .save()
+        fields = ['id']  # + possibly other M2M through fields if you have any
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # If we are editing an existing through-object, we have self.instance.pk.
+        # The existing Option is self.instance.option
+        existing_option = getattr(self.instance, 'option', None)
+        if existing_option:
+            # Pre-populate the fields from the Option instance
+            self.fields['name'].initial = existing_option.name
+            self.fields['type'].initial = existing_option.type
+            self.fields['required'].initial = existing_option.required
+            self.fields['help_text'].initial = existing_option.help_text
+            self.fields['order'].initial = existing_option.order
+
+    def save(self, commit=True):
+        """
+        Override save() to create/update the Option object using the inline fields.
+        Then assign self.instance.option = that Option.
+        Finally, save the through instance.
+        """
+        # 1) Create/update Option using the posted data
+        data = self.cleaned_data
+
+        if self.instance.option_id:
+            # Editing an existing Option
+            option = self.instance.option
+        else:
+            # Creating a new Option
+            option = Option()
+
+        option.name = data['name']
+        option.type = data['type']
+        option.required = data['required']
+        option.help_text = data['help_text']
+        option.order = data['order']
+
+        # Possibly also set option.vendor = self.request.user.vendor (if you want to enforce that).
+        # But we can't do that here easily because we don't have request in the form. 
+        # One approach: pass the vendor in form's __init__ or do it in the formset.
+
+        if commit:
+            option.save()
+
+        # 2) Assign the Option to the through instance
+        self.instance.option = option
+
+        # 3) Let ModelForm handle saving the through instance (with commit)
+        return super().save(commit=commit)

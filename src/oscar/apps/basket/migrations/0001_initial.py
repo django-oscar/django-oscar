@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('line_reference', models.SlugField(max_length=128, verbose_name='Line Reference')),
                 ('quantity', models.PositiveIntegerField(default=1, verbose_name='Quantity')),
-                ('price_currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
+                ('price_currency', models.CharField(default='SAR', max_length=12, verbose_name='Currency')),
                 ('price_excl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Price excl. Tax', null=True)),
                 ('price_incl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Price incl. Tax', null=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),

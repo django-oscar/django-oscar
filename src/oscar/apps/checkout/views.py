@@ -266,10 +266,10 @@ class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
         # an exception on failure.
 
         # Check that shipping is required at all
-        if not request.basket.is_shipping_required():
-            # No shipping required - we store a special code to indicate so.
-            self.checkout_session.use_shipping_method(NoShippingRequired().code)
-            return self.get_success_response()
+        # if not request.basket.is_shipping_required():
+        #     # No shipping required - we store a special code to indicate so.
+        #     self.checkout_session.use_shipping_method(NoShippingRequired().code)
+        #     return self.get_success_response()
 
         # Check that shipping address has been completed
         if not self.checkout_session.is_shipping_address_set():

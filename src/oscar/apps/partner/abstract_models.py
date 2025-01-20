@@ -103,31 +103,31 @@ class AbstractStockRecord(models.Model):
         related_name="stockrecords",
         verbose_name=_("Product"),
     )
-    partner = models.ForeignKey(
-        "partner.Partner",
-        on_delete=models.CASCADE,
-        verbose_name=_("Partner"),
-        related_name="stockrecords",
-    )
+    # partner = models.ForeignKey(
+    #     "partner.Partner",
+    #     on_delete=models.CASCADE,
+    #     verbose_name=_("Partner"),
+    #     related_name="stockrecords",
+    # )
 
     #: The fulfilment partner will often have their own SKU for a product,
     #: which we store here.  This will sometimes be the same the product's UPC
     #: but not always.  It should be unique per partner.
     #: See also http://en.wikipedia.org/wiki/Stock-keeping_unit
-    partner_sku = models.CharField(_("Partner SKU"), max_length=128)
+    # partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     # Price info:
-    price_currency = models.CharField(
-        _("Currency"), max_length=12, default=get_default_currency
-    )
+    # price_currency = models.CharField(
+    #     _("Currency"), max_length=12, default=get_default_currency
+    # )
 
     # This is the base price for calculations - whether this is inclusive or exclusive of
     # tax depends on your implementation, as this is highly domain-specific.
     # It is nullable because some items don't have a fixed
     # price but require a runtime calculation (possibly from an external service).
-    price = models.DecimalField(
-        _("Price"), decimal_places=2, max_digits=12, blank=True, null=True
-    )
+    # price = models.DecimalField(
+    #     _("Price"), decimal_places=2, max_digits=12, blank=True, null=True
+    # )
 
     #: Number of items in stock
     num_in_stock = models.PositiveIntegerField(
@@ -152,19 +152,19 @@ class AbstractStockRecord(models.Model):
 
     def __str__(self):
         msg = "Partner: %s, product: %s" % (
-            self.partner.display_name,
+            self.branch.name,
             self.product,
         )
-        if self.partner_sku:
-            msg = "%s (%s)" % (msg, self.partner_sku)
+        # if self.partner_sku:
+        #     msg = "%s (%s)" % (msg, self.partner_sku)
         return msg
 
     class Meta:
         abstract = True
-        app_label = "partner"
-        unique_together = ("partner", "partner_sku")
-        verbose_name = _("Stock record")
-        verbose_name_plural = _("Stock records")
+        # app_label = "partner"
+        # unique_together = ("partner", "partner_sku")
+        # verbose_name = _("Stock record")
+        # verbose_name_plural = _("Stock records")
 
     @property
     def net_stock_level(self):

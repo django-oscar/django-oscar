@@ -47,7 +47,7 @@ calculating prices and availability information.
    >>> info.price.tax
    Decimal('3.60')
    >>> info.price.currency
-   'GBP'
+   'SAR'
 
 The :py:class:`Product <oscar.apps.catalogue.abstract_models.AbstractProduct>` model captures the core data about the product (title, description,
 images) while the :py:class:`StockRecord <oscar.apps.partner.abstract_models.AbstractStockRecord>` model represents fulfilment information for one

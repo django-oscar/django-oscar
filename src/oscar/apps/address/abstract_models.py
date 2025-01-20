@@ -10,6 +10,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import UppercaseCharField
+from server.apps.user.models import City
 
 
 class AbstractAddress(models.Model):
@@ -228,7 +229,13 @@ class AbstractAddress(models.Model):
     line1 = models.CharField(_("First line of address"), max_length=255)
     line2 = models.CharField(_("Second line of address"), max_length=255, blank=True)
     line3 = models.CharField(_("Third line of address"), max_length=255, blank=True)
-    line4 = models.CharField(_("City"), max_length=255, blank=True)
+    line4 = models.ForeignKey(
+        City,  # Replace with the actual app label if City is in a different app, e.g., "yourapp.City"
+        on_delete=models.CASCADE,  # Use the appropriate behavior for deletion (CASCADE, SET_NULL, etc.)
+        verbose_name=_("City"),
+        blank=True,
+        null=True  # Allow nulls if the field is optional
+    )
     state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = UppercaseCharField(_("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey(

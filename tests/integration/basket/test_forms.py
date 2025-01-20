@@ -224,7 +224,7 @@ class TestAddToBasketForm(TestCase):
     def test_mixed_currency_baskets_are_not_permitted(self):
         # Ensure basket is one currency
         basket = mock.Mock()
-        basket.currency = "GBP"
+        basket.currency = "SAR"
         basket.num_items = 1
 
         # Ensure new product has different currency

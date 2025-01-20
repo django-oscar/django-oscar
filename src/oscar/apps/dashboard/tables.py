@@ -13,7 +13,7 @@ class DashboardTable(Table):
             else:
                 caption = str(self.caption) if self.caption else ''
                 
-            count = f"<span>({self.paginator.count})</span>" if self.paginator else "<span>(0)</span>"
+            count = f"({self.paginator.count})" if self.paginator else "<span>(0)</span>"
             
             if self.icon_svg:
                 return mark_safe(f'{self.icon_svg}&nbsp;&nbsp;{caption}&nbsp;{count}')

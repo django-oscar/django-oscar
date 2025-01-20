@@ -11,7 +11,6 @@ from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views.generic import ObjectLookupView
-from server.apps.dashboard.catalogue.forms import ProductBranchFormSet
 from server.apps.vendor.mixins import VendorMixin
 from server.apps.vendor.models import Vendor
 from django.http import JsonResponse
@@ -47,6 +46,8 @@ from django.views.decorators.http import require_POST
     ProductRecommendationFormSet,
     ProductAttributesFormSet,
     AttributeOptionFormSet,
+    ProductBranchFormSet,
+    ProductOptionFormSet,
 ) = get_classes(
     "dashboard.catalogue.formsets",
     (
@@ -56,6 +57,8 @@ from django.views.decorators.http import require_POST
         "ProductRecommendationFormSet",
         "ProductAttributesFormSet",
         "AttributeOptionFormSet",
+        "ProductBranchFormSet",
+        "ProductOptionFormSet",
     ),
 )
 ProductTable, CategoryTable, AttributeOptionGroupTable, OptionTable = get_classes(
@@ -99,7 +102,7 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
         product_class = self.request.GET.get("product_class")
         ctx["form"] = self.form
         ctx["productclass_form"] = self.productclass_form_class(
-            user=self.request.user,  # Pass the user for vendor filtering
+            # user=self.request.user,  # Pass the user for vendor filtering
             initial={'product_class': product_class}  # Set initial value if available
         )
         return ctx
@@ -234,7 +237,8 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
     image_formset = ProductImageFormSet
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_formset = StockRecordFormSet
-
+    branch_formset = ProductBranchFormSet
+    option_formset = ProductOptionFormSet
     creating = False
     parent = None
 
@@ -245,6 +249,7 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
             "image_formset": self.image_formset,
             "recommended_formset": self.recommendations_formset,
             "stockrecord_formset": self.stockrecord_formset,
+            "option_formset": self.option_formset,
         }
 
     def dispatch(self, request, *args, **kwargs):
@@ -272,36 +277,37 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
 
     def get_object(self, queryset=None):
         """
-        This parts allows generic.UpdateView to handle creating products as
-        well. The only distinction between an UpdateView and a CreateView
-        is that self.object is None. We emulate this behavior.
-
-        This method is also responsible for setting self.product_class and
-        self.parent.
+        Distinguish between creating vs. editing:
+        - creating a standalone product if no pk/parent_pk
+        - creating a child product if no pk but there is parent_pk
+        - editing an existing product if pk is present
         """
         self.creating = "pk" not in self.kwargs
-        if self.creating:
-            # Specifying a parent product is only done when creating a child
-            # product.
-            parent_pk = self.kwargs.get("parent_pk")
-            if parent_pk is None:
-                self.parent = None
-                # A product class needs to be specified when creating a
-                # standalone product.
-                product_class_slug = self.kwargs.get("product_class_slug")
-                self.product_class = get_object_or_404(
-                    ProductClass, slug=product_class_slug
-                )
-            else:
-                self.parent = get_object_or_404(Product, pk=parent_pk)
-                self.product_class = self.parent.product_class
 
-            return None  # success
+        if self.creating:
+            # We're creating
+            parent_pk = self.kwargs.get("parent_pk")
+            if parent_pk:
+                # Creating a new child product
+                parent_product = get_object_or_404(Product, pk=parent_pk)
+                self.parent = parent_product
+                self.product_class = parent_product.get_product_class()
+            else:
+                # Creating a brand new standalone product
+                product_class_slug = self.kwargs.get("product_class_slug")
+                self.product_class = get_object_or_404(ProductClass, slug=product_class_slug)
+                self.parent = None
+
+            # Return `None` so that Django knows we are creating a fresh object
+            return None
+
         else:
+            # Editing an existing product
             product = super().get_object(queryset)
             self.product_class = product.get_product_class()
             self.parent = product.parent
             return product
+
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -312,6 +318,14 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
         # Include category details in context
         ctx["categories"] = Category.objects.filter(vendor=vendor)
 
+        ctx["option_formset"] = ProductOptionFormSet(
+            self.product_class,
+            self.request.user,
+            instance=self.object,
+            data=self.request.POST or None,
+            files=self.request.FILES or None
+        )
+        
         for ctx_name, formset_class in self.formsets.items():
             if ctx_name not in ctx:
                 ctx[ctx_name] = formset_class(
@@ -319,13 +333,13 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
                 )
 
         # Debug category formset to ensure categories are passed
-        if "category_formset" in ctx:
-            for form in ctx["category_formset"]:
-                if "category" in form.fields:
-                    categories = form.fields["category"].queryset
-                    print("Categories passed to template:")
-                    for category in categories:
-                        print(f" - {category.name}: {category.description}")
+        # if "category_formset" in ctx:
+        #     for form in ctx["category_formset"]:
+        #         if "category" in form.fields:
+        #             categories = form.fields["category"].queryset
+                    # print("Categories passed to template:")
+                    # for category in categories:
+                    #     print(f" - {category.name}: {category.description}")
         return ctx
 
     def get_page_title(self):
@@ -408,18 +422,18 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
         """
         self.object = form.save()
 
-        branches = form.cleaned_data.get('branches')
-        if branches:
-            self.object.branches.set(branches)  # Update ManyToManyField
-        else:
-            self.object.branches.clear()
+        # branches = form.cleaned_data.get('branches')
+        # if branches:
+        #     self.object.branches.set(branches)  # Update ManyToManyField
+        # else:
+        #     self.object.branches.clear()
 
 
-        if self.creating:
-            self.handle_adding_child(self.parent)
-        else:
-            # a just created product was already saved in process_all_forms()
-            self.object = form.save()
+        # if self.creating:
+        #     self.handle_adding_child(self.parent)
+        # else:
+        #     # a just created product was already saved in process_all_forms()
+        #     self.object = form.save()
 
         # Save formsets
         for formset in formsets.values():
@@ -724,7 +738,7 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
-        ctx["parent"] = self.object.get_parent()
+        # ctx["parent"] = self.object.get_parent()
         return ctx
 
     def get_success_url(self):
@@ -1128,3 +1142,58 @@ class OptionDeleteView(PopUpWindowDeleteMixin, generic.DeleteView):
     def get_success_url(self):
         self.add_success_message(_("Option deleted successfully"))
         return reverse("dashboard:catalogue-option-list")
+
+class DefaultProductCreateRedirectView(generic.RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        user = self.request.user
+        vendor = Vendor.objects.filter(user=user).first()
+        if not vendor:
+            messages.error(self.request, "No Vendor is associated with this user.")
+            return reverse("dashboard:catalogue-product-list")
+
+        # Instead of: vendor.vendor_type (which doesn't exist)
+        # do:
+        if not hasattr(vendor, "business_details") or not vendor.business_details:
+            messages.error(self.request, "No BusinessDetails found for this vendor.")
+            return reverse("dashboard:catalogue-product-list")
+
+        business_type = vendor.business_details.business_type
+        if not business_type:
+            messages.error(self.request, "No BusinessType found for this vendor.")
+            return reverse("dashboard:catalogue-product-list")
+
+        # Now filter ProductClass by the correct business_type
+        product_class = ProductClass.objects.filter(vendor_type=business_type).first()
+        if not product_class:
+            messages.error(
+                self.request,
+                f"No ProductClass found for {business_type}."
+            )
+            return reverse("dashboard:catalogue-product-list")
+
+        # Finally, redirect to the usual create page with the correct product_class_slug
+        return reverse(
+            "dashboard:catalogue-product-create",
+            kwargs={"product_class_slug": product_class.slug},
+        )
+
+
+@csrf_exempt
+def create_option(request):
+    import json
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        name = data.get('name')
+        code = data.get('code')
+        option_type = data.get('type')
+
+        if not all([name, code, option_type]):
+            return JsonResponse({'success': False, 'error': 'Missing required fields'})
+
+        option = Option.objects.create(name=name, code=code, type=option_type)
+        return JsonResponse({'success': True, 'id': option.id, 'name': option.name})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})

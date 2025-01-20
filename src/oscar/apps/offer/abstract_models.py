@@ -517,7 +517,7 @@ class AbstractConditionalOffer(models.Model):
             return Product.objects.none()
 
         queryset = self.condition.range.all_products()
-        return queryset.filter(is_discountable=True).browsable()
+        return queryset.browsable()
 
     @cached_property
     def combined_offers(self):
@@ -777,7 +777,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         """
         Determines whether the benefit can be applied to a given basket line
         """
-        return line.stockrecord and line.product.is_discountable
+        return line.stockrecord and line.product
 
     # pylint: disable=W0622
     def get_applicable_lines(self, offer, basket, range=None):
@@ -935,7 +935,7 @@ class AbstractCondition(BaseOfferMixin, models.Model):
         if not line.stockrecord_id:
             return False
         product = line.product
-        return self.range.contains_product(product) and product.is_discountable
+        return self.range.contains_product(product) and product
 
     def get_applicable_lines(self, offer, basket, most_expensive_first=True):
         """

@@ -24,7 +24,7 @@ class TestUnavailable(TestCase):
 
 class TestFixedPriceWithoutTax(TestCase):
     def setUp(self):
-        self.price = prices.FixedPrice("GBP", D("9.15"))
+        self.price = prices.FixedPrice("SAR", D("9.15"))
 
     def test_means_unknown_tax(self):
         self.assertFalse(self.price.is_tax_known)

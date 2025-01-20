@@ -246,26 +246,36 @@ class NoTax(object):
     """
 
     def pricing_policy(self, product, stockrecord):
-        # Check stockrecord has the appropriate data
-        if not stockrecord or stockrecord.price is None:
+        # If product.selling_price is missing, it's unavailable
+        if product.selling_price is None:
             return UnavailablePrice()
         return FixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price,
+            currency=product.price_currency or "SAR",  # fallback or your default
+            excl_tax=product.selling_price,
             tax=D("0.00"),
         )
 
     def parent_pricing_policy(self, product, children_stock):
-        stockrecords = [x[1] for x in children_stock if x[1] is not None]
-        if not stockrecords:
-            return UnavailablePrice()
-        # We take price from first record
-        stockrecord = stockrecords[0]
-        return FixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price,
-            tax=D("0.00"),
-        )
+        """
+        For a parent product, you can decide how you want the price determined.
+        For this example, we'll just use the parent's price field
+        (or fallback to the first child's price if parent's is None).
+        """
+        if product.selling_price is not None:
+            return FixedPrice(
+                currency=product.price_currency or "USD",
+                excl_tax=product.selling_price,
+                tax=D("0.00"),
+            )
+        # Fallback: check first child
+        for (child, stockrecord) in children_stock:
+            if child.selling_price is not None:
+                return FixedPrice(
+                    currency=child.price_currency or "USD",
+                    excl_tax=child.selling_price,
+                    tax=D("0.00"),
+                )
+        return UnavailablePrice()
 
 
 class FixedRateTax(object):
@@ -280,29 +290,39 @@ class FixedRateTax(object):
     exponent = D("0.01")  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
-        if not stockrecord or stockrecord.price is None:
+        if product.selling_price is None:
             return UnavailablePrice()
-        rate = self.get_rate(product, stockrecord)
-        exponent = self.get_exponent(stockrecord)
-        tax = (stockrecord.price * rate).quantize(exponent)
+        base_price = product.selling_price
+        tax = (base_price * self.rate).quantize(self.exponent)
         return TaxInclusiveFixedPrice(
-            currency=stockrecord.price_currency, excl_tax=stockrecord.price, tax=tax
+            currency=product.price_currency or "USD",
+            excl_tax=base_price,
+            tax=tax,
         )
 
     def parent_pricing_policy(self, product, children_stock):
-        stockrecords = [x[1] for x in children_stock if x[1] is not None]
-        if not stockrecords:
-            return UnavailablePrice()
-
-        # We take price from first record
-        stockrecord = stockrecords[0]
-        rate = self.get_rate(product, stockrecord)
-        exponent = self.get_exponent(stockrecord)
-        tax = (stockrecord.price * rate).quantize(exponent)
-
-        return FixedPrice(
-            currency=stockrecord.price_currency, excl_tax=stockrecord.price, tax=tax
-        )
+        """
+        Decide how to handle a parent product with children. Example:
+        - Use the parent's price if it exists
+        - Otherwise, fallback to the first child's price
+        """
+        if product.selling_price is not None:
+            tax = (product.selling_price * self.rate).quantize(self.exponent)
+            return TaxInclusiveFixedPrice(
+                currency=product.price_currency or "USD",
+                excl_tax=product.selling_price,
+                tax=tax,
+            )
+        # fallback: first child with a valid price
+        for (child, _) in children_stock:
+            if child.selling_price is not None:
+                tax = (child.selling_price * self.rate).quantize(self.exponent)
+                return TaxInclusiveFixedPrice(
+                    currency=child.price_currency or "USD",
+                    excl_tax=child.selling_price,
+                    tax=tax,
+                )
+        return UnavailablePrice()
 
     def get_rate(self, product, stockrecord):
         """
@@ -331,23 +351,26 @@ class DeferredTax(object):
     """
 
     def pricing_policy(self, product, stockrecord):
-        if not stockrecord or stockrecord.price is None:
+        if product.selling_price is None:
             return UnavailablePrice()
         return FixedPrice(
-            currency=stockrecord.price_currency, excl_tax=stockrecord.price
+            currency=product.price_currency or "USD",
+            excl_tax=product.selling_price,
         )
 
     def parent_pricing_policy(self, product, children_stock):
-        stockrecords = [x[1] for x in children_stock if x[1] is not None]
-        if not stockrecords:
-            return UnavailablePrice()
-
-        # We take price from first record
-        stockrecord = stockrecords[0]
-
-        return FixedPrice(
-            currency=stockrecord.price_currency, excl_tax=stockrecord.price
-        )
+        if product.selling_price is not None:
+            return FixedPrice(
+                currency=product.price_currency or "USD",
+                excl_tax=product.selling_price,
+            )
+        for (child, _) in children_stock:
+            if child.selling_price is not None:
+                return FixedPrice(
+                    currency=child.price_currency or "USD",
+                    excl_tax=child.selling_price,
+                )
+        return UnavailablePrice()
 
 
 # Example strategy composed of above mixins.  For real projects, it's likely
