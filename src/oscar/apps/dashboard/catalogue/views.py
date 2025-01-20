@@ -1153,7 +1153,7 @@ class DefaultProductCreateRedirectView(generic.RedirectView):
             messages.error(self.request, "No Vendor is associated with this user.")
             return reverse("dashboard:catalogue-product-list")
 
-        # Instead of: vendor.vendor_type (which doesn't exist)
+        # Instead of: vendor.business_type (which doesn't exist)
         # do:
         if not hasattr(vendor, "business_details") or not vendor.business_details:
             messages.error(self.request, "No BusinessDetails found for this vendor.")
@@ -1165,7 +1165,7 @@ class DefaultProductCreateRedirectView(generic.RedirectView):
             return reverse("dashboard:catalogue-product-list")
 
         # Now filter ProductClass by the correct business_type
-        product_class = ProductClass.objects.filter(vendor_type=business_type).first()
+        product_class = ProductClass.objects.filter(business_type=business_type).first()
         if not product_class:
             messages.error(
                 self.request,
