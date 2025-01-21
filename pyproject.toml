@@ -56,7 +56,7 @@ docs = [
     "Sphinx>=5.0",
     "sphinxcontrib-spelling==7.5.1",
     "sphinx_rtd_theme==1.0.0",
-    "sphinx-issues==3.0.1",
+    "sphinx-issues==5.0.0",
     "sorl-thumbnail>=12.10.0,<13.0.0",
     "easy-thumbnails>=2.9,<2.10",
 ]
