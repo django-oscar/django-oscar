@@ -1,6 +1,6 @@
 # pylint: disable=W0621, unused-argument
 
-from decimal import Decimal as D
+from decimal import Decimal as D, ROUND_DOWN
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -97,9 +97,8 @@ class PercentageDiscountBenefit(Benefit):
             if quantity_affected <= 0:
                 break
 
-            line_discount = self.round(
-                discount_percent / D("100.0") * price * int(quantity_affected),
-                basket.currency,
+            line_discount = (
+                discount_percent / D("100.0") * price * int(quantity_affected)
             )
 
             if discount_amount_available is not None:
@@ -111,7 +110,7 @@ class PercentageDiscountBenefit(Benefit):
             affected_items += quantity_affected
             discount += line_discount
 
-        return BasketDiscount(discount)
+        return BasketDiscount(self.round(discount, basket.currency))
 
 
 class AbsoluteDiscountBenefit(Benefit):
@@ -196,7 +195,9 @@ class AbsoluteDiscountBenefit(Benefit):
             else:
                 # Calculate a weighted discount for the line
                 line_discount = self.round(
-                    ((price * qty) / affected_items_total) * discount, basket.currency
+                    ((price * qty) / affected_items_total) * discount,
+                    basket.currency,
+                    ROUND_DOWN,
                 )
             apply_discount(line, line_discount, qty, offer)
             applied_discount += line_discount

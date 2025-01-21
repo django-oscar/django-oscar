@@ -1,5 +1,5 @@
 # pylint: disable=redefined-outer-name
-from decimal import ROUND_DOWN, Decimal
+from decimal import ROUND_UP, Decimal
 from unittest.mock import patch
 
 import pytest
@@ -51,7 +51,7 @@ class TestBenefit(TestCase):
         decimal = Decimal(10.0570)
 
         self.assertEqual(
-            benefit.round(decimal), decimal.quantize(Decimal("0.01"), ROUND_DOWN)
+            benefit.round(decimal), decimal.quantize(Decimal("0.01"), ROUND_UP)
         )
 
     @override_settings(
