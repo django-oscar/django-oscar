@@ -1,0 +1,186 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load currency_filters %}
+{% load sorting_tags %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block body_class %}{{ block.super }} students{% endblock %}
+
+{% block title %}
+{% trans "Students" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Students" %}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h1>{% trans "Students" %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<div class="table-header">
+    <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
+</div>
+<div class="card card-body bg-light">
+    <form method="get" class="form-inline" id="search_form">
+        {% for field in form %}
+        {% if "student" in field.id_for_label %}
+        {% if field.is_hidden %}
+        {% render_field field class+='form-control' %}
+        {% else %}
+        <div class="form-group mr-2">
+            {{ field.label_tag }}
+            {% render_field field class+='form-control' %}
+            {% for error in field.errors %}
+            <ul class="error-block">
+                <li>{{ error }}</li>
+            </ul>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        <input type="submit" value="{% trans " Search" %}" class="btn btn-primary mr-2" />
+        <a data-toggle="modal" data-target="#SearchModal" href="#">{% trans "Advanced Search" %}</a>
+    </form>
+
+    {# Search modal, if there are form errors the form is automatically openend #}
+    {% include "oscar/dashboard/partials/advanced_search_modal.html" with form=form style='horizontal' %}
+
+    {% if search_filters %}
+    <div class="search-filter-list">
+        <label>Filters:</label>
+        {% for filter in search_filters %}
+        <span class="badge badge-success">{{ filter }}</span>
+        {% endfor %}
+    </div>
+
+    {% endif %}
+</div>
+
+{% if students %}
+<form method="post" class="student_table" id="students_form">
+    {% csrf_token %}
+
+    {% block student_list %}
+    <table class="table table-striped table-bstudented table-hover">
+        <caption>
+            <h3 class="float-left"><i class="fas fa-shopping-cart"></i>
+                {% if search_filters %}
+                {% trans "Student Search Results" %}
+                {% else %}
+                {% trans "All Students" %}
+                {% endif %}
+            </h3>
+            <div class="float-right">
+                <div class="form-inline">
+                    <label>{% trans "Download selected students as a CSV" %}</label>
+                    <button type="submit" class="btn btn-primary" name="action" value="download_selected_students"
+                        data-loading-text="{% trans 'Submitting...' %}">{% trans "Download" %}</button>
+                </div>
+            </div>
+        </caption>
+
+        <thead>
+            <tr>
+                <th></th>
+                <th>{% anchor 'national_id' _("National id") %}</th>
+                <th>{% anchor 'full_name_en' _("Full Name (English)") %}</th>
+                <th>{% anchor 'full_name_ar' _("Full Name (Arabic)") %}</th>
+                <th>{% trans "Birthdate" %}</th>
+                <th>{% trans "Gender" %}</th>
+                <th>{% trans "Grade" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Parent email address" %}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td><input type="checkbox" name="selected_student" class="selected_student" value="{{ student.id }}" />
+                </td>
+                <td><a href="{% url 'dashboard:student-detail' national_id=student.national_id %}">{{ student.national_id }}</a></td>
+                <td>{{ student.full_name_en }}</td>
+                <td>{{ student.full_name_ar }}</td>
+                <td>{{ student.date_of_birth}}</td>
+                <td>{{ student.gender}}</td>
+                <td>{{ student.grade}}</td>
+                <td>{% if student.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive"%}{% endif %}</td>
+                <td>
+                    {% if student.parent %}
+                    {{ student.parent.user.email }}
+                    
+                    {% else %}
+                    &lt;{% trans "Not Exists" %}&gt;
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-secondary" href="{% url 'dashboard:student-detail' national_id=student.national_id %}">
+                        {%trans "View" %}</a>
+                    <a class="btn btn-primary" href="{% url 'dashboard:student-update' national_id=student.national_id %}">
+                        <i class="fas fa-edit"></i> {% trans "Update" %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endblock student_list %}
+    {% block student_actions %}
+    <div class="card card-body bg-light d-flex gap-2">
+            <h3><i class="fas fa-exclamation-circle"></i> {% trans "Actions" %}:</h3>
+            <div class="form-group">
+                <div class="controls">
+                    <select name="perform_action">
+                        <option value=""> -- {% trans "Choose action" %} -- </option>
+                        <option value="active">{% trans "Active" %}</option>
+                        <option value="inactive">{% trans "Inactive" %}</option>
+                        <option value="delete">{% trans "Delete" %}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex-nowrap">
+                <button type="submit" name="action" value="change_student_statuses" class="btn btn-primary"
+                    data-loading-text="{% trans 'Applying...' %}">
+                    {% trans "Apply" %}
+                </button>
+            </div>
+
+    </div>
+    {% endblock %}
+
+    {% include "oscar/dashboard/partials/pagination.html" %}
+</form>
+{% else %}
+<table class="table table-striped table-bstudented">
+    <caption><i class="fas fa-shopping-cart"></i>
+        {% if search_filters %}
+        {% trans "Student Search Results" %}
+        {% else %}
+        {% trans "All Students" %}
+        {% endif %}
+    </caption>
+    <tr>
+        <td>{% trans "No students found." %}</td>
+    </tr>
+</table>
+{% endif %}
+
+{% endblock dashboard_content %}
+
+{% block onbodyload %}
+{{ block.super }}
+oscar.dashboard.students.initTable();
+{% if form.errors %}
+$('#SearchModal').modal('show');
+{% endif %}
+{% endblock onbodyload %}

@@ -7,11 +7,11 @@ from oscar.core.loading import get_class
 Node = get_class("dashboard.nav", "Node")
 
 
-def get_nodes(user):
+def get_nodes(user, nav_list=settings.OSCAR_DASHBOARD_NAVIGATION):
     """
     Return the visible navigation nodes for the passed user
     """
-    all_nodes = create_menu(settings.OSCAR_DASHBOARD_NAVIGATION)
+    all_nodes = create_menu(nav_list)
     visible_nodes = []
     for node in all_nodes:
         filtered_node = node.filter(user)
