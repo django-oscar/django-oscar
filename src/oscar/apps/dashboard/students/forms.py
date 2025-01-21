@@ -31,12 +31,38 @@ class StudentForm(forms.ModelForm):
             'full_name_en': forms.TextInput(attrs={'class': 'form-control'}),
             'full_name_ar': forms.TextInput(attrs={'class': 'form-control'}),
             'gender': forms.Select(attrs={'class': 'form-control'}),
-            'grade': forms.TextInput(attrs={'class': 'form-control'}),
+            'grade': forms.Select(attrs={'class': 'form-control'}),
         }
         
     def clean_is_active(self):
         """Convert the string 'True'/'False' to boolean value"""
         return self.cleaned_data['is_active'] == 'True'
+class AddStudentForm(forms.ModelForm):
+    STATUS_CHOICES = (
+        (True, 'Active'),
+        (False, 'Inactive')
+    )
+    
+    is_active = forms.ChoiceField(
+        choices=STATUS_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    class Meta:
+        model = Student
+        fields = ['national_id', 'full_name_en', 'full_name_ar', 'date_of_birth', 'gender', 'grade', 'is_active']
+        widgets = {
+            'national_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'full_name_en': forms.TextInput(attrs={'class': 'form-control'}),
+            'full_name_ar': forms.TextInput(attrs={'class': 'form-control'}),
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'grade': forms.Select(attrs={'class': 'form-control'}),
+        }
+    def clean_is_active(self):
+        """Convert the string 'True'/'False' to boolean value"""
+        return self.cleaned_data['is_active'] == 'True'
+
 class StudentSearchForm(forms.Form):
     national_id = forms.CharField(required=False, label=_("National ID"))
     full_name = forms.CharField(required=False, label=_("Full name"))

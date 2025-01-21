@@ -1,0 +1,77 @@
+<!-- templates/oscar/dashboard/students/student_import_success.html -->
+{% extends 'oscar/dashboard/students/student_import_base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Import Complete" %} | {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+
+{% endblock %}
+{% block stepper_tracker %}
+<li role="presentation" class="disabled">
+    <a class="persistant-disabled" href="{% url 'dashboard:student-import' %}" data-toggle="tab" aria-controls="stepper-step-1" role="tab"
+        title="Step 1">
+        <span class="round-tab">1</span>
+    </a>
+</li>
+<li role="presentation" class="disabled">
+    <a class="persistant-disabled" href="{% url 'dashboard:student-import-map' %}" data-toggle="tab" aria-controls="stepper-step-2" role="tab"
+        title="Step 2">
+        <span class="round-tab">2</span>
+    </a>
+</li>
+<li role="presentation" class="disabled">
+    <a class="persistant-disabled" href="{% url 'dashboard:student-import-preview' %}" data-toggle="tab" aria-controls="stepper-step-3" role="tab"
+        title="Step 3">
+        <span class="round-tab">3</span>
+    </a>
+</li>
+<li role="presentation" class="active">
+    <a class="persistant-disabled" href="{% url 'dashboard:student-import-success' %}" data-toggle="tab" aria-controls="stepper-step-4" role="tab"
+        title="Complete">
+        <span class="round-tab">4</span>
+    </a>
+</li>
+
+{% endblock %}
+{% block dashboard_content %}
+<div class="tab-pane show in active" role="tabpanel" id="stepper-step-4">
+
+    <div class="table-header">
+        <h1>{% trans "Import Complete" %}</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if success_count %}
+
+            <div class="alert alert-success">
+                {% blocktrans with count=success_count %}
+                Successfully imported {{ count }} students.
+                {% endblocktrans %}
+            </div>
+            {% endif %}
+
+            {% if import_errors %}
+            <div class="alert alert-warning">
+                <h4>{% trans "Import Errors" %}</h4>
+                <ul>
+                    {% for error in import_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <a href="{% url 'dashboard:students-list' %}" class="btn btn-primary">
+                    {% trans "Return to Student List" %}
+                </a>
+                <a href="{% url 'dashboard:student-import' %}" class="btn btn-light">
+                    {% trans "Import More Students" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, FormView, ListView, UpdateView
+from django.views.generic import DetailView, FormView, ListView, UpdateView, CreateView
 
 from oscar.apps.payment.exceptions import PaymentError
 from oscar.core.compat import UnicodeCSVWriter
@@ -19,6 +19,11 @@ from oscar.core.loading import get_class, get_model
 from oscar.core.utils import datetime_combine, format_datetime
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
+from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView
+from django.core.files.storage import default_storage
+import csv
+from io import TextIOWrapper
 
 Student = get_model("school", "Student")
 StudentSearchForm = get_class("dashboard.students.forms", "StudentSearchForm")
@@ -295,7 +300,7 @@ class StudentListView(BulkEditMixin, ListView):
 
  
 
-class StudentDetailView(DetailView):
+class StudentDetailView( DetailView):
     """
     Dashboard view to display a single student.
 
@@ -356,13 +361,13 @@ class StudentDetailView(DetailView):
 
     def delete_student(self, request, student):
         try:
-            student = student.get(national_id=request.POST.get("national_id", None))
-        except ObjectDoesNotExist:
-            messages.error(request, _("Student cannot be deleted"))
-        else:
+            # No need to query again, we already have the student object
             student.delete()
-            messages.info(request, _("Student deleted Successfully"))
-        return self.reload_page()
+            messages.success(request, _("Student deleted successfully"))
+            return HttpResponseRedirect(reverse('dashboard:students-list'))
+        except Exception as e:
+            messages.error(request, _("Student cannot be deleted"))
+            return self.reload_page()
 
     def change_student_status(self, request, student):
         old_status = "Active" if student.is_active else "Inactive"
@@ -389,7 +394,7 @@ class StudentDetailView(DetailView):
         return self._create_payment_event(request, student, amount)
 
 
-class StudentUpdateView(UpdateView):
+class StudentUpdateView( UpdateView):
     """
     Dashboard view to update student details.
     Supports the permission-based dashboard.
@@ -410,7 +415,7 @@ class StudentUpdateView(UpdateView):
         """
         Redirects to the student detail page after successful update
         """
-        messages.success(self.request, _("Student details updated successfully"))
+        # messages.success(self.request, _("Student details updated successfully"))
         return reverse('dashboard:student-detail', kwargs={'national_id': self.object.national_id})
     
     def get_context_data(self, **kwargs):
@@ -443,3 +448,227 @@ class StudentUpdateView(UpdateView):
         """
         messages.error(self.request, _("Your submitted data was not valid - please correct the errors below"))
         return super().form_invalid(form)
+class StudentCreateView(CreateView):
+    template_name = "oscar/dashboard/students/student_create.html"
+    model = Student
+    form_class = get_class('dashboard.students.forms', 'AddStudentForm')
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     # pylint: disable=attribute-defined-outside-init
+    #     self.product = get_object_or_404(
+    #         self.product_model, pk=kwargs["product_pk"], is_public=True
+    #     )
+    #     # check permission to leave review
+    #     if not self.product.is_review_permitted(request.user):
+    #         if self.product.has_review_by(request.user):
+    #             message = _("You have already reviewed this product!")
+    #         else:
+    #             message = _("You can't leave a review for this product.")
+    #         messages.warning(self.request, message)
+    #         return redirect(self.product.get_absolute_url())
+
+    #     return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        print("StudentCreateView")
+        context = super().get_context_data(**kwargs)
+        context["school"] = self.request.user.school
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.school = self.request.user.school
+        response = super().form_valid(form)
+        messages.success(self.request, _("Student Added Successfully."))
+        return response
+
+    def get_success_url(self):
+        return reverse('dashboard:students-list')
+
+
+def get_changes_between_models(model1, model2, excludes=None):
+    """
+    Return a dict of differences between two model instances
+    """
+    if excludes is None:
+        excludes = []
+    changes = {}
+    for field in model1._meta.fields:
+        if (
+            isinstance(field, (fields.AutoField, fields.related.RelatedField))
+            or field.name in excludes
+        ):
+            continue
+
+        if field.value_from_object(model1) != field.value_from_object(model2):
+            changes[field.verbose_name] = (
+                field.value_from_object(model1),
+                field.value_from_object(model2),
+            )
+    return changes
+
+
+def get_change_summary(model1, model2):
+    """
+    Generate a summary of the changes between two address models
+    """
+    changes = get_changes_between_models(model1, model2, ["search_text"])
+    change_descriptions = []
+    for field, delta in changes.items():
+        change_descriptions.append(
+            _("%(field)s changed from '%(old_value)s' to '%(new_value)s'")
+            % {"field": field, "old_value": delta[0], "new_value": delta[1]}
+        )
+    return "\n".join(change_descriptions)
+
+
+
+
+class StudentImportView(TemplateView):
+    template_name = 'oscar/dashboard/students/student_import.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active_tab'] = 'Upload'
+        context['current_step'] = 1
+        context['sample_csv_url'] = reverse('dashboard:student-sample-csv')
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        step = request.POST.get('step')
+        
+        if step == '1':  # File Upload
+            if 'csv_file' not in request.FILES:
+                messages.error(request, _('Please select a CSV file'))
+                return self.render_to_response(self.get_context_data())
+            
+            csv_file = request.FILES['csv_file']
+            file_path = default_storage.save(f'temp/student_imports/{csv_file.name}', csv_file)
+            request.session['import_file_path'] = file_path
+            return HttpResponseRedirect(reverse('dashboard:student-import-map'))
+            
+        return self.render_to_response(self.get_context_data())
+
+class StudentImportMapFieldsView(TemplateView):
+    template_name = 'oscar/dashboard/students/student_import_map.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        file_path = self.request.session.get('import_file_path')
+        context['active_tab'] = 'Map'
+        context['current_step'] = 2
+        
+        if file_path:
+            with default_storage.open(file_path) as f:
+                csv_reader = csv.reader(TextIOWrapper(f))
+                headers = next(csv_reader)
+                context['csv_headers'] = headers
+                context['required_fields'] = [
+                    ('full_name_en', _('Full Name (English)')),
+                    ('full_name_ar', _('Full Name (Arabic)')),
+                    ('national_id', _('National ID')),
+                    ('grade', _('Grade')),
+                    ('date_of_birth', _('Date of Birth')),
+                ]
+                context['optional_fields'] = [
+                    ('gender', _('Gender')),
+                    ('is_active', _('Status')),
+                ]
+        return context
+
+    def post(self, request, *args, **kwargs):
+        field_mapping = {}
+        for field, _ in self.get_context_data()['required_fields'] + self.get_context_data()['optional_fields']:
+            mapped_column = request.POST.get(f'field_{field}')
+            if mapped_column:
+                field_mapping[field] = mapped_column
+        
+        request.session['field_mapping'] = field_mapping
+        return HttpResponseRedirect(reverse('dashboard:student-import-preview'))
+
+class StudentImportPreviewView(TemplateView):
+    template_name = 'oscar/dashboard/students/student_import_preview.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        file_path = self.request.session.get('import_file_path')
+        field_mapping = self.request.session.get('field_mapping')
+        context['active_tab'] = 'Preview'
+        context['current_step'] = 3
+        if file_path and field_mapping:
+            preview_data = []
+            with default_storage.open(file_path) as f:
+                csv_reader = csv.DictReader(TextIOWrapper(f))
+                for i, row in enumerate(csv_reader):
+                    if i >= 5:  # Preview first 5 rows
+                        break
+                    mapped_row = {field: row[column] for field, column in field_mapping.items()}
+                    preview_data.append(mapped_row)
+            context['preview_data'] = preview_data
+        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if 'confirm' in request.POST:
+            success_count = self.process_import(request)
+            # messages.success(request, _(f'Successfully imported {success_count} students'))
+            request.session["success_count"] = success_count
+            request.session.pop('import_file_path', None)
+            request.session.pop('field_mapping', None)
+            return HttpResponseRedirect(reverse('dashboard:student-import-success'))
+        return self.render_to_response(self.get_context_data())
+
+    def process_import(self, request):
+        file_path = request.session.get('import_file_path')
+        field_mapping = request.session.get('field_mapping')
+        success_count = 0
+        import_errors = {"errors":[]}
+        with default_storage.open(file_path) as f:
+            csv_reader = csv.DictReader(TextIOWrapper(f))
+            for row in csv_reader:
+                try:
+                    student_data = {
+                        field: row[column] 
+                        for field, column in field_mapping.items()
+                    }
+                    student_data['school'] = request.user.school
+                    
+                    # Convert is_active to boolean if present
+                    if 'is_active' in student_data:
+                        is_active_value = student_data['is_active'].lower()
+                        student_data['is_active'] = is_active_value in ['true', '1', 'yes', 'active']
+                    
+                    Student.objects.create(**student_data)
+                    success_count += 1
+                except Exception as e:
+                    error_message = f'Error importing row: {str(e)}'
+                    import_errors["errors"].append(error_message)
+                    # messages.warning(request, _(f'Error importing row: {e}'))
+        request.session["import_errors"] = import_errors
+        return success_count
+
+def student_sample_csv_view(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="student_import_template.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow(['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth', 'Gender', 'Status'])
+    writer.writerow(['John Doe', 'جون دو', '1234567890', '10', '2000-01-01', 'M', 'Active'])
+    
+    return response
+
+class StudentImportSuccessView(TemplateView):
+    template_name = 'oscar/dashboard/students/student_import_success.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active_tab'] = 'Completed'
+        context['current_step'] = 3
+        context['success_count'] = self.request.session.get("success_count")
+        context['import_errors'] = self.request.session.get("import_errors").get("errors")
+
+        
+        return context

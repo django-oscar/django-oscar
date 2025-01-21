@@ -1,0 +1,208 @@
+<!-- templates/oscar/dashboard/students/student_import_base.html -->
+{% extends 'oscar/dashboard/layout.html' %}
+{% load static %}
+
+{% block extrastyles %}
+{{ block.super }}
+<style>
+    .rtl {
+        direction: rtl;
+    }
+    .stepper .nav-tabs {
+  position: relative;
+}
+.stepper .nav-tabs > li {
+  width: 25%;
+  position: relative;
+}
+.stepper .nav-tabs > li:after {
+  content: '';
+  position: absolute;
+  background: #f1f1f1;
+  display: block;
+  width: 100%;
+  height: 5px;
+  top: 30px;
+  left: 0%;
+  z-index: 1;
+}
+.stepper .nav-tabs > li.completed::after ,.stepper .nav-tabs > li.active::after{
+  background: #34bc9b;
+}
+.stepper .nav-tabs > li:last-child::after {
+  background: transparent;
+}
+.stepper .nav-tabs > li.active:last-child .round-tab {
+  background: #34bc9b;
+}
+.stepper .nav-tabs > li.active:last-child .round-tab::after {
+  content: '✔';
+  color: #fff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: 0;
+  display: block;
+}
+.stepper .nav-tabs [data-toggle='tab'] {
+  width: 25px;
+  height: 25px;
+  margin: 20px auto;
+  border-radius: 100%;
+  border: none;
+  padding: 0;
+  color: #f1f1f1;
+}
+.stepper .nav-tabs [data-toggle='tab']:hover {
+  background: transparent;
+  border: none;
+}
+.stepper .nav-tabs > .active > [data-toggle='tab'], .stepper .nav-tabs > .active > [data-toggle='tab']:hover, .stepper .nav-tabs > .active > [data-toggle='tab']:focus {
+  color: #34bc9b;
+  cursor: default;
+  border: none;
+}
+.stepper .tab-pane {
+  position: relative;
+  padding-top: 50px;
+}
+.stepper .round-tab {
+  width: 25px;
+  height: 25px;
+  line-height: 22px;
+  display: inline-block;
+  border-radius: 25px;
+  background: #fff;
+  border: 2px solid #34bc9b;
+  color: #34bc9b;
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  font-size: 14px;
+}
+.stepper .completed .round-tab {
+  background: #34bc9b;
+}
+.stepper .completed .round-tab::after {
+  content: '✔';
+  color: #fff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: 0;
+  display: block;
+}
+.stepper .active .round-tab {
+  background: #fff;
+  border: 2px solid #34bc9b;
+}
+.stepper .active .round-tab:hover {
+  background: #fff;
+  border: 2px solid #34bc9b;
+}
+.stepper .active .round-tab::after {
+  display: none;
+}
+.stepper .disabled .round-tab {
+  background: #fff;
+  color: #f1f1f1;
+  border-color: #f1f1f1;
+}
+.stepper .disabled .round-tab:hover {
+  color: #4dd3b6;
+  border: 2px solid #a6dfd3;
+}
+.stepper .disabled .round-tab::after {
+  display: none;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+            <div class="stepper">
+                <ul class="nav nav-tabs" role="tablist">
+                    {% block stepper_tracker %}{% endblock %}
+                    
+                </ul>
+                    <div class="tab-content">
+                        {% block dashboard_content %}{% endblock %}
+                        
+                    </div>
+            </div>
+
+
+{% endblock %}
+
+{% block extrascripts %}
+{{ block.super }}
+<script>
+    (function ($) {
+        'use strict';
+
+        $(function () {
+
+            $(document).ready(function () {
+                function triggerClick(elem) {
+                    $(elem).click();
+                }
+                var $progressWizard = $('.stepper'),
+                    $tab_active,
+                    $tab_prev,
+                    $tab_next,
+                    $btn_prev = $progressWizard.find('.prev-step'),
+                    $btn_next = $progressWizard.find('.next-step'),
+                    $tab_toggle = $progressWizard.find('[data-toggle="tab"]'),
+                    $tooltips = $progressWizard.find('[data-toggle="tab"][title]');
+
+                // To do:
+                // Disable User select drop-down after first step.
+                // Add support for payment type switching.
+
+                //Initialize tooltips
+                $tooltips.tooltip();
+
+                //Wizard
+                $tab_toggle.on('show.bs.tab', function (e) {
+                    var $target = $(e.target);
+
+                    if (!$target.parent().hasClass('active, disabled')) {
+                        $target.parent().prev().addClass('completed');
+                    }
+                    if ($target.parent().hasClass('disabled')) {
+                        return false;
+                    }
+                });
+
+                $tab_toggle.on('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                });
+
+                $btn_next.on('click', function () {
+                    $tab_active = $progressWizard.find('.active');
+
+                    $tab_active.next().removeClass('disabled');
+
+                    $tab_next = $tab_active.next().find('a[data-toggle="tab"]');
+                    triggerClick($tab_next);
+
+                });
+                $btn_prev.click(function () {
+                    $tab_active = $progressWizard.find('.active');
+                    $tab_prev = $tab_active.prev().find('a[data-toggle="tab"]');
+                    triggerClick($tab_prev);
+                });
+            });
+        });
+
+    }(jQuery, this));
+</script>
+
+{{ block.super }}
+{% endblock %}

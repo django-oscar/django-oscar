@@ -5,7 +5,7 @@
 {% block body_class %}{{ block.super }} students{% endblock %}
 
 {% block title %}
-{% blocktrans with full_name=student.full_name_en %}Update Student {{ full_name }}{% endblocktrans %} | {{ block.super
+{% blocktrans with full_name=student.full_name_en %}Add Student {% endblocktrans %} | {{ block.super
 }}
 {% endblock %}
 
@@ -14,15 +14,13 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
         <li class="breadcrumb-item"><a href="{% url 'dashboard:students-list' %}">{% trans "Students" %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'dashboard:student-detail' student.national_id %}">
-            {{ student.full_name_en }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Update" %}</li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Add Student" %}</li>
     </ol>
 </nav>
 {% endblock %}
 
 {% block headertext %}
-{% blocktrans with full_name=student.full_name_en %}Update Student {{ full_name }}{% endblocktrans %}
+{% blocktrans with full_name=student.full_name_en %}Add Student{% endblocktrans %}
 {% endblock %}
 
 {% block dashboard_content %}
@@ -46,8 +44,13 @@
 
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">{% trans "National ID" %}</label>
-                        <div class="col-sm-9 form-control-plaintext">
-                            {{ student.national_id }}
+                        <div class="col-sm-9">
+                            {{ form.national_id }}
+                            {% if form.national_id.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.national_id.errors }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -157,9 +160,8 @@
 
             <div class="form-group mt-3">
                 <div class="col-sm-9 offset-sm-3">
-                    <button type="submit" class="btn btn-primary">{% trans "Save changes" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
                     
-                    <a href="{% url 'dashboard:student-detail' student.national_id %}">{% trans "cancel" %}</a>
                 </div>
             </div>
         </form>
