@@ -1,0 +1,168 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block body_class %}{{ block.super }} students{% endblock %}
+
+{% block title %}
+{% blocktrans with full_name=student.full_name_en %}Update Student {{ full_name }}{% endblocktrans %} | {{ block.super
+}}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:students-list' %}">{% trans "Students" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:student-detail' student.national_id %}">{{
+                student.full_name_en }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Update" %}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block headertext %}
+{% blocktrans with full_name=student.full_name_en %}Update Student {{ full_name }}{% endblocktrans %}
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" class="form-horizontal">
+            {% csrf_token %}
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{% trans "Student Information" %}</h3>
+                </div>
+                <div class="card-body">
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "National ID" %}</label>
+                        <div class="col-sm-9 form-control-plaintext">
+                            {{ student.national_id }}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Full Name (English)" %}</label>
+                        <div class="col-sm-9">
+                            {{ form.full_name_en }}
+                            {% if form.full_name_en.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.full_name_en.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Full Name (Arabic)" %}</label>
+                        <div class="col-sm-9">
+                            {{ form.full_name_ar }}
+                            {% if form.full_name_ar.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.full_name_ar.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Date of Birth" %}</label>
+                        <div class="col-sm-9">
+                            {{ form.date_of_birth }}
+                            {% if form.date_of_birth.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.date_of_birth.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Gender" %}</label>
+                        <div class="col-sm-9">
+                            {{ form.gender }}
+                            {% if form.gender.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.gender.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Grade" %}</label>
+                        <div class="col-sm-9">
+                            {{ form.grade }}
+                            {% if form.grade.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.grade.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Status" %}</label>
+                        <div class="col-sm-9">
+                            {{ form.is_active }}
+                            {% if form.is_active.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.is_active.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if student.parent %}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="card-title">{% trans "Parent Information" %}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "First Name" %}</label>
+                        <div class="col-sm-9 form-control-plaintext">
+                            {{ student.parent.user.first_name }}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Last Name" %}</label>
+                        <div class="col-sm-9 form-control-plaintext">
+                            {{ student.parent.user.last_name }}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Email" %}</label>
+                        <div class="col-sm-9 form-control-plaintext">
+                            {{ student.parent.user.email }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="form-group mt-3">
+                <div class="col-sm-9 offset-sm-3">
+                    <button type="submit" class="btn btn-primary">{% trans "Save changes" %}</button>
+                    
+                    <a href="{% url 'dashboard:student-detail' student.national_id %}">{% trans "cancel" %}</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock dashboard_content %}

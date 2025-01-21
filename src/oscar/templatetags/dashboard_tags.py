@@ -9,7 +9,9 @@ register = template.Library()
 
 @register.simple_tag
 def dashboard_navigation(user):
-    return get_nodes(user)
+    if hasattr(user, "vendor"):
+        return get_nodes(user)
+    return get_nodes(user, settings.OSCAR_SCHOOLS_DASHBOARD_NAVIGATION)
 
 
 

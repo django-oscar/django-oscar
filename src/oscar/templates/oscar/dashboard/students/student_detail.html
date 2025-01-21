@@ -1,0 +1,120 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block body_class %}{{ block.super }} students{% endblock %}
+
+{% block title %}
+{% blocktrans with full_name=student.full_name %}Student {{ full_name }}{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:students-list' %}">{% trans "Students" %}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ student.full_name }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block headertext %}
+{% blocktrans with full_name=student.full_name %}Student {{ full_name }}{% endblocktrans %}
+{% endblock %}
+
+{% block dashboard_content %}
+<form method="post" class="student_table" id="students_form">
+    {% csrf_token %}
+    {% block student_information %}
+    <table class="table table-striped table-bstudented table-hover">
+        <caption><i class="fas fa-shopping-cart"></i> {% trans "Student information" %}</caption>
+        <tr>
+            <th>{% trans "National id" %}</th>
+            <td>{{ student.national_id }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Full Name (English)" %}</th>
+            <td>{{ student.full_name_en }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Full Name (Arabic)" %}</th>
+            <td>{{ student.full_name_ar }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Birthdate" %}</th>
+            <td>{{ student.date_of_birth}}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Gender" %}</th>
+            <td>{{ student.gender}}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Grade" %}</th>
+            <td>{{ student.grade}}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Status" %}</th>
+            <td>{% if student.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive"%}{% endif %}</td>
+        </tr>
+
+    </table>
+    {% endblock student_information %}
+
+    {% block additional_student_information %}
+    <table class="table table-striped table-bstudented table-hover">
+        <caption><i class="fas fa-shopping-cart"></i> {% trans "Parent information" %}</caption>
+        {% if student.parent %}
+        <tr>
+            <th>{% trans "First Name" %}</th>
+            <td>{{ student.parent.user.first_name }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Last Name" %}</th>
+            <td>{{ student.parent.user.last_name }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Email" %}</th>
+            <td>{{ student.parent.user.email }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Birthdate" %}</th>
+            <td>{{ student.parent.date_of_birth}}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Gender" %}</th>
+            <td>{{ student.parent.gender}}</td>
+        </tr>
+        <tr>
+            <th>{% trans "City" %}</th>
+            <td>{{ student.parent.city}}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Status" %}</th>
+            <td>{% if student.parent.user.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive"%}{% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td>&lt;{% trans "Not Exists" %}&gt;</td>
+
+        </tr>
+        {% endif %}
+
+
+    </table>
+    {% endblock additional_student_information %}
+    <a href="{% url 'dashboard:student-update' student.national_id %}" class="btn btn-primary">
+        <i class="fas fa-edit"></i> {% trans "Update" %}
+    </a>
+
+    <button type="submit" name="student_action" value="delete_student" class="btn btn-danger"
+        data-loading-text="{% trans 'Deleting...' %}">
+        {% trans "Delete" %}
+    </button>
+</form>
+{% endblock dashboard_content %}
+
+{% block onbodyload %}
+{{ block.super }}
+
+{% endblock %}
