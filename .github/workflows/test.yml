@@ -63,6 +63,8 @@ jobs:
         coverage run --parallel -m pytest -x
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5.1.2
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         fail_ci_if_error: false
   lint_python:
