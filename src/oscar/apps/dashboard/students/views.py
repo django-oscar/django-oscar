@@ -17,7 +17,6 @@ from oscar.apps.payment.exceptions import PaymentError
 from oscar.core.compat import UnicodeCSVWriter
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import datetime_combine, format_datetime
-from django.utils.formats import date_format  # Add this import at the top
 
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
@@ -260,8 +259,9 @@ class StudentListView(BulkEditMixin, ListView):
         "national_id": student.national_id,
         "full_name_en": student.full_name_en,
         "full_name_ar": student.full_name_ar,
-        "date_of_birth": date_format(student.date_of_birth, "DATE_FORMAT"),
+        "date_of_birth": student.date_of_birth.strftime('%Y-%m-%d'),
         "grade": student.grade,
+        "grade": student.gender,
         "status":"Active" if student.is_active else "Inactive",
     }
         if student.parent:
