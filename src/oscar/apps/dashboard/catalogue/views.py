@@ -1159,13 +1159,13 @@ class DefaultProductCreateRedirectView(generic.RedirectView):
             messages.error(self.request, "No BusinessDetails found for this vendor.")
             return reverse("dashboard:catalogue-product-list")
 
-        business_type = vendor.business_details.business_type
+        business_type = vendor.business_details.business_type.business_category
         if not business_type:
             messages.error(self.request, "No BusinessType found for this vendor.")
             return reverse("dashboard:catalogue-product-list")
 
         # Now filter ProductClass by the correct business_type
-        product_class = ProductClass.objects.filter(business_type=business_type).first()
+        product_class = ProductClass.objects.filter(business_category=business_type).first()
         if not product_class:
             messages.error(
                 self.request,
