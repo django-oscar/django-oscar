@@ -121,18 +121,18 @@ class IndexView(TemplateView):
             lines = Line.objects.filter()
             products = Product.objects.all()
 
-            if not user.is_staff:
-                partners_ids = tuple(user.partners.values_list("id", flat=True))
-                orders = orders.filter(lines__partner_id__in=partners_ids).distinct()
-                alerts = alerts.filter(stockrecord__partner_id__in=partners_ids)
-                baskets = baskets.filter(
-                    lines__stockrecord__partner_id__in=partners_ids
-                ).distinct()
-                customers = customers.filter(
-                    orders__lines__partner_id__in=partners_ids
-                ).distinct()
-                lines = lines.filter(partner_id__in=partners_ids)
-                products = products.filter(stockrecords__partner_id__in=partners_ids)
+            # if not user.is_staff:
+            #     partners_ids = tuple(user.partners.values_list("id", flat=True))
+            #     orders = orders.filter(lines__partner_id__in=partners_ids).distinct()
+            #     alerts = alerts.filter(stockrecord__partner_id__in=partners_ids)
+            #     baskets = baskets.filter(
+            #         lines__stockrecord__partner_id__in=partners_ids
+            #     ).distinct()
+            #     customers = customers.filter(
+            #         orders__lines__partner_id__in=partners_ids
+            #     ).distinct()
+            #     lines = lines.filter(partner_id__in=partners_ids)
+            #     products = products.filter(stockrecords__partner_id__in=partners_ids)
 
             orders_last_day = orders.filter(date_placed__gt=datetime_24hrs_ago)
 
