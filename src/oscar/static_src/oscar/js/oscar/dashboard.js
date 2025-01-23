@@ -356,7 +356,7 @@ var oscar = (function(o, $) {
         orders: {
             initTabs: function() {
                 if (location.hash) {
-                    $('.nav-tabs a[href=' + location.hash + ']').tab('show');
+                    $('.nav-tabs a[href="' + location.hash + '"]').tab('show');
                 }
             },
             initTable: function() {
