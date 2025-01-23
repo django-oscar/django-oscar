@@ -155,6 +155,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 "label": _("Attribute Option Groups"),
                 "url_name": "dashboard:catalogue-attribute-option-group-list",
             },
+            # {
+            #     "lable": _("Reservation"),
+            #     "url_name": ""
+            # }
         ],
     },
     {

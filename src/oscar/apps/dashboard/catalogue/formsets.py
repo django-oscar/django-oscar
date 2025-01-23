@@ -55,14 +55,14 @@ class StockRecordFormSet(BaseStockRecordFormSet):
         )
         self.product_class = product_class
 
-        if not user.is_staff and "instance" in kwargs and "queryset" not in kwargs:
-            kwargs.update(
-                {
-                    "queryset": StockRecord.objects.filter(
-                        product=kwargs["instance"], partner__in=user.partners.all()
-                    )
-                }
-            )
+        # if not user.is_staff and "instance" in kwargs and "queryset" not in kwargs:
+        #     kwargs.update(
+        #         {
+        #             "queryset": StockRecord.objects.filter(
+        #                 product=kwargs["instance"], partner__in=user.partners.all()
+        #             )
+        #         }
+        #     )
 
         super().__init__(*args, **kwargs)
         self.set_initial_data()

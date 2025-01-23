@@ -11,7 +11,7 @@ class UserAddressAdmin(admin.ModelAdmin):
 
 
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ["__str__", "display_order"]
+    list_display = ["__str__", "display_order", "pk"]
     list_filter = ["is_shipping_country"]
     search_fields = ["name", "printable_name", "iso_3166_1_a2", "iso_3166_1_a3"]
 
