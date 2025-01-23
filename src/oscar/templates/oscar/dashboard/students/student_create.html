@@ -14,14 +14,19 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
         <li class="breadcrumb-item"><a href="{% url 'dashboard:students-list' %}">{% trans "Students" %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Add Student" %}</li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Add Students" %}</li>
     </ol>
 </nav>
 {% endblock %}
 
-{% block headertext %}
-{% blocktrans with full_name=student.full_name_en %}Add Student{% endblocktrans %}
-{% endblock %}
+{% block header %}
+<div class="page-header">
+    <h1>{% trans "Add Students" %}</h1>
+    <a class="btn btn-primary" href="{% url 'dashboard:student-import' %}">
+        <i class="fas fa-edit"></i> {% trans "Import" %}
+    </a>
+</div>
+{% endblock header %}
 
 {% block dashboard_content %}
 <div class="row">

@@ -17,6 +17,7 @@ from oscar.apps.payment.exceptions import PaymentError
 from oscar.core.compat import UnicodeCSVWriter
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import datetime_combine, format_datetime
+
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
 from django.http import HttpResponseRedirect
@@ -27,6 +28,7 @@ from io import TextIOWrapper
 
 Student = get_model("school", "Student")
 StudentSearchForm = get_class("dashboard.students.forms", "StudentSearchForm")
+StudentImportValidator = get_class("dashboard.students.validators", "StudentImportValidator")
 
 
 def queryset_students_for_user(user):
@@ -110,7 +112,7 @@ class StudentListView(BulkEditMixin, ListView):
         data = self.form.cleaned_data
 
         if data["national_id"]:
-            queryset = self.base_queryset.filter(
+            queryset = self.queryset.filter(
                 national_id__istartswith=data["national_id"]
             )
 
@@ -125,18 +127,15 @@ class StudentListView(BulkEditMixin, ListView):
             queryset = queryset.filter(grade__istartswith=data["grade"])
 
         if data["birth_date_from"] and data["birth_date_to"]:
-            birth_date_to = datetime_combine(data["birth_date_to"], datetime.time.max)
-            birth_date_from = datetime_combine(data["birth_date_from"], datetime.time.min)
             queryset = queryset.filter(
-                date_of_birth__gte=birth_date_from, date_of_birth__lt=birth_date_to
+                date_of_birth__gte=data["birth_date_from"],
+                date_of_birth__lte=data["birth_date_to"]
             )
         elif data["birth_date_from"]:
-            birth_date_from = datetime_combine(data["birth_date_from"], datetime.time.min)
-            queryset = queryset.filter(date_of_birth__gte=birth_date_from)
+            queryset = queryset.filter(date_of_birth__gte=data["birth_date_from"])
         elif data["birth_date_to"]:
-            birth_date_to = datetime_combine(data["birth_date_to"], datetime.time.max)
-            queryset = queryset.filter(date_of_birth__lt=birth_date_to)
-
+            queryset = queryset.filter(date_of_birth__lte=data["birth_date_to"])
+        
         if data.get("status"):
             queryset = queryset.filter(is_active=data["status"])
 
@@ -260,8 +259,9 @@ class StudentListView(BulkEditMixin, ListView):
         "national_id": student.national_id,
         "full_name_en": student.full_name_en,
         "full_name_ar": student.full_name_ar,
-        "date_of_birth": format_datetime(student.date_of_birth, "DATETIME_FORMAT"),
+        "date_of_birth": student.date_of_birth.strftime('%Y-%m-%d'),
         "grade": student.grade,
+        "grade": student.gender,
         "status":"Active" if student.is_active else "Inactive",
     }
         if student.parent:
@@ -288,7 +288,6 @@ class StudentListView(BulkEditMixin, ListView):
 
     def change_student_status(self, request, student):
         action = request.POST.get("perform_action", None)
-        print("action", action)
         if action == "active":
             student.is_active = True
             student.save()
@@ -538,19 +537,23 @@ class StudentImportView(TemplateView):
         return context
     
     def post(self, request, *args, **kwargs):
-        step = request.POST.get('step')
+        if 'csv_file' not in request.FILES:
+            messages.error(request, _('Please select a CSV file'))
+            return self.render_to_response(self.get_context_data())
         
-        if step == '1':  # File Upload
-            if 'csv_file' not in request.FILES:
-                messages.error(request, _('Please select a CSV file'))
-                return self.render_to_response(self.get_context_data())
-            
-            csv_file = request.FILES['csv_file']
-            file_path = default_storage.save(f'temp/student_imports/{csv_file.name}', csv_file)
-            request.session['import_file_path'] = file_path
-            return HttpResponseRedirect(reverse('dashboard:student-import-map'))
-            
-        return self.render_to_response(self.get_context_data())
+        csv_file = request.FILES['csv_file']
+        
+        # Validate file
+        file_errors = StudentImportValidator.validate_file(csv_file)
+        if file_errors:
+            for error in file_errors:
+                messages.error(request, error)
+            return self.render_to_response(self.get_context_data())
+        
+        file_path = default_storage.save(f'temp/student_imports/{csv_file.name}', csv_file)
+        request.session['import_file_path'] = file_path
+        return HttpResponseRedirect(reverse('dashboard:student-import-map'))
+
 
 class StudentImportMapFieldsView(TemplateView):
     template_name = 'oscar/dashboard/students/student_import_map.html'
@@ -625,38 +628,56 @@ class StudentImportPreviewView(TemplateView):
         file_path = request.session.get('import_file_path')
         field_mapping = request.session.get('field_mapping')
         success_count = 0
-        import_errors = {"errors":[]}
+        import_errors = {"errors": []}
+        
         with default_storage.open(file_path) as f:
             csv_reader = csv.DictReader(TextIOWrapper(f))
-            for row in csv_reader:
+            for row_number, row in enumerate(csv_reader, start=1):
                 try:
                     student_data = {
                         field: row[column] 
                         for field, column in field_mapping.items()
                     }
+                    
+                    # Validate row data
+                    row_errors = StudentImportValidator.validate_row(student_data, row_number)
+                    if row_errors:
+                        import_errors["errors"].extend(row_errors)
+                        continue
+                    
                     student_data['school'] = request.user.school
                     
-                    # Convert is_active to boolean if present
                     if 'is_active' in student_data:
                         is_active_value = student_data['is_active'].lower()
                         student_data['is_active'] = is_active_value in ['true', '1', 'yes', 'active']
                     
+                    # Check if student with same national_id already exists
+                    if Student.objects.filter(national_id=student_data['national_id']).exists():
+                        import_errors["errors"].append(
+                            _("Row {}: Student with National ID {} already exists").format(
+                                row_number, student_data['national_id']
+                            )
+                        )
+                        continue
+                    
                     Student.objects.create(**student_data)
                     success_count += 1
+                    
                 except Exception as e:
-                    error_message = f'Error importing row: {str(e)}'
+                    error_message = _("Row {}: Error importing student - {}").format(row_number, str(e))
                     import_errors["errors"].append(error_message)
-                    # messages.warning(request, _(f'Error importing row: {e}'))
+        
         request.session["import_errors"] = import_errors
         return success_count
 
+        
 def student_sample_csv_view(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="student_import_template.csv"'
     
     writer = csv.writer(response)
     writer.writerow(['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth', 'Gender', 'Status'])
-    writer.writerow(['John Doe', 'جون دو', '1234567890', '10', '2000-01-01', 'M', 'Active'])
+    writer.writerow(['John Doe', 'جون دو', '1234567890', 'G10', '2000-01-01', 'M', 'Active'])
     
     return response
 
