@@ -179,7 +179,7 @@ class ProductAttributesContainer:
     def __setattr__(self, name, value):
         if name in self.RESERVED_ATTRIBUTES:
             raise ValidationError(
-                "%s is a reserved name and cannot be used as an attribute"
+                "%s is a reserved name and cannot be used as an attribute" % name
             )
 
         self._dirty.add(name)
