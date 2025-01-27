@@ -1,7 +1,10 @@
 from django.contrib import admin
 from server.apps.catalogue.models import ProductBranch
+from server.apps.partner.models import StockRecord
+from server.apps.service.models import Service
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
+from django.utils.safestring import mark_safe
 
 from oscar.core.loading import get_model
 
@@ -48,6 +51,63 @@ class ProductBranchInline(admin.TabularInline):
     verbose_name = "Branch"
     verbose_name_plural = "Branches"
 
+class ProductStockInline(admin.TabularInline):
+    model = StockRecord
+    extra = 1
+    verbose_name = "Stock Record"
+    verbose_name_plural = "Stock Records"
+
+class ProductServiceInline(admin.TabularInline):
+    model = Service
+    extra = 1
+    verbose_name = "Service"
+    verbose_name_plural = "Services"
+    readonly_fields = ("get_dynamic_time_slots",)
+    fields = (
+        "branch",
+        "service_type",
+        "provider_name",
+        "duration_minutes",
+        "max_services_per_slot",
+        "max_future_days",
+        "get_dynamic_time_slots",
+    )
+
+    def get_dynamic_time_slots(self, obj):
+        """
+        Display available time slots for each service in a table format.
+        """
+        if not obj or not obj.pk:  # Handle unsaved or empty objects
+            return "Save the service to see available time slots."
+
+        slots_data = obj.get_available_time_slots()
+        if not slots_data:
+            return "No available time slots."
+
+        # Build an HTML table for displaying slots
+        html_output = '<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;">'
+        html_output += '<thead><tr><th style="border: 1px solid #ddd; padding: 8px;">Date</th>'
+        html_output += '<th style="border: 1px solid #ddd; padding: 8px;">Weekday</th>'
+        html_output += '<th style="border: 1px solid #ddd; padding: 8px;">Time Slots</th></tr></thead>'
+        html_output += '<tbody>'
+
+        for day_data in slots_data:
+            date = day_data.get("date", "N/A")
+            weekday = day_data.get("weekday", "N/A")
+            slots = day_data.get("slots", [])
+
+            slots_str = ", ".join([f"{slot['start']} - {slot['end']}" for slot in slots])
+            html_output += f'<tr><td style="border: 1px solid #ddd; padding: 8px;">{date}</td>'
+            html_output += f'<td style="border: 1px solid #ddd; padding: 8px;">{weekday}</td>'
+            html_output += f'<td style="border: 1px solid #ddd; padding: 8px;">{slots_str}</td></tr>'
+
+        html_output += '</tbody></table>'
+        return mark_safe(html_output)
+
+    get_dynamic_time_slots.short_description = "Dynamic Time Slots"
+
+
+
 class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = "date_created"
     list_display = (
@@ -60,7 +120,7 @@ class ProductAdmin(admin.ModelAdmin):
     )
     # list_filter = [ "is_discountable"]
     raw_id_fields = ["parent"]
-    inlines = [AttributeInline, CategoryInline, ProductRecommendationInline, ProductBranchInline]
+    inlines = [AttributeInline, CategoryInline, ProductRecommendationInline, ProductBranchInline, ProductStockInline, ProductServiceInline]
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ["upc", "title"]
 

@@ -48,6 +48,7 @@ from django.views.decorators.http import require_POST
     AttributeOptionFormSet,
     ProductBranchFormSet,
     ProductOptionFormSet,
+    ProductServiceFormSet,
 ) = get_classes(
     "dashboard.catalogue.formsets",
     (
@@ -59,6 +60,7 @@ from django.views.decorators.http import require_POST
         "AttributeOptionFormSet",
         "ProductBranchFormSet",
         "ProductOptionFormSet",
+        "ProductServiceFormSet",
     ),
 )
 ProductTable, CategoryTable, AttributeOptionGroupTable, OptionTable = get_classes(
@@ -239,6 +241,7 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
     stockrecord_formset = StockRecordFormSet
     branch_formset = ProductBranchFormSet
     option_formset = ProductOptionFormSet
+    service_formset = ProductServiceFormSet
     creating = False
     parent = None
 
@@ -250,6 +253,7 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
             "recommended_formset": self.recommendations_formset,
             "stockrecord_formset": self.stockrecord_formset,
             "option_formset": self.option_formset,
+            "service_formset": self.service_formset,
         }
 
     def dispatch(self, request, *args, **kwargs):
@@ -329,7 +333,11 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
         for ctx_name, formset_class in self.formsets.items():
             if ctx_name not in ctx:
                 ctx[ctx_name] = formset_class(
-                    self.product_class, self.request.user, instance=self.object
+                    instance=self.object,
+                    user=self.request.user,           # pass user as a kwarg
+                    product_class=self.product_class, # if needed
+                    data=self.request.POST or None,
+                    files=self.request.FILES or None,
                 )
 
         # Debug category formset to ensure categories are passed
@@ -345,8 +353,10 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
     def get_page_title(self):
         if self.creating:
             if self.parent is None:
-                return _("Create new %(product_class)s product") % {
-                    "product_class": self.product_class.name
+                product_type = _("Service") if self.product_class.name == "Services" else _("Products")
+                return _("Create new %(product_class)s %(product_type)s") % {
+                    "product_class": self.product_class.name,
+                    "product_type": product_type
                 }
             else:
                 return _("Create new variant of %(parent_product)s") % {
@@ -379,11 +389,11 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
         formsets = {}
         for ctx_name, formset_class in self.formsets.items():
             formsets[ctx_name] = formset_class(
-                self.product_class,
-                self.request.user,
-                self.request.POST,
-                self.request.FILES,
                 instance=self.object,
+                user=self.request.user,           # pass user as a kwarg
+                product_class=self.product_class, # if needed
+                data=self.request.POST or None,
+                files=self.request.FILES or None,
             )
 
         is_valid = form.is_valid() and all(

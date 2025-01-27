@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_classes, get_model
 from server.apps.catalogue.models import Category, ProductBranch
-from server.apps.dashboard.catalogue.forms import ProductBranchForm
+from server.apps.dashboard.catalogue.forms import ProductBranchForm, ServiceForm
 from server.apps.vendor.models import Vendor
 from stores.models import Store
 
@@ -21,6 +21,8 @@ AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 AttributeOption = get_model("catalogue", "AttributeOption")
 Option = get_model('catalogue', 'Option')
 Store = get_model("stores", "Store")
+Service = get_model("service", "Service")
+
 
 (
     StockRecordForm,
@@ -305,3 +307,26 @@ class ProductOptionFormSet(BaseProductOptionFormSet):
         # for form in self.forms:
         #     if 'option' in form.fields:
         #         form.fields['option'].queryset = Option.objects.filter(...)
+
+
+BaseProductServiceFormSet = inlineformset_factory(
+    Product, Service, form=ServiceForm, extra=10, can_delete=True,
+)
+
+
+class ProductServiceFormSet(BaseProductServiceFormSet):
+    """
+    Manage `Service` inline rows from the Product page.
+    Each row references a branch (Store) belonging to the user's vendor.
+    """
+
+    def __init__(self, *args, product_class=None, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.product_class = product_class
+
+    def _construct_form(self, i, **kwargs):
+        # Pass `user` and `product_class` to each form
+        kwargs["user"] = self.user
+        kwargs["product_class"] = self.product_class
+        return super()._construct_form(i, **kwargs)

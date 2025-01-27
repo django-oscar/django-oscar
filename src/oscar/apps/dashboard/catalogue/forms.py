@@ -22,6 +22,8 @@ AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 AttributeOption = get_model("catalogue", "AttributeOption")
 Option = get_model("catalogue", "Option")
 ProductSelect = get_class("dashboard.catalogue.widgets", "ProductSelect")
+Service = get_model("service", "Service")
+
 (RelatedFieldWidgetWrapper, RelatedMultipleFieldWidgetWrapper) = get_classes(
     "dashboard.widgets",
     ("RelatedFieldWidgetWrapper", "RelatedMultipleFieldWidgetWrapper"),
@@ -100,12 +102,12 @@ class ProductClassSelectForm(forms.Form):
 
 
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=64, required=False, label=_("UPC"))
+    # upc = forms.CharField(max_length=64, required=False, label=_("UPC"))
     title = forms.CharField(max_length=255, required=False, label=_("Product title"))
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data["upc"] = cleaned_data["upc"].strip()
+        # cleaned_data["upc"] = cleaned_data["upc"].strip()
         cleaned_data["title"] = cleaned_data["title"].strip()
         return cleaned_data
 
@@ -289,6 +291,14 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
             )
         if "title" in self.fields:
             self.fields["title"].widget = forms.TextInput(attrs={"autocomplete": "off"})
+
+        # if "original_price" in self.fields:
+        #     self.fields["original_price"].required = True
+        #     self.fields["original_price"].widget.attrs.update({"step": "0.01"})
+
+        # if "selling_price" in self.fields:
+        #     self.fields["selling_price"].required = True
+        #     self.fields["selling_price"].widget.attrs.update({"step": "0.01"})
 
     def set_initial(self, product_class, parent, kwargs):
         """

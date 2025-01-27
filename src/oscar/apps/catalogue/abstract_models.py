@@ -388,7 +388,7 @@ class AbstractProduct(models.Model):
         _("Is public"),
         default=True,
         db_index=True,
-        help_text=_("Show this product in search results and catalogue listings."),
+        help_text=_("Controls whether this item is visible in listings and search results."),
     )
 
     upc = NullCharField(
@@ -398,7 +398,7 @@ class AbstractProduct(models.Model):
         null=True,
         unique=True,
         help_text=_(
-            "Universal Product Code (UPC) is an identifier for "
+            "Universal Code (UPC) is an identifier for "
             "a product which is not specific to a particular "
             " supplier. Eg an ISBN for a book."
         ),
