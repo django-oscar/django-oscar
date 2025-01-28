@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from server.apps.catalogue.models import ProductBranch
 from server.apps.vendor.models import Vendor
 from treebeard.forms import movenodeform_factory
+from server.apps.service.models import ServicePolicy
 
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
@@ -268,6 +269,7 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
         }
 
     def __init__(self, product_class, *args, data=None, parent=None, **kwargs):
+        self.product_class = product_class
         self.set_initial(product_class, parent, kwargs)
         super().__init__(data, *args, **kwargs)
         if parent:
@@ -292,13 +294,38 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
         if "title" in self.fields:
             self.fields["title"].widget = forms.TextInput(attrs={"autocomplete": "off"})
 
-        # if "original_price" in self.fields:
-        #     self.fields["original_price"].required = True
-        #     self.fields["original_price"].widget.attrs.update({"step": "0.01"})
+        if product_class and product_class.name.lower() == "services":
+            self.add_policy_fields()
 
-        # if "selling_price" in self.fields:
-        #     self.fields["selling_price"].required = True
-        #     self.fields["selling_price"].widget.attrs.update({"step": "0.01"})
+            if 'instance' in kwargs and kwargs['instance']:
+                instance = kwargs['instance']
+                try:
+                    try:
+                        service_policy = instance.service_policy
+                    except ServicePolicy.DoesNotExist:
+                        service_policy = None
+                    self.fields['cancellation_policy'].initial = service_policy.cancellation_policy
+                    self.fields['rescheduling_policy'].initial = service_policy.rescheduling_policy
+                except ServicePolicy.DoesNotExist:
+                    pass
+
+    def add_policy_fields(self):
+        """
+        Add policy fields dynamically for "services" product class.
+        """
+        self.fields["cancellation_policy"] = forms.CharField(
+            required=False,
+            widget=forms.Textarea(attrs={"rows": 3}),
+            label=_("Cancellation Policy"),
+            help_text=_("Details about the cancellation policy for this service."),
+        )
+        self.fields["rescheduling_policy"] = forms.CharField(
+            required=False,
+            widget=forms.Textarea(attrs={"rows": 3}),
+            label=_("Rescheduling Policy"),
+            help_text=_("Details about the rescheduling policy for this service."),
+        )
+
 
     def set_initial(self, product_class, parent, kwargs):
         """
@@ -369,6 +396,24 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
                 setattr(self.instance.attr, attribute.code, value)
         super()._post_clean()
 
+    def save(self, commit=True):
+        # Save the Product instance first
+        instance = super().save(commit=False)
+        
+        if commit:
+            instance.save()  # Save the Product instance to the database
+
+        # Now that the Product instance is saved, create/update the ServicePolicy
+        if self.product_class and self.product_class.name.lower() == "services":
+            ServicePolicy.objects.update_or_create(
+                product=instance,
+                defaults={
+                    "cancellation_policy": self.cleaned_data.get("cancellation_policy", ""),
+                    "rescheduling_policy": self.cleaned_data.get("rescheduling_policy", ""),
+                },
+            )
+
+        return instance
 
 class StockAlertSearchForm(forms.Form):
     status = forms.CharField(label=_("Status"))

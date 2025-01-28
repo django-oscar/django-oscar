@@ -1,7 +1,7 @@
 from django.contrib import admin
 from server.apps.catalogue.models import ProductBranch
 from server.apps.partner.models import StockRecord
-from server.apps.service.models import Service
+from server.apps.service.models import Service, ServicePolicy
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 from django.utils.safestring import mark_safe
@@ -19,6 +19,7 @@ ProductCategory = get_model("catalogue", "ProductCategory")
 ProductClass = get_model("catalogue", "ProductClass")
 ProductImage = get_model("catalogue", "ProductImage")
 ProductRecommendation = get_model("catalogue", "ProductRecommendation")
+# ServicePolicy = get_model("Service", "ServicePolicy")
 
 
 class AttributeInline(admin.TabularInline):
@@ -69,7 +70,7 @@ class ProductServiceInline(admin.TabularInline):
         "provider_name",
         "duration_minutes",
         "max_services_per_slot",
-        "max_future_days",
+        "max_notice_days",
         "get_dynamic_time_slots",
     )
 
@@ -106,6 +107,10 @@ class ProductServiceInline(admin.TabularInline):
 
     get_dynamic_time_slots.short_description = "Dynamic Time Slots"
 
+class ServicePolicyInline(admin.StackedInline):
+    model = ServicePolicy
+    extra = 0
+    max_num = 1
 
 
 class ProductAdmin(admin.ModelAdmin):

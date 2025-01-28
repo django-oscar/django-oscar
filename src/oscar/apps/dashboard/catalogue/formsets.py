@@ -5,9 +5,10 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_classes, get_model
 from server.apps.catalogue.models import Category, ProductBranch
-from server.apps.dashboard.catalogue.forms import ProductBranchForm, ServiceForm
+from server.apps.dashboard.catalogue.forms import ProductBranchForm, ServiceForm, ServicePolicyForm
 from server.apps.vendor.models import Vendor
 from stores.models import Store
+from server.apps.service.models import ServicePolicy
 
 
 Product = get_model("catalogue", "Product")
@@ -22,6 +23,7 @@ AttributeOption = get_model("catalogue", "AttributeOption")
 Option = get_model('catalogue', 'Option')
 Store = get_model("stores", "Store")
 Service = get_model("service", "Service")
+# ServicePolicy = get_model("service", "ServicePolicy")
 
 
 (
@@ -308,7 +310,29 @@ class ProductOptionFormSet(BaseProductOptionFormSet):
         #     if 'option' in form.fields:
         #         form.fields['option'].queryset = Option.objects.filter(...)
 
+BaseServicePolicyFormSet = inlineformset_factory(
+    Product, ServicePolicy, form=ServicePolicyForm, extra=1, can_delete=False
+)
 
+BaseServiceFormSet = inlineformset_factory(
+    Product, Service, form=ServiceForm, extra=3, can_delete=True
+)
+class ServicePolicyFormSet(BaseServicePolicyFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.forms:
+            form.empty_permitted = False
+
+
+class ServiceFormSet(BaseServiceFormSet):
+    def __init__(self, *args, user=None, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        kwargs['user'] = self.user
+        return super()._construct_form(i, **kwargs)
+    
 BaseProductServiceFormSet = inlineformset_factory(
     Product, Service, form=ServiceForm, extra=10, can_delete=True,
 )
