@@ -28,6 +28,7 @@ class SubscriptionsListView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         ctx = super().get_context_data(**kwargs)
+        ctx["dashboard"] =  True
         ctx["currency"] =  settings.PLANS_CURRENCY
         if hasattr(user, "vendor"):
             ctx["available_plans"] = Plan.objects.filter(available=True, plan_for="vendors").order_by("-order")
@@ -48,6 +49,7 @@ class CancelSubscriptionView( generic.TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["action"] =  reverse_lazy("dashboard:cancel-subscription")
+        ctx["dashboard"] =  True
         try:
             ctx["current_plan"] = Plan.get_current_plan(self.request.user)
             ctx["expiration_date"] = self.request.user.userplan.expire
@@ -84,6 +86,7 @@ class CancelSubscription( generic.FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        ctx["dashboard"] =  True
         try:
             user_plan = Plan.get_current_plan(self.request.user)
             ctx["current_plan"] = user_plan
@@ -156,6 +159,7 @@ class ReactivateSubscriptionView( generic.FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        ctx["dashboard"] =  True
         try:
             user_plan = Plan.get_current_plan(self.request.user)
             ctx["current_plan"] = user_plan
@@ -222,7 +226,8 @@ class SubscribeView( generic.View):
     def get_context_data(self, plan):
         return {
             'plan': plan,
-            'currency': 'USD'  # You might want to make this dynamic
+            'currency': settings.PLANS_CURRENCY,
+            "dashboard": True
         }
 
     def post(self, request, *args, **kwargs):
@@ -320,7 +325,8 @@ class ChangeSubscriptionView( generic.View):
     def get_context_data(self, new_plan):
         context = {
             'new_plan': new_plan,
-            'currency': settings.PLANS_CURRENCY
+            'currency': settings.PLANS_CURRENCY,
+            "dashboard": True
         }
         
         try:

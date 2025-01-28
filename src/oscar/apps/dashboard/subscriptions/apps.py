@@ -10,19 +10,6 @@ class SubscriptionsDashboardConfig(OscarDashboardConfig):
     name = "oscar.apps.dashboard.subscriptions"
     verbose_name = _("Subscriptions dashboard")
 
-    default_permissions = [
-        "is_staff",
-    ]
-    permissions_map = {
-        "subscription-view": (["is_staff"], ["partner.dashboard_access"]),
-        "cancel-subscription-view": (["is_staff"], ["partner.dashboard_access"]),
-        "cancel-subscription": (["is_staff"], ["partner.dashboard_access"]),
-        "reactivate-subscription-view": (["is_staff"], ["partner.dashboard_access"]),
-        "subscribe-view": (["is_staff"], ["partner.dashboard_access"]),
-        "change-subscription-view": (["is_staff"], ["partner.dashboard_access"]),
-        "renew-subscription-view": (["is_staff"], ["partner.dashboard_access"]),
-    }
-
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
         self.subscription_view = get_class("dashboard.subscriptions.views", "SubscriptionsListView")
