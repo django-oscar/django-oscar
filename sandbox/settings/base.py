@@ -25,10 +25,6 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': 'locmemcache://',
-}
-
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -408,10 +404,8 @@ OSCAR_ORDER_STATUS_CASCADE = {
 
 THUMBNAIL_DEBUG = DEBUG
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
-THUMBNAIL_KVSTORE = env(
-    'THUMBNAIL_KVSTORE',
-    default='sorl.thumbnail.kvstores.cached_db_kvstore.KVStore')
-THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
+THUMBNAIL_REDIS_URL = None
 
 # easy-thumbnail. See https://github.com/SmileyChris/easy-thumbnails/issues/641#issuecomment-2291098096
 THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
