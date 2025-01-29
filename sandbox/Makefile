@@ -13,7 +13,7 @@ super:
 	pip install -e ..
 
 sandboxsetup: fail-if-no-virtualenv
-	pip install . --force-reinstall
+	pip install .
 	@make -C .. build_sandbox
 
 %:
