@@ -7,7 +7,7 @@ except ModuleNotFoundError:
 
 DEBUG = False
 STATIC_ROOT = "/srv/www/oscarsandbox/static/"
-STATICFILES_DIRS = (STATIC_ROOT,)
+STATICFILES_DIRS = tuple()
 
 MEDIA_ROOT = "/srv/www/oscarsandbox/media/"
 
