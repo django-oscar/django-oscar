@@ -14,7 +14,7 @@ class StudentImportValidator:
     """
     ALLOWED_EXTENSIONS = ['.csv']
     MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
-    REQUIRED_HEADERS = ['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth']
+    REQUIRED_HEADERS = ['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth', 'Parent Phone Number']
     VALID_GRADES = ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12']
     VALID_GENDERS = ['M', 'F']
 
@@ -80,7 +80,11 @@ class StudentImportValidator:
             errors.append(_("Row {}: Arabic name is required").format(row_number))
         elif len(full_name_ar) < 2 or len(full_name_ar) > 100:
             errors.append(_("Row {}: Arabic name must be between 2 and 100 characters").format(row_number))
-
+        parent_phone_number = row_data.get('parent_phone_number')
+        if not parent_phone_number:
+            errors.append(_("Row {}: Parent Phone Number is required").format(row_number))
+        elif parent_phone_number.isdigit() or len(parent_phone_number) != 9:
+            errors.append(_("Row {}: Parent Phone Number must be exactly 9 digits").format(row_number))
         # Grade validation
         grade = row_data.get('grade')
         if not grade:

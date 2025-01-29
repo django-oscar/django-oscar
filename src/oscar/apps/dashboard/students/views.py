@@ -73,6 +73,7 @@ class StudentListView(BulkEditMixin, ListView):
         "date_of_birth": _("Date of Birth"),
         "grade": _("Grade"),
         "status": _("status"),
+        "parent_phone_number": _("Parent Phone Number"),
         "parent": _("Parent email address"),
     }
 
@@ -122,6 +123,8 @@ class StudentListView(BulkEditMixin, ListView):
         if data.get("full_name_ar"):
             queryset = queryset.filter(full_name_ar__istartswith=data["full_name_ar"]).distinct()
 
+        if data.get("parent_phone_number"):
+            queryset = queryset.filter(parent_phone_number__istartswith=data["parent_phone_number"]).distinct()
 
         if data["grade"]:
             queryset = queryset.filter(grade__istartswith=data["grade"])
@@ -175,6 +178,12 @@ class StudentListView(BulkEditMixin, ListView):
             descriptions.append(
                 _('Student full name in English starts with "{full_name_en}"').format(
                     full_name_en=data["full_name_en"]
+                )
+            )
+        if data.get("parent_phone_number"):
+            descriptions.append(
+                _('Student parent phone number starts with "{parent_phone_number}"').format(
+                    parent_phone_number=data["parent_phone_number"]
                 )
             )
         if data.get("full_name_ar"):
@@ -261,7 +270,8 @@ class StudentListView(BulkEditMixin, ListView):
         "full_name_ar": student.full_name_ar,
         "date_of_birth": student.date_of_birth.strftime('%Y-%m-%d'),
         "grade": student.grade,
-        "grade": student.gender,
+        "gender": student.gender,
+        "parent_phone_number": student.parent_phone_number,
         "status":"Active" if student.is_active else "Inactive",
     }
         if student.parent:
@@ -574,6 +584,7 @@ class StudentImportMapFieldsView(TemplateView):
                     ('full_name_ar', _('Full Name (Arabic)')),
                     ('national_id', _('National ID')),
                     ('grade', _('Grade')),
+                    ('parent_phone_number', _('Parent Phone Number')),
                     ('date_of_birth', _('Date of Birth')),
                 ]
                 context['optional_fields'] = [
