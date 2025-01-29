@@ -6,7 +6,9 @@ except ModuleNotFoundError:
     pass
 
 DEBUG = False
-STATIC_ROOT = STATICFILES_DIRS = "/srv/www/oscarsandbox/static/"
+STATIC_ROOT = "/srv/www/oscarsandbox/static/"
+STATICFILES_DIRS = (STATIC_ROOT,)
+
 MEDIA_ROOT = "/srv/www/oscarsandbox/media/"
 
 ALLOWED_HOSTS = ["*"]
