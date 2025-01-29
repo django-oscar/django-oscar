@@ -102,7 +102,7 @@
                 <th>{% trans "Gender" %}</th>
                 <th>{% trans "Grade" %}</th>
                 <th>{% trans "Status" %}</th>
-                <th>{% trans "Parent email address" %}</th>
+                <th>{% trans "Parent Pone Number" %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -118,14 +118,7 @@
                 <td>{{ student.gender}}</td>
                 <td>{{ student.grade}}</td>
                 <td>{% if student.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive"%}{% endif %}</td>
-                <td>
-                    {% if student.parent %}
-                    {{ student.parent.user.email }}
-                    
-                    {% else %}
-                    &lt;{% trans "Not Exists" %}&gt;
-                    {% endif %}
-                </td>
+                <td>{{ student.parent_phone_number }}</td> 
                 <td>
                     <a class="btn btn-secondary" href="{% url 'dashboard:student-detail' national_id=student.national_id %}">
                         {%trans "View" %}</a>

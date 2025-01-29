@@ -118,7 +118,17 @@
                             {% endif %}
                         </div>
                     </div>
-
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{% trans "Parent Phone Number" %}</label>
+                        <div class="col-sm-9">
+                            {{ form.parent_phone_number }}
+                            {% if form.parent_phone_number.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.parent_phone_number.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">{% trans "Status" %}</label>
                         <div class="col-sm-9">
