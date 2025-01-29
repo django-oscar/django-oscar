@@ -6,7 +6,7 @@ env = environ.Env()
 
 # Path helper
 location = lambda x: os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), x)
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))), x)
 
 DEBUG = env.bool('DEBUG', default=True)
 

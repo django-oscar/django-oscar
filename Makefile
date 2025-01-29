@@ -32,6 +32,7 @@ venv: ## Create a virtual env and install test and production requirements
 # Sandbox management commands
 #############################
 sandbox: install build_sandbox ## Install requirements and create a sandbox
+	@make -C .. sandbox/
 
 build_sandbox: sandbox_clean sandbox_load_user sandbox_load_data ## Creates a sandbox from scratch
 
