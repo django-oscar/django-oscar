@@ -54,7 +54,7 @@ dependencies = [
 [project.optional-dependencies]
 docs = [
     "Sphinx>=5.0",
-    "sphinxcontrib-spelling==7.5.1",
+    "sphinxcontrib-spelling==8.0.1",
     "sphinx_rtd_theme==3.0.2",
     "sphinx-issues==5.0.0",
     "sorl-thumbnail>=12.10.0,<13.0.0",
