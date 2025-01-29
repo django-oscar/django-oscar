@@ -152,7 +152,7 @@ class AbstractCategory(MP_Node):
     image = models.ImageField(
         _("Image"), upload_to="categories", blank=True, null=True, max_length=255
     )
-    slug = SlugField(_("Slug"), max_length=255, db_index=True)
+    slug = SlugField(_("Slug"), max_length=255, db_index=True, blank=True, null=True)
 
     is_public = models.BooleanField(
         _("Is public"),
@@ -168,7 +168,7 @@ class AbstractCategory(MP_Node):
         help_text=_("The ancestors of this category are public"),
     )
 
-    _slug_separator = "/"
+    # _slug_separator = "/"
     _full_name_separator = " > "
 
     objects = CategoryQuerySet.as_manager()
@@ -189,39 +189,39 @@ class AbstractCategory(MP_Node):
         names = [category.name for category in self.get_ancestors_and_self()]
         return self._full_name_separator.join(names)
 
-    def get_full_slug(self, parent_slug=None):
-        if self.is_root():
-            return self.slug
+    # def get_full_slug(self, parent_slug=None):
+    #     if self.is_root():
+    #         return self.slug
 
-        cache_key = self.get_url_cache_key()
-        full_slug = cache.get(cache_key)
-        if full_slug is None:
-            parent_slug = (
-                parent_slug if parent_slug is not None else self.get_parent().full_slug
-            )
-            full_slug = "%s%s%s" % (parent_slug, self._slug_separator, self.slug)
-            cache.set(cache_key, full_slug)
+    #     cache_key = self.get_url_cache_key()
+    #     full_slug = cache.get(cache_key)
+    #     if full_slug is None:
+    #         parent_slug = (
+    #             parent_slug if parent_slug is not None else self.get_parent().full_slug
+    #         )
+    #         full_slug = "%s%s%s" % (parent_slug, self._slug_separator, self.slug)
+    #         cache.set(cache_key, full_slug)
 
-        return full_slug
+    #     return full_slug
 
-    @property
-    def full_slug(self):
-        """
-        Returns a string of this category's slug concatenated with the slugs
-        of it's ancestors, e.g. 'books/non-fiction/essential-programming'.
+    # @property
+    # def full_slug(self):
+    #     """
+    #     Returns a string of this category's slug concatenated with the slugs
+    #     of it's ancestors, e.g. 'books/non-fiction/essential-programming'.
 
-        Oscar used to store this as in the 'slug' model field, but this field
-        has been re-purposed to only store this category's slug and to not
-        include it's ancestors' slugs.
-        """
-        return self.get_full_slug()
+    #     Oscar used to store this as in the 'slug' model field, but this field
+    #     has been re-purposed to only store this category's slug and to not
+    #     include it's ancestors' slugs.
+    #     """
+    #     return self.get_full_slug()
 
-    def generate_slug(self):
-        """
-        Generates a slug for a category. This makes no attempt at generating
-        a unique slug.
-        """
-        return slugify(self.name)
+    # def generate_slug(self):
+    #     """
+    #     Generates a slug for a category. This makes no attempt at generating
+    #     a unique slug.
+    #     """
+    #     return slugify(self.name)
 
     def save(self, *args, **kwargs):
         """
@@ -231,8 +231,8 @@ class AbstractCategory(MP_Node):
         instances with a slug already set, or expose a field on the
         appropriate forms.
         """
-        if not self.slug:
-            self.slug = self.generate_slug()
+        # if not self.slug:
+        #     self.slug = None
         super().save(*args, **kwargs)
 
     def set_ancestors_are_public(self):
@@ -297,7 +297,7 @@ class AbstractCategory(MP_Node):
         cache_key = "CATEGORY_URL_%s_%s" % (current_locale, self.pk)
         return cache_key
 
-    def _get_absolute_url(self, parent_slug=None):
+    def _get_absolute_url(self):
         """
         Our URL scheme means we have to look up the category's ancestors. As
         that is a bit more expensive, we cache the generated URL. That is
@@ -309,7 +309,7 @@ class AbstractCategory(MP_Node):
         return reverse(
             "catalogue:category",
             kwargs={
-                "category_slug": self.get_full_slug(parent_slug=parent_slug),
+                # "category_slug": self.get_full_slug(parent_slug=parent_slug),
                 "pk": self.pk,
             },
         )

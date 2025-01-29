@@ -253,8 +253,17 @@ class ProductCreateUpdateView(VendorMixin, PartnerProductFilterMixin, generic.Up
             "recommended_formset": self.recommendations_formset,
             "stockrecord_formset": self.stockrecord_formset,
             "option_formset": self.option_formset,
-            "service_formset": self.service_formset,
+            # "service_formset": self.service_formset,
         }
+
+        # if (
+        #     self.product_class
+        #     and self.product_class.name
+        #     and self.product_class.name.lower() == "services"
+        # ):
+        #     self.formsets["service_formset"] = self.service_formset
+
+    
 
     def dispatch(self, request, *args, **kwargs):
         resp = super().dispatch(request, *args, **kwargs)
@@ -657,6 +666,19 @@ def toggle_is_public(request, pk):
         return JsonResponse({"success": False, "error": "Category not found"}, status=404)
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+@require_POST
+def toggle_product_is_public(request, product_id):
+    try:
+        # If you only want the vendor owning the product to toggle,
+        # ensure the user matches or check user permissions:
+        product = Product.objects.get(pk=product_id, vendor=request.user.vendor)
+    except Product.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Product not found"}, status=404)
+    
+    product.is_public = not product.is_public
+    product.save(update_fields=["is_public"])
+    return JsonResponse({"success": True, "is_public": product.is_public})
 
 class CategoryListView(SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"

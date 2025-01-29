@@ -103,7 +103,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         )
 
     def get_urls(self):
-        from .views import toggle_is_public
+        from .views import toggle_is_public, toggle_product_is_public
 
         urls = [
             path(
@@ -235,6 +235,11 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 name="catalogue-option-delete",
             ),
             path('toggle-is-public/<int:pk>/', toggle_is_public, name='toggle-is-public'),
+             path(
+                "toggle-product-is-public/<int:product_id>/",
+                toggle_product_is_public,
+                name="dashboard_catalogue_toggle_product_is_public"
+            ),
             path(
                 "products/create-default/",
                 self.default_product_create_redirect_view.as_view(),

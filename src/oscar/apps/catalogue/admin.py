@@ -3,7 +3,7 @@ from server.apps.catalogue.models import ProductBranch
 from server.apps.partner.models import StockRecord
 from server.apps.service.models import Service, ServicePolicy
 from treebeard.admin import TreeAdmin
-from treebeard.forms import movenodeform_factory
+from treebeard.forms import movenodeform_factory, MoveNodeForm
 from django.utils.safestring import mark_safe
 
 from oscar.core.loading import get_model
@@ -159,33 +159,75 @@ class AttributeOptionGroupAdmin(admin.ModelAdmin):
         AttributeOptionInline,
     ]
 
+class CategoryMoveForm(MoveNodeForm):
+    """
+    A custom form that allows creating root nodes if the user
+    doesn't pick a parent node (i.e. _ref_node_id is empty).
+    """
+    def save(self, commit=True):
+        # If user selected no parent (i.e. _ref_node_id not supplied),
+        # we'll create a root node via add_root() instead of the usual move logic.
+        if not self.cleaned_data.get('_ref_node_id'):
+            # Make a new root. We copy relevant fields from self.cleaned_data
+            # onto a brand new instance:
+            model_cls = self.instance.__class__
+            root_instance = model_cls.add_root(
+                name=self.cleaned_data.get('name'),
+                slug=self.cleaned_data.get('slug'),
+                vendor=self.cleaned_data.get('vendor'),
+                description=self.cleaned_data.get('description'),
+                # ... copy any other fields as needed ...
+            )
+            # If you have translations or custom logic, add them here:
+            root_instance.name_en = self.cleaned_data.get('name_en', '')
+            root_instance.name_ar = self.cleaned_data.get('name_ar', '')
+            root_instance.description_en = self.cleaned_data.get('description_en', '')
+            root_instance.description_ar = self.cleaned_data.get('description_ar', '')
+            # And so on.
 
+            if commit:
+                root_instance.save()
+
+            # Return the new node instance
+            return root_instance
+
+        # Otherwise, fallback to normal move logic (child node under an existing parent)
+        return super().save(commit=commit)
+    
 class CategoryAdmin(TreeAdmin):
-    # Use the form for handling tree structure
-    form = movenodeform_factory(Category)
-    
-    # Add fields to the list display
-    list_display = ("name", "vendor", "slug", "is_public", "order", "meta_title")
-    
-    # Add filters for the admin panel
-    list_filter = ("vendor", "is_public")
-    
-    # Add search capabilities
-    search_fields = ("name", "slug", "vendor__name", "meta_title")
-    
-    # Add ordering for the admin panel
-    ordering = ("vendor", "order")
-    
-    # Enable editing fields directly in the list view
-    list_editable = ("is_public", "order")
-    
-    # Customize fieldsets (Optional)
-    fieldsets = (
-        (None, {"fields": ("name_en", "name_ar", "slug", "vendor", "description", "description_en", "description_ar", "image")}),
-        ("Visibility", {"fields": ("is_public", "order")}),
-        ("SEO", {"fields": ("meta_title", "meta_description")}),
+    form = CategoryMoveForm
+    list_display = (
+        "name", "vendor", "is_public", "order", "meta_title", "depth", "numchild"
     )
+    list_filter = ("vendor", "is_public")
+    search_fields = ("name", "vendor__name", "meta_title")
+    ordering = ("vendor", "order")
+    list_editable = ("is_public", "order")
 
+    # Add them to readonly_fields so Django won't treat them as form fields
+    readonly_fields = ("depth", "path", "numchild")
+    
+    fieldsets = (
+        (None, {
+            "fields": (
+                "name", "name_en", "name_ar", 
+                "slug", "vendor",
+                "description", "description_en", "description_ar", 
+                "image",
+                "_position", "_ref_node_id"
+            )
+        }),
+        ("Visibility", {
+            "fields": ("is_public", "order")
+        }),
+        ("SEO", {
+            "fields": ("meta_title", "meta_description")
+        }),
+        ("Tree Structure", {
+            "fields": ("depth", "path", "numchild"),  # read-only now
+            "description": "Automatically managed fields for category hierarchy."
+        }),
+    )
 
 admin.site.register(ProductClass, ProductClassAdmin)
 admin.site.register(Product, ProductAdmin)

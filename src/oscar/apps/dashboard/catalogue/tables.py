@@ -46,6 +46,17 @@ class ProductTable(DashboardTable):
         orderable=False,
     )
 
+    is_public = TemplateColumn(
+        template_code='''
+        <input type="checkbox"
+               data-id="{{ record.id }}"
+               class="product-is-public-toggle is-public-toggle"
+               {% if record.is_public %}checked{% endif %}>
+        ''',
+        verbose_name=_("Is Public"),
+        orderable=True,
+    )
+    
     icon = "fas fa-sitemap"
 
     class Meta(DashboardTable.Meta):

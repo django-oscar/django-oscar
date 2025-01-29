@@ -33,11 +33,17 @@ class CatalogueOnlyConfig(OscarConfig):
                 self.detail_view.as_view(),
                 name="detail",
             ),
+            # re_path(
+            #     r"^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$",
+            #     self.category_view.as_view(),
+            #     name="category",
+            # ),
             re_path(
-                r"^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$",
+                r"^category/(?P<pk>\d+)/$",
                 self.category_view.as_view(),
                 name="category",
             ),
+
             re_path(
                 r"^ranges/(?P<slug>[\w-]+)/$", self.range_view.as_view(), name="range"
             ),
