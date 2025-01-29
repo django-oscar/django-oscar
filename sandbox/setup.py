@@ -3,7 +3,7 @@ import json
 
 from setuptools import find_packages, setup
 
-install_requires: list = ["django-oscar", " django-oscar-elasticsearch", "whitenoise", "sorl-thumbnail", "django-environ"]
+install_requires: list = ["django-oscar", " django-oscar-elasticsearch", "whitenoise", "sorl-thumbnail"]
 
 
 PACKAGE_CLASSIFIERS = [
