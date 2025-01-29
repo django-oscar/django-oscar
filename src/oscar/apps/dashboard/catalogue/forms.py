@@ -72,6 +72,24 @@ class CategoryForm(SEOFormMixin, BaseCategoryForm):
         self.vendor = kwargs.pop('vendor', None)
         super().__init__(*args, **kwargs)
 
+         # ✅ Explicitly mark fields as required
+        # self.fields["name_en"].required = True
+        # self.fields["name_ar"].required = True
+        # self.fields["description_ar"].required = True
+        # self.fields["description_en"].required = True
+        # self.fields["order"].required = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # ✅ Custom validation to enforce required fields
+        required_fields = ["name_en", "name_ar", "description_en", "description_ar", "order"]
+        for field in required_fields:
+            if not cleaned_data.get(field):
+                self.add_error(field, _("This field is required."))
+
+        return cleaned_data
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         if self.vendor:
