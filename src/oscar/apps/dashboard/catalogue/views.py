@@ -126,6 +126,8 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
             if vendor and hasattr(vendor, "business_details") and vendor.business_details.business_type
             else "Products"  # Default to "Products" if no business category is found
         )
+        if (business_category != "Services"):
+            business_category = "Product"
         print("business_category: ", business_category)
         if form.is_valid() and any(form.cleaned_data.values()):
             return _(f"{business_category} search results")
