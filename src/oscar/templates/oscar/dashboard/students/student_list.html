@@ -51,7 +51,8 @@
         {% endif %}
         {% endif %}
         {% endfor %}
-        <input type="submit" value="{% trans " Search" %}" class="btn btn-primary mr-2" />
+        <input name="search" class="form-control" />
+        <button type="submit" data-loading-text="{% trans 'Searching...' %}" class="btn btn-primary mr-2" >{% trans "Search" %}</button>
         <a data-toggle="modal" data-target="#SearchModal" href="#">{% trans "Advanced Search" %}</a>
     </form>
 
@@ -60,10 +61,11 @@
 
     {% if search_filters %}
     <div class="search-filter-list">
-        <label>Filters:</label>
+        <label>{% trans 'Filters' %}:</label>
         {% for filter in search_filters %}
         <span class="badge badge-success">{{ filter }}</span>
         {% endfor %}
+        <a href="{% url 'dashboard:students-list' %}">{% trans 'Clear' %}</a>
     </div>
 
     {% endif %}
@@ -76,7 +78,8 @@
     {% block student_list %}
     <table class="table table-striped table-bstudented table-hover">
         <caption>
-            <h3 class="float-left"><i class="fas fa-shopping-cart"></i>
+            <h3 class="float-left">
+                <input type="checkbox" name="select_all_students" id="select_all_students" />
                 {% if search_filters %}
                 {% trans "Student Search Results" %}
                 {% else %}
@@ -101,8 +104,8 @@
                 <th>{% trans "Birthdate" %}</th>
                 <th>{% trans "Gender" %}</th>
                 <th>{% trans "Grade" %}</th>
+                <th>{% trans "Parent Phone Number" %}</th>
                 <th>{% trans "Status" %}</th>
-                <th>{% trans "Parent Pone Number" %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -111,18 +114,24 @@
             <tr>
                 <td><input type="checkbox" name="selected_student" class="selected_student" value="{{ student.id }}" />
                 </td>
-                <td><a href="{% url 'dashboard:student-detail' national_id=student.national_id %}">{{ student.national_id }}</a></td>
+                <td>
+                    <a href="{% url 'dashboard:student-detail' national_id=student.national_id %}">
+                        {{student.national_id }}
+                    </a>
+                </td>
                 <td>{{ student.full_name_en }}</td>
                 <td>{{ student.full_name_ar }}</td>
                 <td>{{ student.date_of_birth}}</td>
-                <td>{{ student.gender}}</td>
+                <td>{% if student.gender == 'M' %}{% trans 'Male' %}{% else %}{% trans 'Female' %}{% endif %}</td>
                 <td>{{ student.grade}}</td>
-                <td>{% if student.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive"%}{% endif %}</td>
-                <td>{{ student.parent_phone_number }}</td> 
+                <td>{{ student.parent_phone_number }}</td>
+                <td>{% if student.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}</td>
                 <td>
-                    <a class="btn btn-secondary" href="{% url 'dashboard:student-detail' national_id=student.national_id %}">
+                    <a class="btn btn-secondary"
+                        href="{% url 'dashboard:student-detail' national_id=student.national_id %}">
                         {%trans "View" %}</a>
-                    <a class="btn btn-primary" href="{% url 'dashboard:student-update' national_id=student.national_id %}">
+                    <a class="btn btn-primary"
+                        href="{% url 'dashboard:student-update' national_id=student.national_id %}">
                         <i class="fas fa-edit"></i> {% trans "Update" %}
                     </a>
                 </td>
@@ -133,23 +142,23 @@
     {% endblock student_list %}
     {% block student_actions %}
     <div class="card card-body bg-light d-flex gap-2">
-            <h3><i class="fas fa-exclamation-circle"></i> {% trans "Actions" %}:</h3>
-            <div class="form-group">
-                <div class="controls">
-                    <select name="perform_action">
-                        <option value=""> -- {% trans "Choose action" %} -- </option>
-                        <option value="active">{% trans "Active" %}</option>
-                        <option value="inactive">{% trans "Inactive" %}</option>
-                        <option value="delete">{% trans "Delete" %}</option>
-                    </select>
-                </div>
+        <h3><i class="fas fa-exclamation-circle"></i> {% trans "Actions" %}:</h3>
+        <div class="form-group">
+            <div class="controls">
+                <select name="perform_action">
+                    <option value=""> -- {% trans "Choose action" %} -- </option>
+                    <option value="active">{% trans "Active" %}</option>
+                    <option value="inactive">{% trans "Inactive" %}</option>
+                    <option value="delete">{% trans "Delete" %}</option>
+                </select>
             </div>
-            <div class="flex-nowrap">
-                <button type="submit" name="action" value="change_student_statuses" class="btn btn-primary"
-                    data-loading-text="{% trans 'Applying...' %}">
-                    {% trans "Apply" %}
-                </button>
-            </div>
+        </div>
+        <div class="flex-nowrap">
+            <button type="submit" name="action" value="change_student_statuses" class="btn btn-primary"
+                data-loading-text="{% trans 'Applying...' %}">
+                {% trans "Apply" %}
+            </button>
+        </div>
 
     </div>
     {% endblock %}
@@ -175,8 +184,12 @@
 
 {% block onbodyload %}
 {{ block.super }}
+$('#select_all_students').change(function(){
+$(".selected_student").prop("checked",$('#select_all_students').prop("checked") )
+});
 oscar.dashboard.students.initTable();
 {% if form.errors %}
 $('#SearchModal').modal('show');
+
 {% endif %}
 {% endblock onbodyload %}
