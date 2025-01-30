@@ -53,6 +53,10 @@
             <td>{{ student.grade}}</td>
         </tr>
         <tr>
+            <th>{% trans "Parent Phone Number" %}</th>
+            <td>{{ student.parent_phone_number}}</td>
+        </tr>
+        <tr>
             <th>{% trans "Status" %}</th>
             <td>{% if student.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive"%}{% endif %}</td>
         </tr>
