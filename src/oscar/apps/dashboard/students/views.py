@@ -72,9 +72,9 @@ class StudentListView(BulkEditMixin, ListView):
         "full_name_ar": _("Full Name (Arabic)"),
         "date_of_birth": _("Date of Birth"),
         "grade": _("Grade"),
-        "status": _("status"),
+        "gender": _("Gender"),
         "parent_phone_number": _("Parent Phone Number"),
-        "parent": _("Parent email address"),
+        "status": _("status"),
     }
 
     def dispatch(self, request, *args, **kwargs):
@@ -112,7 +112,7 @@ class StudentListView(BulkEditMixin, ListView):
 
         data = self.form.cleaned_data
 
-        if data["national_id"]:
+        if data.get("national_id"):
             queryset = self.queryset.filter(
                 national_id__istartswith=data["national_id"]
             )
@@ -126,25 +126,33 @@ class StudentListView(BulkEditMixin, ListView):
         if data.get("parent_phone_number"):
             queryset = queryset.filter(parent_phone_number__istartswith=data["parent_phone_number"]).distinct()
 
-        if data["grade"]:
+        if data.get("grade"):
             queryset = queryset.filter(grade__istartswith=data["grade"])
 
-        if data["birth_date_from"] and data["birth_date_to"]:
+        if data.get("birth_date_from") and data.get("birth_date_to"):
             queryset = queryset.filter(
                 date_of_birth__gte=data["birth_date_from"],
                 date_of_birth__lte=data["birth_date_to"]
             )
-        elif data["birth_date_from"]:
+        elif data.get("birth_date_from"):
             queryset = queryset.filter(date_of_birth__gte=data["birth_date_from"])
-        elif data["birth_date_to"]:
+        elif data.get("birth_date_to"):
             queryset = queryset.filter(date_of_birth__lte=data["birth_date_to"])
         
         if data.get("status"):
             queryset = queryset.filter(is_active=data["status"])
 
-        if data["parent"]:
+        if data.get("parent"):
             queryset = queryset.filter(parent__user__email=data["parent"])
-
+        search = self.request.GET.get("search")
+        if search:
+            queryset = queryset.filter(
+                Q(national_id__istartswith=search) |
+                Q(full_name_en__istartswith=search) |
+                Q(full_name_ar__istartswith=search) |
+                Q(parent_phone_number__istartswith=search) |
+                Q(grade__istartswith=search) 
+            )
         return queryset
 
     def get_search_filter_descriptions(self):
@@ -584,11 +592,11 @@ class StudentImportMapFieldsView(TemplateView):
                     ('full_name_ar', _('Full Name (Arabic)')),
                     ('national_id', _('National ID')),
                     ('grade', _('Grade')),
-                    ('parent_phone_number', _('Parent Phone Number')),
                     ('date_of_birth', _('Date of Birth')),
+                    ('gender', _('Gender')),
+                    ('parent_phone_number', _('Parent Phone Number')),
                 ]
                 context['optional_fields'] = [
-                    ('gender', _('Gender')),
                     ('is_active', _('Status')),
                 ]
         return context
@@ -687,8 +695,8 @@ def student_sample_csv_view(request):
     response['Content-Disposition'] = 'attachment; filename="student_import_template.csv"'
     
     writer = csv.writer(response)
-    writer.writerow(['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth', 'Gender', 'Status'])
-    writer.writerow(['John Doe', 'جون دو', '1234567890', 'G10', '2000-01-01', 'M', 'Active'])
+    writer.writerow(['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth', 'Gender', 'Parent Phone Number', 'Status'])
+    writer.writerow(['John Doe', 'جون دو', '1234567890', 'G10', '2000-01-01', 'M', '525552368', 'Active'])
     
     return response
 

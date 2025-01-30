@@ -83,7 +83,7 @@ class StudentImportValidator:
         parent_phone_number = row_data.get('parent_phone_number')
         if not parent_phone_number:
             errors.append(_("Row {}: Parent Phone Number is required").format(row_number))
-        elif parent_phone_number.isdigit() or len(parent_phone_number) != 9:
+        elif not parent_phone_number.isdigit() or len(parent_phone_number) != 9:
             errors.append(_("Row {}: Parent Phone Number must be exactly 9 digits").format(row_number))
         # Grade validation
         grade = row_data.get('grade')
