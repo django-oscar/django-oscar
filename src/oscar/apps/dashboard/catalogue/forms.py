@@ -122,7 +122,7 @@ class ProductClassSelectForm(forms.Form):
 
 class ProductSearchForm(forms.Form):
     # upc = forms.CharField(max_length=64, required=False, label=_("UPC"))
-    title = forms.CharField(max_length=255, required=False, label=_("Product title"))
+    title = forms.CharField(max_length=255, required=False, label=_("title"))
 
     def clean(self):
         cleaned_data = super().clean()

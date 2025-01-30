@@ -104,15 +104,32 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
         product_class = self.request.GET.get("product_class")
         ctx["form"] = self.form
         ctx["productclass_form"] = self.productclass_form_class(
-            # user=self.request.user,  # Pass the user for vendor filtering
             initial={'product_class': product_class}  # Set initial value if available
         )
+        
+        # Get the vendor's business_category (e.g., Products or Services)
+        vendor = self.request.user.vendor if hasattr(self.request.user, "vendor") else None
+        business_category = (
+            vendor.business_details.business_type.business_category.name
+            if vendor and hasattr(vendor, "business_details") and vendor.business_details.business_type
+            else None
+        )
+        # Add business category to the context
+        ctx["business_category"] = business_category
+        
         return ctx
 
     def get_description(self, form):
+        vendor = self.request.user.vendor if hasattr(self.request.user, "vendor") else None
+        business_category = (
+            vendor.business_details.business_type.business_category.name
+            if vendor and hasattr(vendor, "business_details") and vendor.business_details.business_type
+            else "Products"  # Default to "Products" if no business category is found
+        )
+        print("business_category: ", business_category)
         if form.is_valid() and any(form.cleaned_data.values()):
-            return _("Product search results")
-        return _("Products")
+            return _(f"{business_category} search results")
+        return _(business_category)
 
     def get_table(self, **kwargs):
         if "recently_edited" in self.request.GET:
