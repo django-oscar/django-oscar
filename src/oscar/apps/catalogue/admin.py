@@ -128,7 +128,7 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline, ProductBranchInline, ProductStockInline, ProductServiceInline]
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ["upc", "title"]
-
+    view_on_site = False
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.select_related("product_class", "parent").prefetch_related(
@@ -203,6 +203,7 @@ class CategoryAdmin(TreeAdmin):
     search_fields = ("name", "vendor__name", "meta_title")
     ordering = ("vendor", "order")
     list_editable = ("is_public", "order")
+    view_on_site = False
 
     # Add them to readonly_fields so Django won't treat them as form fields
     readonly_fields = ("depth", "path", "numchild")

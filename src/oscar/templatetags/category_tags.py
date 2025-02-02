@@ -120,7 +120,7 @@ def get_annotated_list(depth=None, parent=None):
 
         info = CheapCategoryInfo(
             node,
-            url=node._get_absolute_url(tree_slug),
+            url=node._get_absolute_url(),
             num_to_close=[],
             level=node_depth - start_depth,
         )
