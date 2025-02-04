@@ -225,11 +225,11 @@ class AbstractBasket(models.Model):
     # pylint: disable=unused-argument
     def get_stock_info(self, product, options):
         """
-        Hook for implementing strategies that depend on product options
+        Hook for implementing strategies that depend on product options.
         """
-        # The built-in strategies don't use options, so initially disregard
-        # them.
-        return self.strategy.fetch_for_product(product)
+        # Extract branch_id from the basket instance
+        branch_id = getattr(self, 'branch_id', None)
+        return self.strategy.fetch_for_product(product, branch_id=branch_id)
 
     def add_product(self, product, quantity=1, options=None):
         """
@@ -440,10 +440,17 @@ class AbstractBasket(models.Model):
         For executing a named method on each line of the basket
         and returning the total.
         """
+        
         total = D("0.00")
         for line in self.all_lines():
             try:
-                total += getattr(line, model_property)
+                line_total = getattr(line, model_property)
+
+                # Add the total price of options for this line
+                option_prices = self._get_option_prices(line)
+                line_total += option_prices
+
+                total += line_total
             except ObjectDoesNotExist:
                 # Handle situation where the product may have been deleted
                 pass
@@ -453,6 +460,25 @@ class AbstractBasket(models.Model):
                 if info.availability.is_available_to_buy:
                     raise
         return total
+    def _get_option_prices(self, line):
+        """
+        Calculate the total price of all options for a given line,
+        multiplied by the product quantity.
+        """
+        option_prices = D("0.00")
+
+        # Iterate over all attributes (options) for the line
+        for attribute in line.attributes.all():
+
+            # Retrieve the related AttributeOption object
+            try:
+                attribute_option = attribute.option.option_group.options.get(option=attribute.value)
+                option_price = attribute_option.price * line.quantity  # Multiply by the line quantity
+                option_prices += option_price
+            except :
+                continue
+
+        return option_prices
 
     # ==========
     # Properties
