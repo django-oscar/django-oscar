@@ -97,7 +97,7 @@
 
         <thead>
             <tr>
-                <th></th>
+                <th>{% trans "Photo" %}</th>
                 <th>{% anchor 'national_id' _("National id") %}</th>
                 <th>{% anchor 'full_name_en' _("Full Name (English)") %}</th>
                 <th>{% anchor 'full_name_ar' _("Full Name (Arabic)") %}</th>
@@ -112,6 +112,11 @@
         <tbody>
             {% for student in students %}
             <tr>
+                <td>
+                    {% if student.photo %}
+                    <img src="{{ student.photo.url }}" alt="Current Photo" style="max-width: 200px;">
+                    {% endif %}
+                </td>
                 <td><input type="checkbox" name="selected_student" class="selected_student" value="{{ student.id }}" />
                 </td>
                 <td>

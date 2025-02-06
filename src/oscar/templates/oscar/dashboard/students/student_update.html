@@ -28,7 +28,7 @@
 {% block dashboard_content %}
 <div class="row">
     <div class="col-md-12">
-        <form method="post" class="form-horizontal">
+        <form method="post" class="form-horizontal"  enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="card">
@@ -50,7 +50,20 @@
                             {{ student.national_id }}
                         </div>
                     </div>
-
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">{{ form.photo.label }}</label>
+                        <div class="col-sm-3">
+                            {{ form.photo }}
+                            {% if form.photo.errors %}
+                            <div class="alert alert-danger">{{ form.photo.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% if student.photo %}
+                        <div class="col-sm-6">
+                            <img src="{{ student.photo.url }}" alt="Current Photo" style="max-width: 200px;">
+                        </div>
+                        {% endif %}
+                    </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">{% trans "Full Name (English)" %}</label>
                         <div class="col-sm-9">

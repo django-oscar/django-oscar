@@ -8,6 +8,18 @@ from django.utils.translation import gettext_lazy as _
 from io import TextIOWrapper
 import csv
 
+class PhotoValidationMixin:
+    def clean_photo(self):
+        photo = self.cleaned_data.get('photo')
+        if photo:
+            # Check file type
+            valid_extensions = ['.jpg', '.jpeg', '.png']
+            ext = os.path.splitext(photo.name)[1].lower()
+            if ext not in valid_extensions:
+                raise ValidationError(_('Supported photo formats are JPG, JPEG, and PNG.'))
+        
+        return photo
+
 class StudentImportValidator:
     """
     Validator class for student imports

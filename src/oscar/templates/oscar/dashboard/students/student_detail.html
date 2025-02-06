@@ -29,6 +29,14 @@
     <table class="table table-striped table-bstudented table-hover">
         <caption><i class="fas fa-shopping-cart"></i> {% trans "Student information" %}</caption>
         <tr>
+            <th>{% trans "Photo" %}</th>
+            <td>
+                {% if student.photo %}
+                    <img src="{{ student.photo.url }}" alt="Current Photo" style="max-width: 200px;">
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
             <th>{% trans "National id" %}</th>
             <td>{{ student.national_id }}</td>
         </tr>

@@ -11,21 +11,22 @@ from oscar.forms.widgets import DatePickerInput
 from server.apps.school.models import GRADES, GENDER
 
 Student = get_model("school", "Student")
+PhotoValidationMixin = get_class("dashboard.students.validators", "PhotoValidationMixin")
 
-class StudentForm(forms.ModelForm):
+class StudentForm(PhotoValidationMixin, forms.ModelForm):
     STATUS_CHOICES = (
         (True, 'Active'),
         (False, 'Inactive')
     )
-    
+
     is_active = forms.ChoiceField(
         choices=STATUS_CHOICES,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-    
+
     class Meta:
         model = Student
-        fields = ['full_name_en', 'full_name_ar', 'date_of_birth', 'gender', 'grade', 'parent_phone_number', 'is_active']
+        fields = ['full_name_en', 'full_name_ar', 'date_of_birth', 'gender', 'grade', 'parent_phone_number', 'is_active', 'photo']
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'full_name_en': forms.TextInput(attrs={'class': 'form-control'}),
@@ -33,17 +34,19 @@ class StudentForm(forms.ModelForm):
             'gender': forms.Select(attrs={'class': 'form-control'}),
             'grade': forms.Select(attrs={'class': 'form-control'}),
             'parent_phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'photo': forms.FileInput(attrs={'class': 'form-control-file'}),
         }
-        
+
     def clean_is_active(self):
         """Convert the string 'True'/'False' to boolean value"""
         return self.cleaned_data['is_active'] == 'True'
-class AddStudentForm(forms.ModelForm):
+
+class AddStudentForm(PhotoValidationMixin, forms.ModelForm):
     STATUS_CHOICES = (
         (True, 'Active'),
         (False, 'Inactive')
     )
-    
+
     is_active = forms.ChoiceField(
         choices=STATUS_CHOICES,
         widget=forms.Select(attrs={'class': 'form-control'})
@@ -51,7 +54,7 @@ class AddStudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ['national_id', 'full_name_en', 'full_name_ar', 'date_of_birth', 'gender', 'grade', 'parent_phone_number', 'is_active']
+        fields = ['national_id', 'full_name_en', 'full_name_ar', 'date_of_birth', 'gender', 'grade', 'parent_phone_number', 'is_active', 'photo']
         widgets = {
             'national_id': forms.TextInput(attrs={'class': 'form-control'}),
             'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
@@ -60,7 +63,9 @@ class AddStudentForm(forms.ModelForm):
             'gender': forms.Select(attrs={'class': 'form-control'}),
             'grade': forms.Select(attrs={'class': 'form-control'}),
             'parent_phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'photo': forms.FileInput(attrs={'class': 'form-control-file'}),
         }
+
     def clean_is_active(self):
         """Convert the string 'True'/'False' to boolean value"""
         return self.cleaned_data['is_active'] == 'True'

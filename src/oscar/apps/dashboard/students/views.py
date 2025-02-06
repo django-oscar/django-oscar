@@ -372,10 +372,6 @@ class StudentDetailView( DetailView):
         return ctx
 
 
-
-
-
-
     def delete_student(self, request, student):
         try:
             # No need to query again, we already have the student object
@@ -469,22 +465,6 @@ class StudentCreateView(CreateView):
     template_name = "oscar/dashboard/students/student_create.html"
     model = Student
     form_class = get_class('dashboard.students.forms', 'AddStudentForm')
-
-    # def dispatch(self, request, *args, **kwargs):
-    #     # pylint: disable=attribute-defined-outside-init
-    #     self.product = get_object_or_404(
-    #         self.product_model, pk=kwargs["product_pk"], is_public=True
-    #     )
-    #     # check permission to leave review
-    #     if not self.product.is_review_permitted(request.user):
-    #         if self.product.has_review_by(request.user):
-    #             message = _("You have already reviewed this product!")
-    #         else:
-    #             message = _("You can't leave a review for this product.")
-    #         messages.warning(self.request, message)
-    #         return redirect(self.product.get_absolute_url())
-
-    #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         print("StudentCreateView")
@@ -709,6 +689,4 @@ class StudentImportSuccessView(TemplateView):
         context['current_step'] = 3
         context['success_count'] = self.request.session.get("success_count")
         context['import_errors'] = self.request.session.get("import_errors").get("errors")
-
-        
         return context
