@@ -23,6 +23,12 @@ class StudentsDashboardConfig(OscarDashboardConfig):
         self.student_import_success_view = get_class("dashboard.students.views", "StudentImportSuccessView")
         # Fix: Use get_class for the sample CSV view
         self.student_sample_csv_view = get_class("dashboard.students.views", "student_sample_csv_view")
+        self.student_images_import_view = get_class(
+            "dashboard.students.views", "StudentImagesImportView"
+        )
+        self.student_images_import_success_view = get_class(
+            "dashboard.students.views", "StudentImagesImportSuccessView"
+        )
 
     def get_urls(self):
         urls = [
@@ -30,44 +36,45 @@ class StudentsDashboardConfig(OscarDashboardConfig):
             path(
                 "<str:national_id>/details",
                 self.student_detail_view.as_view(),
-                name="student-detail"
+                name="student-detail",
             ),
             path(
-                '<str:national_id>/update/',
+                "<str:national_id>/update/",
                 self.student_update_view.as_view(),
-                name='student-update'
+                name="student-update",
             ),
-            path(
-                'create/',
-                self.student_create_view.as_view(),
-                name='student-create'
-            ),
+            path("create/", self.student_create_view.as_view(), name="student-create"),
             # Fix: Use the class attributes instead of direct references
+            path("import/", self.student_import_view.as_view(), name="student-import"),
             path(
-                'import/',
-                self.student_import_view.as_view(),
-                name='student-import'
-            ),
-            path(
-                'import/map/',
+                "import/map/",
                 self.student_import_map_view.as_view(),
-                name='student-import-map'
+                name="student-import-map",
             ),
             path(
-                'import/preview/',
+                "import/preview/",
                 self.student_import_preview_view.as_view(),
-                name='student-import-preview'
+                name="student-import-preview",
             ),
             path(
-                'import/success/',
+                "import/success/",
                 self.student_import_success_view.as_view(),
-                name='student-import-success'
+                name="student-import-success",
             ),
-            # Fix: Use the class attribute for sample CSV view
             path(
-                'import/sample/',
+                "import/sample/",
                 self.student_sample_csv_view,
-                name='student-sample-csv'
+                name="student-sample-csv",
+            ),
+            path(
+                "import/photos/",
+                self.student_images_import_view.as_view(),
+                name="student-images-import",
+            ),
+            path(
+                "import/photos/success/",
+                self.student_images_import_success_view.as_view(),
+                name="student-images-import-success",
             ),
         ]
 

@@ -1,0 +1,91 @@
+<!-- templates/oscar/dashboard/students/student_import_success.html -->
+{% extends 'oscar/dashboard/students/student_import_base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Import Complete" %} | {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+
+{% endblock %}
+
+{% block stepper_tracker %}
+{% if success_count %}
+<li role="presentation" class="disabled">
+    <a class="persistant-disabled" href="{% url 'dashboard:student-images-import' %}" data-toggle="tab" aria-controls="stepper-step-1" role="tab"
+        title="Step 1">
+        <span class="round-tab">1</span>
+    </a>
+</li>
+<li role="presentation" class="active">
+    <a class="persistant-disabled" href="{% url 'dashboard:student-import-success' %}" data-toggle="tab" aria-controls="stepper-step-4" role="tab"
+        title="Complete">
+        <span class="round-tab">2</span>
+    </a>
+</li>
+{% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="tab-pane show in active" role="tabpanel" id="stepper-step-4">
+
+    <div class="table-header">
+        <h1>{% if success_count %}{% trans "Import Complete" %}{% else %}{% trans "Available Students Photos"%}{% endif %}</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if success_count %}
+
+            <div class="alert alert-success">
+                {% blocktrans with count=success_count %}
+                Successfully imported {{ count }} photos.
+                {% endblocktrans %}
+            </div>
+            {% endif %}
+
+                <div class="module">
+                    <div class="description">
+                        <p>{% trans "These are the photos available for use in students imports. Use these filenames in your CSV file's 'Photo' column." %}</p>
+                    </div>
+                    <div class="images-list">
+                        {% if images %}
+                        <table class="table table-striped table-bstudented table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Preview</th>
+                                    <th>Filename</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for image in images %}
+                                <tr>
+                                    <td>
+                                        <img src="{{ images_dir }}/{{ image }}" alt="{{ image }}"
+                                            style="max-width: 100px; max-height: 100px;">
+                                    </td>
+                                    <td>{{ image }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p>No images uploaded yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+            <div class="form-group">
+                <a href="{% url 'dashboard:students-list' %}" class="btn btn-primary">
+                    {% trans "Return to Student List" %}
+                </a>
+                <a href="{% url 'dashboard:student-import' %}" class="btn btn-light">
+                    {% trans "Import Students" %}
+                </a>
+                <a href="{% url 'dashboard:student-images-import' %}" class="btn btn-light">
+                    {% trans "Import More Photos" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

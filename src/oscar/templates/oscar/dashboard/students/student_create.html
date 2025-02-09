@@ -20,10 +20,13 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
+<div class="page-header d-flex gap-2">
     <h1>{% trans "Add Students" %}</h1>
+    <a class="btn btn-primary mx-1" href="{% url 'dashboard:student-images-import' %}">
+        <i class="fas fa-edit"></i> {% trans "Import Students Photos" %}
+    </a>
     <a class="btn btn-primary" href="{% url 'dashboard:student-import' %}">
-        <i class="fas fa-edit"></i> {% trans "Import" %}
+        <i class="fas fa-edit"></i> {% trans "Import Students" %}
     </a>
 </div>
 {% endblock header %}

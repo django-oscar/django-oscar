@@ -20,10 +20,13 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
+<div class="page-header d-flex gap-2">
     <h1>{% trans "Students" %}</h1>
+    <a class="btn btn-primary mx-1" href="{% url 'dashboard:student-images-import' %}">
+        <i class="fas fa-edit"></i> {% trans "Import Students Photos" %}
+    </a>
     <a class="btn btn-primary" href="{% url 'dashboard:student-import' %}">
-        <i class="fas fa-edit"></i> {% trans "Import" %}
+        <i class="fas fa-edit"></i> {% trans "Import Students" %}
     </a>
 </div>
 {% endblock header %}
@@ -79,7 +82,7 @@
     <table class="table table-striped table-bstudented table-hover">
         <caption>
             <h3 class="float-left">
-                <input type="checkbox" name="select_all_students" id="select_all_students" />
+                
                 {% if search_filters %}
                 {% trans "Student Search Results" %}
                 {% else %}
@@ -97,6 +100,7 @@
 
         <thead>
             <tr>
+                <th><input type="checkbox" name="select_all_students" id="select_all_students" /></th>
                 <th>{% trans "Photo" %}</th>
                 <th>{% anchor 'national_id' _("National id") %}</th>
                 <th>{% anchor 'full_name_en' _("Full Name (English)") %}</th>
@@ -112,12 +116,11 @@
         <tbody>
             {% for student in students %}
             <tr>
+                <td><input type="checkbox" name="selected_student" class="selected_student" value="{{ student.id }}" /></td>
                 <td>
                     {% if student.photo %}
-                    <img src="{{ student.photo.url }}" alt="Current Photo" style="max-width: 200px;">
+                    <img src="{{ student.photo.url }}" alt="Current Photo" style="max-width: 60px;">
                     {% endif %}
-                </td>
-                <td><input type="checkbox" name="selected_student" class="selected_student" value="{{ student.id }}" />
                 </td>
                 <td>
                     <a href="{% url 'dashboard:student-detail' national_id=student.national_id %}">

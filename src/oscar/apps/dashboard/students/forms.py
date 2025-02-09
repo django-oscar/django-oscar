@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from django import forms
 from django.http import QueryDict
@@ -83,5 +84,44 @@ class StudentSearchForm(forms.Form):
     )
     parent_phone_number = forms.CharField(required=False, label=_("Parent Phone Number"))
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
 
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
 
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+class StudentImagesImportForm(forms.Form):
+    images = MultipleFileField(
+        help_text='Select multiple images to upload. Supported formats: .jpg, .jpeg, .png'
+    )
+
+    def clean_images(self):
+        images = self.files.getlist('images')
+        valid_extensions = ['.jpg', '.jpeg', '.png']
+        max_size = 2 * 1024 * 1024  # 2MB
+
+        for image in images:
+            # Check extension
+            ext = os.path.splitext(image.name)[1].lower()
+            if ext not in valid_extensions:
+                raise forms.ValidationError(
+                    f'Invalid file type for {image.name}. Allowed types: {", ".join(valid_extensions)}'
+                )
+
+            # Check size
+            if image.size > max_size:
+                raise forms.ValidationError(
+                    f'File {image.name} is too large. Maximum size is 2MB.'
+                )
+
+        return images

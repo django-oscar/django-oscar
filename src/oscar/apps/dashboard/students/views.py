@@ -2,6 +2,7 @@
 import datetime
 from decimal import Decimal as D
 from decimal import InvalidOperation
+import os
 
 from django.conf import settings
 from django.contrib import messages
@@ -28,6 +29,7 @@ from io import TextIOWrapper
 
 Student = get_model("school", "Student")
 StudentSearchForm = get_class("dashboard.students.forms", "StudentSearchForm")
+StudentImagesImportForm = get_class("dashboard.students.forms", "StudentImagesImportForm")
 StudentImportValidator = get_class("dashboard.students.validators", "StudentImportValidator")
 
 
@@ -49,9 +51,6 @@ def get_student_for_user_or_404(user, national_id):
         return queryset_students_for_user(user).get(national_id=national_id)
     except ObjectDoesNotExist:
         raise Http404()
-
-
-
 
 
 class StudentListView(BulkEditMixin, ListView):
@@ -315,7 +314,6 @@ class StudentListView(BulkEditMixin, ListView):
         elif action == "delete":
             student.delete()
 
- 
 
 class StudentDetailView( DetailView):
     """
@@ -522,8 +520,6 @@ def get_change_summary(model1, model2):
     return "\n".join(change_descriptions)
 
 
-
-
 class StudentImportView(TemplateView):
     template_name = 'oscar/dashboard/students/student_import.html'
     
@@ -555,13 +551,13 @@ class StudentImportView(TemplateView):
 
 class StudentImportMapFieldsView(TemplateView):
     template_name = 'oscar/dashboard/students/student_import_map.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         file_path = self.request.session.get('import_file_path')
         context['active_tab'] = 'Map'
         context['current_step'] = 2
-        
+
         if file_path:
             with default_storage.open(file_path) as f:
                 csv_reader = csv.reader(TextIOWrapper(f))
@@ -576,8 +572,9 @@ class StudentImportMapFieldsView(TemplateView):
                     ('gender', _('Gender')),
                     ('parent_phone_number', _('Parent Phone Number')),
                 ]
-                context['optional_fields'] = [
-                    ('is_active', _('Status')),
+                context["optional_fields"] = [
+                    ("is_active", _("Status")),
+                    ("photo", _("Photo")),
                 ]
         return context
 
@@ -587,13 +584,13 @@ class StudentImportMapFieldsView(TemplateView):
             mapped_column = request.POST.get(f'field_{field}')
             if mapped_column:
                 field_mapping[field] = mapped_column
-        
+
         request.session['field_mapping'] = field_mapping
         return HttpResponseRedirect(reverse('dashboard:student-import-preview'))
 
 class StudentImportPreviewView(TemplateView):
     template_name = 'oscar/dashboard/students/student_import_preview.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         file_path = self.request.session.get('import_file_path')
@@ -610,7 +607,7 @@ class StudentImportPreviewView(TemplateView):
                     mapped_row = {field: row[column] for field, column in field_mapping.items()}
                     preview_data.append(mapped_row)
             context['preview_data'] = preview_data
-        
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -624,60 +621,102 @@ class StudentImportPreviewView(TemplateView):
         return self.render_to_response(self.get_context_data())
 
     def process_import(self, request):
-        file_path = request.session.get('import_file_path')
-        field_mapping = request.session.get('field_mapping')
+        file_path = request.session.get("import_file_path")
+        field_mapping = request.session.get("field_mapping")
         success_count = 0
         import_errors = {"errors": []}
-        
+
         with default_storage.open(file_path) as f:
             csv_reader = csv.DictReader(TextIOWrapper(f))
             for row_number, row in enumerate(csv_reader, start=1):
                 try:
                     student_data = {
-                        field: row[column] 
-                        for field, column in field_mapping.items()
+                        field: row[column] for field, column in field_mapping.items()
                     }
-                    
+
                     # Validate row data
-                    row_errors = StudentImportValidator.validate_row(student_data, row_number)
+                    row_errors = StudentImportValidator.validate_row(
+                        student_data, row_number
+                    )
                     if row_errors:
                         import_errors["errors"].extend(row_errors)
                         continue
-                    
-                    student_data['school'] = request.user.school
-                    
-                    if 'is_active' in student_data:
-                        is_active_value = student_data['is_active'].lower()
-                        student_data['is_active'] = is_active_value in ['true', '1', 'yes', 'active']
-                    
+
+                    student_data["school"] = request.user.school
+
+                    if "is_active" in student_data:
+                        is_active_value = student_data["is_active"].lower()
+                        student_data["is_active"] = is_active_value in [
+                            "true",
+                            "1",
+                            "yes",
+                            "active",
+                        ]
+
+                    # Handle photo
+                    if "photo" in student_data and student_data["photo"]:
+                        photo_name = student_data["photo"]
+                        photo_path = os.path.join("student_images", photo_name)
+                        student_data["photo"] = photo_path
+
                     # Check if student with same national_id already exists
-                    if Student.objects.filter(national_id=student_data['national_id']).exists():
+                    if Student.objects.filter(
+                        national_id=student_data["national_id"]
+                    ).exists():
                         import_errors["errors"].append(
                             _("Row {}: Student with National ID {} already exists").format(
-                                row_number, student_data['national_id']
+                                row_number, student_data["national_id"]
                             )
                         )
                         continue
-                    
+
                     Student.objects.create(**student_data)
                     success_count += 1
-                    
+
                 except Exception as e:
-                    error_message = _("Row {}: Error importing student - {}").format(row_number, str(e))
+                    error_message = _("Row {}: Error importing student - {}").format(
+                        row_number, str(e)
+                    )
                     import_errors["errors"].append(error_message)
-        
+
         request.session["import_errors"] = import_errors
         return success_count
 
-        
+
 def student_sample_csv_view(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="student_import_template.csv"'
-    
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = (
+        'attachment; filename="student_import_template.csv"'
+    )
+
     writer = csv.writer(response)
-    writer.writerow(['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth', 'Gender', 'Parent Phone Number', 'Status'])
-    writer.writerow(['John Doe', 'جون دو', '1234567890', 'G10', '2000-01-01', 'M', '525552368', 'Active'])
-    
+    writer.writerow(
+        [
+            "Full Name (English)",
+            "Full Name (Arabic)",
+            "National ID",
+            "Grade",
+            "Date of Birth",
+            "Gender",
+            "Parent Phone Number",
+            "Photo",
+            "Status",
+        ]
+    )
+    writer.writerow(
+        [
+            "John Doe",
+            "جون دو",
+            "1234567890",
+            "G10",
+            "2000-01-01",
+            "M",
+            "525552368",
+            "john_doe.jpg",
+            "Active",
+        ]
+    )
+
     return response
 
 class StudentImportSuccessView(TemplateView):
@@ -690,3 +729,45 @@ class StudentImportSuccessView(TemplateView):
         context['success_count'] = self.request.session.get("success_count")
         context['import_errors'] = self.request.session.get("import_errors").get("errors")
         return context
+
+class StudentImagesImportSuccessView(TemplateView):
+    template_name = 'oscar/dashboard/students/student_images_import_success.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active_tab'] = 'Completed'
+        context['current_step'] = 2
+        context['success_count'] = self.request.session.get("uploaded_images_count")
+        images_dir = os.path.join(settings.MEDIA_ROOT, 'student_images')
+        available_images = []
+        if os.path.exists(images_dir):
+            for filename in os.listdir(images_dir):
+                if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    available_images.append(filename)
+
+        context['images']= available_images
+        context["images_dir"] = os.path.join(settings.MEDIA_URL, "student_images")
+        self.request.session.pop("uploaded_images_count", None)
+        return context
+
+
+class StudentImagesImportView(TemplateView):
+    template_name = 'oscar/dashboard/students/student_images_import.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active_tab'] = 'Upload'
+        context['current_step'] = 1
+        return context
+
+    def post(self, request, *args, **kwargs):
+        request.session.pop("uploaded_images_count", None)
+        form = StudentImagesImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            images = request.FILES.getlist('images')
+            for image in images:
+                # Save image to existing category directory
+                file_path = os.path.join('student_images', image.name)
+                default_storage.save(file_path, image)
+            request.session["uploaded_images_count"] = len(images)
+        return HttpResponseRedirect(reverse('dashboard:student-images-import-success'))

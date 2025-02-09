@@ -1,6 +1,7 @@
 # Add these at the top with other imports
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.conf import settings
 import re
 import os
 from datetime import datetime
@@ -29,6 +30,29 @@ class StudentImportValidator:
     REQUIRED_HEADERS = ['Full Name (English)', 'Full Name (Arabic)', 'National ID', 'Grade', 'Date of Birth', 'Parent Phone Number']
     VALID_GRADES = ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12']
     VALID_GENDERS = ['M', 'F']
+    
+    @classmethod
+    def validate_photo(cls, photo_name, row_number):
+        """Validate the photo name"""
+        errors = []
+        if photo_name:
+            # Check if the photo exists in the student_images directory
+            images_dir = os.path.join(settings.MEDIA_ROOT, "student_images")
+            if not os.path.exists(images_dir):
+                errors.append(
+                    _("Row {}: Student images directory does not exist").format(
+                        row_number
+                    )
+                )
+            else:
+                photo_path = os.path.join(images_dir, photo_name)
+                if not os.path.exists(photo_path):
+                    errors.append(
+                        _(
+                            "Row {}: Photo '{}' does not exist in the student images directory"
+                        ).format(row_number, photo_name)
+                    )
+        return errors
 
     @classmethod
     def validate_file(cls, file):
@@ -49,13 +73,13 @@ class StudentImportValidator:
             # Create a copy of the file content
             content = file.read().decode('utf-8')
             file.seek(0)  # Reset file pointer
-            
+
             # Use StringIO to create a file-like object from the content
             from io import StringIO
             csv_file = StringIO(content)
             csv_reader = csv.reader(csv_file)
             headers = next(csv_reader)
-            
+
             # Check required headers
             missing_headers = [header for header in cls.REQUIRED_HEADERS if header not in headers]
             if missing_headers:
@@ -120,5 +144,10 @@ class StudentImportValidator:
         gender = row_data.get('gender')
         if gender and gender not in cls.VALID_GENDERS:
             errors.append(_("Row {}: Invalid gender. Must be 'M' or 'F'").format(row_number))
+        #Photo validation
+        photo_name = row_data.get('photo')
+        if photo_name:
+            photo_errors = cls.validate_photo(photo_name, row_number)
+            errors.extend(photo_errors)
 
         return errors
