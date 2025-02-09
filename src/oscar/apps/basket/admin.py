@@ -50,6 +50,7 @@ class BasketAdmin(admin.ModelAdmin):
         "date_created",
         "date_submitted",
         "time_before_submit",
+        "branch_id"
     )
     readonly_fields = ("owner", "date_merged", "date_submitted")
     inlines = [LineInline]
