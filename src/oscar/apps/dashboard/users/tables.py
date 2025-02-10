@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.utils.translation import gettext_lazy as _
 from django_tables2 import A, Column, LinkColumn, TemplateColumn
 
@@ -28,3 +29,16 @@ class UserTable(DashboardTable):
 
     class Meta(DashboardTable.Meta):
         template_name = "oscar/dashboard/users/table.html"
+
+    def order_num_orders(self, queryset, is_descending):
+        """
+        User record is created only once a user places an order, all such records must
+        be at the end of listing, when sorting in descending order, and at the start
+        when sorting in ascending.
+        """
+        if is_descending:
+            order_by = F("userrecord__num_orders").desc(nulls_last=True)
+        else:
+            order_by = F("userrecord__num_orders").asc(nulls_first=True)
+
+        return (queryset.order_by(order_by), True)
