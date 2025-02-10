@@ -29,7 +29,11 @@ class StudentsDashboardConfig(OscarDashboardConfig):
         self.student_images_import_success_view = get_class(
             "dashboard.students.views", "StudentImagesImportSuccessView"
         )
-
+        self.student_import_progress_view = get_class(
+            "dashboard.students.views", "StudentImportProgressView"
+        )
+        # Import tasks to ensure they're registered
+        from . import tasks
     def get_urls(self):
         urls = [
             path("", self.student_list_view.as_view(), name="students-list"),
@@ -60,6 +64,11 @@ class StudentsDashboardConfig(OscarDashboardConfig):
                 "import/success/",
                 self.student_import_success_view.as_view(),
                 name="student-import-success",
+            ),
+            path(
+                "import/progress/",
+                self.student_import_progress_view.as_view(),
+                name="student-import-progress",
             ),
             path(
                 "import/sample/",

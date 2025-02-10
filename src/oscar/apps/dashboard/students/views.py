@@ -21,11 +21,12 @@ from oscar.core.utils import datetime_combine, format_datetime
 
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import TemplateView
 from django.core.files.storage import default_storage
 import csv
 from io import TextIOWrapper
+from oscar.apps.dashboard.students.tasks import process_student_import
 
 Student = get_model("school", "Student")
 StudentSearchForm = get_class("dashboard.students.forms", "StudentSearchForm")
@@ -611,76 +612,26 @@ class StudentImportPreviewView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        if 'confirm' in request.POST:
-            success_count = self.process_import(request)
-            # messages.success(request, _(f'Successfully imported {success_count} students'))
-            request.session["success_count"] = success_count
-            request.session.pop('import_file_path', None)
-            request.session.pop('field_mapping', None)
-            return HttpResponseRedirect(reverse('dashboard:student-import-success'))
+        if "confirm" in request.POST:
+            file_path = request.session.get("import_file_path")
+            field_mapping = request.session.get("field_mapping")
+            user_id = request.user.school.id
+
+            # Trigger the Celery task
+            task = process_student_import.delay(file_path, field_mapping, user_id)
+
+            # Store the task ID in the session to check status later
+            request.session["import_task_id"] = task.id
+
+            messages.info(
+                request,
+                _(
+                    "Student import has started. You will be notified when it's complete."
+                ),
+            )
+            return HttpResponseRedirect(reverse("dashboard:student-import-success"))
+
         return self.render_to_response(self.get_context_data())
-
-    def process_import(self, request):
-        file_path = request.session.get("import_file_path")
-        field_mapping = request.session.get("field_mapping")
-        success_count = 0
-        import_errors = {"errors": []}
-
-        with default_storage.open(file_path) as f:
-            csv_reader = csv.DictReader(TextIOWrapper(f))
-            for row_number, row in enumerate(csv_reader, start=1):
-                try:
-                    student_data = {
-                        field: row[column] for field, column in field_mapping.items()
-                    }
-
-                    # Validate row data
-                    row_errors = StudentImportValidator.validate_row(
-                        student_data, row_number
-                    )
-                    if row_errors:
-                        import_errors["errors"].extend(row_errors)
-                        continue
-
-                    student_data["school"] = request.user.school
-
-                    if "is_active" in student_data:
-                        is_active_value = student_data["is_active"].lower()
-                        student_data["is_active"] = is_active_value in [
-                            "true",
-                            "1",
-                            "yes",
-                            "active",
-                        ]
-
-                    # Handle photo
-                    if "photo" in student_data and student_data["photo"]:
-                        photo_name = student_data["photo"]
-                        photo_path = os.path.join("student_images", photo_name)
-                        student_data["photo"] = photo_path
-
-                    # Check if student with same national_id already exists
-                    if Student.objects.filter(
-                        national_id=student_data["national_id"]
-                    ).exists():
-                        import_errors["errors"].append(
-                            _("Row {}: Student with National ID {} already exists").format(
-                                row_number, student_data["national_id"]
-                            )
-                        )
-                        continue
-
-                    Student.objects.create(**student_data)
-                    success_count += 1
-
-                except Exception as e:
-                    error_message = _("Row {}: Error importing student - {}").format(
-                        row_number, str(e)
-                    )
-                    import_errors["errors"].append(error_message)
-
-        request.session["import_errors"] = import_errors
-        return success_count
 
 
 def student_sample_csv_view(request):
@@ -719,16 +670,68 @@ def student_sample_csv_view(request):
 
     return response
 
+
 class StudentImportSuccessView(TemplateView):
     template_name = 'oscar/dashboard/students/student_import_success.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['active_tab'] = 'Completed'
         context['current_step'] = 3
+        context['task_id'] = self.request.session.get("import_task_id")
         context['success_count'] = self.request.session.get("success_count")
         context['import_errors'] = self.request.session.get("import_errors").get("errors")
         return context
+
+# views.py
+from celery.result import AsyncResult
+from django.http import JsonResponse
+
+
+class StudentImportProgressView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        task_id = request.session.get("import_task_id")
+        if not task_id:
+            return JsonResponse({"error": "No task ID found in session"}, status=400)
+
+        task = AsyncResult(task_id)
+        if task.state == "PENDING":
+            return JsonResponse(
+                {
+                    "state": task.state,
+                    "current": 0,
+                    "total": 1,
+                    "status": "Waiting for task to start...",
+                }
+            )
+        elif task.state == "PROGRESS":
+            return JsonResponse(
+                {
+                    "state": task.state,
+                    "current": task.info.get("current", 0),
+                    "total": task.info.get("total", 1),
+                    "status": task.info.get("status", "Processing..."),
+                }
+            )
+        elif task.state == "SUCCESS":
+            return JsonResponse(
+                {
+                    "state": task.state,
+                    "current": task.info.get("current", 0),
+                    "total": task.info.get("total", 1),
+                    "errors": task.info.get("errors"),
+                    "status": task.info.get("status", "Processing..."),
+                }
+            )
+        else:
+            return JsonResponse(
+                {
+                    "state": task.state,
+                    "error": task.info.get("error", "Unknown error occurred"),
+                    "errors": task.info.get("errors", []),
+                }
+            )
+
 
 class StudentImagesImportSuccessView(TemplateView):
     template_name = 'oscar/dashboard/students/student_images_import_success.html'

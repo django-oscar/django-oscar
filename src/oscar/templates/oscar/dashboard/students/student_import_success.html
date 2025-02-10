@@ -4,39 +4,89 @@
 
 {% block title %}{% trans "Import Complete" %} | {{ block.super }}{% endblock %}
 
-{% block breadcrumbs %}
-
-{% endblock %}
-{% block stepper_tracker %}
-<li role="presentation" class="disabled">
-    <a class="persistant-disabled" href="{% url 'dashboard:student-import' %}" data-toggle="tab" aria-controls="stepper-step-1" role="tab"
-        title="Step 1">
-        <span class="round-tab">1</span>
-    </a>
-</li>
-<li role="presentation" class="disabled">
-    <a class="persistant-disabled" href="{% url 'dashboard:student-import-map' %}" data-toggle="tab" aria-controls="stepper-step-2" role="tab"
-        title="Step 2">
-        <span class="round-tab">2</span>
-    </a>
-</li>
-<li role="presentation" class="disabled">
-    <a class="persistant-disabled" href="{% url 'dashboard:student-import-preview' %}" data-toggle="tab" aria-controls="stepper-step-3" role="tab"
-        title="Step 3">
-        <span class="round-tab">3</span>
-    </a>
-</li>
-<li role="presentation" class="active">
-    <a class="persistant-disabled" href="{% url 'dashboard:student-import-success' %}" data-toggle="tab" aria-controls="stepper-step-4" role="tab"
-        title="Complete">
-        <span class="round-tab">4</span>
-    </a>
-</li>
-
-{% endblock %}
 {% block dashboard_content %}
 <div class="tab-pane show in active" role="tabpanel" id="stepper-step-4">
+    {% if task_id %}
+    <div id="progress-container">
+        <div class="progress-bar">
+            <div id="progress" style="width: 0%"></div>
+        </div>
+        <p id="status-message">Processing...</p>
+    </div>
+    <div id="import-errors-container" style="display: none;">
+        <h4>{% trans "The following errors happened while importing students" %}</h4>
+        <ul class="alert alert-warning" id="import-errors">
+        </ul>
+    </div>
+    <div class="form-group" id="import-result" style="display: none;">
+        <a href="{% url 'dashboard:students-list' %}" class="btn btn-primary">
+            {% trans "Return to Student List" %}
+        </a>
+        <a href="{% url 'dashboard:student-import' %}" class="btn btn-light">
+            {% trans "Import More Students" %}
+        </a>
+    </div>
+    <script>
+        function checkProgress() {
+            fetch('{% url "dashboard:student-import-progress" %}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.state === 'PENDING' || data.state === 'PROGRESS') {
+                        const percent = (data.current / data.total) * 100;
+                        document.getElementById('progress').style.width = percent + '%';
+                        document.getElementById('status-message').textContent = data.status;
+                        setTimeout(checkProgress, 1000);
+                    } else if (data.state === 'SUCCESS') {
+                        document.getElementById('progress').style.width = '100%';
+                        document.getElementById('status-message').textContent = data.status ;
+                        console.log("data.errors", data.errors)
+                        if(data.errors){
+                            document.getElementById('import-errors-container').style.display="block";
+                            var ul = document.getElementById('import-errors');
+                            data.errors.forEach((item, index) => {
+                                var li = document.createElement("li");
+                                li.appendChild(document.createTextNode(item));
+                                ul.appendChild(li);
+                            })
+                        }
+                            document.getElementById('import-result').style.display = "block";
 
+                    } else {
+                        document.getElementById('status-message').textContent = 'Error: ' + data.error;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('status-message').textContent = 'Error checking progress: ' + error;
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            checkProgress();
+        });
+    </script>
+
+    <style>
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        #progress {
+            height: 100%;
+            background-color:#0000FF;
+            transition: width 0.5s ease-in-out;
+        }
+
+        #status-message {
+            text-align: center;
+            margin: 10px 0;
+        }
+    </style>
+    {% else %}
     <div class="table-header">
         <h1>{% trans "Import Complete" %}</h1>
     </div>
@@ -44,7 +94,6 @@
     <div class="card">
         <div class="card-body">
             {% if success_count %}
-
             <div class="alert alert-success">
                 {% blocktrans with count=success_count %}
                 Successfully imported {{ count }} students.
@@ -73,5 +122,6 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
