@@ -20,7 +20,6 @@ from plans.signals import activate_user_plan
 from plans.plan_change import StandardPlanChangePolicy
 
 
-
 class SubscriptionsListView(generic.TemplateView):
     template_name = "oscar/dashboard/subscription/subscription.html"
 
@@ -207,7 +206,7 @@ class ReactivateSubscriptionView( generic.FormView):
 
 class SubscribeView( generic.View):
     template_name = "oscar/dashboard/subscription/subscribe-confirmation.html"
-    success_url = reverse_lazy("dashboard:subscription-view")
+    success_url = reverse_lazy("payments:tap-payment")
 
     def get(self, request, *args, **kwargs):
         plan_id = request.GET.get('plan_id')
@@ -224,36 +223,59 @@ class SubscribeView( generic.View):
             return redirect(self.success_url)
 
     def get_context_data(self, plan):
+        user = self.request.user
+        if hasattr(user, "school"):
+            school = user.school
+            branches_count = school.school_details.branches_count if hasattr(school, "school_details") else 1
+            students_count = school.school_details.students_count if hasattr(school, "school_details") else 1
+        else:
+            vendor = user.vendor
+            branches_count = (
+                school.business_details.branches_count
+                if hasattr(vendor, "business_details")
+                else 1
+            )
+            students_count = 0
         return {
-            'plan': plan,
-            'currency': settings.PLANS_CURRENCY,
-            "dashboard": True
+            "plan": plan,
+            "currency": settings.PLANS_CURRENCY,
+            "dashboard": True,
+            "school_reg": True,
+            "students_count": students_count,
+            "branches_count": branches_count,
+            "students_total": plan.price_per_student * students_count,
+            "branches_total": plan.price() * branches_count,
+            "total_price": (plan.price_per_student * students_count)
+            + (plan.price() * branches_count),
         }
 
     def post(self, request, *args, **kwargs):
         plan_id = request.POST.get('plan_id')
         branches = int(request.POST.get('branches', 1))
+        students = int(request.POST.get("students", 1))
         if not plan_id:
             messages.error(request, _("No plan selected."))
             return redirect(self.success_url)
-            
+
         if branches < 1:
             messages.error(request, _("Number of branches must be at least 1."))
             return redirect(request.path)
-            
+        if students < 1:
+            messages.error(request, _("Number of students must be at least 1."))
+            return redirect(request.path)
         try:
             # Get the selected plan
             plan = Plan.objects.get(id=plan_id)
             user = request.user
 
             # Calculate total price
-            total_price = plan.price() * Decimal(branches)
-            
+            total_price = plan.price() * Decimal(branches) * Decimal(students)
+
             # Check if user already has an active subscription
             existing_plan = UserPlan.objects.filter(
                 user=user,
             ).first()
-            
+
             if existing_plan:
                 messages.error(
                     request,
@@ -261,30 +283,25 @@ class SubscribeView( generic.View):
                 )
                 return redirect(self.success_url)
 
-            payment = True #placeholder
-            if payment:
-                # Create new user plan
-                user_plan = UserPlan.objects.create(
-                    user=user,
-                    plan=plan,
-                    active=False,
-                    branches=branches  
-                )
-                
-                activate_user_plan.send(
-                    sender=self,
-                    user=user
-                )
-                
-                messages.success(
-                    request,
-                    _("Successfully subscribed to {} with {} branches for {} {}").format(
-                        plan.name,
-                        branches,
-                        total_price,
-                        'USD'
-                    )
-                )
+            # Create new user plan
+            user_plan = UserPlan.objects.create(
+                user=user, plan=plan, active=False, branches=branches, students=students
+            )
+
+            # activate_user_plan.send(
+            #     sender=self,
+            #     user=user
+            # )
+
+            # messages.success(
+            #     request,
+            #     _("Successfully subscribed to {} with {} branches for {} {}").format(
+            #         plan.name,
+            #         branches,
+            #         total_price,
+            #         'USD'
+            #     )
+            # )
 
         except Plan.DoesNotExist:
             messages.error(request, _("Selected plan does not exist."))
@@ -296,7 +313,7 @@ class SubscribeView( generic.View):
                 request,
                 _("An error occurred while processing your subscription. Please try again.")
             )
-            
+
         return redirect(self.success_url)
 
     def dispatch(self, request, *args, **kwargs):
@@ -323,12 +340,38 @@ class ChangeSubscriptionView( generic.View):
             return redirect(self.success_url)
 
     def get_context_data(self, new_plan):
+        user = self.request.user
+        if hasattr(user, "school"):
+            school = user.school
+            branches_count = school.school_details.branches_count if hasattr(school, "school_details") else 1
+            students_count = school.school_details.students_count if hasattr(school, "school_details") else 1
+        else:
+            vendor = user.vendor
+            branches_count = (
+                school.business_details.branches_count
+                if hasattr(vendor, "business_details")
+                else 1
+            )
+            students_count = 0
+        current_plan = UserPlan.objects.filter(
+            user=user,
+        ).first()
         context = {
-            'new_plan': new_plan,
-            'currency': settings.PLANS_CURRENCY,
-            "dashboard": True
+            "new_plan": new_plan,
+            "currency": settings.PLANS_CURRENCY,
+            "dashboard": True,
+            "school_reg": True,
+            "students_count": students_count,
+            "branches_count": branches_count,
+            "old_students_total": current_plan.plan.price_per_student * students_count,
+            "students_total": new_plan.price_per_student * students_count,
+            "branches_total": new_plan.price() * branches_count,
+            "old_branches_total": current_plan.plan.price() * branches_count,
+            "total_price": (new_plan.price_per_student * students_count)
+            + (new_plan.price() * branches_count),
+            "old_total_price": (current_plan.plan.price_per_student * students_count)
+            + (current_plan.plan.price() * branches_count),
         }
-        
         try:
             current_plan = self.request.user.userplan
             context.update({
@@ -346,41 +389,41 @@ class ChangeSubscriptionView( generic.View):
                 'current_plan': None,
                 'expiration_date': None
             })
-            
+
         return context
 
     def post(self, request, *args, **kwargs):
         new_plan_id = request.POST.get('plan_id')
         branches = int(request.POST.get('branches', 1))
-        
+
         if not new_plan_id:
             messages.error(request, _("No plan selected for change."))
             return redirect(self.success_url)
-            
+
         if branches < 1:
             messages.error(request, _("Number of branches must be at least 1."))
             return redirect(request.path)
-            
+
         try:
             # Get current and new plans
             current_plan = request.user.userplan
             new_plan = Plan.objects.get(id=new_plan_id)
-            
+
             if current_plan.plan.id == new_plan.id:
                 messages.error(request, _("This is already your current plan."))
                 return redirect(self.success_url)
-            
+
             # Calculate base price using StandardPlanChangePolicy
             policy = StandardPlanChangePolicy()
             days_left = current_plan.days_left()
             base_change_price = policy.get_change_price(current_plan.plan, new_plan, days_left)
-            
+
             # Calculate total price with branches
             if base_change_price is not None:
                 total_change_price = Decimal(str(base_change_price)) * Decimal(str(branches))
             else:
                 total_change_price = None
-                        
+
             if total_change_price is None:
                 current_plan.extend_account(new_plan, None)
                 messages.success(
@@ -410,7 +453,7 @@ class ChangeSubscriptionView( generic.View):
                             'USD'  # You might want to make this dynamic
                         )
                     )
-                
+
         except UserPlan.DoesNotExist:
             messages.error(request, _("You don't have an active subscription to change."))
         except Plan.DoesNotExist:
@@ -423,7 +466,7 @@ class ChangeSubscriptionView( generic.View):
                 request,
                 _("An error occurred while changing your plan. Please try again.")
             )
-        
+
         return redirect(self.success_url)
 
     def dispatch(self, request, *args, **kwargs):
