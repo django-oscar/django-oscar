@@ -42,7 +42,7 @@ class Selector(object):
         """
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord but charging zero tax.
-        return Default(request)
+        return UK(request)
 
 
 # pylint: disable=unused-argument
@@ -401,7 +401,7 @@ class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
     """
 
     # Use UK VAT rate (as of December 2013)
-    rate = D("0.20")
+    rate = D("0.15")
 
 
 class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):

@@ -447,8 +447,9 @@ class AbstractBasket(models.Model):
                 line_total = getattr(line, model_property)
 
                 # Add the total price of options for this line
-                option_prices = self._get_option_prices(line)
-                line_total += option_prices
+                if "line_tax" != model_property:
+                    option_prices = self._get_option_prices(line)
+                    line_total += option_prices
 
                 total += line_total
             except ObjectDoesNotExist:
