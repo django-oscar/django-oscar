@@ -18,7 +18,8 @@ from django.views import generic
 from plans.models import Plan, UserPlan
 from plans.signals import activate_user_plan
 from plans.plan_change import StandardPlanChangePolicy
-
+from server.apps.payments.gateways.tap import TapPaymentGateway
+from plans.models import Order as PlansOrder
 
 class SubscriptionsListView(generic.TemplateView):
     template_name = "oscar/dashboard/subscription/subscription.html"
@@ -341,49 +342,43 @@ class ChangeSubscriptionView( generic.View):
 
     def get_context_data(self, new_plan):
         user = self.request.user
-        if hasattr(user, "school"):
-            school = user.school
-            branches_count = school.school_details.branches_count if hasattr(school, "school_details") else 1
-            students_count = school.school_details.students_count if hasattr(school, "school_details") else 1
-        else:
-            vendor = user.vendor
-            branches_count = (
-                school.business_details.branches_count
-                if hasattr(vendor, "business_details")
-                else 1
-            )
-            students_count = 0
-        current_plan = UserPlan.objects.filter(
-            user=user,
-        ).first()
-        context = {
-            "new_plan": new_plan,
-            "currency": settings.PLANS_CURRENCY,
-            "dashboard": True,
-            "school_reg": True,
-            "students_count": students_count,
-            "branches_count": branches_count,
-            "old_students_total": current_plan.plan.price_per_student * students_count,
-            "students_total": new_plan.price_per_student * students_count,
-            "branches_total": new_plan.price() * branches_count,
-            "old_branches_total": current_plan.plan.price() * branches_count,
-            "total_price": (new_plan.price_per_student * students_count)
-            + (new_plan.price() * branches_count),
-            "old_total_price": (current_plan.plan.price_per_student * students_count)
-            + (current_plan.plan.price() * branches_count),
-        }
         try:
             current_plan = self.request.user.userplan
-            context.update({
-                'current_plan': current_plan.plan,
-                'current_branches': current_plan.branches,
-                'expiration_date': current_plan.expire,
-                'change_price': StandardPlanChangePolicy().get_change_price(
+            branches_count = current_plan.branches
+            students_count = current_plan.students
+
+            context = {
+                "new_plan": new_plan,
+                "currency": settings.PLANS_CURRENCY,
+                "dashboard": True,
+                "school_reg": True,
+                "students_count": students_count,
+                "branches_count": branches_count,
+                "old_students_total": current_plan.plan.price_per_student * students_count,
+                "students_total": new_plan.price_per_student * students_count,
+                "branches_total": new_plan.price() * branches_count,
+                "old_branches_total": current_plan.plan.price() * branches_count,
+                "total_price": (new_plan.price_per_student * students_count)
+                + (new_plan.price() * branches_count),
+                "old_total_price": (current_plan.plan.price_per_student * students_count)
+                + (current_plan.plan.price() * branches_count),
+                "new_plan_day_cost": StandardPlanChangePolicy()._calculate_day_cost(
+                    current_plan, new_plan, current_plan.days_left()
+                ),
+                "current_plan": current_plan.plan,
+                "current_plan_days_left": current_plan.days_left(),
+                "current_branches": current_plan.branches,
+                "expiration_date": current_plan.expire,
+                "current_plan_day_cost": StandardPlanChangePolicy()._calculate_day_cost(
+                    current_plan, current_plan.plan, current_plan.days_left()
+                ),
+                "change_price": StandardPlanChangePolicy().get_change_price(
+                    current_plan,
                     current_plan.plan,
                     new_plan,
-                    current_plan.days_left()
-                )
-            })
+                    current_plan.days_left(),
+                ),
+            }
         except UserPlan.DoesNotExist:
             context.update({
                 'current_plan': None,
@@ -394,15 +389,11 @@ class ChangeSubscriptionView( generic.View):
 
     def post(self, request, *args, **kwargs):
         new_plan_id = request.POST.get('plan_id')
-        branches = int(request.POST.get('branches', 1))
+        total_price = float(request.POST.get("total_price", 0.0))
 
         if not new_plan_id:
             messages.error(request, _("No plan selected for change."))
             return redirect(self.success_url)
-
-        if branches < 1:
-            messages.error(request, _("Number of branches must be at least 1."))
-            return redirect(request.path)
 
         try:
             # Get current and new plans
@@ -411,26 +402,14 @@ class ChangeSubscriptionView( generic.View):
 
             if current_plan.plan.id == new_plan.id:
                 messages.error(request, _("This is already your current plan."))
-                return redirect(self.success_url)
+                return redirect(self.success_url)            
 
-            # Calculate base price using StandardPlanChangePolicy
-            policy = StandardPlanChangePolicy()
-            days_left = current_plan.days_left()
-            base_change_price = policy.get_change_price(current_plan.plan, new_plan, days_left)
-
-            # Calculate total price with branches
-            if base_change_price is not None:
-                total_change_price = Decimal(str(base_change_price)) * Decimal(str(branches))
-            else:
-                total_change_price = None
-
-            if total_change_price is None:
+            if not total_price:
                 current_plan.extend_account(new_plan, None)
                 messages.success(
                     request,
                     _("Successfully changed to plan {} for {} branches").format(
                         new_plan.name,
-                        branches
                     )
                 )
             else:
@@ -438,21 +417,34 @@ class ChangeSubscriptionView( generic.View):
                 # 1. Create an order for the total_change_price amount
                 # 2. Redirect to payment
                 # For this example, we'll assume immediate payment success
-                payment = True
-                if payment:
-                    current_plan.extend_account(new_plan, None)
-                    # You might want to store the number of branches in your UserPlan model
-                    current_plan.branches = branches
-                    current_plan.save()
-                    messages.success(
-                        request,
-                        _("Successfully upgraded to plan {} for {} branches. Total cost: {} {}").format(
-                            new_plan.name,
-                            branches,
-                            total_change_price,
-                            'USD'  # You might want to make this dynamic
-                        )
-                    )
+                gateway = TapPaymentGateway()
+                user = self.request.user
+                # Create django-plans order
+                plans_order = PlansOrder.objects.create(
+                    user=user,
+                    plan=new_plan.plan,
+                    pricing=new_plan.pricing().pricing,
+                    amount=new_plan.plan.pricing().price,
+                    branches_number=current_plan.branches,
+                    students_number=(
+                        current_plan.students
+                        if new_plan.plan_for == "schools"
+                        else None
+                    ),
+                    currency=settings.PLANS_CURRENCY,
+                )
+                # Create Tap charge
+                tap_response = gateway.create_charge(
+                    user=user,
+                    order_number=plans_order.pk,
+                    amount=float(plans_order.total()),
+                    customer=self.get_customer_data(),
+                    redirect_url=f"{self.get_redirect_url()}&new_plan={new_plan.pk}",
+                    save_card=True,
+                )
+                # Get the redirect URL and redirect the user
+                redirect_url = gateway.get_redirect_url(tap_response)
+                return HttpResponseRedirect(redirect_url)
 
         except UserPlan.DoesNotExist:
             messages.error(request, _("You don't have an active subscription to change."))
@@ -473,6 +465,19 @@ class ChangeSubscriptionView( generic.View):
         if not request.user.is_authenticated:
             return redirect('dashboard:login')
         return super().dispatch(request, *args, **kwargs)
+
+    def get_customer_data(self):
+        return {
+            "id": self.request.user.tap_customer_id,
+            "first_name": self.request.user.first_name,
+            "last_name": self.request.user.last_name,
+            "email": self.request.user.email,
+            "phone": {"country_code": "966", "number": self.request.user.phone_number},
+        }
+
+    def get_redirect_url(self):
+        return self.request.build_absolute_uri(reverse("payments:tap-callback"))
+
 
 class RenewSubscriptionView( generic.View):
     success_url = reverse_lazy("dashboard:subscription-view")
