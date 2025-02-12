@@ -1,7 +1,7 @@
 # pylint: disable=unused-argument, W0621
 import csv
 import operator
-from decimal import ROUND_UP
+from decimal import ROUND_DOWN
 from decimal import Decimal as D
 
 from django.conf import settings
@@ -753,7 +753,7 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         if errors:
             raise exceptions.ValidationError(errors)
 
-    def round(self, amount, currency=None, round_type=ROUND_UP):
+    def round(self, amount, currency=None, round_type=ROUND_DOWN):
         """
         Apply rounding to discount amount
         """
