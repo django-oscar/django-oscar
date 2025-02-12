@@ -17,7 +17,7 @@ class VoucherAdmin(admin.ModelAdmin):
     )
     readonly_fields = ("num_basket_additions", "num_orders", "total_discount")
     fieldsets = (
-        (None, {"fields": ("name", "code", "usage", "start_datetime", "end_datetime")}),
+        (None, {"fields": ("name", "code", "vendor", "usage", "start_datetime", "end_datetime")}),
         ("Benefit", {"fields": ("offers",)}),
         ("Usage", {"fields": ("num_basket_additions", "num_orders", "total_discount")}),
     )

@@ -102,7 +102,7 @@
     font-display: swap;
 }
 
-@font-face {
+/* @font-face {
     font-family: 'Saans TRIAL';
     src: url('SaansTRIAL-Regular.eot');
     src: local('Saans TRIAL Regular'), local('SaansTRIAL-Regular'),
@@ -113,7 +113,7 @@
     font-weight: normal;
     font-style: normal;
     font-display: swap;
-}
+} */
 
 @font-face {
     font-family: 'Saans TRIAL';
