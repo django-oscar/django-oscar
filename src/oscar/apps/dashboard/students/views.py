@@ -680,7 +680,8 @@ class StudentImportSuccessView(TemplateView):
         context['current_step'] = 3
         context['task_id'] = self.request.session.get("import_task_id")
         context['success_count'] = self.request.session.get("success_count")
-        context['import_errors'] = self.request.session.get("import_errors").get("errors")
+        if self.request.session.get("import_errors"):
+            context['import_errors'] = self.request.session.get("import_errors").get("errors")
         return context
 
 # views.py

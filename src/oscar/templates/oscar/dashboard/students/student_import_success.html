@@ -39,8 +39,7 @@
                     } else if (data.state === 'SUCCESS') {
                         document.getElementById('progress').style.width = '100%';
                         document.getElementById('status-message').textContent = data.status ;
-                        console.log("data.errors", data.errors)
-                        if(data.errors){
+                        if(data.errors && data.errors.length){
                             document.getElementById('import-errors-container').style.display="block";
                             var ul = document.getElementById('import-errors');
                             data.errors.forEach((item, index) => {
