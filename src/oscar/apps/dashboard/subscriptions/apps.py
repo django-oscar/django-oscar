@@ -19,37 +19,54 @@ class SubscriptionsDashboardConfig(OscarDashboardConfig):
         )
         self.reactivate_subscription_view = get_class("dashboard.subscriptions.views", "ReactivateSubscriptionView")
         self.subscripe_view = get_class("dashboard.subscriptions.views", "SubscribeView")
-        self.change_subscription_view = get_class("dashboard.subscriptions.views", "ChangeSubscriptionView")
+        self.change_subscription_view = get_class(
+            "dashboard.subscriptions.views", "ChangeSubscriptionView"
+        )
+        self.update_subscription_view = get_class(
+            "dashboard.subscriptions.views", "UpdateBranchesView"
+        )
         self.renew_subscription_view = get_class("dashboard.subscriptions.views", "RenewSubscriptionView")
 
     def get_urls(self):
         urls = [
             path(
-                "",self.subscription_view.as_view(),
+                "",
+                self.subscription_view.as_view(),
                 name="subscription-view",
             ),
             path(
-                "cancel/",self.cancel_subscription_view.as_view(),
+                "cancel/",
+                self.cancel_subscription_view.as_view(),
                 name="cancel-subscription-view",
             ),
             path(
-                "cancel/confirm/",self.cancel_subscription.as_view(),
+                "cancel/confirm/",
+                self.cancel_subscription.as_view(),
                 name="cancel-subscription",
             ),
             path(
-                "reactivate/",self.reactivate_subscription_view.as_view(),
+                "reactivate/",
+                self.reactivate_subscription_view.as_view(),
                 name="reactivate-subscription-view",
             ),
             path(
-                "subscribe/",self.subscripe_view.as_view(),
+                "subscribe/",
+                self.subscripe_view.as_view(),
                 name="subscribe-view",
             ),
             path(
-                "change/",self.change_subscription_view.as_view(),
+                "change/",
+                self.change_subscription_view.as_view(),
                 name="change-subscription-view",
             ),
             path(
-                "renew/",self.renew_subscription_view.as_view(),
+                "update-branches/",
+                self.update_subscription_view.as_view(),
+                name="update-subscription-view",
+            ),
+            path(
+                "renew/",
+                self.renew_subscription_view.as_view(),
                 name="renew-subscription-view",
             ),
         ]
