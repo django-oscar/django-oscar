@@ -229,6 +229,8 @@ class AbstractBasket(models.Model):
         """
         # Extract branch_id from the basket instance
         branch_id = getattr(self, 'branch_id', None)
+        if not branch_id:
+            branch_id=self.branch
         return self.strategy.fetch_for_product(product, branch_id=branch_id)
 
     def add_product(self, product, quantity=1, options=None):
@@ -252,7 +254,6 @@ class AbstractBasket(models.Model):
         # Ensure that all lines are the same currency
         price_currency = self.currency
         stock_info = self.get_stock_info(product, options)
-
         if not stock_info.price.exists:
             raise ValueError("Strategy hasn't found a price for product %s" % product)
 
