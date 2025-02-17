@@ -29,16 +29,6 @@ def create_materialized_view(apps, schema_editor):
             """)
 
 
-def create_index(apps, schema_editor):
-    """Creates a unique index for PostgreSQL (outside Django transaction)."""
-    if connection.vendor == "postgresql":
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS catalogue_product_category_hierarchy_idx
-                ON catalogue_product_category_hierarchy (product_id, category_id);
-            """)
-
-
 def drop_materialized_view(apps, schema_editor):
     """Drops the materialized view if rolling back."""
     if connection.vendor == "postgresql":
