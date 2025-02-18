@@ -1,5 +1,6 @@
 from django.core.checks import Error, register
 from django.conf import settings
+from django.db import connection
 
 
 @register()
@@ -18,3 +19,7 @@ def startup_check(*args, **kwargs):
             )
         )
     return errors
+
+
+def is_postgres():
+    return connection.vendor == "postgresql"

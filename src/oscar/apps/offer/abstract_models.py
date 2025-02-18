@@ -6,7 +6,7 @@ from decimal import Decimal as D
 
 from django.conf import settings
 from django.core import exceptions
-from django.db import models, connection
+from django.db import models
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
@@ -14,6 +14,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import get_current_timezone, now
 from django.utils.translation import gettext_lazy as _
 
+from oscar.checks import is_postgres
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import cached_import_string, get_class, get_classes, get_model
 from oscar.models import fields
@@ -1127,7 +1128,7 @@ class AbstractRange(models.Model):
             _filter = Q(id__in=self.excluded_products.values("id"))
             # extend filter if excluded_categories exist
             if self.excluded_categories.exists():
-                if connection.vendor == "postgresql":
+                if is_postgres():
                     product_ids = ProductCategoryHierarchy.objects.filter(
                         category_id__in=self.excluded_categories.values_list(
                             "id", flat=True
@@ -1167,7 +1168,7 @@ class AbstractRange(models.Model):
 
         # extend filter if included_categories exist
         if self.included_categories.exists():
-            if connection.vendor == "postgresql":
+            if is_postgres():
                 product_ids = ProductCategoryHierarchy.objects.filter(
                     category_id__in=self.included_categories.values_list(
                         "id", flat=True

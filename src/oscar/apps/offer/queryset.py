@@ -1,5 +1,6 @@
-from django.db import models, connection
+from django.db import models
 
+from oscar.checks import is_postgres
 from oscar.core.loading import get_class
 
 ExpandUpwardsCategoryQueryset = get_class(
@@ -64,7 +65,7 @@ class RangeQuerySet(models.query.QuerySet):
         return product.categories.values("id")
 
     def get_category_query(self, product):
-        if connection.vendor == "postgresql":
+        if is_postgres():
             if product.structure == product.CHILD:
                 return ProductCategoryHierarchy.objects.filter(
                     product_id=product.parent_id
