@@ -48,6 +48,8 @@ class SubscriptionsListView(generic.TemplateView):
             ctx["students_count"] = user.userplan.students
             ctx["branches_count"] = user.userplan.branches
             ctx["current_plan_active"] = user.userplan.is_active()
+            ctx["current_plan_trial"] = user.userplan.is_trial()
+            ctx["current_plan_trial_end_date"] =user.userplan.trial_end_date
             ctx["current_plan_expired"] = user.userplan.is_expired()
             ctx["expiration_date"] = user.userplan.expire
         except:
@@ -159,6 +161,10 @@ class ReactivateSubscriptionForm(forms.Form):
         cleaned_data = super().clean()
         try:
             user_plan = Plan.get_current_plan(self.user)
+            if user_plan.is_expired():
+                raise forms.ValidationError(
+                    _("The reactivation period expired.")
+                )
         except:
             raise forms.ValidationError(
                 _("You don't have canceled subscription to activate.")
@@ -267,6 +273,7 @@ class SubscribeView(generic.View):
                 else 1
             )
             students_count = 0
+        authorize = self.request.GET.get("authorize", None)
         return {
             "plan": plan,
             "currency": settings.PLANS_CURRENCY,
@@ -278,10 +285,12 @@ class SubscribeView(generic.View):
             "branches_total": plan.price() * branches_count,
             "total_price": (plan.price_per_student * students_count)
             + (plan.price() * branches_count),
+            "authorize": authorize,
         }
 
     def post(self, request, *args, **kwargs):
         plan_id = request.POST.get("plan_id")
+        authorize = request.POST.get("authorize", 0)
         branches = int(request.POST.get("branches", 1))
         students = int(request.POST.get("students", 1))
         if not plan_id:
@@ -299,24 +308,22 @@ class SubscribeView(generic.View):
             plan = Plan.objects.get(id=plan_id)
             user = request.user
 
-            # Calculate total price
-            total_price = plan.price() * Decimal(branches) * Decimal(students)
-
             # Check if user already has an active subscription
             existing_plan = UserPlan.objects.filter(
                 user=user,
             ).first()
 
             if existing_plan:
-                messages.error(
-                    request, _("You already have a subscription. Please activate it.")
+                existing_plan.plan = plan 
+                existing_plan.save()
+            else:
+                UserPlan.objects.create(
+                    user=user,
+                    plan=plan,
+                    active=False,
+                    branches=branches,
+                    students=students,
                 )
-                return redirect(self.success_url)
-
-            # Create new user plan
-            user_plan = UserPlan.objects.create(
-                user=user, plan=plan, active=False, branches=branches, students=students
-            )
 
             # activate_user_plan.send(
             #     sender=self,
@@ -345,8 +352,10 @@ class SubscribeView(generic.View):
                     "An error occurred while processing your subscription. Please try again."
                 ),
             )
-
-        return redirect(self.success_url)
+        redirect_url = self.success_url
+        if authorize:
+            redirect_url = f"{redirect_url}?authorize=1" 
+        return redirect(redirect_url)
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -378,7 +387,11 @@ class ChangeSubscriptionView(generic.View):
             current_plan = self.request.user.userplan
             branches_count = current_plan.branches
             students_count = current_plan.students
-
+            days_left = (
+                current_plan.days_left()
+                if current_plan.days_left()
+                else current_plan.plan.pricing().pricing.period
+            )
             context = {
                 "new_plan": new_plan,
                 "currency": settings.PLANS_CURRENCY,
@@ -398,20 +411,20 @@ class ChangeSubscriptionView(generic.View):
                 )
                 + (current_plan.plan.price() * branches_count),
                 "new_plan_day_cost": StandardPlanChangePolicy()._calculate_day_cost(
-                    current_plan, new_plan, current_plan.days_left()
+                    current_plan, new_plan, days_left
                 ),
                 "current_plan": current_plan.plan,
-                "current_plan_days_left": current_plan.days_left(),
+                "current_plan_days_left": days_left,
                 "current_branches": current_plan.branches,
                 "expiration_date": current_plan.expire,
                 "current_plan_day_cost": StandardPlanChangePolicy()._calculate_day_cost(
-                    current_plan, current_plan.plan, current_plan.days_left()
+                    current_plan, current_plan.plan, days_left
                 ),
                 "change_price": StandardPlanChangePolicy().get_change_price(
                     current_plan,
                     current_plan.plan,
                     new_plan,
-                    current_plan.days_left(),
+                    days_left,
                 ),
             }
         except UserPlan.DoesNotExist:
