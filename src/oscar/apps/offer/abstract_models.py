@@ -6,7 +6,7 @@ from decimal import Decimal as D
 
 from django.conf import settings
 from django.core import exceptions
-from django.db import models
+from django.db import models, connection
 from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.urls import reverse
@@ -27,6 +27,7 @@ ActiveOfferManager, RangeManager, BrowsableRangeManager = get_classes(
 )
 ZERO_DISCOUNT = get_class("offer.results", "ZERO_DISCOUNT")
 load_proxy, unit_price = get_classes("offer.utils", ["load_proxy", "unit_price"])
+ProductCategoryHierarchy = get_class("catalogue.models", "ProductCategoryHierarchy")
 
 
 class BaseOfferMixin(models.Model):
@@ -1126,17 +1127,27 @@ class AbstractRange(models.Model):
             _filter = Q(id__in=self.excluded_products.values("id"))
             # extend filter if excluded_categories exist
             if self.excluded_categories.exists():
-                expanded_range_categories = ExpandDownwardsCategoryQueryset(
-                    self.excluded_categories.values("id")
-                )
-                _filter |= Q(categories__in=expanded_range_categories)
-                # extend filter for parent categories, exclude parent = None
-                if (
-                    Product.objects.exclude(parent=None)
-                    .filter(parent__categories__in=expanded_range_categories)
-                    .exists()
-                ):
-                    _filter |= Q(parent__categories__in=expanded_range_categories)
+                if connection.vendor == "postgresql":
+                    product_ids = ProductCategoryHierarchy.objects.filter(
+                        category_id__in=self.excluded_categories.values_list(
+                            "id", flat=True
+                        )
+                    ).values_list("product_id", flat=True)
+
+                    _filter |= Q(id__in=product_ids)
+                    _filter |= Q(parent__id__in=product_ids)
+                else:
+                    expanded_range_categories = ExpandDownwardsCategoryQueryset(
+                        self.excluded_categories.values("id")
+                    )
+                    _filter |= Q(categories__in=expanded_range_categories)
+                    # extend filter for parent categories, exclude parent = None
+                    if (
+                        Product.objects.exclude(parent=None)
+                        .filter(parent__categories__in=expanded_range_categories)
+                        .exists()
+                    ):
+                        _filter |= Q(parent__categories__in=expanded_range_categories)
 
             # Filter out blacklisted
             return Product.objects.exclude(_filter)
@@ -1156,17 +1167,28 @@ class AbstractRange(models.Model):
 
         # extend filter if included_categories exist
         if self.included_categories.exists():
-            expanded_range_categories = ExpandDownwardsCategoryQueryset(
-                self.included_categories.values("id")
-            )
-            _filter |= Q(categories__in=expanded_range_categories)
-            # extend filter for parent categories, exclude parent = None
-            if (
-                Product.objects.exclude(parent=None)
-                .filter(parent__categories__in=expanded_range_categories)
-                .exists()
-            ):
-                _filter |= Q(parent__categories__in=expanded_range_categories)
+            if connection.vendor == "postgresql":
+                product_ids = ProductCategoryHierarchy.objects.filter(
+                    category_id__in=self.included_categories.values_list(
+                        "id", flat=True
+                    )
+                ).values_list("product_id", flat=True)
+
+                _filter |= Q(id__in=product_ids)
+                _filter |= Q(parent__id__in=product_ids)
+
+            else:
+                expanded_range_categories = ExpandDownwardsCategoryQueryset(
+                    self.included_categories.values("id")
+                )
+                _filter |= Q(categories__in=expanded_range_categories)
+                # extend filter for parent categories, exclude parent = None
+                if (
+                    Product.objects.exclude(parent=None)
+                    .filter(parent__categories__in=expanded_range_categories)
+                    .exists()
+                ):
+                    _filter |= Q(parent__categories__in=expanded_range_categories)
 
         qs = Product.objects.filter(_filter, ~Q(excludes=self))
 
