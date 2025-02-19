@@ -60,7 +60,7 @@ class AbstractWishList(models.Model):
     )
 
     def __str__(self):
-        return "%s's Wish List '%s'" % (self.owner, self.name)
+        return "%s's Wish List" % (self.owner)
 
     def save(self, *args, **kwargs):
         if not self.pk or kwargs.get("force_insert", False):
@@ -148,7 +148,7 @@ class AbstractLine(models.Model):
     title = models.CharField(pgettext_lazy("Product title", "Title"), max_length=255)
 
     def __str__(self):
-        return "%sx %s on %s" % (self.quantity, self.title, self.wishlist.name)
+        return "%sx %s" % (self.quantity, self.title)
 
     def get_title(self):
         if self.product:
