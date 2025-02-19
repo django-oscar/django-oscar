@@ -88,7 +88,3 @@ sorl-thumbnail = [
 easy-thumbnails = [
     "easy-thumbnails>=2.9,<2.11",
 ]
-
-
-[tool.setuptools.dynamic]
-version = {attr = "oscar.__version__"}
