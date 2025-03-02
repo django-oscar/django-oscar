@@ -228,9 +228,9 @@ class AbstractAddress(models.Model):
     line1 = models.CharField(_("First line of address"), max_length=255)
     line2 = models.CharField(_("Second line of address"), max_length=255, blank=True)
     line3 = models.CharField(_("Third line of address"), max_length=255, blank=True)
+    postcode = UppercaseCharField(_("Post/Zip-code"), max_length=64, blank=True)
     line4 = models.CharField(_("City"), max_length=255, blank=True)
     state = models.CharField(_("State/County"), max_length=255, blank=True)
-    postcode = UppercaseCharField(_("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey(
         "address.Country", on_delete=models.CASCADE, verbose_name=_("Country")
     )
@@ -246,9 +246,9 @@ class AbstractAddress(models.Model):
         "line1",
         "line2",
         "line3",
+        "postcode",
         "line4",
         "state",
-        "postcode",
         "country",
     ]
 
@@ -258,9 +258,9 @@ class AbstractAddress(models.Model):
         "line1",
         "line2",
         "line3",
+        "postcode",
         "line4",
         "state",
-        "postcode",
         "country",
     ]
 
@@ -286,9 +286,9 @@ class AbstractAddress(models.Model):
             "line1",
             "line2",
             "line3",
+            "postcode",
             "line4",
             "state",
-            "postcode",
         ]:
             if self.__dict__[field]:
                 self.__dict__[field] = self.__dict__[field].strip()
