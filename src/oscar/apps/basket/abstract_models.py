@@ -452,7 +452,7 @@ class AbstractBasket(models.Model):
                 info = self.get_stock_info(line.product, line.attributes.all())
                 if info.availability.is_available_to_buy:
                     raise
-        return total
+        return round_half_up(total)
 
     # ==========
     # Properties
@@ -981,8 +981,10 @@ class AbstractLine(models.Model):
                 # smaller than line_price_excl_tax
                 return max(
                     0,
-                    self.line_price_excl_tax
-                    - round_half_up(self._tax_ratio * incl_tax_discounts),
+                    round_half_up(
+                        self.line_price_excl_tax
+                        - (self._tax_ratio * incl_tax_discounts)
+                    ),
                 )
             elif self.line_price_incl_tax is not None:
                 # when all else fails, compute based on line_price_incl_tax

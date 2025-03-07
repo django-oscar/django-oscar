@@ -49,6 +49,12 @@ class AlertsDispatcher:
         for product in products:
             self.send_product_alert_email_for_user(product)
 
+    def get_extra_context(self, alert, hurry_mode):
+        return {
+            "alert": alert,
+            "hurry": hurry_mode,
+        }
+
     def send_product_alert_email_for_user(self, product):
         """
         Check for notifications for this product and send email to users
@@ -87,10 +93,7 @@ class AlertsDispatcher:
             if not data.availability.is_available_to_buy:
                 continue
 
-            extra_context = {
-                "alert": alert,
-                "hurry": hurry_mode,
-            }
+            extra_context = self.get_extra_context(alert, hurry_mode)
             if alert.user:
                 # Send a site notification
                 num_notifications += 1
