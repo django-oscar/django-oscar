@@ -571,3 +571,33 @@ class TestConcurrentOrderPlacement(TransactionTestCase):
         assert voucher.applications.count() == 1
 
         assert Order.objects.count() == 1
+
+
+@override_settings(OSCAR_OFFERS_INCL_TAX=True)
+class TestTaxValuesForOrder(TestCase):
+    def test_tax_values_with_discount(self):
+        """Test that an order has correct discount tax values"""
+        # Setup
+        creator = OrderCreator()
+        basket = factories.create_basket(empty=True)
+        basket.strategy = UK()
+        for _ in range(5):
+            basket.add_product(factories.create_product(price=D("4.0"), num_in_stock=1))
+
+        product_range = Range.objects.create(
+            name="All products range", includes_all_products=True
+        )
+        benefit = Benefit.objects.create(
+            range=product_range, type=Benefit.FIXED_UNIT, value=D("2.25")
+        )
+        offer = factories.create_offer(product_range=product_range, benefit=benefit)
+        Applicator().apply_offers(basket, [offer])
+
+        order = place_order(creator, basket=basket, surcharges=None)
+        self.assertEqual(order.total_before_discounts_excl_tax, D("20.00"))
+        self.assertEqual(order.total_before_discounts_incl_tax, D("24.00"))
+        self.assertEqual(order.total_discount_excl_tax, D("9.35"))
+        self.assertEqual(order.total_discount_incl_tax, D("11.25"))
+        self.assertEqual(order.total_excl_tax, D("10.65"))
+        self.assertEqual(order.total_incl_tax, D("12.75"))
+        self.assertEqual(order.total_tax, D("2.10"))
