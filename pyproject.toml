@@ -17,17 +17,19 @@ classifiers = [
     "Environment :: Web Environment",
     "Framework :: Django",
     "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.2",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: BSD License"
 ]
 keywords = ["E-commerce", "Django", "domain-driven"]
 dependencies = [
-    "django>=4.2,<5.2",
+    "django>=4.2,<5.3",
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     "pillow>=6.0",
     # We use the ModelFormSetView from django-extra-views for the basket page
