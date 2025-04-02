@@ -277,7 +277,7 @@ class FixedRateTax(object):
     """
 
     rate = D("0")  # Subclass and specify the correct rate
-    exponent = D("0.01")  # Default to two decimal places
+    exponent = D("0.0001")  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
         if not stockrecord or stockrecord.price is None:

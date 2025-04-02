@@ -165,7 +165,7 @@ def get_default_currency():
     return settings.OSCAR_DEFAULT_CURRENCY
 
 
-def round_half_up(money):
+def round_half_up_two_dec(money):
     """
     Explicitly round a decimal to 2 places half up, as should be used for
     money.
@@ -174,10 +174,28 @@ def round_half_up(money):
     >>> should_not_be_one = decimal.Decimal('1.005')
     >>> should_not_be_one.quantize(exponent)
     Decimal('1.00')
-    >>> round_half_up(should_not_be_one)
+    >>> round_half_up_two_dec(should_not_be_one)
     Decimal('1.01')
     """
     return money.quantize(decimal.Decimal("0.01"), decimal.ROUND_HALF_UP)
+
+
+round_half_up = round_half_up_two_dec
+
+
+def round_half_up_four_dec(money):
+    """
+    Explicitly round a decimal to 4 places half up, as should be used for
+    money.
+
+    >>> exponent = decimal.Decimal('0.0001')
+    >>> should_not_be_one = decimal.Decimal('1.00005')
+    >>> should_not_be_one.quantize(exponent)
+    Decimal('1.00')
+    >>> round_half_up_four_dec(should_not_be_one)
+    Decimal('1.01')
+    """
+    return money.quantize(decimal.Decimal("0.0001"), decimal.ROUND_HALF_UP)
 
 
 def is_ajax(request):
