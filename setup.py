@@ -50,7 +50,7 @@ install_requires = [
     # Used for oscar.test.factories
     "factory-boy>=3.0,<3.3",
     # Used for automatically building larger HTML tables
-    "django-tables2>=2.3,<2.4",
+    "django-tables2>=2.3,<=2.7",
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     "django-widget-tweaks>=1.4.1",
