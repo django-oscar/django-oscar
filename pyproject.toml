@@ -48,7 +48,7 @@ dependencies = [
     # Used for oscar.test.factories
     "factory-boy>=3.3.1,<4.0.0",
     # Used for automatically building larger HTML tables
-    "django-tables2>=2.3,<=2.7",
+    "django-tables2>=2.3,<=2.7.5",
     # Used for manipulating form field attributes in templates (eg: add a css class)
     "django-widget-tweaks>=1.4.1",
 ]
