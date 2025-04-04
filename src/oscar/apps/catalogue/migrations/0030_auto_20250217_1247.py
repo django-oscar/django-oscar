@@ -2,7 +2,7 @@
 
 from django.db import migrations, connection
 
-from oscar.checks import use_productcategory_materialised_view
+from oscar.checks import is_postgres
 
 def create_materialized_view(apps, schema_editor):
     """Creates a materialized view for PostgreSQL."""
