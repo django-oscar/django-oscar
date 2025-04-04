@@ -1,5 +1,5 @@
-Product Category Materialized View
-==================================
+Improve offer performance
+=========================
 
 Overview
 --------
