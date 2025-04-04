@@ -43,8 +43,4 @@ def startup_check(*args, **kwargs):
 
 
 def use_productcategory_materialised_view():
-    return (
-        is_postgres()
-        and hasattr(settings, "OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS")
-        and settings.OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS
-    )
+    return is_postgres() and turned_on_materialised_views()
