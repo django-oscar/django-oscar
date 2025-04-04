@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from oscar.apps.catalogue import models as catalogue_models
 from oscar.apps.offer import models
@@ -280,7 +280,7 @@ class TestRangeQuerySet(TestCase):
         self.child1 = create_product(structure="child", parent=self.parent)
         self.child2 = create_product(structure="child", parent=self.parent)
 
-        self.range = models.Range.objects.create(
+        self.range, _ = models.Range.objects.get_or_create(
             name="All products", includes_all_products=True
         )
         self.range.excluded_products.add(self.excludedprod)
@@ -324,6 +324,13 @@ class TestRangeQuerySet(TestCase):
         )
 
     def test_category(self):
+        self._test_category()
+
+    @override_settings(OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS=True)
+    def test_category_materialized(self):
+        self._test_category()
+
+    def _test_category(self):
         parent_category = catalogue_models.Category.add_root(name="parent")
         child_category = parent_category.add_child(name="child")
         grand_child_category = child_category.add_child(name="grand-child")
@@ -331,7 +338,7 @@ class TestRangeQuerySet(TestCase):
             product=self.parent, category=grand_child_category
         )
 
-        cat_range = models.Range.objects.create(
+        cat_range, _ = models.Range.objects.get_or_create(
             name="category range", includes_all_products=False
         )
         cat_range.included_categories.add(parent_category)

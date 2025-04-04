@@ -3,7 +3,6 @@
 """
 Vanilla product models
 """
-from django.db import models
 from oscar.apps.catalogue.abstract_models import *
 from oscar.core.loading import is_model_registered
 
@@ -98,14 +97,9 @@ if not is_model_registered("catalogue", "ProductImage"):
     __all__.append("ProductImage")
 
 
-class ProductCategoryHierarchy(models.Model):
-    id = models.CharField(max_length=255, primary_key=True)
-    product_id = models.IntegerField()
-    category_id = models.IntegerField()
+if not is_model_registered("catalogue", "ProductCategoryHierarchy"):
 
-    class Meta:
-        db_table = "catalogue_product_category_hierarchy"
-        managed = False
+    class ProductCategoryHierarchy(AbstractProductCategoryHierarchy):
+        pass
 
-
-__all__.append("ProductCategoryHierarchy")
+    __all__.append("ProductCategoryHierarchy")

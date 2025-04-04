@@ -14,7 +14,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import get_current_timezone, now
 from django.utils.translation import gettext_lazy as _
 
-from oscar.checks import is_postgres
+from oscar.checks import use_productcategory_materialised_view
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import cached_import_string, get_class, get_classes, get_model
 from oscar.models import fields
@@ -1128,7 +1128,7 @@ class AbstractRange(models.Model):
             _filter = Q(id__in=self.excluded_products.values("id"))
             # extend filter if excluded_categories exist
             if self.excluded_categories.exists():
-                if is_postgres():
+                if use_productcategory_materialised_view():
                     product_ids = ProductCategoryHierarchy.objects.filter(
                         category_id__in=self.excluded_categories.values_list(
                             "id", flat=True
@@ -1168,7 +1168,7 @@ class AbstractRange(models.Model):
 
         # extend filter if included_categories exist
         if self.included_categories.exists():
-            if is_postgres():
+            if use_productcategory_materialised_view():
                 product_ids = ProductCategoryHierarchy.objects.filter(
                     category_id__in=self.included_categories.values_list(
                         "id", flat=True

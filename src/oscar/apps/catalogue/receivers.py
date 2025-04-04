@@ -5,7 +5,7 @@ from django.db.models.signals import post_delete, post_save, m2m_changed
 from django.dispatch import receiver
 
 from oscar.core.loading import get_model
-from oscar.checks import is_postgres
+from oscar.checks import use_productcategory_materialised_view
 
 Category = get_model("catalogue", "Category")
 ProductCategory = get_model("catalogue", "ProductCategory")
@@ -48,7 +48,7 @@ def post_save_set_ancestors_are_public(sender, instance, **kwargs):
 
 @receiver([post_save, post_delete, m2m_changed], sender=ProductCategory)
 def refresh_materialized_view(sender, **kwargs):
-    if kwargs.get("raw") or not is_postgres():
+    if kwargs.get("raw") and not use_productcategory_materialised_view():
         return
 
     with connection.cursor() as cursor:
