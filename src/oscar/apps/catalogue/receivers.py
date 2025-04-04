@@ -48,7 +48,7 @@ def post_save_set_ancestors_are_public(sender, instance, **kwargs):
 
 @receiver([post_save, post_delete, m2m_changed], sender=ProductCategory)
 def refresh_materialized_view(sender, **kwargs):
-    if kwargs.get("raw") and not use_productcategory_materialised_view():
+    if kwargs.get("raw") or not use_productcategory_materialised_view():
         return
 
     with connection.cursor() as cursor:
