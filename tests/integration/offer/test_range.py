@@ -1,5 +1,4 @@
 from django.test import TestCase, override_settings
-from django.conf import settings
 
 from oscar.apps.catalogue import models as catalogue_models
 from oscar.apps.offer import models
@@ -34,20 +33,17 @@ class TestWholeSiteRange(TestCase):
         self.assertFalse(self.range.contains_product(self.prod))
         self.assertNotIn(self.prod, self.range.all_products())
 
+    def test_category_blacklisting(self):
+        self._test_category_blacklisting()
+
     @override_settings(OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS=True)
     def test_category_blacklisting_materialised(self):
         self.prod.categories.add(
             self.category
-        )  # we need to refresh the materialised view with it enabled for things to work
-        self.range.excluded_categories.add(self.category)
-        self.assertNotIn(self.range, models.Range.objects.contains_product(self.prod))
-        self.assertNotIn(self.range, models.Range.objects.contains_product(self.child))
-        self.assertFalse(self.range.contains_product(self.prod))
-        self.assertFalse(self.range.contains_product(self.child))
-        self.assertNotIn(self.prod, self.range.all_products())
-        self.assertNotIn(self.child, self.range.all_products())
+        )  # we need to refresh the materialised view with the setting enabled for things to work
+        self._test_category_blacklisting()
 
-    def test_category_blacklisting(self):
+    def _test_category_blacklisting(self):
         self.range.excluded_categories.add(self.category)
         self.assertNotIn(self.range, models.Range.objects.contains_product(self.prod))
         self.assertNotIn(self.range, models.Range.objects.contains_product(self.child))
