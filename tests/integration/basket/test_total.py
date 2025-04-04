@@ -67,3 +67,12 @@ class TestBasketTotalAfterRounding(TestCase):
 
         # 10.716 rounded to 10.72
         self.assertEqual(basket.total_incl_tax, D("10.72"))
+
+    def test_total_incl_tax_rounding(self):
+        basket = Basket.objects.create()
+        basket.strategy = strategy.UK()
+        add_product(basket, D("0.01"), 100)
+
+        self.assertEqual(basket.total_excl_tax, D("1"))
+        self.assertEqual(basket.total_incl_tax, D("1.20"))
+        self.assertEqual(basket.total_tax, D("0.20"))

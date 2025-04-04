@@ -596,6 +596,12 @@ class TestTaxValuesForOrder(TestCase):
         order = place_order(creator, basket=basket, surcharges=None)
         self.assertEqual(order.total_before_discounts_excl_tax, D("20.00"))
         self.assertEqual(order.total_before_discounts_incl_tax, D("24.00"))
+        self.assertEqual(
+            order.total_excl_tax + order.total_discount_excl_tax, D("20.00")
+        )
+        self.assertEqual(
+            order.total_incl_tax + order.total_discount_incl_tax, D("24.00")
+        )
         self.assertEqual(order.total_discount_excl_tax, D("9.35"))
         self.assertEqual(order.total_discount_incl_tax, D("11.25"))
         self.assertEqual(order.total_excl_tax, D("10.65"))

@@ -3,6 +3,7 @@ from decimal import Decimal as D
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core import prices
+from oscar.core.utils import round_half_up_four_dec
 
 
 class Base(object):
@@ -199,7 +200,7 @@ class TaxInclusiveOfferDiscount(OfferDiscount):
         # We assume we can linearly scale down the excl tax price before
         # discount.
         excl_tax = base_charge.excl_tax * (incl_tax / base_charge.incl_tax)
-        return excl_tax.quantize(D("0.01"))
+        return round_half_up_four_dec(excl_tax)
 
     def discount(self, basket):
         base_charge = self.method.calculate(basket)
