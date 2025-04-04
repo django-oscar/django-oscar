@@ -55,7 +55,7 @@ jobs:
         DATABASE_HOST: localhost
         DATABASE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
       run: |
-        coverage run --parallel -m pytest -x
+        coverage run --parallel --omit='*migrations*' -m pytest -x
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5.3.1
       with:

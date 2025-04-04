@@ -95,3 +95,11 @@ if not is_model_registered("catalogue", "ProductImage"):
         pass
 
     __all__.append("ProductImage")
+
+
+if not is_model_registered("catalogue", "ProductCategoryHierarchy"):
+
+    class ProductCategoryHierarchy(AbstractProductCategoryHierarchy):
+        pass
+
+    __all__.append("ProductCategoryHierarchy")
