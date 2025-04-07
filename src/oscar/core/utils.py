@@ -14,6 +14,8 @@ from django.utils.text import slugify as django_slugify
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from django.utils.translation import get_language, to_locale
 
+from oscar.core.decorators import deprecated
+
 SLUGIFY_RE = re.compile(r"[^\w\s-]", re.UNICODE)
 
 
@@ -180,7 +182,7 @@ def round_half_up_two_dec(money):
     return money.quantize(decimal.Decimal("0.01"), decimal.ROUND_HALF_UP)
 
 
-round_half_up = round_half_up_two_dec
+round_half_up = deprecated(round_half_up_two_dec)
 
 
 def round_half_up_four_dec(money):
