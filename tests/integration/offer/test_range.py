@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from oscar.apps.catalogue import models as catalogue_models
 from oscar.apps.offer import models
@@ -34,6 +34,16 @@ class TestWholeSiteRange(TestCase):
         self.assertNotIn(self.prod, self.range.all_products())
 
     def test_category_blacklisting(self):
+        self._test_category_blacklisting()
+
+    @override_settings(OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS=True)
+    def test_category_blacklisting_materialised(self):
+        self.prod.categories.add(
+            self.category
+        )  # we need to refresh the materialised view with the setting enabled for things to work
+        self._test_category_blacklisting()
+
+    def _test_category_blacklisting(self):
         self.range.excluded_categories.add(self.category)
         self.assertNotIn(self.range, models.Range.objects.contains_product(self.prod))
         self.assertNotIn(self.range, models.Range.objects.contains_product(self.child))
@@ -280,7 +290,7 @@ class TestRangeQuerySet(TestCase):
         self.child1 = create_product(structure="child", parent=self.parent)
         self.child2 = create_product(structure="child", parent=self.parent)
 
-        self.range = models.Range.objects.create(
+        self.range, _ = models.Range.objects.get_or_create(
             name="All products", includes_all_products=True
         )
         self.range.excluded_products.add(self.excludedprod)
@@ -324,6 +334,13 @@ class TestRangeQuerySet(TestCase):
         )
 
     def test_category(self):
+        self._test_category()
+
+    @override_settings(OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS=True)
+    def test_category_materialized(self):
+        self._test_category()
+
+    def _test_category(self):
         parent_category = catalogue_models.Category.add_root(name="parent")
         child_category = parent_category.add_child(name="child")
         grand_child_category = child_category.add_child(name="grand-child")
@@ -331,7 +348,7 @@ class TestRangeQuerySet(TestCase):
             product=self.parent, category=grand_child_category
         )
 
-        cat_range = models.Range.objects.create(
+        cat_range, _ = models.Range.objects.get_or_create(
             name="category range", includes_all_products=False
         )
         cat_range.included_categories.add(parent_category)

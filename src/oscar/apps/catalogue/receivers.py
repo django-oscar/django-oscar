@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.db.models.signals import post_delete, post_save
+from django.db import connection
+from django.db.models.signals import post_delete, post_save, m2m_changed
 from django.dispatch import receiver
 
 from oscar.core.loading import get_model
+from oscar.checks import use_productcategory_materialised_view
 
 Category = get_model("catalogue", "Category")
+ProductCategory = get_model("catalogue", "ProductCategory")
 
 
 if settings.OSCAR_DELETE_IMAGE_FILES:
@@ -41,3 +44,14 @@ def post_save_set_ancestors_are_public(sender, instance, **kwargs):
         return
 
     instance.set_ancestors_are_public()
+
+
+@receiver([post_save, post_delete, m2m_changed], sender=ProductCategory)
+def refresh_materialized_view(sender, **kwargs):
+    if kwargs.get("raw") or not use_productcategory_materialised_view():
+        return
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "REFRESH MATERIALIZED VIEW CONCURRENTLY catalogue_product_category_hierarchy;"
+        )
