@@ -13,7 +13,11 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class, get_classes
-from oscar.core.utils import get_default_currency, round_half_up
+from oscar.core.utils import (
+    get_default_currency,
+    round_half_up_two_dec,
+    round_half_up_four_dec,
+)
 from oscar.core.decorators import deprecated
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
@@ -452,7 +456,7 @@ class AbstractBasket(models.Model):
                 info = self.get_stock_info(line.product, line.attributes.all())
                 if info.availability.is_available_to_buy:
                     raise
-        return round_half_up(total)
+        return round_half_up_two_dec(total)
 
     # ==========
     # Properties
@@ -821,7 +825,7 @@ class AbstractLine(models.Model):
                 self.discounts.num_consumed()
             )
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
-            item_excl_tax_discount = round_half_up(item_excl_tax_discount)
+            item_excl_tax_discount = round_half_up_four_dec(item_excl_tax_discount)
             prices.append(
                 (
                     self.unit_price_incl_tax - item_incl_tax_discount,
@@ -846,13 +850,7 @@ class AbstractLine(models.Model):
     @property
     def _tax_ratio(self):
         # this function tries to computate the tax ratio based on the incl tax price
-        # versus the excl tax price. Since these values are allready rounded, this will
-        # NOT return the exact ratio corresponding to your tax rate.
-        # if this is a problem you need to provide your own implementation of _tax_ratio
-        # that returns the ratio based on the exact tax percentage in use.
-        # one way to make this value correct is to use 4 decimals for all prices everywhere,
-        # and round only at the last moment when presenting the values to the user.
-        # that would make this value precise and correct because there would be no rounding
+        # versus the excl tax price.
         if not self.unit_price_incl_tax:
             return 0
         return self.unit_price_excl_tax / self.unit_price_incl_tax
@@ -970,18 +968,13 @@ class AbstractLine(models.Model):
         # against tax inclusive prices but we need to guess how much of the
         # discount applies to tax-exclusive prices.  We do this by
         # assuming a linear tax and scaling down the original discount.
-        # Please refer to the _tax_ratio method for more details on how
-        # to make this calculation more precise.
 
         incl_tax_discounts = self.discounts.incl_tax
         if incl_tax_discounts and self._tax_ratio:
             if self.line_price_excl_tax is not None:
-                # if we got a precise line_price_excl_tax use that first, if _tax_ratio is off,
-                # this will create the smallest deviation becaise incl_tax_discounts is usually
-                # smaller than line_price_excl_tax
                 return max(
                     0,
-                    round_half_up(
+                    round_half_up_two_dec(
                         self.line_price_excl_tax
                         - (self._tax_ratio * incl_tax_discounts)
                     ),
@@ -1006,7 +999,7 @@ class AbstractLine(models.Model):
         if self.line_price_incl_tax is not None and incl_tax_discounts:
             return max(0, self.line_price_incl_tax - incl_tax_discounts)
         elif self.line_price_excl_tax is not None and excl_tax_discounts:
-            return round_half_up(
+            return round_half_up_two_dec(
                 self.line_price_excl_tax_incl_discounts / self._tax_ratio
             )
 
