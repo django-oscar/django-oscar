@@ -73,6 +73,7 @@ class RegisterUserMixin(object):
             # We might otherwise accidentally mark unrelated users as inactive
             users = User.objects.filter(email=user.email)
             user = users[0]
+            user.backend = "oscar.apps.customer.auth_backends.EmailBackend"
             for u in users[1:]:
                 u.is_active = False
                 u.save()
