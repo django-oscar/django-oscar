@@ -64,7 +64,7 @@
         </div>
     {% endblock %}
 
-    {% if products %}
+    {% if has_products %}
         {% block product_list %}
             <form method="post">
                 {% csrf_token %}
