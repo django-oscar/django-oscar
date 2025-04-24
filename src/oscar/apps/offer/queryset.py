@@ -1,10 +1,12 @@
 from django.db import models
 
+from oscar.checks import use_productcategory_materialised_view
 from oscar.core.loading import get_class
 
 ExpandUpwardsCategoryQueryset = get_class(
     "catalogue.expressions", "ExpandUpwardsCategoryQueryset"
 )
+ProductCategoryHierarchy = get_class("catalogue.models", "ProductCategoryHierarchy")
 
 
 class RangeQuerySet(models.query.QuerySet):
@@ -62,6 +64,19 @@ class RangeQuerySet(models.query.QuerySet):
 
         return product.categories.values("id")
 
+    def get_category_query(self, product):
+        if use_productcategory_materialised_view():
+            if product.structure == product.CHILD:
+                return ProductCategoryHierarchy.objects.filter(
+                    product_id=product.parent_id
+                ).values_list("category_id")
+
+            return ProductCategoryHierarchy.objects.filter(
+                product_id=product.id
+            ).values_list("category_id")
+
+        return ExpandUpwardsCategoryQueryset(self._get_category_ids(product))
+
     def contains_product(self, product):
         # the wide query is used to determine which ranges have includes_all_products
         # turned on, we only need to look at explicit exclusions, the other
@@ -75,11 +90,7 @@ class RangeQuerySet(models.query.QuerySet):
             self._excluded_products_clause(product),
             self._excluded_categories_clause(product),
             self._included_products_clause(product)
-            | models.Q(
-                included_categories__in=ExpandUpwardsCategoryQueryset(
-                    self._get_category_ids(product)
-                )
-            )
+            | models.Q(included_categories__in=self.get_category_query(product))
             | self._productclasses_clause(product),
             includes_all_products=False,
         )
