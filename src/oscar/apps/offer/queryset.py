@@ -1,12 +1,12 @@
 from django.db import models
 
 from oscar.checks import use_productcategory_materialised_view
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 ExpandUpwardsCategoryQueryset = get_class(
     "catalogue.expressions", "ExpandUpwardsCategoryQueryset"
 )
-ProductCategoryHierarchy = get_class("catalogue.models", "ProductCategoryHierarchy")
+ProductCategoryHierarchy = get_model("catalogue", "ProductCategoryHierarchy")
 
 
 class RangeQuerySet(models.query.QuerySet):

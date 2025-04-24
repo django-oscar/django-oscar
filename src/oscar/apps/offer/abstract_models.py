@@ -28,7 +28,6 @@ ActiveOfferManager, RangeManager, BrowsableRangeManager = get_classes(
 )
 ZERO_DISCOUNT = get_class("offer.results", "ZERO_DISCOUNT")
 load_proxy, unit_price = get_classes("offer.utils", ["load_proxy", "unit_price"])
-ProductCategoryHierarchy = get_class("catalogue.models", "ProductCategoryHierarchy")
 
 
 class BaseOfferMixin(models.Model):
@@ -1122,6 +1121,8 @@ class AbstractRange(models.Model):
     @cached_property
     def product_queryset(self):
         "cached queryset of all the products in the Range"
+        ProductCategoryHierarchy = get_model("catalogue", "ProductCategoryHierarchy")
+
         Product = self.included_products.model
 
         if self.includes_all_products:
