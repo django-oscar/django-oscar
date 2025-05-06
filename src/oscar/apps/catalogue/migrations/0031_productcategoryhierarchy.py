@@ -24,6 +24,8 @@ class Migration(migrations.Migration):
                 ("category_id", models.IntegerField()),
             ],
             options={
+                "verbose_name": "Product category hierarchy",
+                "verbose_name_plural": "Product categories hierarchy",
                 "db_table": "catalogue_product_category_hierarchy",
                 "managed": False,
             },
