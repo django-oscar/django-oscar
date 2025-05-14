@@ -80,6 +80,7 @@
                         <th>{% trans "Reviews written" %}</th>
                         <td>{{ customer.reviews.count }}</td>
                     </tr>
+                    {% block additional_general_info %}{% endblock additional_general_info %}
                     {% if customer.email %}
                         <tr>
                             <th>{% trans "Actions" %}</th>
