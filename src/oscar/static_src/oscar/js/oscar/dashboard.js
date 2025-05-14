@@ -351,6 +351,11 @@ var oscar = (function(o, $) {
                     $this.parents('tr').find('input').prop('checked', true);
                     $this.parents('form').submit();
                 });
+                $('[data-behaviours~="select-all"]').click(function() {
+                    var $this = $(this);
+                    var checked = $this.is(':checked');
+                    $this.parents('table').find('tbody input').prop('checked', checked);
+                });
             }
         },
         orders: {
