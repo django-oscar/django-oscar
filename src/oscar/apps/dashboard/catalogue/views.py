@@ -92,7 +92,7 @@ class ProductListView(PartnerProductFilterMixin, SingleTableView):
         ctx = super().get_context_data(**kwargs)
         ctx["form"] = self.form
         ctx["productclass_form"] = self.productclass_form_class()
-        ctx["has_products"] = self.get_queryset().exists()
+        ctx["has_products"] = self.get_queryset().results.exists()
         return ctx
 
     def get_description(self, form):
