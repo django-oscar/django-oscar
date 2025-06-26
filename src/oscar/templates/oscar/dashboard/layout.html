@@ -42,7 +42,7 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'customer:summary' %}"><i class="fas fa-user"></i> {% trans "Account" %}</a>
                   </li>
-                  <form method="post" action="{% url 'dashboard:logout' %}">
+                  <form id="logout_form" method="post" action="{% url 'dashboard:logout' %}">
                     {% csrf_token %}
                     <button class="btn btn-link nav-link" type="submit">
                         <i class="fas fa-sign-out-alt"></i> {% trans "Log out" %}
