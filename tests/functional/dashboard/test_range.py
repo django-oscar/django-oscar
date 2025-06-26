@@ -92,7 +92,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_upload_file_with_skus(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["file_upload"] = Upload("new_skus.txt", b"456")
         form.submit().follow()
         all_products = self.range.all_products()
@@ -113,7 +113,7 @@ class RangeProductViewTest(WebTestCase):
 
         # Upload the product
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[1]
+        form = range_products_page.forms["add_excluded_products_range_form"]
         form["file_upload"] = Upload("new_skus.txt", b"456")
         form.submit().follow()
 
@@ -137,7 +137,7 @@ class RangeProductViewTest(WebTestCase):
 
         # Upload the products
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[1]
+        form = range_products_page.forms["add_excluded_products_range_form"]
         form["file_upload"] = Upload("new_skus.txt", b"456,789")
         form.submit().follow()
 
@@ -160,7 +160,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertFalse(self.product3 in excluded_products)
 
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[1]
+        form = range_products_page.forms["add_excluded_products_range_form"]
         form["query"] = "456"
         form.submit().follow()
 
@@ -175,7 +175,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertFalse(self.product4 in excluded_products)
 
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[1]
+        form = range_products_page.forms["add_excluded_products_range_form"]
         form["query"] = "456,789"
         form.submit().follow()
 
@@ -187,7 +187,7 @@ class RangeProductViewTest(WebTestCase):
     def test_dupe_skus_warning(self):
         self.range.add_product(self.product3)
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "456"
         response = form.submit()
         self.assertEqual(list(response.context["messages"]), [])
@@ -198,7 +198,7 @@ class RangeProductViewTest(WebTestCase):
             ],
         )
 
-        form = response.forms[0]
+        form = response.forms["add_products_range_form"]
         form["query"] = "456, 789"
         response = form.submit().follow()
         messages = list(response.context["messages"])
@@ -216,7 +216,7 @@ class RangeProductViewTest(WebTestCase):
         self.range.add_product(self.product4)
         self.range.excluded_products.add(self.product3)
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[2]
+        form = range_products_page.forms["add_excluded_products_range_form"]
         form["query"] = "456"
         response = form.submit()
         self.assertEqual(list(response.context["messages"]), [])
@@ -227,7 +227,7 @@ class RangeProductViewTest(WebTestCase):
             ],
         )
 
-        form = response.forms[2]
+        form = response.forms["add_excluded_products_range_form"]
         form["query"] = "456, 789"
         response = form.submit().follow()
         messages = list(response.context["messages"])
@@ -244,7 +244,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_missing_skus_warning(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "321"
         response = form.submit()
         self.assertEqual(list(response.context["messages"]), [])
@@ -252,7 +252,7 @@ class RangeProductViewTest(WebTestCase):
             response.context["form"].errors["query"],
             ["No products exist with a SKU or UPC matching 321"],
         )
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "456, 321"
         response = form.submit().follow()
         messages = list(response.context["messages"])
@@ -266,7 +266,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_same_skus_within_different_products_warning_query(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "123123"
         response = form.submit().follow()
         messages = list(response.context["messages"])
@@ -278,7 +278,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_same_skus_within_different_products_warning_file_upload(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["file_upload"] = Upload("skus.txt", b"123123")
         response = form.submit().follow()
         messages = list(response.context["messages"])
@@ -290,7 +290,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_adding_child_does_not_add_parent(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "1234.345"
         form.submit().follow()
         all_products = self.range.all_products()
@@ -299,7 +299,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertTrue(self.range.contains_product(self.child1))
         self.assertFalse(self.range.contains_product(self.child2))
 
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "1234-345"
         form.submit().follow()
         all_products = self.range.all_products()
@@ -310,7 +310,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_adding_multiple_children_does_not_add_parent(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "1234.345 1234-345"
         form.submit().follow()
         all_products = self.range.all_products()
@@ -321,7 +321,7 @@ class RangeProductViewTest(WebTestCase):
 
     def test_adding_multiple_comma_separated_children_does_not_add_parent(self):
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[0]
+        form = range_products_page.forms["add_products_range_form"]
         form["query"] = "1234.345, 1234-345"
         form.submit().follow()
         all_products = self.range.all_products()
@@ -333,7 +333,7 @@ class RangeProductViewTest(WebTestCase):
     def test_remove_selected_product(self):
         self.range.add_product(self.product3)
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[1]
+        form = range_products_page.forms["update_products_range_form"]
         form["selected_product"] = "456"
         response = form.submit().follow()
         messages = list(response.context["messages"])
@@ -350,7 +350,7 @@ class RangeProductViewTest(WebTestCase):
 
         # Remove the product from exclusion form
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[2]
+        form = range_products_page.forms["remove_excluded_products_range_form"]
         form["selected_product"] = "456"
         response = form.submit().follow()
 
@@ -366,7 +366,7 @@ class RangeProductViewTest(WebTestCase):
         self.assertIn(self.product4, self.range.excluded_products.all())
 
         range_products_page = self.get(self.url)
-        form = range_products_page.forms[2]
+        form = range_products_page.forms["remove_excluded_products_range_form"]
         form["selected_product"] = [self.product3.pk, self.product4.pk]
         response = form.submit().follow()
 

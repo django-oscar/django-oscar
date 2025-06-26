@@ -24,24 +24,24 @@ class TestAnAdmin(testcases.WebTestCase):
         list_page = self.get(reverse("dashboard:offer-list"))
 
         metadata_page = list_page.click("Create new offer")
-        metadata_form = metadata_page.form
+        metadata_form = metadata_page.forms["create_update_offer_step_form"]
         metadata_form["name"] = "Test offer"
         metadata_form["offer_type"] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
-        benefit_form = benefit_page.form
+        benefit_form = benefit_page.forms["create_update_offer_step_form"]
         benefit_form["range"] = self.range.id
         benefit_form["type"] = "Percentage"
         benefit_form["value"] = "25"
 
         condition_page = benefit_form.submit().follow()
-        condition_form = condition_page.form
+        condition_form = condition_page.forms["create_update_offer_step_form"]
         condition_form["range"] = self.range.id
         condition_form["type"] = "Count"
         condition_form["value"] = "3"
 
         restrictions_page = condition_form.submit().follow()
-        restrictions_page.form.submit()
+        restrictions_page.forms["create_update_offer_step_form"].submit()
 
         offers = models.ConditionalOffer.objects.all()
         self.assertEqual(1, len(offers))
@@ -54,7 +54,7 @@ class TestAnAdmin(testcases.WebTestCase):
         offer = factories.create_offer(name="Offer A")
 
         list_page = self.get(reverse("dashboard:offer-list"))
-        form = list_page.forms[0]
+        form = list_page.forms["search_offers_form"]
         form["name"] = "I do not exist"
         res = form.submit()
         self.assertTrue("No offers found" in res.text)
@@ -94,18 +94,18 @@ class TestAnAdmin(testcases.WebTestCase):
         detail_page = list_page.click("Offer A")
 
         metadata_page = detail_page.click(linkid="edit_metadata")
-        metadata_form = metadata_page.form
+        metadata_form = metadata_page.forms["create_update_offer_step_form"]
         metadata_form["name"] = "Offer A+"
         metadata_form["offer_type"] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
-        benefit_form = benefit_page.form
+        benefit_form = benefit_page.forms["create_update_offer_step_form"]
 
         condition_page = benefit_form.submit().follow()
-        condition_form = condition_page.form
+        condition_form = condition_page.forms["create_update_offer_step_form"]
 
         restrictions_page = condition_form.submit().follow()
-        restrictions_page.form.submit()
+        restrictions_page.forms["create_update_offer_step_form"].submit()
 
         models.ConditionalOffer.objects.get(name="Offer A+")
 
@@ -116,7 +116,11 @@ class TestAnAdmin(testcases.WebTestCase):
         name_and_description_page = self.get(
             reverse("dashboard:offer-metadata", kwargs={"pk": offer.pk})
         )
-        res = name_and_description_page.form.submit("save").follow()
+        res = (
+            name_and_description_page.forms["create_update_offer_step_form"]
+            .submit("save")
+            .follow()
+        )
         self.assertEqual(200, res.status_code)
 
     def test_can_jump_to_intermediate_step_for_existing_offer(self):
@@ -167,8 +171,8 @@ class TestAnAdmin(testcases.WebTestCase):
         restrictions_page = self.get(
             reverse("dashboard:offer-restrictions", kwargs={"pk": offer.pk})
         )
-        restrictions_page.form["priority"] = "12"
-        restrictions_page.form.submit()
+        restrictions_page.forms["create_update_offer_step_form"]["priority"] = "12"
+        restrictions_page.forms["create_update_offer_step_form"].submit()
         offer.refresh_from_db()
 
         self.assertEqual(offer.priority, 12)
@@ -177,12 +181,12 @@ class TestAnAdmin(testcases.WebTestCase):
         list_page = self.get(reverse("dashboard:offer-list"))
 
         metadata_page = list_page.click("Create new offer")
-        metadata_form = metadata_page.form
+        metadata_form = metadata_page.forms["create_update_offer_step_form"]
         metadata_form["name"] = "Test offer"
         metadata_form["offer_type"] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
-        benefit_form = benefit_page.form
+        benefit_form = benefit_page.forms["create_update_offer_step_form"]
         benefit_form["range"] = self.range.id
         benefit_form["type"] = "Percentage"
         benefit_form["value"] = "25"
@@ -199,18 +203,18 @@ class TestAnAdmin(testcases.WebTestCase):
         list_page = self.get(reverse("dashboard:offer-list"))
 
         metadata_page = list_page.click("Create new offer")
-        metadata_form = metadata_page.form
+        metadata_form = metadata_page.forms["create_update_offer_step_form"]
         metadata_form["name"] = "Test offer"
         metadata_form["offer_type"] = models.ConditionalOffer.SITE
 
         benefit_page = metadata_form.submit().follow()
-        benefit_form = benefit_page.form
+        benefit_form = benefit_page.forms["create_update_offer_step_form"]
         benefit_form["range"] = self.range.id
         benefit_form["type"] = "Percentage"
         benefit_form["value"] = "25"
 
         condition_page = benefit_form.submit().follow()
-        condition_form = condition_page.form
+        condition_form = condition_page.forms["create_update_offer_step_form"]
         condition_form["range"] = self.range.id
         condition_form["type"] = "Count"
         condition_form["value"] = "3"
@@ -248,17 +252,19 @@ class TestAnAdmin(testcases.WebTestCase):
         restrictions_page = self.get(
             reverse("dashboard:offer-restrictions", kwargs={"pk": offer_a.pk})
         )
-        restrictions_page.form["exclusive"] = False
-        restrictions_page.form["combinations"] = [offer_b.id]
-        restrictions_page.form.submit()
+        restrictions_page.forms["create_update_offer_step_form"]["exclusive"] = False
+        restrictions_page.forms["create_update_offer_step_form"]["combinations"] = [
+            offer_b.id
+        ]
+        restrictions_page.forms["create_update_offer_step_form"].submit()
 
         self.assertIn(offer_a, offer_b.combinations.all())
 
         restrictions_page = self.get(
             reverse("dashboard:offer-restrictions", kwargs={"pk": offer_a.pk})
         )
-        restrictions_page.form["combinations"] = []
-        restrictions_page.form.submit()
+        restrictions_page.forms["create_update_offer_step_form"]["combinations"] = []
+        restrictions_page.forms["create_update_offer_step_form"].submit()
 
         self.assertNotIn(offer_a, offer_b.combinations.all())
 

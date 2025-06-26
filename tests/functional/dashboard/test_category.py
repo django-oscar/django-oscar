@@ -20,7 +20,7 @@ class TestCategoryDashboard(WebTestCase):
         category_add = self.app.get(
             reverse("dashboard:catalogue-category-create"), user=self.staff
         )
-        form = category_add.form
+        form = category_add.forms["create_update_category_form"]
         form["name"] = "Top-level category"
         form["_position"] = "right"
         form["_ref_node_id"] = a.id
@@ -33,7 +33,7 @@ class TestCategoryDashboard(WebTestCase):
         category_add = self.app.get(
             reverse("dashboard:catalogue-category-create"), user=self.staff
         )
-        form = category_add.form
+        form = category_add.forms["create_update_category_form"]
         form["name"] = "Child category"
         form["_position"] = "left"
         form["_ref_node_id"] = c.id
@@ -46,5 +46,5 @@ class TestCategoryDashboard(WebTestCase):
         dashboard_index = self.app.get(reverse("dashboard:index"), user=self.staff)
         category_index = dashboard_index.click("Categories")
         category_add = category_index.click("Create new category")
-        response = category_add.form.submit()
+        response = category_add.forms["create_update_category_form"].submit()
         self.assertEqual(200, response.status_code)

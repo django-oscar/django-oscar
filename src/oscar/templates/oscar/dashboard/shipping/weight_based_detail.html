@@ -85,7 +85,7 @@
         {% endif %}
 
         <h2>{% trans "Add a new weight band" %}</h2>
-        <form method="post">
+        <form id="add_new_weight_band_form" method="post">
             {% csrf_token %}
             {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Adding...' %}">{% trans 'Add weight band' %}</button>

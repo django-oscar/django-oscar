@@ -26,7 +26,7 @@
         <h3><i class="fas fa-search"></i> {% trans "Search product alerts" %}</h3>
     </div>
     <div class="card card-body">
-        <form method="get" class="form-inline">
+        <form id="search_alert_form" method="get" class="form-inline">
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary mr-2" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% trans "or" %}

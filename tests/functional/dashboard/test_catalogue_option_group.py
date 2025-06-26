@@ -72,7 +72,9 @@ class TestAttributeOptionGroupCreateView(PopUpObjectCreateMixin, WebTestCase):
         self.assertEqual(attribute_option.option, self.attribute_option_option)
 
     def _get_create_obj_response(self):
-        form = self.get(self._get_url()).form
+        form = self.get(self._get_url()).forms[
+            "create_update_attribute_option_group_form"
+        ]
         form["name"] = self.object_check_str
         form["options-0-option"] = self.attribute_option_option
         return form.submit()
@@ -101,7 +103,9 @@ class TestAttributeOptionGroupUpdateView(PopUpObjectUpdateMixin, WebTestCase):
         return gettext("Update Attribute Option Group '%s'") % self.obj.name
 
     def _get_update_obj_response(self):
-        form = self.get(self._get_url()).form
+        form = self.get(self._get_url()).forms[
+            "create_update_attribute_option_group_form"
+        ]
         form["name"] = self.object_check_str
         form["options-0-option"] = self.attribute_option_option
         return form.submit()
@@ -147,7 +151,7 @@ class TestAttributeOptionGroupDeleteView(PopUpObjectDeleteMixin, WebTestCase):
         return gettext("Delete Attribute Option Group '%s'") % self.obj.name
 
     def _get_delete_obj_response(self):
-        form = self.get(self._get_url()).form
+        form = self.get(self._get_url()).forms["attribute_delete_form"]
         return form.submit()
 
     def _create_dissalowed_object_factory(self):

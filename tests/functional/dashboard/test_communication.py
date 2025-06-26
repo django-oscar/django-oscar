@@ -23,7 +23,7 @@ class TestAnAdmin(WebTestCase):
     def test_can_preview_an_email(self):
         list_page = self.app.get(reverse("dashboard:comms-list"), user=self.staff)
         update_page = list_page.click("Edit")
-        form = update_page.form
+        form = update_page.forms["update_communication_event_form"]
         form["email_subject_template"] = "Hello {{ user.username }}"
         form["email_body_template"] = "Hello {{ user.username }}"
         form["email_body_html_template"] = "Hello {{ user.username }}"
@@ -33,7 +33,7 @@ class TestAnAdmin(WebTestCase):
     def test_can_send_a_preview_email(self):
         list_page = self.app.get(reverse("dashboard:comms-list"), user=self.staff)
         update_page = list_page.click("Edit")
-        form = update_page.form
+        form = update_page.forms["update_communication_event_form"]
         form["email_subject_template"] = "Hello {{ user.username }}"
         form["email_body_template"] = "Hello {{ user.username }}"
         form["email_body_html_template"] = "Hello {{ user.username }}"
