@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <form method="post">
+    <form id="delete_offer_form" method="post">
         {% csrf_token %}
         <p>{% trans "Are you sure you want to delete this offer?" %}</p>
         <div class="form-actions">

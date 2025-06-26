@@ -36,7 +36,7 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form class="form-stacked wysiwyg fixed-actions" method="post" data-behaviour="tab-nav-errors">
+    <form id="create_update_attribute_option_group_form" class="form-stacked wysiwyg fixed-actions" method="post" data-behaviour="tab-nav-errors">
         {% csrf_token %}
 
         <div class="row">

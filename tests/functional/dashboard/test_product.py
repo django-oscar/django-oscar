@@ -82,7 +82,7 @@ class TestCreateParentProduct(ProductWebTest):
             kwargs={"product_class_slug": self.pclass.slug},
         )
 
-        product_form = self.get(url).form
+        product_form = self.get(url).forms["create_update_product_form"]
 
         product_form["title"] = title
         product_form["upc"] = upc
@@ -137,7 +137,7 @@ class TestCreateChildProduct(ProductWebTest):
         )
         page = self.get(url)
 
-        product_form = page.form
+        product_form = page.forms["create_update_product_form"]
         product_form["title"] = expected_title = "Nice T-Shirt"
         product_form.submit()
 
@@ -156,7 +156,7 @@ class TestProductUpdate(ProductWebTest):
         url = reverse("dashboard:catalogue-product", kwargs={"pk": self.product.id})
 
         page = self.get(url)
-        product_form = page.form
+        product_form = page.forms["create_update_product_form"]
         product_form["title"] = expected_title = "Nice T-Shirt"
         page = product_form.submit()
 
@@ -194,7 +194,7 @@ class TestProductClass(ProductWebTest):
 
     def test_product_update_attribute_values(self):
         page = self.get(self.url)
-        product_form = page.form
+        product_form = page.forms["create_update_product_form"]
         # Send string field values due to an error
         # in the Webtest during multipart form encode.
         product_form["attr_text"] = "test1"
@@ -231,7 +231,7 @@ class TestProductClass(ProductWebTest):
             self.assertEqual(image1_file.read(), image1.content)
 
         page = self.get(self.url)
-        product_form = page.form
+        product_form = page.forms["create_update_product_form"]
         product_form["attr_text"] = "test2"
         product_form["attr_integer"] = "2"
         product_form["attr_float"] = "5.2"
@@ -273,7 +273,7 @@ class TestProductImages(ProductWebTest):
 
     def test_product_images_upload(self):
         page = self.get(self.url)
-        product_form = page.form
+        product_form = page.forms["create_update_product_form"]
         image1 = Upload("image1.png", generate_test_image(), "image/png")
         image2 = Upload("image2.png", generate_test_image(), "image/png")
         image3 = Upload("image3.png", generate_test_image(), "image/png")
@@ -284,7 +284,7 @@ class TestProductImages(ProductWebTest):
         self.product = Product.objects.get(pk=self.product.id)
         self.assertEqual(self.product.images.count(), 2)
         page = self.get(self.url)
-        product_form = page.form
+        product_form = page.forms["create_update_product_form"]
         product_form["images-2-original"] = image3
         product_form.submit()
         self.product = Product.objects.get(pk=self.product.id)
@@ -319,7 +319,7 @@ class TestProductImages(ProductWebTest):
         )
 
         page = self.get(self.url)
-        product_form = page.form
+        product_form = page.forms["create_update_product_form"]
         product_form["images-1-display_order"] = "3"  # 1 is im2
         product_form["images-2-display_order"] = "4"  # 2 is im3
         product_form["images-0-display_order"] = "5"  # 0 is im1

@@ -123,7 +123,7 @@ class TestAStaffUser(WebTestCase):
         page = self.get(
             reverse("dashboard:catalogue-product-create", args=(product_class.slug,))
         )
-        form = page.form
+        form = page.forms["create_update_product_form"]
         form["upc"] = "123456"
         form["title"] = "new product"
         form["productcategory_set-0-category"] = category.id
@@ -137,7 +137,7 @@ class TestAStaffUser(WebTestCase):
         page = self.get(
             reverse("dashboard:catalogue-product-create", args=(product_class.slug,))
         )
-        form = page.form
+        form = page.forms["create_update_product_form"]
         form["upc"] = "123456"
         form["title"] = "new product"
         form["productcategory_set-0-category"] = category.id
@@ -162,7 +162,7 @@ class TestAStaffUser(WebTestCase):
         page = self.get(
             reverse("dashboard:catalogue-product", kwargs={"pk": product.id})
         )
-        form = page.forms[0]
+        form = page.forms["create_update_product_form"]
         form["productcategory_set-0-category"] = category.id
         self.assertNotEqual(form["title"].value, new_title)
         form["title"] = new_title
@@ -184,7 +184,7 @@ class TestAStaffUser(WebTestCase):
         page = self.get(
             reverse("dashboard:catalogue-product-create", args=(product_class.slug,))
         )
-        form = page.form
+        form = page.forms["create_update_product_form"]
         form["upc"] = "123456"
         form["title"] = "new product"
         form["attr_weight"] = "5"
@@ -198,9 +198,11 @@ class TestAStaffUser(WebTestCase):
         category = Category.add_root(name="Test Category")
         ProductCategory.objects.create(category=category, product=product)
 
-        page = self.get(
-            reverse("dashboard:catalogue-product-delete", args=(product.id,))
-        ).form.submit()
+        page = (
+            self.get(reverse("dashboard:catalogue-product-delete", args=(product.id,)))
+            .forms["delete_product_form"]
+            .submit()
+        )
 
         self.assertRedirects(page, reverse("dashboard:catalogue-product-list"))
         self.assertEqual(Product.objects.count(), 0)
@@ -213,7 +215,7 @@ class TestAStaffUser(WebTestCase):
         create_product(parent=parent_product)
 
         url = reverse("dashboard:catalogue-product-delete", args=(parent_product.id,))
-        page = self.get(url).form.submit()
+        page = self.get(url).forms["delete_product_form"].submit()
 
         self.assertRedirects(page, reverse("dashboard:catalogue-product-list"))
         self.assertEqual(Product.objects.count(), 0)
@@ -223,7 +225,7 @@ class TestAStaffUser(WebTestCase):
         child_product = create_product(parent=parent_product)
 
         url = reverse("dashboard:catalogue-product-delete", args=(child_product.id,))
-        page = self.get(url).form.submit()
+        page = self.get(url).forms["delete_product_form"].submit()
 
         expected_url = reverse(
             "dashboard:catalogue-product", kwargs={"pk": parent_product.pk}
@@ -255,7 +257,7 @@ class TestAStaffUser(WebTestCase):
             "dashboard:catalogue-product-create-child",
             kwargs={"parent_pk": parent_product.pk},
         )
-        form = self.get(url).form
+        form = self.get(url).forms["create_update_product_form"]
         form.submit()
 
         self.assertEqual(Product.objects.count(), 2)

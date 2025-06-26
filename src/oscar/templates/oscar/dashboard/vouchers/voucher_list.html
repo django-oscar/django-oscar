@@ -34,7 +34,7 @@
             <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
         </div>
         <div class="card card-body bg-light">
-            <form method="get" class="form-inline">
+            <form id="search_voucher_form" method="get" class="form-inline">
                 {% for field in form %}
                     {% if field.name in form.basic_fields %}
                         {% if field.is_hidden %}

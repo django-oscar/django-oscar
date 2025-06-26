@@ -135,7 +135,7 @@ class SearchTests(WebTestCase):
 
     def _search_by_form_args(self, form_args):
         response = self.get(self.url)
-        search_form = response.forms[0]
+        search_form = response.forms["search_users_form"]
         for field_name, val in form_args.items():
             search_form[field_name] = val
         search_response = search_form.submit("search")

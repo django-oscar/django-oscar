@@ -43,7 +43,7 @@ class TestOptionCreateView(PopUpObjectCreateMixin, WebTestCase):
     object_check_str = "Test Option"
 
     def _get_create_obj_response(self):
-        form = self.get(self._get_url()).form
+        form = self.get(self._get_url()).forms["create_update_option_form"]
         form["name"] = self.object_check_str
         return form.submit()
 
@@ -68,7 +68,7 @@ class TestOptionUpdateView(PopUpObjectUpdateMixin, WebTestCase):
         return gettext("Update Option '%s'") % self.obj.name
 
     def _get_update_obj_response(self):
-        form = self.get(self._get_url()).form
+        form = self.get(self._get_url()).forms["create_update_option_form"]
         form["name"] = self.object_check_str
         return form.submit()
 
@@ -93,7 +93,7 @@ class TestOptionDeleteView(PopUpObjectDeleteMixin, WebTestCase):
         return gettext("Delete Option '%s'") % self.obj.name
 
     def _get_delete_obj_response(self):
-        form = self.get(self._get_url()).form
+        form = self.get(self._get_url()).forms["delete_option_form"]
         return form.submit()
 
     def _create_dissalowed_object_factory(self):

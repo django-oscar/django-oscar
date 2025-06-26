@@ -37,7 +37,7 @@
     </div>
     <div class="card card-body bg-light">
         {% include "oscar/dashboard/vouchers/partials/voucher_details_table.html" %}
-        <form method="post">
+        <form id="delete_voucher_form" method="post">
             {% csrf_token %}
             <div class="form-actions">
                 <button class="btn btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}

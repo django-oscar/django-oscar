@@ -18,7 +18,7 @@ class TestPartnerDashboard(WebTestCase):
         list_page = self.get(url)
         detail_page = list_page.click("Manage partner and users")
         user_page = detail_page.click("Link a new user")
-        form = user_page.form
+        form = user_page.forms["user_partner_form"]
         form["first_name"] = "Maik"
         form["last_name"] = "Hoepfel"
         form["email"] = "maik@gmail.com"

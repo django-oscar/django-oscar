@@ -38,14 +38,14 @@ class TestPageDashboard(WebTestCase):
     def test_dashboard_delete_pages(self):
         page = self.get(reverse("dashboard:page-list"))
         delete_page = page.click(linkid="delete_page_%s" % self.flatpage_1.id)
-        response = delete_page.form.submit()
+        response = delete_page.forms["delete_page_form"].submit()
 
         self.assertIsRedirect(response)
         self.assertEqual(FlatPage.objects.count(), 1)
 
     def test_dashboard_create_page_with_slugified_url(self):
         page = self.get(reverse("dashboard:page-create"))
-        form = page.form
+        form = page.forms["create_update_page_form"]
         form["title"] = "test"
         form["content"] = "my content here"
         response = form.submit()
@@ -54,7 +54,7 @@ class TestPageDashboard(WebTestCase):
 
     def test_dashboard_create_page_with_duplicate_slugified_url_fails(self):
         page = self.get(reverse("dashboard:page-create"))
-        form = page.form
+        form = page.forms["create_update_page_form"]
         form["title"] = "url1"  # This will slugify to url1
         form["content"] = "my content here"
         response = form.submit()
@@ -63,7 +63,7 @@ class TestPageDashboard(WebTestCase):
 
     def test_default_site_added_for_new_pages(self):
         page = self.get(reverse("dashboard:page-create"))
-        form = page.form
+        form = page.forms["create_update_page_form"]
         form["title"] = "test"
         form["url"] = "/hello-world/"
         form.submit()

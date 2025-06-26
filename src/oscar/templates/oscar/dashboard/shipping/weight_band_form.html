@@ -25,7 +25,7 @@
 
 {% block dashboard_content %}
     <div class="card card-body bg-light">
-        <form method="post" class="form-stacked">
+        <form id="create_update_weight_band_form" method="post" class="form-stacked">
             {% csrf_token %}
             {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
             {% block form_actions %}

@@ -33,7 +33,7 @@ class ReviewsDashboardTests(WebTestCase):
         assert ProductReview.objects.count() == 3
 
         list_page = self.get(reverse("dashboard:reviews-list"))
-        form = list_page.forms[1]
+        form = list_page.forms["update_reviews_form"]
         form["selected_review"] = [3, 2]
         form.submit("update")
 

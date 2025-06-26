@@ -25,7 +25,7 @@
 {% block dashboard_content %}
     {% if options %}
         {% block product_list %}
-            <form action="." method="post">
+            <form id="search_option_form" action="." method="post">
                 {% csrf_token %}
                 {% render_table options %}
             </form>
