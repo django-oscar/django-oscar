@@ -57,7 +57,7 @@ jobs:
       run: |
         coverage run --parallel --omit='*migrations*' -m pytest -x
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5.3.1
+      uses: codecov/codecov-action@v5.4.3
       with:
         fail_ci_if_error: false
   lint_python:
