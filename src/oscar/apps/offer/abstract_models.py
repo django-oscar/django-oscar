@@ -82,7 +82,10 @@ class BaseOfferMixin(models.Model):
         A description of the benefit/condition.
         Defaults to the name. May contain HTML.
         """
-        return self.name
+        try:
+            return self.name
+        except AttributeError:
+            pass
 
 
 class AbstractConditionalOffer(models.Model):
