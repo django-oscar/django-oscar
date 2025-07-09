@@ -35,3 +35,13 @@ class TestRangeDetailsPageWithUnicodeSlug(TestCase):
     def test_url_with_unicode_characters(self):
         response = self.client.get(f"/catalogue/ranges/{self.slug}/")
         self.assertEqual(200, response.status_code)
+
+
+class TestBenefitDescription(TestCase):
+    """
+    Tests Benefit description fallback for missing value.
+    """
+
+    def test_description_returns_fallback_if_range_is_none(self):
+        benefit = BenefitFactory(type="Percentage", value=10, range=None)
+        self.assertIsNone(benefit.description)
