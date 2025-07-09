@@ -17,7 +17,7 @@
     "gulp-rename": "^2.1.0",
     "inputmask": "^5.0.9",
     "jquery": "^3.7.1",
-    "jquery-mousewheel": "^3.1.13",
+    "jquery-mousewheel": "^3.2.2",
     "jquery-sortable": "^0.9.13",
     "nan": "^2.22.0",
     "node-sass": "^9.0.0",
