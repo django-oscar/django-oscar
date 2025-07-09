@@ -5,6 +5,7 @@ from django.template import engines
 from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 from oscar.apps.communication.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
@@ -223,6 +224,7 @@ class AbstractNotification(models.Model):
 
     def archive(self):
         self.location = self.ARCHIVE
+        self.date_read = timezone.now()
         self.save()
 
     archive.alters_data = True
