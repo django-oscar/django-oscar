@@ -154,6 +154,13 @@ class AbstractCategory(MP_Node):
     )
     slug = SlugField(_("Slug"), max_length=255, db_index=True)
 
+    exclude_from_menu = models.BooleanField(
+        _("Exclude from menu"),
+        default=False,
+        db_index=True,
+        help_text=_("Exclude this category from the menu."),
+    )
+
     is_public = models.BooleanField(
         _("Is public"),
         default=True,

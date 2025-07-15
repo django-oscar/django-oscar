@@ -33,6 +33,7 @@ BaseCategoryForm = movenodeform_factory(
         "description",
         "image",
         "is_public",
+        "exclude_from_menu",
         "meta_title",
         "meta_description",
     ],

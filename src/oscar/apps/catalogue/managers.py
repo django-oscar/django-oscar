@@ -247,3 +247,9 @@ class CategoryQuerySet(MP_NodeQuerySet):
         Excludes non-public categories
         """
         return self.filter(is_public=True, ancestors_are_public=True)
+
+    def for_menu(self):
+        """
+        Browsable categories that are not excluded for the menu
+        """
+        return self.browsable().exclude(exclude_from_menu=True)
