@@ -145,6 +145,7 @@ class AbstractCategory(MP_Node):
         unique=True,
     )
     description = models.TextField(_("Description"), blank=True)
+    long_description = models.TextField(_("Long description"), blank=True)
     meta_title = models.CharField(
         _("Meta title"), max_length=255, blank=True, null=True
     )
