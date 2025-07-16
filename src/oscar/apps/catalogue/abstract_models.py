@@ -145,6 +145,7 @@ class AbstractCategory(MP_Node):
         unique=True,
     )
     description = models.TextField(_("Description"), blank=True)
+    long_description = models.TextField(_("Long description"), blank=True)
     meta_title = models.CharField(
         _("Meta title"), max_length=255, blank=True, null=True
     )
@@ -153,6 +154,13 @@ class AbstractCategory(MP_Node):
         _("Image"), upload_to="categories", blank=True, null=True, max_length=255
     )
     slug = SlugField(_("Slug"), max_length=255, db_index=True)
+
+    exclude_from_menu = models.BooleanField(
+        _("Exclude from menu"),
+        default=False,
+        db_index=True,
+        help_text=_("Exclude this category from the menu."),
+    )
 
     is_public = models.BooleanField(
         _("Is public"),
