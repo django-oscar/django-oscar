@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from unittest import mock
 
+from django.urls import reverse
 import pytz
 from django.conf import settings
 from django.core import mail
@@ -28,6 +29,45 @@ class TestEmailUserCreationForm(TestCase):
         mocked_validate.assert_called_once_with("terry", form.instance)
         self.assertEqual(mocked_validate.call_args[0][1].email, "terry@boom.com")
         self.assertEqual(form.errors["password2"], ["That password is rubbish"])
+
+    def test_valid_resolvable_redirect_url(self):
+        form = EmailUserCreationForm(
+            data={
+                "email": "foo@bar.com",
+                "password1": "StrongPass123!",
+                "password2": "StrongPass123!",
+                "redirect_url": reverse("customer:login"),
+            },
+            host="testserver",
+        )
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["redirect_url"], reverse("customer:login"))
+
+    def test_invalid_unresolvable_redirect_url_fallback(self):
+        form = EmailUserCreationForm(
+            data={
+                "email": "foo@bar.com",
+                "password1": "StrongPass123!",
+                "password2": "StrongPass123!",
+                "redirect_url": "/not-a-real-view",
+            },
+            host="testserver",
+        )
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["redirect_url"], settings.LOGIN_REDIRECT_URL)
+
+    def test_unsafe_external_redirect_url_fallback(self):
+        form = EmailUserCreationForm(
+            data={
+                "email": "foo@bar.com",
+                "password1": "StrongPass123!",
+                "password2": "StrongPass123!",
+                "redirect_url": "http://malicious.com/phish",
+            },
+            host="testserver",
+        )
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["redirect_url"], settings.LOGIN_REDIRECT_URL)
 
 
 class TestPasswordResetForm(TestCase):
