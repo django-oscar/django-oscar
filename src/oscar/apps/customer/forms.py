@@ -8,6 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
+from django.urls import resolve, Resolver404
 from django.utils.crypto import get_random_string
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
@@ -18,6 +19,8 @@ from oscar.core.compat import existing_user_fields, get_user_model
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.core.utils import datetime_combine
 from oscar.forms import widgets
+
+from urllib.parse import urlparse
 
 CustomerDispatcher = get_class("customer.utils", "CustomerDispatcher")
 ProductAlert = get_model("customer", "ProductAlert")
@@ -147,9 +150,15 @@ class EmailUserCreationForm(forms.ModelForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data["redirect_url"].strip()
-        if url and url_has_allowed_host_and_scheme(url, self.host):
-            return url
-        return settings.LOGIN_REDIRECT_URL
+        if not url or not url_has_allowed_host_and_scheme(url, self.host):
+            return settings.LOGIN_REDIRECT_URL
+
+        try:
+            parsed = urlparse(url)
+            resolve(parsed.path)
+        except Resolver404:
+            return settings.LOGIN_REDIRECT_URL
+        return url
 
     def save(self, commit=True):
         user = super().save(commit=False)
