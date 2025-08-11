@@ -4,6 +4,10 @@
 {% load reviews_tags %}
 {% load display_tags %}
 
+{% block extrahead %}
+    <meta name="robots" content="noindex">
+{% endblock %}
+
 {% block headertext %}
     {% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
 {% endblock %}
