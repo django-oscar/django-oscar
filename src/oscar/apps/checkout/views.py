@@ -734,7 +734,8 @@ class ThankYouView(generic.DetailView):
                 kwargs["number"] = self.request.GET["order_number"]
             elif "order_id" in self.request.GET:
                 kwargs["id"] = self.request.GET["order_id"]
-            order = Order._default_manager.filter(**kwargs).first()
+            if any(kwargs):
+                order = Order._default_manager.filter(**kwargs).first()
 
         if not order:
             if "checkout_order_id" in self.request.session:
