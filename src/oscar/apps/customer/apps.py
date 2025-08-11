@@ -25,6 +25,9 @@ class CustomerConfig(OscarConfig):
         self.anon_order_detail_view = get_class(
             "customer.views", "AnonymousOrderDetailView"
         )
+        self.anon_order_form_view = get_class(
+            "customer.views", "AnonymousOrderFormView"
+        )
         self.order_line_view = get_class("customer.views", "OrderLineView")
 
         self.address_list_view = get_class("customer.views", "AddressListView")
@@ -132,6 +135,11 @@ class CustomerConfig(OscarConfig):
                 "orders/",
                 login_required(self.order_history_view.as_view()),
                 name="order-list",
+            ),
+            re_path(
+                r"^order-status-form/(?P<order_number>[\w-]*)/(?P<hash>[A-z0-9-_=:]+)/$",
+                self.anon_order_form_view.as_view(),
+                name="anon-order-form",
             ),
             re_path(
                 r"^order-status/(?P<order_number>[\w-]*)/(?P<hash>[A-z0-9-_=:]+)/$",

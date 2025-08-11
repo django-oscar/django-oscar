@@ -10,6 +10,7 @@ from oscar.core.loading import get_class, get_model
 
 User = get_user_model()
 CommunicationEventType = get_model("communication", "CommunicationEventType")
+Order = get_model("order", "Order")
 CustomerDispatcher = get_class("customer.utils", "CustomerDispatcher")
 
 logger = logging.getLogger("oscar.customer")
@@ -85,3 +86,26 @@ class RegisterUserMixin(object):
     def send_registration_email(self, user):
         extra_context = {"user": user, "request": self.request}
         CustomerDispatcher().send_registration_email_for_user(user, extra_context)
+
+
+class AnonymousOrderMixin:
+    @property
+    def email(self):
+        return self.request.session.get("anon_order_email")
+
+    @property
+    def order_number(self):
+        return self.kwargs.get("order_number")
+
+    @property
+    def hash(self):
+        return self.kwargs.get("hash")
+
+    def get_object(self):
+        try:
+            order = Order.objects.get(user=None, number=self.order_number)
+            if order.check_verification_hash(self.hash) and order.email == self.email:
+                return order
+        except (AttributeError, Order.DoesNotExist):
+            return None
+        return None

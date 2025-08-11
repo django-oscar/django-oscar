@@ -19,6 +19,8 @@ from oscar.core.utils import safe_referrer
 from oscar.views.generic import PostActionMixin
 
 from . import signals
+from .forms import AnonymousOrderForm
+from .mixins import AnonymousOrderMixin
 
 PageTitleMixin, RegisterUserMixin = get_classes(
     "customer.mixins", ["PageTitleMixin", "RegisterUserMixin"]
@@ -625,18 +627,36 @@ class OrderLineView(PostActionMixin, generic.DetailView):
         messages.info(self.request, msg)
 
 
-class AnonymousOrderDetailView(generic.DetailView):
+class AnonymousOrderFormView(AnonymousOrderMixin, generic.FormView):
+    form_class = AnonymousOrderForm
+    template_name = "oscar/customer/anon_order_form.html"
+
+    def form_valid(self, form):
+        self.request.session["anon_order_email"] = form.cleaned_data["email"]
+        if not self.get_object():
+            form.add_error(None, _("Order not found"))
+            return self.form_invalid(form)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse(
+            "customer:anon-order",
+            kwargs={"order_number": self.order_number, "hash": self.hash},
+        )
+
+
+class AnonymousOrderDetailView(AnonymousOrderMixin, generic.DetailView):
     model = Order
     template_name = "oscar/customer/anon_order.html"
 
-    def get_object(self, queryset=None):
-        # Check URL hash matches that for order to prevent spoof attacks
-        order = get_object_or_404(
-            self.model, user=None, number=self.kwargs["order_number"]
-        )
-        if not order.check_verification_hash(self.kwargs["hash"]):
-            raise http.Http404()
-        return order
+    def dispatch(self, request, *args, **kwargs):
+        if not self.get_object():
+            return redirect(
+                "customer:anon-order-form",
+                order_number=self.order_number,
+                hash=self.hash,
+            )
+        return super().dispatch(request, *args, **kwargs)
 
 
 # ------------
