@@ -20,7 +20,7 @@ jobs:
  
       - name: Install PR Bot
 
-        working-directory: ./pr-agent
+        working-directory: ./pr_agent
 
         shell: bash
 
@@ -36,7 +36,7 @@ jobs:
 
           OPENAI__KEY: ${{ secrets.OPENAI_KEY }}
 
-        working-directory: pr-agent
+        working-directory: ./pr_agent
 
         shell: bash
 
