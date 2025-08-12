@@ -20,7 +20,7 @@ jobs:
  
       - name: Install PR Bot
 
-        working-directory: ./pr_agent
+        working-directory: .
 
         shell: bash
 
