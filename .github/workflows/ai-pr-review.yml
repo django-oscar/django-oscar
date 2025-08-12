@@ -6,7 +6,6 @@ on:
 
     types: [opened, synchronize, reopened]
  
- 
 jobs:
 
   review:
