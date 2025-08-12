@@ -1,0 +1,38 @@
+{
+  "name": "CodiumAI PR-Agent",
+  "description": "CodiumAI PR-Agent",
+  "key": "app_key",
+  "vendor": {
+    "name": "CodiumAI",
+    "url": "https://codium.ai"
+  },
+  "authentication": {
+    "type": "jwt"
+  },
+  "baseUrl": "base_url",
+  "lifecycle": {
+    "installed": "/installed",
+    "uninstalled": "/uninstalled"
+  },
+  "scopes": [
+    "account",
+    "repository:write",
+    "pullrequest:write",
+    "wiki"
+  ],
+  "contexts": [
+    "account"
+  ],
+  "modules": {
+    "webhooks": [
+      {
+        "event": "*",
+        "url": "/webhook"
+      }
+    ]
+  },
+  "links": {
+    "privacy": "https://qodo.ai/privacy-policy",
+    "terms": "https://qodo.ai/terms"
+  }
+}
