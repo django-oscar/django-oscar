@@ -1,0 +1,29 @@
+name: AI PR Review Bot
+ 
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+ 
+jobs:
+  review:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+ 
+      - name: Run AI PR Review
+        env:
+          GITHUB__USER_TOKEN: ${{ secrets.AI_REVIEW_BOT_TOKEN }}
+          OPENAI__KEY: ${{ secrets.OPENAI_KEY }}
+        run: |
+          # Go to your bot repo directory
+          cd /home/user-ci-cd/auto-review
+          # Activate virtualenv
+          source env/bin/activate
+          cd pr-agent
+          # Add pr-agent source folder to PYTHONPATH so python can find it
+          # export PYTHONPATH="$PYTHONPATH:/home/user-ci-cd/auto-review/pr-agent"
+ 
+          # Run the PR Agent CLI with the current PR URL
+          python -c "from pr_agent.cli import run_command; run_command('${{ github.event.pull_request.html_url }}', 'review')"
