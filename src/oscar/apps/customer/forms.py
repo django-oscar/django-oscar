@@ -437,3 +437,7 @@ class ProductAlertForm(forms.ModelForm):
     class Meta:
         model = ProductAlert
         fields = ["email"]
+
+
+class AnonymousOrderForm(forms.Form):
+    email = forms.EmailField(label=_("Email address"))
