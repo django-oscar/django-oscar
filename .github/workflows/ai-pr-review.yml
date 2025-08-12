@@ -1,23 +1,47 @@
+name: AI PR Review Bot_Shiv
+ 
 on:
-  # workflow_dispatch:
-  pull_request:
-    types: [opened, reopened, ready_for_review]
-  issue_comment:
 
-  ##hi this is my new branch
+  pull_request:
+
+    types: [opened, synchronize, reopened]
+ 
 jobs:
-  pr_agent_job:
-    if: ${{ github.event.sender.type != 'Bot' }}
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-      contents: write
-    name: Run pr agent on every pull request, respond to user comments
+
+  review:
+
+    runs-on: ubuntu-latest  # Or 'ubuntu-latest' for GitHub-hosted runner
+ 
     steps:
-      - name: PR Agent action step
-        id: pragent
-        uses: qodo-ai/pr-agent@main
+
+      - name: Checkout PR branch
+
+        uses: actions/checkout@v4
+ 
+      - name: Install PR Bot
+
+        working-directory: ./pr-agent
+
+        shell: bash
+
+        run: |
+
+          pip install -e .
+ 
+      - name: Run PR Review
+
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          GITHUB__USER_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
+
+          OPENAI__KEY: ${{ secrets.OPENAI_KEY }}
+
+        working-directory: pr-agent
+
+        shell: bash
+
+        run: |
+
+          python -c "from pr_agent.cli import run_for_pr; run_for_pr('${{ github.event.pull_request.html_url }}')"
+
+ 
