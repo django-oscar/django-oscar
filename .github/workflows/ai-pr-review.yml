@@ -1,10 +1,10 @@
 name: AI PR Review Bot
  
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
     
-  # pull_request:
-  #   types: [opened, synchronize, reopened]
+    pull_request:
+    types: [opened, synchronize, reopened]
  
 jobs:
   review:
