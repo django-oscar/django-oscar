@@ -56,23 +56,7 @@ def set_parser():
     parser.add_argument('rest', nargs=argparse.REMAINDER, default=[])
     return parser
 
-
-def run_for_pr(pr_url: str):
-    """
-    Runs both review and improve commands for the given PR URL.
-    """
-
-
-    async def inner():
-        agent = PRAgent()
-        await agent.handle_request(pr_url, ["review"])
-        await agent.handle_request(pr_url, ["improve", "--pr_code_suggestions.commitable_code_suggestions=true"])
-
-
-    asyncio.run(inner())
  
-
-
 def run_command(pr_url, command):
     # Preparing the command
     run_command_str = f"--pr_url={pr_url} {command.lstrip('/')}"
