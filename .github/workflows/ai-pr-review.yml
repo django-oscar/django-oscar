@@ -44,4 +44,4 @@ jobs:
  
         run: |
          
-         python -c "from pr_agent.cli import run_for_pr; run_for_pr('github.event.pull_request.html_url')"
+         python -c "from pr_agent.cli import run_for_pr; run_for_pr('${{ github.event.pull_request.html_url }}')"
