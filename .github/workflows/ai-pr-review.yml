@@ -1,3 +1,4 @@
+
 on:
   pull_request:
     types: [opened, reopened, ready_for_review]
@@ -16,5 +17,5 @@ jobs:
         id: pragent
         uses: qodo-ai/pr-agent@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
