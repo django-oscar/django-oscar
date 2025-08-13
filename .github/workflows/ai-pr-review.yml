@@ -1,3 +1,4 @@
+name: AI PR Review Bot_Shiv_2
 
 on:
   pull_request:
@@ -19,4 +20,3 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
-          
