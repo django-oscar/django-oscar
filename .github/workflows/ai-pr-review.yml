@@ -36,7 +36,7 @@ jobs:
 
           GITHUB__USER_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
 
-          OPENAI__KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI__KEY: ${{ secrets.GEMINI_API_KEY }}
 
         working-directory: ./pr-agent
 
