@@ -1,3 +1,0 @@
-[submodule "pr-agent"]
-	path = pr-agent
-	url = https://github.com/qodo-ai/pr-agent.git
