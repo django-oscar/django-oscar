@@ -1,33 +1,49 @@
-name: AI PR Review Bot_ayb
+name: AI PR Review Bot_Shiv
  
 on:
-  # workflow_dispatch:
-    
- pull_request:
+
+  pull_request:
+
     types: [opened, synchronize, reopened]
  
 jobs:
+
   review:
-    runs-on: ubuntu-latest 
+
+    runs-on: ubuntu-latest  # Or 'ubuntu-latest' for GitHub-hosted runner
  
     steps:
+
       - name: Checkout PR branch
+
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: true  
  
       - name: Install PR Bot
+
         working-directory: ./pr-agent
+
         shell: bash
+
         run: |
+
           pip install -e .
-          
-  #  install litellm for OpenAI API support
+ 
       - name: Run PR Review
+
         env:
+
           GITHUB__USER_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
-          OPENAI__KEY: ${{ secrets.OPENAI_API_KEY }}
-        working-directory: ./pr-agent 
+
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+        working-directory: ./pr-agent
+
         shell: bash
+
         run: |
+
           python -c "from pr_agent.cli import run_command; run_command('${{ github.event.pull_request.html_url }}', 'review')"
+
+ 
