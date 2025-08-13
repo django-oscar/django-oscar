@@ -1,5 +1,4 @@
 name: AI PR Review Bot_Shiv_2
-
 on:
   pull_request:
     types: [opened, reopened, ready_for_review]
