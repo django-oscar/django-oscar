@@ -21,8 +21,7 @@ jobs:
         shell: bash
         run: |
           pip install -e .
-          pip install litellm      
-  #  install litellm for OpenAI API support
+               
       - name: Run PR Review
         env:
           GITHUB_USER_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
