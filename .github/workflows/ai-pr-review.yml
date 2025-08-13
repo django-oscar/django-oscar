@@ -25,7 +25,7 @@ jobs:
   #  install litellm for OpenAI API support
       - name: Run PR Review
         env:
-          GITHUB_USER_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
+          GITHUB__USER_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
           OPENAI__KEY: ${{ secrets.OPENAI_API_KEY }}
         working-directory: ./pr-agent 
         shell: bash
