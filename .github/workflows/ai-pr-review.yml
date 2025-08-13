@@ -26,7 +26,7 @@ jobs:
       - name: Run PR Review
         env:
           GITHUB_USER_TOKEN: ${{ secrets.AI_PR_REVIEW_BOT }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI__KEY: ${{ secrets.OPENAI_API_KEY }}
         working-directory: ./pr-agent 
         shell: bash
         run: |
