@@ -17,8 +17,8 @@ jobs:
       - name: Checkout PR branch
  
         uses: actions/checkout@v4
-        # with:
-        # submodules: true
+         with:
+         submodules: true
  
       - name: Install PR Bot
  
