@@ -1,4 +1,9 @@
 {% load i18n %}
+{% load dashboard_permissions %}
+
+{% has_dashboard_permission "offer-metadata" "offers_dashboard" as can_offer_metadata %}
+{% has_dashboard_permission "offer-benefit" "offers_dashboard" as can_offer_benefit %}
+{% has_dashboard_permission "offer-condition" "offers_dashboard" as can_offer_condition %}
 
 <div class="tab-nav sticky-top">
     <div class="table-header">
@@ -7,9 +12,15 @@
     <ul class="nav flex-column bs-docs-sidenav">
         <li class="nav-item step1">
             {% if step == 2 or step == 3 or step == 4 %}
-            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-metadata' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-metadata' %}{% endif %}" class="nav-link visited">
-                {% trans "1. Name, description and type" %}
-            </a>
+                {% if can_offer_metadata %}
+                <a href="{% if session_offer.pk %}{% url 'dashboard:offer-metadata' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-metadata' %}{% endif %}" class="nav-link visited">
+                    {% trans "1. Name, description and type" %}
+                </a>
+                {% else %}
+                <a class="nav-link disabled text-reset">
+                    {% trans "1. Name, description and type" %}
+                </a>
+                {% endif %}
             {% else %}
             <a class="nav-link {% if step == 1 %}active{% else %}disabled text-reset{% endif %}">
                 {% trans "1. Name, description and type" %}
@@ -18,9 +29,15 @@
         </li>
         <li class="nav-item step2">
             {% if step == 3 or step == 4 %}
-            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-benefit' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-benefit' %}{% endif %}" class="nav-link visited">
-                {% trans "2. Incentive" %}
-            </a>
+                {% if can_offer_benefit %}
+                <a href="{% if session_offer.pk %}{% url 'dashboard:offer-benefit' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-benefit' %}{% endif %}" class="nav-link visited">
+                    {% trans "2. Incentive" %}
+                </a>
+                {% else %}
+                <a class="nav-link disabled text-reset">
+                    {% trans "2. Incentive" %}
+                </a>
+                {% endif %}
             {% else %}
             <a class="nav-link {% if step == 2 %}active{% else %}disabled text-reset{% endif %}">
                 {% trans "2. Incentive" %}
@@ -29,9 +46,15 @@
         </li>
         <li class="nav-item step3">
             {% if step == 4 %}
-            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-condition' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-condition' %}{% endif %}" class="nav-link visited">
-                {% trans "3. Condition" %}
-            </a>
+                {% if can_offer_condition %}
+                <a href="{% if session_offer.pk %}{% url 'dashboard:offer-condition' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-condition' %}{% endif %}" class="nav-link visited">
+                    {% trans "3. Condition" %}
+                </a>
+                {% else %}
+                <a class="nav-link disabled text-reset">
+                    {% trans "3. Condition" %}
+                </a>
+                {% endif %}
             {% else %}
             <a class="nav-link {% if step == 3 %}active{% else %}disabled text-reset{% endif %}">
                 {% trans "3. Condition" %}

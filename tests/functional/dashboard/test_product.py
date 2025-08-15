@@ -38,7 +38,9 @@ def media_file_path(path):
 
 class ProductWebTest(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("product")
+    permissions = DashboardPermission.get(
+        "view-product", "change-product", "delete-product", "add-product"
+    )
 
     def get(self, url, **kwargs):
         kwargs["user"] = self.user

@@ -18,15 +18,24 @@ class PartnersDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "partner-list": DashboardPermission.get("partner"),
-            "partner-create": DashboardPermission.get("partner"),
-            "partner-manage": DashboardPermission.get("partner"),
-            "partner-delete": DashboardPermission.get("partner"),
-            "partner-user-create": DashboardPermission.get("partner"),
-            "partner-user-select": DashboardPermission.get("partner"),
-            "partner-user-link": DashboardPermission.get("partner"),
-            "partner-user-unlink": DashboardPermission.get("partner"),
-            "partner-user-update": DashboardPermission.get("partner"),
+            "partner-list": DashboardPermission.get("view-partner"),
+            "partner-create": DashboardPermission.get("add-partner"),
+            "partner-manage": (
+                DashboardPermission.get("view-partner"),
+                DashboardPermission.get("change-partner"),
+            ),
+            "partner-delete": DashboardPermission.get("delete-partner"),
+            "partner-user-create": (
+                DashboardPermission.get("change-partner"),
+                DashboardPermission.get("add-user"),
+            ),
+            "partner-user-select": DashboardPermission.get("change-partner"),
+            "partner-user-link": DashboardPermission.get("change-partner"),
+            "partner-user-unlink": DashboardPermission.get("change-partner"),
+            "partner-user-update": (
+                DashboardPermission.get("change-partner"),
+                DashboardPermission.get("change-user"),
+            ),
         }
 
     # pylint: disable=attribute-defined-outside-init

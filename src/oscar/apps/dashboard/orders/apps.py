@@ -19,27 +19,27 @@ class OrdersDashboardConfig(OscarDashboardConfig):
 
         self.permissions_map = {
             "order-list": (
-                DashboardPermission.get("order"),
+                DashboardPermission.get("view-order"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "order-stats": (
-                DashboardPermission.get("order"),
+                DashboardPermission.get("view-order"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "order-detail": (
-                DashboardPermission.get("order"),
+                DashboardPermission.get("view-order"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "order-detail-note": (
-                DashboardPermission.get("order"),
+                DashboardPermission.get("change-order"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "order-line-detail": (
-                DashboardPermission.get("order"),
+                DashboardPermission.get("view-order"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "order-shipping-address": (
-                DashboardPermission.get("order"),
+                DashboardPermission.get("view-order"),
                 DashboardPermission.partner_dashboard_access,
             ),
         }

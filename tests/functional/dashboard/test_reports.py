@@ -8,7 +8,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class ReportsDashboardTests(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("user_record")
+    permissions = DashboardPermission.get("view-user_record")
 
     def test_dashboard_is_accessible_to_staff(self):
         url = reverse("dashboard:reports-index")

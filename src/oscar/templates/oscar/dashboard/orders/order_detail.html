@@ -1,6 +1,7 @@
 {% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 {% load currency_filters %}
+{% load dashboard_permissions %}
 
 {% block body_class %}{{ block.super }} orders{% endblock %}
 
@@ -23,6 +24,9 @@
 {% endblock  %}
 
 {% block dashboard_content %}
+    {% has_dashboard_permission "order-detail-note" "orders_dashboard" as can_edit_order_note %}
+    {% has_dashboard_permission "delete-order" "orders_dashboard" as can_delete_order %}
+    
     {% block customer_information %}
     <table class="table table-bordered table-hover">
         <caption><i class="fas fa-user"></i> {% trans "Customer Information" %}</caption>
@@ -101,11 +105,13 @@
                         {% trans "Discounts" %}
                     </a>
                 </li>
+                {% if can_edit_order_note %}
                 <li class="nav-item">
                     <a class="nav-link {% if active_tab == 'notes' %}active{% endif %}" href="#notes" data-toggle="tab">
                         {% trans "Notes" %}
                     </a>
                 </li>
+                {% endif %}
             {% endblock nav_tabs %}
         </ul>
 
@@ -137,11 +143,17 @@
                             <tbody>
                                 {% for line in lines %}
                                     <tr>
+                                        {% if can_edit_order_note %}
                                         <td>
                                             <input type="checkbox" name="selected_line" value="{{ line.id }}" />
                                         </td>
+                                        {% endif %}
                                         <td>
+                                            {% if can_edit_order_note %}
                                             <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" size="2" style="width:40px" />
+                                            {% else %}
+                                            {{ line.quantity }}
+                                            {% endif %}
                                         </td>
                                         <td><a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}">#{{ line.id }}</a></td>
                                         <td>{{ line.quantity }}</td>
@@ -278,11 +290,7 @@
                         </table>
                     {% endblock order_lines %}
 
-                    {% comment %}
-                        This is the important block within this template: you will almost certainly want to
-                        override this block to provide your own form widgets that suit your order processing
-                        flow.  The default contents shows a range of widgets - more than is sensible really.
-                    {% endcomment %}
+                    {% if can_edit_order_note %}
                     {% block line_actions %}
                         <div class="card card-body bg-light">
                             <h3>{% trans "With selected lines" %}:</h3>
@@ -350,8 +358,10 @@
                             </div>
                         </div>
                     {% endblock line_actions %}
+                    {% endif %}
                 </form>
 
+                {% if can_edit_order_note %}
                 <form method="post" id="order_status_form">
                     {% csrf_token %}
                     {% block order_actions %}
@@ -369,6 +379,7 @@
                         </div>
                     {% endblock %}
                 </form>
+                {% endif %}
 
                 {% block order_status_changes %}
                     <div class="table-header">
@@ -522,7 +533,7 @@
                                     {% for field in order.shipping_address.active_address_fields %}
                                         {{ field }}<br/>
                                     {% endfor %}
-                                    {% if order.shipping_address %}
+                                    {% if order.shipping_address and can_edit_order_note %}
                                         <a class="btn btn-secondary" href="{% url 'dashboard:order-shipping-address' order.number %}">
                                             {% trans "Update" %}
                                         </a>
@@ -625,6 +636,7 @@
 
             <div class="tab-pane fade {% if active_tab == 'discounts' %}show active{% endif %}" id="discounts" role="tabpanel">
                 {% block tab_discounts %}
+                    {% has_dashboard_permission "view-offer" "offers_dashboard" as can_view_offer %}
 
                     {% with discounts=order.discounts.all %}
                         <div class="table-header">
@@ -650,7 +662,7 @@
                                                 {{ discount.voucher.code|default:"-" }}
                                             </td>
                                             <td>
-                                                {% if discount.offer %}
+                                                {% if discount.offer and can_view_offer %}
                                                     <a href="{% url 'dashboard:offer-detail' pk=discount.offer.id %}">{{ discount.offer.name }}</a>
                                                 {% else %}
                                                     {{ discount.offer_name }}
@@ -673,6 +685,7 @@
                 {% endblock %}
             </div>
 
+            {% if can_edit_order_note %}
             <div class="tab-pane fade {% if active_tab == 'notes' %}show active{% endif %}" id="notes" role="tabpanel">
                 {% block tab_notes %}
                     <div class="table-header">
@@ -697,12 +710,14 @@
                                         <td>
                                             {% if note.is_editable %}
                                                 <a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
+                                                {% if can_delete_order %}
                                                 <form id="delete_order_note_form" method="post" class="float-left m-0">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_action" value="delete_note" />
                                                     <input type="hidden" name="note_id" value="{{ note.id }}" />
                                                     <input type="submit" value="{% trans "Delete" %}" class="btn btn-danger" />
                                                 </form>
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -714,7 +729,8 @@
                             {% endif %}
                         </table>
                     {% endwith %}
-
+                    
+                    {% if can_edit_order_note %}
                     <form id="order_note_form" action=".?note={{ note_id }}" method="post" class="form-stacked">
                         {% csrf_token %}
                         <input type="hidden" value="save_note" name="order_action" />
@@ -724,12 +740,28 @@
                             {% trans "Notes are only editable for 5 minutes after being saved." %}
                         </div>
                     </form>
+                    {% endif %}
                 {% endblock %}
             </div>
+            {% endif %}
 
             {% block extra_tabs %}{% endblock %}
         </div>
     </div>
+    
+    {% if can_delete_order %}
+    <div class="card card-body bg-danger">
+        <h3><i class="fas fa-exclamation-triangle"></i> {% trans "Danger Zone" %}</h3>
+        <form id="order_delete_form" method="post" class="form-stacked">
+            {% csrf_token %}
+            <input type="hidden" name="order_action" value="delete_order" />
+            <p>{% trans "Deleting this order will remove all related information and cannot be undone." %}</p>
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">
+                {% trans "Delete Order" %}
+            </button>
+        </form>
+    </div>
+    {% endif %}
 {% endblock dashboard_content %}
 
 {% block onbodyload %}

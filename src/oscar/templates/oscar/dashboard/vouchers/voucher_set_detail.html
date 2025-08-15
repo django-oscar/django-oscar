@@ -1,7 +1,10 @@
 {% extends 'oscar/dashboard/layout.html' %}
 {% load currency_filters %}
+{% load dashboard_permissions %}
 {% load sorting_tags %}
 {% load i18n %}
+
+{% has_dashboard_permission "view-offer" "offers_dashboard" as can_view_offer %}
 
 {% block title %}
     {{ voucher_set.name }} | {{ block.super }}
@@ -122,7 +125,11 @@
         {% for offer in voucher_set.vouchers.first.offers.all %}
         <tr>
             <td>
-                <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
+                {% if can_view_offer %}
+                    <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
+                {% else %}
+                    {{ offer.name }}
+                {% endif %}
             </td>
             <td>{{ offer.start_datetime|default:"-" }}</td>
             <td>{{ offer.end_datetime|default:"-" }}</td>

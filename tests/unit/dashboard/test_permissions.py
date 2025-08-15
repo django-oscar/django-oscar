@@ -17,5 +17,5 @@ class DashboardPermissionCheckTestCase(TestCase):
 
         # reloading user to purge the _perm_cache
         user = User._default_manager.get(pk=user.pk)
-        add_permissions(user, DashboardPermission.permissions["product"])
+        add_permissions(user, DashboardPermission.get("view-product"))
         self.assertTrue(DashboardPermission.has_dashboard_perms(user))

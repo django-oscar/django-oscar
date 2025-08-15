@@ -18,13 +18,13 @@ class OffersDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "offer-list": DashboardPermission.get("offer"),
-            "offer-metadata": DashboardPermission.get("offer"),
-            "offer-condition": DashboardPermission.get("offer"),
-            "offer-benefit": DashboardPermission.get("offer"),
-            "offer-restrictions": DashboardPermission.get("offer"),
-            "offer-delete": DashboardPermission.get("offer"),
-            "offer-detail": DashboardPermission.get("offer"),
+            "offer-list": DashboardPermission.get("view-offer"),
+            "offer-metadata": DashboardPermission.get("add-offer", "change-offer"),
+            "offer-condition": DashboardPermission.get("add-offer", "change-offer"),
+            "offer-benefit": DashboardPermission.get("add-offer", "change-offer"),
+            "offer-restrictions": DashboardPermission.get("add-offer", "change-offer"),
+            "offer-delete": DashboardPermission.get("delete-offer"),
+            "offer-detail": DashboardPermission.get("view-offer"),
         }
 
     # pylint: disable=attribute-defined-outside-init

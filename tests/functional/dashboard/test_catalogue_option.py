@@ -20,7 +20,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class TestOptionListView(ListViewMixin, WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("option")
+    permissions = DashboardPermission.get("view-option")
     url_name = "dashboard:catalogue-option-list"
 
     def _create_object(self, idx):
@@ -31,7 +31,7 @@ class TestOptionListView(ListViewMixin, WebTestCase):
 
 class TestOptionCreateView(PopUpObjectCreateMixin, WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("option")
+    permissions = DashboardPermission.get("view-option", "add-option")
     model = Option
     form = OptionForm
     page_title = gettext("Add a new Option")
@@ -50,7 +50,7 @@ class TestOptionCreateView(PopUpObjectCreateMixin, WebTestCase):
 
 class TestOptionUpdateView(PopUpObjectUpdateMixin, WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("option")
+    permissions = DashboardPermission.get("view-option", "change-option")
     model = Option
     form = OptionForm
     page_title = None
@@ -75,7 +75,7 @@ class TestOptionUpdateView(PopUpObjectUpdateMixin, WebTestCase):
 
 class TestOptionDeleteView(PopUpObjectDeleteMixin, WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("option")
+    permissions = DashboardPermission.get("view-option", "delete-option")
     model = Option
     page_title = None
     url_name = "dashboard:catalogue-option-delete"

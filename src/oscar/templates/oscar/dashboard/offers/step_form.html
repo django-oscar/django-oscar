@@ -3,6 +3,7 @@
 {% load currency_filters %}
 
 {% load i18n %}
+{% load dashboard_permissions %}
 
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
@@ -61,18 +62,23 @@
                 </div>
 
                 {% block form_actions %}
+                    {% has_dashboard_permission "offer-change" "offers_dashboard" as can_change_offer %}
 
                     <div class="fixed-actions-group">
                         <div class="form-actions">
                             <div class="float-right">
-                            {% block form_actions_buttons %}
-                                <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
-                                {% if offer %}{# When editing offer, show saving button #}
-                                    <button class="btn btn-secondary" name="save" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save changes" %}</button>
-                                {% endif %}
-                            {% endblock %}
+                                {% block form_actions_buttons %}
+                                    {% if offer.pk and can_change_offer %}
+                                        <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">
+                                            {% block submittext %}{% trans "Continue" %}{% endblock %}
+                                        </button>
+                                        <button class="btn btn-secondary" name="save" type="submit" data-loading-text="{% trans 'Saving...' %}">
+                                            {% trans "Save changes" %}
+                                        </button>
+                                    {% endif %}
+                                {% endblock %}
                             </div>
-                            <a class="btn btn-secondary" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
+                            <a class="btn btn-secondary" href="{% url 'dashboard:offer-list' %}">{% trans "Cancel" %}</a>
                         </div>
                     </div>
 

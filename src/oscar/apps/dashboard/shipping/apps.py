@@ -16,13 +16,17 @@ class ShippingDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "shipping-method-list": DashboardPermission.get("shipping_method"),
-            "shipping-method-create": DashboardPermission.get("shipping_method"),
-            "shipping-method-detail": DashboardPermission.get("shipping_method"),
-            "shipping-method-edit": DashboardPermission.get("shipping_method"),
-            "shipping-method-delete": DashboardPermission.get("shipping_method"),
-            "shipping-method-band-edit": DashboardPermission.get("shipping_method"),
-            "shipping-method-band-delete": DashboardPermission.get("shipping_method"),
+            "shipping-method-list": DashboardPermission.get("view-shipping_method"),
+            "shipping-method-create": DashboardPermission.get("add-shipping_method"),
+            "shipping-method-detail": DashboardPermission.get("view-shipping_method"),
+            "shipping-method-edit": DashboardPermission.get("change-shipping_method"),
+            "shipping-method-delete": DashboardPermission.get("delete-shipping_method"),
+            "shipping-method-band-edit": DashboardPermission.get(
+                "change-shipping_method"
+            ),
+            "shipping-method-band-delete": DashboardPermission.get(
+                "delete-shipping_method"
+            ),
         }
 
     # pylint: disable=attribute-defined-outside-init
@@ -39,7 +43,6 @@ class ShippingDashboardConfig(OscarDashboardConfig):
         self.weight_method_delete_view = get_class(
             "dashboard.shipping.views", "WeightBasedDeleteView"
         )
-        # This doubles as the weight_band create view
         self.weight_method_detail_view = get_class(
             "dashboard.shipping.views", "WeightBasedDetailView"
         )
