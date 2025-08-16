@@ -17,7 +17,7 @@ class IndexViewTests(WebTestCase):
     is_staff = True
     active_users_ids = []
     inactive_users_ids = []
-    permissions = DashboardPermission.get("user")
+    permissions = DashboardPermission.get("view-user")
 
     csrf_checks = False
 
@@ -57,7 +57,7 @@ class IndexViewTests(WebTestCase):
 
 class DetailViewTests(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("user")
+    permissions = DashboardPermission.get("view-user")
 
     def test_user_detail_view(self):
         response = self.get(
@@ -69,7 +69,7 @@ class DetailViewTests(WebTestCase):
 
 class TestDetailViewForStaffUser(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("user")
+    permissions = DashboardPermission.get("view-user", "change-user")
 
     def setUp(self):
         self.customer = UserFactory(
@@ -110,7 +110,7 @@ class TestDetailViewForStaffUser(WebTestCase):
 class SearchTests(WebTestCase):
     is_staff = True
     url = reverse_lazy("dashboard:users-index")
-    permissions = DashboardPermission.get("user")
+    permissions = DashboardPermission.get("view-user")
 
     def setUp(self):
         UserFactory(
@@ -166,7 +166,7 @@ class SearchTests(WebTestCase):
 
 class ProductAlertListViewTestCase(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("user")
+    permissions = DashboardPermission.get("view-user")
 
     def test_list_view_get_queryset_ordering(self):
         ProductAlertFactory.create_batch(3)

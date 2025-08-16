@@ -12,7 +12,9 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 class TestPageDashboard(WebTestCase):
     is_anonymous = False
     is_staff = True
-    permissions = DashboardPermission.get("flat_page")
+    permissions = DashboardPermission.get(
+        "view-flatpage", "add-flatpage", "delete-flatpage"
+    )
 
     def setUp(self):
         self.flatpage_1 = FlatPage.objects.create(

@@ -1,5 +1,6 @@
 {% extends 'oscar/dashboard/layout.html' %}
 {% load currency_filters %}
+{% load dashboard_permissions %}
 {% load sorting_tags %}
 {% load i18n %}
 {% load widget_tweaks %}
@@ -26,6 +27,8 @@
 {% endblock header %}
 
 {% block dashboard_content %}
+    {% has_dashboard_permission "order-detail-note" "orders_dashboard" as can_edit_order_note %}
+
     <div class="table-header">
         <h3><i class="fas fa-search"></i> {% trans "Search" %}</h3>
     </div>
@@ -80,12 +83,14 @@
                         {% trans "All Orders" %}
                         {% endif %}
                     </h3>
+                    {% if can_edit_order_note %}
                     <div class="float-right">
                         <div class="form-inline">
                             <label>{% trans "Download selected orders as a CSV" %}</label>
                             <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders" data-loading-text="{% trans 'Submitting...' %}">{% trans "Download" %}</button>
                         </div>
                     </div>
+                    {% endif %}
                 </caption>
 
                 <thead>
@@ -105,8 +110,12 @@
                 <tbody>
                 {% for order in orders %}
                     <tr>
+                        {% if can_edit_order_note %}
                         <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ order.id }}"/></td>
-                        <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
+                        {% endif %}
+                        <td>
+                            <a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a>
+                        </td>
                         <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                         <td>{{ order.num_items }}</td>
                         <td>{{ order.status|default:"-" }}</td>
@@ -130,6 +139,8 @@
                 </tbody>
             </table>
             {% endblock order_list %}
+            
+            {% if can_edit_order_note %}   
             {% block order_actions %}
                 <div class="card card-body bg-light">
                     <h3><i class="fas fa-exclamation-circle"></i> {% trans "Change order status" %}:</h3>
@@ -154,7 +165,8 @@
                     {% endif %}
                 </div>
             {% endblock %}
-
+            {% endif %}
+            
             {% include "oscar/dashboard/partials/pagination.html" %}
         </form>
     {% else %}

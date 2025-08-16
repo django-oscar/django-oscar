@@ -45,7 +45,7 @@ class BaseViewPermissionTestCase(WebTestCase):
         Example view configuration:
         view_access_requirements = [{
             "name": "dashboard:offer-list",
-            "permissions": DashboardPermission.get("offer"),
+            "permissions": DashboardPermission.get("view-offer"),
         }]
 
         Test cases:
@@ -97,125 +97,131 @@ class CatalogueDashboardAccessTest(BaseViewPermissionTestCase):
             # Create Views
             {
                 "name": "dashboard:catalogue-product-create",
-                "permissions": DashboardPermission.get("product"),
+                "permissions": DashboardPermission.get("view-product", "add-product"),
             },
             {
                 "name": "dashboard:catalogue-product-create",
                 "kwargs": {"product_class_slug": product_class.slug},
-                "permissions": DashboardPermission.get("product"),
+                "permissions": DashboardPermission.get("view-product", "add-product"),
             },
             {
                 "name": "dashboard:catalogue-product-create-child",
                 "kwargs": {"parent_pk": parent_product.id},
-                "permissions": DashboardPermission.get("product"),
+                "permissions": DashboardPermission.get("view-product", "add-product"),
             },
             {
                 "name": "dashboard:catalogue-category-create",
-                "permissions": DashboardPermission.get("category"),
+                "permissions": DashboardPermission.get("add-category"),
             },
             {
                 "name": "dashboard:catalogue-category-create-child",
                 "kwargs": {"parent": category.id},
-                "permissions": DashboardPermission.get("category"),
+                "permissions": DashboardPermission.get("add-category"),
             },
             {
                 "name": "dashboard:catalogue-class-create",
-                "permissions": DashboardPermission.get("product_class"),
+                "permissions": DashboardPermission.get("add-productclass"),
             },
             {
                 "name": "dashboard:catalogue-attribute-option-group-create",
-                "permissions": DashboardPermission.get("attribute_option_group"),
+                "permissions": DashboardPermission.get(
+                    "view-attributeoptiongroup", "add-attributeoptiongroup"
+                ),
             },
             {
                 "name": "dashboard:catalogue-option-create",
-                "permissions": DashboardPermission.get("option"),
+                "permissions": DashboardPermission.get("view-option", "add-option"),
             },
             # Update Views
             {
                 "name": "dashboard:catalogue-category-update",
                 "kwargs": {"pk": category.id},
-                "permissions": DashboardPermission.get("category"),
+                "permissions": DashboardPermission.get("change-category"),
             },
             {
                 "name": "dashboard:catalogue-class-update",
                 "kwargs": {"pk": product_class.id},
-                "permissions": DashboardPermission.get("product_class"),
+                "permissions": DashboardPermission.get("change-productclass"),
             },
             {
                 "name": "dashboard:catalogue-attribute-option-group-update",
                 "kwargs": {"pk": attribute_option_group.id},
-                "permissions": DashboardPermission.get("attribute_option_group"),
+                "permissions": DashboardPermission.get(
+                    "view-attributeoptiongroup", "change-attributeoptiongroup"
+                ),
             },
             {
                 "name": "dashboard:catalogue-option-update",
                 "kwargs": {"pk": option.id},
-                "permissions": DashboardPermission.get("option"),
+                "permissions": DashboardPermission.get("view-option", "change-option"),
             },
             # List Views
             {
                 "name": "dashboard:catalogue-product-list",
-                "permissions": DashboardPermission.get("product"),
+                "permissions": DashboardPermission.get("view-product"),
             },
             {
                 "name": "dashboard:stock-alert-list",
-                "permissions": DashboardPermission.get("stockalert"),
+                "permissions": DashboardPermission.get("view-stockalert"),
             },
             {
                 "name": "dashboard:catalogue-category-list",
-                "permissions": DashboardPermission.get("category"),
+                "permissions": DashboardPermission.get("view-category"),
             },
             {
                 "name": "dashboard:catalogue-class-list",
-                "permissions": DashboardPermission.get("product_class"),
+                "permissions": DashboardPermission.get("view-productclass"),
             },
             {
                 "name": "dashboard:catalogue-attribute-option-group-list",
-                "permissions": DashboardPermission.get("attribute_option_group"),
+                "permissions": DashboardPermission.get("view-attributeoptiongroup"),
             },
             {
                 "name": "dashboard:catalogue-option-list",
-                "permissions": DashboardPermission.get("option"),
+                "permissions": DashboardPermission.get("view-option"),
             },
             # Detail Views
             {
                 "name": "dashboard:catalogue-product",
                 "kwargs": {"pk": product.id},
-                "permissions": DashboardPermission.get("product"),
+                "permissions": DashboardPermission.get("view-product"),
             },
             {
                 "name": "dashboard:catalogue-product-lookup",
-                "permissions": DashboardPermission.get("product"),
+                "permissions": DashboardPermission.get("view-product"),
             },
             {
                 "name": "dashboard:catalogue-category-detail-list",
                 "kwargs": {"pk": category.id},
-                "permissions": DashboardPermission.get("category"),
+                "permissions": DashboardPermission.get("view-category"),
             },
             # Delete Views
             {
                 "name": "dashboard:catalogue-product-delete",
                 "kwargs": {"pk": product.id},
-                "permissions": DashboardPermission.get("product"),
+                "permissions": DashboardPermission.get("delete-product"),
             },
             {
                 "name": "dashboard:catalogue-category-delete",
                 "kwargs": {"pk": category.id},
-                "permissions": DashboardPermission.get("category"),
+                "permissions": DashboardPermission.get("delete-category"),
             },
             {
                 "name": "dashboard:catalogue-class-delete",
                 "kwargs": {"pk": product_class.id},
-                "permissions": DashboardPermission.get("product_class"),
+                "permissions": DashboardPermission.get("delete-productclass"),
             },
             {
                 "name": "dashboard:catalogue-attribute-option-group-delete",
                 "kwargs": {"pk": attribute_option_group.id},
-                "permissions": DashboardPermission.get("attribute_option_group"),
+                "permissions": DashboardPermission.get(
+                    "view-attributeoptiongroup", "delete-attributeoptiongroup"
+                ),
             },
             {
                 "name": "dashboard:catalogue-option-delete",
                 "kwargs": {"pk": option.id},
-                "permissions": DashboardPermission.get("option"),
+                "permissions": DashboardPermission.get("view-option", "delete-option"),
             },
         ]
 
@@ -231,12 +237,14 @@ class CommunicationDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:comms-list",
-                "permissions": DashboardPermission.get("communication_event_type"),
+                "permissions": DashboardPermission.get("view-communication_event_type"),
             },
             {
                 "name": "dashboard:comms-update",
                 "kwargs": {"slug": communication_event_type.code},
-                "permissions": DashboardPermission.get("communication_event_type"),
+                "permissions": DashboardPermission.get(
+                    "change-communication_event_type"
+                ),
             },
         ]
 
@@ -245,60 +253,45 @@ class OfferDashboardAccessTest(BaseViewPermissionTestCase):
     def get_view_access_requirements(self):
         offer = ConditionalOfferFactory()
 
+        create_update_perm = DashboardPermission.get("add-offer", "change-offer")
+
         return [
             # List and Detail Views
             {
                 "name": "dashboard:offer-list",
-                "permissions": DashboardPermission.get("offer"),
+                "permissions": DashboardPermission.get("view-offer"),
             },
             {
                 "name": "dashboard:offer-detail",
                 "kwargs": {"pk": offer.id},
-                "permissions": DashboardPermission.get("offer"),
+                "permissions": DashboardPermission.get("view-offer"),
             },
-            # Create Views
+            # Create + Update Views
             {
                 "name": "dashboard:offer-metadata",
-                "permissions": DashboardPermission.get("offer"),
+                "permissions": create_update_perm,
+                "kwargs": {"pk": offer.id},
             },
             {
                 "name": "dashboard:offer-condition",
-                "permissions": DashboardPermission.get("offer"),
+                "permissions": create_update_perm,
+                "kwargs": {"pk": offer.id},
             },
             {
                 "name": "dashboard:offer-benefit",
-                "permissions": DashboardPermission.get("offer"),
+                "permissions": create_update_perm,
+                "kwargs": {"pk": offer.id},
             },
             {
                 "name": "dashboard:offer-restrictions",
-                "permissions": DashboardPermission.get("offer"),
-            },
-            # Update Views
-            {
-                "name": "dashboard:offer-metadata",
+                "permissions": create_update_perm,
                 "kwargs": {"pk": offer.id},
-                "permissions": DashboardPermission.get("offer"),
-            },
-            {
-                "name": "dashboard:offer-condition",
-                "kwargs": {"pk": offer.id},
-                "permissions": DashboardPermission.get("offer"),
-            },
-            {
-                "name": "dashboard:offer-benefit",
-                "kwargs": {"pk": offer.id},
-                "permissions": DashboardPermission.get("offer"),
-            },
-            {
-                "name": "dashboard:offer-restrictions",
-                "kwargs": {"pk": offer.id},
-                "permissions": DashboardPermission.get("offer"),
             },
             # Delete Views
             {
                 "name": "dashboard:offer-delete",
                 "kwargs": {"pk": offer.id},
-                "permissions": DashboardPermission.get("offer"),
+                "permissions": DashboardPermission.get("delete-offer"),
             },
         ]
 
@@ -312,31 +305,31 @@ class OrderDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:order-list",
-                "permissions": DashboardPermission.get("order"),
+                "permissions": DashboardPermission.get("view-order"),
             },
             {
                 "name": "dashboard:order-stats",
-                "permissions": DashboardPermission.get("order"),
+                "permissions": DashboardPermission.get("view-order"),
             },
             {
                 "name": "dashboard:order-detail",
                 "kwargs": {"number": order.number},
-                "permissions": DashboardPermission.get("order"),
+                "permissions": DashboardPermission.get("view-order"),
             },
             {
                 "name": "dashboard:order-detail-note",
                 "kwargs": {"number": order.number, "note_id": note.id},
-                "permissions": DashboardPermission.get("order"),
+                "permissions": DashboardPermission.get("change-order"),
             },
             {
                 "name": "dashboard:order-line-detail",
                 "kwargs": {"number": order.number, "line_id": line.id},
-                "permissions": DashboardPermission.get("order"),
+                "permissions": DashboardPermission.get("view-order"),
             },
             {
                 "name": "dashboard:order-shipping-address",
                 "kwargs": {"number": order.number},
-                "permissions": DashboardPermission.get("order"),
+                "permissions": DashboardPermission.get("view-order"),
             },
         ]
 
@@ -349,21 +342,21 @@ class PageDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:page-list",
-                "permissions": DashboardPermission.get("flat_page"),
+                "permissions": DashboardPermission.get("view-flatpage"),
             },
             {
                 "name": "dashboard:page-create",
-                "permissions": DashboardPermission.get("flat_page"),
+                "permissions": DashboardPermission.get("add-flatpage"),
             },
             {
                 "name": "dashboard:page-update",
                 "kwargs": {"pk": flatpage.id},
-                "permissions": DashboardPermission.get("flat_page"),
+                "permissions": DashboardPermission.get("change-flatpage"),
             },
             {
                 "name": "dashboard:page-delete",
                 "kwargs": {"pk": flatpage.id},
-                "permissions": DashboardPermission.get("flat_page"),
+                "permissions": DashboardPermission.get("delete-flatpage"),
             },
         ]
 
@@ -376,47 +369,49 @@ class PartnerDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:partner-list",
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("view-partner"),
             },
             {
                 "name": "dashboard:partner-create",
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("add-partner"),
             },
             {
                 "name": "dashboard:partner-manage",
                 "kwargs": {"pk": partner.id},
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get(
+                    "view-partner", "change-partner"
+                ),
             },
             {
                 "name": "dashboard:partner-user-create",
                 "kwargs": {"partner_pk": partner.id},
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("add-user", "change-partner"),
             },
             {
                 "name": "dashboard:partner-user-select",
                 "kwargs": {"partner_pk": partner.id},
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("change-partner"),
             },
             {
                 "name": "dashboard:partner-user-link",
                 "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("change-partner"),
             },
             {
                 "name": "dashboard:partner-user-update",
                 "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("change-partner", "change-user"),
             },
             {
                 "name": "dashboard:partner-user-unlink",
                 "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("change-partner"),
                 "method": "post",
             },
             {
                 "name": "dashboard:partner-delete",
                 "kwargs": {"pk": partner.id},
-                "permissions": DashboardPermission.get("partner"),
+                "permissions": DashboardPermission.get("delete-partner"),
             },
         ]
 
@@ -428,32 +423,32 @@ class RangeDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:range-list",
-                "permissions": DashboardPermission.get("range"),
+                "permissions": DashboardPermission.get("view-range"),
             },
             {
                 "name": "dashboard:range-create",
-                "permissions": DashboardPermission.get("range"),
+                "permissions": DashboardPermission.get("add-range"),
             },
             {
                 "name": "dashboard:range-update",
                 "kwargs": {"pk": offer_range.id},
-                "permissions": DashboardPermission.get("range"),
+                "permissions": DashboardPermission.get("change-range"),
             },
             {
                 "name": "dashboard:range-products",
                 "kwargs": {"pk": offer_range.id},
-                "permissions": DashboardPermission.get("range"),
+                "permissions": DashboardPermission.get("change-range"),
             },
             {
                 "name": "dashboard:range-reorder",
                 "kwargs": {"pk": offer_range.id},
-                "permissions": DashboardPermission.get("range"),
+                "permissions": DashboardPermission.get("change-range"),
                 "method": "post",
             },
             {
                 "name": "dashboard:range-delete",
                 "kwargs": {"pk": offer_range.id},
-                "permissions": DashboardPermission.get("range"),
+                "permissions": DashboardPermission.get("delete-range"),
             },
         ]
 
@@ -462,7 +457,7 @@ class ReportDashboardAccessTest(BaseViewPermissionTestCase):
     view_access_requirements = [
         {
             "name": "dashboard:reports-index",
-            "permissions": DashboardPermission.get("user_record"),
+            "permissions": DashboardPermission.get("view-user_record"),
         },
     ]
 
@@ -474,17 +469,17 @@ class ReviewDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:reviews-list",
-                "permissions": DashboardPermission.get("product_review"),
+                "permissions": DashboardPermission.get("view-product_review"),
             },
             {
                 "name": "dashboard:reviews-update",
                 "kwargs": {"pk": review.id},
-                "permissions": DashboardPermission.get("product_review"),
+                "permissions": DashboardPermission.get("change-product_review"),
             },
             {
                 "name": "dashboard:reviews-delete",
                 "kwargs": {"pk": review.id},
-                "permissions": DashboardPermission.get("product_review"),
+                "permissions": DashboardPermission.get("delete-product_review"),
             },
         ]
 
@@ -499,36 +494,36 @@ class ShippingDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:shipping-method-list",
-                "permissions": DashboardPermission.get("shipping_method"),
+                "permissions": DashboardPermission.get("view-shipping_method"),
             },
             {
                 "name": "dashboard:shipping-method-create",
-                "permissions": DashboardPermission.get("shipping_method"),
+                "permissions": DashboardPermission.get("add-shipping_method"),
             },
             {
                 "name": "dashboard:shipping-method-detail",
                 "kwargs": {"pk": weight_based.id},
-                "permissions": DashboardPermission.get("shipping_method"),
+                "permissions": DashboardPermission.get("view-shipping_method"),
             },
             {
                 "name": "dashboard:shipping-method-edit",
                 "kwargs": {"pk": weight_based.id},
-                "permissions": DashboardPermission.get("shipping_method"),
+                "permissions": DashboardPermission.get("change-shipping_method"),
             },
             {
                 "name": "dashboard:shipping-method-delete",
                 "kwargs": {"pk": weight_based.id},
-                "permissions": DashboardPermission.get("shipping_method"),
+                "permissions": DashboardPermission.get("delete-shipping_method"),
             },
             {
                 "name": "dashboard:shipping-method-band-edit",
                 "kwargs": {"pk": weight_band.id, "method_pk": weight_based.id},
-                "permissions": DashboardPermission.get("shipping_method"),
+                "permissions": DashboardPermission.get("change-shipping_method"),
             },
             {
                 "name": "dashboard:shipping-method-band-delete",
                 "kwargs": {"pk": weight_band.id, "method_pk": weight_based.id},
-                "permissions": DashboardPermission.get("shipping_method"),
+                "permissions": DashboardPermission.get("delete-shipping_method"),
             },
         ]
 
@@ -540,33 +535,33 @@ class UserDashboardAccessTest(BaseViewPermissionTestCase):
         return [
             {
                 "name": "dashboard:users-index",
-                "permissions": DashboardPermission.get("user"),
+                "permissions": DashboardPermission.get("view-user"),
             },
             {
                 "name": "dashboard:user-detail",
                 "kwargs": {"pk": self.user.id},
-                "permissions": DashboardPermission.get("user"),
+                "permissions": DashboardPermission.get("view-user"),
             },
             {
                 "name": "dashboard:user-password-reset",
                 "kwargs": {"pk": self.user.id},
-                "permissions": DashboardPermission.get("user"),
+                "permissions": DashboardPermission.get("view-user", "change-user"),
                 "method": "post",
             },
             # Alerts
             {
                 "name": "dashboard:user-alert-list",
-                "permissions": DashboardPermission.get("user"),
+                "permissions": DashboardPermission.get("view-user"),
             },
             {
                 "name": "dashboard:user-alert-update",
                 "kwargs": {"pk": alert.id},
-                "permissions": DashboardPermission.get("user"),
+                "permissions": DashboardPermission.get("change-user"),
             },
             {
                 "name": "dashboard:user-alert-delete",
                 "kwargs": {"pk": alert.id},
-                "permissions": DashboardPermission.get("user"),
+                "permissions": DashboardPermission.get("delete-user"),
             },
         ]
 
@@ -580,54 +575,54 @@ class VoucherDashboardAccessTest(BaseViewPermissionTestCase):
             # Vouchers
             {
                 "name": "dashboard:voucher-list",
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("view-voucher"),
             },
             {
                 "name": "dashboard:voucher-stats",
                 "kwargs": {"pk": voucher.id},
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("view-voucher"),
             },
             {
                 "name": "dashboard:voucher-create",
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("add-voucher"),
             },
             {
                 "name": "dashboard:voucher-update",
                 "kwargs": {"pk": voucher.id},
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("change-voucher"),
             },
             {
                 "name": "dashboard:voucher-delete",
                 "kwargs": {"pk": voucher.id},
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("delete-voucher"),
             },
             # Voucher Sets
             {
                 "name": "dashboard:voucher-set-list",
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("view-voucher"),
             },
             {
                 "name": "dashboard:voucher-set-create",
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("add-voucher"),
             },
             {
                 "name": "dashboard:voucher-set-update",
                 "kwargs": {"pk": voucher_set.id},
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("change-voucher"),
             },
             {
                 "name": "dashboard:voucher-set-detail",
                 "kwargs": {"pk": voucher_set.id},
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("view-voucher"),
             },
             {
                 "name": "dashboard:voucher-set-download",
                 "kwargs": {"pk": voucher_set.id},
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("view-voucher"),
             },
             {
                 "name": "dashboard:voucher-set-delete",
                 "kwargs": {"pk": voucher_set.id},
-                "permissions": DashboardPermission.get("voucher"),
+                "permissions": DashboardPermission.get("delete-voucher"),
             },
         ]

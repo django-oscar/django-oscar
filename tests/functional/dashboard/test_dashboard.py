@@ -52,7 +52,7 @@ class TestDashboardIndexForAnonUser(WebTestCase):
 
 class TestDashboardIndexForStaffUser(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order", "user")
+    permissions = DashboardPermission.get("view-order", "view-user")
 
     def test_is_available(self):
         urls = (

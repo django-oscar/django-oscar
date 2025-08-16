@@ -11,7 +11,12 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class TestShippingMethodDashboard(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("shipping_method")
+    permissions = DashboardPermission.get(
+        "view-shipping_method",
+        "change-shipping_method",
+        "add-shipping_method",
+        "delete-shipping_method",
+    )
 
     def test_for_smoke(self):
         list_page = self.get(reverse("dashboard:shipping-method-list"))
