@@ -14,8 +14,13 @@ from oscar import get_version  # noqa isort:skip
 
 class BuildNPM(build_module.build):
     def run(self):
-        subprocess.check_call(["npm", "install"])
-        subprocess.check_call(["npm", "run", "build"])
+        try:
+            os.stat(os.path.join(PROJECT_DIR, "package.json"))
+        except FileNotFoundError:
+            pass
+        else:
+            subprocess.check_call(["npm", "install"])
+            subprocess.check_call(["npm", "run", "build"])
         super().run()
 
 
