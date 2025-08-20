@@ -4,7 +4,12 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
-from oscar.apps.catalogue.models import Product, ProductAttribute, ProductClass
+from oscar.apps.catalogue.models import (
+    Product,
+    ProductAttribute,
+    ProductAttributeValue,
+    ProductClass,
+)
 from oscar.test import factories
 
 
@@ -61,6 +66,31 @@ class TestContainer(TestCase):
         ProductAttribute(
             name="a1", code="a1", product_class=another_product_class
         ).full_clean()
+
+    def test_attribute_update(self):
+        product_class = factories.ProductClassFactory()
+        second_product_class = factories.ProductClassFactory(name="Second")
+        product_class.attributes.create(name="a1", code="a1", required=True)
+        second_product_class.attributes.create(name="a1", code="a1", required=False)
+        product = factories.ProductFactory(product_class=product_class)
+        product.attr.a1 = "v1"
+        product.attr.save()
+
+        value = ProductAttributeValue.objects.get(product=product)
+        value.attribute = second_product_class.attributes.get(code="a1")
+        value.save()
+
+        product = Product.objects.get(pk=product.pk)
+        attribute_values = product.get_attribute_values()
+        self.assertEqual(
+            attribute_values[0].attribute.product_class, second_product_class
+        )
+
+        product.attr.a1 = "v1"
+        product.attr.save()
+        attribute_values = product.get_attribute_values()
+        self.assertEqual(attribute_values[0].attribute.product_class, product_class)
+        self.assertEqual(ProductAttributeValue.objects.count(), 1)
 
 
 class TestBooleanAttributes(TestCase):

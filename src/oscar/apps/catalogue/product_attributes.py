@@ -299,6 +299,10 @@ class ProductAttributesContainer:
                                     bound_value_obj.value_field_name
                                 ).pre_save(bound_value_obj, False)
 
+                            if bound_value_obj.attribute_id != attribute.id:
+                                bound_value_obj.attribute = attribute
+                                update_fields.add("attribute")
+
                             to_be_updated.append(bound_value_obj)
                             update_fields.add(bound_value_obj.value_field_name)
 
