@@ -4,7 +4,7 @@ import csv
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -311,7 +311,10 @@ class VoucherSetListView(generic.ListView):
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get_queryset(self):
-        qs = self.model.objects.all().order_by("-date_created")
+        qs = self.model.objects.all()
+        for sort_key in ("num_basket_additions", "num_orders"):
+            if sort_key in self.request.GET.get("sort", ""):
+                qs = qs.annotate(**{sort_key: Sum(f"vouchers__{sort_key}")})
         qs = sort_queryset(
             qs,
             self.request,
