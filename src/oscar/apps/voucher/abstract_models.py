@@ -72,10 +72,18 @@ class AbstractVoucherSet(models.Model):
         value = self.vouchers.aggregate(result=Sum("num_basket_additions"))
         return value["result"]
 
+    @num_basket_additions.setter
+    def num_basket_additions(self, val):
+        pass
+
     @property
     def num_orders(self):
         value = self.vouchers.aggregate(result=Sum("num_orders"))
         return value["result"]
+
+    @num_orders.setter
+    def num_orders(self, val):
+        pass
 
     @property
     def total_discount(self):

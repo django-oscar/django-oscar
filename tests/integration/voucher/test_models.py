@@ -173,14 +173,23 @@ class TestVoucherSet(object):
 
     def test_num_basket_additions(self):
         voucherset = VoucherSetFactory()
-        num_additions = voucherset.num_basket_additions
-        assert num_additions == 0
+        init_num_basket_additions = sum(v.num_basket_additions for v in voucherset.vouchers.all())
+        assert voucherset.num_basket_additions == init_num_basket_additions
+
+        # property is aggregated and has a no-op setter
+        voucherset.num_basket_additions = init_num_basket_additions + 10
+        assert voucherset.num_basket_additions == init_num_basket_additions
 
     def test_num_orders(self):
         voucherset = VoucherSetFactory()
-        assert voucherset.num_orders == 0
+        init_num_orders = sum(v.num_orders for v in voucherset.vouchers.all())
+        assert voucherset.num_orders == init_num_orders
 
         user, order = UserFactory(), OrderFactory()
         voucher = voucherset.vouchers.first()
         voucher.record_usage(order, user)
-        assert voucherset.num_orders == 1
+        assert voucherset.num_orders == init_num_orders + 1
+
+        # property is aggregated and has a no-op setter
+        voucherset.num_orders = init_num_orders
+        assert voucherset.num_orders == init_num_orders + 1

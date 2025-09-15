@@ -1,6 +1,11 @@
+import random
+from unittest.mock import patch
+
 import pytest
 from django.contrib.messages import get_messages
+from django.db.models import Sum
 from django.urls import reverse
+from pytest_django.asserts import assertQuerySetEqual
 
 from oscar.apps.dashboard.vouchers import views
 from oscar.core.loading import get_model
@@ -105,6 +110,17 @@ class TestDashboardVoucherSets:
         assert response.context_data["paginator"]
         assert response.context_data["page_obj"]
         assert response.status_code == 200
+
+    @pytest.mark.parametrize("sort_key", ["num_basket_additions", "num_orders"])
+    @patch("oscar.apps.dashboard.vouchers.views.sort_queryset")
+    def test_voucher_set_list_sorting(self, sort_queryset, sort_key, rf, many_voucher_sets):
+        view = views.VoucherSetListView.as_view()
+        request = rf.get("/", {"sort": sort_key})
+        response = view(request)
+        assert response.status_code == 200
+        sort_queryset_args, _ = sort_queryset.call_args
+        qs_arg = sort_queryset_args[0]
+        assert sort_key in qs_arg.query.annotations and qs_arg.order_by(sort_key)
 
     def test_voucher_set_detail_view(self, rf):
         voucher.VoucherSetFactory(count=10)

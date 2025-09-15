@@ -31,7 +31,7 @@ class TestVoucherAddView(TestCase):
         return "\n".join(str(m.message) for m in get_messages(request))
 
     def test_post_valid(self):
-        voucher = factories.VoucherFactory()
+        voucher = factories.VoucherFactory(num_basket_additions=0)
         self.assertTrue(voucher.is_active())
 
         data = {"code": voucher.code}
@@ -49,6 +49,7 @@ class TestVoucherAddView(TestCase):
 
     def test_post_valid_from_set(self):
         voucherset = factories.VoucherSetFactory()
+        voucherset.vouchers.update(num_basket_additions=0)
         voucher = voucherset.vouchers.first()
 
         self.assertTrue(voucher.is_active())

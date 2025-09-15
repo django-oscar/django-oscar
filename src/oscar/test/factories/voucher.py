@@ -1,4 +1,5 @@
 import datetime
+import random
 
 import factory
 from django.utils.timezone import now
@@ -50,5 +51,7 @@ class VoucherSetFactory(factory.django.DjangoModelFactory):
                 usage=Voucher.MULTI_USE,
                 start_datetime=obj.start_datetime,
                 end_datetime=obj.end_datetime,
+                num_basket_additions=random.randint(0, 1000),
+                num_orders=random.randint(0, 1000),
             )
             voucher.offers.add(offer)
