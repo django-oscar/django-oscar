@@ -18,8 +18,14 @@ class CommunicationsDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "comms-list": DashboardPermission.get("communication_event_type"),
-            "comms-update": DashboardPermission.get("communication_event_type"),
+            "comms-list": DashboardPermission.get(
+                "communication", "view_communicationeventtype"
+            ),
+            "comms-update": DashboardPermission.get(
+                "communication",
+                "view_communicationeventtype",
+                "change_communicationeventtype",
+            ),
         }
 
     # pylint: disable=attribute-defined-outside-init

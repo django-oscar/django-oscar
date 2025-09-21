@@ -1,6 +1,7 @@
 from decimal import Decimal as D
 
 from django.urls import reverse
+from oscar.core.compat import get_user_model
 
 from oscar.apps.dashboard.views import IndexView
 from oscar.apps.order.models import Order
@@ -16,6 +17,7 @@ from oscar.test.testcases import WebTestCase
 
 StockAlert = get_model("partner", "StockAlert")
 DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
+User = get_user_model()
 
 
 GENERIC_STATS_KEYS = (
@@ -52,7 +54,9 @@ class TestDashboardIndexForAnonUser(WebTestCase):
 
 class TestDashboardIndexForStaffUser(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order", "user")
+    permissions = DashboardPermission.get(
+        "order", "view_order"
+    ) + DashboardPermission.get(User._meta.app_label, "view_user")
 
     def test_is_available(self):
         urls = (

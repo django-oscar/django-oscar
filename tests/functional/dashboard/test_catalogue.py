@@ -35,7 +35,9 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class TestCatalogueViews(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("product", "category", "stockalert")
+    permissions = DashboardPermission.get(
+        "catalogue", "view_product", "view_category"
+    ) + DashboardPermission.get("partner", "view_stockalert")
 
     def test_exist(self):
         urls = [
@@ -111,7 +113,9 @@ class TestCatalogueViews(WebTestCase):
 
 class TestAStaffUser(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("product")
+    permissions = DashboardPermission.get(
+        "catalogue", "view_product", "change_product", "delete_product", "add_product"
+    )
 
     def setUp(self):
         super().setUp()
@@ -334,7 +338,10 @@ class TestProductCreatePageWithUnicodeSlug(TestCase):
         self.slug = "Ûul-wįth-weird-chars"
         ProductClass.objects.create(name="Book", slug=self.slug)
         self.user = User.objects.create(is_staff=True)
-        add_permissions(self.user, DashboardPermission.get("product"))
+        add_permissions(
+            self.user,
+            DashboardPermission.get("catalogue", "view_product", "add_product"),
+        )
         self.client.force_login(self.user)
 
     def test_url_with_unicode_characters(self):

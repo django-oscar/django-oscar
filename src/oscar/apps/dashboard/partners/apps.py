@@ -15,18 +15,43 @@ class PartnersDashboardConfig(OscarDashboardConfig):
     ]
 
     def configure_permissions(self):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "partner-list": DashboardPermission.get("partner"),
-            "partner-create": DashboardPermission.get("partner"),
-            "partner-manage": DashboardPermission.get("partner"),
-            "partner-delete": DashboardPermission.get("partner"),
-            "partner-user-create": DashboardPermission.get("partner"),
-            "partner-user-select": DashboardPermission.get("partner"),
-            "partner-user-link": DashboardPermission.get("partner"),
-            "partner-user-unlink": DashboardPermission.get("partner"),
-            "partner-user-update": DashboardPermission.get("partner"),
+            "partner-list": DashboardPermission.get("partner", "view_partner"),
+            "partner-create": DashboardPermission.get(
+                "partner", "view_partner", "add_partner"
+            ),
+            "partner-manage": (
+                DashboardPermission.get("partner", "view_partner"),
+                DashboardPermission.get("partner", "view_partner", "change_partner"),
+            ),
+            "partner-delete": DashboardPermission.get(
+                "partner", "view_partner", "delete_partner"
+            ),
+            "partner-user-create": (
+                DashboardPermission.get("partner", "view_partner", "change_partner"),
+                DashboardPermission.get(User._meta.app_label, "view_user", "add_user"),
+            ),
+            "partner-user-select": DashboardPermission.get(
+                "partner", "view_partner", "change_partner"
+            ),
+            "partner-user-link": DashboardPermission.get(
+                "partner", "view_partner", "change_partner"
+            ),
+            "partner-user-unlink": DashboardPermission.get(
+                "partner", "view_partner", "change_partner"
+            ),
+            "partner-user-update": (
+                DashboardPermission.get("partner", "view_partner", "change_partner"),
+                DashboardPermission.get(
+                    User._meta.app_label, "view_user", "change_user"
+                ),
+            ),
         }
 
     # pylint: disable=attribute-defined-outside-init

@@ -18,12 +18,20 @@ class RangesDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "range-list": DashboardPermission.get("range"),
-            "range-create": DashboardPermission.get("range"),
-            "range-update": DashboardPermission.get("range"),
-            "range-delete": DashboardPermission.get("range"),
-            "range-products": DashboardPermission.get("range"),
-            "range-reorder": DashboardPermission.get("range"),
+            "range-list": DashboardPermission.get("offer", "view_range"),
+            "range-create": DashboardPermission.get("offer", "view_range", "add_range"),
+            "range-update": DashboardPermission.get(
+                "offer", "view_range", "change_range"
+            ),
+            "range-delete": DashboardPermission.get(
+                "offer", "view_range", "delete_range"
+            ),
+            "range-products": DashboardPermission.get(
+                "offer", "view_range", "change_range"
+            ),
+            "range-reorder": DashboardPermission.get(
+                "offer", "view_range", "change_range"
+            ),
         }
 
     # pylint: disable=attribute-defined-outside-init

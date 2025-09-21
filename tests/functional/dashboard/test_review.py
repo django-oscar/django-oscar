@@ -15,7 +15,11 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class ReviewsDashboardTests(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("product_review")
+    permissions = DashboardPermission.get(
+        "reviews",
+        "view_productreview",
+        "change_productreview",
+    )
 
     def test_reviews_dashboard_is_accessible_to_staff(self):
         url = reverse("dashboard:reviews-list")
