@@ -113,6 +113,9 @@ class AbstractOrder(models.Model):
     # Index added to this field for reporting
     date_placed = models.DateTimeField(db_index=True)
 
+    # This is to prevent duplicate tracking events from being sent.
+    analytics_tracked = models.BooleanField(default=False)
+
     #: Order status pipeline.  This should be a dict where each (key, value) #:
     #: corresponds to a status and a list of possible statuses that can follow
     #: that one.
