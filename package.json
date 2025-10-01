@@ -27,7 +27,7 @@
     "select2": "4.0.13",
     "select2-bootstrap-theme": "0.1.0-beta.10",
     "tempusdominus-bootstrap-4": "^5.39.2",
-    "tinymce": "^7.9.1",
+    "tinymce": "^8.1.2",
     "@tinymce/tinymce-jquery": "^2.1.0"
   },
   "scripts": {
