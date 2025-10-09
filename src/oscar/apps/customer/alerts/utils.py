@@ -56,7 +56,7 @@ class AlertsDispatcher:
 
     def get_extra_context_for_alert(self, alert, hurry_mode):
         context = self.get_extra_context(alert)
-        context["hurry_mode"] = hurry_mode
+        context["hurry"] = hurry_mode
         return context
 
     def send_product_alert_email_for_user(self, product):
