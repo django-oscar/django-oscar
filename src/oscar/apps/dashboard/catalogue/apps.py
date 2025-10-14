@@ -34,7 +34,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 DashboardPermission.partner_dashboard_access,
             ),
             "catalogue-product-delete": (
-                DashboardPermission.get("catalogue", "delete_product"),
+                DashboardPermission.get("catalogue", "view_product", "delete_product"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "catalogue-product-lookup": (
@@ -54,42 +54,48 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 "catalogue", "view_category"
             ),
             "catalogue-category-create": DashboardPermission.get(
-                "catalogue", "add_category"
+                "catalogue", "view_category", "add_category"
             ),
             "catalogue-category-create-child": DashboardPermission.get(
-                "catalogue", "add_category"
+                "catalogue", "view_category", "add_category"
             ),
             "catalogue-category-update": DashboardPermission.get(
-                "catalogue", "change_category"
+                "catalogue", "view_category", "change_category"
             ),
             "catalogue-category-delete": DashboardPermission.get(
-                "catalogue", "delete_category"
+                "catalogue", "view_category", "delete_category"
             ),
             # Product class views
             "catalogue-class-create": DashboardPermission.get(
-                "catalogue", "add_productclass"
+                "catalogue", "view_productclass", "add_productclass"
             ),
             "catalogue-class-list": DashboardPermission.get(
                 "catalogue", "view_productclass"
             ),
             "catalogue-class-update": DashboardPermission.get(
-                "catalogue", "change_productclass"
+                "catalogue", "view_productclass", "change_productclass"
             ),
             "catalogue-class-delete": DashboardPermission.get(
-                "catalogue", "delete_productclass"
+                "catalogue", "view_productclass", "delete_productclass"
             ),
             # Attribute option group views
             "catalogue-attribute-option-group-list": DashboardPermission.get(
                 "catalogue", "view_attributeoptiongroup"
             ),
             "catalogue-attribute-option-group-create": DashboardPermission.get(
-                "catalogue", "view_attributeoptiongroup", "add_attributeoptiongroup"
+                "catalogue",
+                "view_attributeoptiongroup",
+                "add_attributeoptiongroup",
             ),
             "catalogue-attribute-option-group-update": DashboardPermission.get(
-                "catalogue", "view_attributeoptiongroup", "change_attributeoptiongroup"
+                "catalogue",
+                "view_attributeoptiongroup",
+                "change_attributeoptiongroup",
             ),
             "catalogue-attribute-option-group-delete": DashboardPermission.get(
-                "catalogue", "view_attributeoptiongroup", "delete_attributeoptiongroup"
+                "catalogue",
+                "view_attributeoptiongroup",
+                "delete_attributeoptiongroup",
             ),
             # Option views
             "catalogue-option-list": DashboardPermission.get(

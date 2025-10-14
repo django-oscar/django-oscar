@@ -120,20 +120,20 @@ class CatalogueDashboardAccessTest(BaseViewPermissionTestCase):
             {
                 "name": "dashboard:catalogue-category-create",
                 "permissions": DashboardPermission.get(
-                    "catalogue", "view_product", "add_category"
+                    "catalogue", "view_category", "add_category"
                 ),
             },
             {
                 "name": "dashboard:catalogue-category-create-child",
                 "kwargs": {"parent": category.id},
                 "permissions": DashboardPermission.get(
-                    "catalogue", "view_product", "add_category"
+                    "catalogue", "view_category", "add_category"
                 ),
             },
             {
                 "name": "dashboard:catalogue-class-create",
                 "permissions": DashboardPermission.get(
-                    "catalogue", "view_product", "add_productclass"
+                    "catalogue", "view_productclass", "add_productclass"
                 ),
             },
             {
@@ -244,7 +244,7 @@ class CatalogueDashboardAccessTest(BaseViewPermissionTestCase):
                 "name": "dashboard:catalogue-class-delete",
                 "kwargs": {"pk": product_class.id},
                 "permissions": DashboardPermission.get(
-                    "catalogue", "delete_productclass", "view_productclass"
+                    "catalogue", "view_productclass", "delete_productclass"
                 ),
             },
             {
@@ -261,6 +261,46 @@ class CatalogueDashboardAccessTest(BaseViewPermissionTestCase):
                 "kwargs": {"pk": option.id},
                 "permissions": DashboardPermission.get(
                     "catalogue", "view_option", "delete_option"
+                ),
+            },
+            # Test partner access to catalogue product views
+            # Create Views
+            {
+                "name": "dashboard:catalogue-product-create",
+                "permissions": DashboardPermission.get(
+                    "catalogue", "view_product", "add_product"
+                ),
+            },
+            {
+                "name": "dashboard:catalogue-product-create",
+                "kwargs": {"product_class_slug": product_class.slug},
+                "permissions": DashboardPermission.get(
+                    "catalogue", "view_product", "add_product"
+                ),
+            },
+            # Detail Views
+            {
+                "name": "dashboard:catalogue-product",
+                "kwargs": {"pk": product.id},
+                "permissions": DashboardPermission.get(
+                    "catalogue", "view_product", "add_product", "change_product"
+                ),
+            },
+            {
+                "name": "dashboard:catalogue-product-lookup",
+                "permissions": DashboardPermission.get("catalogue", "view_product"),
+            },
+            # List Views
+            {
+                "name": "dashboard:catalogue-product-list",
+                "permissions": DashboardPermission.get("catalogue", "view_product"),
+            },
+            # Delete Views
+            {
+                "name": "dashboard:catalogue-product-delete",
+                "kwargs": {"pk": product.id},
+                "permissions": DashboardPermission.get(
+                    "catalogue", "view_product", "delete_product"
                 ),
             },
         ]
@@ -387,6 +427,35 @@ class OrderDashboardAccessTest(BaseViewPermissionTestCase):
                 "name": "dashboard:order-shipping-address",
                 "kwargs": {"number": order.number},
                 "permissions": DashboardPermission.get("order", "view_order"),
+            },
+            # Test that partner users can access the order
+            {
+                "name": "dashboard:order-list",
+                "permissions": DashboardPermission.partner_dashboard_access,
+            },
+            {
+                "name": "dashboard:order-stats",
+                "permissions": DashboardPermission.partner_dashboard_access,
+            },
+            {
+                "name": "dashboard:order-detail",
+                "kwargs": {"number": order.number},
+                "permissions": DashboardPermission.partner_dashboard_access,
+            },
+            {
+                "name": "dashboard:order-detail-note",
+                "kwargs": {"number": order.number, "note_id": note.id},
+                "permissions": DashboardPermission.partner_dashboard_access,
+            },
+            {
+                "name": "dashboard:order-line-detail",
+                "kwargs": {"number": order.number, "line_id": line.id},
+                "permissions": DashboardPermission.partner_dashboard_access,
+            },
+            {
+                "name": "dashboard:order-shipping-address",
+                "kwargs": {"number": order.number},
+                "permissions": DashboardPermission.partner_dashboard_access,
             },
         ]
 

@@ -15,36 +15,30 @@ class UsersDashboardConfig(OscarDashboardConfig):
     ]
 
     def configure_permissions(self):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "users-index": DashboardPermission.get(
-                self.User._meta.app_label, "view_user"
-            ),
-            "user-detail": DashboardPermission.get(
-                self.User._meta.app_label, "view_user"
-            ),
+            "users-index": DashboardPermission.get(User._meta.app_label, "view_user"),
+            "user-detail": DashboardPermission.get(User._meta.app_label, "view_user"),
             "user-password-reset": DashboardPermission.get(
-                self.User._meta.app_label, "view_user", "change_user"
+                User._meta.app_label, "view_user", "change_user"
             ),
             "user-alert-list": DashboardPermission.get(
-                self.User._meta.app_label, "view_user"
+                User._meta.app_label, "view_user"
             ),
             "user-alert-delete": DashboardPermission.get(
-                self.User._meta.app_label, "view_user", "delete_user"
+                User._meta.app_label, "view_user", "delete_user"
             ),
             "user-alert-update": DashboardPermission.get(
-                self.User._meta.app_label, "view_user", "change_user"
+                User._meta.app_label, "view_user", "change_user"
             ),
         }
 
     # pylint: disable=attribute-defined-outside-init
     def ready(self):
-        # Import here, when Django is ready
-        from django.contrib.auth import get_user_model
-
-        self.User = get_user_model()
-
         self.index_view = get_class("dashboard.users.views", "IndexView")
         self.user_detail_view = get_class("dashboard.users.views", "UserDetailView")
         self.password_reset_view = get_class(
