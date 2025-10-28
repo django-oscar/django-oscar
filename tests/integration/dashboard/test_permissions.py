@@ -512,47 +512,7 @@ class PartnerDashboardAccessTest(BaseViewPermissionTestCase):
             {
                 "name": "dashboard:partner-manage",
                 "kwargs": {"pk": partner.id},
-                "permissions": DashboardPermission.get(
-                    "partner", "view_partner", "change_partner"
-                ),
-            },
-            {
-                "name": "dashboard:partner-user-create",
-                "kwargs": {"partner_pk": partner.id},
-                "permissions": DashboardPermission.get(
-                    User._meta.app_label, "view_user", "add_user"
-                )
-                + DashboardPermission.get("partner", "view_partner", "change_partner"),
-            },
-            {
-                "name": "dashboard:partner-user-select",
-                "kwargs": {"partner_pk": partner.id},
-                "permissions": DashboardPermission.get(
-                    "partner", "view_partner", "change_partner"
-                ),
-            },
-            {
-                "name": "dashboard:partner-user-link",
-                "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
-                "permissions": DashboardPermission.get(
-                    "partner", "view_partner", "change_partner"
-                ),
-            },
-            {
-                "name": "dashboard:partner-user-update",
-                "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
-                "permissions": DashboardPermission.get(
-                    "partner", "view_partner", "change_partner"
-                )
-                + DashboardPermission.get(User._meta.app_label, "change_user"),
-            },
-            {
-                "name": "dashboard:partner-user-unlink",
-                "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
-                "permissions": DashboardPermission.get(
-                    "partner", "view_partner", "change_partner"
-                ),
-                "method": "post",
+                "permissions": DashboardPermission.get("partner", "view_partner"),
             },
             {
                 "name": "dashboard:partner-delete",
@@ -560,6 +520,44 @@ class PartnerDashboardAccessTest(BaseViewPermissionTestCase):
                 "permissions": DashboardPermission.get(
                     "partner", "view_partner", "delete_partner"
                 ),
+            },
+            {
+                "name": "dashboard:partner-user-create",
+                "kwargs": {"partner_pk": partner.id},
+                "permissions": DashboardPermission.get(
+                    User._meta.app_label, "view_user", "add_user"
+                ),
+            },
+            {
+                "name": "dashboard:partner-user-select",
+                "kwargs": {"partner_pk": partner.id},
+                "permissions": DashboardPermission.get(
+                    User._meta.app_label, "view_user"
+                ),
+            },
+            {
+                "name": "dashboard:partner-user-link",
+                "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
+                "permissions": DashboardPermission.get("partner", "view_partner")
+                + DashboardPermission.get(
+                    User._meta.app_label, "view_user", "change_user"
+                ),
+            },
+            {
+                "name": "dashboard:partner-user-update",
+                "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
+                "permissions": DashboardPermission.get(
+                    User._meta.app_label, "view_user", "change_user"
+                ),
+            },
+            {
+                "name": "dashboard:partner-user-unlink",
+                "kwargs": {"partner_pk": partner.id, "user_pk": self.user.id},
+                "permissions": DashboardPermission.get("partner", "view_partner")
+                + DashboardPermission.get(
+                    User._meta.app_label, "view_user", "change_user"
+                ),
+                "method": "post",
             },
         ]
 

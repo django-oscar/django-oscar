@@ -26,31 +26,24 @@ class PartnersDashboardConfig(OscarDashboardConfig):
             "partner-create": DashboardPermission.get(
                 "partner", "view_partner", "add_partner"
             ),
-            "partner-manage": (
-                DashboardPermission.get("partner", "view_partner"),
-                DashboardPermission.get("partner", "view_partner", "change_partner"),
-            ),
+            "partner-manage": DashboardPermission.get("partner", "view_partner"),
             "partner-delete": DashboardPermission.get(
                 "partner", "view_partner", "delete_partner"
             ),
-            "partner-user-create": (
-                DashboardPermission.get("partner", "view_partner", "change_partner"),
-                DashboardPermission.get(User._meta.app_label, "view_user", "add_user"),
+            "partner-user-create": DashboardPermission.get(
+                User._meta.app_label, "view_user", "add_user"
             ),
             "partner-user-select": DashboardPermission.get(
-                "partner", "view_partner", "change_partner"
+                User._meta.app_label, "view_user"
             ),
             "partner-user-link": DashboardPermission.get(
-                "partner", "view_partner", "change_partner"
+                User._meta.app_label, "view_user", "change_user"
             ),
             "partner-user-unlink": DashboardPermission.get(
-                "partner", "view_partner", "change_partner"
+                User._meta.app_label, "view_user", "change_user"
             ),
-            "partner-user-update": (
-                DashboardPermission.get("partner", "view_partner", "change_partner"),
-                DashboardPermission.get(
-                    User._meta.app_label, "view_user", "change_user"
-                ),
+            "partner-user-update": DashboardPermission.get(
+                User._meta.app_label, "view_user", "change_user"
             ),
         }
 
