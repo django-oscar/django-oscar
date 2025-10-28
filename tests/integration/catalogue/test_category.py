@@ -306,3 +306,48 @@ class TestCategoryTemplateTags(TestCase):
         actual_categories = self.get_category_names(depth=1, parent=parent)
         expected_categories = {"Horror", "Comedy"}
         self.assertEqual(expected_categories, actual_categories)
+
+
+class TestBrowsableCategoriesManager(TestCase):
+    def setUp(self):
+        breadcrumbs = (
+            "Books > Fiction > Horror > Teen",
+            "Books > Fiction > Horror > Gothic",
+            "Books > Fiction > Comedy",
+            "Books > Non-fiction > Biography",
+            "Books > Non-fiction > Programming",
+            "Books > Children",
+        )
+        for trail in breadcrumbs:
+            create_from_breadcrumbs(trail)
+
+        # Exclude some categories from the menu
+        horror = Category.objects.get(name="Horror")
+        horror.exclude_from_menu = True
+        horror.save()
+
+        children = Category.objects.get(name="Children")
+        children.exclude_from_menu = True
+        children.save()
+
+        # Make some categories non-public
+        comedy = Category.objects.get(name="Comedy")
+        comedy.is_public = False
+        comedy.save()
+
+        non_fiction = Category.objects.get(name="Non-fiction")
+        non_fiction.is_public = False
+        non_fiction.save()
+
+    def test_browsable_menu_categories(self):
+        browsable_menu_categories = Category.objects.for_menu()
+        self.assertEqual(len(browsable_menu_categories), 2)
+        browsable_menu_names = [cat.name for cat in browsable_menu_categories]
+        self.assertNotIn("Horror", browsable_menu_names)
+        self.assertNotIn("Programming", browsable_menu_names)
+        self.assertNotIn("Non-fiction", browsable_menu_names)
+        self.assertNotIn("Biography", browsable_menu_names)
+        self.assertNotIn("Children", browsable_menu_names)
+        self.assertNotIn("Comedy", browsable_menu_names)
+        self.assertIn("Books", browsable_menu_names)
+        self.assertIn("Fiction", browsable_menu_names)
