@@ -1,0 +1,41 @@
+========================================
+Oscar 4.1 release notes
+========================================
+
+:release: 2025-10-28
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_4.1:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 4.1 is now compatible with django 5.2 and adds python 3.13 support.
+
+.. _new_in_4.1:
+
+What's new in Oscar 4.1
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Materialized View for Product Categories — Added a PostgreSQL materialized view to the ProductCategory model to significantly improve performance on range queries. ([#4436](https://github.com/django-oscar/django-oscar/pull/4436)) — by @viggo-devries
+- Menu Enhancements — Added the ability to exclude specific menu items and automatically exclude categories if any ancestor is excluded. ([#4491](https://github.com/django-oscar/django-oscar/pull/4491), [#4525](https://github.com/django-oscar/django-oscar/pull/4525)) — by @nathanhighbiza, @samar-hassan
+
+Fixes & Improvements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Registered the Notification model in Django admin for easier management. ([#4512](https://github.com/django-oscar/django-oscar/pull/4512)) — by @IslamMesha
+- Added a convenient “toggle all” option for product ranges. ([#4470](https://github.com/django-oscar/django-oscar/pull/4470)) — by @patrikniebur 
+- Added a robots noindex tag to anon_order.html to prevent indexing. ([#4500](https://github.com/django-oscar/django-oscar/pull/4500)) — by @zylog64 
+- Added an email verification check for anonymous order status. ([#4503](https://github.com/django-oscar/django-oscar/pull/4503)) — by @zylog64 
+- Fixed an issue where ThankYouView displayed the last order to superusers. ([#4501](https://github.com/django-oscar/django-oscar/pull/4501)) — by @crgwbr
+- Validated redirect_url values to prevent broken redirects. ([#4495](https://github.com/django-oscar/django-oscar/pull/4495)) — by @mfarhan943
+- Ensured Benefit.range gracefully handles None values. ([#4489](https://github.com/django-oscar/django-oscar/pull/4489)) — by @mfarhan943 
+- Corrected an if condition in product_list.html. ([#4460](https://github.com/django-oscar/django-oscar/pull/4460)) — by @alberto-765 
+- Fixed migration verbose name texts. ([#4469](https://github.com/django-oscar/django-oscar/pull/4469)) — by @joeyjurjens 
+- Ensured the admin logout button now uses POST, aligning with Django 5 security requirements. ([#4480](https://github.com/django-oscar/django-oscar/pull/4480)) — by @joeyjurjens 
+- Updated product value attributes when out of sync. ([#4509](https://github.com/django-oscar/django-oscar/pull/4509)) — by @samar-hassan 
+- Resolved duplicate tracking of order analytics events. ([#4520](https://github.com/django-oscar/django-oscar/pull/4520)) — by @samar-hassan 
+- Improved confirmation emails to use get_extra_context. ([#4521](https://github.com/django-oscar/django-oscar/pull/4521)) — by @mr-sphere
