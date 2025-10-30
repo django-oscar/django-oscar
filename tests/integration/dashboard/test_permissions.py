@@ -532,7 +532,7 @@ class PartnerDashboardAccessTest(BaseViewPermissionTestCase):
                 "name": "dashboard:partner-user-select",
                 "kwargs": {"partner_pk": partner.id},
                 "permissions": DashboardPermission.get(
-                    User._meta.app_label, "view_user"
+                    User._meta.app_label, "view_user", "change_user"
                 ),
             },
             {

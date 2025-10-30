@@ -9,7 +9,17 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 User = get_user_model()
 
 
-class TestPartnerDashboard(WebTestCase):
+class TestPartnerAccessDashboard(WebTestCase):
+    is_staff = True
+    permissions = DashboardPermission.get("partner", "view_partner")
+
+    def test_partner_access(self):
+        url = reverse("dashboard:partner-list")
+        list_page = self.get(url)
+        self.assertEqual(list_page.status_code, 200)
+
+
+class TestPartnerCreateUserDashboard(WebTestCase):
     is_staff = True
     permissions = [
         *DashboardPermission.get("partner", "view_partner"),
