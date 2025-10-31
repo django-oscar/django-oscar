@@ -18,7 +18,7 @@ class ReportsDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "reports-index": DashboardPermission.get("user_record"),
+            "reports-index": DashboardPermission.get("analytics", "view_userrecord"),
         }
 
     # pylint: disable=attribute-defined-outside-init

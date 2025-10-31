@@ -22,7 +22,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class TestOrderListDashboard(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order")
+    permissions = DashboardPermission.get("order", "view_order", "change_order")
 
     def test_redirects_to_detail_page(self):
         order = create_order()
@@ -121,7 +121,7 @@ class PermissionBasedDashboardOrderTestsNoStaff(PermissionBasedDashboardOrderTes
 
 class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTestsBase):
     is_staff = True
-    permissions = DashboardPermission.get("order")
+    permissions = DashboardPermission.get("order", "view_order")
 
     def test_staff_user_can_list_all_orders(self):
         orders = [self.order_in, self.order_out]
@@ -137,7 +137,7 @@ class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTests
 
 class TestOrderListSearch(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order")
+    permissions = DashboardPermission.get("order", "view_order")
 
     TEST_CASES = [
         ({}, []),
@@ -207,7 +207,9 @@ class TestOrderListSearch(WebTestCase):
 
 class TestOrderDetailPage(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order")
+    permissions = DashboardPermission.get(
+        "order", "view_order", "add_order", "change_order"
+    )
 
     def setUp(self):
         super().setUp()
@@ -264,7 +266,7 @@ class TestOrderDetailPage(WebTestCase):
 
 class TestChangingOrderStatus(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order")
+    permissions = DashboardPermission.get("order", "view_order", "change_order")
 
     def setUp(self):
         super().setUp()
@@ -293,7 +295,7 @@ class TestChangingOrderStatus(WebTestCase):
 
 class TestChangingOrderStatusFromFormOnOrderListView(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order")
+    permissions = DashboardPermission.get("order", "view_order", "change_order")
 
     def setUp(self):
         super().setUp()
@@ -324,7 +326,7 @@ class TestChangingOrderStatusFromFormOnOrderListView(WebTestCase):
 
 class LineDetailTests(WebTestCase):
     is_staff = True
-    permissions = DashboardPermission.get("order")
+    permissions = DashboardPermission.get("order", "view_order")
 
     def setUp(self):
         self.order = create_order()

@@ -12,7 +12,16 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 class TestCategoryDashboard(WebTestCase):
     def setUp(self):
         self.staff = UserFactory(is_staff=True)
-        add_permissions(self.staff, DashboardPermission.get("category"))
+        add_permissions(
+            self.staff,
+            DashboardPermission.get(
+                "catalogue",
+                "view_category",
+                "change_category",
+                "delete_category",
+                "add_category",
+            ),
+        )
         create_from_breadcrumbs("A > B > C")
 
     def test_redirects_to_main_dashboard_after_creating_top_level_category(self):

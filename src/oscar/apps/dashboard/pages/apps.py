@@ -18,10 +18,16 @@ class PagesDashboardConfig(OscarDashboardConfig):
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "page-list": DashboardPermission.get("flat_page"),
-            "page-create": DashboardPermission.get("flat_page"),
-            "page-update": DashboardPermission.get("flat_page"),
-            "page-delete": DashboardPermission.get("flat_page"),
+            "page-list": DashboardPermission.get("flatpages", "view_flatpage"),
+            "page-create": DashboardPermission.get(
+                "flatpages", "view_flatpage", "add_flatpage"
+            ),
+            "page-update": DashboardPermission.get(
+                "flatpages", "view_flatpage", "change_flatpage"
+            ),
+            "page-delete": DashboardPermission.get(
+                "flatpages", "view_flatpage", "delete_flatpage"
+            ),
         }
 
     # pylint: disable=attribute-defined-outside-init

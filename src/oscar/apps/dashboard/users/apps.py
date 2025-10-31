@@ -15,15 +15,26 @@ class UsersDashboardConfig(OscarDashboardConfig):
     ]
 
     def configure_permissions(self):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
         DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
         self.permissions_map = {
-            "users-index": DashboardPermission.get("user"),
-            "user-detail": DashboardPermission.get("user"),
-            "user-password-reset": DashboardPermission.get("user"),
-            "user-alert-list": DashboardPermission.get("user"),
-            "user-alert-delete": DashboardPermission.get("user"),
-            "user-alert-update": DashboardPermission.get("user"),
+            "users-index": DashboardPermission.get(User._meta.app_label, "view_user"),
+            "user-detail": DashboardPermission.get(User._meta.app_label, "view_user"),
+            "user-password-reset": DashboardPermission.get(
+                User._meta.app_label, "view_user", "change_user"
+            ),
+            "user-alert-list": DashboardPermission.get(
+                User._meta.app_label, "view_user"
+            ),
+            "user-alert-delete": DashboardPermission.get(
+                User._meta.app_label, "view_user", "delete_user"
+            ),
+            "user-alert-update": DashboardPermission.get(
+                User._meta.app_label, "view_user", "change_user"
+            ),
         }
 
     # pylint: disable=attribute-defined-outside-init

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
+from oscar.core.compat import get_user_model
 
 from oscar.core.loading import get_class
 from oscar.test.factories import UserFactory, create_order
