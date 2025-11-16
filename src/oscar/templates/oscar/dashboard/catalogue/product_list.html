@@ -1,6 +1,7 @@
 {% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
 {% load render_table from django_tables2 %}
+{% load dashboard_tags %}
 
 {% block body_class %}{{ block.super }} catalogue{% endblock %}
 
@@ -29,17 +30,20 @@
 
 {% block dashboard_content %}
     {% block create_product %}
-        <div class="table-header">
-            <h3><i class="fas fa-sitemap"></i> {% trans "Create new product" %}</h3>
-        </div>
-        <div class="card card-body">
-            <form id="create_product_with_class_form" action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
-                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=productclass_form %}
-                <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">
-                    <i class="fas fa-plus-circle"></i> {% trans "New Product" %}
-                </button>
-            </form>
-        </div>
+        {% has_dashboard_permission "catalogue-product-create" "catalogue_dashboard" as can_create_product %}
+        {% if can_create_product %}
+            <div class="table-header">
+                <h3><i class="fas fa-sitemap"></i> {% trans "Create new product" %}</h3>
+            </div>
+            <div class="card card-body">
+                <form id="create_product_with_class_form" action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
+                    {% include "oscar/dashboard/partials/form_fields_inline.html" with form=productclass_form %}
+                    <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">
+                        <i class="fas fa-plus-circle"></i> {% trans "New Product" %}
+                    </button>
+                </form>
+            </div>
+        {% endif %}
     {% endblock %}
 
     {% block search_products %}

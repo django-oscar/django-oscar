@@ -1,9 +1,12 @@
 from django.conf import settings
+from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext_lazy
 from django_tables2 import A, Column, LinkColumn, TemplateColumn
 
+from oscar.templatetags.dashboard_tags import has_dashboard_permission
 from oscar.core.loading import get_class, get_model
 
 DashboardTable = get_class("dashboard.tables", "DashboardTable")
@@ -11,6 +14,7 @@ Product = get_model("catalogue", "Product")
 Category = get_model("catalogue", "Category")
 AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 Option = get_model("catalogue", "Option")
+DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class ProductTable(DashboardTable):
@@ -48,6 +52,21 @@ class ProductTable(DashboardTable):
 
     icon = "fas fa-sitemap"
 
+    def render_title(self, value, record):
+        """
+        Return the product title as an edit link when the current request
+        user has the dashboard permission to change products; otherwise
+        return the plain title.
+        """
+        user = self.request.user
+        url = reverse("dashboard:catalogue-product", args=[record.pk])
+
+        if has_dashboard_permission(
+            {"user": user}, "catalogue-product", "catalogue_dashboard"
+        ):
+            return format_html('<a href="{}">{}</a>', url, value)
+        return value
+
     class Meta(DashboardTable.Meta):
         model = Product
         fields = ("upc", "is_public", "date_updated")
@@ -67,7 +86,7 @@ class ProductTable(DashboardTable):
 
 
 class CategoryTable(DashboardTable):
-    name = LinkColumn("dashboard:catalogue-category-update", args=[A("pk")])
+    name = Column()
     description = TemplateColumn(
         template_code='{{ record.description|default:""|striptags'
         '|cut:"&nbsp;"|truncatewords:6 }}'
@@ -88,6 +107,21 @@ class CategoryTable(DashboardTable):
 
     icon = "sitemap"
     caption = ngettext_lazy("%s Category", "%s Categories")
+
+    def render_name(self, value, record):
+        """
+        Return the category name as an edit link when the current request
+        user has the dashboard permission to change categories; otherwise
+        return the plain name.
+        """
+        user = self.request.user
+        url = reverse("dashboard:catalogue-category-update", args=[record.pk])
+
+        if has_dashboard_permission(
+            {"user": user}, "catalogue-category-update", "catalogue_dashboard"
+        ):
+            return format_html('<a href="{}">{}</a>', url, value)
+        return value
 
     class Meta(DashboardTable.Meta):
         model = Category
