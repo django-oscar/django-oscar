@@ -5,13 +5,16 @@
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% trans "Actions" %}
         </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{% url 'dashboard:catalogue-attribute-option-group-update' pk=record.id %}{% querystring %}">
-                {% trans "Edit Attribute Option Group" %}
-            </a>
-            <a class="dropdown-item" href="{% url 'dashboard:catalogue-attribute-option-group-delete' pk=record.id %}{% querystring %}">
-                {% trans "Delete" %}
-            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                {% load dashboard_tags %}
+                {% has_dashboard_permission "catalogue-attribute-option-group-update" "catalogue_dashboard" as can_update_group %}
+                {% has_dashboard_permission "catalogue-attribute-option-group-delete" "catalogue_dashboard" as can_delete_group %}
+                {% if can_update_group %}
+                <a class="dropdown-item" href="{% url 'dashboard:catalogue-attribute-option-group-update' pk=record.id %}{% querystring %}">{% trans "Edit Attribute Option Group" %}</a>
+                {% endif %}
+                {% if can_delete_group %}
+                <a class="dropdown-item" href="{% url 'dashboard:catalogue-attribute-option-group-delete' pk=record.id %}{% querystring %}">{% trans "Delete" %}</a>
+                {% endif %}
         </div>
     </div>
 </div>
