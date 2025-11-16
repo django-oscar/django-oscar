@@ -6,22 +6,35 @@
             {% trans "Actions" %}
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            {% load dashboard_tags %}
+            {% has_dashboard_permission "catalogue-category-update" "catalogue_dashboard" as can_update_category %}
+            {% has_dashboard_permission "catalogue-category-create-child" "catalogue_dashboard" as can_create_child_category %}
+            {% has_dashboard_permission "catalogue-category-detail-list" "catalogue_dashboard" as can_view_children %}
+            {% has_dashboard_permission "catalogue-category-delete" "catalogue_dashboard" as can_delete_category %}
+            {% if can_update_category %}
             <a class="dropdown-item" href="{% url 'dashboard:catalogue-category-update' pk=record.id %}">
                 {% trans "Edit category" %}
             </a>
+            {% endif %}
+            {% if can_create_child_category %}
             <a class="dropdown-item" href="{% url 'dashboard:catalogue-category-create-child' parent=record.pk %}">
                 {% trans "Add child category" %}
             </a>
+            {% endif %}
+            {% if can_view_children %}
             <a class="dropdown-item {% if not record.has_children %}disabled{% endif %}"
                href="{% if not record.has_children %}#{% else %}{% url 'dashboard:catalogue-category-detail-list' pk=record.pk %}{% endif %}">
-                {% trans "Edit children" %}
+                {% trans "View children" %}
             </a>
+            {% endif %}
             <a class="dropdown-item" href="{{ record.get_absolute_url }}">
                 {% trans "View on site" %}
             </a>
+            {% if can_delete_category %}
             <a class="dropdown-item" href="{% url 'dashboard:catalogue-category-delete' pk=record.id %}">
                 {% trans "Delete" %}
             </a>
+            {% endif %}
         </div>
     </div>
 </div>

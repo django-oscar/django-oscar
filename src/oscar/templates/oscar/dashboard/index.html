@@ -1,5 +1,6 @@
 {% extends 'oscar/dashboard/layout.html' %}
 {% load currency_filters %}
+{% load dashboard_tags %}
 {% load i18n %}
 
 {% block body_class %}{{ block.super }} orders home{% endblock %}
@@ -17,6 +18,11 @@
 {% endblock %}
 
 {% block dashboard_content %}
+{% has_dashboard_permission "order-list" "orders_dashboard" as can_view_orders %}
+{% has_dashboard_permission "product-list" "catalogue_dashboard" as can_view_products %}
+{% has_dashboard_permission "stock-alert-list" "partners_dashboard" as can_view_stock %}
+{% has_dashboard_permission "offer-list" "offers_dashboard" as can_view_offers %}
+{% has_dashboard_permission "voucher-list" "vouchers_dashboard" as can_view_vouchers %}
 
 <div class="table-header">
     <i class="fas fa-signal"></i> {% trans "Your Store Statistics" %}
@@ -82,9 +88,11 @@
     <div class="col-md-4">
         <table class="table table-striped table-bordered table-hover">
             <caption>
-                <a href="{% url 'dashboard:order-list' %}" class="btn btn-secondary float-right">
-                    <i class="fas fa-shopping-cart"></i> {% trans "Manage" %}
-                </a>
+                {% if can_view_orders %}
+                    <a href="{% url 'dashboard:order-list' %}" class="btn btn-secondary float-right">
+                        <i class="fas fa-shopping-cart"></i> {% trans "Manage" %}
+                    </a>
+                {% endif %}
                 <i class="fas fa-shopping-cart"></i> {% trans "Orders - All Time" %}
             </caption>
             <tr>
@@ -130,16 +138,20 @@
         <table class="table table-striped table-bordered table-hover">
             <caption>
                 <div class="btn-toolbar float-right">
-                    <div class="btn-group">
-                        <a href="{% url 'dashboard:catalogue-product-list' %}" class="btn btn-secondary">
-                            <i class="fas fa-sitemap"></i> {% trans "Manage" %}
-                        </a>
-                    </div>
-                    <div class="btn-group ml-2">
-                        <a href="{% url 'dashboard:stock-alert-list' %}" class="btn btn-secondary">
-                            <i class="fas fa-sitemap"></i> {% trans "View Stock Alerts" %}
-                        </a>
-                    </div>
+                    {% if can_view_products %}
+                        <div class="btn-group">
+                            <a href="{% url 'dashboard:catalogue-product-list' %}" class="btn btn-secondary">
+                                <i class="fas fa-sitemap"></i> {% trans "Manage" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if can_view_stock %}
+                        <div class="btn-group ml-2">
+                            <a href="{% url 'dashboard:stock-alert-list' %}" class="btn btn-secondary">
+                                <i class="fas fa-sitemap"></i> {% trans "View Stock Alerts" %}
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
                 <i class="fas fa-sitemap"></i> {% trans "Catalogue and stock" %}
             </caption>
@@ -158,7 +170,6 @@
         </table>
     </div>
     <div class="col-md-6">
-        {% if user.is_staff %}
         <table class="table table-striped table-bordered table-hover">
             <caption><i class="fas fa-gift"></i> {% trans "Offers, vouchers" %}</caption>
             {% for offer_map in offer_maps %}
@@ -172,7 +183,6 @@
                 <td class="col-md-2" >{{ total_vouchers }}</td>
             </tr>
         </table>
-        {% endif %}
     </div>
 </div>
 

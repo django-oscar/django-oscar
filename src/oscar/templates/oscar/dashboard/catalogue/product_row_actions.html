@@ -1,20 +1,29 @@
 {% load django_tables2 %}
+{% load dashboard_tags %}
 {% load i18n %}
+
+{% has_dashboard_permission "catalogue-product" "catalogue_dashboard" as can_change_product %}
+{% has_dashboard_permission "catalogue-product-delete" "catalogue_dashboard" as can_delete_product %}
+
 <div class="btn-toolbar">
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% trans "Actions" %}
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            {% if can_change_product %}
             <a class="dropdown-item" href="{% url 'dashboard:catalogue-product' pk=record.id %}{% querystring %}">
                 {% trans "Edit" %}
             </a>
+            {% endif %}
             <a class="dropdown-item" href="{{ record.get_absolute_url }}">
                 {% trans "View on site" %}
             </a>
+            {% if can_delete_product %}
             <a class="dropdown-item" href="{% url 'dashboard:catalogue-product-delete' pk=record.id %}">
                 {% trans "Delete" %}
             </a>
+            {% endif %}
         </div>
     </div>
 </div>
