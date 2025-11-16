@@ -61,7 +61,9 @@ class ProductTable(DashboardTable):
         user = self.request.user
         url = reverse("dashboard:catalogue-product", args=[record.pk])
 
-        if has_dashboard_permission({"user": user}, "catalogue-product", "catalogue_dashboard"):
+        if has_dashboard_permission(
+            {"user": user}, "catalogue-product", "catalogue_dashboard"
+        ):
             return format_html('<a href="{}">{}</a>', url, value)
         return value
 
@@ -115,7 +117,9 @@ class CategoryTable(DashboardTable):
         user = self.request.user
         url = reverse("dashboard:catalogue-category-update", args=[record.pk])
 
-        if has_dashboard_permission({"user": user}, "catalogue-category-update", "catalogue_dashboard"):
+        if has_dashboard_permission(
+            {"user": user}, "catalogue-category-update", "catalogue_dashboard"
+        ):
             return format_html('<a href="{}">{}</a>', url, value)
         return value
 
