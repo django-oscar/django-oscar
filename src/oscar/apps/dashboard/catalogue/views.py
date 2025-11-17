@@ -22,6 +22,7 @@ from oscar.views.generic import ObjectLookupView
     StockAlertSearchForm,
     AttributeOptionGroupForm,
     OptionForm,
+    CategorySearchForm,
 ) = get_classes(
     "dashboard.catalogue.forms",
     (
@@ -33,6 +34,7 @@ from oscar.views.generic import ObjectLookupView
         "StockAlertSearchForm",
         "AttributeOptionGroupForm",
         "OptionForm",
+        "CategorySearchForm",
     ),
 )
 (
@@ -577,13 +579,26 @@ class StockAlertListView(generic.ListView):
 class CategoryListView(SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     table_class = CategoryTable
+    form_class = CategorySearchForm
     context_table_name = "categories"
 
     def get_queryset(self):
-        return Category.get_root_nodes()
+        self.form = self.form_class(self.request.GET)
+
+        if not self.form.is_valid():
+            return Category.get_root_nodes()
+
+        name = self.form.cleaned_data.get("name")
+        if name:
+            queryset = Category.objects.filter(Q(name__icontains=name))
+        else:
+            return Category.get_root_nodes()
+
+        return queryset.distinct()
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
+        ctx["form"] = self.form
         ctx["child_categories"] = Category.get_root_nodes()
         return ctx
 
@@ -600,6 +615,7 @@ class CategoryDetailListView(SingleTableMixin, generic.DetailView):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
+        ctx["form"] = CategorySearchForm()
         ctx["child_categories"] = self.object.get_children()
         ctx["ancestors"] = self.object.get_ancestors_and_self()
         return ctx

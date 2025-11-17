@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext_lazy
@@ -67,7 +69,6 @@ class ProductTable(DashboardTable):
 
 
 class CategoryTable(DashboardTable):
-    name = LinkColumn("dashboard:catalogue-category-update", args=[A("pk")])
     description = TemplateColumn(
         template_code='{{ record.description|default:""|striptags'
         '|cut:"&nbsp;"|truncatewords:6 }}'
@@ -88,6 +89,14 @@ class CategoryTable(DashboardTable):
 
     icon = "sitemap"
     caption = ngettext_lazy("%s Category", "%s Categories")
+
+    def render_name(self, value, record):
+        url = reverse("dashboard:catalogue-category-update", args=[record.pk])
+        if self.request.GET.get("name"):
+            value = mark_safe(
+                record.full_name.replace(value, f"<strong>{value}</strong>")
+            )
+        return format_html('<a href="{}">{}</a>', url, value)
 
     class Meta(DashboardTable.Meta):
         model = Category

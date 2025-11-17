@@ -450,3 +450,12 @@ class OptionForm(forms.ModelForm):
     class Meta:
         model = Option
         fields = ["name", "type", "required", "order", "help_text", "option_group"]
+
+
+class CategorySearchForm(forms.Form):
+    name = forms.CharField(max_length=255, required=False, label=_("Name"))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data["name"] = cleaned_data["name"].strip()
+        return cleaned_data
