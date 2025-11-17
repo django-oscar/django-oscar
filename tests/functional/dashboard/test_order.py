@@ -268,6 +268,8 @@ class TestChangingOrderStatus(WebTestCase):
     is_staff = True
     permissions = DashboardPermission.get("order", "view_order", "change_order")
 
+    csrf_checks = False
+
     def setUp(self):
         super().setUp()
 
@@ -291,6 +293,41 @@ class TestChangingOrderStatus(WebTestCase):
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
+
+    def test_bulk_status_update_no_selections(self):
+        response = self.post(
+            reverse("dashboard:order-list"),
+            params={
+                "new_status": "C",
+                "action": "change_order_statuses",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual("B", self.reload_order().status)
+
+    def test_bulk_status_update_selection(self):
+        response = self.post(
+            reverse("dashboard:order-list"),
+            params={
+                "new_status": "C",
+                "selected_order": [self.order.pk],
+                "action": "change_order_statuses",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual("C", self.reload_order().status)
+
+    def test_bulk_status_update_all_across(self):
+        response = self.post(
+            reverse("dashboard:order-list"),
+            params={
+                "new_status": "C",
+                "select_across": "1",
+                "action": "change_order_statuses",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual("C", self.reload_order().status)
 
 
 class TestChangingOrderStatusFromFormOnOrderListView(WebTestCase):
