@@ -69,7 +69,7 @@
     {% if orders %}
         <form method="post" class="order_table" id="orders_form">
             {% csrf_token %}
-            {% include "oscar/dashboard/partials/bulk_actions.html" %}
+            {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=object_list.count num_pages=paginator.num_pages total_count=paginator.count module="Orders" %}
 
             {% block order_list %}
             <table class="table table-striped table-bordered table-hover">

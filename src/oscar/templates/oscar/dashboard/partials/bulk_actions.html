@@ -5,16 +5,14 @@
         <input type="hidden" name="select_across" value="0"/>
         {% block actions-counter %}
             <div class="bulk-actions ml-3">
-                {% with count=object_list.count %}
-                    <span class="action-counter" style="display:none;" data-objects-count="{{ count }}">
-                        {% blocktranslate with count=count %}<span class="selected-records">0</span> of <span class="page-records-count">{{ count }}</span> selected{% endblocktranslate %}
-                    </span>
-                {% endwith %}
-                {% if paginator.num_pages > 1 %}
-                <span class="all" style="display:none;">{% blocktranslate with count=paginator.count %}All {{ count }} selected{% endblocktranslate %}</span>
+                <span class="action-counter" style="display:none;" data-objects-count="{{ page_objects_count }}">
+                    {% blocktranslate with count=page_objects_count %}<span class="selected-records">0</span> of <span class="page-records-count">{{ count }}</span> selected{% endblocktranslate %}
+                </span>
+                {% if num_pages > 1 %}
+                <span class="all" style="display:none;">{% blocktranslate with count=total_count %}All {{ count }} selected{% endblocktranslate %}</span>
                 <span class="question ml-3" style="display:none;">
                     <a role="button" href="#" title="{% trans 'Click here to select the objects across all pages' %}">
-                        {% blocktranslate with count=paginator.count module=view.context_object_name %}
+                        {% blocktranslate with count=total_count module=module %}
                             Select all {{ count }} {{ module }}
                         {% endblocktranslate %}
                     </a>
