@@ -585,16 +585,13 @@ class CategoryListView(SingleTableView):
     def get_queryset(self):
         self.form = self.form_class(self.request.GET)
 
-        if not self.form.is_valid():
-            return Category.get_root_nodes()
+        if self.form.is_valid():
+            name = self.form.cleaned_data.get("name")
+            if name:
+                queryset = Category.objects.filter(Q(name__icontains=name))
+                return queryset.distinct()
 
-        name = self.form.cleaned_data.get("name")
-        if name:
-            queryset = Category.objects.filter(Q(name__icontains=name))
-        else:
-            return Category.get_root_nodes()
-
-        return queryset.distinct()
+        return Category.get_root_nodes()
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
