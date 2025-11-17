@@ -366,15 +366,15 @@ var oscar = (function(o, $) {
             },
         },
         bulk_actions: (function() {
-            const $allInputs = $('input[name^="selected_"]');
-            const $countMessage = $('.bulk-actions .action-counter');
-            const $allSelectedMessage = $('.bulk-actions .all');
-            const $selectAllQuestion = $('.bulk-actions .question');
-            const $clearSelections = $('.bulk-actions .clear');
-            const $selectionCount = $('.bulk-actions .selected-records');
-            const recordsInPage = $countMessage.data("objects-count");
+            var $allInputs = $('input[name^="selected_"]');
+            var $countMessage = $('.bulk-actions .action-counter');
+            var $allSelectedMessage = $('.bulk-actions .all');
+            var $selectAllQuestion = $('.bulk-actions .question');
+            var $clearSelections = $('.bulk-actions .clear');
+            var $selectionCount = $('.bulk-actions .selected-records');
+            var recordsInPage = $countMessage.data("objects-count");
 
-            const reset = function() {
+            function reset() {
                 $countMessage.hide();
                 $allSelectedMessage.hide();
                 $selectAllQuestion.hide();
@@ -406,16 +406,16 @@ var oscar = (function(o, $) {
                 $selectionCount.html(num);
             }
 
-            const addToggleAll = function() {
-                const $table = $('form table');
-                const $selectAll = $('<input type="checkbox" name="select_all" />').css({
+            function addToggleAll() {
+                var $table = $('form table');
+                var $selectAll = $('<input type="checkbox" name="select_all" />').css({
                     'margin-right': '5px',
                     'vertical-align': 'top'
                 });
                 $('th:first', $table).prepend($selectAll);
 
                 $selectAll.on("change", function(){
-                    const selectAllChecked = $(this).is(':checked');
+                    var selectAllChecked = $(this).is(':checked');
                     $table.find('tr td input[name^="selected_"]').prop(
                         "checked", selectAllChecked
                     );
@@ -430,11 +430,11 @@ var oscar = (function(o, $) {
                 });
             }
 
-            const checkEvents = function() {
+            function checkEvents() {
                 $allInputs.on("change", function() {
-                    const allAcrossSelected = $('input[name="select_across"]').val() === '1';
-                    const selectAllChecked = $('input[name="select_all"]').is(':checked');
-                    const currentSelections = $allInputs.filter(':checked').length;
+                    var allAcrossSelected = $('input[name="select_across"]').val() === '1';
+                    var selectAllChecked = $('input[name="select_all"]').is(':checked');
+                    var currentSelections = $allInputs.filter(':checked').length;
                     updateCounter(currentSelections);
 
                     if (allAcrossSelected || selectAllChecked) {
@@ -466,14 +466,15 @@ var oscar = (function(o, $) {
                     reset();
                 });
             }
-            const init = function() {
+
+            var init = function() {
                 addToggleAll();
                 checkEvents();
-            }
+            };
 
             return {
                 "init": init
-            }
+            };
         }()),
         reordering: (function() {
             var options = {
