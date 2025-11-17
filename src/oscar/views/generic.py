@@ -46,6 +46,7 @@ class BulkEditMixin:
     """
 
     action_param = "action"
+    select_across_param = "select_across"
 
     # Permitted methods that can be used to act on the selected objects
     actions = None
@@ -67,20 +68,25 @@ class BulkEditMixin:
         # designated by the 'action' parameter.  The action has to be in a
         # whitelist to avoid security issues.
         action = request.POST.get(self.action_param, "").lower()
+        all_selections = self.request.POST.get(self.select_across_param, "").lower()
         if not self.actions or action not in self.actions:
             messages.error(self.request, _("Invalid action"))
             return redirect(self.get_error_url(request))
 
-        ids = request.POST.getlist("selected_%s" % self.get_checkbox_object_name())
-        ids = list(map(int, ids))
-        if not ids:
-            messages.error(
-                self.request,
-                _("You need to select some %ss") % self.get_checkbox_object_name(),
-            )
-            return redirect(self.get_error_url(request))
+        if all_selections == "1":
+            objects = self.get_queryset()
+        else:
+            ids = request.POST.getlist("selected_%s" % self.get_checkbox_object_name())
+            ids = list(map(int, ids))
+            if not ids:
+                messages.error(
+                    self.request,
+                    _("You need to select some %ss") % self.get_checkbox_object_name(),
+                )
+                return redirect(self.get_error_url(request))
 
-        objects = self.get_objects(ids)
+            objects = self.get_objects(ids)
+
         return getattr(self, action)(request, objects)
 
     def get_objects(self, ids):

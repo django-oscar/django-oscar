@@ -364,20 +364,117 @@ var oscar = (function(o, $) {
                     $('.nav-tabs a[href="' + location.hash + '"]').tab('show');
                 }
             },
-            initTable: function() {
-                var table = $('form table'),
-                    input = $('<input type="checkbox" />').css({
-                        'margin-right': '5px',
-                        'vertical-align': 'top'
-                    });
-                $('th:first', table).prepend(input);
-                $(input).change(function(){
-                    $('tr', table).each(function() {
-                        $('td:first input', this).prop("checked", $(input).is(':checked'));
-                    });
+        },
+        bulk_actions: (function() {
+            const $allInputs = $('input[name^="selected_"]');
+            const $countMessage = $('.bulk-actions .action-counter');
+            const $allSelectedMessage = $('.bulk-actions .all');
+            const $selectAllQuestion = $('.bulk-actions .question');
+            const $clearSelections = $('.bulk-actions .clear');
+            const $selectionCount = $('.bulk-actions .selected-records');
+            const recordsInPage = $countMessage.data("objects-count");
+
+            const reset = function() {
+                $countMessage.hide();
+                $allSelectedMessage.hide();
+                $selectAllQuestion.hide();
+                $clearSelections.hide();
+            }
+
+            function showQuestion() {
+                $countMessage.show();
+                $allSelectedMessage.hide();
+                $clearSelections.hide();
+                $selectAllQuestion.show();
+            }
+
+            function showCounter() {
+                $countMessage.show();
+                $allSelectedMessage.hide();
+                $clearSelections.hide();
+                $selectAllQuestion.hide();
+            }
+
+            function allAcrossSelected() {
+                $countMessage.hide();
+                $allSelectedMessage.show();
+                $clearSelections.show();
+                $selectAllQuestion.hide();
+            }
+
+            function updateCounter(num) {
+                $selectionCount.html(num);
+            }
+
+            const addToggleAll = function() {
+                const $table = $('form table');
+                const $selectAll = $('<input type="checkbox" name="select_all" />').css({
+                    'margin-right': '5px',
+                    'vertical-align': 'top'
+                });
+                $('th:first', $table).prepend($selectAll);
+
+                $selectAll.on("change", function(){
+                    const selectAllChecked = $(this).is(':checked');
+                    $table.find('tr td input[name^="selected_"]').prop(
+                        "checked", selectAllChecked
+                    );
+                    $('input[name="select_across"]').val('0');
+                    if (selectAllChecked) {
+                        updateCounter(recordsInPage);
+                        showQuestion();
+                    } else {
+                        updateCounter(0);
+                        reset();
+                    }
                 });
             }
-        },
+
+            const checkEvents = function() {
+                $allInputs.on("change", function() {
+                    const allAcrossSelected = $('input[name="select_across"]').val() === '1';
+                    const selectAllChecked = $('input[name="select_all"]').is(':checked');
+                    const currentSelections = $allInputs.filter(':checked').length;
+                    updateCounter(currentSelections);
+
+                    if (allAcrossSelected || selectAllChecked) {
+                        $('input[name="select_all"]').prop("checked", false);
+                        $('input[name="select_across"]').val('0');
+                        showCounter();
+                    } else if (currentSelections === 0) {
+                        reset();
+                    } else if (currentSelections === recordsInPage) {
+                        $('input[name="select_all"]').prop("checked", true);
+                        showQuestion();
+                    } else {
+                        showCounter();
+                    }
+                });
+
+                $selectAllQuestion.find("a").on("click", function(e) {
+                    e.preventDefault();
+                    allAcrossSelected();
+                    $('input[name="select_across"]').val('1');
+                });
+
+                $clearSelections.find("a").on("click", function(e) {
+                    e.preventDefault();
+                    $allInputs.prop("checked", false);
+                    $('input[name="select_all"]').prop("checked", false);
+                    $('input[name="select_across"]').val('0');
+                    updateCounter(0);
+                    reset();
+                });
+            }
+            const init = function() {
+                addToggleAll();
+                checkEvents();
+            }
+
+            return {
+                "init": init
+            }
+        }()),
         reordering: (function() {
             var options = {
                     handle: '.btn-handle',
