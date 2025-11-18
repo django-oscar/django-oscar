@@ -366,13 +366,13 @@ var oscar = (function(o, $) {
             },
         },
         bulk_actions: (function() {
-            var $allInputs = $('input[name^="selected_"]');
-            var $countMessage = $('.bulk-actions .action-counter');
-            var $allSelectedMessage = $('.bulk-actions .all');
-            var $selectAllQuestion = $('.bulk-actions .question');
-            var $clearSelections = $('.bulk-actions .clear');
-            var $selectionCount = $('.bulk-actions .selected-records');
-            var recordsInPage = $countMessage.data("objects-count");
+            var $allInputs, 
+                $countMessage, 
+                $allSelectedMessage, 
+                $selectAllQuestion, 
+                $clearSelections, 
+                $selectionCount, 
+                recordsInPage;
 
             function reset() {
                 $countMessage.hide();
@@ -468,6 +468,13 @@ var oscar = (function(o, $) {
             }
 
             var init = function() {
+                $allInputs = $('input[name^="selected_"]');
+                $countMessage = $('.bulk-actions .action-counter');
+                $allSelectedMessage = $('.bulk-actions .all');
+                $selectAllQuestion = $('.bulk-actions .question');
+                $clearSelections = $('.bulk-actions .clear');
+                $selectionCount = $('.bulk-actions .selected-records');
+                recordsInPage = $countMessage.data("objects-count");
                 addToggleAll();
                 checkEvents();
             };
