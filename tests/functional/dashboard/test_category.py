@@ -10,6 +10,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class TestCategoryDashboard(WebTestCase):
     is_staff = True
+    csrf_checks = False
     permissions = DashboardPermission.get(
         "catalogue",
         "view_product",
@@ -61,3 +62,25 @@ class TestCategoryDashboard(WebTestCase):
         page = self.get("%s?name=B" % reverse("dashboard:catalogue-category-list"))
         category = Category.objects.get(name="B")
         self.assertIn(category, page.context["category_list"])
+
+    def test_make_public(self):
+        Category.objects.update(is_public=False)
+        a = Category.objects.get(name="A")
+        params = {"action": "make_public", "selected_category": [a.id]}
+        response = self.post(
+            reverse("dashboard:catalogue-category-list"), params=params
+        )
+        self.assertIsRedirect(response)
+        a.refresh_from_db()
+        self.assertTrue(a.is_public)
+
+    def test_make_non_public(self):
+        b = Category.objects.get(name="B")
+        params = {"action": "make_non_public", "selected_category": [b.id]}
+        response = self.post(
+            reverse("dashboard:catalogue-category-detail-list", args=(b.pk,)),
+            params=params,
+        )
+        self.assertIsRedirect(response)
+        b.refresh_from_db()
+        self.assertFalse(b.is_public)

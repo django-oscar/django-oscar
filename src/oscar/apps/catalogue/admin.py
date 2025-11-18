@@ -52,7 +52,7 @@ class ProductAdmin(admin.ModelAdmin):
         "attribute_summary",
         "date_created",
     )
-    list_filter = ["structure", "is_discountable"]
+    list_filter = ["structure", "is_discountable", "is_public"]
     raw_id_fields = ["parent"]
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
     prepopulated_fields = {"slug": ("title",)}
@@ -91,6 +91,7 @@ class AttributeOptionGroupAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(TreeAdmin):
     form = movenodeform_factory(Category)
+    list_filter = ["is_public"]
     list_display = ("name", "slug")
 
 

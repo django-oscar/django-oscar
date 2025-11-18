@@ -48,7 +48,7 @@
         <div class="table-header">
             <h3><i class="fas fa-search"></i> {% trans "Search Categories" %}</h3>
         </div>
-        <div class="card card-body">
+        <div class="card card-body mb-0">
             <form id="search_category_form" method="get" class="form-inline" action="{% url 'dashboard:catalogue-category-list' %}">
                 {% comment %}
                     Add the current query string to the search form so that the
@@ -67,8 +67,13 @@
         </div>
     {% endblock %}
 
-    {% if category_list %}
-        {% render_table categories %}
+    {% if category_list or child_categories %}
+        <form method="post">
+            {% csrf_token %}
+            {% trans "Categories" as module_label %}
+            {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=categories.page.object_list.data.count num_pages=categories.paginator.num_pages total_count=categories.paginator.count module=module_label %}
+            {% render_table categories %}
+        </form>
     {% elif request.GET.name %}
         <p>{% trans "No categories found." %}</p>
     {% endif %}
@@ -77,3 +82,8 @@
         <p>{% trans "There are no categories." %}</p>
     {% endif %}
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.dashboard.bulk_actions.init();
+{% endblock onbodyload %}

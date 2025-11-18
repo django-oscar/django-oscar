@@ -1,0 +1,24 @@
+{% extends 'oscar/dashboard/table.html' %}
+{% load i18n %}
+
+{% block table.caption %}
+    {{ block.super }}
+    <div class="float-right">
+        <div class="form-inline">
+            <i class="fas fa-sync-alt mr-1"></i> <span class="mr-2">{% trans "Bulk Actions" %}</span>
+            <label class="mr-3">{% trans "With selected categories:" %}</label>
+
+            <div class="form-check mr-2">
+                <input id="make_public_check" class="form-check-input" type="radio" name="action" value="make_public" />
+                <label class="form-check-label" for="make_public_check">{% trans "Make public" %}</label>
+            </div>
+
+            <div class="form-check mr-2">
+                <input id="make_non_public_check" class="form-check-input" type="radio" name="action" value="make_non_public" />
+                <label class="form-check-label" for="make_non_public_check"> {% trans "Make non-public" %}</label>
+            </div>
+
+            <input type="submit" value="{% trans 'Go!' %}" class="btn btn-primary" />
+        </div>
+    </div>
+{% endblock %}

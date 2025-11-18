@@ -16,6 +16,10 @@ Option = get_model("catalogue", "Option")
 
 
 class ProductTable(DashboardTable):
+    checkbox = TemplateColumn(
+        verbose_name="",
+        template_name="oscar/dashboard/catalogue/product_row_checkbox.html",
+    )
     title = TemplateColumn(
         verbose_name=_("Title"),
         template_name="oscar/dashboard/catalogue/product_row_title.html",
@@ -52,8 +56,10 @@ class ProductTable(DashboardTable):
 
     class Meta(DashboardTable.Meta):
         model = Product
+        template_name = "oscar/dashboard/catalogue/product_table.html"
         fields = ("upc", "is_public", "date_updated")
         sequence = (
+            "checkbox",
             "title",
             "upc",
             "image",
@@ -69,6 +75,10 @@ class ProductTable(DashboardTable):
 
 
 class CategoryTable(DashboardTable):
+    checkbox = TemplateColumn(
+        verbose_name="",
+        template_name="oscar/dashboard/catalogue/category_row_checkbox.html",
+    )
     description = TemplateColumn(
         template_code='{{ record.description|default:""|striptags'
         '|cut:"&nbsp;"|truncatewords:6 }}'
@@ -100,8 +110,9 @@ class CategoryTable(DashboardTable):
 
     class Meta(DashboardTable.Meta):
         model = Category
+        template_name = "oscar/dashboard/catalogue/category_table.html"
         fields = ("name", "description", "is_public")
-        sequence = ("name", "description", "...", "is_public", "actions")
+        sequence = ("checkbox", "name", "description", "...", "is_public", "actions")
 
 
 class AttributeOptionGroupTable(DashboardTable):

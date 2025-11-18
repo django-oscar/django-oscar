@@ -35,6 +35,7 @@ DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 class TestCatalogueViews(WebTestCase):
     is_staff = True
+    csrf_checks = False
     permissions = DashboardPermission.get(
         "catalogue", "view_product", "view_category"
     ) + DashboardPermission.get("partner", "view_stockalert")
@@ -109,6 +110,22 @@ class TestCatalogueViews(WebTestCase):
             row.record for row in page.context["products"].page.object_list
         ]
         self.assertEqual(products_on_page, [product])
+
+    def test_make_public(self):
+        a = create_product(upc="A", is_public=False)
+        params = {"action": "make_public", "selected_product": [a.id]}
+        response = self.post(reverse("dashboard:catalogue-product-list"), params=params)
+        self.assertIsRedirect(response)
+        a.refresh_from_db()
+        self.assertTrue(a.is_public)
+
+    def test_make_non_public(self):
+        b = create_product(upc="B")
+        params = {"action": "make_non_public", "selected_product": [b.id]}
+        response = self.post(reverse("dashboard:catalogue-product-list"), params=params)
+        self.assertIsRedirect(response)
+        b.refresh_from_db()
+        self.assertFalse(b.is_public)
 
 
 class TestAStaffUser(WebTestCase):

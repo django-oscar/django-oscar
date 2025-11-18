@@ -46,7 +46,7 @@
         <div class="table-header">
             <h3><i class="fas fa-search"></i> {% trans "Search Products" %}</h3>
         </div>
-        <div class="card card-body">
+        <div class="card card-body mb-0">
             <form id="search_product_form" method="get" class="form-inline">
                 {% comment %}
                     Add the current query string to the search form so that the
@@ -68,6 +68,8 @@
         {% block product_list %}
             <form method="post">
                 {% csrf_token %}
+                {% trans "Products" as module_label %}
+                {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=products.page.object_list.data.count num_pages=products.paginator.num_pages total_count=products.paginator.count module=module_label %}
                 {% render_table products %}
             </form>
             <div class="modal fade" id="product-image-modal" tabindex="-1" role="dialog">
@@ -93,4 +95,5 @@
 {% block onbodyload %}
     {{ block.super }}
     oscar.dashboard.product_lists.init();
+    oscar.dashboard.bulk_actions.init();
 {% endblock onbodyload %}
