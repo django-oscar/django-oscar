@@ -4,20 +4,20 @@
     <div class="bulk-action-container d-flex flex-column justify-content-center">
         <input type="hidden" name="select_across" value="0"/>
         {% block actions-counter %}
-            <div class="bulk-actions ml-3">
+            <div class="bulk-actions mx-3">
                 <span class="action-counter" style="display:none;" data-objects-count="{{ page_objects_count }}">
                     {% blocktranslate with count=page_objects_count %}<span class="selected-records">0</span> of <span class="page-records-count">{{ count }}</span> selected{% endblocktranslate %}
                 </span>
                 {% if num_pages > 1 %}
                 <span class="all" style="display:none;">{% blocktranslate with count=total_count %}All {{ count }} selected{% endblocktranslate %}</span>
-                <span class="question ml-3" style="display:none;">
+                <span class="question mx-3" style="display:none;">
                     <a role="button" href="#" title="{% trans 'Click here to select the objects across all pages' %}">
                         {% blocktranslate with count=total_count module=module %}
                             Select all {{ count }} {{ module }}
                         {% endblocktranslate %}
                     </a>
                 </span>
-                <span class="clear ml-3" style="display:none;"><a role="button" href="#">{% trans "Clear selection" %}</a></span>
+                <span class="clear mx-3" style="display:none;"><a role="button" href="#">{% trans "Clear selection" %}</a></span>
                 {% endif %}
             </div>
         {% endblock actions-counter %}
