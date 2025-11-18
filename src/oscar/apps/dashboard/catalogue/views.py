@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
-from oscar.core.loading import get_class, get_classes, get_model
+from oscar.core.loading import get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 
 (
@@ -63,8 +63,9 @@ ProductTable, CategoryTable, AttributeOptionGroupTable, OptionTable = get_classe
     "dashboard.views",
     ("PopUpWindowCreateMixin", "PopUpWindowUpdateMixin", "PopUpWindowDeleteMixin"),
 )
-PartnerProductFilterMixin = get_class(
-    "dashboard.catalogue.mixins", "PartnerProductFilterMixin"
+PartnerProductFilterMixin, PublicVisibilityUpdateMixin = get_classes(
+    "dashboard.catalogue.mixins",
+    ("PartnerProductFilterMixin", "PublicVisibilityUpdateMixin"),
 )
 Product = get_model("catalogue", "Product")
 Category = get_model("catalogue", "Category")
@@ -78,13 +79,16 @@ AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 Option = get_model("catalogue", "Option")
 
 
-class ProductListView(PartnerProductFilterMixin, SingleTableView):
+class ProductListView(
+    PublicVisibilityUpdateMixin, PartnerProductFilterMixin, SingleTableView
+):
     """
     Dashboard view of the product list.
     Supports the permission-based dashboard.
     """
 
     template_name = "oscar/dashboard/catalogue/product_list.html"
+    model = Product
     form_class = ProductSearchForm
     productclass_form_class = ProductClassSelectForm
     table_class = ProductTable
@@ -576,8 +580,9 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(SingleTableView):
+class CategoryListView(PublicVisibilityUpdateMixin, SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"
+    model = Category
     table_class = CategoryTable
     form_class = CategorySearchForm
     context_table_name = "categories"
@@ -600,7 +605,9 @@ class CategoryListView(SingleTableView):
         return ctx
 
 
-class CategoryDetailListView(SingleTableMixin, generic.DetailView):
+class CategoryDetailListView(
+    PublicVisibilityUpdateMixin, SingleTableMixin, generic.DetailView
+):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category
     context_object_name = "category"
