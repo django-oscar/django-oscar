@@ -72,7 +72,9 @@
             {% csrf_token %}
             {% trans "Categories" as module_label %}
             {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=categories.page.object_list.data.count num_pages=categories.paginator.num_pages total_count=categories.paginator.count module=module_label %}
-            {% render_table categories %}
+            {% block category_table %}
+                {% render_table categories %}
+            {% endblock category_table %}
         </form>
     {% elif request.GET.name %}
         <p>{% trans "No categories found." %}</p>
