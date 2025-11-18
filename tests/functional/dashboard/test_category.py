@@ -3,25 +3,24 @@ from django.urls import reverse
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.apps.catalogue.models import Category
 from oscar.core.loading import get_class
-from oscar.test.factories import UserFactory
-from oscar.test.testcases import WebTestCase, add_permissions
+from oscar.test.testcases import WebTestCase
 
 DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class TestCategoryDashboard(WebTestCase):
+    is_staff = True
+    permissions = DashboardPermission.get(
+        "catalogue",
+        "view_product",
+        "view_category",
+        "delete_category",
+        "add_category",
+    )
+
     def setUp(self):
-        self.staff = UserFactory(is_staff=True)
-        add_permissions(
-            self.staff,
-            DashboardPermission.get(
-                "catalogue",
-                "view_category",
-                "change_category",
-                "delete_category",
-                "add_category",
-            ),
-        )
+        super().setUp()
+        self.staff = self.user
         create_from_breadcrumbs("A > B > C")
 
     def test_redirects_to_main_dashboard_after_creating_top_level_category(self):
@@ -57,3 +56,8 @@ class TestCategoryDashboard(WebTestCase):
         category_add = category_index.click("Create new category")
         response = category_add.forms["create_update_category_form"].submit()
         self.assertEqual(200, response.status_code)
+
+    def test_name_filter(self):
+        page = self.get("%s?name=B" % reverse("dashboard:catalogue-category-list"))
+        category = Category.objects.get(name="B")
+        self.assertIn(category, page.context["category_list"])

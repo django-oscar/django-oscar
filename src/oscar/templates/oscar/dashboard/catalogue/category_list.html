@@ -30,19 +30,48 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-    <div class="alert alert-info">
-        <div>{% trans "You are editing:" %}
-            <strong><a href="{% url 'dashboard:catalogue-category-list' %}">{% trans "Home" %}</a></strong>
-            {% if ancestors %}
-                &gt;
-                {% for ancestor in ancestors %}
-                    <strong><a href="{% url 'dashboard:catalogue-category-detail-list' pk=ancestor.pk %}">{{ ancestor.name }}</a></strong>{% if not forloop.last %} > {% endif %}
-                {% endfor %}
-            {% endif %}
+    {% if not request.GET.name %}
+        <div class="alert alert-info">
+            <div>{% trans "You are editing:" %}
+                <strong><a href="{% url 'dashboard:catalogue-category-list' %}">{% trans "Home" %}</a></strong>
+                {% if ancestors %}
+                    &gt;
+                    {% for ancestor in ancestors %}
+                        <strong><a href="{% url 'dashboard:catalogue-category-detail-list' pk=ancestor.pk %}">{{ ancestor.name }}</a></strong>{% if not forloop.last %} > {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
-    {% render_table categories %}
+    {% block search_categories %}
+        <div class="table-header">
+            <h3><i class="fas fa-search"></i> {% trans "Search Categories" %}</h3>
+        </div>
+        <div class="card card-body">
+            <form id="search_category_form" method="get" class="form-inline" action="{% url 'dashboard:catalogue-category-list' %}">
+                {% comment %}
+                    Add the current query string to the search form so that the
+                    sort order is not reset when searching.
+                {% endcomment %}
+                {% for name, value in request.GET.items %}
+                    {% if name not in form.fields %}
+                        <input type="hidden" name="{{ name }}" value="{{ value }}"/>
+                    {% endif %}
+                {% endfor %}
+
+                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
+                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}"><i class="fas fa-search"></i> {% trans "Search" %}</button>
+                <a href="{% url 'dashboard:catalogue-category-list' %}" class="btn btn-secondary ml-1">{% trans "Reset" %}</a>
+            </form>
+        </div>
+    {% endblock %}
+
+    {% if category_list %}
+        {% render_table categories %}
+    {% elif request.GET.name %}
+        <p>{% trans "No categories found." %}</p>
+    {% endif %}
 
     {% if not child_categories %}
         <p>{% trans "There are no categories." %}</p>

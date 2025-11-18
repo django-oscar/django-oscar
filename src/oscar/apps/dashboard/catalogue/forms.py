@@ -94,12 +94,6 @@ class ProductSearchForm(forms.Form):
     upc = forms.CharField(max_length=64, required=False, label=_("UPC"))
     title = forms.CharField(max_length=255, required=False, label=_("Product title"))
 
-    def clean(self):
-        cleaned_data = super().clean()
-        cleaned_data["upc"] = cleaned_data["upc"].strip()
-        cleaned_data["title"] = cleaned_data["title"].strip()
-        return cleaned_data
-
 
 class StockRecordForm(forms.ModelForm):
     def __init__(self, product_class, user, *args, **kwargs):
@@ -450,3 +444,7 @@ class OptionForm(forms.ModelForm):
     class Meta:
         model = Option
         fields = ["name", "type", "required", "order", "help_text", "option_group"]
+
+
+class CategorySearchForm(forms.Form):
+    name = forms.CharField(max_length=255, required=False, label=_("Name"))
