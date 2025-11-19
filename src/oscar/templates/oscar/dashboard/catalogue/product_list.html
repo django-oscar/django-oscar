@@ -68,9 +68,13 @@
         {% block product_list %}
             <form method="post">
                 {% csrf_token %}
-                {% trans "Products" as module_label %}
-                {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=products.page.object_list.data.count num_pages=products.paginator.num_pages total_count=products.paginator.count module=module_label %}
-                {% render_table products %}
+                {% block bulk_action %}
+                    {% trans "Products" as module_label %}
+                    {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=products.page.object_list.data.count num_pages=products.paginator.num_pages total_count=products.paginator.count module=module_label %}
+                {% endblock bulk_action %}
+                {% block product_table %}
+                    {% render_table products %}
+                {% endblock product_table %}
             </form>
             <div class="modal fade" id="product-image-modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
