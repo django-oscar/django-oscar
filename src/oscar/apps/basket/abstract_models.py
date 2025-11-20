@@ -1053,7 +1053,7 @@ class AbstractLine(models.Model):
 
         # Compare current price to price when added to basket
         current_price_incl_tax = self.purchase_info.price.incl_tax
-        if current_price_incl_tax != self.price_incl_tax:
+        if round(current_price_incl_tax, 2) != round(self.price_incl_tax, 2):
             product_prices = {
                 "product": self.product.get_title(),
                 "old_price": currency(self.price_incl_tax, self.price_currency),
