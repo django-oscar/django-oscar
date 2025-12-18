@@ -46,6 +46,7 @@ class ConditionalOfferAdmin(admin.ModelAdmin):
         ),
         ("Usage", {"fields": ("total_discount", "num_orders")}),
     )
+    search_fields = ("name", "description")
 
 
 admin.site.register(ConditionalOffer, ConditionalOfferAdmin)

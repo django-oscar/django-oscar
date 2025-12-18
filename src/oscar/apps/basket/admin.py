@@ -38,6 +38,12 @@ class LineAdmin(admin.ModelAdmin):
         "price_excl_tax",
         "quantity",
     )
+    search_fields = (
+        "basket__id",
+        "basket__owner__email",
+        "product__title",
+        "product__upc",
+    )
 
 
 class BasketAdmin(admin.ModelAdmin):
@@ -53,8 +59,20 @@ class BasketAdmin(admin.ModelAdmin):
     )
     readonly_fields = ("owner", "date_merged", "date_submitted")
     inlines = [LineInline]
+    search_fields = ("owner__email",)
+
+
+class LineAttributeAdmin(admin.ModelAdmin):
+    list_display = ("id", "line", "option", "value")
+    raw_id_fields = ("line",)
+    search_fields = (
+        "line__basket__owner__email",
+        "line__product__upc",
+        "option__name",
+        "value",
+    )
 
 
 admin.site.register(get_model("basket", "basket"), BasketAdmin)
 admin.site.register(Line, LineAdmin)
-admin.site.register(get_model("basket", "LineAttribute"))
+admin.site.register(get_model("basket", "LineAttribute"), LineAttributeAdmin)

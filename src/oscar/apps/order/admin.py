@@ -23,14 +23,22 @@ Surcharge = get_model("order", "Surcharge")
 class LineInline(admin.TabularInline):
     model = Line
     extra = 0
+    autocomplete_fields = ("product",)
+    raw_id_fields = ("stockrecord",)
+
+    def get_fields(self, request, obj=None):
+        fields = super().get_fields(request, obj)
+        priority = ("product", "quantity", "line_price_incl_tax")
+
+        return list(priority) + [f for f in fields if f not in priority]
 
 
 class OrderAdmin(admin.ModelAdmin):
     raw_id_fields = [
-        "user",
         "billing_address",
         "shipping_address",
     ]
+    autocomplete_fields = ("user",)
     list_display = (
         "number",
         "total_incl_tax",
@@ -48,14 +56,25 @@ class OrderAdmin(admin.ModelAdmin):
         "shipping_excl_tax",
     )
     inlines = [LineInline]
+    search_fields = ("number", "user__username", "user__email")
 
 
 class LineAdmin(admin.ModelAdmin):
     list_display = ("order", "product", "stockrecord", "quantity")
+    raw_id_fields = ("stockrecord", "order")
+    autocomplete_fields = ("product",)
+    search_fields = (
+        "order__number",
+        "product__title",
+        "product__upc",
+        "order__user__email",
+    )
 
 
 class LinePriceAdmin(admin.ModelAdmin):
     list_display = ("order", "line", "price_incl_tax", "quantity")
+    search_fields = ("order__number",)
+    raw_id_fields = ("line", "order")
 
 
 class ShippingEventTypeAdmin(admin.ModelAdmin):
@@ -65,6 +84,7 @@ class ShippingEventTypeAdmin(admin.ModelAdmin):
 class PaymentEventQuantityInline(admin.TabularInline):
     model = PaymentEventQuantity
     extra = 0
+    raw_id_fields = ("line",)
 
 
 class PaymentEventAdmin(admin.ModelAdmin):
@@ -76,6 +96,9 @@ class PaymentEventAdmin(admin.ModelAdmin):
         "date_created",
     )
     inlines = [PaymentEventQuantityInline]
+    raw_id_fields = ("order", "shipping_event")
+    search_fields = ("order__number",)
+    list_filter = ("event_type",)
 
 
 class PaymentEventTypeAdmin(admin.ModelAdmin):
@@ -93,24 +116,62 @@ class OrderDiscountAdmin(admin.ModelAdmin):
         "amount",
     )
     list_display = ("order", "category", "offer", "voucher", "voucher_code", "amount")
+    search_fields = ("order__number", "offer_name", "voucher_code")
 
 
 class SurchargeAdmin(admin.ModelAdmin):
     raw_id_fields = ("order",)
+    search_fields = ("order__number",)
+
+
+class OrderNoteAdmin(admin.ModelAdmin):
+    search_fields = ("order__number",)
+    raw_id_fields = ("order",)
+    autocomplete_fields = ("user",)
+
+
+class OrderStatusAdmin(admin.ModelAdmin):
+    search_fields = ("order__number",)
+    raw_id_fields = ("order",)
+
+
+class ShippingAddressAdmin(admin.ModelAdmin):
+    search_fields = ("search_text",)
+
+
+class ShippingEventAdmin(admin.ModelAdmin):
+    search_fields = ("order__number",)
+    raw_id_fields = ("order",)
+
+
+class LineAttributeAdmin(admin.ModelAdmin):
+    search_fields = ("line__order__number",)
+    readonly_fields = ("line",)
+    list_filter = ("option",)
+
+
+class CommunicationEventAdmin(admin.ModelAdmin):
+    search_fields = ("order__number", "order__user__email")
+    list_filter = ("event_type",)
+    raw_id_fields = ("order",)
+
+
+class BillingAddressAdmin(admin.ModelAdmin):
+    search_fields = ("order__user__email", "search_text")
 
 
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderNote)
-admin.site.register(OrderStatusChange)
-admin.site.register(ShippingAddress)
+admin.site.register(OrderNote, OrderNoteAdmin)
+admin.site.register(OrderStatusChange, OrderStatusAdmin)
+admin.site.register(ShippingAddress, ShippingAddressAdmin)
 admin.site.register(Line, LineAdmin)
 admin.site.register(LinePrice, LinePriceAdmin)
-admin.site.register(ShippingEvent)
+admin.site.register(ShippingEvent, ShippingEventAdmin)
 admin.site.register(ShippingEventType, ShippingEventTypeAdmin)
 admin.site.register(PaymentEvent, PaymentEventAdmin)
 admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
-admin.site.register(LineAttribute)
+admin.site.register(LineAttribute, LineAttributeAdmin)
 admin.site.register(OrderDiscount, OrderDiscountAdmin)
-admin.site.register(CommunicationEvent)
-admin.site.register(BillingAddress)
+admin.site.register(CommunicationEvent, CommunicationEventAdmin)
+admin.site.register(BillingAddress, BillingAddressAdmin)
 admin.site.register(Surcharge, SurchargeAdmin)
