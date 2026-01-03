@@ -1,5 +1,6 @@
 {% extends 'oscar/dashboard/layout.html' %}
 {% load i18n %}
+{% load dashboard_tags %}
 {% load render_table from django_tables2 %}
 
 {% block title %}
@@ -17,7 +18,6 @@
 
 {% block header %}
     <div class="page-header">
-    {% load dashboard_tags %}
     {% has_dashboard_permission "catalogue-attribute-option-group-create" "catalogue_dashboard" as can_create_attribute_option_group %}
     {% if can_create_attribute_option_group %}
     <a href="{% url 'dashboard:catalogue-attribute-option-group-create' %}?{{ querystring }}" class="btn btn-primary float-right">
