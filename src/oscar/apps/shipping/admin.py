@@ -11,11 +11,13 @@ class OrderChargesAdmin(admin.ModelAdmin):
     filter_horizontal = ("countries",)
     list_display = (
         "name",
+        "code",
         "description",
         "price_per_order",
         "price_per_item",
         "free_shipping_threshold",
     )
+    search_fields = ("name", "code", "description")
 
 
 class WeightBandInline(admin.TabularInline):
