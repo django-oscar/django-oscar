@@ -142,7 +142,7 @@ class AbstractProductAlert(models.Model):
     email = models.EmailField(_("Email"), db_index=True, blank=True)
 
     # This key are used to confirm and cancel alerts for anon users
-    key = models.CharField(_("Key"), max_length=128, blank=True, db_index=True)
+    key = models.CharField(_("Key"), max_length=128, blank=True, null=True, unique=True, db_index=True)
 
     # An alert can have two different statuses for authenticated
     # users ``ACTIVE`` and ``CANCELLED`` and anonymous users have an
