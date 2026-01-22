@@ -19,7 +19,7 @@ AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 AttributeOption = get_model("catalogue", "AttributeOption")
 Option = get_model("catalogue", "Option")
 ProductSelect = get_class("dashboard.catalogue.widgets", "ProductSelect")
-(RelatedFieldWidgetWrapper, RelatedMultipleFieldWidgetWrapper) = get_classes(
+RelatedFieldWidgetWrapper, RelatedMultipleFieldWidgetWrapper = get_classes(
     "dashboard.widgets",
     ("RelatedFieldWidgetWrapper", "RelatedMultipleFieldWidgetWrapper"),
 )
