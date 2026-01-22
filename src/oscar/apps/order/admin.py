@@ -136,7 +136,7 @@ class OrderStatusAdmin(admin.ModelAdmin):
 
 
 class ShippingAddressAdmin(admin.ModelAdmin):
-    search_fields = ("search_text",)
+    search_fields = ("search_text", "code")
 
 
 class ShippingEventAdmin(admin.ModelAdmin):
@@ -157,7 +157,7 @@ class CommunicationEventAdmin(admin.ModelAdmin):
 
 
 class BillingAddressAdmin(admin.ModelAdmin):
-    search_fields = ("order__user__email", "search_text")
+    search_fields = ("order__user__email", "search_text", "code")
 
 
 admin.site.register(Order, OrderAdmin)
