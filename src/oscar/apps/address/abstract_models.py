@@ -9,7 +9,7 @@ from django.utils.translation import pgettext_lazy
 from phonenumber_field.modelfields import PhoneNumberField
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import UppercaseCharField
+from oscar.models.fields import NullCharField, UppercaseCharField
 
 
 class AbstractAddress(models.Model):
@@ -214,6 +214,13 @@ class AbstractAddress(models.Model):
         "ZM": r"^[0-9]{5}$",
     }
 
+    code = NullCharField(
+        _("Code"),
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+    )
     title = models.CharField(
         pgettext_lazy("Treatment Pronouns for the customer", "Title"),
         max_length=64,

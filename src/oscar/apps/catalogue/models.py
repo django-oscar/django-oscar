@@ -3,6 +3,7 @@
 """
 Vanilla product models
 """
+
 from oscar.apps.catalogue.abstract_models import *
 from oscar.core.loading import is_model_registered
 

@@ -95,7 +95,7 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
 
     def test_loading_classes_defined_in_both_local_and_oscar_modules(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
-            (Free, FixedPrice) = get_classes("shipping.methods", ("Free", "FixedPrice"))
+            Free, FixedPrice = get_classes("shipping.methods", ("Free", "FixedPrice"))
             self.assertEqual("tests._site.apps.shipping.methods", Free.__module__)
             self.assertEqual("oscar.apps.shipping.methods", FixedPrice.__module__)
 

@@ -19,6 +19,7 @@ class UserAddressAdmin(admin.ModelAdmin):
         "state",
         "postcode",
         "phone_number",
+        "code",
     )
 
 

@@ -59,7 +59,7 @@ ProductTable, CategoryTable, AttributeOptionGroupTable, OptionTable = get_classe
     "dashboard.catalogue.tables",
     ("ProductTable", "CategoryTable", "AttributeOptionGroupTable", "OptionTable"),
 )
-(PopUpWindowCreateMixin, PopUpWindowUpdateMixin, PopUpWindowDeleteMixin) = get_classes(
+PopUpWindowCreateMixin, PopUpWindowUpdateMixin, PopUpWindowDeleteMixin = get_classes(
     "dashboard.views",
     ("PopUpWindowCreateMixin", "PopUpWindowUpdateMixin", "PopUpWindowDeleteMixin"),
 )
