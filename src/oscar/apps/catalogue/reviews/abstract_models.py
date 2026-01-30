@@ -9,6 +9,7 @@ from oscar.apps.catalogue.reviews.utils import get_default_review_status
 from oscar.core import validators
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class
+from oscar.models.fields import NullCharField
 
 ProductReviewQuerySet = get_class("catalogue.reviews.managers", "ProductReviewQuerySet")
 
@@ -61,6 +62,13 @@ class AbstractProductReview(models.Model):
 
     status = models.SmallIntegerField(
         _("Status"), choices=STATUS_CHOICES, default=get_default_review_status
+    )
+    code = NullCharField(
+        _("Code"),
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
     )
 
     # Denormalised vote totals
