@@ -14,9 +14,20 @@ class ProductReviewAdmin(admin.ModelAdmin):
         "status",
         "total_votes",
         "delta_votes",
+        "code",
         "date_created",
     )
     readonly_fields = ("total_votes", "delta_votes")
+    search_fields = (
+        "title",
+        "body",
+        "name",
+        "email",
+        "user__email",
+        "product__upc",
+        "product__title",
+        "code",
+    )
 
 
 class VoteAdmin(admin.ModelAdmin):
