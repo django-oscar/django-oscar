@@ -1,4 +1,7 @@
-{% load currency_filters i18n url_tags %}{% blocktrans with order_number=order.number %}Hello,
+{% extends "oscar/communication/emails/base.txt" %}
+{% load currency_filters i18n url_tags %}
+{% block body %}
+{% blocktrans with order_number=order.number %}Hello,
 
 We are pleased to confirm your order {{ order_number }} has been received and
 will be processed shortly.{% endblocktrans %}
@@ -23,3 +26,4 @@ will be processed shortly.{% endblocktrans %}
 {% endif %}
 
 {% blocktrans %}The team{% endblocktrans %}
+{% endblock %}
