@@ -1,0 +1,10 @@
+{
+  "version": "0.1.0",
+  "profile_name": "mixed_mode",
+  "specs": [
+    "src/oscar/apps/order/line_reports.spec.md"
+  ],
+  "whitelisted_files": [
+   "src/oscar/apps/dashboard/reports/utils.py"
+  ]
+}

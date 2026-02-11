@@ -60,3 +60,5 @@ settings_local.py
 
 # test stuff
 /tests/whoosh_index/
+# CodeSpeak
+.codespeak/ignored/
