@@ -264,8 +264,8 @@ class AbstractCategory(MP_Node):
         return children.filter(is_public=True)
 
     @classmethod
-    def fix_tree(cls, destructive=False, fix_paths=False):
-        super().fix_tree(destructive, fix_paths)
+    def fix_tree(cls, fix_paths=False, **kwargs):  # pylint: disable=W0221
+        super().fix_tree(fix_paths=fix_paths, **kwargs)
         for node in cls.get_root_nodes():
             # ancestors_are_public *must* be True for root nodes, or all trees
             # will become non-public
@@ -333,10 +333,10 @@ class AbstractCategory(MP_Node):
         verbose_name_plural = _("Categories")
 
     def has_children(self):
-        return self.get_num_children() > 0
+        return self.get_children().exists()
 
     def get_num_children(self):
-        return self.get_children().count()
+        return self.get_children_count()
 
 
 class AbstractProductCategory(models.Model):
