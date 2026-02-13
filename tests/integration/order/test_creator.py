@@ -1,10 +1,12 @@
 import datetime
 import threading
 import time
+import unittest
 from decimal import Decimal as D
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from django.db import connection
 from django.http import HttpRequest
 from django.test import TestCase, TransactionTestCase
 from django.test.utils import override_settings
@@ -480,6 +482,7 @@ class TestPlaceOrderWithVoucher(TestCase):
         assert voucher.applications.count() == 0
 
 
+@unittest.skipIf(connection.vendor == "sqlite", "SQLite cannot handle concurrent writes")
 class TestConcurrentOrderPlacement(TransactionTestCase):
     def test_single_usage(self):
         user = AnonymousUser()
