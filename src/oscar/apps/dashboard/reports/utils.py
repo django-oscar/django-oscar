@@ -1,6 +1,7 @@
 from oscar.core.loading import get_class, get_classes
 
 OrderReportGenerator = get_class("order.reports", "OrderReportGenerator")
+OrderLineReportGenerator = get_class("order.line_reports", "OrderLineReportGenerator")
 ProductReportGenerator, UserReportGenerator = get_classes(
     "analytics.reports", ["ProductReportGenerator", "UserReportGenerator"]
 )
@@ -14,6 +15,7 @@ VoucherReportGenerator = get_class("voucher.reports", "VoucherReportGenerator")
 class GeneratorRepository(object):
     generators = [
         OrderReportGenerator,
+        OrderLineReportGenerator,
         ProductReportGenerator,
         UserReportGenerator,
         OpenBasketReportGenerator,

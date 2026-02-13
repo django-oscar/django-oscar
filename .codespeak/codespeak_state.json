@@ -1,0 +1,58 @@
+{
+    "meta": {
+        "schema": {
+            "spec": {
+                "type": "file",
+                "relative_path": "spec.processed.md",
+                "format": "text",
+                "by_task": "ProcessSpec"
+            },
+            "console_app_dev_command": {
+                "type": "file",
+                "relative_path": "console_app_dev_command.txt",
+                "format": "text",
+                "by_task": "GenerateCliUsageExamples"
+            },
+            "console_app_usage_examples": {
+                "type": "file",
+                "relative_path": "console_app_usage_examples.json",
+                "format": "json",
+                "by_task": "GenerateCliUsageExamples"
+            },
+            "external_apis": {
+                "type": "file",
+                "relative_path": "external_apis.json",
+                "format": "json",
+                "by_task": "AnalyzeExternalApis"
+            },
+            "implemented_change_requests": {
+                "type": "file",
+                "relative_path": "implemented_change_requests.json",
+                "format": "json",
+                "by_task": "FinalizeChangeRequest"
+            },
+            "sha_to_checkpoint": {
+                "type": "file",
+                "relative_path": "sha_to_checkpoint.json",
+                "format": "json"
+            }
+        },
+        "version": "0.2.0"
+    },
+    "phases_state": {
+        "spec_file": "src/oscar/apps/order/line_reports.spec.md",
+        "spec": ".codespeak/spec.processed.md",
+        "old_spec": null,
+        "spec_diff": null,
+        "test_run_instructions": "Determine how to run tests for this project. Check for Python project management tools (uv, hatch, poetry, pip) by inspecting pyproject.toml and other config files. Use the appropriate command to run the test suite (e.g. `uv run pytest` for uv projects, `hatch run test` for hatch projects, `poetry run pytest` for poetry projects, `pytest` or `python -m pytest` otherwise).",
+        "agents_md_content": "# Running Tests\n\n## Setup\n\n```bash\nmake venv\n```\n\n## Run tests\n\n```bash\nvenv/bin/pytest --sqlite                                          # all tests, SQLite\nvenv/bin/pytest --sqlite tests/integration/offer/test_availability.py  # single file\nvenv/bin/pytest --sqlite tests/integration/offer/test_availability.py::TestASuspendedOffer::test_is_unavailable  # single test\n```\n\nWithout `--sqlite`, tests require a running PostgreSQL server with a database named `oscar` (default config in `tests/settings.py`).\n",
+        "managed_files": {
+            "src/oscar/apps/order/line_reports.spec.md": [
+                "src/oscar/apps/order/line_reports.py",
+                "src/oscar/templates/oscar/dashboard/reports/partials/order_line_report.html",
+                "tests/functional/dashboard/test_line_reports.py",
+                "tests/integration/order/test_line_reports.py"
+            ]
+        }
+    }
+}

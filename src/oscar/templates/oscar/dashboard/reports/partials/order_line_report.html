@@ -1,0 +1,41 @@
+{% extends 'oscar/dashboard/reports/index.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block report %}
+    <table class="table table-striped table-bordered table-hover">
+        {% if objects %}
+            <tr>
+                <th>{% trans "Order number" %}</th>
+                <th>{% trans "SKU" %}</th>
+                <th>{% trans "Product title" %}</th>
+                <th>{% trans "Quantity" %}</th>
+                <th>{% trans "Line price (incl. tax)" %}</th>
+                <th>{% trans "Partner name" %}</th>
+                <th></th>
+            </tr>
+            {% for line in objects %}
+                <tr>
+                    <td><a href="{% url 'dashboard:order-detail' line.order.number %}">{{ line.order.number }}</a></td>
+                    <td>{{ line.partner_sku|default:line.upc|default:"-" }}</td>
+                    <td>
+                        {% if line.product %}
+                            <a href="{% url 'dashboard:catalogue-product' pk=line.product.id %}">{{ line.title }}</a>
+                        {% else %}
+                            {{ line.title }}
+                        {% endif %}
+                    </td>
+                    <td>{{ line.quantity }}</td>
+                    <td>{{ line.line_price_incl_tax|currency:line.order.currency }}</td>
+                    <td>{{ line.partner_name|default:"-" }}</td>
+                    <td>
+                        <a class="btn btn-secondary" href="{% url 'dashboard:order-detail' number=line.order.number %}">{% trans "View Order" %}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="7">{% trans "No results found." %}</td></tr>
+        {% endif %}
+    </table>
+    {% include "oscar/dashboard/partials/pagination.html" %}
+{% endblock %}
