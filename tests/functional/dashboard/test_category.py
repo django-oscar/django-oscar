@@ -31,8 +31,8 @@ class TestCategoryDashboard(WebTestCase):
         )
         form = category_add.forms["create_update_category_form"]
         form["name"] = "Top-level category"
-        form["_position"] = "right"
-        form["_ref_node_id"] = a.id
+        form["treebeard_position"] = "right"
+        form["treebeard_ref_node"] = a.id
         response = form.submit()
         self.assertRedirects(response, reverse("dashboard:catalogue-category-list"))
 
@@ -44,8 +44,8 @@ class TestCategoryDashboard(WebTestCase):
         )
         form = category_add.forms["create_update_category_form"]
         form["name"] = "Child category"
-        form["_position"] = "left"
-        form["_ref_node_id"] = c.id
+        form["treebeard_position"] = "left"
+        form["treebeard_ref_node"] = c.id
         response = form.submit()
         self.assertRedirects(
             response, reverse("dashboard:catalogue-category-detail-list", args=(b.pk,))

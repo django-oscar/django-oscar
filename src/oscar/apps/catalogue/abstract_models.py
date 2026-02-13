@@ -259,13 +259,26 @@ class AbstractCategory(MP_Node):
         # Correctly populate ancestors_are_public
         self.refresh_from_db()
 
+    def move(self, target, pos=None):
+        """
+        Moves the category and invalidates the full_slug cache for the entire
+        affected subtree so that full_slug is recalculated from the new tree
+        position.
+        """
+        # Collect cache keys before the move (descendants may change path)
+        cache_keys = [n.get_url_cache_key() for n in self.get_descendants_and_self()]
+        result = super().move(target, pos)
+        for key in cache_keys:
+            cache.delete(key)
+        return result
+
     def get_public_children(self):
         children = self.get_children()
         return children.filter(is_public=True)
 
     @classmethod
-    def fix_tree(cls, destructive=False, fix_paths=False):
-        super().fix_tree(destructive, fix_paths)
+    def fix_tree(cls, fix_paths=False, **kwargs):
+        super().fix_tree(fix_paths=fix_paths, **kwargs)
         for node in cls.get_root_nodes():
             # ancestors_are_public *must* be True for root nodes, or all trees
             # will become non-public
