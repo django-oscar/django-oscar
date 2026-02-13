@@ -84,7 +84,7 @@ class IndexView(BulkEditMixin, FormMixin, SingleTableView):
         """
         if data["email"]:
             email = data["email"]
-            queryset = queryset.filter(email__istartswith=email)
+            queryset = queryset.filter(email__icontains=email)
             self.desc_ctx["email_filter"] = _(" with email matching '%s'") % email
         if data["name"]:
             # If the value is two words, then assume they are first name and
