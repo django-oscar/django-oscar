@@ -40,6 +40,17 @@ class IndexViewTests(WebTestCase):
         response = self.get(reverse("dashboard:users-index"))
         self.assertInContext(response, "users")
 
+    def test_user_list_search_view(self):
+        for user in User.objects.all()[:3]:
+            response = self.get(
+                reverse(
+                    "dashboard:users-index", query={"email": user.email, "search": ""}
+                )
+            )
+            self.assertTrue(
+                response.context["users"].data.data.filter(email=user.email).exists()
+            )
+
     def test_make_active(self):
         params = {"action": "make_active", "selected_user": self.inactive_users_ids}
         response = self.post(reverse("dashboard:users-index"), params=params)
