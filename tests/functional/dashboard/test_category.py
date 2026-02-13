@@ -5,6 +5,8 @@ from oscar.apps.catalogue.models import Category
 from oscar.core.loading import get_class
 from oscar.test.testcases import WebTestCase
 
+from treebeard import __version__ as treebeard_version
+
 DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
@@ -17,6 +19,12 @@ class TestCategoryDashboard(WebTestCase):
         "view_category",
         "delete_category",
         "add_category",
+    )
+    TREEBEARD_POS_FIELD = (
+        "treebeard_position" if treebeard_version >= "5" else "_position"
+    )
+    TREEBEARD_REF_FIELD = (
+        "treebeard_ref_node" if treebeard_version >= "5" else "_ref_node_id"
     )
 
     def setUp(self):
@@ -31,8 +39,8 @@ class TestCategoryDashboard(WebTestCase):
         )
         form = category_add.forms["create_update_category_form"]
         form["name"] = "Top-level category"
-        form["_position"] = "right"
-        form["_ref_node_id"] = a.id
+        form[self.TREEBEARD_POS_FIELD] = "right"
+        form[self.TREEBEARD_REF_FIELD] = a.id
         response = form.submit()
         self.assertRedirects(response, reverse("dashboard:catalogue-category-list"))
 
@@ -44,8 +52,8 @@ class TestCategoryDashboard(WebTestCase):
         )
         form = category_add.forms["create_update_category_form"]
         form["name"] = "Child category"
-        form["_position"] = "left"
-        form["_ref_node_id"] = c.id
+        form[self.TREEBEARD_POS_FIELD] = "left"
+        form[self.TREEBEARD_REF_FIELD] = c.id
         response = form.submit()
         self.assertRedirects(
             response, reverse("dashboard:catalogue-category-detail-list", args=(b.pk,))
