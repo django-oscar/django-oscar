@@ -43,9 +43,7 @@ class IndexViewTests(WebTestCase):
     def test_user_list_search_view(self):
         for user in User.objects.all()[:3]:
             response = self.get(
-                reverse(
-                    "dashboard:users-index", query={"email": user.email, "search": ""}
-                )
+                reverse("dashboard:users-index") + f"?search=&email={user.email}"
             )
             self.assertTrue(
                 response.context["users"].data.data.filter(email=user.email).exists()
