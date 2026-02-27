@@ -29,7 +29,7 @@ classifiers = [
 ]
 keywords = ["E-commerce", "Django", "domain-driven"]
 dependencies = [
-    "django>=4.2,<5.3",
+    "django>=4.2.26,<5.3",
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     "pillow>=6.0",
     # We use the ModelFormSetView from django-extra-views for the basket page
