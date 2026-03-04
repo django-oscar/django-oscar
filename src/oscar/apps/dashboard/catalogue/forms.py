@@ -6,6 +6,8 @@ from treebeard.forms import movenodeform_factory
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.forms.widgets import DateTimePickerInput, ImageInput
+import nh3
+
 
 Product = get_model("catalogue", "Product")
 ProductClass = get_model("catalogue", "ProductClass")
@@ -67,6 +69,9 @@ class CategoryForm(SEOFormMixin, BaseCategoryForm):
             self.fields["slug"].help_text = _(
                 "Leave blank to generate from category name"
             )
+
+    def clean_description(self):
+        return nh3.clean(self.cleaned_data.get("description") or "")
 
 
 class ProductClassSelectForm(forms.Form):
@@ -316,6 +321,9 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
         for field_name in ["description", "is_discountable"]:
             if field_name in self.fields:
                 del self.fields[field_name]
+
+    def clean_description(self):
+        return nh3.clean(self.cleaned_data.get("description") or "")
 
     def _post_clean(self):
         """
