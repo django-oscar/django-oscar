@@ -230,6 +230,59 @@ There are also several predefined availability policies:
    :members: Unavailable, Available, StockRequired
    :noindex:
 
+Enforcing stock rules
+~~~~~~~~~~~~~~~~~~~~~
+
+To enforce custom stock validation rules (such as limiting the maximum quantity
+of a product that can be purchased), you should use a custom availability policy
+rather than raising exceptions in basket signals.
+
+The correct approach is to subclass the appropriate availability policy and
+override the ``is_purchase_permitted`` method:
+
+.. code-block:: python
+
+    from oscar.apps.partner import availability
+
+    class LimitedStock(availability.StockRequired):
+        """
+        Availability policy that enforces a maximum purchase quantity.
+        """
+        max_purchase_quantity = 4
+
+        def is_purchase_permitted(self, product, stockrecord, quantity=1):
+            # First check parent logic (stock availability)
+            result = super().is_purchase_permitted(product, stockrecord, quantity)
+            if not result.is_permitted:
+                return result
+
+            # Enforce maximum quantity limit
+            if quantity > self.max_purchase_quantity:
+                return availability.AvailabilityResult(
+                    is_available=True,
+                    is_permitted=False,
+                    message=_(f"You can only purchase up to "
+                              f"{self.max_purchase_quantity} of these"),
+                    code='max_purchase_quantity_exceeded'
+                )
+            return result
+
+Then use this policy in your custom strategy:
+
+.. code-block:: python
+
+    from oscar.apps.partner import strategy
+
+    class LimitedStockStrategy(strategy.UseFirstStockRecord,
+                               strategy.Structured):
+        availability_policy = LimitedStock
+
+This approach is preferred over using signals because:
+
+1. It provides proper error messages to customers instead of 500 errors
+2. It integrates with Oscar's validation flow
+3. It allows quantity limits to be checked at the appropriate time
+
 Strategy mixins
 ---------------
 
