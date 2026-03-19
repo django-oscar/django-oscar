@@ -15,9 +15,8 @@ from django.core.validators import MinValueValidator
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Count, Exists, OuterRef, Sum
+from django.db.models import Count, Exists, Lookup, OuterRef, Sum
 from django.db.models.fields import Field
-from django.db.models import Lookup
 from django.template.defaultfilters import striptags
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -76,7 +75,7 @@ class ReverseStartsWith(Lookup):
         lhs, lhs_params = self.process_rhs(compiler, connection)
 
         params = lhs_params + rhs_params
-        return "%s = %s" % (lhs, rhs), params
+        return "%s LIKE %s || '%%%%'" % (lhs, rhs), params
 
 
 Field.register_lookup(ReverseStartsWith)
