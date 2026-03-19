@@ -17,7 +17,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef, Sum
 from django.db.models.fields import Field
-from django.db.models.lookups import StartsWith
+from django.db.models import Lookup
 from django.template.defaultfilters import striptags
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -45,7 +45,7 @@ ProductAttributesContainer = get_class(
 
 
 # pylint: disable=abstract-method
-class ReverseStartsWith(StartsWith):
+class ReverseStartsWith(Lookup):
     """
     Adds a new lookup method to the django query language, that allows the
     following syntax::
@@ -66,16 +66,20 @@ class ReverseStartsWith(StartsWith):
     "koe".startswith(henk)
     """
 
-    def process_rhs(self, qn, connection):
-        return super().process_lhs(qn, connection)
+    lookup_name = "rstartswith"
 
-    def process_lhs(self, compiler, connection, lhs=None):
-        if lhs is not None:
-            raise Exception("Flipped process_lhs does not accept lhs argument")
-        return super().process_rhs(compiler, connection)
+    def as_sql(self, compiler, connection):
+        # Process the original LHS as the new RHS
+        rhs, rhs_params = self.process_lhs(compiler, connection)
+
+        # Process the original RHS as the new LHS
+        lhs, lhs_params = self.process_rhs(compiler, connection)
+
+        params = lhs_params + rhs_params
+        return "%s = %s" % (lhs, rhs), params
 
 
-Field.register_lookup(ReverseStartsWith, "rstartswith")
+Field.register_lookup(ReverseStartsWith)
 
 
 class AbstractProductClass(models.Model):
