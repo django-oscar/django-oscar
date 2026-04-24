@@ -78,7 +78,7 @@ class UpdateView(BulkEditMixin, generic.View):
         return self.model.objects.filter(recipient=self.request.user).in_bulk(ids)
 
     def get_success_response(self):
-        return redirect_to_referrer(self.request, "communication:notifications-inbox")
+        return redirect_to_referrer(self.request, "customer:notifications-inbox")
 
     def archive(self, request, notifications):
         for notification in notifications:
