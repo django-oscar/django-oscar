@@ -19,7 +19,7 @@ jobs:
       fail-fast: true
       matrix:
         python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
-        django-version: ['4.2', '5.2', '6.0', '6.1']
+        django-version: ['4.2', '5.2', '6.0']
         exclude:
           # Django 4.2 does not support Python 3.14.
           - django-version: '4.2'
@@ -31,11 +31,6 @@ jobs:
           - django-version: '6.0'
             python-version: '3.10'
           - django-version: '6.0'
-            python-version: '3.11'
-          # Django 6.1 supports Python 3.12 and up.
-          - django-version: '6.1'
-            python-version: '3.10'
-          - django-version: '6.1'
             python-version: '3.11'
     services:
       postgres:
