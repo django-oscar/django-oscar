@@ -66,13 +66,14 @@ class ReverseStartsWith(StartsWith):
     "koe".startswith(henk)
     """
 
-    def process_rhs(self, qn, connection):
-        return super().process_lhs(qn, connection)
-
     def process_lhs(self, compiler, connection, lhs=None):
         if lhs is not None:
             raise Exception("Flipped process_lhs does not accept lhs argument")
-        return super().process_rhs(compiler, connection)
+        sql, params = super().process_rhs(compiler, connection)
+        return sql, list(params)
+
+    def process_rhs(self, qn, connection):
+        return super().process_lhs(qn, connection)
 
 
 Field.register_lookup(ReverseStartsWith, "rstartswith")
