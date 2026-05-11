@@ -1,0 +1,3 @@
+{% with sr=child.stockrecords.first %}
+<td>{% if sr %}{{ sr.price_currency }} {{ sr.price|default:"-" }}{% else %}-{% endif %}</td>
+{% endwith %}

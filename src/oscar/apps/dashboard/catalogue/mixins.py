@@ -4,7 +4,9 @@ from django.db.transaction import atomic
 from django.shortcuts import redirect
 from django.utils.translation import ngettext
 
-from oscar.views.generic import BulkEditMixin
+from django.urls import reverse
+
+from oscar.views.generic import IntermediateBulkEditMixin
 
 
 class PartnerProductFilterMixin:
@@ -25,11 +27,22 @@ class PartnerProductFilterMixin:
         ).distinct()
 
 
-class PublicVisibilityUpdateMixin(BulkEditMixin):
+class PublicVisibilityUpdateMixin(IntermediateBulkEditMixin):
     actions = (
         "make_public",
         "make_non_public",
+        "make_children_public",
+        "make_children_non_public",
+        "set_children_price",
     )
+    intermediate_actions = (
+        "make_children_public",
+        "make_children_non_public",
+        "set_children_price",
+    )
+
+    def get_intermediate_url(self, request, action):
+        return reverse("dashboard:catalogue-product-children-bulk-action")
 
     def make_non_public(self, request, records):
         return self._update_public_flag(records, False)

@@ -33,6 +33,12 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 DashboardPermission.get("catalogue", "view_product"),
                 DashboardPermission.partner_dashboard_access,
             ),
+            "catalogue-product-children-bulk-action": (
+                DashboardPermission.get(
+                    "catalogue", "view_product", "change_product"
+                ),
+                DashboardPermission.partner_dashboard_access,
+            ),
             "catalogue-product-delete": (
                 DashboardPermission.get("catalogue", "view_product", "delete_product"),
                 DashboardPermission.partner_dashboard_access,
@@ -117,6 +123,9 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         self.product_list_view = get_class(
             "dashboard.catalogue.views", "ProductListView"
         )
+        self.product_children_bulk_action_view = get_class(
+            "dashboard.catalogue.views", "ChildProductSelectView"
+        )
         self.product_lookup_view = get_class(
             "dashboard.catalogue.views", "ProductLookupView"
         )
@@ -190,6 +199,11 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
 
     def get_urls(self):
         urls = [
+            path(
+                "products/children-bulk-action/",
+                self.product_children_bulk_action_view.as_view(),
+                name="catalogue-product-children-bulk-action",
+            ),
             path(
                 "products/<int:pk>/",
                 self.product_createupdate_view.as_view(),

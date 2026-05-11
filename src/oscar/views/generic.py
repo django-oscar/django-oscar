@@ -98,6 +98,52 @@ class BulkEditMixin:
         return self.get_queryset().in_bulk(ids)
 
 
+class IntermediateBulkEditMixin(BulkEditMixin):
+    """
+    Extension of BulkEditMixin that supports a two-step bulk action flow.
+
+    Actions listed in `intermediate_actions` store the selected parent IDs in
+    the session and redirect to an intermediate view (returned by
+    `get_intermediate_url`) instead of applying immediately.
+    """
+
+    intermediate_actions = ()
+    bulk_intermediate_session_key = "bulk_intermediate"
+
+    def get_intermediate_url(self, request, action):
+        raise NotImplementedError(
+            "Subclasses of IntermediateBulkEditMixin must implement get_intermediate_url()"
+        )
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get(self.action_param, "").lower()
+        if action in self.intermediate_actions:
+            return self._handle_intermediate_action(request, action, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
+
+    def _handle_intermediate_action(self, request, action, *args, **kwargs):
+        select_across = request.POST.get(self.select_across_param, "").lower()
+        if select_across == "1":
+            parent_ids = list(self.get_queryset().values_list("pk", flat=True))
+        else:
+            parent_ids = list(map(int, request.POST.getlist(
+                "selected_%s" % self.get_checkbox_object_name()
+            )))
+
+        if not parent_ids:
+            messages.error(
+                request,
+                _("You need to select some %ss") % self.get_checkbox_object_name(),
+            )
+            return redirect(self.get_error_url(request))
+
+        session_data = request.session.setdefault(self.bulk_intermediate_session_key, {})
+        session_data["parent_ids"] = parent_ids
+        session_data["action"] = action
+        request.session.modified = True
+        return redirect(self.get_intermediate_url(request, action))
+
+
 class ObjectLookupView(View):
     """Base view for json lookup for objects"""
 

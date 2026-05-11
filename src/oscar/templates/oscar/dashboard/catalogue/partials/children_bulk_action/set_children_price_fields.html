@@ -1,0 +1,16 @@
+{% load i18n %}
+<div class="alert alert-warning">
+    <strong>{% trans "Note:" %}</strong>
+    {% trans "This will update <strong>all stockrecords</strong> of each selected child product." %}
+</div>
+<div class="form-group row mb-4">
+    <label for="{{ form.new_price.id_for_label }}" class="col-sm-2 col-form-label">
+        {{ form.new_price.label }}
+    </label>
+    <div class="col-sm-3">
+        {{ form.new_price }}
+        {% if form.new_price.errors %}
+        <div class="invalid-feedback d-block">{{ form.new_price.errors }}</div>
+        {% endif %}
+    </div>
+</div>

@@ -1,12 +1,16 @@
 # pylint: disable=attribute-defined-outside-init
+
+from dataclasses import dataclass, field
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
+from django.db.transaction import atomic
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.template.response import TemplateResponse
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, ngettext
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
@@ -23,6 +27,8 @@ from oscar.views.generic import ObjectLookupView
     AttributeOptionGroupForm,
     OptionForm,
     CategorySearchForm,
+    ChildrenBulkActionForm,
+    SetChildrenPriceForm,
 ) = get_classes(
     "dashboard.catalogue.forms",
     (
@@ -35,6 +41,8 @@ from oscar.views.generic import ObjectLookupView
         "AttributeOptionGroupForm",
         "OptionForm",
         "CategorySearchForm",
+        "ChildrenBulkActionForm",
+        "SetChildrenPriceForm",
     ),
 )
 (
@@ -179,6 +187,212 @@ class ProductListView(
             )
 
         return queryset.distinct()
+
+
+@dataclass
+class ChildBulkAction:
+    """
+    Descriptor for a single bulk action that operates on child products.
+
+    Attributes
+    ----------
+    label
+        Human-readable action label shown in the confirmation page heading
+        and submit button.
+    form_class
+        Form class used for the confirmation step. Must accept a
+        children_queryset keyword argument. Defaults to
+        ChildrenBulkActionForm (the base form with only the child selection field).
+    fields_template
+        Optional template path rendered inside the ``{% block action_fields %}``
+        block of the confirmation page. Use this to add action-specific input
+        fields (e.g. a new price input).
+    child_column_header
+        Column header string rendered in the ``<th>`` of the confirmation table.
+    child_column_template
+        Template path for the per-child ``<td>`` value column in the
+        confirmation table. The partial receives the loop variable ``child``.
+    context
+        Extra key/value pairs merged into the template context for this action.
+    """
+
+    label: str
+    form_class: type = None  # None resolves to ChildrenBulkActionForm at runtime
+    fields_template: str = None
+    child_column_header: str = _("Currently public")
+    child_column_template: str = (
+        "oscar/dashboard/catalogue/partials/children_bulk_action/visibility_column_value.html"
+    )
+    context: dict = field(default_factory=dict)
+
+
+class ChildProductSelectView(generic.View):
+    """
+    Intermediate view for two-step bulk actions that operate on child products.
+
+    Step 1 (GET): Displays child products of the stored parent IDs, grouped by
+    parent, with all children selected. Action-specific template context is
+    provided via each action's ``context`` dict.
+
+    Step 2 (POST): Dispatches to ``handle_{action}(request, child_ids)``, then
+    calls ``after_update(child_ids)`` and clears session state.
+    """
+
+    template_name = "oscar/dashboard/catalogue/product_children_bulk_action.html"
+    bulk_intermediate_session_key = "bulk_intermediate"
+
+    bulk_actions = {
+        "make_children_public": ChildBulkAction(
+            label=_("Make children public"),
+        ),
+        "make_children_non_public": ChildBulkAction(
+            label=_("Make children non-public"),
+        ),
+        "set_children_price": ChildBulkAction(
+            label=_("Set children price"),
+            form_class=SetChildrenPriceForm,
+            fields_template=(
+                "oscar/dashboard/catalogue/partials/children_bulk_action/set_children_price_fields.html"
+            ),
+            child_column_template=(
+                "oscar/dashboard/catalogue/partials/children_bulk_action/price_column_value.html"
+            ),
+            child_column_header=_("Current price"),
+        ),
+    }
+
+    def dispatch(self, request, *args, **kwargs):
+        session_data = request.session.get(self.bulk_intermediate_session_key, {})
+        self._action = session_data.get("action")
+        self._parent_ids = session_data.get("parent_ids", [])
+        if not self._action or not self._parent_ids or self._action not in self.bulk_actions:
+            messages.warning(
+                request,
+                _("No pending bulk action. Please select products and try again."),
+            )
+            return redirect(self.get_cancel_url())
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_cancel_url(self):
+        return reverse("dashboard:catalogue-product-list")
+
+    def get_success_url(self):
+        return reverse("dashboard:catalogue-product-list")
+
+    def get_parent_queryset(self):
+        """Queryset of parent products for the stored parent IDs."""
+        return Product.objects.filter(
+            pk__in=self._parent_ids, structure=Product.PARENT
+        ).prefetch_related("children")
+
+    def get_form_class(self):
+        """Return the form class for the current action."""
+        return self.bulk_actions[self._action].form_class or ChildrenBulkActionForm
+
+    def get_children_queryset_for_form(self):
+        """Flat queryset of all children of the stored parents, used for form validation."""
+        return Product.objects.filter(
+            parent_id__in=self._parent_ids, structure=Product.CHILD
+        )
+
+    def get_form(self, data=None):
+        return self.get_form_class()(
+            data=data,
+            children_queryset=self.get_children_queryset_for_form(),
+        )
+
+    def get_children_queryset(self, child_ids):
+        return Product.objects.filter(pk__in=child_ids, structure=Product.CHILD)
+
+    def get_context_data(self, form=None, **kwargs):
+        if form is None:
+            form = self.get_form()
+        action = self.bulk_actions[self._action]
+        ctx = {
+            "form": form,
+            "parents_with_children": self.get_parent_queryset(),
+            "action": self._action,
+            "action_label": action.label,
+            "cancel_url": self.get_cancel_url(),
+            "action_fields_template": action.fields_template,
+            "child_column_template": action.child_column_template,
+            "child_column_header": action.child_column_header,
+        }
+        ctx.update(action.context)
+        ctx.update(kwargs)
+        return ctx
+
+    def get(self, request, *args, **kwargs):
+        return TemplateResponse(request, self.template_name, self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(data=request.POST)
+        if not form.is_valid():
+            return TemplateResponse(
+                request, self.template_name, self.get_context_data(form=form)
+            )
+
+        handler = getattr(self, "handle_%s" % self._action, None)
+        if handler is None:
+            messages.error(request, _("Unknown action."))
+            return redirect(self.get_cancel_url())
+
+        self.form = form
+        child_ids = list(
+            form.cleaned_data["selected_children"].values_list("pk", flat=True)
+        )
+        result = handler(request, child_ids)
+        if result is not None:
+            return result
+
+        self.after_update(child_ids)
+        self._clear_session(request)
+        return redirect(self.get_success_url())
+
+    def after_update(self, child_ids):
+        """Hook called after children are successfully updated."""
+
+    def _clear_session(self, request):
+        request.session.pop(self.bulk_intermediate_session_key, None)
+        request.session.modified = True
+
+    @atomic
+    def handle_make_children_public(self, request, child_ids):
+        self._update_children_visibility(request, child_ids, is_public=True)
+
+    @atomic
+    def handle_make_children_non_public(self, request, child_ids):
+        self._update_children_visibility(request, child_ids, is_public=False)
+
+    def _update_children_visibility(self, request, child_ids, is_public):
+        count = self.get_children_queryset(child_ids).update(is_public=is_public)
+        messages.info(
+            request,
+            ngettext(
+                "Updated %(count)d child product.",
+                "Updated %(count)d child products.",
+                count,
+            ) % {"count": count},
+        )
+
+    def handle_set_children_price(self, request, child_ids):
+        count = self._update_children_price(
+            child_ids, self.form.cleaned_data["new_price"]
+        )
+        messages.info(
+            request,
+            ngettext(
+                "Price updated on %(count)d stockrecord.",
+                "Price updated on %(count)d stockrecords.",
+                count,
+            ) % {"count": count},
+        )
+
+    @atomic
+    def _update_children_price(self, child_ids, new_price):
+        return StockRecord.objects.filter(
+            product__pk__in=child_ids, product__structure=Product.CHILD
+        ).update(price=new_price)
 
 
 class ProductCreateRedirectView(generic.RedirectView):

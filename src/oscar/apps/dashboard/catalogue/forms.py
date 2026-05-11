@@ -448,3 +448,31 @@ class OptionForm(forms.ModelForm):
 
 class CategorySearchForm(forms.Form):
     name = forms.CharField(max_length=255, required=False, label=_("Name"))
+
+
+class ChildrenBulkActionForm(forms.Form):
+    """
+    Base form for intermediate bulk actions operating on child products.
+
+    Validates that at least one child product is selected and that the selected
+    PKs belong to the allowed children queryset. Pass children_queryset to
+    __init__ to restrict which child products are valid
+    """
+
+    selected_children = forms.ModelMultipleChoiceField(
+        queryset=Product.objects.none(),
+        error_messages={"required": _("Select at least one child product.")},
+    )
+
+    def __init__(self, *args, children_queryset=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if children_queryset is not None:
+            self.fields["selected_children"].queryset = children_queryset
+
+
+class SetChildrenPriceForm(ChildrenBulkActionForm):
+    new_price = forms.DecimalField(
+        min_value=0,
+        decimal_places=2,
+        label=_("New price"),
+    )

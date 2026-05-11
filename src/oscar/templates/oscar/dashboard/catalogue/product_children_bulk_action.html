@@ -1,0 +1,97 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Confirm child product action" %} | {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+        <li class="breadcrumb-item"><a href="{{ cancel_url }}">{% trans "Products" %}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Confirm action" %}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="page-header">
+    <h1>{% blocktranslate with label=action_label %}Confirm: {{ label }}{% endblocktranslate %}</h1>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% block action_fields %}
+    {% if action_fields_template %}{% include action_fields_template %}{% endif %}
+    {% endblock action_fields %}
+
+    {% if form.selected_children.errors %}
+    <div class="alert alert-danger">{{ form.selected_children.errors }}</div>
+    {% endif %}
+
+    {% with selected_values=form.selected_children.value %}
+    {% for parent in parents_with_children %}
+    <div class="card mb-3">
+        <div class="card-header d-flex align-items-center">
+            <input type="checkbox" class="select-all-children mr-2"
+                   data-parent="{{ parent.pk }}" title="{% trans 'Select / deselect all' %}">
+            <strong>{{ parent.get_title }}</strong>
+            <small class="text-muted ml-2">({{ parent.children.count }} {% trans "children" %})</small>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width:40px;"></th>
+                        <th>{% trans "Title" %}</th>
+                        <th>{% trans "UPC" %}</th>
+                        <th>{{ child_column_header }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for child in parent.children.all %}
+                    {% with child_pk=child.pk|stringformat:"s" %}
+                    <tr>
+                        <td class="text-center">
+                            <input type="checkbox" name="selected_children" value="{{ child.pk }}"
+                                   data-parent="{{ parent.pk }}"
+                                   {% if not form.is_bound or child_pk in selected_values %}checked{% endif %}>
+                        </td>
+                        <td>{{ child.get_title }}</td>
+                        <td>{{ child.upc|default:"-" }}</td>
+                        {% include child_column_template %}
+                    </tr>
+                    {% endwith %}
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-muted px-3">{% trans "No child products." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">{% trans "None of the selected products have child products." %}</p>
+    {% endfor %}
+    {% endwith %}
+
+    {% block action_buttons %}
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">
+            {% blocktranslate with label=action_label %}Apply: {{ label }}{% endblocktranslate %}
+        </button>
+        <a href="{{ cancel_url }}" class="btn btn-secondary ml-2">{% trans "Cancel" %}</a>
+    </div>
+    {% endblock action_buttons %}
+</form>
+{% endblock %}
+
+{% block onbodyload %}
+{{ block.super }}
+oscar.dashboard.child_product_bulk_action.init();
+{% endblock %}
