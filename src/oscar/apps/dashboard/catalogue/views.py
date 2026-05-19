@@ -195,34 +195,21 @@ class ChildBulkAction:
     Descriptor for a single bulk action that operates on child products.
 
     Attributes
-    ----------
+    ---------
     label
-        Human-readable action label shown in the confirmation page heading
-        and submit button.
+        Human-readable label
     form_class
         Form class used for the confirmation step. Must accept a
-        children_queryset keyword argument. Defaults to
-        ChildrenBulkActionForm (the base form with only the child selection field).
-    fields_template
-        Optional template path rendered inside the ``{% block action_fields %}``
-        block of the confirmation page. Use this to add action-specific input
-        fields (e.g. a new price input).
-    child_column_header
-        Column header string rendered in the ``<th>`` of the confirmation table.
-    child_column_template
-        Template path for the per-child ``<td>`` value column in the
-        confirmation table. The partial receives the loop variable ``child``.
+        children_queryset keyword argument.
+    template
+        Template rendered for this action's confirmation page.
     context
         Extra key/value pairs merged into the template context for this action.
     """
 
     label: str
-    form_class: type = None  # None resolves to ChildrenBulkActionForm at runtime
-    fields_template: str = None
-    child_column_header: str = _("Currently public")
-    child_column_template: str = (
-        "oscar/dashboard/catalogue/partials/children_bulk_action/visibility_column_value.html"
-    )
+    form_class: type = ChildrenBulkActionForm
+    template: str = "oscar/dashboard/catalogue/product_children_bulk_action.html"
     context: dict = field(default_factory=dict)
 
 
@@ -230,15 +217,14 @@ class ChildProductSelectView(generic.View):
     """
     Intermediate view for two-step bulk actions that operate on child products.
 
-    Step 1 (GET): Displays child products of the stored parent IDs, grouped by
-    parent, with all children selected. Action-specific template context is
-    provided via each action's ``context`` dict.
+    Step 1 (GET): Renders the action's template (from bulk_actions) with
+    the parent products and their children selected. Each action template
+    extends product_children_bulk_action.html and overrides:
 
-    Step 2 (POST): Dispatches to ``handle_{action}(request, child_ids)``, then
-    calls ``after_update(child_ids)`` and clears session state.
+    Step 2 (POST): Dispatches to handle_{action}(request, child_ids), then
+    calls after_update(child_ids) and clears session state.
     """
 
-    template_name = "oscar/dashboard/catalogue/product_children_bulk_action.html"
     bulk_intermediate_session_key = "bulk_intermediate"
 
     bulk_actions = {
@@ -251,13 +237,7 @@ class ChildProductSelectView(generic.View):
         "set_children_price": ChildBulkAction(
             label=_("Set children price"),
             form_class=SetChildrenPriceForm,
-            fields_template=(
-                "oscar/dashboard/catalogue/partials/children_bulk_action/set_children_price_fields.html"
-            ),
-            child_column_template=(
-                "oscar/dashboard/catalogue/partials/children_bulk_action/price_column_value.html"
-            ),
-            child_column_header=_("Current price"),
+            template="oscar/dashboard/catalogue/product_children_bulk_action_set_price.html",
         ),
     }
 
@@ -287,7 +267,7 @@ class ChildProductSelectView(generic.View):
 
     def get_form_class(self):
         """Return the form class for the current action."""
-        return self.bulk_actions[self._action].form_class or ChildrenBulkActionForm
+        return self.bulk_actions[self._action].form_class
 
     def get_children_queryset_for_form(self):
         """Flat queryset of all children of the stored parents, used for form validation."""
@@ -314,22 +294,22 @@ class ChildProductSelectView(generic.View):
             "action": self._action,
             "action_label": action.label,
             "cancel_url": self.get_cancel_url(),
-            "action_fields_template": action.fields_template,
-            "child_column_template": action.child_column_template,
-            "child_column_header": action.child_column_header,
         }
         ctx.update(action.context)
         ctx.update(kwargs)
         return ctx
 
+    def get_template_name(self):
+        return self.bulk_actions[self._action].template
+
     def get(self, request, *args, **kwargs):
-        return TemplateResponse(request, self.template_name, self.get_context_data())
+        return TemplateResponse(request, self.get_template_name(), self.get_context_data())
 
     def post(self, request, *args, **kwargs):
         form = self.get_form(data=request.POST)
         if not form.is_valid():
             return TemplateResponse(
-                request, self.template_name, self.get_context_data(form=form)
+                request, self.get_template_name(), self.get_context_data(form=form)
             )
 
         handler = getattr(self, "handle_%s" % self._action, None)
@@ -350,7 +330,7 @@ class ChildProductSelectView(generic.View):
         return redirect(self.get_success_url())
 
     def after_update(self, child_ids):
-        """Hook called after children are successfully updated."""
+        """Hook called after the bulk action is executed."""
 
     def _clear_session(self, request):
         request.session.pop(self.bulk_intermediate_session_key, None)

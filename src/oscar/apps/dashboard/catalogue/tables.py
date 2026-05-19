@@ -56,7 +56,7 @@ class ProductTable(DashboardTable):
 
     class Meta(DashboardTable.Meta):
         model = Product
-        template_name = "oscar/dashboard/catalogue/product_table.html"
+        template_name = "oscar/dashboard/table.html"
         fields = ("upc", "is_public", "date_updated")
         sequence = (
             "checkbox",

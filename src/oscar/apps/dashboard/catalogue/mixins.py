@@ -2,11 +2,12 @@ from django.contrib import messages
 from django.db.models import Q
 from django.db.transaction import atomic
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.translation import ngettext
 
-from django.urls import reverse
-
 from oscar.views.generic import IntermediateBulkEditMixin
+
+from .constants import PRODUCT_BULK_ACTIONS
 
 
 class PartnerProductFilterMixin:
@@ -28,18 +29,20 @@ class PartnerProductFilterMixin:
 
 
 class PublicVisibilityUpdateMixin(IntermediateBulkEditMixin):
-    actions = (
-        "make_public",
-        "make_non_public",
-        "make_children_public",
-        "make_children_non_public",
-        "set_children_price",
-    )
+    # Dict of action name → label. Used both as the dispatch whitelist (dict
+    # keys) and as the data source for the bulk-actions dropdown in the template.
+    # Subclasses can extend this dict to add further actions.
+    actions = PRODUCT_BULK_ACTIONS
     intermediate_actions = (
         "make_children_public",
         "make_children_non_public",
         "set_children_price",
     )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["actions"] = self.get_actions()
+        return ctx
 
     def get_intermediate_url(self, request, action):
         return reverse("dashboard:catalogue-product-children-bulk-action")

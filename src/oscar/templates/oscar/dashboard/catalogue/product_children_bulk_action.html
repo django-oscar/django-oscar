@@ -26,7 +26,19 @@
     {% endif %}
 
     {% block action_fields %}
-    {% if action_fields_template %}{% include action_fields_template %}{% endif %}
+    {% block action_notice %}{% endblock action_notice %}
+    <div class="card card-body mb-3">
+        <div class="table-header">
+        <h3>{% block action_fields_header %}{% trans "Action parameters" %}{% endblock action_fields_header %}</h3>
+        </div>
+        {% block action_fields_content %}
+        {% for field in form %}
+            {% if field.html_name != "selected_children" %}
+                {% include "oscar/dashboard/partials/form_field.html" %}
+            {% endif %}
+        {% endfor %}
+        {% endblock action_fields_content %}
+    </div>
     {% endblock action_fields %}
 
     {% if form.selected_children.errors %}
@@ -43,13 +55,14 @@
             <small class="text-muted ml-2">({{ parent.children.count }} {% trans "children" %})</small>
         </div>
         <div class="card-body p-0">
+            <div class="table-responsive">
             <table class="table table-sm mb-0">
                 <thead>
                     <tr>
                         <th class="text-center" style="width:40px;"></th>
                         <th>{% trans "Title" %}</th>
                         <th>{% trans "UPC" %}</th>
-                        <th>{{ child_column_header }}</th>
+                        {% block extra_column_headers %}<th>{% trans "Currently public" %}</th>{% endblock %}
                     </tr>
                 </thead>
                 <tbody>
@@ -63,7 +76,7 @@
                         </td>
                         <td>{{ child.get_title }}</td>
                         <td>{{ child.upc|default:"-" }}</td>
-                        {% include child_column_template %}
+                        {% block extra_column_values %}<td>{% if child.is_public %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>{% endblock %}
                     </tr>
                     {% endwith %}
                     {% empty %}
@@ -73,6 +86,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     {% empty %}
@@ -83,7 +97,7 @@
     {% block action_buttons %}
     <div class="form-group mt-3">
         <button type="submit" class="btn btn-primary">
-            {% blocktranslate with label=action_label %}Apply: {{ label }}{% endblocktranslate %}
+            {% trans "Apply" %}: {{ action_label }}
         </button>
         <a href="{{ cancel_url }}" class="btn btn-secondary ml-2">{% trans "Cancel" %}</a>
     </div>

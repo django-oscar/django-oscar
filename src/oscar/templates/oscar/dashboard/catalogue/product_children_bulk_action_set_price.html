@@ -1,0 +1,19 @@
+{% extends "oscar/dashboard/catalogue/product_children_bulk_action.html" %}
+{% load i18n %}
+
+{% block action_notice %}
+<div class="alert alert-warning">
+    <strong>{% trans "Note:" %}</strong>
+    {% trans "This action will update <strong>all stockrecords</strong> of each selected child product." %}
+</div>
+{% endblock action_notice %}
+
+{% block extra_column_headers %}
+<th>{% trans "Current price" %}</th>
+{% endblock %}
+
+{% block extra_column_values %}
+{% with sr=child.stockrecords.first %}
+<td>{% if sr %}{{ sr.price_currency }} {{ sr.price|default:"-" }}{% else %}-{% endif %}</td>
+{% endwith %}
+{% endblock %}

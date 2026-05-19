@@ -52,6 +52,12 @@ class BulkEditMixin:
     actions = None
     checkbox_object_name = None
 
+    def get_actions(self):
+        base = self.actions or {}
+        if isinstance(base, (tuple, list)):
+            base = dict.fromkeys(base)
+        return base
+
     def get_checkbox_object_name(self):
         if self.checkbox_object_name:
             return self.checkbox_object_name
@@ -69,7 +75,8 @@ class BulkEditMixin:
         # whitelist to avoid security issues.
         action = request.POST.get(self.action_param, "").lower()
         all_selections = self.request.POST.get(self.select_across_param, "").lower()
-        if not self.actions or action not in self.actions:
+        actions = self.get_actions()
+        if not actions or action not in actions:
             messages.error(self.request, _("Invalid action"))
             return redirect(self.get_error_url(request))
 
