@@ -557,6 +557,16 @@ var oscar = (function(o, $) {
                 });
             }
         },
+        child_product_bulk_action: {
+            init: function() {
+                $('.select-all-children').on('change', function() {
+                    var parentId = $(this).data('parent');
+                    var checked = $(this).prop('checked');
+                    $('input[type="checkbox"][name="selected_children"][data-parent="' + parentId + '"]')
+                        .prop('checked', checked);
+                });
+            }
+        },
     };
 
     return o;

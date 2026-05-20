@@ -40,10 +40,9 @@ class PartnerProductFilterMixin:
         ).distinct()
 
 
-class CatalogueBulkActionMixin(IntermediateBulkEditMixin):
-    # Dict of action name → label. Used both as the dispatch whitelist (dict
-    # keys) and as the data source for the bulk-actions dropdown in the template.
-    # Subclasses can extend this dict to add further actions.
+class ProductBulkActionMixin(IntermediateBulkEditMixin):
+    """Mixin that implements bulk actions for products"""
+
     actions = {
         "make_public": MakePublicAction(),
         "make_non_public": MakeNonPublicAction(),

@@ -14,11 +14,7 @@ Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
 
 
-class ProductBulkAction(BulkAction):
-    """Base class for a direct bulk action on a list of products."""
-
-
-class MakePublicAction(ProductBulkAction):
+class MakePublicAction(BulkAction):
     label = _("Make public")
 
     @atomic
@@ -26,7 +22,7 @@ class MakePublicAction(ProductBulkAction):
         for record in records:
             record.is_public = True
             record.save()
-        messages.info(
+        messages.success(
             request,
             ngettext(
                 "Public status was successfully updated for %(count)d record.",
@@ -37,7 +33,7 @@ class MakePublicAction(ProductBulkAction):
         return redirect(request.get_full_path())
 
 
-class MakeNonPublicAction(ProductBulkAction):
+class MakeNonPublicAction(BulkAction):
     label = _("Make non-public")
 
     @atomic
@@ -45,7 +41,7 @@ class MakeNonPublicAction(ProductBulkAction):
         for record in records:
             record.is_public = False
             record.save()
-        messages.info(
+        messages.success(
             request,
             ngettext(
                 "Public status was successfully updated for %(count)d record.",
@@ -74,7 +70,7 @@ class MakeChildrenPublicAction(ChildBulkAction):
         count = Product.objects.filter(
             pk__in=child_ids, structure=Product.CHILD
         ).update(is_public=True)
-        messages.info(
+        messages.success(
             request,
             ngettext(
                 "Updated %(count)d child product.",
@@ -92,7 +88,7 @@ class MakeChildrenNonPublicAction(ChildBulkAction):
         count = Product.objects.filter(
             pk__in=child_ids, structure=Product.CHILD
         ).update(is_public=False)
-        messages.info(
+        messages.success(
             request,
             ngettext(
                 "Updated %(count)d child product.",
@@ -112,7 +108,7 @@ class SetChildrenPriceAction(ChildBulkAction):
         count = StockRecord.objects.filter(
             product__pk__in=child_ids, product__structure=Product.CHILD
         ).update(price=form.cleaned_data["new_price"])
-        messages.info(
+        messages.success(
             request,
             ngettext(
                 "Price updated on %(count)d stockrecord.",

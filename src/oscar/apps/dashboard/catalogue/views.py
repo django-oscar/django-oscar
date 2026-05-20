@@ -69,18 +69,9 @@ PopUpWindowCreateMixin, PopUpWindowUpdateMixin, PopUpWindowDeleteMixin = get_cla
     "dashboard.views",
     ("PopUpWindowCreateMixin", "PopUpWindowUpdateMixin", "PopUpWindowDeleteMixin"),
 )
-PartnerProductFilterMixin, CatalogueBulkActionMixin = get_classes(
+PartnerProductFilterMixin, ProductBulkActionMixin = get_classes(
     "dashboard.catalogue.mixins",
-    ("PartnerProductFilterMixin", "CatalogueBulkActionMixin"),
-)
-ChildBulkAction, MakeChildrenPublicAction, MakeChildrenNonPublicAction, SetChildrenPriceAction = get_classes(
-    "dashboard.catalogue.bulk_actions",
-    (
-        "ChildBulkAction",
-        "MakeChildrenPublicAction",
-        "MakeChildrenNonPublicAction",
-        "SetChildrenPriceAction",
-    ),
+    ("PartnerProductFilterMixin", "ProductBulkActionMixin"),
 )
 Product = get_model("catalogue", "Product")
 Category = get_model("catalogue", "Category")
@@ -95,7 +86,7 @@ Option = get_model("catalogue", "Option")
 
 
 class ProductListView(
-    CatalogueBulkActionMixin, PartnerProductFilterMixin, SingleTableView
+    ProductBulkActionMixin, PartnerProductFilterMixin, SingleTableView
 ):
     """
     Dashboard view of the product list.
@@ -196,31 +187,27 @@ class ProductListView(
         return queryset.distinct()
 
 
-class ChildProductSelectView(generic.View):
+class ChildProductSelectView(ProductBulkActionMixin, generic.View):
     """
     Intermediate view for two-step bulk actions that operate on child products.
+
+    Extends ``ProductBulkActionMixin`` to inherit ``actions`` and
+    ``intermediate_actions`` as the single source of truth for which actions
+    this view handles.
 
     Step 1 (GET): Renders the action's confirmation template with parent
     products and their children pre-selected.
 
     Step 2 (POST): Validates the form, then delegates execution entirely to
-    ``action.handler(request, child_ids, form)``. The view owns the UI flow;
+    ``action.execute(request, child_ids, form)``. The view owns the UI flow;
     the action owns the business logic.
     """
-
-    bulk_intermediate_session_key = "bulk_intermediate"
-
-    bulk_actions = {
-        "make_children_public": MakeChildrenPublicAction(),
-        "make_children_non_public": MakeChildrenNonPublicAction(),
-        "set_children_price": SetChildrenPriceAction(),
-    }
 
     def dispatch(self, request, *args, **kwargs):
         session_data = request.session.get(self.bulk_intermediate_session_key, {})
         self._action = session_data.get("action")
         self._parent_ids = session_data.get("parent_ids", [])
-        if not self._action or not self._parent_ids or self._action not in self.bulk_actions:
+        if not self._action or not self._parent_ids or self._action not in self.intermediate_actions:
             messages.warning(
                 request,
                 _("No pending bulk action. Please select products and try again."),
@@ -245,7 +232,7 @@ class ChildProductSelectView(generic.View):
         )
 
     def get_form(self, data=None):
-        action = self.bulk_actions[self._action]
+        action = self.actions[self._action]
         return action.form_class(
             data=data,
             children_queryset=self.get_children_queryset_for_form(),
@@ -254,7 +241,7 @@ class ChildProductSelectView(generic.View):
     def get_context_data(self, form=None, **kwargs):
         if form is None:
             form = self.get_form()
-        action = self.bulk_actions[self._action]
+        action = self.actions[self._action]
         ctx = {
             "form": form,
             "parents_with_children": self.get_parent_queryset(),
@@ -267,7 +254,7 @@ class ChildProductSelectView(generic.View):
         return ctx
 
     def get_template_name(self):
-        return self.bulk_actions[self._action].template
+        return self.actions[self._action].template
 
     def get(self, request, *args, **kwargs):
         return TemplateResponse(request, self.get_template_name(), self.get_context_data())
@@ -279,7 +266,7 @@ class ChildProductSelectView(generic.View):
                 request, self.get_template_name(), self.get_context_data(form=form)
             )
 
-        action = self.bulk_actions[self._action]
+        action = self.actions[self._action]
         child_ids = list(
             form.cleaned_data["selected_children"].values_list("pk", flat=True)
         )
@@ -694,7 +681,7 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(CatalogueBulkActionMixin, SingleTableView):
+class CategoryListView(ProductBulkActionMixin, SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category
     table_class = CategoryTable
@@ -720,7 +707,7 @@ class CategoryListView(CatalogueBulkActionMixin, SingleTableView):
 
 
 class CategoryDetailListView(
-    CatalogueBulkActionMixin, SingleTableMixin, generic.DetailView
+    ProductBulkActionMixin, SingleTableMixin, generic.DetailView
 ):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category
