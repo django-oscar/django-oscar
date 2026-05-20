@@ -1,13 +1,25 @@
-from django.contrib import messages
 from django.db.models import Q
-from django.db.transaction import atomic
-from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.translation import ngettext
 
+from oscar.core.loading import get_classes
 from oscar.views.generic import IntermediateBulkEditMixin
 
-from .constants import PRODUCT_BULK_ACTIONS
+(
+    MakePublicAction,
+    MakeNonPublicAction,
+    MakeChildrenPublicAction,
+    MakeChildrenNonPublicAction,
+    SetChildrenPriceAction,
+) = get_classes(
+    "dashboard.catalogue.bulk_actions",
+    (
+        "MakePublicAction",
+        "MakeNonPublicAction",
+        "MakeChildrenPublicAction",
+        "MakeChildrenNonPublicAction",
+        "SetChildrenPriceAction",
+    ),
+)
 
 
 class PartnerProductFilterMixin:
@@ -28,11 +40,17 @@ class PartnerProductFilterMixin:
         ).distinct()
 
 
-class PublicVisibilityUpdateMixin(IntermediateBulkEditMixin):
+class CatalogueBulkActionMixin(IntermediateBulkEditMixin):
     # Dict of action name → label. Used both as the dispatch whitelist (dict
     # keys) and as the data source for the bulk-actions dropdown in the template.
     # Subclasses can extend this dict to add further actions.
-    actions = PRODUCT_BULK_ACTIONS
+    actions = {
+        "make_public": MakePublicAction(),
+        "make_non_public": MakeNonPublicAction(),
+        "make_children_public": MakeChildrenPublicAction(),
+        "make_children_non_public": MakeChildrenNonPublicAction(),
+        "set_children_price": SetChildrenPriceAction(),
+    }
     intermediate_actions = (
         "make_children_public",
         "make_children_non_public",
@@ -47,25 +65,3 @@ class PublicVisibilityUpdateMixin(IntermediateBulkEditMixin):
     def get_intermediate_url(self, request, action):
         return reverse("dashboard:catalogue-product-children-bulk-action")
 
-    def make_non_public(self, request, records):
-        return self._update_public_flag(records, False)
-
-    def make_public(self, request, records):
-        return self._update_public_flag(records, True)
-
-    @atomic
-    def _update_public_flag(self, records, value):
-        for record in records:
-            record.is_public = value
-            record.save()
-        total_records = len(records)
-        messages.info(
-            self.request,
-            ngettext(
-                "Public status was successfully updated for %(count)d record.",
-                "Public status was successfully updated for %(count)d records.",
-                total_records,
-            )
-            % {"count": total_records},
-        )
-        return redirect(self.request.get_full_path())

@@ -8,6 +8,26 @@ from django.views.generic.base import View
 from oscar.core.utils import safe_referrer
 
 
+class BulkAction:
+    """Base class for bulk actions. Intended to be used with BulkEditMixin."""
+
+    label = ""
+
+    def __str__(self):
+        return str(self.label)
+
+    def execute(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+
+class IntermediateBulkAction(BulkAction):
+    """Base class for two-step bulk actions. Intended to be used with IntermediateBulkEditMixin."""
+
+    form_class = None
+    template = "oscar/dashboard/intermediate_bulk_action.html"
+    context = {}
+
+
 class PostActionMixin:
     """
     Simple mixin to forward POST request that contain a key 'action'
@@ -25,7 +45,7 @@ class PostActionMixin:
             method_name = "do_%s" % self.request.POST["action"].lower()
             if hasattr(self, method_name):
                 getattr(self, method_name)(model)
-                return self.response
+                return self.response,
             else:
                 messages.error(request, _("Invalid form submission"))
                 return self.get(request, *args, **kwargs)
@@ -43,13 +63,15 @@ class BulkEditMixin:
     Mixin for views that have a bulk editing facility.  This is normally in the
     form of tabular data where each row has a checkbox.  The UI allows a number
     of rows to be selected and then some 'action' to be performed on them.
+
+    actions should be a dict with "action_name": BulkAction().
     """
 
     action_param = "action"
     select_across_param = "select_across"
 
     # Permitted methods that can be used to act on the selected objects
-    actions = None
+    actions: dict[str, BulkAction] = None
     checkbox_object_name = None
 
     def get_actions(self):
@@ -94,6 +116,9 @@ class BulkEditMixin:
 
             objects = self.get_objects(ids)
 
+        action_handler = actions[action]
+        if hasattr(action_handler, "execute"):
+            return action_handler.execute(request, objects)
         return getattr(self, action)(request, objects)
 
     def get_objects(self, ids):
@@ -107,11 +132,12 @@ class BulkEditMixin:
 
 class IntermediateBulkEditMixin(BulkEditMixin):
     """
-    Extension of BulkEditMixin that supports a two-step bulk action flow.
-
-    Actions listed in `intermediate_actions` store the selected parent IDs in
-    the session and redirect to an intermediate view (returned by
-    `get_intermediate_url`) instead of applying immediately.
+    Extension of BulkEditMixin
+    Allows for bulk actions with an intermediate step that contains a form.
+    So the user can input extra parameters to the bulk action.
+    
+    Actions with an intermediate step should be specified by
+    putting the keys from actions into intermediate_actions
     """
 
     intermediate_actions = ()

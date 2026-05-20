@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.db.transaction import atomic
+from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _, ngettext
 
 from oscar.core.loading import get_classes, get_model
+from oscar.views.generic import BulkAction, IntermediateBulkAction
 
 ChildrenBulkActionForm, SetChildrenPriceForm = get_classes(
     "dashboard.catalogue.forms",
@@ -12,28 +14,53 @@ Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
 
 
-class ChildBulkAction:
-    """
-    Base class for a bulk action that operates on child products.
+class ProductBulkAction(BulkAction):
+    """Base class for a direct bulk action on a list of products."""
 
-    Subclass and set ``label``, and optionally ``form_class``, ``template``,
-    and ``context``. Override ``execute`` to implement the action logic.
 
-    ``execute(request, child_ids, form) -> None | HttpResponse``
-        Perform the action. Return ``None`` on success or an ``HttpResponse``
-        to abort (e.g. re-render the form with an error).
+class MakePublicAction(ProductBulkAction):
+    label = _("Make public")
 
-    ``template``
-        Should extend ``product_children_bulk_action.html`` and override
-        ``{% block extra_column_headers %}``,
-        ``{% block extra_column_values %}``, and
-        ``{% block action_notice %}`` as needed.
-    """
+    @atomic
+    def execute(self, request, records):
+        for record in records:
+            record.is_public = True
+            record.save()
+        messages.info(
+            request,
+            ngettext(
+                "Public status was successfully updated for %(count)d record.",
+                "Public status was successfully updated for %(count)d records.",
+                len(records),
+            ) % {"count": len(records)},
+        )
+        return redirect(request.get_full_path())
 
-    label = ""
+
+class MakeNonPublicAction(ProductBulkAction):
+    label = _("Make non-public")
+
+    @atomic
+    def execute(self, request, records):
+        for record in records:
+            record.is_public = False
+            record.save()
+        messages.info(
+            request,
+            ngettext(
+                "Public status was successfully updated for %(count)d record.",
+                "Public status was successfully updated for %(count)d records.",
+                len(records),
+            ) % {"count": len(records)},
+        )
+        return redirect(request.get_full_path())
+
+
+class ChildBulkAction(IntermediateBulkAction):
+    """Base class for a two-step bulk action that operates on child products."""
+
     form_class = ChildrenBulkActionForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action.html"
-    context = {}
 
     def execute(self, request, child_ids, form):
         raise NotImplementedError
@@ -76,7 +103,7 @@ class MakeChildrenNonPublicAction(ChildBulkAction):
 
 
 class SetChildrenPriceAction(ChildBulkAction):
-    label = _("Set children price")
+    label = _("Update children price")
     form_class = SetChildrenPriceForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action_set_price.html"
 

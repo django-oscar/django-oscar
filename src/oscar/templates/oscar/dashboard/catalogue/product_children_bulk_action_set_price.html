@@ -1,12 +1,12 @@
 {% extends "oscar/dashboard/catalogue/product_children_bulk_action.html" %}
 {% load i18n %}
 
-{% block action_notice %}
+{% block prepend_form %}
 <div class="alert alert-warning">
     <strong>{% trans "Note:" %}</strong>
     {% trans "This action will update <strong>all stockrecords</strong> of each selected child product." %}
 </div>
-{% endblock action_notice %}
+{% endblock prepend_form %}
 
 {% block extra_column_headers %}
 <th>{% trans "Current price" %}</th>

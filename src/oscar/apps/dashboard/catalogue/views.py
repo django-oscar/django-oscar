@@ -69,9 +69,9 @@ PopUpWindowCreateMixin, PopUpWindowUpdateMixin, PopUpWindowDeleteMixin = get_cla
     "dashboard.views",
     ("PopUpWindowCreateMixin", "PopUpWindowUpdateMixin", "PopUpWindowDeleteMixin"),
 )
-PartnerProductFilterMixin, PublicVisibilityUpdateMixin = get_classes(
+PartnerProductFilterMixin, CatalogueBulkActionMixin = get_classes(
     "dashboard.catalogue.mixins",
-    ("PartnerProductFilterMixin", "PublicVisibilityUpdateMixin"),
+    ("PartnerProductFilterMixin", "CatalogueBulkActionMixin"),
 )
 ChildBulkAction, MakeChildrenPublicAction, MakeChildrenNonPublicAction, SetChildrenPriceAction = get_classes(
     "dashboard.catalogue.bulk_actions",
@@ -95,7 +95,7 @@ Option = get_model("catalogue", "Option")
 
 
 class ProductListView(
-    PublicVisibilityUpdateMixin, PartnerProductFilterMixin, SingleTableView
+    CatalogueBulkActionMixin, PartnerProductFilterMixin, SingleTableView
 ):
     """
     Dashboard view of the product list.
@@ -694,7 +694,7 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(PublicVisibilityUpdateMixin, SingleTableView):
+class CategoryListView(CatalogueBulkActionMixin, SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category
     table_class = CategoryTable
@@ -720,7 +720,7 @@ class CategoryListView(PublicVisibilityUpdateMixin, SingleTableView):
 
 
 class CategoryDetailListView(
-    PublicVisibilityUpdateMixin, SingleTableMixin, generic.DetailView
+    CatalogueBulkActionMixin, SingleTableMixin, generic.DetailView
 ):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category
