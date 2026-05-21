@@ -1,7 +1,7 @@
 {% extends 'oscar/dashboard/intermediate_bulk_action.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Confirm child product action" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Confirm variant action" %} | {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
@@ -36,7 +36,7 @@
         <input type="checkbox" class="select-all-children mr-2"
             data-parent="{{ parent.pk }}" title="{% trans 'Select / deselect all' %}">
         <strong>{{ parent.get_title }}</strong>
-        <small class="text-muted ml-2">({{ parent.children.count }} {% trans "children" %})</small>
+        <small class="text-muted ml-2">({{ parent.children.count }} {% trans "variants" %})</small>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -65,7 +65,7 @@
                 {% endwith %}
                 {% empty %}
                 <tr>
-                    <td colspan="4" class="text-muted px-3">{% trans "No child products." %}</td>
+                    <td colspan="4" class="text-muted px-3">{% trans "No variants." %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -74,7 +74,7 @@
     </div>
 </div>
 {% empty %}
-<p class="text-muted">{% trans "None of the selected products have child products." %}</p>
+<p class="text-muted">{% trans "None of the selected products have variants." %}</p>
 {% endfor %}
 {% endwith %}
 {% endblock form_content %}

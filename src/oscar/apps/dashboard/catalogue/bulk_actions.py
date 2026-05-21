@@ -58,7 +58,7 @@ class ChildBulkAction(IntermediateBulkAction):
 
 
 class MakeChildrenPublicAction(ChildBulkAction):
-    label = _("Make children public")
+    label = _("Make variants public")
 
     @atomic
     def execute(self, request, child_ids, form):
@@ -68,8 +68,8 @@ class MakeChildrenPublicAction(ChildBulkAction):
         messages.success(
             request,
             ngettext(
-                "Updated %(count)d child product.",
-                "Updated %(count)d child products.",
+                "Updated %(count)d variant.",
+                "Updated %(count)d variants.",
                 count,
             )
             % {"count": count},
@@ -77,7 +77,7 @@ class MakeChildrenPublicAction(ChildBulkAction):
 
 
 class MakeChildrenNonPublicAction(ChildBulkAction):
-    label = _("Make children non-public")
+    label = _("Make variants non-public")
 
     @atomic
     def execute(self, request, child_ids, form):
@@ -87,8 +87,8 @@ class MakeChildrenNonPublicAction(ChildBulkAction):
         messages.success(
             request,
             ngettext(
-                "Updated %(count)d child product.",
-                "Updated %(count)d child products.",
+                "Updated %(count)d variant.",
+                "Updated %(count)d variants.",
                 count,
             )
             % {"count": count},
@@ -96,7 +96,7 @@ class MakeChildrenNonPublicAction(ChildBulkAction):
 
 
 class SetChildrenPriceAction(ChildBulkAction):
-    label = _("Update children price")
+    label = _("Update variant prices")
     form_class = SetChildrenPriceForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action_set_price.html"
 

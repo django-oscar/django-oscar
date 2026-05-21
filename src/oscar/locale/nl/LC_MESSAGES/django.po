@@ -7456,8 +7456,8 @@ msgid ""
 msgstr "\nVerwijder Product <strong>%(title)s</strong> - ben je zeker?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:45
-msgid "This will also delete the following child products:"
-msgstr "Dit verwijdert ook volgende subproducten:"
+msgid "This will also delete the following variants:"
+msgstr "Dit verwijdert ook de volgende varianten:"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:33
 msgid "Create new product"
@@ -9436,20 +9436,20 @@ msgstr "Openbaar maken"
 msgid "Make non-public"
 msgstr "Niet openbaar maken"
 
-msgid "Make children public"
-msgstr "Kindproducten openbaar maken"
+msgid "Make variants public"
+msgstr "Varianten openbaar maken"
 
-msgid "Make children non-public"
-msgstr "Kindproducten niet openbaar maken"
+msgid "Make variants non-public"
+msgstr "Varianten niet openbaar maken"
 
-msgid "Update children price"
-msgstr "Prijs van kindproducten bijwerken"
+msgid "Update variant prices"
+msgstr "Variantprijzen bijwerken"
 
 msgid "No pending bulk action. Please select items and try again."
 msgstr "Geen openstaande bulkactie. Selecteer items en probeer het opnieuw."
 
-msgid "Select at least one child product."
-msgstr "Selecteer minimaal één kindproduct."
+msgid "Select at least one variant."
+msgstr "Selecteer minimaal één variant."
 
 #, python-format
 msgid "Price updated on %(count)d stockrecord."
@@ -9464,10 +9464,10 @@ msgstr[0] "Publieksstatus succesvol bijgewerkt voor %(count)d record."
 msgstr[1] "Publieksstatus succesvol bijgewerkt voor %(count)d records."
 
 #, python-format
-msgid "Updated %(count)d child product."
-msgid_plural "Updated %(count)d child products."
-msgstr[0] "%(count)d kindproduct bijgewerkt."
-msgstr[1] "%(count)d kindproducten bijgewerkt."
+msgid "Updated %(count)d variant."
+msgid_plural "Updated %(count)d variants."
+msgstr[0] "%(count)d variant bijgewerkt."
+msgstr[1] "%(count)d varianten bijgewerkt."
 
 msgid "New price"
 msgstr "Nieuwe prijs"
@@ -9481,8 +9481,8 @@ msgstr "Bevestigen"
 msgid "Apply"
 msgstr "Toepassen"
 
-msgid "Confirm child product action"
-msgstr "Actie voor kindproduct bevestigen"
+msgid "Confirm variant action"
+msgstr "Variantactie bevestigen"
 
 msgid "Action parameters"
 msgstr "Actieparameters"
@@ -9490,23 +9490,23 @@ msgstr "Actieparameters"
 msgid "Select / deselect all"
 msgstr "Alles selecteren / deselecteren"
 
-msgid "children"
-msgstr "kinderen"
+msgid "variants"
+msgstr "varianten"
 
 msgid "Currently public"
 msgstr "Momenteel openbaar"
 
-msgid "No child products."
-msgstr "Geen kindproducten."
+msgid "No variants."
+msgstr "Geen varianten."
 
-msgid "None of the selected products have child products."
-msgstr "Geen van de geselecteerde producten heeft kindproducten."
+msgid "None of the selected products have variants."
+msgstr "Geen van de geselecteerde producten heeft varianten."
 
 msgid "Note:"
 msgstr "Opmerking:"
 
-msgid "This action will update <strong>all existing stockrecords</strong> of each selected child product."
-msgstr "Deze actie werkt <strong>alle bestaande voorraadrecords</strong> bij van elk geselecteerd kindproduct."
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected variant."
+msgstr "Deze actie werkt <strong>alle bestaande voorraadrecords</strong> bij van elke geselecteerde variant."
 
 msgid "Current price"
 msgstr "Huidige prijs"

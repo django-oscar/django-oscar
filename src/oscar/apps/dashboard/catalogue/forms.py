@@ -461,7 +461,7 @@ class ChildrenBulkActionForm(forms.Form):
 
     selected_children = forms.ModelMultipleChoiceField(
         queryset=Product.objects.none(),
-        error_messages={"required": _("Select at least one child product.")},
+        error_messages={"required": _("Select at least one variant.")},
     )
 
     def __init__(self, *args, children_queryset=None, **kwargs):

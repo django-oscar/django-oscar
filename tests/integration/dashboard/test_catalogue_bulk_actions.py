@@ -53,7 +53,7 @@ class TestChildrenBulkActionForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn("selected_children", form.errors)
         self.assertIn(
-            "Select at least one child product.", form.errors["selected_children"]
+            "Select at least one variant.", form.errors["selected_children"]
         )
 
     def test_invalid_pk_outside_queryset(self):

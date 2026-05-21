@@ -99,7 +99,7 @@ class TestMakeChildrenNonPublicFlow(ChildrenBulkActionTests):
         form = page.context["form"]
         self.assertIn("selected_children", form.errors)
         self.assertIn(
-            "Select at least one child product.", form.errors["selected_children"]
+            "Select at least one variant.", form.errors["selected_children"]
         )
 
 

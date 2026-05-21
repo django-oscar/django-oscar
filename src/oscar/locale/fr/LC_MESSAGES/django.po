@@ -7475,8 +7475,8 @@ msgid ""
 msgstr "\nSupprimer le produit <strong>%(title)s</strong> - êtes-vous sûr ?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:45
-msgid "This will also delete the following child products:"
-msgstr "Ceci supprimera également les produits enfants suivants :"
+msgid "This will also delete the following variants:"
+msgstr "Ceci supprimera également les variantes suivantes :"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:33
 msgid "Create new product"
@@ -9459,20 +9459,20 @@ msgstr "Rendre public"
 msgid "Make non-public"
 msgstr "Rendre non public"
 
-msgid "Make children public"
-msgstr "Rendre les produits enfants publics"
+msgid "Make variants public"
+msgstr "Rendre les variantes publiques"
 
-msgid "Make children non-public"
-msgstr "Rendre les produits enfants non publics"
+msgid "Make variants non-public"
+msgstr "Rendre les variantes non publiques"
 
-msgid "Update children price"
-msgstr "Mettre à jour le prix des produits enfants"
+msgid "Update variant prices"
+msgstr "Mettre à jour le prix des variantes"
 
 msgid "No pending bulk action. Please select items and try again."
 msgstr "Aucune action groupée en attente. Veuillez sélectionner des éléments et réessayer."
 
-msgid "Select at least one child product."
-msgstr "Sélectionnez au moins un produit enfant."
+msgid "Select at least one variant."
+msgstr "Sélectionnez au moins une variante."
 
 #, python-format
 msgid "Price updated on %(count)d stockrecord."
@@ -9487,10 +9487,10 @@ msgstr[0] "Statut public mis à jour avec succès pour %(count)d enregistrement.
 msgstr[1] "Statut public mis à jour avec succès pour %(count)d enregistrements."
 
 #, python-format
-msgid "Updated %(count)d child product."
-msgid_plural "Updated %(count)d child products."
-msgstr[0] "%(count)d produit enfant mis à jour."
-msgstr[1] "%(count)d produits enfants mis à jour."
+msgid "Updated %(count)d variant."
+msgid_plural "Updated %(count)d variants."
+msgstr[0] "%(count)d variante mise à jour."
+msgstr[1] "%(count)d variantes mises à jour."
 
 msgid "New price"
 msgstr "Nouveau prix"
@@ -9504,8 +9504,8 @@ msgstr "Confirmer"
 msgid "Apply"
 msgstr "Appliquer"
 
-msgid "Confirm child product action"
-msgstr "Confirmer l'action sur le produit enfant"
+msgid "Confirm variant action"
+msgstr "Confirmer l'action sur la variante"
 
 msgid "Action parameters"
 msgstr "Paramètres de l'action"
@@ -9513,23 +9513,23 @@ msgstr "Paramètres de l'action"
 msgid "Select / deselect all"
 msgstr "Tout sélectionner / désélectionner"
 
-msgid "children"
-msgstr "enfants"
+msgid "variants"
+msgstr "variantes"
 
 msgid "Currently public"
 msgstr "Actuellement public"
 
-msgid "No child products."
-msgstr "Aucun produit enfant."
+msgid "No variants."
+msgstr "Aucune variante."
 
-msgid "None of the selected products have child products."
-msgstr "Aucun des produits sélectionnés n'a de produits enfants."
+msgid "None of the selected products have variants."
+msgstr "Aucun des produits sélectionnés n'a de variantes."
 
 msgid "Note:"
 msgstr "Remarque :"
 
-msgid "This action will update <strong>all existing stockrecords</strong> of each selected child product."
-msgstr "Cette action mettra à jour <strong>tous les enregistrements de stock existants</strong> de chaque produit enfant sélectionné."
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected variant."
+msgstr "Cette action mettra à jour <strong>tous les enregistrements de stock existants</strong> de chaque variante sélectionnée."
 
 msgid "Current price"
 msgstr "Prix actuel"

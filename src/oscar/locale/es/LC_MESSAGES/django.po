@@ -7481,8 +7481,8 @@ msgid ""
 msgstr "\nEliminar producto <strong>%(title)s</strong> - ¿está seguro?\n                "
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:45
-msgid "This will also delete the following child products:"
-msgstr "Esto eliminará también los siguientes productos hijo:"
+msgid "This will also delete the following variants:"
+msgstr "Esto eliminará también las siguientes variantes:"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:33
 msgid "Create new product"
@@ -9465,20 +9465,20 @@ msgstr "Hacer público"
 msgid "Make non-public"
 msgstr "Hacer no público"
 
-msgid "Make children public"
-msgstr "Hacer públicos los productos secundarios"
+msgid "Make variants public"
+msgstr "Hacer públicas las variantes"
 
-msgid "Make children non-public"
-msgstr "Hacer no públicos los productos secundarios"
+msgid "Make variants non-public"
+msgstr "Hacer no públicas las variantes"
 
-msgid "Update children price"
-msgstr "Actualizar precio de productos secundarios"
+msgid "Update variant prices"
+msgstr "Actualizar precio de variantes"
 
 msgid "No pending bulk action. Please select items and try again."
 msgstr "No hay acción masiva pendiente. Seleccione elementos e inténtelo de nuevo."
 
-msgid "Select at least one child product."
-msgstr "Seleccione al menos un producto secundario."
+msgid "Select at least one variant."
+msgstr "Seleccione al menos una variante."
 
 #, python-format
 msgid "Price updated on %(count)d stockrecord."
@@ -9493,10 +9493,10 @@ msgstr[0] "Estado público actualizado correctamente para %(count)d registro."
 msgstr[1] "Estado público actualizado correctamente para %(count)d registros."
 
 #, python-format
-msgid "Updated %(count)d child product."
-msgid_plural "Updated %(count)d child products."
-msgstr[0] "%(count)d producto secundario actualizado."
-msgstr[1] "%(count)d productos secundarios actualizados."
+msgid "Updated %(count)d variant."
+msgid_plural "Updated %(count)d variants."
+msgstr[0] "%(count)d variante actualizada."
+msgstr[1] "%(count)d variantes actualizadas."
 
 msgid "New price"
 msgstr "Nuevo precio"
@@ -9510,8 +9510,8 @@ msgstr "Confirmar"
 msgid "Apply"
 msgstr "Aplicar"
 
-msgid "Confirm child product action"
-msgstr "Confirmar acción en producto secundario"
+msgid "Confirm variant action"
+msgstr "Confirmar acción en variante"
 
 msgid "Action parameters"
 msgstr "Parámetros de acción"
@@ -9519,23 +9519,23 @@ msgstr "Parámetros de acción"
 msgid "Select / deselect all"
 msgstr "Seleccionar / deseleccionar todo"
 
-msgid "children"
-msgstr "secundarios"
+msgid "variants"
+msgstr "variantes"
 
 msgid "Currently public"
 msgstr "Actualmente público"
 
-msgid "No child products."
-msgstr "Sin productos secundarios."
+msgid "No variants."
+msgstr "Sin variantes."
 
-msgid "None of the selected products have child products."
-msgstr "Ninguno de los productos seleccionados tiene productos secundarios."
+msgid "None of the selected products have variants."
+msgstr "Ninguno de los productos seleccionados tiene variantes."
 
 msgid "Note:"
 msgstr "Nota:"
 
-msgid "This action will update <strong>all existing stockrecords</strong> of each selected child product."
-msgstr "Esta acción actualizará <strong>todos los registros de stock existentes</strong> de cada producto secundario seleccionado."
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected variant."
+msgstr "Esta acción actualizará <strong>todos los registros de stock existentes</strong> de cada variante seleccionada."
 
 msgid "Current price"
 msgstr "Precio actual"
