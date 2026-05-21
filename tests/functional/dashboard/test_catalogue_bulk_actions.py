@@ -98,9 +98,7 @@ class TestMakeChildrenNonPublicFlow(ChildrenBulkActionTests):
         self.assertIsOk(page)
         form = page.context["form"]
         self.assertIn("selected_children", form.errors)
-        self.assertIn(
-            "Select at least one variant.", form.errors["selected_children"]
-        )
+        self.assertIn("Select at least one variant.", form.errors["selected_children"])
 
 
 class TestSetChildrenPriceFlow(ChildrenBulkActionTests):

@@ -52,9 +52,7 @@ class TestChildrenBulkActionForm(TestCase):
         form = ChildrenBulkActionForm(data={}, children_queryset=self.qs)
         self.assertFalse(form.is_valid())
         self.assertIn("selected_children", form.errors)
-        self.assertIn(
-            "Select at least one variant.", form.errors["selected_children"]
-        )
+        self.assertIn("Select at least one variant.", form.errors["selected_children"])
 
     def test_invalid_pk_outside_queryset(self):
         restricted_qs = Product.objects.filter(pk=self.child1.pk)
