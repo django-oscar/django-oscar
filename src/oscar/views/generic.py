@@ -122,8 +122,11 @@ class BulkEditMixin:
 
         action_handler = actions[action]
         if hasattr(action_handler, "execute"):
-            return action_handler.execute(request, objects)
-        return getattr(self, action)(request, objects)
+            action_handler.execute(request, objects)
+        else:
+            getattr(self, action)(request, objects)
+
+        return redirect(self.get_success_url(request))
 
     def get_objects(self, ids):
         object_dict = self.get_object_dict(ids)
@@ -265,9 +268,7 @@ class IntermediateBulkActionView(View):
             return TemplateResponse(
                 request, self.get_template_name(), self.get_context_data(form=form)
             )
-        result = self.execute_action(request, form)
-        if result is not None:
-            return result
+        self.execute_action(request, form)
         self._clear_session(request)
         return redirect(self.get_success_url())
 

@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.db.transaction import atomic
-from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _, ngettext
 
 from oscar.core.loading import get_classes, get_model
@@ -31,7 +30,6 @@ class MakePublicAction(BulkAction):
             )
             % {"count": len(records)},
         )
-        return redirect(request.get_full_path())
 
 
 class MakeNonPublicAction(BulkAction):
@@ -51,7 +49,6 @@ class MakeNonPublicAction(BulkAction):
             )
             % {"count": len(records)},
         )
-        return redirect(request.get_full_path())
 
 
 class ChildBulkAction(IntermediateBulkAction):
