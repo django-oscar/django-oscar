@@ -18,11 +18,13 @@
     <div class="table-header">
         <h3>{% block action_fields_header %}{% trans "Action parameters" %}{% endblock action_fields_header %}</h3>
     </div>
+    {% block form_fields %}
     {% for field in form %}
         {% if field.html_name != "selected_children" %}
             {% include "oscar/dashboard/partials/form_field.html" %}
         {% endif %}
     {% endfor %}
+    {% endblock %}
 </div>
 
 {% if form.selected_children.errors %}
@@ -52,7 +54,7 @@
             <tbody>
                 {% for child in parent.children.all %}
                 {% with child_pk=child.pk|stringformat:"s" %}
-                <tr>
+                <tr class="align-middle">
                     <td class="text-center">
                         <input type="checkbox" name="selected_children" value="{{ child.pk }}"
                             data-parent="{{ parent.pk }}"

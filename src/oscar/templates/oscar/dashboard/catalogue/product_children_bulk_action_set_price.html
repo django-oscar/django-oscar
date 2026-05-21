@@ -1,5 +1,5 @@
 {% extends "oscar/dashboard/catalogue/product_children_bulk_action.html" %}
-{% load i18n %}
+{% load i18n form_tags %}
 
 {% block prepend_form %}
 <div class="alert alert-warning">
@@ -8,12 +8,26 @@
 </div>
 {% endblock prepend_form %}
 
+{% block form_fields %}
+{% include "oscar/dashboard/partials/form_field.html" with field=form.new_price %}
+{% include "oscar/dashboard/partials/form_field.html" with field=form.increase_by_amount %}
+{% include "oscar/dashboard/partials/form_field.html" with field=form.increase_by_percentage %}
+{% if form.partners.field.queryset.exists %}
+{% include "oscar/dashboard/partials/form_field.html" with field=form.partners %}
+{% endif %}
+{% endblock %}
+
 {% block extra_column_headers %}
-<th>{% trans "Current price" %}</th>
+<th>{% trans "Lowest current price" %}</th>
+<th>{% trans "Specific price" %}</th>
 {% endblock %}
 
 {% block extra_column_values %}
-{% with sr=child.stockrecords.first %}
+{% with sr=child.cheapest_stockrecord price_field=form|child_price_field:child.pk %}
 <td>{% if sr %}{{ sr.price_currency }} {{ sr.price|default:"-" }}{% else %}-{% endif %}</td>
+<td>
+    {{ price_field }}
+    {% if price_field.errors %}<div class="text-danger small">{{ price_field.errors|join:", " }}</div>{% endif %}
+</td>
 {% endwith %}
 {% endblock %}

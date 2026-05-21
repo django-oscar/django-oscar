@@ -704,6 +704,10 @@ class AbstractProduct(models.Model):
         return self.stockrecords.count()
 
     @property
+    def cheapest_stockrecord(self):
+        return self.stockrecords.order_by("price").first()
+
+    @property
     def attribute_summary(self):
         """
         Return a string of all of a product's attributes

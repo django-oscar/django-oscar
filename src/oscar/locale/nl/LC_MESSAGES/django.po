@@ -9472,6 +9472,30 @@ msgstr[1] "%(count)d varianten bijgewerkt."
 msgid "New price"
 msgstr "Nieuwe prijs"
 
+msgid "Lowest current price"
+msgstr "Laagste huidige prijs"
+
+msgid "All variants without a specific price will be set to this price."
+msgstr "Alle varianten zonder een specifieke prijs worden op deze prijs ingesteld."
+
+msgid "Increase by amount"
+msgstr "Verhogen met bedrag"
+
+msgid "Adds a fixed amount to each variant's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+msgstr "Voegt een vast bedrag toe aan de huidige prijs van elke variant. Gebruik een negatieve waarde om te verlagen. Bijv. 2,00 verhoogt €10,00 naar €12,00; -3,00 verlaagt naar €7,00. Prijzen gaan niet onder €0,00."
+
+msgid "Increase by percentage"
+msgstr "Verhogen met percentage"
+
+msgid "Adds a percentage of each variant's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+msgstr "Voegt een percentage van de huidige prijs van elke variant toe. Gebruik een negatieve waarde om te verlagen. Bijv. 10 verhoogt €10,00 naar €11,00; -10 verlaagt naar €9,00. Prijzen gaan niet onder €0,00."
+
+msgid "Only one of new price, increase by amount, or increase by percentage can be set at a time."
+msgstr "Er kan slechts één optie tegelijk worden ingesteld: nieuwe prijs, verhogen met bedrag of verhogen met percentage."
+
+msgid "Enter a price, or set a base price above."
+msgstr "Voer een prijs in, of stel hierboven een basisprijs in."
+
 msgid "Confirm action"
 msgstr "Actie bevestigen"
 

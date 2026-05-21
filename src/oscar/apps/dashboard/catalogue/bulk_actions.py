@@ -1,4 +1,8 @@
+from decimal import Decimal
+
 from django.contrib import messages
+from django.db.models import Case, DecimalField, F, Value, When
+from django.db.models.functions import Greatest
 from django.db.transaction import atomic
 from django.utils.translation import gettext_lazy as _, ngettext
 
@@ -57,6 +61,9 @@ class ChildBulkAction(IntermediateBulkAction):
     form_class = ChildrenBulkActionForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action.html"
 
+    def filter_children_queryset(self, qs):
+        return qs
+
     def execute(self, request, child_ids, form):
         raise NotImplementedError
 
@@ -104,11 +111,57 @@ class SetChildrenPriceAction(ChildBulkAction):
     form_class = SetChildrenPriceForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action_set_price.html"
 
+    def filter_children_queryset(self, qs):
+        return qs.filter(stockrecords__isnull=False).distinct()
+
     @atomic
     def execute(self, request, child_ids, form):
-        count = StockRecord.objects.filter(
-            product__pk__in=child_ids, product__structure=Product.CHILD
-        ).update(price=form.cleaned_data["new_price"])
+        specific = form.get_specific_prices()
+        override_ids = [pk for pk in child_ids if pk in specific]
+        rest_ids = [pk for pk in child_ids if pk not in specific]
+        partners = form.cleaned_data.get("partners")
+        partner_filter = {"partner__in": partners} if partners else {}
+
+        count = 0
+
+        if override_ids:
+            count += StockRecord.objects.filter(
+                product_id__in=override_ids,
+                product__structure=Product.CHILD,
+                **partner_filter,
+            ).update(
+                price=Case(
+                    *[
+                        When(product_id=pk, then=Value(p))
+                        for pk, p in specific.items()
+                        if pk in override_ids
+                    ],
+                    output_field=DecimalField(),
+                )
+            )
+
+        if rest_ids:
+            qs = StockRecord.objects.filter(
+                product_id__in=rest_ids,
+                product__structure=Product.CHILD,
+                **partner_filter,
+            )
+            base = form.cleaned_data.get("new_price")
+            amount = form.cleaned_data.get("increase_by_amount")
+            percentage = form.cleaned_data.get("increase_by_percentage")
+
+            if base is not None:
+                count += qs.update(price=base)
+            elif amount is not None:
+                count += qs.update(
+                    price=Greatest(F("price") + amount, Value(Decimal("0")))
+                )
+            elif percentage is not None:
+                multiplier = Decimal("1") + percentage / Decimal("100")
+                count += qs.update(
+                    price=Greatest(F("price") * multiplier, Value(Decimal("0")))
+                )
+
         messages.success(
             request,
             ngettext(

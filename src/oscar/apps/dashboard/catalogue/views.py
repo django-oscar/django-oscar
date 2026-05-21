@@ -2,7 +2,7 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -197,15 +197,25 @@ class ChildProductSelectView(IntermediateBulkActionView):
     def get_success_url(self):
         return reverse("dashboard:catalogue-product-list")
 
+    def _get_action(self):
+        return self.intermediate_actions.get(self._action)
+
     def get_parent_queryset(self):
-        return Product.objects.filter(
-            pk__in=self._selected_ids, structure=Product.PARENT
-        ).prefetch_related("children")
+        children_qs = self._get_action().filter_children_queryset(
+            Product.objects.filter(structure=Product.CHILD)
+        )
+        return (
+            Product.objects.filter(pk__in=self._selected_ids, structure=Product.PARENT)
+            .filter(children__in=children_qs)
+            .prefetch_related(Prefetch("children", queryset=children_qs))
+            .distinct()
+        )
 
     def get_children_queryset_for_form(self):
-        return Product.objects.filter(
+        qs = Product.objects.filter(
             parent_id__in=self._selected_ids, structure=Product.CHILD
         )
+        return self._get_action().filter_children_queryset(qs)
 
     def get_form_kwargs(self):
         return {

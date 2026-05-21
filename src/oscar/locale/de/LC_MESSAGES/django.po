@@ -9472,6 +9472,30 @@ msgstr[1] "%(count)d Varianten aktualisiert."
 msgid "New price"
 msgstr "Neuer Preis"
 
+msgid "Lowest current price"
+msgstr "Niedrigster aktueller Preis"
+
+msgid "All variants without a specific price will be set to this price."
+msgstr "Alle Varianten ohne spezifischen Preis werden auf diesen Preis gesetzt."
+
+msgid "Increase by amount"
+msgstr "Um Betrag erhöhen"
+
+msgid "Adds a fixed amount to each variant's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+msgstr "Fügt einen festen Betrag zum aktuellen Preis jeder Variante hinzu. Negativer Wert zum Senken. Z. B. hebt 2,00 einen Preis von 10,00 € auf 12,00 € an; -3,00 senkt ihn auf 7,00 €. Preise gehen nicht unter 0,00 €."
+
+msgid "Increase by percentage"
+msgstr "Um Prozentsatz erhöhen"
+
+msgid "Adds a percentage of each variant's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+msgstr "Fügt einen Prozentsatz des aktuellen Preises jeder Variante hinzu. Negativer Wert zum Senken. Z. B. hebt 10 einen Preis von 10,00 € auf 11,00 € an; -10 senkt ihn auf 9,00 €. Preise gehen nicht unter 0,00 €."
+
+msgid "Only one of new price, increase by amount, or increase by percentage can be set at a time."
+msgstr "Es kann jeweils nur eines der Felder gesetzt werden: neuer Preis, Erhöhung um Betrag oder Erhöhung um Prozentsatz."
+
+msgid "Enter a price, or set a base price above."
+msgstr "Geben Sie einen Preis ein oder legen Sie oben einen Basispreis fest."
+
 msgid "Confirm action"
 msgstr "Aktion bestätigen"
 
