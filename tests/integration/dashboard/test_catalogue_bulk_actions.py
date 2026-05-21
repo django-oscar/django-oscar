@@ -8,7 +8,9 @@ from oscar.test.utils import RequestFactory
 
 Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
-ChildrenBulkActionForm = get_class("dashboard.catalogue.forms", "ChildrenBulkActionForm")
+ChildrenBulkActionForm = get_class(
+    "dashboard.catalogue.forms", "ChildrenBulkActionForm"
+)
 SetChildrenPriceForm = get_class("dashboard.catalogue.forms", "SetChildrenPriceForm")
 MakeChildrenPublicAction = get_class(
     "dashboard.catalogue.bulk_actions", "MakeChildrenPublicAction"
@@ -50,7 +52,9 @@ class TestChildrenBulkActionForm(TestCase):
         form = ChildrenBulkActionForm(data={}, children_queryset=self.qs)
         self.assertFalse(form.is_valid())
         self.assertIn("selected_children", form.errors)
-        self.assertIn("Select at least one child product.", form.errors["selected_children"])
+        self.assertIn(
+            "Select at least one child product.", form.errors["selected_children"]
+        )
 
     def test_invalid_pk_outside_queryset(self):
         restricted_qs = Product.objects.filter(pk=self.child1.pk)
@@ -110,8 +114,12 @@ class TestSetChildrenPriceForm(TestCase):
 class TestMakeChildrenPublicAction(TestCase):
     def setUp(self):
         self.parent = create_product(structure="parent")
-        self.child1 = create_product(structure="child", parent=self.parent, is_public=False)
-        self.child2 = create_product(structure="child", parent=self.parent, is_public=False)
+        self.child1 = create_product(
+            structure="child", parent=self.parent, is_public=False
+        )
+        self.child2 = create_product(
+            structure="child", parent=self.parent, is_public=False
+        )
         self.action = MakeChildrenPublicAction()
         self.request = RequestFactory().get("/")
 
@@ -136,8 +144,12 @@ class TestMakeChildrenPublicAction(TestCase):
 class TestMakeChildrenNonPublicAction(TestCase):
     def setUp(self):
         self.parent = create_product(structure="parent")
-        self.child1 = create_product(structure="child", parent=self.parent, is_public=True)
-        self.child2 = create_product(structure="child", parent=self.parent, is_public=True)
+        self.child1 = create_product(
+            structure="child", parent=self.parent, is_public=True
+        )
+        self.child2 = create_product(
+            structure="child", parent=self.parent, is_public=True
+        )
         self.action = MakeChildrenNonPublicAction()
         self.request = RequestFactory().get("/")
 
@@ -188,9 +200,7 @@ class TestSetChildrenPriceAction(TestCase):
     def test_ignores_non_child_stockrecords(self):
         standalone = create_product()
         sr_standalone = create_stockrecord(standalone, price=Decimal("5.00"))
-        self.action.execute(
-            self.request, [self.child1.pk, standalone.pk], self.form
-        )
+        self.action.execute(self.request, [self.child1.pk, standalone.pk], self.form)
         sr_standalone.refresh_from_db()
         self.assertEqual(sr_standalone.price, Decimal("5.00"))
 

@@ -17,8 +17,12 @@ class ChildrenBulkActionTests(WebTestCase):
     def setUp(self):
         super().setUp()
         self.parent = create_product(structure="parent")
-        self.child1 = create_product(structure="child", parent=self.parent, is_public=False)
-        self.child2 = create_product(structure="child", parent=self.parent, is_public=False)
+        self.child1 = create_product(
+            structure="child", parent=self.parent, is_public=False
+        )
+        self.child2 = create_product(
+            structure="child", parent=self.parent, is_public=False
+        )
         create_stockrecord(self.child1, price=Decimal("5.00"))
         create_stockrecord(self.child2, price=Decimal("5.00"))
 
@@ -153,9 +157,7 @@ class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
         self.assertIsRedirect(response)
         followed = response.follow()
         messages = list(followed.context["messages"])
-        self.assertTrue(
-            any("No pending bulk action" in str(m) for m in messages)
-        )
+        self.assertTrue(any("No pending bulk action" in str(m) for m in messages))
 
     def test_select_all_seeds_all_parents_in_session(self):
         parent2 = create_product(structure="parent")
