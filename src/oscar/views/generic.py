@@ -49,7 +49,7 @@ class PostActionMixin:
             method_name = "do_%s" % self.request.POST["action"].lower()
             if hasattr(self, method_name):
                 getattr(self, method_name)(model)
-                return (self.response,)
+                return self.response
             else:
                 messages.error(request, _("Invalid form submission"))
                 return self.get(request, *args, **kwargs)
