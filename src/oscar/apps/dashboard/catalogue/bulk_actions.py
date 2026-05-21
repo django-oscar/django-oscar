@@ -28,7 +28,8 @@ class MakePublicAction(BulkAction):
                 "Public status was successfully updated for %(count)d record.",
                 "Public status was successfully updated for %(count)d records.",
                 len(records),
-            ) % {"count": len(records)},
+            )
+            % {"count": len(records)},
         )
         return redirect(request.get_full_path())
 
@@ -47,7 +48,8 @@ class MakeNonPublicAction(BulkAction):
                 "Public status was successfully updated for %(count)d record.",
                 "Public status was successfully updated for %(count)d records.",
                 len(records),
-            ) % {"count": len(records)},
+            )
+            % {"count": len(records)},
         )
         return redirect(request.get_full_path())
 
@@ -76,7 +78,8 @@ class MakeChildrenPublicAction(ChildBulkAction):
                 "Updated %(count)d child product.",
                 "Updated %(count)d child products.",
                 count,
-            ) % {"count": count},
+            )
+            % {"count": count},
         )
 
 
@@ -94,7 +97,8 @@ class MakeChildrenNonPublicAction(ChildBulkAction):
                 "Updated %(count)d child product.",
                 "Updated %(count)d child products.",
                 count,
-            ) % {"count": count},
+            )
+            % {"count": count},
         )
 
 
@@ -114,5 +118,6 @@ class SetChildrenPriceAction(ChildBulkAction):
                 "Price updated on %(count)d stockrecord.",
                 "Price updated on %(count)d stockrecords.",
                 count,
-            ) % {"count": count},
+            )
+            % {"count": count},
         )

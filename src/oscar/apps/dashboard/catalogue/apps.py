@@ -34,9 +34,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 DashboardPermission.partner_dashboard_access,
             ),
             "catalogue-product-children-bulk-action": (
-                DashboardPermission.get(
-                    "catalogue", "view_product", "change_product"
-                ),
+                DashboardPermission.get("catalogue", "view_product", "change_product"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "catalogue-product-delete": (

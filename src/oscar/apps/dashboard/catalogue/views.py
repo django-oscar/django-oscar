@@ -6,7 +6,6 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
-from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
@@ -207,7 +206,10 @@ class ChildProductSelectView(IntermediateBulkActionView, ProductBulkActionMixin)
         )
 
     def get_form_kwargs(self):
-        return {**super().get_form_kwargs(), "children_queryset": self.get_children_queryset_for_form()}
+        return {
+            **super().get_form_kwargs(),
+            "children_queryset": self.get_children_queryset_for_form(),
+        }
 
     def get_context_data(self, form=None, **kwargs):
         return super().get_context_data(

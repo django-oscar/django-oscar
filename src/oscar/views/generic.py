@@ -17,7 +17,7 @@ class BulkAction:
     def __str__(self):
         return str(self.label)
 
-    def execute(self, request, *args, **kwargs):
+    def execute(self, request, records):
         raise NotImplementedError
 
 
@@ -27,6 +27,9 @@ class IntermediateBulkAction(BulkAction):
     form_class = None
     template = "oscar/dashboard/intermediate_bulk_action.html"
     context = {}
+
+    def execute(self, request, child_ids, form):  # pylint: disable=arguments-differ
+        raise NotImplementedError
 
 
 class PostActionMixin:
@@ -46,7 +49,7 @@ class PostActionMixin:
             method_name = "do_%s" % self.request.POST["action"].lower()
             if hasattr(self, method_name):
                 getattr(self, method_name)(model)
-                return self.response,
+                return (self.response,)
             else:
                 messages.error(request, _("Invalid form submission"))
                 return self.get(request, *args, **kwargs)
@@ -136,7 +139,7 @@ class IntermediateBulkEditMixin(BulkEditMixin):
     Extension of BulkEditMixin
     Allows for bulk actions with an intermediate step that contains a form.
     So the user can input extra parameters to the bulk action.
-    
+
     Actions with an intermediate step should be specified by
     putting the keys from actions into intermediate_actions
     """
@@ -160,9 +163,14 @@ class IntermediateBulkEditMixin(BulkEditMixin):
         if select_across == "1":
             parent_ids = list(self.get_queryset().values_list("pk", flat=True))
         else:
-            parent_ids = list(map(int, request.POST.getlist(
-                "selected_%s" % self.get_checkbox_object_name()
-            )))
+            parent_ids = list(
+                map(
+                    int,
+                    request.POST.getlist(
+                        "selected_%s" % self.get_checkbox_object_name()
+                    ),
+                )
+            )
 
         if not parent_ids:
             messages.error(
@@ -171,7 +179,9 @@ class IntermediateBulkEditMixin(BulkEditMixin):
             )
             return redirect(self.get_error_url(request))
 
-        session_data = request.session.setdefault(self.bulk_intermediate_session_key, {})
+        session_data = request.session.setdefault(
+            self.bulk_intermediate_session_key, {}
+        )
         session_data["parent_ids"] = parent_ids
         session_data["action"] = action
         request.session.modified = True
@@ -194,11 +204,20 @@ class IntermediateBulkActionView(View):
     intermediate_actions = ()
     bulk_intermediate_session_key = "bulk_intermediate"
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._action = None
+        self._selected_ids = []
+
     def dispatch(self, request, *args, **kwargs):
         session_data = request.session.get(self.bulk_intermediate_session_key, {})
         self._action = session_data.get("action")
         self._selected_ids = session_data.get("parent_ids", [])
-        if not self._action or not self._selected_ids or self._action not in self.intermediate_actions:
+        if (
+            not self._action
+            or not self._selected_ids
+            or self._action not in self.intermediate_actions
+        ):
             messages.warning(
                 request,
                 _("No pending bulk action. Please select items and try again."),
@@ -237,7 +256,9 @@ class IntermediateBulkActionView(View):
         return self.actions[self._action].template
 
     def get(self, request, *args, **kwargs):
-        return TemplateResponse(request, self.get_template_name(), self.get_context_data())
+        return TemplateResponse(
+            request, self.get_template_name(), self.get_context_data()
+        )
 
     def post(self, request, *args, **kwargs):
         form = self.get_form(data=request.POST)

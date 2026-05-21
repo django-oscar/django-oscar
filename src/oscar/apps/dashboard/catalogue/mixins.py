@@ -63,4 +63,3 @@ class ProductBulkActionMixin(IntermediateBulkEditMixin):
 
     def get_intermediate_url(self, request, action):
         return reverse("dashboard:catalogue-product-children-bulk-action")
-
