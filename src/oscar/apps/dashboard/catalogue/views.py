@@ -68,9 +68,15 @@ PopUpWindowCreateMixin, PopUpWindowUpdateMixin, PopUpWindowDeleteMixin = get_cla
     "dashboard.views",
     ("PopUpWindowCreateMixin", "PopUpWindowUpdateMixin", "PopUpWindowDeleteMixin"),
 )
-PartnerProductFilterMixin, ProductBulkActionMixin = get_classes(
-    "dashboard.catalogue.mixins",
-    ("PartnerProductFilterMixin", "ProductBulkActionMixin"),
+PartnerProductFilterMixin, ProductBulkActionMixin, CategoryBulkActionMixin = (
+    get_classes(
+        "dashboard.catalogue.mixins",
+        (
+            "PartnerProductFilterMixin",
+            "ProductBulkActionMixin",
+            "CategoryBulkActionMixin",
+        ),
+    )
 )
 Product = get_model("catalogue", "Product")
 Category = get_model("catalogue", "Category")
@@ -637,7 +643,7 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(ProductBulkActionMixin, SingleTableView):
+class CategoryListView(CategoryBulkActionMixin, SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category
     table_class = CategoryTable
@@ -663,7 +669,7 @@ class CategoryListView(ProductBulkActionMixin, SingleTableView):
 
 
 class CategoryDetailListView(
-    ProductBulkActionMixin, SingleTableMixin, generic.DetailView
+    CategoryBulkActionMixin, SingleTableMixin, generic.DetailView
 ):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category

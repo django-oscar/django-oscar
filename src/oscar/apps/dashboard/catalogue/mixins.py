@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.urls import reverse
 
 from oscar.core.loading import get_classes
-from oscar.views.generic import IntermediateBulkEditMixin
+from oscar.views.generic import BulkEditMixin, IntermediateBulkEditMixin
 
 (
     MakePublicAction,
@@ -63,3 +63,17 @@ class ProductBulkActionMixin(IntermediateBulkEditMixin):
 
     def get_intermediate_url(self, request, action):
         return reverse("dashboard:catalogue-product-children-bulk-action")
+
+
+class CategoryBulkActionMixin(BulkEditMixin):
+    """Mixin that implements bulk actions for category list views."""
+
+    actions = {
+        "make_public": MakePublicAction(),
+        "make_non_public": MakeNonPublicAction(),
+    }
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["actions"] = self.actions
+        return ctx

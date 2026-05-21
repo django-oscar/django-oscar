@@ -22,7 +22,10 @@ class MakePublicAction(BulkAction):
 
     @atomic
     def execute(self, request, records):
-        count = Product.objects.filter(pk__in=[r.pk for r in records]).update(
+        if not records:
+            return
+        model = type(records[0])
+        count = model.objects.filter(pk__in=[r.pk for r in records]).update(
             is_public=True
         )
         messages.success(
@@ -41,7 +44,10 @@ class MakeNonPublicAction(BulkAction):
 
     @atomic
     def execute(self, request, records):
-        count = Product.objects.filter(pk__in=[r.pk for r in records]).update(
+        if not records:
+            return
+        model = type(records[0])
+        count = model.objects.filter(pk__in=[r.pk for r in records]).update(
             is_public=False
         )
         messages.success(
