@@ -9429,3 +9429,84 @@ msgstr "Zurück zu den Suchergebnissen"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Sie müssen einige %s auswählen"
+
+msgid "Make public"
+msgstr "Öffentlich machen"
+
+msgid "Make non-public"
+msgstr "Nicht öffentlich machen"
+
+msgid "Make children public"
+msgstr "Unterprodukte öffentlich machen"
+
+msgid "Make children non-public"
+msgstr "Unterprodukte nicht öffentlich machen"
+
+msgid "Update children price"
+msgstr "Preis der Unterprodukte aktualisieren"
+
+msgid "No pending bulk action. Please select items and try again."
+msgstr "Keine ausstehende Massenaktion. Bitte Elemente auswählen und erneut versuchen."
+
+msgid "Select at least one child product."
+msgstr "Bitte mindestens ein Unterprodukt auswählen."
+
+#, python-format
+msgid "Price updated on %(count)d stockrecord."
+msgid_plural "Price updated on %(count)d stockrecords."
+msgstr[0] "Preis für %(count)d Lagerbestand aktualisiert."
+msgstr[1] "Preis für %(count)d Lagerbestände aktualisiert."
+
+#, python-format
+msgid "Public status was successfully updated for %(count)d record."
+msgid_plural "Public status was successfully updated for %(count)d records."
+msgstr[0] "Öffentlichkeitsstatus für %(count)d Datensatz erfolgreich aktualisiert."
+msgstr[1] "Öffentlichkeitsstatus für %(count)d Datensätze erfolgreich aktualisiert."
+
+#, python-format
+msgid "Updated %(count)d child product."
+msgid_plural "Updated %(count)d child products."
+msgstr[0] "%(count)d Unterprodukt aktualisiert."
+msgstr[1] "%(count)d Unterprodukte aktualisiert."
+
+msgid "New price"
+msgstr "Neuer Preis"
+
+msgid "Confirm action"
+msgstr "Aktion bestätigen"
+
+msgid "Confirm"
+msgstr "Bestätigen"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+msgid "Confirm child product action"
+msgstr "Unterprodukt-Aktion bestätigen"
+
+msgid "Action parameters"
+msgstr "Aktionsparameter"
+
+msgid "Select / deselect all"
+msgstr "Alle auswählen / abwählen"
+
+msgid "children"
+msgstr "Unterartikel"
+
+msgid "Currently public"
+msgstr "Derzeit öffentlich"
+
+msgid "No child products."
+msgstr "Keine Unterprodukte."
+
+msgid "None of the selected products have child products."
+msgstr "Keines der ausgewählten Produkte hat Unterprodukte."
+
+msgid "Note:"
+msgstr "Hinweis:"
+
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected child product."
+msgstr "Diese Aktion aktualisiert <strong>alle vorhandenen Lagerbestände</strong> jedes ausgewählten Unterprodukts."
+
+msgid "Current price"
+msgstr "Aktueller Preis"

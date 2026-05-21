@@ -9429,3 +9429,84 @@ msgstr "Terug naar zoekresultaten"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "U moet %ss selecteren"
+
+msgid "Make public"
+msgstr "Openbaar maken"
+
+msgid "Make non-public"
+msgstr "Niet openbaar maken"
+
+msgid "Make children public"
+msgstr "Kindproducten openbaar maken"
+
+msgid "Make children non-public"
+msgstr "Kindproducten niet openbaar maken"
+
+msgid "Update children price"
+msgstr "Prijs van kindproducten bijwerken"
+
+msgid "No pending bulk action. Please select items and try again."
+msgstr "Geen openstaande bulkactie. Selecteer items en probeer het opnieuw."
+
+msgid "Select at least one child product."
+msgstr "Selecteer minimaal één kindproduct."
+
+#, python-format
+msgid "Price updated on %(count)d stockrecord."
+msgid_plural "Price updated on %(count)d stockrecords."
+msgstr[0] "Prijs bijgewerkt op %(count)d voorraadrecord."
+msgstr[1] "Prijs bijgewerkt op %(count)d voorraadrecords."
+
+#, python-format
+msgid "Public status was successfully updated for %(count)d record."
+msgid_plural "Public status was successfully updated for %(count)d records."
+msgstr[0] "Publieksstatus succesvol bijgewerkt voor %(count)d record."
+msgstr[1] "Publieksstatus succesvol bijgewerkt voor %(count)d records."
+
+#, python-format
+msgid "Updated %(count)d child product."
+msgid_plural "Updated %(count)d child products."
+msgstr[0] "%(count)d kindproduct bijgewerkt."
+msgstr[1] "%(count)d kindproducten bijgewerkt."
+
+msgid "New price"
+msgstr "Nieuwe prijs"
+
+msgid "Confirm action"
+msgstr "Actie bevestigen"
+
+msgid "Confirm"
+msgstr "Bevestigen"
+
+msgid "Apply"
+msgstr "Toepassen"
+
+msgid "Confirm child product action"
+msgstr "Actie voor kindproduct bevestigen"
+
+msgid "Action parameters"
+msgstr "Actieparameters"
+
+msgid "Select / deselect all"
+msgstr "Alles selecteren / deselecteren"
+
+msgid "children"
+msgstr "kinderen"
+
+msgid "Currently public"
+msgstr "Momenteel openbaar"
+
+msgid "No child products."
+msgstr "Geen kindproducten."
+
+msgid "None of the selected products have child products."
+msgstr "Geen van de geselecteerde producten heeft kindproducten."
+
+msgid "Note:"
+msgstr "Opmerking:"
+
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected child product."
+msgstr "Deze actie werkt <strong>alle bestaande voorraadrecords</strong> bij van elk geselecteerd kindproduct."
+
+msgid "Current price"
+msgstr "Huidige prijs"

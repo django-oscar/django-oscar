@@ -9458,3 +9458,84 @@ msgstr "Retornar a los resultados de la búsqueda"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Selecciona algunos %ss."
+
+msgid "Make public"
+msgstr "Hacer público"
+
+msgid "Make non-public"
+msgstr "Hacer no público"
+
+msgid "Make children public"
+msgstr "Hacer públicos los productos secundarios"
+
+msgid "Make children non-public"
+msgstr "Hacer no públicos los productos secundarios"
+
+msgid "Update children price"
+msgstr "Actualizar precio de productos secundarios"
+
+msgid "No pending bulk action. Please select items and try again."
+msgstr "No hay acción masiva pendiente. Seleccione elementos e inténtelo de nuevo."
+
+msgid "Select at least one child product."
+msgstr "Seleccione al menos un producto secundario."
+
+#, python-format
+msgid "Price updated on %(count)d stockrecord."
+msgid_plural "Price updated on %(count)d stockrecords."
+msgstr[0] "Precio actualizado en %(count)d registro de stock."
+msgstr[1] "Precio actualizado en %(count)d registros de stock."
+
+#, python-format
+msgid "Public status was successfully updated for %(count)d record."
+msgid_plural "Public status was successfully updated for %(count)d records."
+msgstr[0] "Estado público actualizado correctamente para %(count)d registro."
+msgstr[1] "Estado público actualizado correctamente para %(count)d registros."
+
+#, python-format
+msgid "Updated %(count)d child product."
+msgid_plural "Updated %(count)d child products."
+msgstr[0] "%(count)d producto secundario actualizado."
+msgstr[1] "%(count)d productos secundarios actualizados."
+
+msgid "New price"
+msgstr "Nuevo precio"
+
+msgid "Confirm action"
+msgstr "Confirmar acción"
+
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Confirm child product action"
+msgstr "Confirmar acción en producto secundario"
+
+msgid "Action parameters"
+msgstr "Parámetros de acción"
+
+msgid "Select / deselect all"
+msgstr "Seleccionar / deseleccionar todo"
+
+msgid "children"
+msgstr "secundarios"
+
+msgid "Currently public"
+msgstr "Actualmente público"
+
+msgid "No child products."
+msgstr "Sin productos secundarios."
+
+msgid "None of the selected products have child products."
+msgstr "Ninguno de los productos seleccionados tiene productos secundarios."
+
+msgid "Note:"
+msgstr "Nota:"
+
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected child product."
+msgstr "Esta acción actualizará <strong>todos los registros de stock existentes</strong> de cada producto secundario seleccionado."
+
+msgid "Current price"
+msgstr "Precio actual"
