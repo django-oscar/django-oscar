@@ -13,7 +13,7 @@ from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
 from oscar.core.loading import get_classes, get_model
-from oscar.views.generic import ObjectLookupView
+from oscar.views.generic import IntermediateBulkActionView, ObjectLookupView
 
 (
     ProductForm,
@@ -187,33 +187,8 @@ class ProductListView(
         return queryset.distinct()
 
 
-class ChildProductSelectView(ProductBulkActionMixin, generic.View):
-    """
-    Intermediate view for two-step bulk actions that operate on child products.
-
-    Extends ``ProductBulkActionMixin`` to inherit ``actions`` and
-    ``intermediate_actions`` as the single source of truth for which actions
-    this view handles.
-
-    Step 1 (GET): Renders the action's confirmation template with parent
-    products and their children pre-selected.
-
-    Step 2 (POST): Validates the form, then delegates execution entirely to
-    ``action.execute(request, child_ids, form)``. The view owns the UI flow;
-    the action owns the business logic.
-    """
-
-    def dispatch(self, request, *args, **kwargs):
-        session_data = request.session.get(self.bulk_intermediate_session_key, {})
-        self._action = session_data.get("action")
-        self._parent_ids = session_data.get("parent_ids", [])
-        if not self._action or not self._parent_ids or self._action not in self.intermediate_actions:
-            messages.warning(
-                request,
-                _("No pending bulk action. Please select products and try again."),
-            )
-            return redirect(self.get_cancel_url())
-        return super().dispatch(request, *args, **kwargs)
+class ChildProductSelectView(IntermediateBulkActionView, ProductBulkActionMixin):
+    """Confirmation view for two-step bulk actions on child products."""
 
     def get_cancel_url(self):
         return reverse("dashboard:catalogue-product-list")
@@ -223,63 +198,30 @@ class ChildProductSelectView(ProductBulkActionMixin, generic.View):
 
     def get_parent_queryset(self):
         return Product.objects.filter(
-            pk__in=self._parent_ids, structure=Product.PARENT
+            pk__in=self._selected_ids, structure=Product.PARENT
         ).prefetch_related("children")
 
     def get_children_queryset_for_form(self):
         return Product.objects.filter(
-            parent_id__in=self._parent_ids, structure=Product.CHILD
+            parent_id__in=self._selected_ids, structure=Product.CHILD
         )
 
-    def get_form(self, data=None):
-        action = self.actions[self._action]
-        return action.form_class(
-            data=data,
-            children_queryset=self.get_children_queryset_for_form(),
-        )
+    def get_form_kwargs(self):
+        return {**super().get_form_kwargs(), "children_queryset": self.get_children_queryset_for_form()}
 
     def get_context_data(self, form=None, **kwargs):
-        if form is None:
-            form = self.get_form()
-        action = self.actions[self._action]
-        ctx = {
-            "form": form,
-            "parents_with_children": self.get_parent_queryset(),
-            "action": self._action,
-            "action_label": action.label,
-            "cancel_url": self.get_cancel_url(),
-        }
-        ctx.update(action.context)
-        ctx.update(kwargs)
-        return ctx
+        return super().get_context_data(
+            form=form,
+            parents_with_children=self.get_parent_queryset(),
+            **kwargs,
+        )
 
-    def get_template_name(self):
-        return self.actions[self._action].template
-
-    def get(self, request, *args, **kwargs):
-        return TemplateResponse(request, self.get_template_name(), self.get_context_data())
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form(data=request.POST)
-        if not form.is_valid():
-            return TemplateResponse(
-                request, self.get_template_name(), self.get_context_data(form=form)
-            )
-
+    def execute_action(self, request, form):
         action = self.actions[self._action]
         child_ids = list(
             form.cleaned_data["selected_children"].values_list("pk", flat=True)
         )
-        result = action.execute(request, child_ids, form)
-        if result is not None:
-            return result
-
-        self._clear_session(request)
-        return redirect(self.get_success_url())
-
-    def _clear_session(self, request):
-        request.session.pop(self.bulk_intermediate_session_key, None)
-        request.session.modified = True
+        return action.execute(request, child_ids, form)
 
 
 class ProductCreateRedirectView(generic.RedirectView):

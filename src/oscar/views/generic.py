@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.utils.encoding import smart_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import View
@@ -175,6 +176,88 @@ class IntermediateBulkEditMixin(BulkEditMixin):
         session_data["action"] = action
         request.session.modified = True
         return redirect(self.get_intermediate_url(request, action))
+
+
+class IntermediateBulkActionView(View):
+    """
+    Generic view for the confirmation step of a two-step bulk action.
+    Pair with ``IntermediateBulkEditMixin`` on the originating list view.
+
+    Reads the pending action and selected IDs from the session, renders
+    the action's template with its form on GET, and dispatches to
+    ``execute_action`` on POST.
+
+    Subclasses must implement ``get_cancel_url`` and ``get_success_url``.
+    """
+
+    actions = {}
+    intermediate_actions = ()
+    bulk_intermediate_session_key = "bulk_intermediate"
+
+    def dispatch(self, request, *args, **kwargs):
+        session_data = request.session.get(self.bulk_intermediate_session_key, {})
+        self._action = session_data.get("action")
+        self._selected_ids = session_data.get("parent_ids", [])
+        if not self._action or not self._selected_ids or self._action not in self.intermediate_actions:
+            messages.warning(
+                request,
+                _("No pending bulk action. Please select items and try again."),
+            )
+            return redirect(self.get_cancel_url())
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_cancel_url(self):
+        raise NotImplementedError
+
+    def get_success_url(self):
+        raise NotImplementedError
+
+    def get_form_kwargs(self):
+        return {}
+
+    def get_form(self, data=None):
+        action = self.actions[self._action]
+        return action.form_class(data=data, **self.get_form_kwargs())
+
+    def get_context_data(self, form=None, **kwargs):
+        if form is None:
+            form = self.get_form()
+        action = self.actions[self._action]
+        ctx = {
+            "form": form,
+            "action": self._action,
+            "action_label": action.label,
+            "cancel_url": self.get_cancel_url(),
+        }
+        ctx.update(action.context)
+        ctx.update(kwargs)
+        return ctx
+
+    def get_template_name(self):
+        return self.actions[self._action].template
+
+    def get(self, request, *args, **kwargs):
+        return TemplateResponse(request, self.get_template_name(), self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(data=request.POST)
+        if not form.is_valid():
+            return TemplateResponse(
+                request, self.get_template_name(), self.get_context_data(form=form)
+            )
+        result = self.execute_action(request, form)
+        if result is not None:
+            return result
+        self._clear_session(request)
+        return redirect(self.get_success_url())
+
+    def execute_action(self, request, form):
+        action = self.actions[self._action]
+        return action.execute(request, form)
+
+    def _clear_session(self, request):
+        request.session.pop(self.bulk_intermediate_session_key, None)
+        request.session.modified = True
 
 
 class ObjectLookupView(View):
