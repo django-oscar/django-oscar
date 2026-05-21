@@ -18,7 +18,7 @@ class MakePublicAction(BulkAction):
 
     @atomic
     def execute(self, request, records):
-        count = Product.objects.filter(pk__in=records).update(is_public=True)
+        count = Product.objects.filter(pk__in=[r.pk for r in records]).update(is_public=True)
         messages.success(
             request,
             ngettext(
@@ -35,7 +35,7 @@ class MakeNonPublicAction(BulkAction):
 
     @atomic
     def execute(self, request, records):
-        count = Product.objects.filter(pk__in=records).update(is_public=False)
+        count = Product.objects.filter(pk__in=[r.pk for r in records]).update(is_public=False)
         messages.success(
             request,
             ngettext(
