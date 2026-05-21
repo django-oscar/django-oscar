@@ -18,17 +18,15 @@ class MakePublicAction(BulkAction):
 
     @atomic
     def execute(self, request, records):
-        for record in records:
-            record.is_public = True
-            record.save()
+        count = Product.objects.filter(pk__in=records).update(is_public=True)
         messages.success(
             request,
             ngettext(
                 "Public status was successfully updated for %(count)d record.",
                 "Public status was successfully updated for %(count)d records.",
-                len(records),
+                count,
             )
-            % {"count": len(records)},
+            % {"count": count},
         )
 
 
@@ -37,17 +35,15 @@ class MakeNonPublicAction(BulkAction):
 
     @atomic
     def execute(self, request, records):
-        for record in records:
-            record.is_public = False
-            record.save()
+        count = Product.objects.filter(pk__in=records).update(is_public=False)
         messages.success(
             request,
             ngettext(
                 "Public status was successfully updated for %(count)d record.",
                 "Public status was successfully updated for %(count)d records.",
-                len(records),
+                count,
             )
-            % {"count": len(records)},
+            % {"count": count},
         )
 
 
