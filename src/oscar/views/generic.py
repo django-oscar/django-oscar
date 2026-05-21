@@ -144,7 +144,7 @@ class IntermediateBulkEditMixin(BulkEditMixin):
     putting the keys from actions into intermediate_actions
     """
 
-    intermediate_actions = ()
+    intermediate_actions = {}
     bulk_intermediate_session_key = "bulk_intermediate"
 
     def get_intermediate_url(self, request, action):
@@ -200,8 +200,7 @@ class IntermediateBulkActionView(View):
     Subclasses must implement ``get_cancel_url`` and ``get_success_url``.
     """
 
-    actions = {}
-    intermediate_actions = ()
+    intermediate_actions = {}
     bulk_intermediate_session_key = "bulk_intermediate"
 
     def __init__(self, **kwargs):
@@ -235,13 +234,13 @@ class IntermediateBulkActionView(View):
         return {}
 
     def get_form(self, data=None):
-        action = self.actions[self._action]
+        action = self.intermediate_actions[self._action]
         return action.form_class(data=data, **self.get_form_kwargs())
 
     def get_context_data(self, form=None, **kwargs):
         if form is None:
             form = self.get_form()
-        action = self.actions[self._action]
+        action = self.intermediate_actions[self._action]
         ctx = {
             "form": form,
             "action": self._action,
@@ -253,7 +252,7 @@ class IntermediateBulkActionView(View):
         return ctx
 
     def get_template_name(self):
-        return self.actions[self._action].template
+        return self.intermediate_actions[self._action].template
 
     def get(self, request, *args, **kwargs):
         return TemplateResponse(
@@ -273,7 +272,7 @@ class IntermediateBulkActionView(View):
         return redirect(self.get_success_url())
 
     def execute_action(self, request, form):
-        action = self.actions[self._action]
+        action = self.intermediate_actions[self._action]
         return action.execute(request, form)
 
     def _clear_session(self, request):

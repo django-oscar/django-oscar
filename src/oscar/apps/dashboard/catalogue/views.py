@@ -186,7 +186,8 @@ class ProductListView(
         return queryset.distinct()
 
 
-class ChildProductSelectView(IntermediateBulkActionView, ProductBulkActionMixin):
+class ChildProductSelectView(IntermediateBulkActionView):
+    intermediate_actions = ProductBulkActionMixin.intermediate_actions
     """Confirmation view for two-step bulk actions on child products."""
 
     def get_cancel_url(self):
@@ -219,7 +220,7 @@ class ChildProductSelectView(IntermediateBulkActionView, ProductBulkActionMixin)
         )
 
     def execute_action(self, request, form):
-        action = self.actions[self._action]
+        action = self.intermediate_actions[self._action]
         child_ids = list(
             form.cleaned_data["selected_children"].values_list("pk", flat=True)
         )

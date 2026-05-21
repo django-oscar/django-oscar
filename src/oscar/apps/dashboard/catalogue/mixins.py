@@ -41,20 +41,20 @@ class PartnerProductFilterMixin:
 
 
 class ProductBulkActionMixin(IntermediateBulkEditMixin):
-    """Mixin that implements bulk actions for products"""
+    """Mixin that implements bulk actions for the product list view."""
 
     actions = {
         "make_public": MakePublicAction(),
         "make_non_public": MakeNonPublicAction(),
+    }
+    intermediate_actions = {
         "make_children_public": MakeChildrenPublicAction(),
         "make_children_non_public": MakeChildrenNonPublicAction(),
         "set_children_price": SetChildrenPriceAction(),
     }
-    intermediate_actions = (
-        "make_children_public",
-        "make_children_non_public",
-        "set_children_price",
-    )
+
+    def get_actions(self):
+        return {**super().get_actions(), **self.intermediate_actions}
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
