@@ -188,7 +188,7 @@ class ProductListView(
 
 class ChildProductSelectView(IntermediateBulkActionView):
     """Confirmation view for two-step bulk actions on child products."""
-    
+
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
 
     def get_cancel_url(self):
