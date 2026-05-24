@@ -61,7 +61,7 @@ class BasketMessageGenerator(object):
         message_list.extend(self.get_new_total_messages(basket, include_buttons))
         return message_list
 
-    def apply_messages(self, request, offers_before):
+    def apply_messages(self, request, offers_before, include_buttons=True):
         """
         Set flash messages triggered by changes to the basket
         """
@@ -71,7 +71,7 @@ class BasketMessageGenerator(object):
         offers_after = request.basket.applied_offers()
 
         for level, msg in self.get_messages(
-            request.basket, offers_before, offers_after
+            request.basket, offers_before, offers_after, include_buttons=include_buttons
         ):
             messages.add_message(request, level, msg, extra_tags="safe noicon")
 
