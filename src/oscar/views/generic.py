@@ -28,7 +28,9 @@ class IntermediateBulkAction(AbstractBulkAction):
 
     form_class = None
     template = "oscar/dashboard/intermediate_bulk_action.html"
-    context = {}
+
+    def get_context(self):
+        return {}
 
     def execute(self, request, objects, form):
         raise NotImplementedError
@@ -252,7 +254,7 @@ class IntermediateBulkActionView(View):
             "action_label": action.label,
             "cancel_url": self.get_cancel_url(),
         }
-        ctx.update(action.context)
+        ctx.update(action.get_context())
         ctx.update(kwargs)
         return ctx
 

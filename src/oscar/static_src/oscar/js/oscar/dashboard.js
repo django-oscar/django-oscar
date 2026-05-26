@@ -562,8 +562,18 @@ var oscar = (function(o, $) {
                 $('.select-all-children').on('change', function() {
                     var parentId = $(this).data('parent');
                     var checked = $(this).prop('checked');
-                    $('input[type="checkbox"][name="selected_children"][data-parent="' + parentId + '"]')
+                    $('input[type="checkbox"][name="selected_products"][data-parent="' + parentId + '"]')
                         .prop('checked', checked);
+                });
+
+                $('.select-all-parents').on('change', function() {
+                    var checked = $(this).prop('checked');
+                    $('input[type="checkbox"].select-parent').prop('checked', checked);
+                });
+
+                $('.select-all-children-global').on('change', function() {
+                    var checked = $(this).prop('checked');
+                    $('.select-all-children').prop('checked', checked).trigger('change');
                 });
             }
         },

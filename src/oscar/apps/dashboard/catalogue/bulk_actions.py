@@ -61,68 +61,70 @@ class MakeNonPublicAction(BulkAction):
         )
 
 
-class ChildBulkAction(IntermediateBulkAction):
-    """Base class for a two-step bulk action that operates on child products."""
+class ProductIntermediateAction(IntermediateBulkAction):
+    """Base class for a two-step bulk action that operates on products."""
 
     form_class = ChildrenBulkActionForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action.html"
+    supported_structures = None  # None means all structures are supported
 
-    def filter_children_queryset(self, qs):
+    def filter_products_queryset(self, qs):
         return qs
 
 
-class MakeChildrenPublicAction(ChildBulkAction):
-    label = _("Make variants public")
+class MakeProductsPublicAction(ProductIntermediateAction):
+    label = _("Make products public")
 
     @atomic
     def execute(self, request, objects, form):
-        count = Product.objects.filter(
-            pk__in=[r.pk for r in objects], structure=Product.CHILD
-        ).update(is_public=True)
+        count = Product.objects.filter(pk__in=[r.pk for r in objects]).update(
+            is_public=True
+        )
         messages.success(
             request,
             ngettext(
-                "Updated %(count)d variant.",
-                "Updated %(count)d variants.",
+                "Updated %(count)d product.",
+                "Updated %(count)d products.",
                 count,
             )
             % {"count": count},
         )
 
 
-class MakeChildrenNonPublicAction(ChildBulkAction):
-    label = _("Make variants non-public")
+class MakeProductsNonPublicAction(ProductIntermediateAction):
+    label = _("Make products non-public")
 
     @atomic
     def execute(self, request, objects, form):
-        count = Product.objects.filter(
-            pk__in=[r.pk for r in objects], structure=Product.CHILD
-        ).update(is_public=False)
+        count = Product.objects.filter(pk__in=[r.pk for r in objects]).update(
+            is_public=False
+        )
         messages.success(
             request,
             ngettext(
-                "Updated %(count)d variant.",
-                "Updated %(count)d variants.",
+                "Updated %(count)d product.",
+                "Updated %(count)d products.",
                 count,
             )
             % {"count": count},
         )
 
 
-class SetChildrenPriceAction(ChildBulkAction):
-    label = _("Update variant prices")
+class SetProductPriceAction(ProductIntermediateAction):
+    label = _("Update product prices")
     form_class = SetChildrenPriceForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action_set_price.html"
+    supported_structures = [Product.CHILD, Product.STANDALONE]
 
-    def filter_children_queryset(self, qs):
+    def filter_products_queryset(self, qs):
         return qs.filter(stockrecords__isnull=False).distinct()
 
     @atomic
     def execute(self, request, objects, form):
-        child_ids = [r.pk for r in objects]
+        product_ids = [r.pk for r in objects]
         specific = form.get_specific_prices()
-        override_ids = [pk for pk in child_ids if pk in specific]
-        rest_ids = [pk for pk in child_ids if pk not in specific]
+        override_ids = [pk for pk in product_ids if pk in specific]
+        rest_ids = [pk for pk in product_ids if pk not in specific]
         partners = form.cleaned_data.get("partners")
         partner_filter = {"partner__in": partners} if partners else {}
 
@@ -131,7 +133,6 @@ class SetChildrenPriceAction(ChildBulkAction):
         if override_ids:
             count += StockRecord.objects.filter(
                 product_id__in=override_ids,
-                product__structure=Product.CHILD,
                 **partner_filter,
             ).update(
                 price=Case(
@@ -147,7 +148,6 @@ class SetChildrenPriceAction(ChildBulkAction):
         if rest_ids:
             qs = StockRecord.objects.filter(
                 product_id__in=rest_ids,
-                product__structure=Product.CHILD,
                 **partner_filter,
             )
             base = form.cleaned_data.get("new_price")

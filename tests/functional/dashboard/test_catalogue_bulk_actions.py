@@ -36,25 +36,28 @@ class ChildrenBulkActionTests(WebTestCase):
         return reverse("dashboard:catalogue-product-children-bulk-action")
 
 
-class TestMakeChildrenPublicFlow(ChildrenBulkActionTests):
+class TestMakeProductsPublicFlow(ChildrenBulkActionTests):
     def test_list_post_redirects_to_intermediate(self):
-        response = self._seed_session("make_children_public")
+        response = self._seed_session("make_products_public")
         self.assertIsRedirect(response, self._intermediate_url())
 
     def test_get_intermediate_view_renders_form(self):
-        self._seed_session("make_children_public")
+        self._seed_session("make_products_public")
         page = self.get(self._intermediate_url())
         self.assertIsOk(page)
         self.assertInContext(page, "form")
-        self.assertInContext(page, "parents_with_children")
-        parents = list(page.context["parents_with_children"])
+        parents = [
+            row["product"]
+            for row in page.context["display_rows"]
+            if row["is_group_header"]
+        ]
         self.assertIn(self.parent, parents)
 
     def test_submit_makes_children_public(self):
-        self._seed_session("make_children_public")
+        self._seed_session("make_products_public")
         response = self.post(
             self._intermediate_url(),
-            params={"selected_children": [self.child1.pk, self.child2.pk]},
+            params={"selected_products": [self.child1.pk, self.child2.pk]},
         )
         self.assertRedirectsTo(response, "dashboard:catalogue-product-list")
         self.child1.refresh_from_db()
@@ -63,16 +66,16 @@ class TestMakeChildrenPublicFlow(ChildrenBulkActionTests):
         self.assertTrue(self.child2.is_public)
 
     def test_session_cleared_after_submit(self):
-        self._seed_session("make_children_public")
+        self._seed_session("make_products_public")
         self.post(
             self._intermediate_url(),
-            params={"selected_children": [self.child1.pk]},
+            params={"selected_products": [self.child1.pk]},
         )
         response = self.get(self._intermediate_url())
         self.assertIsRedirect(response)
 
 
-class TestMakeChildrenNonPublicFlow(ChildrenBulkActionTests):
+class TestMakeProductsNonPublicFlow(ChildrenBulkActionTests):
     def setUp(self):
         super().setUp()
         self.child1.is_public = True
@@ -81,10 +84,10 @@ class TestMakeChildrenNonPublicFlow(ChildrenBulkActionTests):
         self.child2.save()
 
     def test_submit_makes_children_non_public(self):
-        self._seed_session("make_children_non_public")
+        self._seed_session("make_products_non_public")
         response = self.post(
             self._intermediate_url(),
-            params={"selected_children": [self.child1.pk, self.child2.pk]},
+            params={"selected_products": [self.child1.pk, self.child2.pk]},
         )
         self.assertRedirectsTo(response, "dashboard:catalogue-product-list")
         self.child1.refresh_from_db()
@@ -93,32 +96,32 @@ class TestMakeChildrenNonPublicFlow(ChildrenBulkActionTests):
         self.assertFalse(self.child2.is_public)
 
     def test_empty_selection_rerenders_with_error(self):
-        self._seed_session("make_children_non_public")
+        self._seed_session("make_products_non_public")
         page = self.post(self._intermediate_url(), params={})
         self.assertIsOk(page)
         form = page.context["form"]
-        self.assertIn("selected_children", form.errors)
-        self.assertIn("Select at least one variant.", form.errors["selected_children"])
+        self.assertIn("selected_products", form.errors)
+        self.assertIn("Select at least one product.", form.errors["selected_products"])
 
 
-class TestSetChildrenPriceFlow(ChildrenBulkActionTests):
+class TestSetProductPriceFlow(ChildrenBulkActionTests):
     def test_list_post_redirects_to_intermediate(self):
-        response = self._seed_session("set_children_price")
+        response = self._seed_session("set_product_price")
         self.assertIsRedirect(response, self._intermediate_url())
 
     def test_get_shows_price_form(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         page = self.get(self._intermediate_url())
         self.assertIsOk(page)
         form = page.context["form"]
         self.assertIn("new_price", form.fields)
 
     def test_submit_valid_base_price(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         response = self.post(
             self._intermediate_url(),
             params={
-                "selected_children": [self.child1.pk, self.child2.pk],
+                "selected_products": [self.child1.pk, self.child2.pk],
                 "new_price": "19.99",
             },
         )
@@ -131,11 +134,11 @@ class TestSetChildrenPriceFlow(ChildrenBulkActionTests):
         self.assertEqual(sr2.price, Decimal("19.99"))
 
     def test_submit_valid_override_prices(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         response = self.post(
             self._intermediate_url(),
             params={
-                "selected_children": [self.child1.pk, self.child2.pk],
+                "selected_products": [self.child1.pk, self.child2.pk],
                 f"price_{self.child1.pk}": "11.00",
                 f"price_{self.child2.pk}": "22.00",
             },
@@ -150,21 +153,21 @@ class TestSetChildrenPriceFlow(ChildrenBulkActionTests):
 
     def test_variants_without_stockrecord_are_excluded(self):
         child_no_sr = create_product(structure="child", parent=self.parent)
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         page = self.get(self._intermediate_url())
         self.assertIsOk(page)
         form = page.context["form"]
-        child_pks = [c.pk for c in form.fields["selected_children"].queryset]
+        child_pks = [c.pk for c in form.fields["selected_products"].queryset]
         self.assertIn(self.child1.pk, child_pks)
         self.assertIn(self.child2.pk, child_pks)
         self.assertNotIn(child_no_sr.pk, child_pks)
 
     def test_submit_increase_by_amount(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         response = self.post(
             self._intermediate_url(),
             params={
-                "selected_children": [self.child1.pk, self.child2.pk],
+                "selected_products": [self.child1.pk, self.child2.pk],
                 "increase_by_amount": "2.00",
             },
         )
@@ -175,11 +178,11 @@ class TestSetChildrenPriceFlow(ChildrenBulkActionTests):
         self.assertEqual(self.child2.stockrecords.first().price, Decimal("7.00"))
 
     def test_submit_increase_by_percentage(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         response = self.post(
             self._intermediate_url(),
             params={
-                "selected_children": [self.child1.pk, self.child2.pk],
+                "selected_products": [self.child1.pk, self.child2.pk],
                 "increase_by_percentage": "10",
             },
         )
@@ -190,11 +193,11 @@ class TestSetChildrenPriceFlow(ChildrenBulkActionTests):
         self.assertEqual(self.child2.stockrecords.first().price, Decimal("5.50"))
 
     def test_submit_multiple_global_options_rerenders_with_error(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         page = self.post(
             self._intermediate_url(),
             params={
-                "selected_children": [self.child1.pk],
+                "selected_products": [self.child1.pk],
                 "new_price": "5.00",
                 "increase_by_amount": "1.00",
             },
@@ -203,19 +206,19 @@ class TestSetChildrenPriceFlow(ChildrenBulkActionTests):
         self.assertIn("__all__", page.context["form"].errors)
 
     def test_submit_negative_base_price_rerenders_with_error(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         page = self.post(
             self._intermediate_url(),
-            params={"selected_children": [self.child1.pk], "new_price": "-5"},
+            params={"selected_products": [self.child1.pk], "new_price": "-5"},
         )
         self.assertIsOk(page)
         self.assertIn("new_price", page.context["form"].errors)
 
     def test_submit_no_price_rerenders_with_error(self):
-        self._seed_session("set_children_price")
+        self._seed_session("set_product_price")
         page = self.post(
             self._intermediate_url(),
-            params={"selected_children": [self.child1.pk]},
+            params={"selected_products": [self.child1.pk]},
         )
         self.assertIsOk(page)
         self.assertIn(f"price_{self.child1.pk}", page.context["form"].errors)
@@ -237,11 +240,15 @@ class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
 
         self.post(
             reverse("dashboard:catalogue-product-list"),
-            params={"action": "make_children_public", "select_across": "1"},
+            params={"action": "make_products_public", "select_across": "1"},
         )
         page = self.get(self._intermediate_url())
         self.assertIsOk(page)
-        parents = list(page.context["parents_with_children"])
+        parents = [
+            row["product"]
+            for row in page.context["display_rows"]
+            if row["is_group_header"]
+        ]
         self.assertIn(self.parent, parents)
         self.assertIn(parent2, parents)
         self.assertIn(parent3, parents)

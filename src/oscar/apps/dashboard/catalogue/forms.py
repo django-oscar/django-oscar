@@ -455,22 +455,22 @@ class CategorySearchForm(forms.Form):
 
 class ChildrenBulkActionForm(forms.Form):
     """
-    Base form for intermediate bulk actions operating on child products.
+    Base form for intermediate bulk actions operating on products.
 
-    Validates that at least one child product is selected and that the selected
-    PKs belong to the allowed children queryset. Pass children_queryset to
-    __init__ to restrict which child products are valid
+    Validates that at least one product is selected and that the selected
+    PKs belong to the allowed products queryset. Pass products_queryset to
+    __init__ to restrict which products are valid
     """
 
-    selected_children = forms.ModelMultipleChoiceField(
+    selected_products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.none(),
-        error_messages={"required": _("Select at least one variant.")},
+        error_messages={"required": _("Select at least one product.")},
     )
 
-    def __init__(self, *args, children_queryset=None, **kwargs):
+    def __init__(self, *args, products_queryset=None, **kwargs):
         super().__init__(*args, **kwargs)
-        if children_queryset is not None:
-            self.fields["selected_children"].queryset = children_queryset
+        if products_queryset is not None:
+            self.fields["selected_products"].queryset = products_queryset
 
 
 class SetChildrenPriceForm(ChildrenBulkActionForm):
@@ -498,11 +498,11 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
         ),
     )
 
-    def __init__(self, *args, children_queryset=None, **kwargs):
-        super().__init__(*args, children_queryset=children_queryset, **kwargs)
+    def __init__(self, *args, products_queryset=None, **kwargs):
+        super().__init__(*args, products_queryset=products_queryset, **kwargs)
         qs = (
-            children_queryset
-            if children_queryset is not None
+            products_queryset
+            if products_queryset is not None
             else Product.objects.none()
         )
         partner_qs = Partner.objects.filter(stockrecords__product__in=qs).distinct()
@@ -537,7 +537,7 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             )
 
         has_global = bool(global_options)
-        for child in cleaned_data.get("selected_children", []):
+        for child in cleaned_data.get("selected_products", []):
             if cleaned_data.get(f"price_{child.pk}") is None and not has_global:
                 self.add_error(
                     f"price_{child.pk}",

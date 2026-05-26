@@ -22,12 +22,16 @@
 <th>{% trans "Specific price" %}</th>
 {% endblock %}
 
+
 {% block extra_column_values %}
-{% with sr=child.cheapest_stockrecord price_field=form|child_price_field:child.pk %}
+{% with sr=product.cheapest_stockrecord price_field=form|child_price_field:product.pk %}
 <td>{% if sr %}{{ sr.price_currency }} {{ sr.price|default:"-" }}{% else %}-{% endif %}</td>
+
 <td>
-    {{ price_field }}
-    {% if price_field.errors %}<div class="text-danger small">{{ price_field.errors|join:", " }}</div>{% endif %}
+    {% if row.selectable %}
+        {{ price_field }}
+        {% if price_field.errors %}<div class="text-danger small">{{ price_field.errors|join:", " }}</div>{% endif %}
+    {% endif %}
 </td>
 {% endwith %}
 {% endblock %}

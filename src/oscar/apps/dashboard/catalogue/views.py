@@ -195,6 +195,11 @@ class ProductListView(
 class ChildProductSelectView(IntermediateBulkActionView):
     """Confirmation view for two-step bulk actions on child products."""
 
+    # TODO: add safeguard for when there is a very large amount of products selected (skip product selection?)
+    # TODO: add a select all standalone checkbox
+    # TODO: merge make product public and product not public, and add a form to choose to public/not public
+    # TODO: add translations
+
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
 
     def get_cancel_url(self):
@@ -206,39 +211,105 @@ class ChildProductSelectView(IntermediateBulkActionView):
     def _get_action(self):
         return self.intermediate_actions.get(self._action)
 
-    def get_parent_queryset(self):
-        children_qs = self._get_action().filter_children_queryset(
-            Product.objects.filter(structure=Product.CHILD)
-        )
+    def _is_structure_supported(self, structure):
+        action = self._get_action()
         return (
-            Product.objects.filter(pk__in=self._selected_ids, structure=Product.PARENT)
-            .filter(children__in=children_qs)
-            .prefetch_related(Prefetch("children", queryset=children_qs))
-            .distinct()
+            action.supported_structures is None
+            or structure in action.supported_structures
         )
 
-    def get_children_queryset_for_form(self):
+    def get_selectable_queryset(self):
+        """Products that the user can select for this action."""
+        action = self._get_action()
         qs = Product.objects.filter(
-            parent_id__in=self._selected_ids, structure=Product.CHILD
+            Q(pk__in=self._selected_ids) | Q(parent_id__in=self._selected_ids)
         )
-        return self._get_action().filter_children_queryset(qs)
+        if action.supported_structures is not None:
+            qs = qs.filter(structure__in=action.supported_structures)
+        print(list(qs.values_list("id", flat=True)))
+        return action.filter_products_queryset(qs)
+
+    def get_parent_queryset(self):
+        """Parent products to show as group headers."""
+        selectable_qs = self.get_selectable_queryset()
+        parent_selectable = self._is_structure_supported(Product.PARENT)
+        children_selectable = self._is_structure_supported(Product.CHILD)
+
+        base = Product.objects.filter(
+            pk__in=self._selected_ids, structure=Product.PARENT
+        )
+        if not parent_selectable and not children_selectable:
+            base = base.none()
+
+        elif not parent_selectable:
+            # Only show parents that have selectable children
+            base = base.filter(children__in=selectable_qs)
+
+        children_qs = selectable_qs.filter(structure=Product.CHILD)
+        return base.prefetch_related(
+            Prefetch("children", queryset=children_qs)
+        ).distinct()
+
+    def get_standalone_queryset(self):
+        """Standalone products from the original selection that are selectable."""
+        return self.get_selectable_queryset().filter(
+            pk__in=self._selected_ids, structure=Product.STANDALONE
+        )
 
     def get_form_kwargs(self):
         return {
             **super().get_form_kwargs(),
-            "children_queryset": self.get_children_queryset_for_form(),
+            "products_queryset": self.get_selectable_queryset(),
         }
 
     def get_objects(self, form):
-        return list(form.cleaned_data["selected_children"])
+        return list(form.cleaned_data["selected_products"])
 
     def get_context_data(self, form=None, **kwargs):
+        parent_selectable = self._is_structure_supported(Product.PARENT)
+        children_selectable = self._is_structure_supported(Product.CHILD)
+        parents = self.get_parent_queryset()
+        standalone = self.get_standalone_queryset()
+
+        display_rows = []
+        for product in standalone:
+            display_rows.append(
+                {
+                    "selectable": True,
+                    "product": product,
+                    "is_group_header": False,
+                    "indent": False,
+                }
+            )
+        for parent in parents:
+            display_rows.append(
+                {
+                    "selectable": parent_selectable,
+                    "product": parent,
+                    "is_group_header": True,
+                    "children": list(parent.children.all()),
+                    "children_selectable": children_selectable,
+                }
+            )
+            if children_selectable:
+                for child in parent.children.all():
+                    display_rows.append(
+                        {
+                            "selectable": True,
+                            "product": child,
+                            "is_group_header": False,
+                            "indent": True,
+                        }
+                    )
+
         return super().get_context_data(
             form=form,
-            parents_with_children=self.get_parent_queryset(),
+            display_rows=display_rows,
+            standalone_products=standalone,
+            parent_selectable=parent_selectable,
+            children_selectable=children_selectable,
             **kwargs,
         )
-
 
 
 class ProductCreateRedirectView(generic.RedirectView):

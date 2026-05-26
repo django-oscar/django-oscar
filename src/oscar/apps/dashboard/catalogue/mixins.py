@@ -7,17 +7,17 @@ from oscar.views.generic import BulkEditMixin, IntermediateBulkEditMixin
 (
     MakePublicAction,
     MakeNonPublicAction,
-    MakeChildrenPublicAction,
-    MakeChildrenNonPublicAction,
-    SetChildrenPriceAction,
+    MakeProductsPublicAction,
+    MakeProductsNonPublicAction,
+    SetProductPriceAction,
 ) = get_classes(
     "dashboard.catalogue.bulk_actions",
     (
         "MakePublicAction",
         "MakeNonPublicAction",
-        "MakeChildrenPublicAction",
-        "MakeChildrenNonPublicAction",
-        "SetChildrenPriceAction",
+        "MakeProductsPublicAction",
+        "MakeProductsNonPublicAction",
+        "SetProductPriceAction",
     ),
 )
 
@@ -43,14 +43,11 @@ class PartnerProductFilterMixin:
 class ProductBulkActionMixin(IntermediateBulkEditMixin):
     """Mixin that implements bulk actions for the product list view."""
 
-    actions = {
-        "make_public": MakePublicAction(),
-        "make_non_public": MakeNonPublicAction(),
-    }
+    actions = {}
     intermediate_actions = {
-        "make_children_public": MakeChildrenPublicAction(),
-        "make_children_non_public": MakeChildrenNonPublicAction(),
-        "set_children_price": SetChildrenPriceAction(),
+        "make_products_public": MakeProductsPublicAction(),
+        "make_products_non_public": MakeProductsNonPublicAction(),
+        "set_product_price": SetProductPriceAction(),
     }
 
     def get_actions(self):
