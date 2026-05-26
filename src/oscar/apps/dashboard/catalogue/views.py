@@ -229,6 +229,9 @@ class ChildProductSelectView(IntermediateBulkActionView):
             "children_queryset": self.get_children_queryset_for_form(),
         }
 
+    def get_objects(self, form):
+        return list(form.cleaned_data["selected_children"])
+
     def get_context_data(self, form=None, **kwargs):
         return super().get_context_data(
             form=form,
@@ -236,12 +239,6 @@ class ChildProductSelectView(IntermediateBulkActionView):
             **kwargs,
         )
 
-    def execute_action(self, request, form):
-        action = self.intermediate_actions[self._action]
-        child_ids = list(
-            form.cleaned_data["selected_children"].values_list("pk", flat=True)
-        )
-        return action.execute(request, child_ids, form)
 
 
 class ProductCreateRedirectView(generic.RedirectView):

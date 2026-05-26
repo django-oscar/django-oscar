@@ -213,8 +213,18 @@ class TestMakeChildrenPublicAction(TestCase):
         self.action = MakeChildrenPublicAction()
         self.request = RequestFactory().get("/")
 
+    def _make_form(self, children):
+        qs = Product.objects.filter(pk__in=[c.pk for c in children])
+        form = ChildrenBulkActionForm(
+            data={"selected_children": [c.pk for c in children]},
+            children_queryset=qs,
+        )
+        form.is_valid()
+        return form
+
     def test_sets_is_public_true(self):
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form=None)
+        form = self._make_form([self.child1, self.child2])
+        self.action.execute(self.request, [self.child1, self.child2], form)
         self.child1.refresh_from_db()
         self.child2.refresh_from_db()
         self.assertTrue(self.child1.is_public)
@@ -222,12 +232,14 @@ class TestMakeChildrenPublicAction(TestCase):
 
     def test_ignores_non_child_structure(self):
         standalone = create_product(is_public=False)
-        self.action.execute(self.request, [self.child1.pk, standalone.pk], form=None)
+        form = self._make_form([self.child1])
+        self.action.execute(self.request, [self.child1], form)
         standalone.refresh_from_db()
         self.assertFalse(standalone.is_public)
 
     def test_returns_none(self):
-        result = self.action.execute(self.request, [self.child1.pk], form=None)
+        form = self._make_form([self.child1])
+        result = self.action.execute(self.request, [self.child1], form)
         self.assertIsNone(result)
 
 
@@ -243,20 +255,32 @@ class TestMakeChildrenNonPublicAction(TestCase):
         self.action = MakeChildrenNonPublicAction()
         self.request = RequestFactory().get("/")
 
+    def _make_form(self, children):
+        qs = Product.objects.filter(pk__in=[c.pk for c in children])
+        form = ChildrenBulkActionForm(
+            data={"selected_children": [c.pk for c in children]},
+            children_queryset=qs,
+        )
+        form.is_valid()
+        return form
+
     def test_sets_is_public_false(self):
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form=None)
+        form = self._make_form([self.child1, self.child2])
+        self.action.execute(self.request, [self.child1, self.child2], form)
         self.child1.refresh_from_db()
         self.child2.refresh_from_db()
         self.assertFalse(self.child1.is_public)
         self.assertFalse(self.child2.is_public)
 
     def test_ignores_parent_structure(self):
-        self.action.execute(self.request, [self.child1.pk, self.parent.pk], form=None)
+        form = self._make_form([self.child1])
+        self.action.execute(self.request, [self.child1], form)
         self.parent.refresh_from_db()
         self.assertTrue(self.parent.is_public)
 
     def test_returns_none(self):
-        result = self.action.execute(self.request, [self.child1.pk], form=None)
+        form = self._make_form([self.child1])
+        result = self.action.execute(self.request, [self.child1], form)
         self.assertIsNone(result)
 
 
@@ -276,6 +300,9 @@ class TestSetChildrenPriceAction(TestCase):
         form.is_valid()
         return form
 
+    def _objects(self, form):
+        return list(form.cleaned_data["selected_children"])
+
     def test_base_price_updates_all(self):
         form = self._make_form(
             {
@@ -283,7 +310,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "new_price": "12.50",
             }
         )
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.sr2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("12.50"))
@@ -297,7 +324,7 @@ class TestSetChildrenPriceAction(TestCase):
                 f"price_{self.child1.pk}": "20.00",
             }
         )
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.sr2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("20.00"))
@@ -311,7 +338,7 @@ class TestSetChildrenPriceAction(TestCase):
                 f"price_{self.child2.pk}": "7.00",
             }
         )
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.sr2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("3.00"))
@@ -324,7 +351,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "increase_by_amount": "3.00",
             }
         )
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.sr2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("8.00"))
@@ -337,7 +364,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "increase_by_amount": "-99.00",
             }
         )
-        self.action.execute(self.request, [self.child1.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("0.00"))
 
@@ -348,7 +375,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "increase_by_percentage": "20",
             }
         )
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.sr2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("6.00"))
@@ -361,7 +388,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "increase_by_percentage": "-200",
             }
         )
-        self.action.execute(self.request, [self.child1.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("0.00"))
 
@@ -373,7 +400,7 @@ class TestSetChildrenPriceAction(TestCase):
                 f"price_{self.child1.pk}": "99.00",
             }
         )
-        self.action.execute(self.request, [self.child1.pk, self.child2.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         self.sr2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("99.00"))
@@ -388,7 +415,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "new_price": "12.50",
             }
         )
-        self.action.execute(self.request, [self.child1.pk, standalone.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         sr_standalone.refresh_from_db()
         self.assertEqual(sr_standalone.price, Decimal("5.00"))
 
@@ -403,7 +430,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "partners": [self.sr1.partner.pk],
             }
         )
-        self.action.execute(self.request, [self.child1.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         sr1_p2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("20.00"))
@@ -419,7 +446,7 @@ class TestSetChildrenPriceAction(TestCase):
                 "new_price": "20.00",
             }
         )
-        self.action.execute(self.request, [self.child1.pk], form)
+        self.action.execute(self.request, self._objects(form), form)
         self.sr1.refresh_from_db()
         sr1_p2.refresh_from_db()
         self.assertEqual(self.sr1.price, Decimal("20.00"))
@@ -429,5 +456,5 @@ class TestSetChildrenPriceAction(TestCase):
         form = self._make_form(
             {"selected_children": [self.child1.pk], "new_price": "9.00"}
         )
-        result = self.action.execute(self.request, [self.child1.pk], form)
+        result = self.action.execute(self.request, self._objects(form), form)
         self.assertIsNone(result)

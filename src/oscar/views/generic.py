@@ -9,26 +9,28 @@ from django.views.generic.base import View
 from oscar.core.utils import safe_referrer
 
 
-class BulkAction:
-    """Base class for bulk actions. Intended to be used with BulkEditMixin."""
-
+class AbstractBulkAction:
     label = ""
 
     def __str__(self):
         return str(self.label)
 
-    def execute(self, request, records):
+
+class BulkAction(AbstractBulkAction):
+    """Base class for bulk actions. Intended to be used with BulkEditMixin."""
+
+    def execute(self, request, objects):
         raise NotImplementedError
 
 
-class IntermediateBulkAction(BulkAction):
+class IntermediateBulkAction(AbstractBulkAction):
     """Base class for two-step bulk actions. Intended to be used with IntermediateBulkEditMixin."""
 
     form_class = None
     template = "oscar/dashboard/intermediate_bulk_action.html"
     context = {}
 
-    def execute(self, request, child_ids, form):  # pylint: disable=arguments-differ
+    def execute(self, request, objects, form):
         raise NotImplementedError
 
 
@@ -272,9 +274,12 @@ class IntermediateBulkActionView(View):
         self._clear_session(request)
         return redirect(self.get_success_url())
 
+    def get_objects(self, form):
+        return []
+
     def execute_action(self, request, form):
         action = self.intermediate_actions[self._action]
-        return action.execute(request, form)
+        return action.execute(request, self.get_objects(form), form)
 
     def _clear_session(self, request):
         request.session.pop(self.bulk_intermediate_session_key, None)

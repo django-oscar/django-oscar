@@ -21,18 +21,18 @@ class MakePublicAction(BulkAction):
     label = _("Make public")
 
     @atomic
-    def execute(self, request, records):
-        if not records:
+    def execute(self, request, objects):
+        if not objects:
             return
-        model = type(records[0])
-        count = model.objects.filter(pk__in=[r.pk for r in records]).update(
+        model = type(objects[0])
+        count = model.objects.filter(pk__in=[r.pk for r in objects]).update(
             is_public=True
         )
         messages.success(
             request,
             ngettext(
                 "Public status was successfully updated for %(count)d record.",
-                "Public status was successfully updated for %(count)d records.",
+                "Public status was successfully updated for %(count)d objects.",
                 count,
             )
             % {"count": count},
@@ -43,18 +43,18 @@ class MakeNonPublicAction(BulkAction):
     label = _("Make non-public")
 
     @atomic
-    def execute(self, request, records):
-        if not records:
+    def execute(self, request, objects):
+        if not objects:
             return
-        model = type(records[0])
-        count = model.objects.filter(pk__in=[r.pk for r in records]).update(
+        model = type(objects[0])
+        count = model.objects.filter(pk__in=[r.pk for r in objects]).update(
             is_public=False
         )
         messages.success(
             request,
             ngettext(
                 "Public status was successfully updated for %(count)d record.",
-                "Public status was successfully updated for %(count)d records.",
+                "Public status was successfully updated for %(count)d objects.",
                 count,
             )
             % {"count": count},
@@ -70,17 +70,14 @@ class ChildBulkAction(IntermediateBulkAction):
     def filter_children_queryset(self, qs):
         return qs
 
-    def execute(self, request, child_ids, form):
-        raise NotImplementedError
-
 
 class MakeChildrenPublicAction(ChildBulkAction):
     label = _("Make variants public")
 
     @atomic
-    def execute(self, request, child_ids, form):
+    def execute(self, request, objects, form):
         count = Product.objects.filter(
-            pk__in=child_ids, structure=Product.CHILD
+            pk__in=[r.pk for r in objects], structure=Product.CHILD
         ).update(is_public=True)
         messages.success(
             request,
@@ -97,9 +94,9 @@ class MakeChildrenNonPublicAction(ChildBulkAction):
     label = _("Make variants non-public")
 
     @atomic
-    def execute(self, request, child_ids, form):
+    def execute(self, request, objects, form):
         count = Product.objects.filter(
-            pk__in=child_ids, structure=Product.CHILD
+            pk__in=[r.pk for r in objects], structure=Product.CHILD
         ).update(is_public=False)
         messages.success(
             request,
@@ -121,7 +118,8 @@ class SetChildrenPriceAction(ChildBulkAction):
         return qs.filter(stockrecords__isnull=False).distinct()
 
     @atomic
-    def execute(self, request, child_ids, form):
+    def execute(self, request, objects, form):
+        child_ids = [r.pk for r in objects]
         specific = form.get_specific_prices()
         override_ids = [pk for pk in child_ids if pk in specific]
         rest_ids = [pk for pk in child_ids if pk not in specific]
