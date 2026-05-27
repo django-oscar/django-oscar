@@ -66,10 +66,13 @@ class ProductIntermediateAction(IntermediateBulkAction):
 
     form_class = ChildrenBulkActionForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action.html"
-    supported_structures = None  # None means all structures are supported
+    supported_structures = None
 
     def filter_products_queryset(self, qs):
         return qs
+
+    def execute(self, request, objects, form):
+        raise NotImplementedError
 
 
 class MakeProductsPublicAction(ProductIntermediateAction):
