@@ -566,6 +566,11 @@ var oscar = (function(o, $) {
                         .prop('checked', checked);
                 });
 
+                $('.select-all-standalones').on('change', function() {
+                    var checked = $(this).prop('checked');
+                    $('input[type="checkbox"].select-standalone').prop('checked', checked);
+                });
+
                 $('.select-all-parents').on('change', function() {
                     var checked = $(this).prop('checked');
                     $('input[type="checkbox"].select-parent').prop('checked', checked);

@@ -195,9 +195,8 @@ class ProductListView(
 class ChildProductSelectView(IntermediateBulkActionView):
     """Confirmation view for two-step bulk actions on child products."""
 
-    # TODO: add safeguard for when there is a very large amount of products selected (skip product selection?)
-    # TODO: add a select all standalone checkbox
     # TODO: merge make product public and product not public, and add a form to choose to public/not public
+    # TODO: add safeguard for when there is a very large amount of products selected (skip product selection?)
     # TODO: add translations
 
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
@@ -226,7 +225,6 @@ class ChildProductSelectView(IntermediateBulkActionView):
         )
         if action.supported_structures is not None:
             qs = qs.filter(structure__in=action.supported_structures)
-        print(list(qs.values_list("id", flat=True)))
         return action.filter_products_queryset(qs)
 
     def get_parent_queryset(self):
@@ -266,6 +264,7 @@ class ChildProductSelectView(IntermediateBulkActionView):
         return list(form.cleaned_data["selected_products"])
 
     def get_context_data(self, form=None, **kwargs):
+        standalone_selectable = self._is_structure_supported(Product.STANDALONE)
         parent_selectable = self._is_structure_supported(Product.PARENT)
         children_selectable = self._is_structure_supported(Product.CHILD)
         parents = self.get_parent_queryset()
@@ -306,6 +305,7 @@ class ChildProductSelectView(IntermediateBulkActionView):
             form=form,
             display_rows=display_rows,
             standalone_products=standalone,
+            standalone_selectable=standalone_selectable,
             parent_selectable=parent_selectable,
             children_selectable=children_selectable,
             **kwargs,

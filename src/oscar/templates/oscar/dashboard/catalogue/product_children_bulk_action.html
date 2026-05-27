@@ -35,6 +35,12 @@
 <div class="card mb-3">
     {% if parent_selectable or children_selectable %}
     <div class="d-flex gap-4 px-3 py-2 border-bottom">
+        {% if standalone_selectable %}
+        <label class="d-flex align-items-center gap-1 text-muted small mb-0 user-select-none">
+            <input type="checkbox" class="select-all-standalones">
+            {% trans "Select all standalones" %}
+        </label>
+        {% endif %}
         {% if parent_selectable %}
         <label class="d-flex align-items-center gap-1 text-muted small mb-0 user-select-none">
             <input type="checkbox" class="select-all-parents">
@@ -67,7 +73,7 @@
                     <td class="text-center {% if row.indent %}ps-4{% endif %}">
                         {% if row.selectable %}
                         <input type="checkbox" name="selected_products" value="{{ product.pk }}"
-                            class="{% if row.is_group_header %}select-parent{% endif %}"
+                            class="{% if row.product.is_parent %}select-parent{% elif row.product.is_child %}select-child{% elif row.product.is_standalone %}select-standalone{% endif %}"
                             {% if row.indent %}data-parent="{{ product.parent_id }}"{% endif %}
                             {% if not form.is_bound or pk_str in selected_values %}checked{% endif %}>
                         {% endif %}
