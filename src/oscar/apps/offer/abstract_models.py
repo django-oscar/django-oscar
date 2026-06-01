@@ -3,6 +3,7 @@ import csv
 import operator
 from decimal import ROUND_DOWN
 from decimal import Decimal as D
+from django.core.exceptions import ImproperlyConfigured
 
 from django.conf import settings
 from django.core import exceptions
@@ -794,6 +795,11 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         """
         if range is None:
             range = self.range
+        if range is None:
+            raise ImproperlyConfigured(
+                "Benefit '%s' has no range set. A range is required "
+                "for get_applicable_lines to work." % self.__class__.__name__
+            )    
         line_tuples = []
         for line in basket.all_lines():
             product = line.product
