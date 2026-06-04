@@ -54,6 +54,7 @@ class UserReportCSVFormatter(ReportCSVFormatter):
     def generate_csv(self, response, users):
         writer = self.get_csv_writer(response)
         header_row = [
+            _("Email"),
             _("Name"),
             _("Date registered"),
             _("Product views"),
@@ -68,6 +69,7 @@ class UserReportCSVFormatter(ReportCSVFormatter):
 
         for record in users:
             row = [
+                record.user.email,
                 record.user.get_full_name(),
                 self.format_date(record.user.date_joined),
                 record.num_product_views,
