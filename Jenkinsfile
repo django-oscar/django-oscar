@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                withPythonEnv('System-CPython-3.10') {
+                withPythonEnv('System-CPython-3.12') {
                     withEnv(['DATABASE_USER=django_oscar', 'DATABASE_PASSWORD=django_oscar', 'DATABASE_PORT=5432', 'DATABASE_HOST=localhost']) {
                         pysh "make install"
                     }
@@ -16,14 +16,14 @@ pipeline {
         }
         stage('Lint') {
             steps {
-                withPythonEnv('System-CPython-3.10') {
+                withPythonEnv('System-CPython-3.12') {
                     pysh "make lint"
                 }
             }
         }
         stage('Test') {
             steps {
-                withPythonEnv('System-CPython-3.10') {
+                withPythonEnv('System-CPython-3.12') {
                     withEnv(['DATABASE_USER=django_oscar', 'DATABASE_PASSWORD=django_oscar', 'DATABASE_PORT=5432', 'DATABASE_HOST=localhost']) {
                         pysh "make test"
                     }
@@ -49,7 +49,7 @@ pipeline {
         }
         success {
             echo 'This will run only if successful'
-            withPythonEnv('System-CPython-3.10') {
+            withPythonEnv('System-CPython-3.12') {
                 echo 'This will run only if successful'
                 pysh "version --plugin=wheel -B${env.BUILD_NUMBER} --skip-build"
                 sh "which git"
