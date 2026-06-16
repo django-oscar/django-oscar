@@ -2,7 +2,7 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Prefetch, Q
+from django.db.models import OuterRef, Prefetch, Q, Subquery
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -234,6 +234,16 @@ class ChildProductSelectView(IntermediateBulkActionView):
 
         return qs
 
+    def _annotate_cheapest_price(self, qs):
+        """Annotate a product queryset with cheapest_price and cheapest_price_currency."""
+        cheapest_sr = StockRecord.objects.filter(product=OuterRef("pk")).order_by(
+            "price"
+        )
+        return qs.annotate(
+            cheapest_price=Subquery(cheapest_sr.values("price")[:1]),
+            cheapest_price_currency=Subquery(cheapest_sr.values("price_currency")[:1]),
+        )
+
     def get_parent_queryset(self):
         """Parent products to show as group headers."""
         selectable_qs = self.get_selectable_queryset()
@@ -250,15 +260,21 @@ class ChildProductSelectView(IntermediateBulkActionView):
             # Only show parents that have selectable children
             base = base.filter(children__in=selectable_qs)
 
-        children_qs = selectable_qs.filter(structure=Product.CHILD)
-        return base.prefetch_related(
-            Prefetch("children", queryset=children_qs)
-        ).distinct()
+        children_qs = self._annotate_cheapest_price(
+            selectable_qs.filter(structure=Product.CHILD)
+        )
+        return (
+            self._annotate_cheapest_price(base)
+            .prefetch_related(Prefetch("children", queryset=children_qs))
+            .distinct()
+        )
 
     def get_standalone_queryset(self):
         """Standalone products from the original selection that are selectable."""
-        return self.get_selectable_queryset().filter(
-            pk__in=self._selected_ids, structure=Product.STANDALONE
+        return self._annotate_cheapest_price(
+            self.get_selectable_queryset().filter(
+                pk__in=self._selected_ids, structure=Product.STANDALONE
+            )
         )
 
     def get_form_kwargs(self):

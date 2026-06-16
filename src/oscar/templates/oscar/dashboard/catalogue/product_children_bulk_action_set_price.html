@@ -1,5 +1,5 @@
 {% extends "oscar/dashboard/catalogue/product_children_bulk_action.html" %}
-{% load i18n form_tags %}
+{% load i18n form_tags currency_filters %}
 
 {% block prepend_form %}
 <div class="alert alert-warning">
@@ -24,8 +24,8 @@
 
 
 {% block extra_column_values %}
-{% with sr=product.cheapest_stockrecord price_field=form|child_price_field:product.pk %}
-<td>{% if sr %}{{ sr.price_currency }} {{ sr.price|default:"-" }}{% else %}-{% endif %}</td>
+{% with price_field=form|child_price_field:product.pk %}
+<td>{{ product.cheapest_price|currency:product.cheapest_price_currency|default:"-" }}</td>
 
 <td>
     {% if row.selectable %}

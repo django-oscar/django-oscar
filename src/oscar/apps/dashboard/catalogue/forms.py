@@ -467,7 +467,9 @@ class ChildrenBulkActionForm(forms.Form):
         required=False,
         error_messages={"required": _("Select at least one product.")},
     )
-    select_all = forms.BooleanField(widget=forms.HiddenInput(), initial=False, required=False)
+    select_all = forms.BooleanField(
+        widget=forms.HiddenInput(), initial=False, required=False
+    )
 
     def __init__(self, *args, products_queryset=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -476,7 +478,9 @@ class ChildrenBulkActionForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        if not cleaned_data.get("select_all") and not cleaned_data.get("selected_products"):
+        if not cleaned_data.get("select_all") and not cleaned_data.get(
+            "selected_products"
+        ):
             self.add_error("selected_products", _("Select at least one product."))
         return cleaned_data
 
@@ -505,6 +509,7 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
         ),
     )
+
     def __init__(self, *args, products_queryset=None, **kwargs):
         super().__init__(*args, products_queryset=products_queryset, **kwargs)
         qs = (
