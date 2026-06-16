@@ -9119,3 +9119,72 @@ msgstr ""
 #, python-format
 msgid "You need to select some %ss"
 msgstr ""
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d record."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d objects."
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d product."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d products."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Make products public"
+msgstr ""
+
+msgid "Make products non-public"
+msgstr ""
+
+msgid "Update product prices"
+msgstr ""
+
+msgid "Select at least one product."
+msgstr ""
+
+msgid "Set price to a specific amount."
+msgstr ""
+
+msgid "Public"
+msgstr ""
+
+msgid "Non-public"
+msgstr ""
+
+msgid "public"
+msgstr ""
+
+msgid "non-public"
+msgstr ""
+
+msgid "Select all standalones"
+msgstr ""
+
+msgid "Select all parents"
+msgstr ""
+
+msgid "Select all variants"
+msgstr ""
+
+msgid "Select / deselect all variants"
+msgstr ""
+
+msgid "The amount selected products and their variants exceed the maximum total for selection. The action will be applied to the entire selection."
+msgstr ""
+
+msgid "No products."
+msgstr ""
+
+msgid "Specific price"
+msgstr ""
+
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners."
+msgstr ""
+
+msgid "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+msgstr ""
+
+msgid "Selected products"
+msgstr ""

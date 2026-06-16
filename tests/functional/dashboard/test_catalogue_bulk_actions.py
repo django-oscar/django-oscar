@@ -1,10 +1,13 @@
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.urls import reverse
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 from oscar.test.factories import create_product, create_stockrecord
 from oscar.test.testcases import WebTestCase
+
+Product = get_model("catalogue", "Product")
 
 DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
@@ -252,3 +255,42 @@ class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
         self.assertIn(self.parent, parents)
         self.assertIn(parent2, parents)
         self.assertIn(parent3, parents)
+
+
+class TestTooManyProductsSafeguard(ChildrenBulkActionTests):
+    """
+    When the selectable queryset exceeds max_products_for_selection the view
+    skips the individual-checkbox table and instead shows a summary count,
+    pre-checks the hidden select_all field, and still executes the action
+    against the full queryset on POST.
+    """
+
+    view_path = "oscar.apps.dashboard.catalogue.views.ChildProductSelectView.max_products_for_selection"
+
+    def test_get_sets_skip_product_selection_in_context(self):
+        self._seed_session("make_products_public")
+        with patch(self.view_path, new=1):
+            page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        self.assertTrue(page.context["skip_product_selection"])
+
+    def test_get_shows_product_counts_in_context(self):
+        self._seed_session("make_products_public")
+        with patch(self.view_path, new=1):
+            page = self.get(self._intermediate_url())
+        self.assertEqual(page.context["selected_child_count"], 2)
+        self.assertEqual(page.context["selected_standalone_count"], 0)
+        self.assertEqual(page.context["selected_parent_count"], 1)
+
+    def test_post_with_select_all_updates_all_products(self):
+        self._seed_session("make_products_public")
+        with patch(self.view_path, new=1):
+            response = self.post(
+                self._intermediate_url(),
+                params={"select_all": "on"},
+            )
+        self.assertIsRedirect(response)
+        self.child1.refresh_from_db()
+        self.child2.refresh_from_db()
+        self.assertTrue(self.child1.is_public)
+        self.assertTrue(self.child2.is_public)

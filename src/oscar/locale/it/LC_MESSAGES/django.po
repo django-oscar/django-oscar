@@ -9448,20 +9448,20 @@ msgstr "Rendi pubblico"
 msgid "Make non-public"
 msgstr "Rendi non pubblico"
 
-msgid "Make variants public"
-msgstr "Rendi pubbliche le varianti"
+msgid "Make products public"
+msgstr "Rendi pubblici i prodotti"
 
-msgid "Make variants non-public"
-msgstr "Rendi non pubbliche le varianti"
+msgid "Make products non-public"
+msgstr "Rendi non pubblici i prodotti"
 
-msgid "Update variant prices"
-msgstr "Aggiorna il prezzo delle varianti"
+msgid "Update product prices"
+msgstr "Aggiorna il prezzo dei prodotti"
 
 msgid "No pending bulk action. Please select items and try again."
 msgstr "Nessuna azione di massa in sospeso. Seleziona gli elementi e riprova."
 
-msgid "Select at least one variant."
-msgstr "Seleziona almeno una variante."
+msgid "Select at least one product."
+msgstr "Seleziona almeno un prodotto."
 
 #, python-format
 msgid "Price updated on %(count)d stockrecord."
@@ -9469,17 +9469,17 @@ msgid_plural "Price updated on %(count)d stockrecords."
 msgstr[0] "Prezzo aggiornato su %(count)d record di magazzino."
 msgstr[1] "Prezzo aggiornato su %(count)d record di magazzino."
 
-#, python-format
-msgid "Public status was successfully updated for %(count)d record."
-msgid_plural "Public status was successfully updated for %(count)d records."
-msgstr[0] "Stato pubblico aggiornato con successo per %(count)d record."
-msgstr[1] "Stato pubblico aggiornato con successo per %(count)d record."
+#~ #, python-format
+#~ msgid "Public status was successfully updated for %(count)d record."
+#~ msgid_plural "Public status was successfully updated for %(count)d records."
+#~ msgstr[0] "Stato pubblico aggiornato con successo per %(count)d record."
+#~ msgstr[1] "Stato pubblico aggiornato con successo per %(count)d record."
 
-#, python-format
-msgid "Updated %(count)d variant."
-msgid_plural "Updated %(count)d variants."
-msgstr[0] "%(count)d variante aggiornata."
-msgstr[1] "%(count)d varianti aggiornate."
+#~ #, python-format
+#~ msgid "Updated %(count)d variant."
+#~ msgid_plural "Updated %(count)d variants."
+#~ msgstr[0] "%(count)d variante aggiornata."
+#~ msgstr[1] "%(count)d varianti aggiornate."
 
 msgid "New price"
 msgstr "Nuovo prezzo"
@@ -9487,20 +9487,20 @@ msgstr "Nuovo prezzo"
 msgid "Lowest current price"
 msgstr "Prezzo corrente più basso"
 
-msgid "All variants without a specific price will be set to this price."
-msgstr "Tutte le varianti senza un prezzo specifico verranno impostate a questo prezzo."
+#~ msgid "All variants without a specific price will be set to this price."
+#~ msgstr "Tutte le varianti senza un prezzo specifico verranno impostate a questo prezzo."
 
 msgid "Increase by amount"
 msgstr "Aumenta di un importo"
 
-msgid "Adds a fixed amount to each variant's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
-msgstr "Aggiunge un importo fisso al prezzo corrente di ogni variante. Usa un valore negativo per diminuire. Es. 2,00 porta €10,00 a €12,00; -3,00 lo abbassa a €7,00. I prezzi non scenderanno sotto €0,00."
+msgid "Adds a fixed amount to each product's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+msgstr "Aggiunge un importo fisso al prezzo corrente di ogni prodotto. Usa un valore negativo per diminuire. Es. 2,00 porta €10,00 a €12,00; -3,00 lo abbassa a €7,00. I prezzi non scenderanno sotto €0,00."
 
 msgid "Increase by percentage"
 msgstr "Aumenta di una percentuale"
 
-msgid "Adds a percentage of each variant's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
-msgstr "Aggiunge una percentuale del prezzo corrente di ogni variante. Usa un valore negativo per diminuire. Es. 10 porta €10,00 a €11,00; -10 lo abbassa a €9,00. I prezzi non scenderanno sotto €0,00."
+msgid "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+msgstr "Aggiunge una percentuale del prezzo corrente di ogni prodotto. Usa un valore negativo per diminuire. Es. 10 porta €10,00 a €11,00; -10 lo abbassa a €9,00. I prezzi non scenderanno sotto €0,00."
 
 msgid "Only one of new price, increase by amount, or increase by percentage can be set at a time."
 msgstr "È possibile impostare solo uno dei seguenti campi alla volta: nuovo prezzo, aumenta di un importo o aumenta di una percentuale."
@@ -9532,17 +9532,62 @@ msgstr "varianti"
 msgid "Currently public"
 msgstr "Attualmente pubblico"
 
-msgid "No variants."
-msgstr "Nessuna variante."
-
-msgid "None of the selected products have variants."
-msgstr "Nessuno dei prodotti selezionati ha varianti."
-
-msgid "Note:"
-msgstr "Nota:"
-
-msgid "This action will update <strong>all existing stockrecords</strong> of each selected variant."
-msgstr "Questa azione aggiornerà <strong>tutti i record di magazzino esistenti</strong> di ogni variante selezionata."
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners."
+msgstr "Questa azione aggiornerà <strong>tutti i record di magazzino esistenti</strong> di ogni prodotto selezionato all'interno dei partner selezionati."
 
 msgid "Current price"
 msgstr "Prezzo attuale"
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d record."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d objects."
+msgstr[0] "Stato pubblico aggiornato con successo a %(status)s per %(count)d record."
+msgstr[1] "Stato pubblico aggiornato con successo a %(status)s per %(count)d record."
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d product."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d products."
+msgstr[0] "Stato pubblico aggiornato con successo a %(status)s per %(count)d prodotto."
+msgstr[1] "Stato pubblico aggiornato con successo a %(status)s per %(count)d prodotti."
+
+msgid "Set price to a specific amount."
+msgstr "Imposta il prezzo a un importo specifico."
+
+msgid "Public"
+msgstr "Pubblico"
+
+msgid "Non-public"
+msgstr "Non pubblico"
+
+msgid "public"
+msgstr "pubblico"
+
+msgid "non-public"
+msgstr "non pubblico"
+
+msgid "Select all standalones"
+msgstr "Seleziona tutti i prodotti standalone"
+
+msgid "Select all parents"
+msgstr "Seleziona tutti i prodotti principali"
+
+msgid "Select all variants"
+msgstr "Seleziona tutte le varianti"
+
+msgid "Select / deselect all variants"
+msgstr "Seleziona / deseleziona tutte le varianti"
+
+msgid "The amount selected products and their variants exceed the maximum total for selection. The action will be applied to the entire selection."
+msgstr "Il numero di prodotti selezionati e le loro varianti supera il massimo consentito per la selezione. L'azione verrà applicata all'intera selezione."
+
+msgid "No products."
+msgstr "Nessun prodotto."
+
+msgid "Specific price"
+msgstr "Prezzo specifico"
+
+msgid "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+msgstr "Verranno aggiornati solo i record di magazzino dei partner selezionati. Deseleziona un partner per lasciare invariati i suoi prezzi."
+
+msgid "Selected products"
+msgstr "Prodotti selezionati"

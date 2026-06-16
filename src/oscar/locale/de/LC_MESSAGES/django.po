@@ -9436,20 +9436,20 @@ msgstr "Öffentlich machen"
 msgid "Make non-public"
 msgstr "Nicht öffentlich machen"
 
-msgid "Make variants public"
-msgstr "Varianten öffentlich machen"
+msgid "Make products public"
+msgstr "Produkte öffentlich machen"
 
-msgid "Make variants non-public"
-msgstr "Varianten nicht öffentlich machen"
+msgid "Make products non-public"
+msgstr "Produkte nicht öffentlich machen"
 
-msgid "Update variant prices"
-msgstr "Preise der Varianten aktualisieren"
+msgid "Update product prices"
+msgstr "Preise der Produkte aktualisieren"
 
 msgid "No pending bulk action. Please select items and try again."
 msgstr "Keine ausstehende Massenaktion. Bitte Elemente auswählen und erneut versuchen."
 
-msgid "Select at least one variant."
-msgstr "Bitte mindestens eine Variante auswählen."
+msgid "Select at least one product."
+msgstr "Bitte mindestens ein Produkt auswählen."
 
 #, python-format
 msgid "Price updated on %(count)d stockrecord."
@@ -9457,17 +9457,17 @@ msgid_plural "Price updated on %(count)d stockrecords."
 msgstr[0] "Preis für %(count)d Lagerbestand aktualisiert."
 msgstr[1] "Preis für %(count)d Lagerbestände aktualisiert."
 
-#, python-format
-msgid "Public status was successfully updated for %(count)d record."
-msgid_plural "Public status was successfully updated for %(count)d records."
-msgstr[0] "Öffentlichkeitsstatus für %(count)d Datensatz erfolgreich aktualisiert."
-msgstr[1] "Öffentlichkeitsstatus für %(count)d Datensätze erfolgreich aktualisiert."
+#~ #, python-format
+#~ msgid "Public status was successfully updated for %(count)d record."
+#~ msgid_plural "Public status was successfully updated for %(count)d records."
+#~ msgstr[0] "Öffentlichkeitsstatus für %(count)d Datensatz erfolgreich aktualisiert."
+#~ msgstr[1] "Öffentlichkeitsstatus für %(count)d Datensätze erfolgreich aktualisiert."
 
-#, python-format
-msgid "Updated %(count)d variant."
-msgid_plural "Updated %(count)d variants."
-msgstr[0] "%(count)d Variante aktualisiert."
-msgstr[1] "%(count)d Varianten aktualisiert."
+#~ #, python-format
+#~ msgid "Updated %(count)d variant."
+#~ msgid_plural "Updated %(count)d variants."
+#~ msgstr[0] "%(count)d Variante aktualisiert."
+#~ msgstr[1] "%(count)d Varianten aktualisiert."
 
 msgid "New price"
 msgstr "Neuer Preis"
@@ -9475,20 +9475,20 @@ msgstr "Neuer Preis"
 msgid "Lowest current price"
 msgstr "Niedrigster aktueller Preis"
 
-msgid "All variants without a specific price will be set to this price."
-msgstr "Alle Varianten ohne spezifischen Preis werden auf diesen Preis gesetzt."
+#~ msgid "All variants without a specific price will be set to this price."
+#~ msgstr "Alle Varianten ohne spezifischen Preis werden auf diesen Preis gesetzt."
 
 msgid "Increase by amount"
 msgstr "Um Betrag erhöhen"
 
-msgid "Adds a fixed amount to each variant's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
-msgstr "Fügt einen festen Betrag zum aktuellen Preis jeder Variante hinzu. Negativer Wert zum Senken. Z. B. hebt 2,00 einen Preis von 10,00 € auf 12,00 € an; -3,00 senkt ihn auf 7,00 €. Preise gehen nicht unter 0,00 €."
+msgid "Adds a fixed amount to each product's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+msgstr "Fügt einen festen Betrag zum aktuellen Preis jeder Produkt hinzu. Negativer Wert zum Senken. Z. B. hebt 2,00 einen Preis von 10,00 € auf 12,00 € an; -3,00 senkt ihn auf 7,00 €. Preise gehen nicht unter 0,00 €."
 
 msgid "Increase by percentage"
 msgstr "Um Prozentsatz erhöhen"
 
-msgid "Adds a percentage of each variant's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
-msgstr "Fügt einen Prozentsatz des aktuellen Preises jeder Variante hinzu. Negativer Wert zum Senken. Z. B. hebt 10 einen Preis von 10,00 € auf 11,00 € an; -10 senkt ihn auf 9,00 €. Preise gehen nicht unter 0,00 €."
+msgid "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+msgstr "Fügt einen Prozentsatz des aktuellen Preises jeder Produkt hinzu. Negativer Wert zum Senken. Z. B. hebt 10 einen Preis von 10,00 € auf 11,00 € an; -10 senkt ihn auf 9,00 €. Preise gehen nicht unter 0,00 €."
 
 msgid "Only one of new price, increase by amount, or increase by percentage can be set at a time."
 msgstr "Es kann jeweils nur eines der Felder gesetzt werden: neuer Preis, Erhöhung um Betrag oder Erhöhung um Prozentsatz."
@@ -9520,17 +9520,62 @@ msgstr "Varianten"
 msgid "Currently public"
 msgstr "Derzeit öffentlich"
 
-msgid "No variants."
-msgstr "Keine Varianten."
-
-msgid "None of the selected products have variants."
-msgstr "Keines der ausgewählten Produkte hat Varianten."
-
-msgid "Note:"
-msgstr "Hinweis:"
-
-msgid "This action will update <strong>all existing stockrecords</strong> of each selected variant."
-msgstr "Diese Aktion aktualisiert <strong>alle vorhandenen Lagerbestände</strong> jeder ausgewählten Variante."
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners."
+msgstr "Diese Aktion aktualisiert <strong>alle vorhandenen Lagerbestände</strong> jedes ausgewählten Produkts innerhalb der ausgewählten Partner."
 
 msgid "Current price"
 msgstr "Aktueller Preis"
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d record."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d objects."
+msgstr[0] "Öffentlichkeitsstatus für %(count)d Datensatz erfolgreich auf %(status)s aktualisiert."
+msgstr[1] "Öffentlichkeitsstatus für %(count)d Datensätze erfolgreich auf %(status)s aktualisiert."
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d product."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d products."
+msgstr[0] "Öffentlichkeitsstatus für %(count)d Produkt erfolgreich auf %(status)s aktualisiert."
+msgstr[1] "Öffentlichkeitsstatus für %(count)d Produkte erfolgreich auf %(status)s aktualisiert."
+
+msgid "Set price to a specific amount."
+msgstr "Preis auf einen bestimmten Betrag setzen."
+
+msgid "Public"
+msgstr "Öffentlich"
+
+msgid "Non-public"
+msgstr "Nicht öffentlich"
+
+msgid "public"
+msgstr "öffentlich"
+
+msgid "non-public"
+msgstr "nicht öffentlich"
+
+msgid "Select all standalones"
+msgstr "Alle eigenständigen Produkte auswählen"
+
+msgid "Select all parents"
+msgstr "Alle übergeordneten Produkte auswählen"
+
+msgid "Select all variants"
+msgstr "Alle Varianten auswählen"
+
+msgid "Select / deselect all variants"
+msgstr "Alle Varianten auswählen / abwählen"
+
+msgid "The amount selected products and their variants exceed the maximum total for selection. The action will be applied to the entire selection."
+msgstr "Die Anzahl der ausgewählten Produkte und ihrer Varianten überschreitet das Maximum für die Auswahl. Die Aktion wird auf die gesamte Auswahl angewendet."
+
+msgid "No products."
+msgstr "Keine Produkte."
+
+msgid "Specific price"
+msgstr "Spezifischer Preis"
+
+msgid "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+msgstr "Nur Lagerbestände der ausgewählten Partner werden aktualisiert. Deaktivieren Sie einen Partner, um dessen Preise unverändert zu lassen."
+
+msgid "Selected products"
+msgstr "Ausgewählte Produkte"

@@ -195,9 +195,6 @@ class ProductListView(
 class ChildProductSelectView(IntermediateBulkActionView):
     """Confirmation view for two-step bulk actions on child products."""
 
-    # TODO: add safeguard for when there is a very large amount of products selected (skip product selection?)
-    # TODO: add translations 
-
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
 
     max_products_for_selection = 500
@@ -270,12 +267,14 @@ class ChildProductSelectView(IntermediateBulkActionView):
             "products_queryset": self.get_selectable_queryset(),
         }
         if self.skip_product_selection:
-            kwargs["initial"] = kwargs.get("initial", {}).update({"select_all": True})
+            initial = kwargs.get("initial") or {}
+            initial["select_all"] = True
+            kwargs["initial"] = initial
         return kwargs
 
     def get_objects(self, form):
         if form.cleaned_data.get("select_all"):
-            return list(self.get_selectable_queryset()) 
+            return list(self.get_selectable_queryset())
         else:
             return list(form.cleaned_data["selected_products"])
 
@@ -327,18 +326,27 @@ class ChildProductSelectView(IntermediateBulkActionView):
             skip_product_selection=self.skip_product_selection,
             **kwargs,
         )
-        
+
         if self.skip_product_selection:
             qs = self.get_selectable_queryset()
-            context["selected_standalone_count"] = qs.filter(structure=Product.STANDALONE).count()
-            context["selected_parent_count"] = qs.filter(structure=Product.PARENT).count()
+            context["selected_standalone_count"] = qs.filter(
+                structure=Product.STANDALONE
+            ).count()
+            context["selected_parent_count"] = qs.filter(
+                structure=Product.PARENT
+            ).count()
             context["selected_child_count"] = qs.filter(structure=Product.CHILD).count()
-        
-        context["has_extra_fields"] = len(
-            list(
-                field for field in context["form"] if field.name != "selected_products"
+
+        context["has_extra_fields"] = (
+            len(
+                list(
+                    field
+                    for field in context["form"]
+                    if field.name != "selected_products"
+                )
             )
-        ) > 0
+            > 0
+        )
         return context
 
 

@@ -464,13 +464,21 @@ class ChildrenBulkActionForm(forms.Form):
 
     selected_products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.none(),
+        required=False,
         error_messages={"required": _("Select at least one product.")},
     )
+    select_all = forms.BooleanField(widget=forms.HiddenInput(), initial=False, required=False)
 
     def __init__(self, *args, products_queryset=None, **kwargs):
         super().__init__(*args, **kwargs)
         if products_queryset is not None:
             self.fields["selected_products"].queryset = products_queryset
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not cleaned_data.get("select_all") and not cleaned_data.get("selected_products"):
+            self.add_error("selected_products", _("Select at least one product."))
+        return cleaned_data
 
 
 class SetChildrenPriceForm(ChildrenBulkActionForm):
@@ -497,8 +505,6 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
         ),
     )
-    select_all = forms.BooleanField(widget=forms.HiddenInput(), initial=False)
-
     def __init__(self, *args, products_queryset=None, **kwargs):
         super().__init__(*args, products_queryset=products_queryset, **kwargs)
         qs = (
@@ -511,6 +517,9 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             queryset=partner_qs,
             required=False,
             label=_("Partners"),
+            help_text=_(
+                "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+            ),
             widget=forms.CheckboxSelectMultiple,
             initial=partner_qs,
         )

@@ -35,10 +35,7 @@ class MakePublicAction(BulkAction):
                 "Public status was successfully updated to %(status)s for %(count)d objects.",
                 count,
             )
-            % {
-                "count": count,
-                "status": _("Public")
-            },
+            % {"count": count, "status": _("Public")},
         )
 
 
@@ -60,10 +57,7 @@ class MakeNonPublicAction(BulkAction):
                 "Public status was successfully updated to %(status)s for %(count)d objects.",
                 count,
             )
-            % {
-                "count": count,
-                "status": _("Non-public")
-            },
+            % {"count": count, "status": _("Non-public")},
         )
 
 
@@ -96,10 +90,7 @@ class MakeProductsPublicAction(ProductIntermediateAction):
                 "Public status was successfully updated to %(status)s for %(count)d products.",
                 count,
             )
-            % {
-                "count": count,
-                "status": _("public")
-            },
+            % {"count": count, "status": _("public")},
         )
 
 
@@ -118,10 +109,7 @@ class MakeProductsNonPublicAction(ProductIntermediateAction):
                 "Public status was successfully updated to %(status)s for %(count)d products.",
                 count,
             )
-            % {
-                "count": count,
-                "status": _("non-public")
-            },
+            % {"count": count, "status": _("non-public")},
         )
 
 

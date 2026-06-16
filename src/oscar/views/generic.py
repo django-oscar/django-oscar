@@ -105,23 +105,15 @@ class BulkEditMixin:
         """
         Return the selected object IDs from the request.
         """
-        select_across = request.POST.get(
-            self.select_across_param, ""
-        ).lower()
+        select_across = request.POST.get(self.select_across_param, "").lower()
 
         if select_across == "1":
-            return list(
-                self.get_select_across_queryset().values_list("pk", flat=True)
-            )
+            return list(self.get_select_across_queryset().values_list("pk", flat=True))
 
-        posted_ids = request.POST.getlist(
-            f"selected_{self.get_checkbox_object_name()}"
-        )
+        posted_ids = request.POST.getlist(f"selected_{self.get_checkbox_object_name()}")
 
         return list(
-            self.get_queryset()
-            .filter(pk__in=posted_ids)
-            .values_list("pk", flat=True)
+            self.get_queryset().filter(pk__in=posted_ids).values_list("pk", flat=True)
         )
 
     def post(self, request, *args, **kwargs):
@@ -137,8 +129,7 @@ class BulkEditMixin:
         if not ids:
             messages.error(
                 self.request,
-                _("You need to select some %ss")
-                % self.get_checkbox_object_name(),
+                _("You need to select some %ss") % self.get_checkbox_object_name(),
             )
             return redirect(self.get_error_url(request))
 
@@ -184,22 +175,17 @@ class IntermediateBulkEditMixin(BulkEditMixin):
         action = request.POST.get(self.action_param, "").lower()
 
         if action in self.intermediate_actions:
-            return self._handle_intermediate_action(
-                request, action, *args, **kwargs
-            )
+            return self._handle_intermediate_action(request, action, *args, **kwargs)
 
         return super().post(request, *args, **kwargs)
 
-    def _handle_intermediate_action(
-        self, request, action, *args, **kwargs
-    ):
+    def _handle_intermediate_action(self, request, action, *args, **kwargs):
         object_ids = self.get_selected_ids(request)
 
         if not object_ids:
             messages.error(
                 request,
-                _("You need to select some %ss")
-                % self.get_checkbox_object_name(),
+                _("You need to select some %ss") % self.get_checkbox_object_name(),
             )
             return redirect(self.get_error_url(request))
 
@@ -212,9 +198,8 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
         request.session.modified = True
 
-        return redirect(
-            self.get_intermediate_url(request, action)
-        )
+        return redirect(self.get_intermediate_url(request, action))
+
 
 class IntermediateBulkActionView(View):
     """
