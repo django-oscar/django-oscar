@@ -195,11 +195,16 @@ class ProductListView(
 class ChildProductSelectView(IntermediateBulkActionView):
     """Confirmation view for two-step bulk actions on child products."""
 
-    # TODO: merge make product public and product not public, and add a form to choose to public/not public
     # TODO: add safeguard for when there is a very large amount of products selected (skip product selection?)
-    # TODO: add translations
+    # TODO: add translations 
 
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
+
+    max_products_for_selection = 500
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.skip_product_selection = None
 
     def get_cancel_url(self):
         return reverse("dashboard:catalogue-product-list")
@@ -225,7 +230,12 @@ class ChildProductSelectView(IntermediateBulkActionView):
         )
         if action.supported_structures is not None:
             qs = qs.filter(structure__in=action.supported_structures)
-        return action.filter_products_queryset(qs)
+        qs = action.filter_products_queryset(qs)
+
+        if qs.count() > self.max_products_for_selection:
+            self.skip_product_selection = True
+
+        return qs
 
     def get_parent_queryset(self):
         """Parent products to show as group headers."""
@@ -255,13 +265,19 @@ class ChildProductSelectView(IntermediateBulkActionView):
         )
 
     def get_form_kwargs(self):
-        return {
+        kwargs = {
             **super().get_form_kwargs(),
             "products_queryset": self.get_selectable_queryset(),
         }
+        if self.skip_product_selection:
+            kwargs["initial"] = kwargs.get("initial", {}).update({"select_all": True})
+        return kwargs
 
     def get_objects(self, form):
-        return list(form.cleaned_data["selected_products"])
+        if form.cleaned_data.get("select_all"):
+            return list(self.get_selectable_queryset()) 
+        else:
+            return list(form.cleaned_data["selected_products"])
 
     def get_context_data(self, form=None, **kwargs):
         standalone_selectable = self._is_structure_supported(Product.STANDALONE)
@@ -301,15 +317,29 @@ class ChildProductSelectView(IntermediateBulkActionView):
                         }
                     )
 
-        return super().get_context_data(
+        context = super().get_context_data(
             form=form,
             display_rows=display_rows,
             standalone_products=standalone,
             standalone_selectable=standalone_selectable,
             parent_selectable=parent_selectable,
             children_selectable=children_selectable,
+            skip_product_selection=self.skip_product_selection,
             **kwargs,
         )
+        
+        if self.skip_product_selection:
+            qs = self.get_selectable_queryset()
+            context["selected_standalone_count"] = qs.filter(structure=Product.STANDALONE).count()
+            context["selected_parent_count"] = qs.filter(structure=Product.PARENT).count()
+            context["selected_child_count"] = qs.filter(structure=Product.CHILD).count()
+        
+        context["has_extra_fields"] = len(
+            list(
+                field for field in context["form"] if field.name != "selected_products"
+            )
+        ) > 0
+        return context
 
 
 class ProductCreateRedirectView(generic.RedirectView):

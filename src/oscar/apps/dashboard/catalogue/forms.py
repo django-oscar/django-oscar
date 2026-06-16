@@ -479,14 +479,14 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
         decimal_places=2,
         label=_("New price"),
         required=False,
-        help_text=_("All variants without a specific price will be set to this price."),
+        help_text=_("Set price to a specific amount."),
     )
     increase_by_amount = forms.DecimalField(
         decimal_places=2,
         label=_("Increase by amount"),
         required=False,
         help_text=_(
-            "Adds a fixed amount to each variant's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+            "Adds a fixed amount to each product's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
         ),
     )
     increase_by_percentage = forms.DecimalField(
@@ -494,9 +494,10 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
         label=_("Increase by percentage"),
         required=False,
         help_text=_(
-            "Adds a percentage of each variant's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+            "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
         ),
     )
+    select_all = forms.BooleanField(widget=forms.HiddenInput(), initial=False)
 
     def __init__(self, *args, products_queryset=None, **kwargs):
         super().__init__(*args, products_queryset=products_queryset, **kwargs)
@@ -546,7 +547,7 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
         return cleaned_data
 
     def get_specific_prices(self):
-        """Return {child_pk: price} only for children with an explicit per-variant override."""
+        """Return {child_pk: price} only for children with an explicit per-product override."""
         return {
             int(key[6:]): value
             for key, value in self.cleaned_data.items()

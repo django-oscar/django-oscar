@@ -31,11 +31,14 @@ class MakePublicAction(BulkAction):
         messages.success(
             request,
             ngettext(
-                "Public status was successfully updated for %(count)d record.",
-                "Public status was successfully updated for %(count)d objects.",
+                "Public status was successfully updated to %(status)s for %(count)d record.",
+                "Public status was successfully updated to %(status)s for %(count)d objects.",
                 count,
             )
-            % {"count": count},
+            % {
+                "count": count,
+                "status": _("Public")
+            },
         )
 
 
@@ -53,11 +56,14 @@ class MakeNonPublicAction(BulkAction):
         messages.success(
             request,
             ngettext(
-                "Public status was successfully updated for %(count)d record.",
-                "Public status was successfully updated for %(count)d objects.",
+                "Public status was successfully updated to %(status)s for %(count)d record.",
+                "Public status was successfully updated to %(status)s for %(count)d objects.",
                 count,
             )
-            % {"count": count},
+            % {
+                "count": count,
+                "status": _("Non-public")
+            },
         )
 
 
@@ -86,11 +92,14 @@ class MakeProductsPublicAction(ProductIntermediateAction):
         messages.success(
             request,
             ngettext(
-                "Updated %(count)d product.",
-                "Updated %(count)d products.",
+                "Public status was successfully updated to %(status)s for %(count)d product.",
+                "Public status was successfully updated to %(status)s for %(count)d products.",
                 count,
             )
-            % {"count": count},
+            % {
+                "count": count,
+                "status": _("public")
+            },
         )
 
 
@@ -105,11 +114,14 @@ class MakeProductsNonPublicAction(ProductIntermediateAction):
         messages.success(
             request,
             ngettext(
-                "Updated %(count)d product.",
-                "Updated %(count)d products.",
+                "Public status was successfully updated to %(status)s for %(count)d product.",
+                "Public status was successfully updated to %(status)s for %(count)d products.",
                 count,
             )
-            % {"count": count},
+            % {
+                "count": count,
+                "status": _("non-public")
+            },
         )
 
 
