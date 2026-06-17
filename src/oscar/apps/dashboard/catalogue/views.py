@@ -199,10 +199,6 @@ class ChildProductSelectView(IntermediateBulkActionView):
 
     max_products_for_selection = 500
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.skip_product_selection = None
-
     def get_cancel_url(self):
         return reverse("dashboard:catalogue-product-list")
 
@@ -221,18 +217,23 @@ class ChildProductSelectView(IntermediateBulkActionView):
 
     def get_selectable_queryset(self):
         """Products that the user can select for this action."""
-        action = self._get_action()
-        qs = Product.objects.filter(
-            Q(pk__in=self._selected_ids) | Q(parent_id__in=self._selected_ids)
-        )
-        if action.supported_structures is not None:
-            qs = qs.filter(structure__in=action.supported_structures)
-        qs = action.filter_products_queryset(qs)
+        if not hasattr(self, "_selectable_qs"):
+            action = self._get_action()
+            qs = Product.objects.filter(
+                Q(pk__in=self._selected_ids) | Q(parent_id__in=self._selected_ids)
+            )
+            if action.supported_structures is not None:
+                qs = qs.filter(structure__in=action.supported_structures)
+            self._selectable_qs = action.filter_products_queryset(qs)
+        return self._selectable_qs
 
-        if qs.count() > self.max_products_for_selection:
-            self.skip_product_selection = True
-
-        return qs
+    @property
+    def skip_product_selection(self):
+        if not hasattr(self, "_skip_product_selection"):
+            self._skip_product_selection = (
+                self.get_selectable_queryset().count() > self.max_products_for_selection
+            )
+        return self._skip_product_selection
 
     def _annotate_cheapest_price(self, qs):
         """Annotate a product queryset with cheapest_price and cheapest_price_currency."""

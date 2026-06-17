@@ -17,48 +17,37 @@ Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
 
 
-class MakePublicAction(BulkAction):
+class BaseSetPublicStatusAction(BulkAction):
+    is_public: bool
+
+    @atomic
+    def execute(self, request, objects):
+        if not objects:
+            return
+        model = type(objects[0])
+        count = model.objects.filter(pk__in=[r.pk for r in objects]).update(
+            is_public=self.is_public
+        )
+        status = _("Public") if self.is_public else _("Non-public")
+        messages.success(
+            request,
+            ngettext(
+                "Public status was successfully updated to %(status)s for %(count)d record.",
+                "Public status was successfully updated to %(status)s for %(count)d objects.",
+                count,
+            )
+            % {"count": count, "status": status},
+        )
+
+
+class MakePublicAction(BaseSetPublicStatusAction):
     label = _("Make public")
-
-    @atomic
-    def execute(self, request, objects):
-        if not objects:
-            return
-        model = type(objects[0])
-        count = model.objects.filter(pk__in=[r.pk for r in objects]).update(
-            is_public=True
-        )
-        messages.success(
-            request,
-            ngettext(
-                "Public status was successfully updated to %(status)s for %(count)d record.",
-                "Public status was successfully updated to %(status)s for %(count)d objects.",
-                count,
-            )
-            % {"count": count, "status": _("Public")},
-        )
+    is_public = True
 
 
-class MakeNonPublicAction(BulkAction):
+class MakeNonPublicAction(BaseSetPublicStatusAction):
     label = _("Make non-public")
-
-    @atomic
-    def execute(self, request, objects):
-        if not objects:
-            return
-        model = type(objects[0])
-        count = model.objects.filter(pk__in=[r.pk for r in objects]).update(
-            is_public=False
-        )
-        messages.success(
-            request,
-            ngettext(
-                "Public status was successfully updated to %(status)s for %(count)d record.",
-                "Public status was successfully updated to %(status)s for %(count)d objects.",
-                count,
-            )
-            % {"count": count, "status": _("Non-public")},
-        )
+    is_public = False
 
 
 class ProductIntermediateAction(IntermediateBulkAction):
@@ -75,42 +64,34 @@ class ProductIntermediateAction(IntermediateBulkAction):
         raise NotImplementedError
 
 
-class MakeProductsPublicAction(ProductIntermediateAction):
+class BaseSetProductsPublicStatusAction(ProductIntermediateAction):
+    is_public: bool
+
+    @atomic
+    def execute(self, request, objects, form):
+        count = Product.objects.filter(pk__in=[r.pk for r in objects]).update(
+            is_public=self.is_public
+        )
+        status = _("public") if self.is_public else _("non-public")
+        messages.success(
+            request,
+            ngettext(
+                "Public status was successfully updated to %(status)s for %(count)d product.",
+                "Public status was successfully updated to %(status)s for %(count)d products.",
+                count,
+            )
+            % {"count": count, "status": status},
+        )
+
+
+class MakeProductsPublicAction(BaseSetProductsPublicStatusAction):
     label = _("Make products public")
-
-    @atomic
-    def execute(self, request, objects, form):
-        count = Product.objects.filter(pk__in=[r.pk for r in objects]).update(
-            is_public=True
-        )
-        messages.success(
-            request,
-            ngettext(
-                "Public status was successfully updated to %(status)s for %(count)d product.",
-                "Public status was successfully updated to %(status)s for %(count)d products.",
-                count,
-            )
-            % {"count": count, "status": _("public")},
-        )
+    is_public = True
 
 
-class MakeProductsNonPublicAction(ProductIntermediateAction):
+class MakeProductsNonPublicAction(BaseSetProductsPublicStatusAction):
     label = _("Make products non-public")
-
-    @atomic
-    def execute(self, request, objects, form):
-        count = Product.objects.filter(pk__in=[r.pk for r in objects]).update(
-            is_public=False
-        )
-        messages.success(
-            request,
-            ngettext(
-                "Public status was successfully updated to %(status)s for %(count)d product.",
-                "Public status was successfully updated to %(status)s for %(count)d products.",
-                count,
-            )
-            % {"count": count, "status": _("non-public")},
-        )
+    is_public = False
 
 
 class SetProductPriceAction(ProductIntermediateAction):

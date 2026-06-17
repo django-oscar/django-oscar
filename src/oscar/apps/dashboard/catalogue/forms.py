@@ -512,11 +512,7 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
 
     def __init__(self, *args, products_queryset=None, **kwargs):
         super().__init__(*args, products_queryset=products_queryset, **kwargs)
-        qs = (
-            products_queryset
-            if products_queryset is not None
-            else Product.objects.none()
-        )
+        qs = self.fields["selected_products"].queryset
         partner_qs = Partner.objects.filter(stockrecords__product__in=qs).distinct()
         self.fields["partners"] = forms.ModelMultipleChoiceField(
             queryset=partner_qs,
@@ -528,8 +524,8 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             widget=forms.CheckboxSelectMultiple,
             initial=partner_qs,
         )
-        for child in qs:
-            self.fields[f"price_{child.pk}"] = forms.DecimalField(
+        for pk in qs.values_list("pk", flat=True):
+            self.fields[f"price_{pk}"] = forms.DecimalField(
                 min_value=0,
                 decimal_places=2,
                 label="",
