@@ -2,7 +2,7 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import OuterRef, Prefetch, Q, Subquery
+from django.db.models import Count, OuterRef, Prefetch, Q, Subquery
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -313,17 +313,18 @@ class ChildProductSelectView(IntermediateBulkActionView):
                 }
             )
         for parent in parents:
+            children = list(parent.children.all())
             display_rows.append(
                 {
                     "selectable": parent_selectable,
                     "product": parent,
                     "is_group_header": True,
-                    "children": list(parent.children.all()),
+                    "children": children,
                     "children_selectable": children_selectable,
                 }
             )
             if children_selectable:
-                for child in parent.children.all():
+                for child in children:
                     display_rows.append(
                         {
                             "selectable": True,
@@ -345,24 +346,19 @@ class ChildProductSelectView(IntermediateBulkActionView):
         )
 
         if self.skip_product_selection:
-            qs = self.get_selectable_queryset()
-            context["selected_standalone_count"] = qs.filter(
-                structure=Product.STANDALONE
-            ).count()
-            context["selected_parent_count"] = qs.filter(
-                structure=Product.PARENT
-            ).count()
-            context["selected_child_count"] = qs.filter(structure=Product.CHILD).count()
+            counts = {
+                row["structure"]: row["count"]
+                for row in self.get_selectable_queryset()
+                .values("structure")
+                .annotate(count=Count("pk"))
+            }
+            context["selected_standalone_count"] = counts.get(Product.STANDALONE, 0)
+            context["selected_parent_count"] = counts.get(Product.PARENT, 0)
+            context["selected_child_count"] = counts.get(Product.CHILD, 0)
 
-        context["has_extra_fields"] = (
-            len(
-                list(
-                    field
-                    for field in context["form"]
-                    if field.name != "selected_products"
-                )
-            )
-            > 0
+        context["has_extra_fields"] = any(
+            not field.field.widget.is_hidden and field.name != "selected_products"
+            for field in context["form"]
         )
         return context
 
