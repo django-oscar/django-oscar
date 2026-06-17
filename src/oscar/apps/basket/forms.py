@@ -270,6 +270,8 @@ class AddToBasketForm(forms.Form):
         """
         Add the product option fields.
         """
+        if not product.has_options:
+            return
         for option in product.options:
             self._add_option_field(product, option)
 
