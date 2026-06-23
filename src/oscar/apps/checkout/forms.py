@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 
@@ -79,7 +80,15 @@ class GatewayForm(AuthenticationForm):
         if self.is_guest_checkout() or self.is_new_account_checkout():
             if "password" in self.errors:
                 del self.errors["password"]
-            if "username" in self.cleaned_data:
+            # Guests with an existing account are normally forced to sign in.
+            # When OSCAR_ALLOW_GUEST_CHECKOUT_WITH_ACCOUNT is enabled, we let
+            # them proceed as a guest instead. The check is always enforced for
+            # new account checkout, where a duplicate email is invalid.
+            skip_existing_check = (
+                self.is_guest_checkout()
+                and settings.OSCAR_ALLOW_GUEST_CHECKOUT_WITH_ACCOUNT
+            )
+            if not skip_existing_check and "username" in self.cleaned_data:
                 email = normalise_email(self.cleaned_data["username"])
                 if User._default_manager.filter(email__iexact=email).exists():
                     msg = _("A user with that email address already exists")

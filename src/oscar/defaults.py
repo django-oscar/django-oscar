@@ -55,6 +55,9 @@ OSCAR_DASHBOARD_ITEMS_PER_PAGE = 20
 
 # Checkout
 OSCAR_ALLOW_ANON_CHECKOUT = False
+# Allow customers who already have an account to check out as a guest, instead
+# of forcing them to sign in when their email matches an existing account.
+OSCAR_ALLOW_GUEST_CHECKOUT_WITH_ACCOUNT = False
 
 # Reviews
 OSCAR_ALLOW_ANON_REVIEWS = True

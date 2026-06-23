@@ -222,6 +222,16 @@ Specifies if an anonymous user can buy products without creating an account
 first.  If set to ``False`` users are required to authenticate before they can
 checkout (using Oscar's default checkout views).
 
+``OSCAR_ALLOW_GUEST_CHECKOUT_WITH_ACCOUNT``
+-------------------------------------------
+
+Default: ``False``
+
+Specifies whether a customer who already has an account can check out as a
+guest.  By default, when a guest enters an email address that matches an
+existing account, Oscar forces them to sign in.  If set to ``True``, such
+customers are allowed to proceed as a guest instead.
+
 ``OSCAR_REQUIRED_ADDRESS_FIELDS``
 ---------------------------------
 
