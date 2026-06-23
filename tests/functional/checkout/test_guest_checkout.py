@@ -130,6 +130,25 @@ class TestIndexView(
             "be changed to existing, so the user can enter his password",
         )
 
+    @override_settings(OSCAR_ALLOW_GUEST_CHECKOUT_WITH_ACCOUNT=True)
+    def test_guest_checkout_allowed_for_existing_user(self):
+        email = "forgetfulguest@test.com"
+        self.create_user(email, email, self.password)
+
+        self.add_product_to_basket()
+
+        # select guest checkout with an email that already has an account
+        page = self.get(reverse("checkout:index"))
+        form = page.form
+        form["options"].select(GatewayForm.GUEST)
+        form["username"].value = email
+
+        response = form.submit()
+
+        # The customer is allowed to proceed as a guest rather than being
+        # forced to sign in.
+        self.assertRedirectsTo(response, "checkout:shipping-address")
+
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
 class TestShippingAddressView(
