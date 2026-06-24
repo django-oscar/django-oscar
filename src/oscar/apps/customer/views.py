@@ -521,6 +521,9 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
             self.model, user=self.request.user, number=self.kwargs["order_number"]
         )
 
+    def get_line_attributes_to_copy(self, line):
+        return line.attributes.all()
+
     def do_reorder(self, order):
         """
         'Re-order' a previous order.
@@ -556,7 +559,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
 
         for line in lines_to_add:
             options = []
-            for attribute in line.attributes.all():
+            for attribute in self.get_line_attributes_to_copy(line):
                 if attribute.option:
                     options.append(
                         {"option": attribute.option, "value": attribute.value}
@@ -594,6 +597,9 @@ class OrderLineView(PostActionMixin, generic.DetailView):
         )
         return order.lines.get(id=self.kwargs["line_id"])
 
+    def get_line_attributes_to_copy(self, line):
+        return line.attributes.all()
+
     def do_reorder(self, line):
         self.response = redirect("customer:order", self.kwargs["order_number"])
         basket = self.request.basket
@@ -612,7 +618,7 @@ class OrderLineView(PostActionMixin, generic.DetailView):
 
         # Convert line attributes into basket options
         options = []
-        for attribute in line.attributes.all():
+        for attribute in self.get_line_attributes_to_copy(line):
             if attribute.option:
                 options.append({"option": attribute.option, "value": attribute.value})
         basket.add_product(line.product, line.quantity, options)
