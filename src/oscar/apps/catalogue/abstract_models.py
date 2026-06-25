@@ -36,8 +36,8 @@ from oscar.models.fields import AutoSlugField, NullCharField
 from oscar.models.fields.slugfield import SlugField
 from oscar.utils.models import get_image_upload_path
 
-CategoryQuerySet, ProductQuerySet = get_classes(
-    "catalogue.managers", ["CategoryQuerySet", "ProductQuerySet"]
+CategoryQuerySet, CategoryManager, ProductQuerySet = get_classes(
+    "catalogue.managers", ["CategoryQuerySet", "CategoryManager", "ProductQuerySet"]
 )
 ProductAttributesContainer = get_class(
     "catalogue.product_attributes", "ProductAttributesContainer"
@@ -180,7 +180,7 @@ class AbstractCategory(MP_Node):
     _slug_separator = "/"
     _full_name_separator = " > "
 
-    objects = CategoryQuerySet.as_manager()
+    objects = CategoryManager.from_queryset(CategoryQuerySet)()
 
     def __str__(self):
         return self.full_name

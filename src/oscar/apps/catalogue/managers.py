@@ -3,7 +3,7 @@ from collections import defaultdict
 from django.db import models
 from django.db.models import Exists, OuterRef, Prefetch, F, Q
 from django.db.models.constants import LOOKUP_SEP
-from treebeard.mp_tree import MP_NodeQuerySet
+from treebeard.mp_tree import MP_NodeQuerySet, MP_NodeManager
 
 from oscar.core.loading import get_model
 
@@ -264,3 +264,9 @@ class CategoryQuerySet(MP_NodeQuerySet):
                 condition |= Q(path__startswith=path)
             qs = qs.exclude(condition)
         return qs
+
+
+class CategoryManager(MP_NodeManager):
+    def get_queryset(self):
+        # Ignore the parent class method, which applies ordering, and use Django's default
+        return super(MP_NodeManager, self).get_queryset()
