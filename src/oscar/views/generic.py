@@ -1,11 +1,39 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.utils.encoding import smart_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import View
 
 from oscar.core.utils import safe_referrer
+
+
+class AbstractBulkAction:
+    label = ""
+
+    def __str__(self):
+        return str(self.label)
+
+
+class BulkAction(AbstractBulkAction):
+    """Base class for bulk actions. Intended to be used with BulkEditMixin."""
+
+    def execute(self, request, objects):
+        raise NotImplementedError
+
+
+class IntermediateBulkAction(AbstractBulkAction):
+    """Base class for two-step bulk actions. Intended to be used with IntermediateBulkEditMixin."""
+
+    form_class = None
+    template = "oscar/dashboard/intermediate_bulk_action.html"
+
+    def get_context(self):
+        return {}
+
+    def execute(self, request, objects, form):
+        raise NotImplementedError
 
 
 class PostActionMixin:
@@ -43,14 +71,21 @@ class BulkEditMixin:
     Mixin for views that have a bulk editing facility.  This is normally in the
     form of tabular data where each row has a checkbox.  The UI allows a number
     of rows to be selected and then some 'action' to be performed on them.
+
+    actions should be a dict with "action_name": BulkAction().
     """
 
     action_param = "action"
     select_across_param = "select_across"
 
-    # Permitted methods that can be used to act on the selected objects
-    actions = None
+    actions: dict[str, BulkAction] = None
     checkbox_object_name = None
+
+    def get_actions(self):
+        base = self.actions or {}
+        if isinstance(base, (tuple, list)):
+            base = dict.fromkeys(base)
+        return base
 
     def get_checkbox_object_name(self):
         if self.checkbox_object_name:
@@ -63,39 +98,200 @@ class BulkEditMixin:
     def get_success_url(self, request):
         return safe_referrer(request, ".")
 
+    def get_select_across_queryset(self):
+        return self.get_queryset()
+
+    def get_selected_ids(self, request):
+        """
+        Return the selected object IDs from the request.
+        """
+        select_across = request.POST.get(self.select_across_param, "").lower()
+
+        if select_across == "1":
+            return list(self.get_select_across_queryset().values_list("pk", flat=True))
+
+        posted_ids = request.POST.getlist(f"selected_{self.get_checkbox_object_name()}")
+
+        return list(
+            self.get_queryset().filter(pk__in=posted_ids).values_list("pk", flat=True)
+        )
+
     def post(self, request, *args, **kwargs):
-        # Dynamic dispatch pattern - we forward POST requests onto a method
-        # designated by the 'action' parameter.  The action has to be in a
-        # whitelist to avoid security issues.
         action = request.POST.get(self.action_param, "").lower()
-        all_selections = self.request.POST.get(self.select_across_param, "").lower()
-        if not self.actions or action not in self.actions:
+        actions = self.get_actions()
+
+        if not actions or action not in actions:
             messages.error(self.request, _("Invalid action"))
             return redirect(self.get_error_url(request))
 
-        if all_selections == "1":
-            objects = self.get_queryset()
+        ids = self.get_selected_ids(request)
+
+        if not ids:
+            messages.error(
+                self.request,
+                _("You need to select some %ss") % self.get_checkbox_object_name(),
+            )
+            return redirect(self.get_error_url(request))
+
+        objects = self.get_objects(ids)
+
+        action_handler = actions[action]
+
+        if hasattr(action_handler, "execute"):
+            action_handler.execute(request, objects)
         else:
-            ids = request.POST.getlist("selected_%s" % self.get_checkbox_object_name())
-            ids = list(map(int, ids))
-            if not ids:
-                messages.error(
-                    self.request,
-                    _("You need to select some %ss") % self.get_checkbox_object_name(),
-                )
-                return redirect(self.get_error_url(request))
+            getattr(self, action)(request, objects)
 
-            objects = self.get_objects(ids)
-
-        return getattr(self, action)(request, objects)
+        return redirect(self.get_success_url(request))
 
     def get_objects(self, ids):
         object_dict = self.get_object_dict(ids)
-        # Rearrange back into the original order
         return [object_dict[id] for id in ids if id in object_dict]
 
     def get_object_dict(self, ids):
         return self.get_queryset().in_bulk(ids)
+
+
+class IntermediateBulkEditMixin(BulkEditMixin):
+    """
+    Extension of BulkEditMixin
+    Allows for bulk actions with an intermediate step that contains a form.
+    So the user can input extra parameters to the bulk action.
+
+    Actions with an intermediate step should be specified by
+    putting the keys from actions into intermediate_actions
+    """
+
+    intermediate_actions = {}
+    bulk_intermediate_session_key = "bulk_intermediate"
+
+    def get_intermediate_url(self, request, action):
+        raise NotImplementedError(
+            "Subclasses of IntermediateBulkEditMixin must "
+            "implement get_intermediate_url()"
+        )
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get(self.action_param, "").lower()
+
+        if action in self.intermediate_actions:
+            return self._handle_intermediate_action(request, action, *args, **kwargs)
+
+        return super().post(request, *args, **kwargs)
+
+    def _handle_intermediate_action(self, request, action, *args, **kwargs):
+        object_ids = self.get_selected_ids(request)
+
+        if not object_ids:
+            messages.error(
+                request,
+                _("You need to select some %ss") % self.get_checkbox_object_name(),
+            )
+            return redirect(self.get_error_url(request))
+
+        session_data = request.session.setdefault(
+            self.bulk_intermediate_session_key, {}
+        )
+
+        session_data["object_ids"] = object_ids
+        session_data["action"] = action
+
+        request.session.modified = True
+
+        return redirect(self.get_intermediate_url(request, action))
+
+
+class IntermediateBulkActionView(View):
+    """
+    Generic view for the confirmation step of a two-step bulk action.
+    Pair with ``IntermediateBulkEditMixin`` on the originating list view.
+
+    Reads the pending action and selected IDs from the session, renders
+    the action's template with its form on GET, and dispatches to
+    ``execute_action`` on POST.
+
+    Subclasses must implement ``get_cancel_url``, ``get_success_url`` and ``get_objects``.
+    """
+
+    intermediate_actions = {}
+    bulk_intermediate_session_key = "bulk_intermediate"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._action = None
+        self._selected_ids = []
+
+    def dispatch(self, request, *args, **kwargs):
+        session_data = request.session.get(self.bulk_intermediate_session_key, {})
+        self._action = session_data.get("action")
+        self._selected_ids = session_data.get("object_ids", [])
+        if (
+            not self._action
+            or not self._selected_ids
+            or self._action not in self.intermediate_actions
+        ):
+            messages.warning(
+                request,
+                _("No pending bulk action. Please select items and try again."),
+            )
+            return redirect(self.get_cancel_url())
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_cancel_url(self):
+        raise NotImplementedError
+
+    def get_success_url(self):
+        raise NotImplementedError
+
+    def get_form_kwargs(self):
+        return {}
+
+    def get_form(self, data=None):
+        action = self.intermediate_actions[self._action]
+        return action.form_class(data=data, **self.get_form_kwargs())
+
+    def get_context_data(self, form=None, **kwargs):
+        if form is None:
+            form = self.get_form()
+        action = self.intermediate_actions[self._action]
+        ctx = {
+            "form": form,
+            "action": self._action,
+            "action_label": action.label,
+            "cancel_url": self.get_cancel_url(),
+        }
+        ctx.update(action.get_context())
+        ctx.update(kwargs)
+        return ctx
+
+    def get_template_name(self):
+        return self.intermediate_actions[self._action].template
+
+    def get(self, request, *args, **kwargs):
+        return TemplateResponse(
+            request, self.get_template_name(), self.get_context_data()
+        )
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(data=request.POST)
+        if not form.is_valid():
+            return TemplateResponse(
+                request, self.get_template_name(), self.get_context_data(form=form)
+            )
+        self.execute_action(request, form)
+        self._clear_session(request)
+        return redirect(self.get_success_url())
+
+    def get_objects(self, form):
+        raise NotImplementedError
+
+    def execute_action(self, request, form):
+        action = self.intermediate_actions[self._action]
+        return action.execute(request, self.get_objects(form), form)
+
+    def _clear_session(self, request):
+        request.session.pop(self.bulk_intermediate_session_key, None)
+        request.session.modified = True
 
 
 class ObjectLookupView(View):

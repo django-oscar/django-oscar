@@ -37,7 +37,7 @@ class TestCatalogueViews(WebTestCase):
     is_staff = True
     csrf_checks = False
     permissions = DashboardPermission.get(
-        "catalogue", "view_product", "view_category"
+        "catalogue", "view_product", "change_product", "view_category"
     ) + DashboardPermission.get("partner", "view_stockalert")
 
     def test_exist(self):
@@ -113,16 +113,30 @@ class TestCatalogueViews(WebTestCase):
 
     def test_make_public(self):
         a = create_product(upc="A", is_public=False)
-        params = {"action": "make_public", "selected_product": [a.id]}
-        response = self.post(reverse("dashboard:catalogue-product-list"), params=params)
+        intermediate_url = reverse("dashboard:catalogue-product-children-bulk-action")
+        self.post(
+            reverse("dashboard:catalogue-product-list"),
+            params={"action": "make_products_public", "selected_product": [a.id]},
+        )
+        response = self.post(
+            intermediate_url,
+            params={"selected_products": [a.id]},
+        )
         self.assertIsRedirect(response)
         a.refresh_from_db()
         self.assertTrue(a.is_public)
 
     def test_make_non_public(self):
         b = create_product(upc="B")
-        params = {"action": "make_non_public", "selected_product": [b.id]}
-        response = self.post(reverse("dashboard:catalogue-product-list"), params=params)
+        intermediate_url = reverse("dashboard:catalogue-product-children-bulk-action")
+        self.post(
+            reverse("dashboard:catalogue-product-list"),
+            params={"action": "make_products_non_public", "selected_product": [b.id]},
+        )
+        response = self.post(
+            intermediate_url,
+            params={"selected_products": [b.id]},
+        )
         self.assertIsRedirect(response)
         b.refresh_from_db()
         self.assertFalse(b.is_public)

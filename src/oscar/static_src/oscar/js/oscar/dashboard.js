@@ -557,6 +557,31 @@ var oscar = (function(o, $) {
                 });
             }
         },
+        child_product_bulk_action: {
+            init: function() {
+                $('.select-all-children').on('change', function() {
+                    var parentId = $(this).data('parent');
+                    var checked = $(this).prop('checked');
+                    $('input[type="checkbox"][name="selected_products"][data-parent="' + parentId + '"]')
+                        .prop('checked', checked);
+                });
+
+                $('.select-all-standalones').on('change', function() {
+                    var checked = $(this).prop('checked');
+                    $('input[type="checkbox"].select-standalone').prop('checked', checked);
+                });
+
+                $('.select-all-parents').on('change', function() {
+                    var checked = $(this).prop('checked');
+                    $('input[type="checkbox"].select-parent').prop('checked', checked);
+                });
+
+                $('.select-all-children-global').on('change', function() {
+                    var checked = $(this).prop('checked');
+                    $('.select-all-children').prop('checked', checked).trigger('change');
+                });
+            }
+        },
     };
 
     return o;

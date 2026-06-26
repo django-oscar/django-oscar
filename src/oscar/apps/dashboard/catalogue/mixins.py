@@ -1,10 +1,25 @@
-from django.contrib import messages
 from django.db.models import Q
-from django.db.transaction import atomic
-from django.shortcuts import redirect
-from django.utils.translation import ngettext
+from django.urls import reverse
 
-from oscar.views.generic import BulkEditMixin
+from oscar.core.loading import get_classes
+from oscar.views.generic import BulkEditMixin, IntermediateBulkEditMixin
+
+(
+    MakePublicAction,
+    MakeNonPublicAction,
+    MakeProductsPublicAction,
+    MakeProductsNonPublicAction,
+    SetProductPriceAction,
+) = get_classes(
+    "dashboard.catalogue.bulk_actions",
+    (
+        "MakePublicAction",
+        "MakeNonPublicAction",
+        "MakeProductsPublicAction",
+        "MakeProductsNonPublicAction",
+        "SetProductPriceAction",
+    ),
+)
 
 
 class PartnerProductFilterMixin:
@@ -25,31 +40,37 @@ class PartnerProductFilterMixin:
         ).distinct()
 
 
-class PublicVisibilityUpdateMixin(BulkEditMixin):
-    actions = (
-        "make_public",
-        "make_non_public",
-    )
+class ProductBulkActionMixin(IntermediateBulkEditMixin):
+    """Mixin that implements bulk actions for the product list view."""
 
-    def make_non_public(self, request, records):
-        return self._update_public_flag(records, False)
+    actions = {}
+    intermediate_actions = {
+        "make_products_public": MakeProductsPublicAction(),
+        "make_products_non_public": MakeProductsNonPublicAction(),
+        "set_product_price": SetProductPriceAction(),
+    }
 
-    def make_public(self, request, records):
-        return self._update_public_flag(records, True)
+    def get_actions(self):
+        return {**super().get_actions(), **self.intermediate_actions}
 
-    @atomic
-    def _update_public_flag(self, records, value):
-        for record in records:
-            record.is_public = value
-            record.save()
-        total_records = len(records)
-        messages.info(
-            self.request,
-            ngettext(
-                "Public status was successfully updated for %(count)d record.",
-                "Public status was successfully updated for %(count)d records.",
-                total_records,
-            )
-            % {"count": total_records},
-        )
-        return redirect(self.request.get_full_path())
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["actions"] = self.get_actions()
+        return ctx
+
+    def get_intermediate_url(self, request, action):
+        return reverse("dashboard:catalogue-product-children-bulk-action")
+
+
+class CategoryBulkActionMixin(BulkEditMixin):
+    """Mixin that implements bulk actions for category list views."""
+
+    actions = {
+        "make_public": MakePublicAction(),
+        "make_non_public": MakeNonPublicAction(),
+    }
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["actions"] = self.actions
+        return ctx

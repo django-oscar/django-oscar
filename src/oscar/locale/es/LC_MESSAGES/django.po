@@ -7481,8 +7481,8 @@ msgid ""
 msgstr "\nEliminar producto <strong>%(title)s</strong> - ¿está seguro?\n                "
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:45
-msgid "This will also delete the following child products:"
-msgstr "Esto eliminará también los siguientes productos hijo:"
+msgid "This will also delete the following variants:"
+msgstr "Esto eliminará también las siguientes variantes:"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:33
 msgid "Create new product"
@@ -9458,3 +9458,153 @@ msgstr "Retornar a los resultados de la búsqueda"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Selecciona algunos %ss."
+
+msgid "Make public"
+msgstr "Hacer público"
+
+msgid "Make non-public"
+msgstr "Hacer no público"
+
+msgid "Make products public"
+msgstr "Hacer públicos los productos"
+
+msgid "Make products non-public"
+msgstr "Hacer no públicos los productos"
+
+msgid "Update product prices"
+msgstr "Actualizar precio de productos"
+
+msgid "No pending bulk action. Please select items and try again."
+msgstr "No hay acción masiva pendiente. Seleccione elementos e inténtelo de nuevo."
+
+msgid "Select at least one product."
+msgstr "Seleccione al menos un producto."
+
+#, python-format
+msgid "Price updated on %(count)d stockrecord."
+msgid_plural "Price updated on %(count)d stockrecords."
+msgstr[0] "Precio actualizado en %(count)d registro de stock."
+msgstr[1] "Precio actualizado en %(count)d registros de stock."
+
+#~ #, python-format
+#~ msgid "Public status was successfully updated for %(count)d record."
+#~ msgid_plural "Public status was successfully updated for %(count)d records."
+#~ msgstr[0] "Estado público actualizado correctamente para %(count)d registro."
+#~ msgstr[1] "Estado público actualizado correctamente para %(count)d registros."
+
+#~ #, python-format
+#~ msgid "Updated %(count)d variant."
+#~ msgid_plural "Updated %(count)d variants."
+#~ msgstr[0] "%(count)d variante actualizada."
+#~ msgstr[1] "%(count)d variantes actualizadas."
+
+msgid "New price"
+msgstr "Nuevo precio"
+
+msgid "Lowest current price"
+msgstr "Precio actual más bajo"
+
+#~ msgid "All variants without a specific price will be set to this price."
+#~ msgstr "Todas las variantes sin un precio específico se establecerán en este precio."
+
+msgid "Increase by amount"
+msgstr "Aumentar por importe"
+
+msgid "Adds a fixed amount to each product's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+msgstr "Añade un importe fijo al precio actual de cada producto. Use un valor negativo para reducir. P. ej. 2,00 sube €10,00 a €12,00; -3,00 lo baja a €7,00. Los precios no bajarán de €0,00."
+
+msgid "Increase by percentage"
+msgstr "Aumentar por porcentaje"
+
+msgid "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+msgstr "Añade un porcentaje del precio actual de cada producto. Use un valor negativo para reducir. P. ej. 10 sube €10,00 a €11,00; -10 lo baja a €9,00. Los precios no bajarán de €0,00."
+
+msgid "Only one of new price, increase by amount, or increase by percentage can be set at a time."
+msgstr "Solo se puede establecer uno de los siguientes campos a la vez: nuevo precio, aumentar por importe o aumentar por porcentaje."
+
+msgid "Enter a price, or set a base price above."
+msgstr "Introduzca un precio o establezca un precio base arriba."
+
+msgid "Confirm action"
+msgstr "Confirmar acción"
+
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Confirm variant action"
+msgstr "Confirmar acción en variante"
+
+msgid "Action parameters"
+msgstr "Parámetros de acción"
+
+msgid "Select / deselect all"
+msgstr "Seleccionar / deseleccionar todo"
+
+msgid "variants"
+msgstr "variantes"
+
+msgid "Currently public"
+msgstr "Actualmente público"
+
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners."
+msgstr "Esta acción actualizará <strong>todos los registros de stock existentes</strong> de cada producto seleccionado dentro de los socios seleccionados."
+
+msgid "Current price"
+msgstr "Precio actual"
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d record."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d objects."
+msgstr[0] "Estado público actualizado correctamente a %(status)s para %(count)d registro."
+msgstr[1] "Estado público actualizado correctamente a %(status)s para %(count)d registros."
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d product."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d products."
+msgstr[0] "Estado público actualizado correctamente a %(status)s para %(count)d producto."
+msgstr[1] "Estado público actualizado correctamente a %(status)s para %(count)d productos."
+
+msgid "Set price to a specific amount."
+msgstr "Establecer el precio a una cantidad específica."
+
+msgid "Public"
+msgstr "Público"
+
+msgid "Non-public"
+msgstr "No público"
+
+msgid "public"
+msgstr "público"
+
+msgid "non-public"
+msgstr "no público"
+
+msgid "Select all standalones"
+msgstr "Seleccionar todos los productos independientes"
+
+msgid "Select all parents"
+msgstr "Seleccionar todos los productos principales"
+
+msgid "Select all variants"
+msgstr "Seleccionar todas las variantes"
+
+msgid "Select / deselect all variants"
+msgstr "Seleccionar / deseleccionar todas las variantes"
+
+msgid "The amount selected products and their variants exceed the maximum total for selection. The action will be applied to the entire selection."
+msgstr "El número de productos seleccionados y sus variantes supera el máximo para la selección. La acción se aplicará a toda la selección."
+
+msgid "No products."
+msgstr "Sin productos."
+
+msgid "Specific price"
+msgstr "Precio específico"
+
+msgid "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+msgstr "Solo se actualizarán los registros de stock de los socios seleccionados. Deseleccione un socio para dejar sus precios sin cambios."
+
+msgid "Selected products"
+msgstr "Productos seleccionados"

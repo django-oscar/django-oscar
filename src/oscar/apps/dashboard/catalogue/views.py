@@ -1,7 +1,8 @@
 # pylint: disable=attribute-defined-outside-init
+
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Count, OuterRef, Prefetch, Q, Subquery
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -11,7 +12,7 @@ from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
 from oscar.core.loading import get_classes, get_model
-from oscar.views.generic import ObjectLookupView
+from oscar.views.generic import IntermediateBulkActionView, ObjectLookupView
 
 (
     ProductForm,
@@ -23,6 +24,8 @@ from oscar.views.generic import ObjectLookupView
     AttributeOptionGroupForm,
     OptionForm,
     CategorySearchForm,
+    ChildrenBulkActionForm,
+    SetChildrenPriceForm,
 ) = get_classes(
     "dashboard.catalogue.forms",
     (
@@ -35,6 +38,8 @@ from oscar.views.generic import ObjectLookupView
         "AttributeOptionGroupForm",
         "OptionForm",
         "CategorySearchForm",
+        "ChildrenBulkActionForm",
+        "SetChildrenPriceForm",
     ),
 )
 (
@@ -63,9 +68,15 @@ PopUpWindowCreateMixin, PopUpWindowUpdateMixin, PopUpWindowDeleteMixin = get_cla
     "dashboard.views",
     ("PopUpWindowCreateMixin", "PopUpWindowUpdateMixin", "PopUpWindowDeleteMixin"),
 )
-PartnerProductFilterMixin, PublicVisibilityUpdateMixin = get_classes(
-    "dashboard.catalogue.mixins",
-    ("PartnerProductFilterMixin", "PublicVisibilityUpdateMixin"),
+PartnerProductFilterMixin, ProductBulkActionMixin, CategoryBulkActionMixin = (
+    get_classes(
+        "dashboard.catalogue.mixins",
+        (
+            "PartnerProductFilterMixin",
+            "ProductBulkActionMixin",
+            "CategoryBulkActionMixin",
+        ),
+    )
 )
 Product = get_model("catalogue", "Product")
 Category = get_model("catalogue", "Category")
@@ -80,7 +91,7 @@ Option = get_model("catalogue", "Option")
 
 
 class ProductListView(
-    PublicVisibilityUpdateMixin, PartnerProductFilterMixin, SingleTableView
+    ProductBulkActionMixin, PartnerProductFilterMixin, SingleTableView
 ):
     """
     Dashboard view of the product list.
@@ -179,6 +190,177 @@ class ProductListView(
             )
 
         return queryset.distinct()
+
+
+class ChildProductSelectView(IntermediateBulkActionView):
+    """Confirmation view for two-step bulk actions on child products."""
+
+    intermediate_actions = ProductBulkActionMixin.intermediate_actions
+
+    max_products_for_selection = 500
+
+    def get_cancel_url(self):
+        return reverse("dashboard:catalogue-product-list")
+
+    def get_success_url(self):
+        return reverse("dashboard:catalogue-product-list")
+
+    def _get_action(self):
+        return self.intermediate_actions.get(self._action)
+
+    def _is_structure_supported(self, structure):
+        action = self._get_action()
+        return (
+            action.supported_structures is None
+            or structure in action.supported_structures
+        )
+
+    def get_selectable_queryset(self):
+        """Products that the user can select for this action."""
+        if not hasattr(self, "_selectable_qs"):
+            action = self._get_action()
+            qs = Product.objects.filter(
+                Q(pk__in=self._selected_ids) | Q(parent_id__in=self._selected_ids)
+            )
+            if action.supported_structures is not None:
+                qs = qs.filter(structure__in=action.supported_structures)
+            self._selectable_qs = action.filter_products_queryset(qs)
+        return self._selectable_qs
+
+    @property
+    def skip_product_selection(self):
+        if not hasattr(self, "_skip_product_selection"):
+            self._skip_product_selection = (
+                self.get_selectable_queryset().count() > self.max_products_for_selection
+            )
+        return self._skip_product_selection
+
+    def _annotate_cheapest_price(self, qs):
+        """Annotate a product queryset with cheapest_price and cheapest_price_currency."""
+        cheapest_sr = StockRecord.objects.filter(product=OuterRef("pk")).order_by(
+            "price"
+        )
+        return qs.annotate(
+            cheapest_price=Subquery(cheapest_sr.values("price")[:1]),
+            cheapest_price_currency=Subquery(cheapest_sr.values("price_currency")[:1]),
+        )
+
+    def get_parent_queryset(self):
+        """Parent products to show as group headers."""
+        selectable_qs = self.get_selectable_queryset()
+        parent_selectable = self._is_structure_supported(Product.PARENT)
+        children_selectable = self._is_structure_supported(Product.CHILD)
+
+        base = Product.objects.filter(
+            pk__in=self._selected_ids, structure=Product.PARENT
+        )
+        if not parent_selectable and not children_selectable:
+            base = base.none()
+
+        elif not parent_selectable:
+            # Only show parents that have selectable children
+            base = base.filter(children__in=selectable_qs)
+
+        children_qs = self._annotate_cheapest_price(
+            selectable_qs.filter(structure=Product.CHILD)
+        )
+        return (
+            self._annotate_cheapest_price(base)
+            .prefetch_related(Prefetch("children", queryset=children_qs))
+            .distinct()
+        )
+
+    def get_standalone_queryset(self):
+        """Standalone products from the original selection that are selectable."""
+        return self._annotate_cheapest_price(
+            self.get_selectable_queryset().filter(
+                pk__in=self._selected_ids, structure=Product.STANDALONE
+            )
+        )
+
+    def get_form_kwargs(self):
+        kwargs = {
+            **super().get_form_kwargs(),
+            "products_queryset": self.get_selectable_queryset(),
+        }
+        if self.skip_product_selection:
+            initial = kwargs.get("initial") or {}
+            initial["select_all"] = True
+            kwargs["initial"] = initial
+        return kwargs
+
+    def get_objects(self, form):
+        if form.cleaned_data.get("select_all"):
+            return list(self.get_selectable_queryset())
+        else:
+            return list(form.cleaned_data["selected_products"])
+
+    def get_context_data(self, form=None, **kwargs):
+        standalone_selectable = self._is_structure_supported(Product.STANDALONE)
+        parent_selectable = self._is_structure_supported(Product.PARENT)
+        children_selectable = self._is_structure_supported(Product.CHILD)
+        parents = self.get_parent_queryset()
+        standalone = self.get_standalone_queryset()
+
+        display_rows = []
+        for product in standalone:
+            display_rows.append(
+                {
+                    "selectable": True,
+                    "product": product,
+                    "is_group_header": False,
+                    "indent": False,
+                }
+            )
+        for parent in parents:
+            children = list(parent.children.all())
+            display_rows.append(
+                {
+                    "selectable": parent_selectable,
+                    "product": parent,
+                    "is_group_header": True,
+                    "children": children,
+                    "children_selectable": children_selectable,
+                }
+            )
+            if children_selectable:
+                for child in children:
+                    display_rows.append(
+                        {
+                            "selectable": True,
+                            "product": child,
+                            "is_group_header": False,
+                            "indent": True,
+                        }
+                    )
+
+        context = super().get_context_data(
+            form=form,
+            display_rows=display_rows,
+            standalone_products=standalone,
+            standalone_selectable=standalone_selectable,
+            parent_selectable=parent_selectable,
+            children_selectable=children_selectable,
+            skip_product_selection=self.skip_product_selection,
+            **kwargs,
+        )
+
+        if self.skip_product_selection:
+            counts = {
+                row["structure"]: row["count"]
+                for row in self.get_selectable_queryset()
+                .values("structure")
+                .annotate(count=Count("pk"))
+            }
+            context["selected_standalone_count"] = counts.get(Product.STANDALONE, 0)
+            context["selected_parent_count"] = counts.get(Product.PARENT, 0)
+            context["selected_child_count"] = counts.get(Product.CHILD, 0)
+
+        context["has_extra_fields"] = any(
+            not field.field.widget.is_hidden and field.name != "selected_products"
+            for field in context["form"]
+        )
+        return context
 
 
 class ProductCreateRedirectView(generic.RedirectView):
@@ -580,7 +762,7 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(PublicVisibilityUpdateMixin, SingleTableView):
+class CategoryListView(CategoryBulkActionMixin, SingleTableView):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category
     table_class = CategoryTable
@@ -606,7 +788,7 @@ class CategoryListView(PublicVisibilityUpdateMixin, SingleTableView):
 
 
 class CategoryDetailListView(
-    PublicVisibilityUpdateMixin, SingleTableMixin, generic.DetailView
+    CategoryBulkActionMixin, SingleTableMixin, generic.DetailView
 ):
     template_name = "oscar/dashboard/catalogue/category_list.html"
     model = Category

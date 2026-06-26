@@ -69,6 +69,23 @@
             <form method="post">
                 {% csrf_token %}
                 {% block bulk_action %}
+                    {% block bulk_actions_select %}
+                    {% if actions %}
+                    <div class="card card-body bg-light mt-2 mb-0">
+                        <h3><i class="fas fa-tasks"></i> {% trans "Bulk Actions" %}:</h3>
+                        <div class="form-group d-flex">
+                            <select name="action">
+                                <option value=""> -- {% trans "choose action" %} -- </option>
+                                {% for action_name, action_label in actions.items %}
+                                <option value="{{ action_name }}">{{ action_label }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary mx-2" data-loading-text="{% trans 'Processing...' %}">{% trans "Go" %}</button>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endblock bulk_actions_select %}
+
                     {% trans "Products" as module_label %}
                     {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=products.page.object_list.data.count num_pages=products.paginator.num_pages total_count=products.paginator.count module=module_label %}
                 {% endblock bulk_action %}

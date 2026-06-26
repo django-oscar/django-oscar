@@ -7456,8 +7456,8 @@ msgid ""
 msgstr "\nVerwijder Product <strong>%(title)s</strong> - ben je zeker?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:45
-msgid "This will also delete the following child products:"
-msgstr "Dit verwijdert ook volgende subproducten:"
+msgid "This will also delete the following variants:"
+msgstr "Dit verwijdert ook de volgende varianten:"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:33
 msgid "Create new product"
@@ -9429,3 +9429,153 @@ msgstr "Terug naar zoekresultaten"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "U moet %ss selecteren"
+
+msgid "Make public"
+msgstr "Openbaar maken"
+
+msgid "Make non-public"
+msgstr "Niet openbaar maken"
+
+msgid "Make products public"
+msgstr "Producten openbaar maken"
+
+msgid "Make products non-public"
+msgstr "Producten niet openbaar maken"
+
+msgid "Update product prices"
+msgstr "Productprijzen bijwerken"
+
+msgid "No pending bulk action. Please select items and try again."
+msgstr "Geen openstaande bulkactie. Selecteer items en probeer het opnieuw."
+
+msgid "Select at least one product."
+msgstr "Selecteer minimaal één product."
+
+#, python-format
+msgid "Price updated on %(count)d stockrecord."
+msgid_plural "Price updated on %(count)d stockrecords."
+msgstr[0] "Prijs bijgewerkt op %(count)d stock record."
+msgstr[1] "Prijs bijgewerkt op %(count)d stock records."
+
+#~ #, python-format
+#~ msgid "Public status was successfully updated for %(count)d record."
+#~ msgid_plural "Public status was successfully updated for %(count)d records."
+#~ msgstr[0] "Publieksstatus succesvol bijgewerkt voor %(count)d record."
+#~ msgstr[1] "Publieksstatus succesvol bijgewerkt voor %(count)d records."
+
+#~ #, python-format
+#~ msgid "Updated %(count)d variant."
+#~ msgid_plural "Updated %(count)d variants."
+#~ msgstr[0] "%(count)d variant bijgewerkt."
+#~ msgstr[1] "%(count)d varianten bijgewerkt."
+
+msgid "New price"
+msgstr "Nieuwe prijs"
+
+msgid "Lowest current price"
+msgstr "Laagste huidige prijs"
+
+#~ msgid "All variants without a specific price will be set to this price."
+#~ msgstr "Alle varianten zonder een specifieke prijs worden op deze prijs ingesteld."
+
+msgid "Increase by amount"
+msgstr "Verhogen met bedrag"
+
+msgid "Adds a fixed amount to each product's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+msgstr "Voegt een vast bedrag toe aan de huidige prijs van elk product. Gebruik een negatieve waarde om te verlagen. Bijv. 2,00 verhoogt €10,00 naar €12,00; -3,00 verlaagt naar €7,00. Prijzen gaan niet onder €0,00."
+
+msgid "Increase by percentage"
+msgstr "Verhogen met percentage"
+
+msgid "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+msgstr "Voegt een percentage van de huidige prijs van elk product toe. Gebruik een negatieve waarde om te verlagen. Bijv. 10 verhoogt €10,00 naar €11,00; -10 verlaagt naar €9,00. Prijzen gaan niet onder €0,00."
+
+msgid "Only one of new price, increase by amount, or increase by percentage can be set at a time."
+msgstr "Er kan slechts één optie tegelijk worden ingesteld: nieuwe prijs, verhogen met bedrag of verhogen met percentage."
+
+msgid "Enter a price, or set a base price above."
+msgstr "Voer een prijs in, of stel hierboven een basisprijs in."
+
+msgid "Confirm action"
+msgstr "Actie bevestigen"
+
+msgid "Confirm"
+msgstr "Bevestigen"
+
+msgid "Apply"
+msgstr "Toepassen"
+
+msgid "Confirm variant action"
+msgstr "Variantactie bevestigen"
+
+msgid "Action parameters"
+msgstr "Actieparameters"
+
+msgid "Select / deselect all"
+msgstr "Alles selecteren / deselecteren"
+
+msgid "variants"
+msgstr "varianten"
+
+msgid "Currently public"
+msgstr "Momenteel openbaar"
+
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners."
+msgstr "Deze actie werkt <strong>alle bestaande stock records</strong> bij van elk geselecteerd product binnen de geselecteerde partners."
+
+msgid "Current price"
+msgstr "Huidige prijs"
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d record."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d objects."
+msgstr[0] "Publieksstatus succesvol bijgewerkt naar %(status)s voor %(count)d record."
+msgstr[1] "Publieksstatus succesvol bijgewerkt naar %(status)s voor %(count)d records."
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d product."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d products."
+msgstr[0] "Publieksstatus succesvol bijgewerkt naar %(status)s voor %(count)d product."
+msgstr[1] "Publieksstatus succesvol bijgewerkt naar %(status)s voor %(count)d producten."
+
+msgid "Set price to a specific amount."
+msgstr "Prijs instellen op een specifiek bedrag."
+
+msgid "Public"
+msgstr "Openbaar"
+
+msgid "Non-public"
+msgstr "Niet openbaar"
+
+msgid "public"
+msgstr "openbaar"
+
+msgid "non-public"
+msgstr "niet openbaar"
+
+msgid "Select all standalones"
+msgstr "Alle standalone producten selecteren"
+
+msgid "Select all parents"
+msgstr "Alle bovenliggende producten selecteren"
+
+msgid "Select all variants"
+msgstr "Alle varianten selecteren"
+
+msgid "Select / deselect all variants"
+msgstr "Alle varianten selecteren / deselecteren"
+
+msgid "The amount selected products and their variants exceed the maximum total for selection. The action will be applied to the entire selection."
+msgstr "Het aantal geselecteerde producten en hun varianten overschrijdt het maximale totaal voor selectie. De actie wordt toegepast op de volledige selectie."
+
+msgid "No products."
+msgstr "Geen producten."
+
+msgid "Specific price"
+msgstr "Specifieke prijs"
+
+msgid "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+msgstr "Alleen stock records van de geselecteerde partners worden bijgewerkt. Deselecteer een partner om diens prijzen ongewijzigd te laten."
+
+msgid "Selected products"
+msgstr "Geselecteerde producten"
