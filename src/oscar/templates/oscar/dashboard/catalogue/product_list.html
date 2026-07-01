@@ -33,7 +33,7 @@
             <h3><i class="fas fa-sitemap"></i> {% trans "Create new product" %}</h3>
         </div>
         <div class="card card-body">
-            <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
+            <form id="create_product_with_class_form" action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
                 {% include "oscar/dashboard/partials/form_fields_inline.html" with form=productclass_form %}
                 <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">
                     <i class="fas fa-plus-circle"></i> {% trans "New Product" %}
@@ -46,8 +46,8 @@
         <div class="table-header">
             <h3><i class="fas fa-search"></i> {% trans "Search Products" %}</h3>
         </div>
-        <div class="card card-body">
-            <form method="get" class="form-inline">
+        <div class="card card-body mb-0">
+            <form id="search_product_form" method="get" class="form-inline">
                 {% comment %}
                     Add the current query string to the search form so that the
                     sort order is not reset when searching.
@@ -64,11 +64,17 @@
         </div>
     {% endblock %}
 
-    {% if products %}
+    {% if has_products %}
         {% block product_list %}
             <form method="post">
                 {% csrf_token %}
-                {% render_table products %}
+                {% block bulk_action %}
+                    {% trans "Products" as module_label %}
+                    {% include "oscar/dashboard/partials/bulk_actions.html" with page_objects_count=products.page.object_list.data.count num_pages=products.paginator.num_pages total_count=products.paginator.count module=module_label %}
+                {% endblock bulk_action %}
+                {% block product_table %}
+                    {% render_table products %}
+                {% endblock product_table %}
             </form>
             <div class="modal fade" id="product-image-modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -93,4 +99,5 @@
 {% block onbodyload %}
     {{ block.super }}
     oscar.dashboard.product_lists.init();
+    oscar.dashboard.bulk_actions.init();
 {% endblock onbodyload %}

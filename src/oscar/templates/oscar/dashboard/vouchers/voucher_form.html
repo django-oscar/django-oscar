@@ -33,7 +33,7 @@
             {% endif %}
         </h2>
     </div>
-    <form method="post" class="card card-body form-stacked">
+    <form id="create_update_voucher_form" method="post" class="card card-body form-stacked">
         {% csrf_token %}
         {% include "oscar/dashboard/partials/form_fields.html" with form=form %}
         {% block form_actions %}

@@ -4,7 +4,6 @@ from oscar.apps.partner import availability
 
 
 class TestBasePolicy(TestCase):
-
     def setUp(self):
         self.availability = availability.Base()
 
@@ -18,7 +17,6 @@ class TestBasePolicy(TestCase):
 
 
 class TestUnavailablePolicy(TestCase):
-
     def setUp(self):
         self.availability = availability.Unavailable()
 
@@ -34,11 +32,10 @@ class TestUnavailablePolicy(TestCase):
         self.assertEqual("unavailable", msg)
 
     def test_returns_availability_code(self):
-        self.assertEqual('unavailable', self.availability.code)
+        self.assertEqual("unavailable", self.availability.code)
 
 
 class TestStockRequiredWrapperForRecordWithStock(TestCase):
-
     def setUp(self):
         self.availability = availability.StockRequired(5)
 
@@ -56,10 +53,10 @@ class TestStockRequiredWrapperForRecordWithStock(TestCase):
         self.assertEqual(msg, "a maximum of 5 can be bought")
 
     def test_returns_correct_code(self):
-        self.assertEqual('instock', self.availability.code)
+        self.assertEqual("instock", self.availability.code)
 
     def test_returns_correct_message(self):
-        self.assertEqual('In stock (5 available)', self.availability.message)
+        self.assertEqual("In stock (5 available)", self.availability.message)
 
     def test_returns_correct_message_when_allocation_higher_than_stock(self):
         # this is the value passed when stock lower than allocation by 1
@@ -70,7 +67,6 @@ class TestStockRequiredWrapperForRecordWithStock(TestCase):
 
 
 class TestStockRequiredWrapperForRecordWithoutStock(TestCase):
-
     def setUp(self):
         self.availability = availability.StockRequired(0)
 
@@ -82,14 +78,13 @@ class TestStockRequiredWrapperForRecordWithoutStock(TestCase):
         self.assertFalse(is_permitted)
 
     def test_returns_correct_code(self):
-        self.assertEqual('outofstock', self.availability.code)
+        self.assertEqual("outofstock", self.availability.code)
 
     def test_returns_correct_message(self):
-        self.assertEqual('Unavailable', self.availability.message)
+        self.assertEqual("Unavailable", self.availability.message)
 
 
 class TestAvailableWrapper(TestCase):
-
     def setUp(self):
         self.availability = availability.Available()
 
@@ -101,7 +96,7 @@ class TestAvailableWrapper(TestCase):
         self.assertTrue(is_permitted)
 
     def test_returns_correct_code(self):
-        self.assertEqual('available', self.availability.code)
+        self.assertEqual("available", self.availability.code)
 
     def test_returns_correct_message(self):
-        self.assertEqual('Available', self.availability.message)
+        self.assertEqual("Available", self.availability.message)

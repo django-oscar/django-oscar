@@ -11,8 +11,7 @@ module.exports = function(done) {
         .pipe(gulp.dest("src/oscar/static/oscar/js/jquery"));
 
     gulp.src([
-        "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
-        "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+        "node_modules/bootstrap/dist/js/*",
     ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4"));
 
     gulp.src("node_modules/bootstrap/fonts/*")
@@ -23,7 +22,7 @@ module.exports = function(done) {
         "node_modules/tempusdominus-bootstrap-4/build/css/*.min.css"
     ]).pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
-    gulp.src("node_modules/moment/min/moment-with-locales.min.js")
+    gulp.src("node_modules/moment/min/*")
         .pipe(gulp.dest("src/oscar/static/oscar/js/bootstrap4-datetimepicker"));
 
     gulp.src("node_modules/inputmask/dist/jquery.inputmask.min.js")

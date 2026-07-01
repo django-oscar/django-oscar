@@ -36,7 +36,7 @@
     <h3><i class="fas fa-search"></i> {% trans "Search vouchers" %}</h3>
 </div>
 <div class="card card-body bg-light">
-    <form method="get" class="form-inline">
+    <form id="search_voucher_in_voucherset_form" method="get" class="form-inline">
 		{% include 'oscar/partials/form_fields_inline.html' with form=form %}
 		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
 		<a href="{% url 'dashboard:voucher-set-detail' pk=voucher_set.pk %}" class="btn">{% trans "Reset" %}</a>

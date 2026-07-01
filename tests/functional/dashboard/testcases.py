@@ -1,3 +1,4 @@
+# pylint: disable=abstract-method
 import json
 from http import client as http_client
 
@@ -8,12 +9,10 @@ from django.utils.http import urlencode
 
 from oscar.core.loading import get_class
 
-RelatedFieldWidgetWrapper = get_class('dashboard.widgets',
-                                      'RelatedFieldWidgetWrapper')
+RelatedFieldWidgetWrapper = get_class("dashboard.widgets", "RelatedFieldWidgetWrapper")
 
 
 class ListViewMixin:
-
     url_name = None
     per_page = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
@@ -30,11 +29,10 @@ class ListViewMixin:
         page = self.get(self._get_url())
 
         # Test the pagination
-        self.assertContains(page, 'Page 1 of 2')
+        self.assertContains(page, "Page 1 of 2")
 
 
 class ResponseObjectMixin:
-
     url_name = None
 
     def _test_success_response(self):
@@ -42,7 +40,7 @@ class ResponseObjectMixin:
 
         self.assertEqual(response.status_code, http_client.FOUND)
         self.assertRedirectsTo(response, self.success_url_name)
-        messages = list(response.follow().context['messages'])
+        messages = list(response.follow().context["messages"])
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages[0].level, INFO)
         self.assertEqual(messages[0].message, self.success_message)
@@ -52,7 +50,6 @@ class ResponseObjectMixin:
 
 
 class PopUpWindowMixin:
-
     is_popup_testcase = None
 
     @property
@@ -75,15 +72,15 @@ class PopUpWindowMixin:
         response = self.response
 
         self.assertEqual(response.status_code, http_client.OK)
-        self.assertTemplateUsed(response, 'oscar/dashboard/widgets/popup_response.html')
-        self.assertInContext(response, 'popup_response_data')
-        self.popup_response_data = json.loads(response.context['popup_response_data'])
+        self.assertTemplateUsed(response, "oscar/dashboard/widgets/popup_response.html")
+        self.assertInContext(response, "popup_response_data")
+        self.popup_response_data = json.loads(response.context["popup_response_data"])
 
     def _test_display_regular_window_response(self):
         response = self.response
 
-        self.assertTrue('is_popup' not in response.context)
-        self.assertTrue('is_popup_var' not in response.context)
+        self.assertTrue("is_popup" not in response.context)
+        self.assertTrue("is_popup_var" not in response.context)
 
     def _get_popup_params(self):
         return {
@@ -92,28 +89,27 @@ class PopUpWindowMixin:
 
     def _get_popup_url(self, url):
         querystring = urlencode(self._get_popup_params())
-        return '%s?%s' % (url, querystring)
+        return "%s?%s" % (url, querystring)
 
 
 class PopUpWindowCreateUpdateMixin(PopUpWindowMixin):
-
     def _test_display_regular_window_response(self):
         super()._test_display_regular_window_response()
         response = self.response
-        self.assertTrue('to_field' not in response.context)
-        self.assertTrue('to_field_var' not in response.context)
+        self.assertTrue("to_field" not in response.context)
+        self.assertTrue("to_field_var" not in response.context)
 
     def _test_display_popup_window_response(self):
         response = self.response
 
-        self.assertInContext(response, 'to_field')
-        self.assertEqual(response.context['to_field'], self.to_field)
-        self.assertInContext(response, 'is_popup')
-        self.assertEqual(response.context['is_popup'], self.is_popup)
-        self.assertInContext(response, 'to_field_var')
-        self.assertEqual(response.context['to_field_var'], self.to_field_var)
-        self.assertInContext(response, 'is_popup_var')
-        self.assertEqual(response.context['is_popup_var'], self.is_popup_var)
+        self.assertInContext(response, "to_field")
+        self.assertEqual(response.context["to_field"], self.to_field)
+        self.assertInContext(response, "is_popup")
+        self.assertEqual(response.context["is_popup"], self.is_popup)
+        self.assertInContext(response, "to_field_var")
+        self.assertEqual(response.context["to_field_var"], self.to_field_var)
+        self.assertInContext(response, "is_popup_var")
+        self.assertEqual(response.context["is_popup_var"], self.is_popup_var)
 
     def _get_popup_params(self):
         params = super()._get_popup_params()
@@ -122,7 +118,6 @@ class PopUpWindowCreateUpdateMixin(PopUpWindowMixin):
 
 
 class ObjectCreateMixin(ResponseObjectMixin):
-
     model = None
     form = None
     page_title = None
@@ -141,11 +136,11 @@ class ObjectCreateMixin(ResponseObjectMixin):
 
         self.assertEqual(response.status_code, http_client.OK)
         self.assertTemplateUsed(response, self.template_name)
-        self.assertInContext(response, 'form')
-        self.assertIsInstance(response.context['form'], self.form)
-        self.assertTrue(response.context['form'].instance._state.adding)
-        self.assertInContext(response, 'title')
-        self.assertEqual(response.context['title'], self.page_title)
+        self.assertInContext(response, "form")
+        self.assertIsInstance(response.context["form"], self.form)
+        self.assertTrue(response.context["form"].instance._state.adding)
+        self.assertInContext(response, "title")
+        self.assertEqual(response.context["title"], self.page_title)
 
     def test_display_create_form(self):
         self.response = self.get(reverse(self.url_name))
@@ -157,7 +152,8 @@ class ObjectCreateMixin(ResponseObjectMixin):
         self.assertEqual(1, self.model.objects.all().count())
         self.obj = self.model.objects.first()
         self.assertEqual(
-            getattr(self.obj, self.create_check_attr), self.object_check_str)
+            getattr(self.obj, self.create_check_attr), self.object_check_str
+        )
 
     def _get_create_obj_response(self):
         raise NotImplementedError
@@ -172,7 +168,6 @@ class ObjectCreateMixin(ResponseObjectMixin):
 
 
 class PopUpObjectCreateMixin(PopUpWindowCreateUpdateMixin, ObjectCreateMixin):
-
     def _get_url(self):
         url = super()._get_url()
         if self.is_popup_testcase:
@@ -204,17 +199,16 @@ class PopUpObjectCreateMixin(PopUpWindowCreateUpdateMixin, ObjectCreateMixin):
         self._test_popup_window_success_response()
         popup_response_data = self.popup_response_data
 
-        self.assertTrue('value' in popup_response_data)
-        self.assertTrue('obj' in popup_response_data)
-        self.assertFalse('action' in popup_response_data)
+        self.assertTrue("value" in popup_response_data)
+        self.assertTrue("obj" in popup_response_data)
+        self.assertFalse("action" in popup_response_data)
 
         response = self.response
-        messages = list(response.context['messages'])
+        messages = list(response.context["messages"])
         self.assertEqual(len(messages), 0)
 
 
 class ObjectUpdateMixin(ResponseObjectMixin):
-
     model = None
     form = None
     page_title = None
@@ -226,7 +220,7 @@ class ObjectUpdateMixin(ResponseObjectMixin):
     object_check_str = None
 
     def _get_url(self):
-        return reverse(self.url_name, kwargs={'pk': self.obj.pk})
+        return reverse(self.url_name, kwargs={"pk": self.obj.pk})
 
     def _get_page_title(self):
         raise NotImplementedError
@@ -243,11 +237,11 @@ class ObjectUpdateMixin(ResponseObjectMixin):
 
         self.assertEqual(response.status_code, http_client.OK)
         self.assertTemplateUsed(response, self.template_name)
-        self.assertInContext(response, 'form')
-        self.assertIsInstance(response.context['form'], self.form)
-        self.assertEqual(response.context['form'].instance, self.obj)
-        self.assertInContext(response, 'title')
-        self.assertEqual(response.context['title'], self._get_page_title())
+        self.assertInContext(response, "form")
+        self.assertIsInstance(response.context["form"], self.form)
+        self.assertEqual(response.context["form"].instance, self.obj)
+        self.assertInContext(response, "title")
+        self.assertEqual(response.context["title"], self._get_page_title())
 
     def test_display_update_form(self):
         self.response = self.get(self._get_url())
@@ -258,7 +252,8 @@ class ObjectUpdateMixin(ResponseObjectMixin):
         # Test the update of an object
         self.obj = self.model.objects.first()
         self.assertEqual(
-            getattr(self.obj, self.create_check_attr), self.object_check_str)
+            getattr(self.obj, self.create_check_attr), self.object_check_str
+        )
 
     def _get_update_obj_response(self):
         raise NotImplementedError
@@ -272,7 +267,6 @@ class ObjectUpdateMixin(ResponseObjectMixin):
 
 
 class PopUpObjectUpdateMixin(PopUpWindowCreateUpdateMixin, ObjectUpdateMixin):
-
     def _get_url(self):
         url = super()._get_url()
         if self.is_popup_testcase:
@@ -304,19 +298,18 @@ class PopUpObjectUpdateMixin(PopUpWindowCreateUpdateMixin, ObjectUpdateMixin):
         self._test_popup_window_success_response()
         popup_response_data = self.popup_response_data
 
-        self.assertTrue('action' in popup_response_data)
-        self.assertEqual(popup_response_data['action'], 'change')
-        self.assertTrue('value' in popup_response_data)
-        self.assertTrue('obj' in popup_response_data)
-        self.assertTrue('new_value' in popup_response_data)
+        self.assertTrue("action" in popup_response_data)
+        self.assertEqual(popup_response_data["action"], "change")
+        self.assertTrue("value" in popup_response_data)
+        self.assertTrue("obj" in popup_response_data)
+        self.assertTrue("new_value" in popup_response_data)
 
         response = self.response
-        messages = list(response.context['messages'])
+        messages = list(response.context["messages"])
         self.assertEqual(len(messages), 0)
 
 
 class ObjectDeleteMixin(ResponseObjectMixin):
-
     model = None
     page_title = None
     url_name = None
@@ -326,7 +319,7 @@ class ObjectDeleteMixin(ResponseObjectMixin):
     delete_dissalowed_possible = None
 
     def _get_url(self):
-        return reverse(self.url_name, kwargs={'pk': self.obj.pk})
+        return reverse(self.url_name, kwargs={"pk": self.obj.pk})
 
     def _get_page_title(self):
         raise NotImplementedError
@@ -343,8 +336,8 @@ class ObjectDeleteMixin(ResponseObjectMixin):
 
         self.assertEqual(response.status_code, http_client.OK)
         self.assertTemplateUsed(response, self.template_name)
-        self.assertInContext(response, 'title')
-        self.assertEqual(response.context['title'], self._get_page_title())
+        self.assertInContext(response, "title")
+        self.assertEqual(response.context["title"], self._get_page_title())
 
     def test_display_delete_form(self):
         self.response = self.get(self._get_url())
@@ -380,12 +373,11 @@ class ObjectDeleteMixin(ResponseObjectMixin):
     def _test_display_delete_disallowed_response(self):
         response = self.response
 
-        self.assertInContext(response, 'disallow')
-        self.assertTrue(response.context['disallow'])
+        self.assertInContext(response, "disallow")
+        self.assertTrue(response.context["disallow"])
 
 
 class PopUpObjectDeleteMixin(PopUpWindowMixin, ObjectDeleteMixin):
-
     def _get_url(self):
         url = super()._get_url()
         if self.is_popup_testcase:
@@ -408,10 +400,10 @@ class PopUpObjectDeleteMixin(PopUpWindowMixin, ObjectDeleteMixin):
     def _test_display_popup_delete_response(self):
         response = self.response
 
-        self.assertInContext(response, 'is_popup')
-        self.assertEqual(response.context['is_popup'], self.is_popup)
-        self.assertInContext(response, 'is_popup_var')
-        self.assertEqual(response.context['is_popup_var'], self.is_popup_var)
+        self.assertInContext(response, "is_popup")
+        self.assertEqual(response.context["is_popup"], self.is_popup)
+        self.assertInContext(response, "is_popup_var")
+        self.assertEqual(response.context["is_popup_var"], self.is_popup_var)
 
     def test_delete_popup_object(self):
         self.is_popup_testcase = True
@@ -425,12 +417,12 @@ class PopUpObjectDeleteMixin(PopUpWindowMixin, ObjectDeleteMixin):
         self._test_popup_window_success_response()
         popup_response_data = self.popup_response_data
 
-        self.assertTrue('action' in popup_response_data)
-        self.assertEqual(popup_response_data['action'], 'delete')
-        self.assertTrue('value' in popup_response_data)
+        self.assertTrue("action" in popup_response_data)
+        self.assertEqual(popup_response_data["action"], "delete")
+        self.assertTrue("value" in popup_response_data)
 
         response = self.response
-        messages = list(response.context['messages'])
+        messages = list(response.context["messages"])
         self.assertEqual(len(messages), 0)
 
     def test_display_disallowed_delete(self):

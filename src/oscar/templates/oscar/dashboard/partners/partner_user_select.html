@@ -23,7 +23,7 @@
 {% block dashboard_content %}
     {% block users_form %}
         <div class="card card-body">
-            <form method="get" class="form-inline">
+            <form id="search_partner_user_form" method="get" class="form-inline">
                 {% include 'oscar/dashboard/partials/form_fields_inline.html' with form=form %}
                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                 {% if form.is_bound %}
@@ -61,7 +61,7 @@
                                                 User is already linked to {{ name }}.
                                             {% endblocktrans %}
                                         {% else %}
-                                            <form action="{% url 'dashboard:partner-user-link' partner_pk=partner.id user_pk=user.id %}" method="post">
+                                            <form id="unlink_user_from_partner_form" action="{% url 'dashboard:partner-user-link' partner_pk=partner.id user_pk=user.id %}" method="post">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Linking...' %}">{% trans 'Link user' %}</button>
                                             </form>

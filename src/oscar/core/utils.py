@@ -14,7 +14,9 @@ from django.utils.text import slugify as django_slugify
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from django.utils.translation import get_language, to_locale
 
-SLUGIFY_RE = re.compile(r'[^\w\s-]', re.UNICODE)
+from oscar.core.decorators import deprecated
+
+SLUGIFY_RE = re.compile(r"[^\w\s-]", re.UNICODE)
 
 
 def cautious_slugify(value):
@@ -38,16 +40,16 @@ def cautious_slugify(value):
     # characters to be split into 'base character' + 'accent modifier'; the latter will
     # be stripped out by the regexp, resulting in an ASCII-clean character that doesn't
     # need to be escaped
-    value = unicodedata.normalize('NFKD', value)
+    value = unicodedata.normalize("NFKD", value)
 
     # Strip out characters that aren't letterlike, underscores or hyphens,
     # using the same regexp that slugify uses. This ensures that non-ASCII non-letters
     # (e.g. accent modifiers, fancy punctuation) get stripped rather than escaped
-    value = SLUGIFY_RE.sub('', value)
+    value = SLUGIFY_RE.sub("", value)
 
     # Encode as ASCII, escaping non-ASCII characters with backslashreplace, then convert
     # back to a unicode string (which is what slugify expects)
-    value = value.encode('ascii', 'backslashreplace').decode('ascii')
+    value = value.encode("ascii", "backslashreplace").decode("ascii")
 
     # Pass to slugify to perform final conversion (whitespace stripping); this will
     # also strip out the backslashes from the 'backslashreplace' conversion
@@ -89,8 +91,8 @@ def slugify(value):
 
     # Remove stopwords from slug
     for word in settings.OSCAR_SLUG_BLACKLIST:
-        slug = slug.replace(word + '-', '')
-        slug = slug.replace('-' + word, '')
+        slug = slug.replace(word + "-", "")
+        slug = slug.replace("-" + word, "")
 
     return slug
 
@@ -100,13 +102,11 @@ def format_timedelta(td):
     Takes an instance of timedelta and formats it as a readable translated string
     """
     return format_td(
-        td,
-        threshold=2,
-        locale=to_locale(get_language() or settings.LANGUAGE_CODE)
+        td, threshold=2, locale=to_locale(get_language() or settings.LANGUAGE_CODE)
     )
 
 
-def format_datetime(dt, format=None):
+def format_datetime(dt, dt_format=None):
     """
     Takes an instance of datetime, converts it to the current timezone and
     formats it as a string. Use this instead of
@@ -118,17 +118,15 @@ def format_datetime(dt, format=None):
     """
     if is_naive(dt):
         localtime = make_aware(dt, get_current_timezone())
-        logging.warning(
-            "oscar.core.utils.format_datetime received native datetime")
+        logging.warning("oscar.core.utils.format_datetime received native datetime")
     else:
         localtime = dt.astimezone(get_current_timezone())
-    return date_filter(localtime, format)
+    return date_filter(localtime, dt_format)
 
 
 def datetime_combine(date, time):
     """Timezone aware version of `datetime.datetime.combine`"""
-    return make_aware(
-        datetime.datetime.combine(date, time), get_current_timezone())
+    return make_aware(datetime.datetime.combine(date, time), get_current_timezone())
 
 
 def safe_referrer(request, default):
@@ -139,7 +137,7 @@ def safe_referrer(request, default):
     The default URL can be a model with get_absolute_url defined, a urlname
     or a regular URL
     """
-    referrer = request.META.get('HTTP_REFERER')
+    referrer = request.META.get("HTTP_REFERER")
     if referrer and url_has_allowed_host_and_scheme(referrer, request.get_host()):
         return referrer
     if default:
@@ -169,7 +167,7 @@ def get_default_currency():
     return settings.OSCAR_DEFAULT_CURRENCY
 
 
-def round_half_up(money):
+def round_half_up_two_dec(money):
     """
     Explicitly round a decimal to 2 places half up, as should be used for
     money.
@@ -178,10 +176,28 @@ def round_half_up(money):
     >>> should_not_be_one = decimal.Decimal('1.005')
     >>> should_not_be_one.quantize(exponent)
     Decimal('1.00')
-    >>> round_half_up(should_not_be_one)
+    >>> round_half_up_two_dec(should_not_be_one)
     Decimal('1.01')
     """
-    return money.quantize(decimal.Decimal('0.01'), decimal.ROUND_HALF_UP)
+    return money.quantize(decimal.Decimal("0.01"), decimal.ROUND_HALF_UP)
+
+
+round_half_up = deprecated(round_half_up_two_dec)
+
+
+def round_half_up_four_dec(money):
+    """
+    Explicitly round a decimal to 4 places half up, as should be used for
+    money.
+
+    >>> exponent = decimal.Decimal('0.0001')
+    >>> should_not_be_one = decimal.Decimal('1.00005')
+    >>> should_not_be_one.quantize(exponent)
+    Decimal('1.00')
+    >>> round_half_up_four_dec(should_not_be_one)
+    Decimal('1.01')
+    """
+    return money.quantize(decimal.Decimal("0.0001"), decimal.ROUND_HALF_UP)
 
 
 def is_ajax(request):

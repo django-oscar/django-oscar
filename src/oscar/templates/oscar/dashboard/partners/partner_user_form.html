@@ -26,7 +26,7 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form method="post" class="card card-body form-stacked wysiwyg" enctype="multipart/form-data">
+    <form id="user_partner_form" method="post" class="card card-body form-stacked wysiwyg" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'oscar/dashboard/partials/form_fields.html' with form=form %}
         <div class="form-actions">

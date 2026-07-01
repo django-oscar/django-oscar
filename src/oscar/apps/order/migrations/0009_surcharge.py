@@ -2,6 +2,10 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django.utils.module_loading import import_string
+from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 
 class Migration(migrations.Migration):
@@ -18,16 +22,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Surcharge',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='Surcharge')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=128, verbose_name='Name')),
                 ('code', models.CharField(max_length=128, verbose_name='Surcharge code')),
                 ('incl_tax', models.DecimalField(decimal_places=2, default=0, max_digits=12, verbose_name='Surcharge (inc. tax)')),
                 ('excl_tax', models.DecimalField(decimal_places=2, default=0, max_digits=12, verbose_name='Surcharge (excl. tax)')),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='surcharges', to='order.Order', verbose_name='Surcharges')),
+                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='surcharges', to='order.Order', verbose_name='Order')),
             ],
             options={
                 'abstract': False,
-                'ordering': ['pk']
+                'ordering': ['pk'],
+                'verbose_name': 'Surcharge',
+                'verbose_name_plural': 'Surcharges'
             },
         ),
     ]

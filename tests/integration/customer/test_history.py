@@ -3,11 +3,10 @@ from django.test import TestCase
 
 from oscar.core.loading import get_class
 
-CustomerHistoryManager = get_class('customer.history', 'CustomerHistoryManager')
+CustomerHistoryManager = get_class("customer.history", "CustomerHistoryManager")
 
 
 class TestProductHistory(TestCase):
-
     def setUp(self):
         self.request = http.HttpRequest()
         self.response = http.HttpResponse()

@@ -1,12 +1,20 @@
 version: 2
 updates:
-- package-ecosystem: pip
+- package-ecosystem: "github-actions"
+  directory: "/"
+  groups:
+    GitHub_Actions:
+      patterns:
+        - "*"  # Group all Actions updates into a single larger pull request
+  schedule:
+    interval: weekly
+- package-ecosystem: npm
   directory: "/"
   schedule:
     interval: monthly
     time: "11:00"
   open-pull-requests-limit: 10
-- package-ecosystem: npm
+- package-ecosystem: pip
   directory: "/"
   schedule:
     interval: monthly

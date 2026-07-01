@@ -1,1 +1,1 @@
-default_app_config = 'oscar.apps.dashboard.apps.DashboardConfig'
+default_app_config = "oscar.apps.dashboard.apps.DashboardConfig"

@@ -1,25 +1,31 @@
 from oscar.apps.voucher.abstract_models import (
-    AbstractVoucher, AbstractVoucherApplication, AbstractVoucherSet)
+    AbstractVoucher,
+    AbstractVoucherApplication,
+    AbstractVoucherSet,
+)
 from oscar.core.loading import is_model_registered
 
 __all__ = []
 
-if not is_model_registered('voucher', 'VoucherSet'):
+if not is_model_registered("voucher", "VoucherSet"):
+
     class VoucherSet(AbstractVoucherSet):
         pass
 
-    __all__.append('VoucherSet')
+    __all__.append("VoucherSet")
 
 
-if not is_model_registered('voucher', 'Voucher'):
+if not is_model_registered("voucher", "Voucher"):
+
     class Voucher(AbstractVoucher):
         pass
 
-    __all__.append('Voucher')
+    __all__.append("Voucher")
 
 
-if not is_model_registered('voucher', 'VoucherApplication'):
+if not is_model_registered("voucher", "VoucherApplication"):
+
     class VoucherApplication(AbstractVoucherApplication):
         pass
 
-    __all__.append('VoucherApplication')
+    __all__.append("VoucherApplication")

@@ -1,0 +1,109 @@
+========================================
+Oscar 4.0 release notes
+========================================
+
+:release: 2025-04-14
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_4.0:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 4.0 is now compatible with django 5.2 and adds python 3.13 support as well.
+
+.. _new_in_4.0:
+
+What's new in Oscar 4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are mainly bug fixes and dependency updates within this release and a few new features;
+
+- Added support for django 5.2; https://github.com/django-oscar/django-oscar/commit/464fa8a9bf8a26dbfc073da84a66843a6841255b
+- A new 'priority' field has been added to the product model; https://github.com/django-oscar/django-oscar/commit/e70a56f7f86dd49d5ef89c69fd638e0def6222d1
+- A new 'code' field has been added to the product model; https://github.com/django-oscar/django-oscar/commit/acf629df84ab72b9ecf5c3ba20fa478fdddb7ac9
+- Permissions system has been improved, new staff users don't automatically get access to everything; https://github.com/django-oscar/django-oscar/commit/b152eb5100317cd1acb1878165ac0221a2d90df4
+- Useful prefetches have been added for performance; https://github.com/django-oscar/django-oscar/commit/a79c8c2190ee684e6246166aa135341946fbe493
+- Calculations are now done with four decimals to improve accuracy; https://github.com/django-oscar/django-oscar/commit/b74d83ca4a7479b5dbbc6843a4e79d0caaac2c6a
+
+The following list contains all changes in Oscar 4.0;
+
+- [Fix] Resolve rounding errors (#4455) by Samar Hassan in https://github.com/django-oscar/django-oscar/pull/4455
+- fix 🐛 resolve multiple backend error in race condition (#4457) by Samar Hassan in https://github.com/django-oscar/django-oscar/pull/4457
+- bug fix: AbstractProduct.primary_images() should check against ProductImage._meta, not ProductImage.Meta (#4419) by nevin in https://github.com/django-oscar/django-oscar/pull/4419
+- Django 5.2 (lts) support. (#4456) by Joey in https://github.com/django-oscar/django-oscar/pull/4456
+- changed button colors so it uses primary (#4449) by Rafael-Highbiza in https://github.com/django-oscar/django-oscar/pull/4449
+- [Fix] Resolve rounding error (#4448) by Samar Hassan in https://github.com/django-oscar/django-oscar/pull/4448
+- Make setuptools get dynamic version from setup.py rather than the pyprojectoml. (#4437) by Joey in https://github.com/django-oscar/django-oscar/pull/4437
+- [Fix] Number of orders sorting fix in dashboard customer listing (#4435) by Samar Hassan in https://github.com/django-oscar/django-oscar/pull/4435
+- Bump sphinxcontrib-spelling from 7.5.1 to 8.0.1 (#4417) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4417
+- Bump codecov/codecov-action in the github_actions group (#4430) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4430
+- Fix string formatting not showing which attribute is reserved (#4429) by Joey in https://github.com/django-oscar/django-oscar/pull/4429
+- fix: wrap selector attr value in double quotes (#4428) by gasoved in https://github.com/django-oscar/django-oscar/pull/4428
+- [FIXED] Issue #4344 NoneType error when discount.offer is None (#4424) by Gregory Mariani in https://github.com/django-oscar/django-oscar/pull/4344
+- Trigger build, as codecov uploading hasnt worked in 10 months. by Joey Jurjens in https://github.com/django-oscar/django-oscar/commit/81bc5bd50
+- Bump sass from 1.81.0 to 1.83.4 (#4426) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4426
+- Update django-extra-views requirement from <0.15,>=0.13 to >=0.13,<0.16 (#4416) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4416
+- Update easy-thumbnails requirement from <2.10,>=2.9 to >=2.9,<2.11 (#4415) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4415
+- Bump @fortawesome/fontawesome-free from 6.7.1 to 6.7.2 (#4410) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4410
+- Bump sphinx-rtd-theme from 1.0.0 to 3.0.2 (#4414) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4414
+- Bump tinymce from 7.5.1 to 7.6.0 (#4412) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4412
+- Bump codecov/codecov-action (#4407) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4407
+- Bump sphinx-issues from 3.0.1 to 5.0.0 (#4418) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4418
+- [FEAT] Improve Percentage discount benefit accuracy (#4423) by Samar Hassan in https://github.com/django-oscar/django-oscar/pull/4423
+- [FEAT] Add method to get all dashboard permissions (#4392) by Samar Hassan in https://github.com/django-oscar/django-oscar/pull/4392
+- fix blocktrans indentation (#4408) by Gijs in https://github.com/django-oscar/django-oscar/pull/4408
+- Solr: restore price range in search facets (#4376) by Gunther Waidacher in https://github.com/django-oscar/django-oscar/pull/4376
+- Implement pyproject.toml (#4404) by Viggo de Vries in https://github.com/django-oscar/django-oscar/pull/4404
+- Bump sass from 1.80.6 to 1.81.0 (#4397) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4397
+- Bump tinymce from 7.5.0 to 7.5.1 (#4398) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4398
+- Bump gulp-sass from 5.1.0 to 6.0.0 (#4399) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4399
+- Bump @fortawesome/fontawesome-free from 6.6.0 to 6.7.1 (#4400) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4400
+- Product code (#4402) by Voxin Muyli in https://github.com/django-oscar/django-oscar/pull/4402
+- If product is child and parent is not public, it's not viewable! (#4401) by Viggo de Vries in https://github.com/django-oscar/django-oscar/pull/4401
+- fix pylint (#4395) by Gijs in https://github.com/django-oscar/django-oscar/pull/4395
+- Bump codecov/codecov-action (#4393) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4393
+- put line and line_created in attributes (#4394) by Gijs in https://github.com/django-oscar/django-oscar/pull/4394
+- Merge pull request #4391 from django-oscar/fix-order-form-test by Voxin Muyli in https://github.com/django-oscar/django-oscar/pull/4391
+- fix :wrench: order search form must have at least one field by Samar Hassan in https://github.com/django-oscar/django-oscar/commit/2b08af5ae
+- Fix test by Viggo de Vries in https://github.com/django-oscar/django-oscar/commit/4c89087f1
+- Add blocks to basket messages (#4390) by Gijs in https://github.com/django-oscar/django-oscar/pull/4390
+- Fix a typo which caused a typeerror on string formatting (#4274) by Thomas van der Hoeven in https://github.com/django-oscar/django-oscar/pull/4274
+- Fix duplicate search box in Dashboard -> Offers -> Voucher (voucher_list.html) (#4353) by Ryan Malloy in https://github.com/django-oscar/django-oscar/pull/4353
+- Fix wrong variable name in example code (#4383) by Luiz Cavalcanti in https://github.com/django-oscar/django-oscar/pull/4383
+- Bump tinymce from 7.3.0 to 7.5.0 (#4388) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4388
+- Update whitenoise requirement from <6.8,>=6.7.0 to >=6.7.0,<6.9 (#4377) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4377
+- Update redis requirement from <5.1,>=3.5 to >=3.5,<5.3 (#4378) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4378
+- Bump sass from 1.78.0 to 1.80.6 (#4386) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4386
+- Bump nan from 2.20.0 to 2.22.0 (#4380) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4380
+- Merge pull request #4384 from django-oscar/dashboard-permissions by Voxin Muyli in https://github.com/django-oscar/django-oscar/pull/4384
+- chore :recycle: drop support for Django 3.2, move to LTS Django 4.2+ by Samar Hassan in https://github.com/django-oscar/django-oscar/commit/a8443bd0e
+- tests :white_check_mark: add more tests by Samar Hassan in https://github.com/django-oscar/django-oscar/commit/7b7aee46e
+- feat :star: oscar dashboard permissions by Samar Hassan in https://github.com/django-oscar/django-oscar/commit/b152eb510
+- Merge pull request #4360 from django-oscar/get_public_children_categories by nathanhighbiza in https://github.com/django-oscar/django-oscar/pull/4360
+- Get public children on category by Viggo de Vries in https://github.com/django-oscar/django-oscar/commit/12ee5083a
+- 4.0 by Viggo de Vries in https://github.com/django-oscar/django-oscar/commit/362ee0c88
+- Oscar 4.0a1 by Viggo de Vries in https://github.com/django-oscar/django-oscar/commit/ef5539a24
+- Fix de docs by Viggo de Vries in https://github.com/django-oscar/django-oscar/commit/7bbe47631
+- Add nodejs to tools by Viggo de Vries in https://github.com/django-oscar/django-oscar/commit/713d6ba1c
+- release django oscar version 3.2.5 (#4354) by Viggo de Vries in https://github.com/django-oscar/django-oscar/pull/4354
+- [FEAT] Update 3.2.5 release docs (#4355) by Samar Hassan in https://github.com/django-oscar/django-oscar/pull/4355
+- Fix result of prefetch attribute values for children (#4352) by Joey in https://github.com/django-oscar/django-oscar/pull/4352
+- lint by Viggo de Vries in https://github.com/django-oscar/django-oscar/commit/2b32fc1c6
+- Add priority field (#4351) by Viggo de Vries in https://github.com/django-oscar/django-oscar/pull/4351
+- Add useful prefetch methods for bulk processing (#4350) by Joey in https://github.com/django-oscar/django-oscar/pull/4350
+- Merge pull request #4349 from django-oscar/upgrade-deps by Voxin Muyli in https://github.com/django-oscar/django-oscar/pull/4349
+- fix :wrench: upgrade deps in test venv by Samar Hassan in https://github.com/django-oscar/django-oscar/commit/ad93b59e4
+- Merge pull request #4348 from django-oscar/fix-tests by Voxin Muyli in https://github.com/django-oscar/django-oscar/pull/4348
+- feat :star: upgrade setuptools version by Samar Hassan in https://github.com/django-oscar/django-oscar/commit/23b672224
+- Bump tinymce from 7.2.0 to 7.3.0 (#4342) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4342
+- Bump sass from 1.77.4 to 1.78.0 (#4346) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4346
+- fixed typo in docs (#4347) by Ryan Malloy in https://github.com/django-oscar/django-oscar/pull/4347
+- Fix basket check id and translation (#4283) by Julie Rymer in https://github.com/django-oscar/django-oscar/pull/4283
+- Bump @fortawesome/fontawesome-free from 6.5.2 to 6.6.0 (#4329) by dependabot[bot] in https://github.com/django-oscar/django-oscar/pull/4329
+- Supress mention of django-secure from deploying.rst (#4337) by Luiz Cavalcanti in https://github.com/django-oscar/django-oscar/pull/4337
+- Don’t allow adding a product with negative quantity (#4338) by sephi in https://github.com/django-oscar/django-oscar/pull/4338

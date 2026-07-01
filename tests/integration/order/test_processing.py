@@ -7,7 +7,6 @@ from oscar.apps.order import exceptions, processing
 
 
 class TestValidatePaymentEvent(TestCase):
-
     def setUp(self):
         self.event_handler = processing.EventHandler()
 
@@ -15,13 +14,14 @@ class TestValidatePaymentEvent(TestCase):
         order = mock.Mock()
         lines = [mock.Mock() for r in range(3)]
         line_quantities = [line.quantity for line in lines]
-        self.event_handler.validate_payment_event(order, 'pre-auth',
-                                                  D('10.00'), lines,
-                                                  line_quantities)
+        self.event_handler.validate_payment_event(
+            order, "pre-auth", D("10.00"), lines, line_quantities
+        )
         # Has each line has been checked
         for line in lines:
-            line.is_payment_event_permitted.assert_called_with('pre-auth',
-                                                               line.quantity)
+            line.is_payment_event_permitted.assert_called_with(
+                "pre-auth", line.quantity
+            )
 
     def test_invalid_lines(self):
         order = mock.Mock()
@@ -38,14 +38,16 @@ class TestValidatePaymentEvent(TestCase):
         error = "The selected quantity for line #6 is too large"
 
         with self.assertRaisesRegex(exceptions.InvalidPaymentEvent, error):
-            self.event_handler.validate_payment_event(order, 'payment',
-                                                      D('10.00'), lines,
-                                                      line_quantities)
+            self.event_handler.validate_payment_event(
+                order, "payment", D("10.00"), lines, line_quantities
+            )
 
     def test_no_lines(self):
         order = mock.Mock()
         lines = None
         line_quantities = None
+        # pylint: disable=assignment-from-no-return
         out = self.event_handler.validate_payment_event(
-            order, 'payment', D('10.00'), lines, line_quantities)
+            order, "payment", D("10.00"), lines, line_quantities
+        )
         self.assertIsNone(out)

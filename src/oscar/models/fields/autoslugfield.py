@@ -35,7 +35,7 @@ from .slugfield import SlugField
 
 
 class AutoSlugField(SlugField):
-    """ AutoSlugField
+    """AutoSlugField
 
     By default, sets editable=False, blank=True.
 
@@ -55,25 +55,26 @@ class AutoSlugField(SlugField):
     Inspired by SmileyChris' Unique Slugify snippet:
     http://www.djangosnippets.org/snippets/690/
     """
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('blank', True)
-        kwargs.setdefault('editable', False)
 
-        populate_from = kwargs.pop('populate_from', None)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("blank", True)
+        kwargs.setdefault("editable", False)
+
+        populate_from = kwargs.pop("populate_from", None)
         if populate_from is None:
             raise ValueError("missing 'populate_from' argument")
         else:
             self._populate_from = populate_from
             self._populate_from_org = populate_from
-        self.separator = kwargs.pop('separator', '-')
-        self.overwrite = kwargs.pop('overwrite', False)
-        self.uppercase = kwargs.pop('uppercase', False)
-        self.allow_duplicates = kwargs.pop('allow_duplicates', False)
+        self.separator = kwargs.pop("separator", "-")
+        self.overwrite = kwargs.pop("overwrite", False)
+        self.uppercase = kwargs.pop("uppercase", False)
+        self.allow_duplicates = kwargs.pop("allow_duplicates", False)
 
         # not override parameter if it was passed explicitly,
         # so passed parameters takes precedence over the setting
         if settings.OSCAR_SLUG_ALLOW_UNICODE:
-            kwargs.setdefault('allow_unicode', settings.OSCAR_SLUG_ALLOW_UNICODE)
+            kwargs.setdefault("allow_unicode", settings.OSCAR_SLUG_ALLOW_UNICODE)
 
         super().__init__(*args, **kwargs)
 
@@ -85,9 +86,9 @@ class AutoSlugField(SlugField):
         If an alternate separator is used, it will also replace any instances
         of the default '-' separator with the new separator.
         """
-        re_sep = '(?:-|%s)' % re.escape(self.separator)
-        value = re.sub('%s+' % re_sep, self.separator, value)
-        return re.sub(r'^%s+|%s+$' % (re_sep, re_sep), '', value)
+        re_sep = "(?:-|%s)" % re.escape(self.separator)
+        value = re.sub("%s+" % re_sep, self.separator, value)
+        return re.sub(r"^%s+|%s+$" % (re_sep, re_sep), "", value)
 
     def get_queryset(self, model_cls, slug_field):
         # https://github.com/django-extensions/django-extensions/pull/854/files
@@ -99,12 +100,12 @@ class AutoSlugField(SlugField):
     def slugify_func(self, content):
         if content:
             return slugify(content)
-        return ''
+        return ""
 
-    def create_slug(self, model_instance, add):  # NOQA (too complex)
+    def create_slug(self, model_instance, add):
         # get fields to populate from and slug field to set
         if not isinstance(self._populate_from, (list, tuple)):
-            self._populate_from = (self._populate_from, )
+            self._populate_from = (self._populate_from,)
         slug_field = model_instance._meta.get_field(self.attname)
 
         # only set slug if empty and first-time save, or when overwrite=True
@@ -112,8 +113,9 @@ class AutoSlugField(SlugField):
             # slugify the original field content and set next step to 2
             def slug_for_field(field):
                 return self.slugify_func(getattr(model_instance, field))
-            slug = self.separator.join(map(slug_for_field, self._populate_from))  # NOQA
-            next = 2
+
+            slug = self.separator.join(map(slug_for_field, self._populate_from))
+            next_num = 2
         else:
             # get slug from the current model instance
             slug = getattr(model_instance, self.attname)
@@ -154,14 +156,14 @@ class AutoSlugField(SlugField):
         # depending on the given slug, clean-up
         while not slug or queryset.filter(**kwargs):
             slug = original_slug
-            end = '%s%s' % (self.separator, next)
+            end = "%s%s" % (self.separator, next_num)
             end_len = len(end)
             if slug_len and len(slug) + end_len > slug_len:
-                slug = slug[:slug_len - end_len]
+                slug = slug[: slug_len - end_len]
                 slug = self._slug_strip(slug)
-            slug = '%s%s' % (slug, end)
+            slug = "%s%s" % (slug, end)
             kwargs[self.attname] = slug
-            next += 1
+            next_num += 1
         return slug
 
     def pre_save(self, model_instance, add):
@@ -174,11 +176,11 @@ class AutoSlugField(SlugField):
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['populate_from'] = self._populate_from_org
-        if not self.separator == '-':
-            kwargs['separator'] = self.separator
+        kwargs["populate_from"] = self._populate_from_org
+        if not self.separator == "-":
+            kwargs["separator"] = self.separator
         if self.overwrite is not False:
-            kwargs['overwrite'] = True
+            kwargs["overwrite"] = True
         if self.allow_duplicates is not False:
-            kwargs['allow_duplicates'] = True
+            kwargs["allow_duplicates"] = True
         return name, path, args, kwargs

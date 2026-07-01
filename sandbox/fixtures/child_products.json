@@ -15,6 +15,7 @@
     "model": "catalogue.category",
     "fields": {
         "description": "",
+        "long_description": "",
         "numchild": 0,
         "slug": "clothing",
         "depth": 1,

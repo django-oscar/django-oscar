@@ -8,7 +8,6 @@ from oscar.test.factories import UserFactory
 
 
 class DashboardAccessFunctionTestCase(TestCase):
-
     def setUp(self):
         self.staff_user = UserFactory(is_staff=True)
         self.non_staff_user = UserFactory()
@@ -17,23 +16,22 @@ class DashboardAccessFunctionTestCase(TestCase):
         self.assertTrue(default_access_fn(self.staff_user, None))
 
     def test_default_access_fn_staff(self):
-        self.assertTrue(default_access_fn(self.staff_user, 'dashboard:index'))
+        self.assertTrue(default_access_fn(self.staff_user, "dashboard:index"))
 
     def test_default_access_fn_non_staff_user(self):
-        self.assertFalse(default_access_fn(self.non_staff_user, 'dashboard:index'))
+        self.assertFalse(default_access_fn(self.non_staff_user, "dashboard:index"))
 
     def test_default_access_fn_invalid_url_name(self):
         with self.assertRaises(NoReverseMatch):
-            default_access_fn(self.staff_user, 'invalid_module:index')
+            default_access_fn(self.staff_user, "invalid_module:index")
 
     def test_default_access_non_dashboard_url_name(self):
-        assert reverse('search:search')
+        assert reverse("search:search")
         with self.assertRaises(KeyError):
-            default_access_fn(self.staff_user, 'search:search')
+            default_access_fn(self.staff_user, "search:search")
 
 
 class DashboardNavTestCase(TestCase):
-
     def test_staff_user_has_menu(self):
         menu = get_nodes(UserFactory(is_staff=True))
         self.assertTrue(menu)

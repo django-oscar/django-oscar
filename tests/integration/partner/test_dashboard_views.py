@@ -10,9 +10,9 @@ class TestPartnerUserUnlinkView(TestCase):
     def test_remove_dashboard_permission(self):
         user = UserFactory(is_staff=False)
         permission = PermissionFactory(
-            codename='dashboard_access',
-            content_type=ContentType.objects.get(
-                app_label='partner', model='partner'))
+            codename="dashboard_access",
+            content_type=ContentType.objects.get(app_label="partner", model="partner"),
+        )
         user.user_permissions.add(permission)
         partner = PartnerFactory()
         partner.users.add(user)

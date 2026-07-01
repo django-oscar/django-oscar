@@ -2,10 +2,14 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import oscar.models.fields.autoslugfield
 import django.db.models.deletion
 import django.core.validators
+from django.utils.module_loading import import_string
+from django.conf import settings
+import oscar.models.fields.autoslugfield
 import oscar.models.fields
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 
 class Migration(migrations.Migration):
@@ -18,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AttributeOption',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('option', models.CharField(max_length=255, verbose_name='Option')),
             ],
             options={
@@ -31,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AttributeOptionGroup',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128, verbose_name='Name')),
             ],
             options={
@@ -44,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('path', models.CharField(unique=True, max_length=255)),
                 ('depth', models.PositiveIntegerField()),
                 ('numchild', models.PositiveIntegerField(default=0)),
@@ -65,7 +69,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Option',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128, verbose_name='Name')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Code', max_length=128, editable=False, blank=True)),
                 ('type', models.CharField(default='Required', max_length=128, verbose_name='Status', choices=[('Required', 'Required - a value for this option must be specified'), ('Optional', 'Optional - a value for this option can be omitted')])),
@@ -80,7 +84,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Product',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('structure', models.CharField(default='standalone', max_length=10, verbose_name='Product structure', choices=[('standalone', 'Stand-alone product'), ('parent', 'Parent product'), ('child', 'Child product')])),
                 ('upc', oscar.models.fields.NullCharField(unique=True, verbose_name='UPC', max_length=64, help_text='Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book.')),
                 ('title', models.CharField(max_length=255, verbose_name='Title', blank=True)),
@@ -102,7 +106,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductAttribute',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128, verbose_name='Name')),
                 ('code', models.SlugField(max_length=128, verbose_name='Code', validators=[django.core.validators.RegexValidator(regex='^[a-zA-Z\\-_][0-9a-zA-Z\\-_]*$', message="Code can only contain the letters a-z, A-Z, digits, minus and underscores, and can't start with a digit")])),
                 ('type', models.CharField(default='text', max_length=20, verbose_name='Type', choices=[('text', 'Text'), ('integer', 'Integer'), ('boolean', 'True / False'), ('float', 'Float'), ('richtext', 'Rich Text'), ('date', 'Date'), ('option', 'Option'), ('entity', 'Entity'), ('file', 'File'), ('image', 'Image')])),
@@ -120,7 +124,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductAttributeValue',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('value_text', models.TextField(blank=True, verbose_name='Text', null=True)),
                 ('value_integer', models.IntegerField(blank=True, verbose_name='Integer', null=True)),
                 ('value_boolean', models.NullBooleanField(verbose_name='Boolean')),
@@ -145,7 +149,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductCategory',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('category', models.ForeignKey(verbose_name='Category', to='catalogue.Category', on_delete=models.CASCADE)),
                 ('product', models.ForeignKey(verbose_name='Product', to='catalogue.Product', on_delete=models.CASCADE)),
             ],
@@ -160,7 +164,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductClass',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128, verbose_name='Name')),
                 ('slug', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Slug', max_length=128, editable=False, blank=True)),
                 ('requires_shipping', models.BooleanField(default=True, verbose_name='Requires shipping?')),
@@ -178,7 +182,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductImage',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('original', models.ImageField(upload_to='images/products/%Y/%m/', max_length=255, verbose_name='Original')),
                 ('caption', models.CharField(max_length=200, verbose_name='Caption', blank=True)),
                 ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display order', help_text='An image with a display order of zero will be the primary image for a product')),
@@ -196,7 +200,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductRecommendation',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('ranking', models.PositiveSmallIntegerField(default=0, verbose_name='Ranking', help_text='Determines order of the products. A product with a higher value will appear before one with a lower ranking.')),
                 ('primary', models.ForeignKey(verbose_name='Primary product', related_name='primary_recommendations', to='catalogue.Product', on_delete=models.CASCADE)),
                 ('recommendation', models.ForeignKey(verbose_name='Recommended product', to='catalogue.Product', on_delete=models.CASCADE)),

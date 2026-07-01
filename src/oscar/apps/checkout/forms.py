@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 
@@ -8,35 +9,40 @@ from oscar.core.loading import get_class, get_model
 from oscar.forms.mixins import PhoneNumberMixin
 
 User = get_user_model()
-AbstractAddressForm = get_class('address.forms', 'AbstractAddressForm')
-Country = get_model('address', 'Country')
+AbstractAddressForm = get_class("address.forms", "AbstractAddressForm")
+Country = get_model("address", "Country")
 
 
 class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.adjust_country_field()
 
     def adjust_country_field(self):
-        countries = Country._default_manager.filter(
-            is_shipping_country=True)
+        countries = Country._default_manager.filter(is_shipping_country=True)
 
         # No need to show country dropdown if there is only one option
         if len(countries) == 1:
-            self.fields.pop('country', None)
+            self.fields.pop("country", None)
             self.instance.country = countries[0]
         else:
-            self.fields['country'].queryset = countries
-            self.fields['country'].empty_label = None
+            self.fields["country"].queryset = countries
+            self.fields["country"].empty_label = None
 
     class Meta:
-        model = get_model('order', 'shippingaddress')
+        model = get_model("order", "shippingaddress")
         fields = [
-            'first_name', 'last_name',
-            'line1', 'line2', 'line3', 'line4',
-            'state', 'postcode', 'country',
-            'phone_number', 'notes',
+            "first_name",
+            "last_name",
+            "line1",
+            "line2",
+            "line3",
+            "line4",
+            "state",
+            "postcode",
+            "country",
+            "phone_number",
+            "notes",
         ]
 
 
@@ -44,42 +50,64 @@ class ShippingMethodForm(forms.Form):
     method_code = forms.ChoiceField(widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):
-        methods = kwargs.pop('methods', [])
+        methods = kwargs.pop("methods", [])
         super().__init__(*args, **kwargs)
-        self.fields['method_code'].choices = ((m.code, m.name) for m in methods)
+        self.fields["method_code"].choices = ((m.code, m.name) for m in methods)
 
 
 class GatewayForm(AuthenticationForm):
     username = forms.EmailField(label=_("My email address is"))
-    GUEST, NEW, EXISTING = 'anonymous', 'new', 'existing'
+    GUEST, NEW, EXISTING = "anonymous", "new", "existing"
     CHOICES = (
-        (GUEST, _('I am a new customer and want to checkout as a guest')),
-        (NEW, _('I am a new customer and want to create an account '
-                'before checking out')),
-        (EXISTING, _('I am a returning customer, and my password is')))
-    options = forms.ChoiceField(widget=forms.widgets.RadioSelect,
-                                choices=CHOICES, initial=GUEST)
+        (GUEST, _("I am a new customer and want to checkout as a guest")),
+        (
+            NEW,
+            _(
+                "I am a new customer and want to create an account "
+                "before checking out"
+            ),
+        ),
+        (EXISTING, _("I am a returning customer, and my password is")),
+    )
+    options = forms.ChoiceField(
+        widget=forms.widgets.RadioSelect, choices=CHOICES, initial=GUEST
+    )
 
     def clean_username(self):
-        return normalise_email(self.cleaned_data['username'])
+        return normalise_email(self.cleaned_data["username"])
 
     def clean(self):
         if self.is_guest_checkout() or self.is_new_account_checkout():
-            if 'password' in self.errors:
-                del self.errors['password']
-            if 'username' in self.cleaned_data:
-                email = normalise_email(self.cleaned_data['username'])
+            if "password" in self.errors:
+                del self.errors["password"]
+            # Guests with an existing account are normally forced to sign in.
+            # When OSCAR_ALLOW_GUEST_CHECKOUT_WITH_ACCOUNT is enabled, we let
+            # them proceed as a guest instead. The check is always enforced for
+            # new account checkout, where a duplicate email is invalid.
+            skip_existing_check = (
+                self.is_guest_checkout()
+                and settings.OSCAR_ALLOW_GUEST_CHECKOUT_WITH_ACCOUNT
+            )
+            if not skip_existing_check and "username" in self.cleaned_data:
+                email = normalise_email(self.cleaned_data["username"])
                 if User._default_manager.filter(email__iexact=email).exists():
                     msg = _("A user with that email address already exists")
                     self._errors["username"] = self.error_class([msg])
+
+                    # change the value of the 'options' in the submitted data,
+                    # which will be used to render the form
+                    options_field = self.add_prefix("options")
+                    self.data = self.data.copy()
+                    self.data[options_field] = self.EXISTING
+
             return self.cleaned_data
         return super().clean()
 
     def is_guest_checkout(self):
-        return self.cleaned_data.get('options', None) == self.GUEST
+        return self.cleaned_data.get("options", None) == self.GUEST
 
     def is_new_account_checkout(self):
-        return self.cleaned_data.get('options', None) == self.NEW
+        return self.cleaned_data.get("options", None) == self.NEW
 
 
 # The BillingAddress form is in oscar.apps.payment.forms

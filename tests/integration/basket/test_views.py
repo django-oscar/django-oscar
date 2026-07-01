@@ -1,3 +1,4 @@
+# pylint: disable=no-member, attribute-defined-outside-init
 from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse
@@ -6,7 +7,10 @@ from oscar.apps.basket import views
 from oscar.core.loading import get_model
 from oscar.test import factories
 from oscar.test.factories import (
-    AttributeOptionFactory, AttributeOptionGroupFactory, OptionFactory)
+    AttributeOptionFactory,
+    AttributeOptionGroupFactory,
+    OptionFactory,
+)
 from oscar.test.testcases import WebTestCase
 from tests.fixtures import RequestFactory
 from tests.functional.checkout import CheckoutMixin
@@ -16,7 +20,7 @@ Option = get_model("catalogue", "Option")
 
 class TestVoucherAddView(TestCase):
     def test_get(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
 
         view = views.VoucherAddView.as_view()
         response = view(request)
@@ -24,16 +28,14 @@ class TestVoucherAddView(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def _get_voucher_message(self, request):
-        return '\n'.join(str(m.message) for m in get_messages(request))
+        return "\n".join(str(m.message) for m in get_messages(request))
 
     def test_post_valid(self):
         voucher = factories.VoucherFactory()
         self.assertTrue(voucher.is_active())
 
-        data = {
-            'code': voucher.code
-        }
-        request = RequestFactory().post('/', data=data)
+        data = {"code": voucher.code}
+        request = RequestFactory().post("/", data=data)
         request.basket.save()
 
         view = views.VoucherAddView.as_view()
@@ -41,7 +43,9 @@ class TestVoucherAddView(TestCase):
         self.assertEqual(response.status_code, 302)
 
         voucher = voucher.__class__.objects.get(pk=voucher.pk)
-        self.assertEqual(voucher.num_basket_additions, 1, msg=self._get_voucher_message(request))
+        self.assertEqual(
+            voucher.num_basket_additions, 1, msg=self._get_voucher_message(request)
+        )
 
     def test_post_valid_from_set(self):
         voucherset = factories.VoucherSetFactory()
@@ -49,10 +53,8 @@ class TestVoucherAddView(TestCase):
 
         self.assertTrue(voucher.is_active())
 
-        data = {
-            'code': voucher.code
-        }
-        request = RequestFactory().post('/', data=data)
+        data = {"code": voucher.code}
+        request = RequestFactory().post("/", data=data)
         request.basket.save()
 
         view = views.VoucherAddView.as_view()
@@ -60,7 +62,9 @@ class TestVoucherAddView(TestCase):
         self.assertEqual(response.status_code, 302)
 
         voucher = voucher.__class__.objects.get(pk=voucher.pk)
-        self.assertEqual(voucher.num_basket_additions, 1, msg=self._get_voucher_message(request))
+        self.assertEqual(
+            voucher.num_basket_additions, 1, msg=self._get_voucher_message(request)
+        )
 
         self.assertEqual(voucherset.num_basket_additions, 1)
 
@@ -69,10 +73,8 @@ class TestVoucherRemoveView(TestCase):
     def test_post_valid(self):
         voucher = factories.VoucherFactory(num_basket_additions=5)
 
-        data = {
-            'code': voucher.code
-        }
-        request = RequestFactory().post('/', data=data)
+        data = {"code": voucher.code}
+        request = RequestFactory().post("/", data=data)
         request.basket.save()
         request.basket.vouchers.add(voucher)
 
@@ -84,10 +86,10 @@ class TestVoucherRemoveView(TestCase):
         self.assertEqual(voucher.num_basket_additions, 4)
 
     def test_post_with_missing_voucher(self):
-        """ If the voucher is missing, verify the view queues a message and redirects. """
-        pk = '12345'
+        """If the voucher is missing, verify the view queues a message and redirects."""
+        pk = "12345"
         view = views.VoucherRemoveView.as_view()
-        request = RequestFactory().post('/')
+        request = RequestFactory().post("/")
         request.basket.save()
         response = view(request, pk=pk)
 
@@ -100,7 +102,7 @@ class TestVoucherRemoveView(TestCase):
 
 class TestBasketSummaryView(TestCase):
     def setUp(self):
-        self.url = reverse('basket:summary')
+        self.url = reverse("basket:summary")
         self.country = factories.CountryFactory()
         self.user = factories.UserFactory()
 
@@ -133,8 +135,10 @@ class TestVoucherViews(CheckoutMixin, WebTestCase):
 
         assert self.voucher.basket_set.count() == 0
 
-        response = self.post(reverse('basket:vouchers-add'), params={'code': self.voucher.code})
-        self.assertRedirectsTo(response, 'basket:summary')
+        response = self.post(
+            reverse("basket:vouchers-add"), params={"code": self.voucher.code}
+        )
+        self.assertRedirectsTo(response, "basket:summary")
         assert self.voucher.basket_set.count() == 1
 
     def test_remove_voucher(self):
@@ -146,26 +150,40 @@ class TestVoucherViews(CheckoutMixin, WebTestCase):
 
         assert self.voucher.basket_set.count() == 1
 
-        response = self.post(reverse('basket:vouchers-remove', kwargs={'pk': self.voucher.id}))
-        self.assertRedirectsTo(response, 'basket:summary')
+        response = self.post(
+            reverse("basket:vouchers-remove", kwargs={"pk": self.voucher.id})
+        )
+        self.assertRedirectsTo(response, "basket:summary")
         assert self.voucher.basket_set.count() == 0
 
 
 class TestOptionAddToBasketView(TestCase):
-    def setUp(self):
-        super().setUp()
-
     def setup_options(self, required):
         self.product = factories.create_product(num_in_stock=1)
         group = AttributeOptionGroupFactory(name="minte")
         AttributeOptionFactory(option="henk", group=group)
         AttributeOptionFactory(option="klaas", group=group)
-        self.select = OptionFactory(required=required, code=Option.SELECT, type=Option.SELECT, option_group=group)
-        self.radio = OptionFactory(required=required, code=Option.RADIO, type=Option.RADIO, option_group=group)
+        self.select = OptionFactory(
+            required=required,
+            code=Option.SELECT,
+            type=Option.SELECT,
+            option_group=group,
+        )
+        self.radio = OptionFactory(
+            required=required, code=Option.RADIO, type=Option.RADIO, option_group=group
+        )
         self.multi_select = OptionFactory(
-            required=required, code=Option.MULTI_SELECT, type=Option.MULTI_SELECT, option_group=group)
+            required=required,
+            code=Option.MULTI_SELECT,
+            type=Option.MULTI_SELECT,
+            option_group=group,
+        )
         self.checkbox = OptionFactory(
-            required=required, code=Option.CHECKBOX, type=Option.CHECKBOX, option_group=group)
+            required=required,
+            code=Option.CHECKBOX,
+            type=Option.CHECKBOX,
+            option_group=group,
+        )
 
         self.product.product_class.options.add(self.select)
         self.product.product_class.options.add(self.radio)
@@ -174,7 +192,7 @@ class TestOptionAddToBasketView(TestCase):
 
     def test_option_visible_required(self):
         self.setup_options(True)
-        url = reverse('catalogue:detail', args=(self.product.slug, self.product.pk))
+        url = reverse("catalogue:detail", args=(self.product.slug, self.product.pk))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, Option.SELECT)
@@ -184,7 +202,7 @@ class TestOptionAddToBasketView(TestCase):
 
     def test_option_visible_not_required(self):
         self.setup_options(False)
-        url = reverse('catalogue:detail', args=(self.product.slug, self.product.pk))
+        url = reverse("catalogue:detail", args=(self.product.slug, self.product.pk))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, Option.SELECT)
@@ -194,84 +212,123 @@ class TestOptionAddToBasketView(TestCase):
 
     def test_add_to_basket_with_options_required(self):
         self.setup_options(True)
-        url = reverse('basket:add', kwargs={'pk': self.product.pk})
+        url = reverse("basket:add", kwargs={"pk": self.product.pk})
         post_params = {
-            'product_id': self.product.id,
-            Option.SELECT: 'klaas',
-            Option.RADIO: 'henk',
-            Option.MULTI_SELECT: ['henk', 'klaas'],
-            Option.CHECKBOX: ['henk'],
-            'action': 'add',
-            'quantity': 1
+            "product_id": self.product.id,
+            Option.SELECT: "klaas",
+            Option.RADIO: "henk",
+            Option.MULTI_SELECT: ["henk", "klaas"],
+            Option.CHECKBOX: ["henk"],
+            "action": "add",
+            "quantity": 1,
         }
         response = self.client.post(url, post_params, follow=True)
         basket = response.context["basket"]
 
-        self.assertEqual(basket.all_lines().count(), 1, "One line should have been added to the basket")
-        line, = basket.all_lines()
+        self.assertEqual(
+            basket.all_lines().count(),
+            1,
+            "One line should have been added to the basket",
+        )
+        (line,) = basket.all_lines()
 
-        self.assertEqual(line.attributes.count(), 4, "One lineattribute shoould have been added to the basket")
+        self.assertEqual(
+            line.attributes.count(),
+            4,
+            "One lineattribute shoould have been added to the basket",
+        )
         checkbox, multi_select, radio, select = line.attributes.order_by("option__code")
 
-        self.assertEqual(checkbox.value, ["henk"], "The lineattribute should be saved as json")
         self.assertEqual(
-            checkbox.option, self.checkbox,
-            "The lineattribute's option should be the option created by the factory"
+            checkbox.value, ["henk"], "The lineattribute should be saved as json"
+        )
+        self.assertEqual(
+            checkbox.option,
+            self.checkbox,
+            "The lineattribute's option should be the option created by the factory",
         )
 
-        self.assertListEqual(multi_select.value, ["henk", "klaas"], "The lineattribute should be saved as json")
+        self.assertListEqual(
+            multi_select.value,
+            ["henk", "klaas"],
+            "The lineattribute should be saved as json",
+        )
         self.assertEqual(
-            multi_select.option, self.multi_select,
-            "The lineattribute's option should be the option created by the factory"
+            multi_select.option,
+            self.multi_select,
+            "The lineattribute's option should be the option created by the factory",
         )
 
-        self.assertEqual(radio.value, "henk", "The lineattribute should be saved as json")
         self.assertEqual(
-            radio.option, self.radio,
-            "The lineattribute's option should be the option created by the factory"
+            radio.value, "henk", "The lineattribute should be saved as json"
+        )
+        self.assertEqual(
+            radio.option,
+            self.radio,
+            "The lineattribute's option should be the option created by the factory",
         )
 
-        self.assertEqual(select.value, "klaas", "The lineattribute should be saved as json")
         self.assertEqual(
-            select.option, self.select,
-            "The lineattribute's option should be the option created by the factory"
+            select.value, "klaas", "The lineattribute should be saved as json"
+        )
+        self.assertEqual(
+            select.option,
+            self.select,
+            "The lineattribute's option should be the option created by the factory",
         )
 
     def test_add_to_basket_with_options_not_required(self):
         self.setup_options(False)
-        url = reverse('basket:add', kwargs={'pk': self.product.pk})
+        url = reverse("basket:add", kwargs={"pk": self.product.pk})
         post_params = {
-            'product_id': self.product.id,
-            Option.SELECT: 'klaas',
-            Option.RADIO: 'henk',
+            "product_id": self.product.id,
+            Option.SELECT: "klaas",
+            Option.RADIO: "henk",
             Option.MULTI_SELECT: [],
-            Option.CHECKBOX: ['henk'],
-            'action': 'add',
-            'quantity': 1
+            Option.CHECKBOX: ["henk"],
+            "action": "add",
+            "quantity": 1,
         }
         response = self.client.post(url, post_params, follow=True)
         basket = response.context["basket"]
 
-        self.assertEqual(basket.all_lines().count(), 1, "One line should have been added to the basket")
-        line, = basket.all_lines()
+        self.assertEqual(
+            basket.all_lines().count(),
+            1,
+            "One line should have been added to the basket",
+        )
+        (line,) = basket.all_lines()
 
-        self.assertEqual(line.attributes.count(), 3, "One lineattribute shoould have been added to the basket")
+        self.assertEqual(
+            line.attributes.count(),
+            3,
+            "One lineattribute shoould have been added to the basket",
+        )
         checkbox, radio, select = line.attributes.order_by("option__code")
 
-        self.assertEqual(checkbox.value, ["henk"], "The lineattribute should be saved as json")
         self.assertEqual(
-            checkbox.option, self.checkbox,
-            "The lineattribute's option should be the option created by the factory"
+            checkbox.value, ["henk"], "The lineattribute should be saved as json"
+        )
+        self.assertEqual(
+            checkbox.option,
+            self.checkbox,
+            "The lineattribute's option should be the option created by the factory",
         )
 
-        self.assertEqual(radio.value, "henk", "The lineattribute should be saved as json")
         self.assertEqual(
-            radio.option, self.radio,
-            "The lineattribute's option should be the option created by the factory"
+            radio.value, "henk", "The lineattribute should be saved as json"
+        )
+        self.assertEqual(
+            radio.option,
+            self.radio,
+            "The lineattribute's option should be the option created by the factory",
         )
 
-        self.assertEqual(select.value, "klaas", "The lineattribute should be saved as json")
         self.assertEqual(
-            select.option, self.select,
-            "The lineattribute's option should be the option created by the factory"
+            select.value, "klaas", "The lineattribute should be saved as json"
+        )
+        self.assertEqual(
+            select.option,
+            self.select,
+            "The lineattribute's option should be the option created by the factory",
         )

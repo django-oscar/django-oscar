@@ -8,4 +8,4 @@ class TestExtendedURLField(TestCase):
 
     def test_validates_local_urls(self):
         field = fields.ExtendedURLField()
-        field.clean('/')
+        field.clean("/")

@@ -2,8 +2,12 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.utils.module_loading import import_string
 from django.conf import settings
 from decimal import Decimal
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
+
 
 
 class Migration(migrations.Migration):
@@ -18,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Voucher',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(verbose_name='Name', max_length=128, help_text='This will be shown in the checkout and basket once the voucher is entered')),
                 ('code', models.CharField(max_length=128, verbose_name='Code', unique=True, db_index=True, help_text='Case insensitive / No spaces allowed')),
                 ('usage', models.CharField(default='Multi-use', max_length=128, verbose_name='Usage', choices=[('Single use', 'Can be used once by one customer'), ('Multi-use', 'Can be used multiple times by multiple customers'), ('Once per customer', 'Can only be used once per customer')])),
@@ -41,7 +45,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VoucherApplication',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_created', models.DateField(auto_now_add=True, verbose_name='Date Created')),
                 ('order', models.ForeignKey(verbose_name='Order', to='order.Order', on_delete=models.CASCADE)),
                 ('user', models.ForeignKey(null=True, verbose_name='User', to=settings.AUTH_USER_MODEL, blank=True, on_delete=models.CASCADE)),

@@ -17,9 +17,10 @@ class Price(object):
         currency (str): 3 character currency code
     """
 
-    def __init__(self, currency, excl_tax, incl_tax=None, tax=None):
+    def __init__(self, currency, excl_tax, incl_tax=None, tax=None, tax_code=None):
         self.currency = currency
         self.excl_tax = excl_tax
+        self.tax_code = tax_code
         if incl_tax is not None:
             self.incl_tax = incl_tax
             self.is_tax_known = True
@@ -42,18 +43,27 @@ class Price(object):
     def __repr__(self):
         if self.is_tax_known:
             return "%s(currency=%r, excl_tax=%r, incl_tax=%r, tax=%r)" % (
-                self.__class__.__name__, self.currency, self.excl_tax,
-                self.incl_tax, self.tax)
+                self.__class__.__name__,
+                self.currency,
+                self.excl_tax,
+                self.incl_tax,
+                self.tax,
+            )
         return "%s(currency=%r, excl_tax=%r)" % (
-            self.__class__.__name__, self.currency, self.excl_tax)
+            self.__class__.__name__,
+            self.currency,
+            self.excl_tax,
+        )
 
     def __eq__(self, other):
         """
         Two price objects are equal if currency, price.excl_tax and tax match.
         """
-        return (self.currency == other.currency
-                and self.excl_tax == other.excl_tax
-                and self.incl_tax == other.incl_tax)
+        return (
+            self.currency == other.currency
+            and self.excl_tax == other.excl_tax
+            and self.incl_tax == other.incl_tax
+        )
 
     def __add__(self, other):
         if self.currency != other.currency:
@@ -62,7 +72,8 @@ class Price(object):
         return Price(
             currency=self.currency,
             incl_tax=self.incl_tax + other.incl_tax,
-            excl_tax=self.excl_tax + other.excl_tax
+            excl_tax=self.excl_tax + other.excl_tax,
+            tax_code=self.tax_code,
         )
 
     def __radd__(self, other):

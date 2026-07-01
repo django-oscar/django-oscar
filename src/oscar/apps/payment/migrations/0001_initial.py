@@ -3,8 +3,12 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import oscar.models.fields.autoslugfield
+from django.utils.module_loading import import_string
 from django.conf import settings
 from decimal import Decimal
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
+
 
 
 class Migration(migrations.Migration):
@@ -18,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Bankcard',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('card_type', models.CharField(max_length=128, verbose_name='Card Type')),
                 ('name', models.CharField(max_length=255, verbose_name='Name', blank=True)),
                 ('number', models.CharField(max_length=32, verbose_name='Number')),
@@ -36,7 +40,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Source',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
                 ('amount_allocated', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Allocated')),
                 ('amount_debited', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Debited')),
@@ -55,7 +59,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SourceType',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128, verbose_name='Name')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Code', editable=False, max_length=128, help_text='This is used within forms to identify this source type', blank=True)),
             ],
@@ -69,7 +73,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Transaction',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('txn_type', models.CharField(max_length=128, verbose_name='Type', blank=True)),
                 ('amount', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Amount')),
                 ('reference', models.CharField(max_length=128, verbose_name='Reference', blank=True)),

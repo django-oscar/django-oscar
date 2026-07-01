@@ -9,10 +9,11 @@ from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 
 User = get_user_model()
-CommunicationEventType = get_model('communication', 'CommunicationEventType')
-CustomerDispatcher = get_class('customer.utils', 'CustomerDispatcher')
+CommunicationEventType = get_model("communication", "CommunicationEventType")
+Order = get_model("order", "Order")
+CustomerDispatcher = get_class("customer.utils", "CustomerDispatcher")
 
-logger = logging.getLogger('oscar.customer')
+logger = logging.getLogger("oscar.customer")
 
 
 class PageTitleMixin(object):
@@ -22,6 +23,7 @@ class PageTitleMixin(object):
 
     Dynamic page titles are possible by overriding get_page_title.
     """
+
     page_title = None
     active_tab = None
 
@@ -31,13 +33,12 @@ class PageTitleMixin(object):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx.setdefault('page_title', self.get_page_title())
-        ctx.setdefault('active_tab', self.active_tab)
+        ctx.setdefault("page_title", self.get_page_title())
+        ctx.setdefault("active_tab", self.active_tab)
         return ctx
 
 
 class RegisterUserMixin(object):
-
     def register_user(self, form):
         """
         Create a user instance and send a new registration email (if configured
@@ -47,17 +48,16 @@ class RegisterUserMixin(object):
 
         # Raise signal robustly (we don't want exceptions to crash the request
         # handling).
-        user_registered.send_robust(
-            sender=self, request=self.request, user=user)
+        user_registered.send_robust(sender=self, request=self.request, user=user)
 
-        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
+        if getattr(settings, "OSCAR_SEND_REGISTRATION_EMAIL", True):
             self.send_registration_email(user)
 
         # We have to authenticate before login
         try:
             user = authenticate(
-                username=user.email,
-                password=form.cleaned_data['password1'])
+                username=user.email, password=form.cleaned_data["password1"]
+            )
         except User.MultipleObjectsReturned:
             # Handle race condition where the registration request is made
             # multiple times in quick succession.  This leads to both requests
@@ -65,14 +65,16 @@ class RegisterUserMixin(object):
             # hasn't committed when the second one runs the check).  We retain
             # the first one and deactivate the dupes.
             logger.warning(
-                'Multiple users with identical email address and password'
-                'were found. Marking all but one as not active.')
+                "Multiple users with identical email address and password"
+                "were found. Marking all but one as not active."
+            )
             # As this section explicitly deals with the form being submitted
             # twice, this is about the only place in Oscar where we don't
             # ignore capitalisation when looking up an email address.
             # We might otherwise accidentally mark unrelated users as inactive
             users = User.objects.filter(email=user.email)
             user = users[0]
+            user.backend = "oscar.apps.customer.auth_backends.EmailBackend"
             for u in users[1:]:
                 u.is_active = False
                 u.save()
@@ -82,5 +84,28 @@ class RegisterUserMixin(object):
         return user
 
     def send_registration_email(self, user):
-        extra_context = {'user': user, 'request': self.request}
+        extra_context = {"user": user, "request": self.request}
         CustomerDispatcher().send_registration_email_for_user(user, extra_context)
+
+
+class AnonymousOrderMixin:
+    @property
+    def email(self):
+        return self.request.session.get("anon_order_email")
+
+    @property
+    def order_number(self):
+        return self.kwargs.get("order_number")
+
+    @property
+    def hash(self):
+        return self.kwargs.get("hash")
+
+    def get_object(self):
+        try:
+            order = Order.objects.get(user=None, number=self.order_number)
+            if order.check_verification_hash(self.hash) and order.email == self.email:
+                return order
+        except (AttributeError, Order.DoesNotExist):
+            return None
+        return None

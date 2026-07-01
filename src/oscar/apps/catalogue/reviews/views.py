@@ -9,12 +9,12 @@ from oscar.core.loading import get_classes, get_model
 from oscar.core.utils import redirect_to_referrer
 
 ProductReviewForm, VoteForm, SortReviewsForm = get_classes(
-    'catalogue.reviews.forms',
-    ['ProductReviewForm', 'VoteForm', 'SortReviewsForm'])
+    "catalogue.reviews.forms", ["ProductReviewForm", "VoteForm", "SortReviewsForm"]
+)
 
-Vote = get_model('reviews', 'vote')
-ProductReview = get_model('reviews', 'ProductReview')
-Product = get_model('catalogue', 'product')
+Vote = get_model("reviews", "vote")
+ProductReview = get_model("reviews", "ProductReview")
+Product = get_model("catalogue", "product")
 
 
 class CreateProductReview(CreateView):
@@ -25,8 +25,10 @@ class CreateProductReview(CreateView):
     view_signal = review_added
 
     def dispatch(self, request, *args, **kwargs):
+        # pylint: disable=attribute-defined-outside-init
         self.product = get_object_or_404(
-            self.product_model, pk=kwargs['product_pk'], is_public=True)
+            self.product_model, pk=kwargs["product_pk"], is_public=True
+        )
         # check permission to leave review
         if not self.product.is_review_permitted(request.user):
             if self.product.has_review_by(request.user):
@@ -36,18 +38,17 @@ class CreateProductReview(CreateView):
             messages.warning(self.request, message)
             return redirect(self.product.get_absolute_url())
 
-        return super().dispatch(
-            request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product'] = self.product
+        context["product"] = self.product
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['product'] = self.product
-        kwargs['user'] = self.request.user
+        kwargs["product"] = self.product
+        kwargs["user"] = self.request.user
         return kwargs
 
     def form_valid(self, form):
@@ -56,24 +57,29 @@ class CreateProductReview(CreateView):
         return response
 
     def get_success_url(self):
-        messages.success(
-            self.request, _("Thank you for reviewing this product"))
+        messages.success(self.request, _("Thank you for reviewing this product"))
         return self.product.get_absolute_url()
 
     def send_signal(self, request, response, review):
-        self.view_signal.send(sender=self, review=review, user=request.user,
-                              request=request, response=response)
+        self.view_signal.send(
+            sender=self,
+            review=review,
+            user=request.user,
+            request=request,
+            response=response,
+        )
 
 
 class ProductReviewDetail(DetailView):
     template_name = "oscar/catalogue/reviews/review_detail.html"
-    context_object_name = 'review'
+    context_object_name = "review"
     model = ProductReview
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product'] = get_object_or_404(
-            Product, pk=self.kwargs['product_pk'], is_public=True)
+        context["product"] = get_object_or_404(
+            Product, pk=self.kwargs["product_pk"], is_public=True
+        )
         return context
 
 
@@ -86,8 +92,10 @@ class AddVoteView(View):
     """
 
     def post(self, request, *args, **kwargs):
-        product = get_object_or_404(Product, pk=self.kwargs['product_pk'], is_public=True)
-        review = get_object_or_404(ProductReview, pk=self.kwargs['pk'])
+        product = get_object_or_404(
+            Product, pk=self.kwargs["product_pk"], is_public=True
+        )
+        review = get_object_or_404(ProductReview, pk=self.kwargs["pk"])
 
         form = VoteForm(review, request.user, request.POST)
         if form.is_valid():
@@ -107,24 +115,27 @@ class ProductReviewList(ListView):
     """
     Browse reviews for a product
     """
-    template_name = 'oscar/catalogue/reviews/review_list.html'
+
+    template_name = "oscar/catalogue/reviews/review_list.html"
     context_object_name = "reviews"
     model = ProductReview
     product_model = Product
     paginate_by = settings.OSCAR_REVIEWS_PER_PAGE
 
     def get_queryset(self):
-        qs = self.model.objects.approved().filter(product=self.kwargs['product_pk'])
+        qs = self.model.objects.approved().filter(product=self.kwargs["product_pk"])
+        # pylint: disable=attribute-defined-outside-init
         self.form = SortReviewsForm(self.request.GET)
         if self.request.GET and self.form.is_valid():
-            sort_by = self.form.cleaned_data['sort_by']
+            sort_by = self.form.cleaned_data["sort_by"]
             if sort_by == SortReviewsForm.SORT_BY_RECENCY:
-                return qs.order_by('-date_created')
-        return qs.order_by('-score')
+                return qs.order_by("-date_created")
+        return qs.order_by("-score")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product'] = get_object_or_404(
-            self.product_model, pk=self.kwargs['product_pk'], is_public=True)
-        context['form'] = self.form
+        context["product"] = get_object_or_404(
+            self.product_model, pk=self.kwargs["product_pk"], is_public=True
+        )
+        context["form"] = self.form
         return context

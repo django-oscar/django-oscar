@@ -3,8 +3,8 @@ from itertools import chain
 
 from oscar.core.loading import get_class, get_model
 
-logger = logging.getLogger('oscar.offers')
-OfferApplications = get_class('offer.results', 'OfferApplications')
+logger = logging.getLogger("oscar.offers")
+OfferApplications = get_class("offer.results", "OfferApplications")
 
 
 class OfferApplicationError(Exception):
@@ -12,7 +12,6 @@ class OfferApplicationError(Exception):
 
 
 class Applicator(object):
-
     def apply(self, basket, user=None, request=None):
         """
         Apply all relevant offers to the given basket.
@@ -56,20 +55,24 @@ class Applicator(object):
         user_offers = self.get_user_offers(user)
         session_offers = self.get_session_offers(request)
 
-        return list(sorted(chain(
-            session_offers, basket_offers, user_offers, site_offers),
-            key=lambda o: o.priority, reverse=True))
+        return list(
+            sorted(
+                chain(session_offers, basket_offers, user_offers, site_offers),
+                key=lambda o: o.priority,
+                reverse=True,
+            )
+        )
 
     def get_site_offers(self):
         """
         Return site offers that are available to all users
         """
-        ConditionalOffer = get_model('offer', 'ConditionalOffer')
+        ConditionalOffer = get_model("offer", "ConditionalOffer")
         qs = ConditionalOffer.active.filter(offer_type=ConditionalOffer.SITE)
         # Using select_related with the condition/benefit ranges doesn't seem
         # to work.  I think this is because both the related objects have the
         # FK to range with the same name.
-        return qs.select_related('condition', 'benefit')
+        return qs.select_related("condition", "benefit")
 
     def get_basket_offers(self, basket, user):
         """
@@ -89,6 +92,7 @@ class Applicator(object):
                 offers = list(chain(offers, basket_offers))
         return offers
 
+    # pylint: disable=unused-argument
     def get_user_offers(self, user):
         """
         Returns offers linked to this particular user.

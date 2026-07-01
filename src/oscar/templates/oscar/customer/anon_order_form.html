@@ -1,0 +1,14 @@
+{% extends "oscar/layout.html" %}
+{% load i18n %}
+{% block extrahead %}
+    <meta name="robots" content="noindex">
+{% endblock %}
+{% block content %}
+<form method="post">{%csrf_token%}
+    <p><h3>{% trans "Enter the following information you used for this order" %}</h3></p>
+{{form.as_p}}
+<button class="btn btn-secondary" type="submit">{% trans "Submit" %}</button>
+
+</form>
+
+{% endblock %}

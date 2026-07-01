@@ -8,7 +8,7 @@ def tax_subtract(price, tax_percentage=21):
         return None
 
     result = price / ((100 + tax_percentage) / D(100))
-    return result.quantize(D('0.01'), ROUND_HALF_UP)
+    return result.quantize(D("0.01"), ROUND_HALF_UP)
 
 
 def tax_add(price, tax_percentage=21):
@@ -17,4 +17,4 @@ def tax_add(price, tax_percentage=21):
         return None
 
     result = price * ((100 + tax_percentage) / D(100))
-    return result.quantize(D('0.01'), ROUND_HALF_UP)
+    return result.quantize(D("0.01"), ROUND_HALF_UP)

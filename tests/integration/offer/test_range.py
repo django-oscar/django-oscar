@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from oscar.apps.catalogue import models as catalogue_models
 from oscar.apps.offer import models
@@ -6,18 +6,21 @@ from oscar.test.factories import create_product
 
 
 class TestWholeSiteRange(TestCase):
-
     def setUp(self):
         self.range = models.Range.objects.create(
-            name="All products", includes_all_products=True)
+            name="All products", includes_all_products=True
+        )
         self.prod = create_product()
+        self.child = create_product(structure="child", parent=self.prod)
+        self.category = catalogue_models.Category.add_root(name="root")
+        self.prod.categories.add(self.category)
 
     def test_all_products_range(self):
         self.assertTrue(self.range.contains_product(self.prod))
         self.assertIn(self.range, models.Range.objects.contains_product(self.prod))
 
     def test_all_products_includes_child_products(self):
-        child_product = create_product(structure='child', parent=self.prod)
+        child_product = create_product(structure="child", parent=self.prod)
         self.assertTrue(child_product in self.range.all_products())
 
     def test_whitelisting(self):
@@ -30,15 +33,34 @@ class TestWholeSiteRange(TestCase):
         self.assertFalse(self.range.contains_product(self.prod))
         self.assertNotIn(self.prod, self.range.all_products())
 
+    def test_category_blacklisting(self):
+        self._test_category_blacklisting()
+
+    @override_settings(OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS=True)
+    def test_category_blacklisting_materialised(self):
+        self.prod.categories.add(
+            self.category
+        )  # we need to refresh the materialised view with the setting enabled for things to work
+        self._test_category_blacklisting()
+
+    def _test_category_blacklisting(self):
+        self.range.excluded_categories.add(self.category)
+        self.assertNotIn(self.range, models.Range.objects.contains_product(self.prod))
+        self.assertNotIn(self.range, models.Range.objects.contains_product(self.child))
+        self.assertFalse(self.range.contains_product(self.prod))
+        self.assertFalse(self.range.contains_product(self.child))
+        self.assertNotIn(self.prod, self.range.all_products())
+        self.assertNotIn(self.child, self.range.all_products())
+
 
 class TestChildRange(TestCase):
-
     def setUp(self):
         self.range = models.Range.objects.create(
-            name='Child-specific range', includes_all_products=False)
-        self.parent = create_product(structure='parent')
-        self.child1 = create_product(structure='child', parent=self.parent)
-        self.child2 = create_product(structure='child', parent=self.parent)
+            name="Child-specific range", includes_all_products=False
+        )
+        self.parent = create_product(structure="parent")
+        self.child1 = create_product(structure="child", parent=self.parent)
+        self.child2 = create_product(structure="child", parent=self.parent)
         self.range.add_product(self.child1)
 
     def test_includes_child(self):
@@ -59,13 +81,13 @@ class TestChildRange(TestCase):
 
 
 class TestParentRange(TestCase):
-
     def setUp(self):
         self.range = models.Range.objects.create(
-            name='Parent-specific range', includes_all_products=False)
-        self.parent = create_product(structure='parent')
-        self.child1 = create_product(structure='child', parent=self.parent)
-        self.child2 = create_product(structure='child', parent=self.parent)
+            name="Parent-specific range", includes_all_products=False
+        )
+        self.parent = create_product(structure="parent")
+        self.child1 = create_product(structure="child", parent=self.parent)
+        self.child2 = create_product(structure="child", parent=self.parent)
 
     def test_includes_all_children_when_parent_in_included_products(self):
         self.range.add_product(self.parent)
@@ -81,12 +103,12 @@ class TestParentRange(TestCase):
 
 
 class TestPartialRange(TestCase):
-
     def setUp(self):
         self.range = models.Range.objects.create(
-            name="All products", includes_all_products=False)
-        self.parent = create_product(structure='parent')
-        self.child = create_product(structure='child', parent=self.parent)
+            name="All products", includes_all_products=False
+        )
+        self.parent = create_product(structure="parent")
+        self.child = create_product(structure="child", parent=self.parent)
 
     def test_empty_list(self):
         self.assertFalse(self.range.contains_product(self.parent))
@@ -114,8 +136,7 @@ class TestPartialRange(TestCase):
         excluded_products = [create_product() for _ in range(count)]
 
         for product in included_products:
-            models.RangeProduct.objects.create(
-                product=product, range=self.range)
+            models.RangeProduct.objects.create(product=product, range=self.range)
 
         self.range.excluded_products.add(*excluded_products)
 
@@ -133,15 +154,15 @@ class TestPartialRange(TestCase):
         product_in_included_class = create_product(product_class="123")
         included_product_class = product_in_included_class.product_class
         excluded_product_in_included_class = create_product(
-            product_class=included_product_class.name)
+            product_class=included_product_class.name
+        )
 
         self.range.classes.add(included_product_class)
         self.range.excluded_products.add(excluded_product_in_included_class)
 
         all_products = self.range.all_products()
         self.assertTrue(product_in_included_class in all_products)
-        self.assertTrue(excluded_product_in_included_class not in
-                        all_products)
+        self.assertTrue(excluded_product_in_included_class not in all_products)
 
         self.assertEqual(self.range.num_products(), 1)
 
@@ -151,18 +172,18 @@ class TestPartialRange(TestCase):
         excluded_product_in_included_category = create_product()
 
         catalogue_models.ProductCategory.objects.create(
-            product=product_in_included_category, category=included_category)
+            product=product_in_included_category, category=included_category
+        )
         catalogue_models.ProductCategory.objects.create(
-            product=excluded_product_in_included_category,
-            category=included_category)
+            product=excluded_product_in_included_category, category=included_category
+        )
 
         self.range.included_categories.add(included_category)
         self.range.excluded_products.add(excluded_product_in_included_category)
 
         all_products = self.range.all_products()
         self.assertTrue(product_in_included_category in all_products)
-        self.assertTrue(excluded_product_in_included_category not in
-                        all_products)
+        self.assertTrue(excluded_product_in_included_category not in all_products)
 
         self.assertEqual(self.range.num_products(), 1)
 
@@ -175,9 +196,11 @@ class TestPartialRange(TestCase):
         gc_product = create_product()
 
         catalogue_models.ProductCategory.objects.create(
-            product=c_product, category=child_category)
+            product=c_product, category=child_category
+        )
         catalogue_models.ProductCategory.objects.create(
-            product=gc_product, category=grand_child_category)
+            product=gc_product, category=grand_child_category
+        )
 
         self.range.included_categories.add(parent_category)
 
@@ -194,15 +217,17 @@ class TestPartialRange(TestCase):
         included_category2 = catalogue_models.Category.add_root(name="cat2")
         product = create_product()
         catalogue_models.ProductCategory.objects.create(
-            product=product, category=included_category1)
+            product=product, category=included_category1
+        )
         catalogue_models.ProductCategory.objects.create(
-            product=product, category=included_category2)
+            product=product, category=included_category2
+        )
 
         self.range.included_categories.add(included_category1)
         self.range.included_categories.add(included_category2)
         self.range.add_product(product)
 
-        all_product_ids = list(self.range.all_products().values_list('id', flat=True))
+        all_product_ids = list(self.range.all_products().values_list("id", flat=True))
         product_occurances_in_range = all_product_ids.count(product.id)
         self.assertEqual(product_occurances_in_range, 1)
 
@@ -210,7 +235,8 @@ class TestPartialRange(TestCase):
         included_category = catalogue_models.Category.add_root(name="root")
         product = create_product()
         catalogue_models.ProductCategory.objects.create(
-            product=product, category=included_category)
+            product=product, category=included_category
+        )
 
         self.range.included_categories.add(included_category)
         self.range.add_product(product)
@@ -236,7 +262,8 @@ class TestPartialRange(TestCase):
 
         included_category = catalogue_models.Category.add_root(name="root")
         catalogue_models.ProductCategory.objects.create(
-            product=product, category=included_category)
+            product=product, category=included_category
+        )
         self.range.included_categories.add(included_category)
 
         self.range.invalidate_cached_queryset()
@@ -248,7 +275,6 @@ class TestPartialRange(TestCase):
 
 
 class TestRangeModel(TestCase):
-
     def test_ensures_unique_slugs_are_used(self):
         first_range = models.Range.objects.create(name="Foo")
         first_range.name = "Bar"
@@ -264,7 +290,7 @@ class TestRangeQuerySet(TestCase):
         self.child1 = create_product(structure="child", parent=self.parent)
         self.child2 = create_product(structure="child", parent=self.parent)
 
-        self.range = models.Range.objects.create(
+        self.range, _ = models.Range.objects.get_or_create(
             name="All products", includes_all_products=True
         )
         self.range.excluded_products.add(self.excludedprod)
@@ -301,12 +327,20 @@ class TestRangeQuerySet(TestCase):
     def test_exclude_child(self):
         ranges = models.Range.objects.contains_product(self.child2)
         self.assertEqual(
-            ranges.count(), 0,
+            ranges.count(),
+            0,
             "None of the ranges should contain the second child, because it"
-            " was excluded in the range that contains the parent."
+            " was excluded in the range that contains the parent.",
         )
 
     def test_category(self):
+        self._test_category()
+
+    @override_settings(OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS=True)
+    def test_category_materialized(self):
+        self._test_category()
+
+    def _test_category(self):
         parent_category = catalogue_models.Category.add_root(name="parent")
         child_category = parent_category.add_child(name="child")
         grand_child_category = child_category.add_child(name="grand-child")
@@ -314,7 +348,7 @@ class TestRangeQuerySet(TestCase):
             product=self.parent, category=grand_child_category
         )
 
-        cat_range = models.Range.objects.create(
+        cat_range, _ = models.Range.objects.get_or_create(
             name="category range", includes_all_products=False
         )
         cat_range.included_categories.add(parent_category)

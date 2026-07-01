@@ -1,0 +1,109 @@
+========================================
+Oscar 3.2.5 release notes
+========================================
+
+:release: 2024-09-03
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2.5:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.2.5 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
+
+.. _new_in_3.2.5:
+
+What's new in Oscar 3.2.5?
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There were a couple of major changes in django-oscar 3.2.5
+
+
+
+Search app
+~~~~~~~~~~
+
+The search app was completely overhauled, haystack was upgraded to the newest version and we removed the search handlers and are now working with the haystack class based views.
+
+This change has made it possible to update our django-oscar-elasticsearch package to have a much better and adjustable implementation with Elasticsearch 8.13. 
+
+When upgrading to this version you will have to change you search customisations to now be done in the search views instead of the search handlers.
+
+The catalogue views (CatalogueView and ProductCategoryView) definitions are now moved to the search app for easier overriding and customising in projects (you only have to fork 1 app instead of 2) 
+
+See: https://github.com/django-oscar/django-oscar/commit/45adecde1945098dae75599d8cbcc35b56a0608e for everything that has changed.
+
+Stock allocation
+~~~~~~~~~~~~~~~~
+
+Stock allocations are now also tracked on the Order.Line model. It was possible to cancel an order so the stock was re-allocated to the stock record, then manually set the order to paid and then re-cancel the order which will re-allocate the stock again which has not been allocated again after manually setting the order to paid.
+
+
+
+Excluding categories from ranges
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It's now also possible to exclude a category from a range.
+If you would have to select hundreds of categories in the included categories the queries would become really slow and it required lots of maintenance from the site owner to keep all new categories in this list.
+
+What's Changed
+~~~~~~~~~~~~~~
+- Bump the github_actions group with 5 updates by @dependabot in https://github.com/django-oscar/django-oscar/pull/4244
+- Use new haystack views and remove the now unused search handlers by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4187
+- django.utils.timezone.utc was removed in Django 5.0 by @cclauss in https://github.com/django-oscar/django-oscar/pull/4231
+- Bump eslint from 8.54.0 to 8.56.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4241
+- Bump sass from 1.69.5 to 1.70.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4240
+- Bump tinymce from 6.8.1 to 6.8.3 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4249
+- [FEAT] Update product_class str method by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4248
+- Only create attributevalues that are dirty by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4250
+- Dashboard: Add a link to the attribute option group list by @JulienPalard in https://github.com/django-oscar/django-oscar/pull/4257
+- Correct paths in documentation URLs by @sgerrand in https://github.com/django-oscar/django-oscar/pull/4259
+- Fixes exception thrown when pickling/unpickling ProductAttributesContainer by @crgwbr in https://github.com/django-oscar/django-oscar/pull/4271
+- [FEAT] Line stock allocations by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4260
+- Bump codecov/codecov-action from 4.0.1 to 4.3.0 in the github_actions group by @dependabot in https://github.com/django-oscar/django-oscar/pull/4275
+- Fix `TypeError` raised when comparing nullable property by @ajharry69 in https://github.com/django-oscar/django-oscar/pull/4279
+- fix: use old email to build reset_url on email change by @Chadys in https://github.com/django-oscar/django-oscar/pull/4278
+- [FEAT] Add excluded categories in range by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4261
+- Fix get rules from order with option value instead of option code by @svandeneertwegh in https://github.com/django-oscar/django-oscar/pull/4269
+- [FEAT] Add attribute setter in product attribute container by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4286
+- 3.2.5a2 release by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4298
+- Jenkinsfile by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4301
+- Have a default for orders where all lines have been deleted. by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4305
+- Make sure to always build the assets when building a python package by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4306
+- Bump inputmask from 5.0.8 to 5.0.9 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4314
+- Bump tinymce from 6.8.3 to 7.1.1 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4313
+- Bump sass from 1.70.0 to 1.77.4 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4312
+- Update django-debug-toolbar requirement from <4.3,>=2.2 to >=2.2,<4.5 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4310
+- Bump codecov/codecov-action from 4.3.0 to 4.4.1 in the github_actions group across 1 directory by @dependabot in https://github.com/django-oscar/django-oscar/pull/4309
+- Bump @fortawesome/fontawesome-free from 6.5.1 to 6.5.2 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4294
+- feat: handle receivers counter race condition by @Chadys in https://github.com/django-oscar/django-oscar/pull/4290
+- fix: prevent insert error when creating deferred transaction by @Chadys in https://github.com/django-oscar/django-oscar/pull/4288
+- fix: handle broken link for the missing image file by @Chadys in https://github.com/django-oscar/django-oscar/pull/4287
+- fix: typos in model field verbose name by @Chadys in https://github.com/django-oscar/django-oscar/pull/4285
+- Bump codecov/codecov-action from 4.4.1 to 4.5.0 in the github_actions group by @dependabot in https://github.com/django-oscar/django-oscar/pull/4317
+- fix: typo in has_children value and tests of annotated list extra info by @Chadys in https://github.com/django-oscar/django-oscar/pull/4284
+- Missed django 4.2 upgrade DeleteView override fix by @maziar-dandc in https://github.com/django-oscar/django-oscar/pull/4316
+- [Fix] Set num_allocated to quantity if None by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4315
+- fix: remove communication unused config files by @Chadys in https://github.com/django-oscar/django-oscar/pull/4282
+- Bump nan from 2.18.0 to 2.20.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4322
+- Bump tinymce from 7.1.1 to 7.2.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4321
+- Update whitenoise requirement from <6.6,>=5.2 to >=6.7.0,<6.8 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4323
+- [FEAT] Upgrade pylint by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4333
+- [FEAT] Auto select existing user when an account already exists by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4325
+- Turn off converting urls in tinymce by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4343
+
+
+New Contributors
+~~~~~~~~~~~~~~~~
+
+- @JulienPalard made their first contribution in https://github.com/django-oscar/django-oscar/pull/4257
+- @sgerrand made their first contribution in https://github.com/django-oscar/django-oscar/pull/4259
+- @svandeneertwegh made their first contribution in https://github.com/django-oscar/django-oscar/pull/4269
+- @maziar-dandc made their first contribution in https://github.com/django-oscar/django-oscar/pull/4316
+
+**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2.4...3.2.5

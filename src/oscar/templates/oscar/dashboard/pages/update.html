@@ -26,7 +26,7 @@
     <h2>{{ title }}</h2>
 </div>
 
-<form method="post" class="card card-body form-stacked wysiwyg" enctype="multipart/form-data">
+<form id="create_update_page_form" method="post" class="card card-body form-stacked wysiwyg" enctype="multipart/form-data">
     {% csrf_token %}
     {% include 'oscar/dashboard/partials/form_fields.html' with form=form %}
     <div class="form-actions">

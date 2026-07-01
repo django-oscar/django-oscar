@@ -10,13 +10,12 @@ from oscar.templatetags.history_tags import get_back_button
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
 
-CustomerHistoryManager = get_class('customer.history', 'CustomerHistoryManager')
+CustomerHistoryManager = get_class("customer.history", "CustomerHistoryManager")
 User = get_user_model()
 COOKIE_NAME = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
 
 
 class HistoryHelpersTest(WebTestCase):
-
     def setUp(self):
         self.product = create_product()
 
@@ -33,32 +32,35 @@ class HistoryHelpersTest(WebTestCase):
     def test_get_back_button(self):
         request = HttpRequest()
 
-        request.META['SERVER_NAME'] = 'test'
-        request.META['SERVER_PORT'] = 8000
-        request.META['HTTP_REFERER'] = 'http://www.google.com'
-        backbutton = get_back_button({'request': request})
+        request.META["SERVER_NAME"] = "test"
+        request.META["SERVER_PORT"] = 8000
+        request.META["HTTP_REFERER"] = "http://www.google.com"
+        backbutton = get_back_button({"request": request})
         self.assertEqual(backbutton, None)
 
-        request.META['HTTP_REFERER'] = 'http://test:8000/search/'
-        backbutton = get_back_button({'request': request})
+        request.META["HTTP_REFERER"] = "http://test:8000/search/"
+        backbutton = get_back_button({"request": request})
         self.assertTrue(backbutton)
-        self.assertEqual(backbutton['title'], 'Back to search results')
+        self.assertEqual(backbutton["title"], "Back to search results")
 
 
 class TestAUserWhoLogsOut(WebTestCase):
-    username = 'customer'
-    password = 'cheeseshop'
-    email = 'customer@example.com'
+    username = "customer"
+    password = "cheeseshop"
+    email = "customer@example.com"
 
     def setUp(self):
         self.product = create_product()
-        self.user = User.objects.create_user(username=self.username,
-                                             email=self.email, password=self.password)
+        self.user = User.objects.create_user(
+            username=self.username, email=self.email, password=self.password
+        )
 
     def test_has_their_cookies_deleted_on_logout(self):
         response = self.get(self.product.get_absolute_url())
         self.assertTrue(COOKIE_NAME in response.test_app.cookies)
 
-        response = self.get(reverse('customer:logout'))
-        self.assertTrue((COOKIE_NAME not in response.test_app.cookies)
-                        or not self.app.cookies.get('oscar_recently_viewed_products', None))
+        response = self.get(reverse("customer:logout"))
+        self.assertTrue(
+            (COOKIE_NAME not in response.test_app.cookies)
+            or not self.app.cookies.get("oscar_recently_viewed_products", None)
+        )

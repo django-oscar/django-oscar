@@ -5,20 +5,19 @@ from oscar.test.factories import UserFactory
 
 
 class AuthBackendTestCase(TestCase):
-
     def setUp(self):
-        self.user = UserFactory(email='foo@example.com', is_staff=True)
-        self.user.set_password('letmein')
+        self.user = UserFactory(email="foo@example.com", is_staff=True)
+        self.user.set_password("letmein")
         self.user.save()
         self.backend = EmailBackend()
 
     def test_authentication_method_signature_post_django_1_11(self):
-        auth_result = self.backend.authenticate(None, 'foo@example.com', 'letmein')
+        auth_result = self.backend.authenticate(None, "foo@example.com", "letmein")
         self.assertEqual(auth_result, self.user)
 
     def test_inactive_users_cannot_authenticate(self):
         self.user.is_active = False
         self.user.save()
 
-        auth_result = self.backend.authenticate(None, 'foo@example.com', 'letmein')
+        auth_result = self.backend.authenticate(None, "foo@example.com", "letmein")
         self.assertIsNone(auth_result)

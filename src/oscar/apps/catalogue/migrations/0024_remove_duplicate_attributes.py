@@ -5,14 +5,16 @@ from django.db import migrations
 from django.db.models import CharField, Count, Value
 from django.db.models.functions import Concat
 
-from oscar.core.loading import get_model
-
-# Needed for calling _get_value, the historical model can't be used for that.
-NonHistoricalProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
-
-
 logger = logging.getLogger(__name__)
 
+
+def get_value(attribute_value):
+    typ = attribute_value.attribute.type
+    field_name = "value_%s" % typ
+    value = getattr(attribute_value, field_name)
+    if hasattr(value, "all"):
+        value = value.all()
+    return value
 
 def remove_duplicate_attributes(apps, schema_editor):
     """
@@ -83,8 +85,8 @@ def remove_duplicate_attributes(apps, schema_editor):
                     """ % (
                         product.id,
                         attribute.code,
-                        NonHistoricalProductAttributeValue._get_value(to_be_used_attribute_value),
-                        NonHistoricalProductAttributeValue._get_value(attribute_value)
+                        get_value(to_be_used_attribute_value),
+                        get_value(attribute_value)
                     )
                     logger.warning(msg)
 

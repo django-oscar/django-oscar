@@ -2,6 +2,10 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django.utils.module_loading import import_string
+from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 
 class Migration(migrations.Migration):
@@ -14,11 +18,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderStatusChange',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('old_status', models.CharField(blank=True, max_length=100, verbose_name='Old Status')),
                 ('new_status', models.CharField(blank=True, max_length=100, verbose_name='New Status')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='status_changes', to='order.Order', verbose_name='Order Status Changes')),
+                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='status_changes', to='order.Order', verbose_name='Order')),
             ],
             options={
                 'verbose_name': 'Order Status Change',

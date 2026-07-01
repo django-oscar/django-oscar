@@ -10,4 +10,4 @@ class PciFormatter(Formatter):
 
     def format(self, record):
         s = Formatter.format(self, record)
-        return re.sub(r'\d[ \d-]{15,22}', 'XXXX-XXXX-XXXX-XXXX', s)
+        return re.sub(r"\d[ \d-]{15,22}", "XXXX-XXXX-XXXX-XXXX", s)

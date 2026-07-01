@@ -18,11 +18,11 @@ class TestSurcharges(TestCase):
         self.basket = factories.create_basket(empty=True)
 
     def test_stock_surcharges(self):
-        add_product(self.basket, D('12.00'))
+        add_product(self.basket, D("12.00"))
         surcharges = self.applicator.get_applicable_surcharges(self.basket)
 
-        self.assertEqual(surcharges.total.excl_tax, D('20.0'))
-        self.assertEqual(surcharges.total.incl_tax, D('22.0'))
+        self.assertEqual(surcharges.total.excl_tax, D("20.0"))
+        self.assertEqual(surcharges.total.incl_tax, D("22.0"))
 
     def test_percentage_surcharge(self):
         percentage_surcharge = PercentageCharge(percentage=D(10))
@@ -52,9 +52,11 @@ class TestSurcharges(TestCase):
         percentage_surcharge = PercentageCharge(percentage=D(4))
         add_product(self.basket, D(10))
         shipping_charge = prices.Price(
-            currency=self.basket.currency,
-            excl_tax=D('3.95'), tax=D('1.05'))
-        price = percentage_surcharge.calculate(self.basket, shipping_charge=shipping_charge)
+            currency=self.basket.currency, excl_tax=D("3.95"), tax=D("1.05")
+        )
+        price = percentage_surcharge.calculate(
+            self.basket, shipping_charge=shipping_charge
+        )
 
         self.assertEqual(self.basket.total_incl_tax, D(10))
         self.assertEqual(shipping_charge.incl_tax, D(5))

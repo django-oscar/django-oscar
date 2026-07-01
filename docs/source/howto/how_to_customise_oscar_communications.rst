@@ -21,9 +21,9 @@ to send out to a customer, the client code will do something like this::
     try:
         event_type = CommunicationEventType.objects.get(code=commtype_code)
     except CommunicationEventType.DoesNotExist:
-        messages = CommunicationEventType.objects.get_and_render(commtype_code, ctx)
+        messages = CommunicationEventType.objects.get_and_render(commtype_code, context)
     else:
-        messages = event_type.get_messages(ctx)
+        messages = event_type.get_messages(context)
 
 What's happening here is:
 

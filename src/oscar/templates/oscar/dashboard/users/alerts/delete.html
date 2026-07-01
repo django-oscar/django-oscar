@@ -28,7 +28,7 @@
     </div>
     <div class="card card-body bg-light">
         {% include 'oscar/dashboard/users/alerts/partials/alert.html' %}
-        <form method="post">
+        <form id="delete_alert_form" method="post">
             {% csrf_token %}
             <div class="form-actions">
                 <p>{% trans "Are you sure that you want to delete this alert?" %}</p>

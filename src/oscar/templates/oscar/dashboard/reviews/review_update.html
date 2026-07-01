@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <form method="post" class="form-stacked" enctype="multipart/form-data">
+    <form id="create_update_review_form" method="post" class="form-stacked" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="table-header">
             <h3>{% trans "Review information" %}</h3>

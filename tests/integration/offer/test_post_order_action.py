@@ -8,15 +8,13 @@ from oscar.test.basket import add_product
 
 
 class CustomAction(models.Benefit):
-
     class Meta:
         proxy = True
-        app_label = 'tests'
+        app_label = "tests"
 
     def apply(self, basket, condition, offer):
         condition.consume_items(offer, basket, ())
-        return models.PostOrderAction(
-            "Something will happen")
+        return models.PostOrderAction("Something will happen")
 
     def apply_deferred(self, basket, order, application):
         return "Something happened"
@@ -27,33 +25,30 @@ class CustomAction(models.Benefit):
 
 
 def create_offer():
-    range = models.Range.objects.create(
-        name="All products", includes_all_products=True)
+    product_range = models.Range.objects.create(
+        name="All products", includes_all_products=True
+    )
     condition = models.CountCondition.objects.create(
-        range=range,
-        type=models.Condition.COUNT,
-        value=1)
+        range=product_range, type=models.Condition.COUNT, value=1
+    )
     benefit = custom.create_benefit(CustomAction)
     return models.ConditionalOffer.objects.create(
-        condition=condition,
-        benefit=benefit,
-        offer_type=models.ConditionalOffer.SITE)
+        condition=condition, benefit=benefit, offer_type=models.ConditionalOffer.SITE
+    )
 
 
 class TestAnOfferWithAPostOrderAction(TestCase):
-
     def setUp(self):
         self.basket = factories.create_basket(empty=True)
-        add_product(self.basket, D('12.00'), 1)
+        add_product(self.basket, D("12.00"), 1)
         create_offer()
         utils.Applicator().apply(self.basket)
 
     def test_applies_correctly_to_basket_which_meets_condition(self):
         self.assertEqual(1, len(self.basket.offer_applications))
-        self.assertEqual(
-            1, len(self.basket.offer_applications.post_order_actions))
+        self.assertEqual(1, len(self.basket.offer_applications.post_order_actions))
         action = self.basket.offer_applications.post_order_actions[0]
-        self.assertEqual('Something will happen', action['description'])
+        self.assertEqual("Something will happen", action["description"])
 
     def test_has_discount_recorded_correctly_when_order_is_placed(self):
         order = factories.create_order(basket=self.basket)
@@ -64,5 +59,5 @@ class TestAnOfferWithAPostOrderAction(TestCase):
 
         discount = discounts[0]
         self.assertTrue(discount.is_post_order_action)
-        self.assertEqual(D('0.00'), discount.amount)
-        self.assertEqual('Something happened', discount.message)
+        self.assertEqual(D("0.00"), discount.amount)
+        self.assertEqual("Something happened", discount.message)

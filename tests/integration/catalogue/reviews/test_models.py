@@ -9,16 +9,15 @@ User = get_user_model()
 
 
 class TestAnAnonymousReview(TestCase):
-
     def setUp(self):
         self.product = create_product()
         self.data = {
-            'product': self.product,
-            'title': 'This product is lovely',
-            'body': 'I really like this cheese',
-            'score': 0,
-            'name': 'JR Hartley',
-            'email': 'hartley@example.com'
+            "product": self.product,
+            "title": "This product is lovely",
+            "body": "I really like this cheese",
+            "score": 0,
+            "name": "JR Hartley",
+            "email": "hartley@example.com",
         }
 
     def review(self, **kwargs):
@@ -76,16 +75,15 @@ class TestAnAnonymousReview(TestCase):
 
 
 class TestAUserReview(TestCase):
-
     def setUp(self):
         self.product = create_product()
         self.user = UserFactory(first_name="Tom", last_name="Thumb")
         self.data = {
-            'product': self.product,
-            'title': 'This product is lovely',
-            'body': 'I really like this cheese',
-            'score': 0,
-            'user': self.user
+            "product": self.product,
+            "title": "This product is lovely",
+            "body": "I really like this cheese",
+            "score": 0,
+            "user": self.user,
         }
 
     def review(self, **kwargs):
@@ -130,16 +128,13 @@ class TestAUserReview(TestCase):
 
 
 class TestVotingOnAReview(TestCase):
-
     def setUp(self):
         self.product = create_product()
         self.user = UserFactory()
         self.voter = UserFactory()
         self.review = self.product.reviews.create(
-            title='This is nice',
-            score=3,
-            body="This is the body",
-            user=self.user)
+            title="This is nice", score=3, body="This is the body", user=self.user
+        )
 
     def test_updates_totals_for_upvote(self):
         self.review.vote_up(self.voter)

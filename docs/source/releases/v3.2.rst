@@ -2,7 +2,7 @@
 Oscar 3.2 release notes
 ========================================
 
-:release: TBD
+:release: 2022-23-12
 
 .. contents::
     :local:

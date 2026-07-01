@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Csaba Saransky <stackiflowi@gmail.com>, 2019
+# Istvan Farkas <istvan.farkas@gmail.com>, 2023
 # Karoly Kalapacs <mail@tinkersense.com>, 2019
 # Samir Shah <solaris.smoke@gmail.com>, 2020
 msgid ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-30 10:56+0100\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
-"Last-Translator: Samir Shah <solaris.smoke@gmail.com>, 2020\n"
-"Language-Team: Hungarian (Hungary) (http://www.transifex.com/codeinthehole/django-oscar/language/hu_HU/)\n"
+"Last-Translator: Istvan Farkas <istvan.farkas@gmail.com>, 2023\n"
+"Language-Team: Hungarian (Hungary) (http://app.transifex.com/codeinthehole/django-oscar/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,19 +23,19 @@ msgstr ""
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
-msgstr ""
+msgstr "Mr"
 
 #: apps/address/abstract_models.py:25
 msgid "Miss"
-msgstr ""
+msgstr "Miss"
 
 #: apps/address/abstract_models.py:26
 msgid "Mrs"
-msgstr ""
+msgstr "Mrs"
 
 #: apps/address/abstract_models.py:27
 msgid "Ms"
-msgstr ""
+msgstr "Ms"
 
 #: apps/address/abstract_models.py:28
 msgid "Dr"

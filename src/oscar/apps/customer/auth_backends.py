@@ -6,11 +6,11 @@ from oscar.core.compat import get_user_model
 
 User = get_user_model()
 
-if hasattr(User, 'REQUIRED_FIELDS'):
-    if not (User.USERNAME_FIELD == 'email' or 'email' in User.REQUIRED_FIELDS):
+if hasattr(User, "REQUIRED_FIELDS"):
+    if not (User.USERNAME_FIELD == "email" or "email" in User.REQUIRED_FIELDS):
         raise ImproperlyConfigured(
-            "EmailBackend: Your User model must have an email"
-            " field with blank=False")
+            "EmailBackend: Your User model must have an email field with blank=False"
+        )
 
 
 class EmailBackend(ModelBackend):
@@ -20,16 +20,17 @@ class EmailBackend(ModelBackend):
     For this to work, the User model must have an 'email' field
     """
 
+    # pylint: disable=keyword-arg-before-vararg
     def _authenticate(self, request, email=None, password=None, *args, **kwargs):
         if email is None:
-            if 'username' not in kwargs or kwargs['username'] is None:
+            if "username" not in kwargs or kwargs["username"] is None:
                 return None
-            clean_email = normalise_email(kwargs['username'])
+            clean_email = normalise_email(kwargs["username"])
         else:
             clean_email = normalise_email(email)
 
         # Check if we're dealing with an email address
-        if '@' not in clean_email:
+        if "@" not in clean_email:
             return None
 
         # Since Django doesn't enforce emails to be unique, we look for all
@@ -40,7 +41,10 @@ class EmailBackend(ModelBackend):
         # We make a case-insensitive match when looking for emails.
         matching_users = User.objects.filter(email__iexact=clean_email)
         authenticated_users = [
-            user for user in matching_users if (user.check_password(password) and self.user_can_authenticate(user))]
+            user
+            for user in matching_users
+            if (user.check_password(password) and self.user_can_authenticate(user))
+        ]
         if len(authenticated_users) == 1:
             # Happy path
             return authenticated_users[0]
@@ -49,8 +53,8 @@ class EmailBackend(ModelBackend):
             # the same email address AND password. We can't safely authenticate
             # either.
             raise User.MultipleObjectsReturned(
-                "There are multiple users with the given email address and "
-                "password")
+                "There are multiple users with the given email address and password"
+            )
         return None
 
     def authenticate(self, *args, **kwargs):

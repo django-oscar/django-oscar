@@ -8,7 +8,7 @@ from oscar.apps.offer import utils
 from oscar.core.loading import get_model
 from oscar.test import factories
 
-Voucher = get_model('voucher', 'Voucher')
+Voucher = get_model("voucher", "Voucher")
 
 
 class TestPriorityOffers(TestCase):
@@ -29,15 +29,18 @@ class TestPriorityOffers(TestCase):
             code="test",
             usage=Voucher.MULTI_USE,
             start_datetime=timezone.now(),
-            end_datetime=timezone.now() + datetime.timedelta(days=12))
+            end_datetime=timezone.now() + datetime.timedelta(days=12),
+        )
 
-        voucher.offers.set([
-            factories.create_offer(name="A", priority=0),
-            factories.create_offer(name="B", priority=7),
-            factories.create_offer(name="C", priority=5),
-            factories.create_offer(name="D", priority=7),
-            factories.create_offer(name="E", priority=1),
-        ])
+        voucher.offers.set(
+            [
+                factories.create_offer(name="A", priority=0),
+                factories.create_offer(name="B", priority=7),
+                factories.create_offer(name="C", priority=5),
+                factories.create_offer(name="D", priority=7),
+                factories.create_offer(name="E", priority=1),
+            ]
+        )
 
         basket = factories.create_basket()
         user = mock.Mock()

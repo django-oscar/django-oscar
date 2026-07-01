@@ -7,15 +7,12 @@ from oscar.test.factories import UserFactory
 
 User = get_user_model()
 
-Dispatcher = get_class('communication.utils', 'Dispatcher')
+Dispatcher = get_class("communication.utils", "Dispatcher")
 
 
 class TestANewNotification(TestCase):
-
     def setUp(self):
-        self.notification = Notification(
-            recipient=UserFactory(),
-            subject="Hello")
+        self.notification = Notification(recipient=UserFactory(), subject="Hello")
 
     def test_is_in_a_users_inbox(self):
         assert Notification.INBOX == self.notification.location
@@ -25,11 +22,10 @@ class TestANewNotification(TestCase):
 
 
 class TestANotification(TestCase):
-
     def setUp(self):
         self.notification = Notification.objects.create(
-            recipient=UserFactory(),
-            subject="Hello")
+            recipient=UserFactory(), subject="Hello"
+        )
 
     def test_can_be_archived(self):
         self.notification.archive()
@@ -37,7 +33,6 @@ class TestANotification(TestCase):
 
 
 class NotificationServiceTestCase(TestCase):
-
     def test_notify_a_single_user(self):
         user = UserFactory()
         subj = "Hello you!"

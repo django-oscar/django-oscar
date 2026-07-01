@@ -106,3 +106,74 @@ If all is well, you should now be able to rebuild the search index.
 
 If the indexing succeeded, search in Oscar will be working. Search for any term
 in the search box on your Oscar site, and you should get results.
+
+Add custom product attributes in faceted search
+===============================================
+
+Fork Oscar's search app and add the additional fields to your search index:
+
+.. code-block:: bash
+
+    $ ./manage.py fork_app search <yourapp>
+    $ touch <yourapp>/search/search_indexes.py
+
+Edit ``<yourapp>/search/search_indexes.py``, create a subclass of Oscar's
+ProductIndex with your additional fields:
+
+.. code-block:: python
+
+    from oscar.apps.search import ProductIndex as OscarProductIndex
+
+    class ProductIndex(OscarProductIndex):
+
+        format = indexes.CharField(null=True, faceted=True)
+        color = indexes.CharField(null=True, faceted=True)
+
+        def prepare_format(self, obj):
+            return obj.attribute_values.get(attribute__code="format").value_text
+
+        def prepare_color(self, obj):
+            return obj.attribute_values.get(attribute__code="color").value_text
+
+Add the new fields to your ``schema.xml``:
+
+.. code-block:: xml
+
+    <field name="format" type="text" indexed="true" stored="true" multiValued="false" />
+    <field name="format_exact" type="string" indexed="true" stored="true" multiValued="false" />
+
+    <field name="color" type="text" indexed="true" stored="true" multiValued="false" />
+    <field name="color_exact" type="string" indexed="true" stored="true" multiValued="false" />
+
+Reload your new ``schema.xml`` & restart solr:
+
+.. code-block:: bash
+
+    $ curl http://localhost:8983/solr/admin/cores?action=RELOAD&core=sandbox
+    $ cd ${HOME}/solr
+    $ ./bin/solr restart
+
+Rebuild the search index with the new fields:
+
+.. code-block:: bash
+
+    $ cd <path to your app>
+    $ ./manage.py rebuild_index --noinput
+
+Add the new fields in ``settings.py`` to ``OSCAR_SEARCH_FACETS``:
+
+.. code-block:: python
+
+    OSCAR_SEARCH_FACETS = {
+        "fields": OrderedDict(
+            [
+                # ....
+                ("format", {"name": "Format", "field": "format"}),
+                ("color", {"name": "Color", "field": "color"}),
+            ],
+        ),
+        # ...
+    }
+
+The new fields will appear automatically in the left column below your
+category tree in the search facets.

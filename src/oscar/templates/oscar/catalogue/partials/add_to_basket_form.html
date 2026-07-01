@@ -5,7 +5,7 @@
 
 {% purchase_info_for_product request product as session %}
 
-{% if session.availability.is_available_to_buy %}
+{% if session.availability.is_available_to_buy and session.price.exists %}
     {% basket_form request product as basket_form %}
     <form id="add_to_basket_form" action="{% url 'basket:add' pk=product.pk  %}" method="post" class="add-to-basket mb-0">
         {% csrf_token %}

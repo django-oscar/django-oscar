@@ -4,11 +4,10 @@ from oscar.core.loading import get_model
 from oscar.templatetags.wishlist_tags import wishlists_containing_product
 from oscar.test.factories import ProductFactory, UserFactory, WishListFactory
 
-Wishlist = get_model('wishlists', 'Wishlist')
+Wishlist = get_model("wishlists", "Wishlist")
 
 
 class WishlistTagsTestCase(TestCase):
-
     def test_wishlists_containing_product(self):
         p1 = ProductFactory()
         p2 = ProductFactory()

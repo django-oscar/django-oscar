@@ -1,2 +1,1 @@
-default_app_config = (
-    'oscar.apps.dashboard.partners.apps.PartnersDashboardConfig')
+default_app_config = "oscar.apps.dashboard.partners.apps.PartnersDashboardConfig"

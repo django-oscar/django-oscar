@@ -10,16 +10,18 @@ from django.utils.html import escape
 from oscar.core.thumbnails import get_thumbnailer
 
 register = template.Library()
-kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
-logger = logging.getLogger('oscar.thumbnail')
+kw_pat = re.compile(r"^(?P<key>[\w]+)=(?P<value>.+)$")
+logger = logging.getLogger("oscar.thumbnail")
 
 
+# pylint: disable=unused-argument
 def do_dynamic_image_url(parser, token):
     tokens = token.split_contents()
 
     if len(tokens) < 2:
         raise template.TemplateSyntaxError(
-            "%r tag requires at least an image URL or field" % tokens[0])
+            "%r tag requires at least an image URL or field" % tokens[0]
+        )
 
     image = tokens[1]
 
@@ -37,12 +39,13 @@ class DynamicImageNode(template.Node):
 
         for p in params:
             try:
-                bits = p.split('=')
+                bits = p.split("=")
                 self.params[bits[0]] = template.Variable(bits[1])
             except IndexError:
                 raise template.TemplateSyntaxError(
                     "image tag parameters must be of form key=value, "
-                    "you used '%s'" % p)
+                    "you used '%s'" % p
+                )
 
     def render(self, context):
         if isinstance(self.image, ImageFieldFile):
@@ -50,35 +53,35 @@ class DynamicImageNode(template.Node):
         else:
             path = self.image
 
-        host = getattr(settings, 'DYNAMIC_MEDIA_URL', None)
+        host = getattr(settings, "DYNAMIC_MEDIA_URL", None)
 
         if host:
             params = []
-            ext = path[path.rfind('.') + 1:]
+            ext = path[path.rfind(".") + 1 :]
             ext_changed = False
 
             for key, v in self.params.items():
                 value = v.resolve(context)
-                if key == 'format':
+                if key == "format":
                     ext = value
                     ext_changed = True
                 else:
-                    params.append('%s-%s' % (key, value))
+                    params.append("%s-%s" % (key, value))
 
             if len(params) > 0:
-                suffix = '_'.join(params)
-                path = '.'.join((path, suffix, ext))
+                suffix = "_".join(params)
+                path = ".".join((path, suffix, ext))
             else:
                 if ext_changed:
                     if params:
-                        path = '.'.join((path, ext))
+                        path = ".".join((path, ext))
                     else:
-                        path = '.'.join((path, 'to', ext))
+                        path = ".".join((path, "to", ext))
             return host + path
 
 
 class ThumbnailNode(template.Node):
-    no_resolve = {'True': True, 'False': False, 'None': None}
+    no_resolve = {"True": True, "False": False, "None": None}
 
     def __init__(self, parser, token):
         args = token.split_contents()
@@ -87,7 +90,7 @@ class ThumbnailNode(template.Node):
         # The second argument is the size/geometry.
         self.size_var = parser.compile_filter(args[2])
 
-        is_context_variable = args[-2] == 'as'
+        is_context_variable = args[-2] == "as"
         if is_context_variable:
             self.context_name = args[-1]
             args = args[3:-2]
@@ -98,22 +101,22 @@ class ThumbnailNode(template.Node):
         self.options = []
         for arg in args:
             m = kw_pat.match(arg)
-            key = smart_str(m.group('key'))
-            expr = parser.compile_filter(m.group('value'))
+            key = smart_str(m.group("key"))
+            expr = parser.compile_filter(m.group("value"))
             self.options.append((key, expr))
 
     def get_thumbnail_options(self, context):
-        return {'size': self.size_var.resolve(context)}
+        return {"size": self.size_var.resolve(context)}
 
     def render(self, context):
         try:
             return self._render(context)
         except Exception as e:
-            if getattr(settings, 'OSCAR_THUMBNAIL_DEBUG', settings.DEBUG):
+            if getattr(settings, "OSCAR_THUMBNAIL_DEBUG", settings.DEBUG):
                 raise e
 
             logger.exception(e)
-            return ''
+            return ""
 
     def _render(self, context):
         source = self.source_var.resolve(context)
@@ -129,12 +132,12 @@ class ThumbnailNode(template.Node):
             return escape(thumbnail.url)
         else:
             context[self.context_name] = thumbnail
-            return ''
+            return ""
 
 
 def oscar_thumbnail(parser, token):
     return ThumbnailNode(parser, token)
 
 
-register.tag('image', do_dynamic_image_url)
-register.tag('oscar_thumbnail', oscar_thumbnail)
+register.tag("image", do_dynamic_image_url)
+register.tag("oscar_thumbnail", oscar_thumbnail)

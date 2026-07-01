@@ -4,7 +4,11 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import oscar.models.fields.autoslugfield
 import oscar.models.fields
+from django.utils.module_loading import import_string
 from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
+
 
 
 class Migration(migrations.Migration):
@@ -19,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Partner',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Code', max_length=128, editable=False, blank=True)),
                 ('name', models.CharField(max_length=128, verbose_name='Name', blank=True)),
                 ('users', models.ManyToManyField(related_name='partners', blank=True, verbose_name='Users', to=settings.AUTH_USER_MODEL, null=True)),
@@ -35,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PartnerAddress',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(verbose_name='Title', max_length=64, blank=True, choices=[('Mr', 'Mr'), ('Miss', 'Miss'), ('Mrs', 'Mrs'), ('Ms', 'Ms'), ('Dr', 'Dr')])),
                 ('first_name', models.CharField(max_length=255, verbose_name='First name', blank=True)),
                 ('last_name', models.CharField(max_length=255, verbose_name='Last name', blank=True)),
@@ -59,7 +63,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='StockAlert',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('threshold', models.PositiveIntegerField(verbose_name='Threshold')),
                 ('status', models.CharField(default='Open', max_length=128, verbose_name='Status', choices=[('Open', 'Open'), ('Closed', 'Closed')])),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
@@ -76,7 +80,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='StockRecord',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('partner_sku', models.CharField(max_length=128, verbose_name='Partner SKU')),
                 ('price_currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
                 ('price_excl_tax', models.DecimalField(max_digits=12, decimal_places=2, blank=True, verbose_name='Price (excl. tax)', null=True)),

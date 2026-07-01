@@ -4,6 +4,6 @@ from oscar.core.application import OscarConfig
 
 
 class ShippingConfig(OscarConfig):
-    label = 'shipping'
-    name = 'oscar.apps.shipping'
-    verbose_name = _('Shipping')
+    label = "shipping"
+    name = "oscar.apps.shipping"
+    verbose_name = _("Shipping")

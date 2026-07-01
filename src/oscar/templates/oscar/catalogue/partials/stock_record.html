@@ -15,6 +15,7 @@
 {% else %}
     <p class="price_color">&nbsp;</p>
 {% endif %}
+{% if session.price.exists %}
 <p class="{{ session.availability.code }} availability">
     {% if session.availability.is_available_to_buy %}
         <i class="fas fa-check-circle"></i>
@@ -27,3 +28,7 @@
         {{ session.availability.short_message }}
     {% endif %}
 </p>
+{% else %}
+    <i class="fas fa-ban"></i>
+    {% trans 'Unavailable' %}
+{% endif %}

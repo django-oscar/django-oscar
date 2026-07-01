@@ -20,7 +20,7 @@ def forward(apps, schema_editor):
             at.value = json.dumps(val, cls=DjangoJSONEncoder)
             at.save()
             continue
-        except ValueError:
+        except (ValueError, SyntaxError):
             pass
 
         # convert the string to json as it is

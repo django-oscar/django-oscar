@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 
 from oscar.core.loading import get_model
 
-Product = get_model('catalogue', 'Product')
+Product = get_model("catalogue", "Product")
 
 
 class Command(BaseCommand):
@@ -17,5 +17,4 @@ class Command(BaseCommand):
         products = Product.objects.all()
         for product in products:
             product.update_rating()
-        self.stdout.write(
-            'Successfully updated %s products\n' % products.count())
+        self.stdout.write("Successfully updated %s products\n" % products.count())

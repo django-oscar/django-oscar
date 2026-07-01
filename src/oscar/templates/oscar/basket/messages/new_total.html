@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load currency_filters %}
 
+{% block message_content %}
 {% if basket.is_empty %}
     {% trans "Your basket is now empty" %}
 {% else %}
@@ -14,9 +15,14 @@
         {% endblocktrans %}
     {% endif %}
 {% endif %}
+{% endblock message_content %}
 
 {% if include_buttons %}
-    <br>
-    <a href="{% url 'basket:summary' %}" class="btn btn-info">{% trans "View basket" %}</a>
-    <a href="{% url 'checkout:index' %}" class="btn btn-info">{% trans "Checkout now" %}</a>
+    {% block buttons %}
+        <br>
+        <a href="{% url 'basket:summary' %}" class="btn btn-primary">{% trans "View basket" %}</a>
+        <a href="{% url 'checkout:index' %}" class="btn btn-primary">{% trans "Checkout now" %}</a>
+    {% endblock buttons %}
 {% endif %}
+
+{% block analytics_scripts %}{% endblock analytics_scripts %}

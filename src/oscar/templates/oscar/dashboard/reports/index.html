@@ -24,7 +24,7 @@
         <h3><i class="fas fa-chart-bar"></i> {% trans "Reporting dashboard" %}</h3>
     </div>
     <div class="card card-body">
-        <form method="get" class="form-inline">
+        <form id="generate_report_form" method="get" class="form-inline">
             {% include "oscar/dashboard/partials/form_fields_inline.html" with form=form %}
             <span class="form-group">
                 {# data-loading-text is deliberately not used here so that the button doesn't stay disabled after a CSV download has started #}

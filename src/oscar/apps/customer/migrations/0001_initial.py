@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models, migrations
 import oscar.models.fields.autoslugfield
+from django.utils.module_loading import import_string
 from django.conf import settings
+
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
+
 
 
 class Migration(migrations.Migration):
@@ -17,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CommunicationEventType',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Code', editable=False, separator='_', max_length=128, help_text='Code used for looking up this event programmatically', blank=True)),
                 ('name', models.CharField(verbose_name='Name', max_length=255, help_text='This is just used for organisational purposes')),
                 ('category', models.CharField(default='Order related', max_length=255, verbose_name='Category', choices=[('Order related', 'Order related'), ('User related', 'User related')])),
@@ -38,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Email',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('subject', models.TextField(max_length=255, verbose_name='Subject')),
                 ('body_text', models.TextField(verbose_name='Body Text')),
                 ('body_html', models.TextField(verbose_name='Body HTML', blank=True)),
@@ -55,7 +58,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Notification',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('subject', models.CharField(max_length=255)),
                 ('body', models.TextField()),
                 ('category', models.CharField(max_length=255, blank=True)),
@@ -76,7 +79,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductAlert',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('email', models.EmailField(max_length=75, db_index=True, verbose_name='Email', blank=True)),
                 ('key', models.CharField(max_length=128, db_index=True, verbose_name='Key', blank=True)),
                 ('status', models.CharField(default='Active', max_length=20, verbose_name='Status', choices=[('Unconfirmed', 'Not yet confirmed'), ('Active', 'Active'), ('Cancelled', 'Cancelled'), ('Closed', 'Closed')])),

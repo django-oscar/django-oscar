@@ -12,20 +12,23 @@ from oscar.core.loading import get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import URLDoesNotExistValidator
 
-FlatPage = get_model('flatpages', 'FlatPage')
-Site = get_model('sites', 'Site')
-PageSearchForm, PageUpdateForm = get_classes('dashboard.pages.forms', ('PageSearchForm', 'PageUpdateForm'))
+FlatPage = get_model("flatpages", "FlatPage")
+Site = get_model("sites", "Site")
+PageSearchForm, PageUpdateForm = get_classes(
+    "dashboard.pages.forms", ("PageSearchForm", "PageUpdateForm")
+)
 
 
 class PageListView(ListView):
     """
     View for listing all existing flatpages.
     """
-    template_name = 'oscar/dashboard/pages/index.html'
+
+    template_name = "oscar/dashboard/pages/index.html"
     model = FlatPage
     form_class = PageSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
-    desc_template = '%(main_filter)s %(title_filter)s'
+    desc_template = "%(main_filter)s %(title_filter)s"
 
     def get_queryset(self):
         """
@@ -33,22 +36,25 @@ class PageListView(ListView):
         search term is specified in the search form, it will be used
         to filter the queryset.
         """
+        # pylint: disable=attribute-defined-outside-init
         self.desc_ctx = {
-            'main_filter': _('All pages'),
-            'title_filter': '',
+            "main_filter": _("All pages"),
+            "title_filter": "",
         }
-        queryset = self.model.objects.all().order_by('title')
+        queryset = self.model.objects.all().order_by("title")
 
+        # pylint: disable=attribute-defined-outside-init
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             return queryset
 
         data = self.form.cleaned_data
 
-        if data['title']:
-            queryset = queryset.filter(title__icontains=data['title'])
-            self.desc_ctx['title_filter'] \
-                = _(" with title containing '%s'") % data['title']
+        if data["title"]:
+            queryset = queryset.filter(title__icontains=data["title"])
+            self.desc_ctx["title_filter"] = (
+                _(" with title containing '%s'") % data["title"]
+            )
 
         return queryset
 
@@ -58,23 +64,23 @@ class PageListView(ListView):
         added to it.
         """
         context = super().get_context_data(**kwargs)
-        context['form'] = self.form
-        context['queryset_description'] = self.desc_template % self.desc_ctx
+        context["form"] = self.form
+        context["queryset_description"] = self.desc_template % self.desc_ctx
         return context
 
 
 class PageCreateUpdateMixin(object):
-
-    template_name = 'oscar/dashboard/pages/update.html'
+    template_name = "oscar/dashboard/pages/update.html"
     model = FlatPage
     form_class = PageUpdateForm
-    context_object_name = 'page'
+    context_object_name = "page"
 
     def get_success_url(self):
-        msg = render_to_string('oscar/dashboard/pages/messages/saved.html',
-                               {'page': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:page-list')
+        msg = render_to_string(
+            "oscar/dashboard/pages/messages/saved.html", {"page": self.object}
+        )
+        messages.success(self.request, msg, extra_tags="safe noicon")
+        return reverse("dashboard:page-list")
 
     def form_valid(self, form):
         # Ensure saved page is added to the current site
@@ -86,10 +92,9 @@ class PageCreateUpdateMixin(object):
 
 
 class PageCreateView(PageCreateUpdateMixin, generic.CreateView):
-
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['title'] = _('Create New Page')
+        ctx["title"] = _("Create New Page")
         return ctx
 
     def form_valid(self, form):
@@ -103,7 +108,7 @@ class PageCreateView(PageCreateUpdateMixin, generic.CreateView):
         page = form.save(commit=False)
 
         if not page.url:
-            page.url = '/%s/' % slugify(page.title)
+            page.url = "/%s/" % slugify(page.title)
 
         try:
             URLDoesNotExistValidator()(page.url)
@@ -113,7 +118,7 @@ class PageCreateView(PageCreateUpdateMixin, generic.CreateView):
             return super().form_valid(form)
 
         ctx = self.get_context_data()
-        ctx['form'] = form
+        ctx["form"] = form
         return self.render_to_response(ctx)
 
 
@@ -121,17 +126,17 @@ class PageUpdateView(PageCreateUpdateMixin, generic.UpdateView):
     """
     View for updating flatpages from the dashboard.
     """
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['title'] = self.object.title
+        ctx["title"] = self.object.title
         return ctx
 
 
 class PageDeleteView(generic.DeleteView):
-    template_name = 'oscar/dashboard/pages/delete.html'
+    template_name = "oscar/dashboard/pages/delete.html"
     model = FlatPage
 
     def get_success_url(self):
-        messages.success(
-            self.request, _("Deleted page '%s'") % self.object.title)
-        return reverse('dashboard:page-list')
+        messages.success(self.request, _("Deleted page '%s'") % self.object.title)
+        return reverse("dashboard:page-list")

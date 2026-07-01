@@ -1,0 +1,110 @@
+========================================
+Oscar 3.2.2 release notes
+========================================
+
+:release: 2023-10-09
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_3.2.2:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 3.2.2 is compatible with Django 3.2, 4.0, 4.1 and 4.2 and Python versions 3.8, 3.9, 3.10 and 3.11
+
+Support for Django 3.1 has been dropped. Support for Python 3.7 has been dropped.
+
+.. _new_in_3.2.2:
+
+What's new in Oscar 3.2.2?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Bump eslint from 8.22.0 to 8.33.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4047
+* Bump sass from 1.54.0 to 1.58.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4045
+* post_save_set_ancestors_are_public should not run when loading fixtures, by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4040
+* Fix combination offer removal bug by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4017
+* orderlist view added email when there isn't a name by @nathanhighbiza in https://github.com/django-oscar/django-oscar/pull/4009
+* Query optimization in dashboard user detail page by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4051
+* [FIX] Exclude suspended offers when is_active filter is applied by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4059
+* Exclude non-public Products from Offers by @gwaidacher in https://github.com/django-oscar/django-oscar/pull/4053
+* [FIX] Show address update button only if there exists one by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4044
+* Optimize range products reordering by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4010
+* Fix review list template by @dd in https://github.com/django-oscar/django-oscar/pull/4014
+* Removing unnecessary permissions from static and documentation f… by @dd in https://github.com/django-oscar/django-oscar/pull/4067
+* [FEAT] Optimize order count calculation in user listing page by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4061
+* fix for #4049 by @mghiglieri in https://github.com/django-oscar/django-oscar/pull/4050
+* Update whitenoise requirement from <6.3,>=5.2 to >=5.2,<6.5 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4064
+* Update redis requirement from <4.4,>=3.5 to >=3.5,<4.6 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4065
+* Bump @fortawesome/fontawesome-free from 6.1.2 to 6.4.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4075
+* Bump jquery from 3.6.0 to 3.6.4 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4076
+* Update django-environ requirement from <0.10,>=0.4 to >=0.4,<0.11 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4078
+* Exclusivevoucherbug by @joeyjurjens in https://github.com/django-oscar/django-oscar/pull/4095
+* Update django-debug-toolbar requirement from <3.6,>=2.2 to >=2.2,<4.1 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4091
+* Reduce db calls by counting offers in voucher listing by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4084
+* Update how_to_setup_solr.rst by @gwaidacher in https://github.com/django-oscar/django-oscar/pull/4085
+* Create SECURITY.md by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4094
+* Bump sass from 1.58.0 to 1.62.1 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4093
+* Add default auto field for django 3 by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4097
+* i18n fixes by @dhvcc in https://github.com/django-oscar/django-oscar/pull/3965
+* Bump eslint from 8.33.0 to 8.39.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4090
+* Use voucher_set name for vouchers in basket totals template by @joeyjurjens in https://github.com/django-oscar/django-oscar/pull/3996
+* chore: Set permissions for GitHub actions by @naveensrinivasan in https://github.com/django-oscar/django-oscar/pull/3914
+* Update how_to_integrate_payment.rst by @gwaidacher in https://github.com/django-oscar/django-oscar/pull/4087
+* Bump flake8 from 4.0.1 to 6.0.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4021
+* Bump nan from 2.16.0 to 2.17.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/3998
+* Bump node-sass from 7.0.1 to 8.0.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4022
+* Bump tinymce from 6.1.2 to 6.4.2 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4089
+* Bump @tinymce/tinymce-jquery from 2.0.0 to 2.1.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4080
+* Updated javascript dependencies with npm audit by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4099
+* If a product has a option it cannot be oversold by @joeyjurjens in https://github.com/django-oscar/django-oscar/pull/4096
+* Make products without price unable to be added to basket by @Wessellix in https://github.com/django-oscar/django-oscar/pull/4013
+* changed keyOrder to form.field_order by @joeyjurjens in https://github.com/django-oscar/django-oscar/pull/4101
+* Bump inputmask from 5.0.7 to 5.0.8 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4081
+* project contribution section and code of conduct by @brahim12chamakh in https://github.com/django-oscar/django-oscar/pull/4088
+* When there are product discountable true and variant discountable false in cart in the same time, discount is calculated for variant which is incorrect. by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4102
+* Hutchison/master by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4106
+* Use entire queryset for offer report download rather than paginated one by @joeyjurjens in https://github.com/django-oscar/django-oscar/pull/4105
+* [Fix] Remove duplicate count in voucher offers by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4107
+* Speeding up Range.product_queryset() by @gwaidacher in https://github.com/django-oscar/django-oscar/pull/4100
+* Fixed extra ) in apps.py by @WaqarAnwar in https://github.com/django-oscar/django-oscar/pull/4108
+* Django 4.2, Python 3.11 by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4098
+* Fix convert_to_valid_json migrations by @jribbens in https://github.com/django-oscar/django-oscar/pull/4118
+* [FEAT] Optimize Offer Listing page by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4120
+* Only change order line status when status is available by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/3948
+* Make the oscar migrations able to handle different DEFAULT_AUTO_FIELD settings by @specialunderwear in https://github.com/django-oscar/django-oscar/pull/4121
+* Bump jquery from 3.6.4 to 3.7.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4114
+* Remove Werkzeug dependency, creates security errors. by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4122
+* Update django-debug-toolbar requirement from <4.1,>=2.2 to >=2.2,<4.2 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4112
+* Bump eslint from 8.39.0 to 8.43.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4125
+* Update flake8 requirement from <6.0.0 to <7.0.0 by @dependabot in https://github.com/django-oscar/django-oscar/pull/4110
+* Manage excluded_products in ranges dashboard by @gwaidacher in https://github.com/django-oscar/django-oscar/pull/4073
+* Make all the things black by @hertogjan-bier in https://github.com/django-oscar/django-oscar/pull/4126
+* Add a .git-blame-ignore-revs file to ignore the black & pylint commit in blame view. by @joeyjurjens in https://github.com/django-oscar/django-oscar/pull/4129
+* Update basket_totals.html - Fixed surcharges display by @patrick-agbokou in https://github.com/django-oscar/django-oscar/pull/4127
+* [FEAT] Optimize range listing by @samar-hassan in https://github.com/django-oscar/django-oscar/pull/4128
+* Save tax codes on the basket and order for reference by @viggo-devries in https://github.com/django-oscar/django-oscar/pull/4136
+
+
+.. new_contributors:
+
+New Contributors
+~~~~~~~~~~~~~~~~
+
+* @samar-hassan made their first contribution in https://github.com/django-oscar/django-oscar/pull/4017
+* @nathanhighbiza made their first contribution in https://github.com/django-oscar/django-oscar/pull/4009
+* @dd made their first contribution in https://github.com/django-oscar/django-oscar/pull/4014
+* @mghiglieri made their first contribution in https://github.com/django-oscar/django-oscar/pull/4050
+* @dhvcc made their first contribution in https://github.com/django-oscar/django-oscar/pull/3965
+* @naveensrinivasan made their first contribution in https://github.com/django-oscar/django-oscar/pull/3914
+* @Wessellix made their first contribution in https://github.com/django-oscar/django-oscar/pull/4013
+* @brahim12chamakh made their first contribution in https://github.com/django-oscar/django-oscar/pull/4088
+* @WaqarAnwar made their first contribution in https://github.com/django-oscar/django-oscar/pull/4108
+* @jribbens made their first contribution in https://github.com/django-oscar/django-oscar/pull/4118
+* @hertogjan-bier made their first contribution in https://github.com/django-oscar/django-oscar/pull/4126
+* @patrick-agbokou made their first contribution in https://github.com/django-oscar/django-oscar/pull/4127
+
+**Full Changelog**: https://github.com/django-oscar/django-oscar/compare/3.2...3.2.2

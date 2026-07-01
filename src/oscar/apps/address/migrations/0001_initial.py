@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import oscar.models.fields
+from django.utils.module_loading import import_string
 from django.conf import settings
 
+models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 
 class Migration(migrations.Migration):
 
@@ -35,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserAddress',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models_AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(verbose_name='Title', max_length=64, blank=True, choices=[('Mr', 'Mr'), ('Miss', 'Miss'), ('Mrs', 'Mrs'), ('Ms', 'Ms'), ('Dr', 'Dr')])),
                 ('first_name', models.CharField(max_length=255, verbose_name='First name', blank=True)),
                 ('last_name', models.CharField(max_length=255, verbose_name='Last name', blank=True)),

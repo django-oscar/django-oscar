@@ -9,7 +9,6 @@ from oscar.views.decorators import check_permissions
 
 
 class TestPermissionsDecorator(TestCase):
-
     def test_empty_permissions_passes(self):
         user = factories.UserFactory.build()
         self.assertTrue(check_permissions(user, []))
@@ -17,31 +16,28 @@ class TestPermissionsDecorator(TestCase):
     def test_properties_are_checked(self):
         staff_user = factories.UserFactory.build(is_staff=True)
         non_staff_user = factories.UserFactory.build(is_staff=False)
-        self.assertTrue(check_permissions(staff_user, ['is_staff']))
-        self.assertFalse(check_permissions(non_staff_user, ['is_staff']))
+        self.assertTrue(check_permissions(staff_user, ["is_staff"]))
+        self.assertFalse(check_permissions(non_staff_user, ["is_staff"]))
 
     def test_methods_are_checked(self):
         anonymous_user = AnonymousUser()
         known_user = factories.UserFactory.build()
-        self.assertTrue(check_permissions(anonymous_user, ['is_anonymous']))
-        self.assertFalse(check_permissions(known_user, ['is_anonymous']))
+        self.assertTrue(check_permissions(anonymous_user, ["is_anonymous"]))
+        self.assertFalse(check_permissions(known_user, ["is_anonymous"]))
 
     def test_permissions_are_checked(self):
         user_with_perm = factories.UserFactory()
         user_without_perm = factories.UserFactory()
         perm = Permission.objects.get(
-            content_type__app_label='address', codename='add_country')
+            content_type__app_label="address", codename="add_country"
+        )
         user_with_perm.user_permissions.add(perm)
-        self.assertTrue(
-            check_permissions(user_with_perm, ['address.add_country']))
-        self.assertFalse(
-            check_permissions(user_without_perm, ['address.add_country']))
+        self.assertTrue(check_permissions(user_with_perm, ["address.add_country"]))
+        self.assertFalse(check_permissions(user_without_perm, ["address.add_country"]))
 
 
 class TestDeprecatedDecorator(TestCase):
-
     def test_decorate_function(self):
-
         @deprecated
         def func():
             return True
@@ -53,7 +49,6 @@ class TestDeprecatedDecorator(TestCase):
             assert issubclass(caught[0].category, DeprecationWarning)
 
     def test_decorate_class(self):
-
         class Cls(object):
             val = False
 
@@ -70,7 +65,6 @@ class TestDeprecatedDecorator(TestCase):
             assert issubclass(caught[0].category, DeprecationWarning)
 
     def test_subclass_decorated(self):
-
         class Cls(object):
             val = False
 

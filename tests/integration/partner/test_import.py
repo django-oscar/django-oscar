@@ -11,8 +11,10 @@ from oscar.apps.partner.models import Partner
 from oscar.test.factories import create_product
 from tests._site.apps.partner.models import StockRecord
 
-TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small.csv')
-TEST_BOOKS_SEMICOLON_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small-semicolon.csv')
+TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), "fixtures/books-small.csv")
+TEST_BOOKS_SEMICOLON_CSV = os.path.join(
+    os.path.dirname(__file__), "fixtures/books-small-semicolon.csv"
+)
 
 
 class NullHandler(logging.Handler):
@@ -25,7 +27,6 @@ logger.addHandler(NullHandler())
 
 
 class CommandEdgeCasesTest(TestCase):
-
     def setUp(self):
         self.importer = CatalogueImporter(logger)
 
@@ -46,7 +47,6 @@ class CommandEdgeCasesTest(TestCase):
 
 
 class ImportSmokeTest(TestCase):
-
     # First row is:
     # "9780115531446","Prepare for Your Practical Driving Test",NULL,"Book","Gardners","9780115531446","10.32","6"
     #
@@ -56,7 +56,7 @@ class ImportSmokeTest(TestCase):
     def setUp(self):
         self.importer = CatalogueImporter(logger)
         self.importer.handle(TEST_BOOKS_CSV)
-        self.product = Product.objects.get(upc='9780115531446')
+        self.product = Product.objects.get(upc="9780115531446")
 
     def test_all_rows_are_imported(self):
         self.assertEqual(10, Product.objects.all().count())
@@ -96,7 +96,7 @@ class ImportSmokeTest(TestCase):
 
     def test_price_is_imported(self):
         stockrecord = self.product.stockrecords.all()[0]
-        self.assertEqual(D('10.32'), stockrecord.price)
+        self.assertEqual(D("10.32"), stockrecord.price)
 
     def test_num_in_stock_is_imported(self):
         stockrecord = self.product.stockrecords.all()[0]
@@ -104,7 +104,6 @@ class ImportSmokeTest(TestCase):
 
 
 class ImportSemicolonDelimitedFileTest(TestCase):
-
     def setUp(self):
         self.importer = CatalogueImporter(logger, delimiter=";")
 
@@ -113,13 +112,12 @@ class ImportSemicolonDelimitedFileTest(TestCase):
 
 
 class ImportWithFlushTest(TestCase):
-
     def setUp(self):
         self.importer = CatalogueImporter(logger, flush=True)
 
     def test_items_are_flushed_by_importer(self):
         upc = "0000000000000"
-        create_product(price=D('10.00'), upc=upc)
+        create_product(price=D("10.00"), upc=upc)
 
         self.importer.handle(TEST_BOOKS_CSV)
 

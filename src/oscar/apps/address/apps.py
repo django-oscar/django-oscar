@@ -4,6 +4,6 @@ from oscar.core.application import OscarConfig
 
 
 class AddressConfig(OscarConfig):
-    label = 'address'
-    name = 'oscar.apps.address'
-    verbose_name = _('Address')
+    label = "address"
+    name = "oscar.apps.address"
+    verbose_name = _("Address")

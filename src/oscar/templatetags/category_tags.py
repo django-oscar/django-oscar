@@ -21,8 +21,8 @@ class CategoryFieldPassThroughMetaClass(type):
     """
     Add accessors for category fields to whichever class is of this type.
     """
-    def __new__(cls, name, bases, attrs):
 
+    def __new__(cls, name, bases, attrs):
         field_accessors = {}
         for field in Category._meta.get_fields():
             name = field.name
@@ -68,7 +68,7 @@ class CheapCategoryInfo(dict, metaclass=CategoryFieldPassThroughMetaClass):
 
 
 @register.simple_tag(name="category_tree")
-def get_annotated_list(depth=None, parent=None):    # noqa: C901 too complex
+def get_annotated_list(depth=None, parent=None):
     """
     Gets an annotated list from a tree branch.
 
@@ -93,10 +93,11 @@ def get_annotated_list(depth=None, parent=None):    # noqa: C901 too complex
     if max_depth is not None:
         categories = categories.filter(depth__lte=max_depth)
 
-    categories = categories.browsable()
+    categories = categories.for_menu()
 
     info = CheapCategoryInfo(parent, url="")
 
+    node_depth = 0
     for node in categories:
         node_depth = node.get_depth()
         if start_depth is None:
@@ -129,7 +130,7 @@ def get_annotated_list(depth=None, parent=None):    # noqa: C901 too complex
 
     if prev_depth is not None:
         # close last leaf
-        info['num_to_close'] = list(range(0, prev_depth - start_depth))
-        info['has_children'] = prev_depth > prev_depth
+        info["num_to_close"] = list(range(0, prev_depth - start_depth))
+        info["has_children"] = node_depth > prev_depth
 
     return annotated_categories

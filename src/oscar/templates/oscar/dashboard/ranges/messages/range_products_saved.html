@@ -6,10 +6,10 @@
 <ul>
     {% if upload.num_new_skus %}
         <li>
-            {% blocktrans count n=upload.num_new_skus %}
-                <strong>{{ n }}</strong> product added
+            {% blocktrans with action=action count n=upload.num_new_skus %}
+                <strong>{{ n }}</strong> product has been {{ action }}
             {% plural %}
-                <strong>{{ n }}</strong> products added
+                <strong>{{ n }}</strong> products have been {{ action }}
             {% endblocktrans %}
         </li>
     {% endif %}

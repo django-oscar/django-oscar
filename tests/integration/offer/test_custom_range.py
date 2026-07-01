@@ -27,7 +27,6 @@ class CustomRangeLazy(object):
 
 
 class TestACustomRange(TestCase):
-
     def test_creating_duplicate_range_fails(self):
         custom.create_range(CustomRange)
         self.assertRaises(ValueError, custom.create_range, CustomRange)

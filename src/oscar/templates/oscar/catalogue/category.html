@@ -41,5 +41,12 @@
             {% endif %}
         </div>
     {% endif %}
+
     {{ block.super }}
+
+    {% if category.long_description %}
+        <div class="row">
+            <div class="col-sm-9"><p>{{ category.long_description|safe }}</p></div>
+        </div>
+    {% endif %}
 {% endblock %}

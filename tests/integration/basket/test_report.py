@@ -1,15 +1,17 @@
 import datetime
 
 from django.test import TestCase
-from django.utils.timezone import utc
+from datetime import timezone
 from freezegun import freeze_time
 
 from oscar.apps.basket.reports import (
-    OpenBasketReportGenerator, SubmittedBasketReportGenerator)
+    OpenBasketReportGenerator,
+    SubmittedBasketReportGenerator,
+)
 from oscar.core.loading import get_model
 from oscar.test.factories import BasketFactory
 
-Basket = get_model('basket', 'Basket')
+Basket = get_model("basket", "Basket")
 
 
 class TestBasketReports(TestCase):
@@ -19,9 +21,9 @@ class TestBasketReports(TestCase):
 
     def test_open_report_doesnt_error(self):
         data = {
-            'start_date': datetime.date(2012, 5, 1),
-            'end_date': datetime.date(2012, 5, 17),
-            'formatter': 'CSV'
+            "start_date": datetime.date(2012, 5, 1),
+            "end_date": datetime.date(2012, 5, 17),
+            "formatter": "CSV",
         }
         generator = OpenBasketReportGenerator(**data)
         generator.generate()
@@ -30,22 +32,22 @@ class TestBasketReports(TestCase):
         generator = OpenBasketReportGenerator()
         assert generator.queryset.count() == 5
 
-    @freeze_time('2020-05-02')
+    @freeze_time("2020-05-02")
     def test_open_report_filtering_by_date_range(self):
         BasketFactory.create(status=Basket.OPEN)
         data = {
-            'start_date': datetime.date(2020, 5, 1),
-            'end_date': datetime.date(2020, 6, 1),
-            'formatter': 'CSV'
+            "start_date": datetime.date(2020, 5, 1),
+            "end_date": datetime.date(2020, 6, 1),
+            "formatter": "CSV",
         }
         generator = OpenBasketReportGenerator(**data)
         assert generator.queryset.count() == 1
 
     def test_submitted_report_doesnt_error(self):
         data = {
-            'start_date': datetime.date(2012, 5, 1),
-            'end_date': datetime.date(2012, 5, 17),
-            'formatter': 'CSV'
+            "start_date": datetime.date(2012, 5, 1),
+            "end_date": datetime.date(2012, 5, 17),
+            "formatter": "CSV",
         }
         generator = SubmittedBasketReportGenerator(**data)
         generator.generate()
@@ -55,12 +57,12 @@ class TestBasketReports(TestCase):
         assert generator.queryset.count() == 6
 
     def test_submitted_report_filtering_by_date_range(self):
-        date_submitted = datetime.datetime(2020, 7, 3).replace(tzinfo=utc)
+        date_submitted = datetime.datetime(2020, 7, 3).replace(tzinfo=timezone.utc)
         BasketFactory.create(status=Basket.SUBMITTED, date_submitted=date_submitted)
         data = {
-            'start_date': datetime.date(2020, 7, 1),
-            'end_date': datetime.date(2020, 8, 1),
-            'formatter': 'CSV'
+            "start_date": datetime.date(2020, 7, 1),
+            "end_date": datetime.date(2020, 8, 1),
+            "formatter": "CSV",
         }
         generator = SubmittedBasketReportGenerator(**data)
         assert generator.queryset.count() == 1

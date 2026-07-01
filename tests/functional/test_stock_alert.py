@@ -9,11 +9,11 @@ from tests._site.apps.partner.models import StockRecord
 
 
 class TestPlacingAnOrder(TestCase):
-
     def setUp(self):
         self.product = factories.create_product()
         self.stockrecord = factories.create_stockrecord(
-            self.product, D('12.00'), num_in_stock=5)
+            self.product, D("12.00"), num_in_stock=5
+        )
         self.basket = factories.create_basket(empty=True)
         add_product(self.basket, product=self.product)
 
@@ -40,27 +40,24 @@ class TestPlacingAnOrder(TestCase):
         self.set_threshold(5)
         factories.create_order(basket=self.basket)
 
-        alerts = StockAlert.objects.filter(
-            stockrecord=self.stockrecord)
+        alerts = StockAlert.objects.filter(stockrecord=self.stockrecord)
         self.assertEqual(1, len(alerts))
 
     def test_only_raises_an_alert_once(self):
         self.set_threshold(5)
-        StockAlert.objects.create(stockrecord=self.stockrecord,
-                                  threshold=10)
+        StockAlert.objects.create(stockrecord=self.stockrecord, threshold=10)
         factories.create_order(basket=self.basket)
 
-        alerts = StockAlert.objects.filter(
-            stockrecord=self.stockrecord)
+        alerts = StockAlert.objects.filter(stockrecord=self.stockrecord)
         self.assertEqual(1, len(alerts))
 
 
 class TestRestockingProduct(TestCase):
-
     def setUp(self):
         self.product = factories.create_product()
         self.stockrecord = factories.create_stockrecord(
-            self.product, D('12.00'), num_in_stock=5)
+            self.product, D("12.00"), num_in_stock=5
+        )
         self.basket = factories.create_basket(empty=True)
         add_product(self.basket, product=self.product)
 

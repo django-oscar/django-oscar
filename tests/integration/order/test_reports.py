@@ -8,7 +8,7 @@ from oscar.apps.order import reports
 
 class TestOrderReportGenerator(TestCase):
     def test_generate_csv_no_filter(self):
-        generator = reports.OrderReportGenerator(formatter='CSV')
+        generator = reports.OrderReportGenerator(formatter="CSV")
         generator.generate()
 
     def test_generate_csv_start_and_end_date(self):
@@ -16,5 +16,6 @@ class TestOrderReportGenerator(TestCase):
         end_date = now() + datetime.timedelta(days=28)
 
         generator = reports.OrderReportGenerator(
-            start_date=start_date, end_date=end_date, formatter='CSV')
+            start_date=start_date, end_date=end_date, formatter="CSV"
+        )
         generator.generate()

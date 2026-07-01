@@ -15,6 +15,7 @@
     "model": "catalogue.category",
     "fields": {
         "description": null,
+        "long_description": null,
         "numchild": 2,
         "slug": "books",
         "depth": 1,

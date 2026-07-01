@@ -7,9 +7,10 @@ from django.views import generic
 from oscar.core.loading import get_classes, get_model
 
 WeightBandForm, WeightBasedForm = get_classes(
-    'dashboard.shipping.forms', ['WeightBandForm', 'WeightBasedForm'])
-WeightBased = get_model('shipping', 'WeightBased')
-WeightBand = get_model('shipping', 'WeightBand')
+    "dashboard.shipping.forms", ["WeightBandForm", "WeightBasedForm"]
+)
+WeightBased = get_model("shipping", "WeightBased")
+WeightBand = get_model("shipping", "WeightBand")
 
 
 class WeightBasedListView(generic.ListView):
@@ -25,11 +26,13 @@ class WeightBasedCreateView(generic.CreateView):
 
     def get_success_url(self):
         msg = render_to_string(
-            'oscar/dashboard/shipping/messages/method_created.html',
-            {'method': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:shipping-method-detail',
-                       kwargs={'pk': self.object.pk})
+            "oscar/dashboard/shipping/messages/method_created.html",
+            {"method": self.object},
+        )
+        messages.success(self.request, msg, extra_tags="safe noicon")
+        return reverse(
+            "dashboard:shipping-method-detail", kwargs={"pk": self.object.pk}
+        )
 
 
 class WeightBasedDetailView(generic.CreateView):
@@ -37,29 +40,29 @@ class WeightBasedDetailView(generic.CreateView):
     form_class = WeightBandForm
     template_name = "oscar/dashboard/shipping/weight_based_detail.html"
 
+    # pylint: disable=attribute-defined-outside-init
     def dispatch(self, request, *args, **kwargs):
-        self.method = shortcuts.get_object_or_404(
-            WeightBased, pk=kwargs['pk'])
-        return super().dispatch(
-            request, *args, **kwargs)
+        self.method = shortcuts.get_object_or_404(WeightBased, pk=kwargs["pk"])
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self, **kwargs):
         kwargs = super().get_form_kwargs(**kwargs)
-        kwargs['method'] = self.method
+        kwargs["method"] = self.method
         return kwargs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['method'] = self.method
+        ctx["method"] = self.method
         return ctx
 
     def get_success_url(self):
         msg = render_to_string(
-            'oscar/dashboard/shipping/messages/band_created.html',
-            {'band': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:shipping-method-detail',
-                       kwargs={'pk': self.method.pk})
+            "oscar/dashboard/shipping/messages/band_created.html", {"band": self.object}
+        )
+        messages.success(self.request, msg, extra_tags="safe noicon")
+        return reverse(
+            "dashboard:shipping-method-detail", kwargs={"pk": self.method.pk}
+        )
 
 
 class WeightBasedUpdateView(generic.UpdateView):
@@ -70,11 +73,13 @@ class WeightBasedUpdateView(generic.UpdateView):
 
     def get_success_url(self):
         msg = render_to_string(
-            'oscar/dashboard/shipping/messages/method_updated.html',
-            {'method': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:shipping-method-detail',
-                       kwargs={'pk': self.object.pk})
+            "oscar/dashboard/shipping/messages/method_updated.html",
+            {"method": self.object},
+        )
+        messages.success(self.request, msg, extra_tags="safe noicon")
+        return reverse(
+            "dashboard:shipping-method-detail", kwargs={"pk": self.object.pk}
+        )
 
 
 class WeightBandUpdateView(generic.UpdateView):
@@ -83,27 +88,27 @@ class WeightBandUpdateView(generic.UpdateView):
     template_name = "oscar/dashboard/shipping/weight_band_form.html"
     context_object_name = "band"
 
+    # pylint: disable=attribute-defined-outside-init
     def dispatch(self, request, *args, **kwargs):
-        self.method = shortcuts.get_object_or_404(
-            WeightBased, pk=kwargs['method_pk'])
-        return super().dispatch(
-            request, *args, **kwargs)
+        self.method = shortcuts.get_object_or_404(WeightBased, pk=kwargs["method_pk"])
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return self.method.bands.all()
 
     def get_form_kwargs(self, **kwargs):
         kwargs = super().get_form_kwargs(**kwargs)
-        kwargs['method'] = self.method
+        kwargs["method"] = self.method
         return kwargs
 
     def get_success_url(self):
         msg = render_to_string(
-            'oscar/dashboard/shipping/messages/band_updated.html',
-            {'band': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:shipping-method-detail',
-                       kwargs={'pk': self.method.pk})
+            "oscar/dashboard/shipping/messages/band_updated.html", {"band": self.object}
+        )
+        messages.success(self.request, msg, extra_tags="safe noicon")
+        return reverse(
+            "dashboard:shipping-method-detail", kwargs={"pk": self.method.pk}
+        )
 
 
 class WeightBandDeleteView(generic.DeleteView):
@@ -111,22 +116,22 @@ class WeightBandDeleteView(generic.DeleteView):
     template_name = "oscar/dashboard/shipping/weight_band_delete.html"
     context_object_name = "band"
 
+    # pylint: disable=attribute-defined-outside-init
     def dispatch(self, request, *args, **kwargs):
-        self.method = shortcuts.get_object_or_404(
-            WeightBased, pk=kwargs['method_pk'])
-        return super().dispatch(
-            request, *args, **kwargs)
+        self.method = shortcuts.get_object_or_404(WeightBased, pk=kwargs["method_pk"])
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return self.method.bands.all()
 
     def get_success_url(self):
         msg = render_to_string(
-            'oscar/dashboard/shipping/messages/band_deleted.html',
-            {'band': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:shipping-method-detail',
-                       kwargs={'pk': self.method.pk})
+            "oscar/dashboard/shipping/messages/band_deleted.html", {"band": self.object}
+        )
+        messages.success(self.request, msg, extra_tags="safe noicon")
+        return reverse(
+            "dashboard:shipping-method-detail", kwargs={"pk": self.method.pk}
+        )
 
 
 class WeightBasedDeleteView(generic.DeleteView):
@@ -136,7 +141,8 @@ class WeightBasedDeleteView(generic.DeleteView):
 
     def get_success_url(self):
         msg = render_to_string(
-            'oscar/dashboard/shipping/messages/method_deleted.html',
-            {'method': self.object})
-        messages.success(self.request, msg, extra_tags='safe noicon')
-        return reverse('dashboard:shipping-method-list')
+            "oscar/dashboard/shipping/messages/method_deleted.html",
+            {"method": self.object},
+        )
+        messages.success(self.request, msg, extra_tags="safe noicon")
+        return reverse("dashboard:shipping-method-list")

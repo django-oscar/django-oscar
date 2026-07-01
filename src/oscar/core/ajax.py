@@ -15,8 +15,8 @@ class FlashMessages(object):
     def add_message(self, level, message):
         self.msgs.setdefault(level, []).append(message)
 
-    def add_messages(self, level, messages):
-        for msg in messages:
+    def add_messages(self, level, message_list):
+        for msg in message_list:
             self.add_message(level, msg)
 
     def info(self, message):
@@ -34,7 +34,7 @@ class FlashMessages(object):
     def as_dict(self):
         payload = {}
         for level, msgs in self.msgs.items():
-            tag = messages.DEFAULT_TAGS.get(level, 'info')
+            tag = messages.DEFAULT_TAGS.get(level, "info")
             payload[tag] = [str(msg) for msg in msgs]
         return payload
 

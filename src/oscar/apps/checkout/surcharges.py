@@ -40,13 +40,11 @@ class PercentageCharge(BaseSurcharge):
             return prices.Price(
                 currency=basket.currency,
                 excl_tax=total_excl_tax * self.percentage / 100,
-                incl_tax=total_incl_tax * self.percentage / 100
+                incl_tax=total_incl_tax * self.percentage / 100,
             )
         else:
             return prices.Price(
-                currency=basket.currency,
-                excl_tax=D('0.0'),
-                incl_tax=D('0.0')
+                currency=basket.currency, excl_tax=D("0.0"), incl_tax=D("0.0")
             )
 
 
@@ -60,6 +58,5 @@ class FlatCharge(BaseSurcharge):
 
     def calculate(self, basket, **kwargs):
         return prices.Price(
-            currency=basket.currency,
-            excl_tax=self.excl_tax,
-            incl_tax=self.incl_tax)
+            currency=basket.currency, excl_tax=self.excl_tax, incl_tax=self.incl_tax
+        )

@@ -5,19 +5,17 @@ from oscar.test.factories import UserFactory, create_product
 
 
 class TestReviewForm(TestCase):
-
     def test_cleans_title(self):
         product = create_product()
         reviewer = UserFactory()
         data = {
-            'title': '  This product is lovely',
-            'body': 'I really like this cheese',
-            'score': 0,
-            'name': 'JR Hartley',
-            'email': 'hartley@example.com'
+            "title": "  This product is lovely",
+            "body": "I really like this cheese",
+            "score": 0,
+            "name": "JR Hartley",
+            "email": "hartley@example.com",
         }
-        form = forms.ProductReviewForm(
-            product=product, user=reviewer, data=data)
+        form = forms.ProductReviewForm(product=product, user=reviewer, data=data)
 
         assert form.is_valid()
 
@@ -30,39 +28,36 @@ class TestReviewForm(TestCase):
 
     def test_validates_correctly(self):
         data = {
-            'title': 'This product is lovely',
-            'body': 'I really like this cheese',
-            'score': 0,
-            'name': 'JR Hartley',
-            'email': 'hartley@example.com'
+            "title": "This product is lovely",
+            "body": "I really like this cheese",
+            "score": 0,
+            "name": "JR Hartley",
+            "email": "hartley@example.com",
         }
         form = forms.ProductReviewForm(product=None, user=None, data=data)
         assert form.is_valid()
 
 
 class TestVoteForm(TestCase):
-
     def setUp(self):
         self.product = create_product()
         self.reviewer = UserFactory()
         self.voter = UserFactory()
         self.review = self.product.reviews.create(
-            title='This is nice',
-            score=3,
-            body="This is the body",
-            user=self.reviewer)
+            title="This is nice", score=3, body="This is the body", user=self.reviewer
+        )
 
     def test_allows_real_users_to_vote(self):
-        form = forms.VoteForm(self.review, self.voter, data={'delta': 1})
+        form = forms.VoteForm(self.review, self.voter, data={"delta": 1})
         self.assertTrue(form.is_valid())
 
     def test_prevents_users_from_voting_more_than_once(self):
         self.review.vote_up(self.voter)
-        form = forms.VoteForm(self.review, self.voter, data={'delta': 1})
+        form = forms.VoteForm(self.review, self.voter, data={"delta": 1})
         self.assertFalse(form.is_valid())
-        self.assertTrue(len(form.errors['__all__']) > 0)
+        self.assertTrue(len(form.errors["__all__"]) > 0)
 
     def test_prevents_users_voting_on_their_own_reviews(self):
-        form = forms.VoteForm(self.review, self.reviewer, data={'delta': 1})
+        form = forms.VoteForm(self.review, self.reviewer, data={"delta": 1})
         self.assertFalse(form.is_valid())
-        self.assertTrue(len(form.errors['__all__']) > 0)
+        self.assertTrue(len(form.errors["__all__"]) > 0)

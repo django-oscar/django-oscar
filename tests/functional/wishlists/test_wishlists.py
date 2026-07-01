@@ -12,7 +12,9 @@ User = get_user_model()
 class WishListPrivateTestCase(TestCase):
     def setUp(self):
         super().setUp()
-        self.user = User.objects.create(email="test@example.com", password="testpassword")
+        self.user = User.objects.create(
+            email="test@example.com", password="testpassword"
+        )
         self.wishlist = WishListFactory(owner=self.user, visibility=WishList.PRIVATE)
         self.wishlist_shared_url = self.wishlist.get_shared_url()
 
@@ -26,12 +28,14 @@ class WishListPrivateTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_private_wishlist_detail_shared_email(self):
-        WishListSharedEmail.objects.create(wishlist=self.wishlist, email="test2@example.com")
+        WishListSharedEmail.objects.create(
+            wishlist=self.wishlist, email="test2@example.com"
+        )
         response = self.client.get(self.wishlist_shared_url)
         self.assertEqual(
             response.status_code,
             403,
-            "The response should be 403 because the visibility is set to private."
+            "The response should be 403 because the visibility is set to private.",
         )
 
     def test_private_wishlist_is_sharable(self):
@@ -41,7 +45,9 @@ class WishListPrivateTestCase(TestCase):
 class WishListPublicTestCase(TestCase):
     def setUp(self):
         super().setUp()
-        self.user = User.objects.create(email="test@example.com", password="testpassword")
+        self.user = User.objects.create(
+            email="test@example.com", password="testpassword"
+        )
         self.wishlist = WishListFactory(owner=self.user, visibility=WishList.PUBLIC)
         self.wishlist_shared_url = self.wishlist.get_shared_url()
 
@@ -55,7 +61,9 @@ class WishListPublicTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_public_wishlist_detail_shared_email(self):
-        WishListSharedEmail.objects.create(wishlist=self.wishlist, email="test2@example.com")
+        WishListSharedEmail.objects.create(
+            wishlist=self.wishlist, email="test2@example.com"
+        )
         response = self.client.get(self.wishlist_shared_url)
         self.assertEqual(response.status_code, 200)
 
@@ -66,8 +74,12 @@ class WishListPublicTestCase(TestCase):
 class WishListSharedTestCase(WebTestCase):
     def setUp(self):
         super().setUp()
-        self.wishlist_user = User.objects.create(email="test@example.com", password="testpassword")
-        self.wishlist = WishListFactory(owner=self.wishlist_user, visibility=WishList.SHARED)
+        self.wishlist_user = User.objects.create(
+            email="test@example.com", password="testpassword"
+        )
+        self.wishlist = WishListFactory(
+            owner=self.wishlist_user, visibility=WishList.SHARED
+        )
         self.wishlist_shared_url = self.wishlist.get_shared_url()
 
     def test_shared_wishlist_detail_owner(self):
@@ -80,8 +92,12 @@ class WishListSharedTestCase(WebTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_shared_wishlist_detail_shared_email(self):
-        WishListSharedEmail.objects.create(wishlist=self.wishlist, email="test2@example.com")
-        user = User.objects.create(email="test2@example.com", password="testpassword", username="test2")
+        WishListSharedEmail.objects.create(
+            wishlist=self.wishlist, email="test2@example.com"
+        )
+        user = User.objects.create(
+            email="test2@example.com", password="testpassword", username="test2"
+        )
         self.client.force_login(user)
         response = self.client.get(self.wishlist_shared_url)
         self.assertEqual(response.status_code, 200)
@@ -91,7 +107,7 @@ class WishListSharedTestCase(WebTestCase):
         non_shared_user = User.objects.create(
             email="anotheruser@example.com",
             password="testpassword",
-            username="anotheruser"
+            username="anotheruser",
         )
         self.client.force_login(non_shared_user)
         response = self.client.get(self.wishlist_shared_url)
@@ -102,7 +118,9 @@ class WishListSharedTestCase(WebTestCase):
         user = User.objects.create(email="test2@example.com", username="test2")
         user.set_password("testpassword")
         user.save()
-        WishListSharedEmail.objects.create(wishlist=self.wishlist, email="test2@example.com")
+        WishListSharedEmail.objects.create(
+            wishlist=self.wishlist, email="test2@example.com"
+        )
 
         # Set user to None (non authenticated user)
         self.user = None

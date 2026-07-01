@@ -6,38 +6,38 @@ from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
 
-Site = get_model('sites', 'Site')
-CustomerHistoryManager = get_class('customer.history', 'CustomerHistoryManager')
+Site = get_model("sites", "Site")
+CustomerHistoryManager = get_class("customer.history", "CustomerHistoryManager")
 
 register = template.Library()
 
 
-@register.inclusion_tag('oscar/customer/history/recently_viewed_products.html',
-                        takes_context=True)
+@register.inclusion_tag(
+    "oscar/customer/history/recently_viewed_products.html", takes_context=True
+)
 def recently_viewed_products(context, current_product=None):
     """
     Inclusion tag listing the most recently viewed products
     """
-    request = context['request']
+    request = context["request"]
     products = CustomerHistoryManager.get(request)
     if current_product:
         products = [p for p in products if p != current_product]
-    return {'products': products,
-            'request': request}
+    return {"products": products, "request": request}
 
 
 @register.simple_tag(takes_context=True)
-def get_back_button(context):   # noqa (too complex (11))
+def get_back_button(context):
     """
     Show back button, custom title available for different urls, for
     example 'Back to search results', no back button if user came from other
     site
     """
-    request = context.get('request', None)
+    request = context.get("request", None)
     if not request:
-        raise Exception('Cannot get request from context')
+        raise Exception("Cannot get request from context")
 
-    referrer = request.META.get('HTTP_REFERER', None)
+    referrer = request.META.get("HTTP_REFERER", None)
     if not referrer:
         return None
 
@@ -60,11 +60,11 @@ def get_back_button(context):   # noqa (too complex (11))
 
     # This dict can be extended to link back to other browsing pages
     titles = {
-        'search:search': _('Back to search results'),
+        "search:search": _("Back to search results"),
     }
     title = titles.get(match.view_name, None)
 
     if title is None:
         return None
 
-    return {'url': referrer, 'title': str(title), 'match': match}
+    return {"url": referrer, "title": str(title), "match": match}

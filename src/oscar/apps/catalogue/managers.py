@@ -1,9 +1,9 @@
 from collections import defaultdict
 
 from django.db import models
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Prefetch, F, Q
 from django.db.models.constants import LOOKUP_SEP
-from treebeard.mp_tree import MP_NodeQuerySet
+from treebeard.mp_tree import MP_NodeQuerySet, MP_NodeManager
 
 from oscar.core.loading import get_model
 
@@ -57,7 +57,9 @@ class AttributeFilter(dict):
 
         for code, (lookup, value) in self.items():
             selected_values = self._select_value(typedict[code], lookup, value)
-            if not selected_values:  # if no value clause can be formed, no result can be formed.
+            if (
+                not selected_values
+            ):  # if no value clause can be formed, no result can be formed.
                 return queryset.none()
 
             qs = qs.filter(
@@ -69,7 +71,6 @@ class AttributeFilter(dict):
 
 
 class ProductQuerySet(models.query.QuerySet):
-
     def filter_by_attributes(self, **filter_kwargs):
         """
         Allows querying by attribute as if the attributes where fields on the
@@ -93,13 +94,25 @@ class ProductQuerySet(models.query.QuerySet):
         Applies select_related and prefetch_related for commonly related
         models to save on queries
         """
-        Option = get_model('catalogue', 'Option')
-        product_class_options = Option.objects.filter(productclass=OuterRef('product_class'))
-        product_options = Option.objects.filter(product=OuterRef('pk'))
-        return self.select_related('product_class')\
-            .prefetch_related('children', 'product_options', 'product_class__options', 'stockrecords', 'images') \
-            .annotate(has_product_class_options=Exists(product_class_options),
-                      has_product_options=Exists(product_options))
+        Option = get_model("catalogue", "Option")
+        product_class_options = Option.objects.filter(
+            productclass=OuterRef("product_class")
+        )
+        product_options = Option.objects.filter(product=OuterRef("pk"))
+        return (
+            self.select_related("product_class")  # pylint:disable=E1102
+            .annotate(
+                has_product_class_options=Exists(product_class_options),
+                has_product_options=Exists(product_options),
+            )
+            .prefetch_related(
+                "children",
+                "product_options",
+                "product_class__options",
+                "stockrecords",
+                "images",
+            )
+        )
 
     def browsable(self):
         """
@@ -121,11 +134,139 @@ class ProductQuerySet(models.query.QuerySet):
         """
         return self.filter(parent=None)
 
+    def prefetch_browsable_categories(self, queryset=None):
+        """
+        Prefetches browsable categories for each product in the queryset,
+        including the parent's categories
+        """
+        if queryset is None:
+            Category = get_model("catalogue", "Category")
+            queryset = Category.objects.browsable()
+
+        return self.prefetch_related(
+            Prefetch(
+                "categories",
+                queryset=queryset,
+                to_attr="_prefetched_browsable_categories",
+            ),
+            Prefetch(
+                "parent__categories",
+                queryset=queryset,
+                to_attr="_prefetched_browsable_categories",
+            ),
+        )
+
+    def prefetch_public_children(self, queryset=None):
+        """
+        Prefetches public children for each product in the queryset
+        """
+        if queryset is None:
+            queryset = self.model.objects.public()
+
+        return self.prefetch_related(
+            Prefetch(
+                "children",
+                queryset=queryset,
+                to_attr="_prefetched_public_children",
+            )
+        )
+
+    def prefetch_attribute_values(self, include_parent_children_attributes=False):
+        """
+        This prefetches the attribute values for each product in the queryset.
+        It also makes sure that for child products, the parent's attribute values are also
+        prefetched (excluding the ones the child has).
+
+        Args:
+            include_parent_children_attributes (bool): If True, it will also prefetch the attributes for the
+            parent's children. You should only set this to true if you're going to iterate over the
+            parent's children's attribute values as well, otherwise you're doing useless queries.
+        """
+        ProductAttributeValue = get_model("catalogue", "ProductAttributeValue")
+        AttributeOption = get_model("catalogue", "AttributeOption")
+        ProductAttribute = get_model("catalogue", "ProductAttribute")
+
+        # The base queryset for both self and parent attribute values.
+        prefetch_queryset = (
+            ProductAttributeValue.objects.all()
+            .select_related("attribute", "value_option", "value_option__group")
+            .prefetch_related(
+                Prefetch(
+                    "value_multi_option",
+                    queryset=AttributeOption.objects.select_related("group"),
+                )
+            )
+            .annotate(code=F("attribute__code"))
+        )
+
+        # pylint: disable=not-callable
+        queryset = self.select_related(
+            "product_class", "parent__product_class"
+        ).prefetch_related(
+            Prefetch(
+                "attribute_values",
+                queryset=prefetch_queryset,
+                to_attr="_prefetched_attribute_values",
+            ),
+            Prefetch(
+                "parent__attribute_values",
+                queryset=prefetch_queryset,
+                to_attr="_prefetched_parent_attribute_values",
+            ),
+            # The AttributesQuerysetCache retrieves the attributes for the product class, prefetch those too.
+            Prefetch(
+                "product_class__attributes",
+                queryset=ProductAttribute.objects.all(),
+            ),
+            Prefetch(
+                "parent__product_class__attributes",
+                queryset=ProductAttribute.objects.all(),
+            ),
+        )
+
+        if include_parent_children_attributes:
+            queryset = queryset.prefetch_related(
+                Prefetch(
+                    "children__attribute_values",
+                    queryset=prefetch_queryset,
+                    to_attr="_prefetched_attribute_values",
+                ),
+                Prefetch(
+                    "children__parent__attribute_values",
+                    queryset=prefetch_queryset,
+                    to_attr="_prefetched_parent_attribute_values",
+                ),
+            )
+
+        return queryset
+
 
 class CategoryQuerySet(MP_NodeQuerySet):
-
     def browsable(self):
         """
         Excludes non-public categories
         """
         return self.filter(is_public=True, ancestors_are_public=True)
+
+    def for_menu(self):
+        """
+        Browsable categories that are not excluded for the menu
+        """
+        excluded_paths = list(
+            self.browsable()
+            .filter(exclude_from_menu=True)
+            .values_list("path", flat=True)
+        )
+        qs = self.browsable().filter(exclude_from_menu=False)
+        if excluded_paths:
+            condition = Q()
+            for path in excluded_paths:
+                condition |= Q(path__startswith=path)
+            qs = qs.exclude(condition)
+        return qs
+
+
+class CategoryManager(MP_NodeManager):
+    def get_queryset(self):
+        # Ignore the parent class method, which applies ordering, and use Django's default
+        return super(MP_NodeManager, self).get_queryset()

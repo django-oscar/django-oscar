@@ -5,15 +5,15 @@ from django.utils.translation import pgettext_lazy
 from oscar.core.loading import get_model
 from oscar.core.validators import URLDoesNotExistValidator
 
-FlatPage = get_model('flatpages', 'FlatPage')
+FlatPage = get_model("flatpages", "FlatPage")
 
 
 class PageSearchForm(forms.Form):
     """
     Search form to filter pages by *title.
     """
-    title = forms.CharField(
-        required=False, label=pgettext_lazy("Page title", "Title"))
+
+    title = forms.CharField(required=False, label=pgettext_lazy("Page title", "Title"))
 
 
 class PageUpdateForm(forms.ModelForm):
@@ -22,10 +22,11 @@ class PageUpdateForm(forms.ModelForm):
     and *content* field. The specified URL will be validated and check if
     the same URL already exists in the system.
     """
+
     url = forms.RegexField(
         label=_("URL"),
         max_length=100,
-        regex=r'^[-\w/\.~]+$',
+        regex=r"^[-\w/\.~]+$",
         required=False,
         help_text=_("Example: '/about/contact/'."),
         error_messages={
@@ -44,13 +45,13 @@ class PageUpdateForm(forms.ModelForm):
 
         Returns cleaned URL or raises an exception.
         """
-        url = self.cleaned_data['url']
-        if 'url' in self.changed_data:
-            if not url.endswith('/'):
-                url += '/'
+        url = self.cleaned_data["url"]
+        if "url" in self.changed_data:
+            if not url.endswith("/"):
+                url += "/"
             URLDoesNotExistValidator()(url)
         return url
 
     class Meta:
         model = FlatPage
-        fields = ('title', 'url', 'content')
+        fields = ("title", "url", "content")

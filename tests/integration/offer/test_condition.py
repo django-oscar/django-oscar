@@ -1,3 +1,4 @@
+# pylint: disable=redefined-outer-name
 from decimal import Decimal as D
 from unittest import mock
 
@@ -12,7 +13,7 @@ from oscar.test import factories
 from oscar.test.basket import add_product
 from tests._site.model_tests_app.models import BasketOwnerCalledBarry
 
-Selector = get_class('partner.strategy', 'Selector')
+Selector = get_class("partner.strategy", "Selector")
 
 
 @pytest.fixture
@@ -21,22 +22,18 @@ def products_some():
 
 
 @pytest.fixture()
-def range():
+def product_range():
     return factories.RangeFactory()
 
 
 @pytest.fixture
 def range_all():
-    return factories.RangeFactory(
-        name="All products range", includes_all_products=True
-    )
+    return factories.RangeFactory(name="All products range", includes_all_products=True)
 
 
 @pytest.fixture
 def range_some(products_some):
-    return factories.RangeFactory(
-        name="Some products", products=products_some
-    )
+    return factories.RangeFactory(name="Some products", products=products_some)
 
 
 @pytest.fixture
@@ -73,7 +70,6 @@ def mock_offer():
 
 @pytest.mark.django_db
 class TestCountCondition:
-
     @pytest.fixture(autouse=True)
     def setUp(self, mock_offer):
         self.offer = mock_offer
@@ -218,7 +214,6 @@ class TestValueCondition:
 
 @pytest.mark.django_db
 class TestCoverageCondition:
-
     @pytest.fixture(autouse=True)
     def setUp(self, range_some, products_some, empty_basket, coverage_condition):
         self.products = products_some
@@ -280,10 +275,10 @@ class TestCoverageCondition:
 
     def test_consumed_items_checks_affected_items(self):
         # Create new offer
-        range = models.Range.objects.create(
+        product_range = models.Range.objects.create(
             name="All products", includes_all_products=True
         )
-        cond = models.CoverageCondition(range=range, type="Coverage", value=2)
+        cond = models.CoverageCondition(range=product_range, type="Coverage", value=2)
 
         # Get 4 distinct products in the basket
         self.products.extend([factories.create_product(), factories.create_product()])
@@ -301,19 +296,19 @@ class TestCoverageCondition:
 
 @pytest.mark.django_db
 class TestConditionProxyModels(object):
-    def test_name_and_description(self, range):
+    def test_name_and_description(self, product_range):
         """
         Tests that the condition proxy classes all return a name and
         description. Unfortunately, the current implementations means
         a valid range and value are required.
         """
-        for type, __ in models.Condition.TYPE_CHOICES:
-            condition = models.Condition(type=type, range=range, value=5)
+        for event_type, __ in models.Condition.TYPE_CHOICES:
+            condition = models.Condition(type=event_type, range=product_range, value=5)
             assert all([condition.name, condition.description, str(condition)])
 
-    def test_proxy(self, range):
-        for type, __ in models.Condition.TYPE_CHOICES:
-            condition = models.Condition(type=type, range=range, value=5)
+    def test_proxy(self, product_range):
+        for event_type, __ in models.Condition.TYPE_CHOICES:
+            condition = models.Condition(type=event_type, range=product_range, value=5)
             proxy = condition.proxy()
             assert condition.type == proxy.type
             assert condition.range == proxy.range
@@ -336,31 +331,36 @@ class TestCustomCondition(TestCase):
 
 
 class TestOffersWithCountCondition(TestCase):
-
     def setUp(self):
         super().setUp()
 
         self.basket = factories.create_basket(empty=True)
 
         # Create range and add one product to it.
-        rng = factories.RangeFactory(name='All products', includes_all_products=True)
+        rng = factories.RangeFactory(name="All products", includes_all_products=True)
         self.product = factories.ProductFactory()
         rng.add_product(self.product)
 
         # Create a non-exclusive offer #1.
-        condition1 = factories.ConditionFactory(range=rng, value=D('1'))
-        benefit1 = factories.BenefitFactory(range=rng, value=D('10'))
+        condition1 = factories.ConditionFactory(range=rng, value=D("1"))
+        benefit1 = factories.BenefitFactory(range=rng, value=D("10"))
         self.offer1 = factories.ConditionalOfferFactory(
-            condition=condition1, benefit=benefit1, start_datetime=now(),
-            name='Test offer #1', exclusive=False,
+            condition=condition1,
+            benefit=benefit1,
+            start_datetime=now(),
+            name="Test offer #1",
+            exclusive=False,
         )
 
         # Create a non-exclusive offer #2.
-        condition2 = factories.ConditionFactory(range=rng, value=D('1'))
-        benefit2 = factories.BenefitFactory(range=rng, value=D('5'))
+        condition2 = factories.ConditionFactory(range=rng, value=D("1"))
+        benefit2 = factories.BenefitFactory(range=rng, value=D("5"))
         self.offer2 = factories.ConditionalOfferFactory(
-            condition=condition2, benefit=benefit2, start_datetime=now(),
-            name='Test offer #2', exclusive=False,
+            condition=condition2,
+            benefit=benefit2,
+            start_datetime=now(),
+            name="Test offer #2",
+            exclusive=False,
         )
 
     def add_product(self):
