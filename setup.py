@@ -18,7 +18,7 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=3.1,<3.3',
+    'django==5.1.3',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=6.0',
     # We use the ModelFormSetView from django-extra-views for the basket page
