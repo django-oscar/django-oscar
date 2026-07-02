@@ -9562,6 +9562,34 @@ msgstr "Alle übergeordneten Produkte auswählen"
 msgid "Select all variants"
 msgstr "Alle Varianten auswählen"
 
+msgid "Select all visible standalones"
+msgstr "Alle sichtbaren eigenständigen Produkte auswählen"
+
+msgid "Select all visible parents"
+msgstr "Alle sichtbaren übergeordneten Produkte auswählen"
+
+msgid "Select all visible variants"
+msgstr "Alle sichtbaren Varianten auswählen"
+
+msgid "All %(count)s selected."
+msgstr "Alle %(count)s ausgewählt."
+
+msgid "Select all %(count)s standalones"
+msgstr "Alle %(count)s eigenständigen Produkte auswählen"
+
+msgid "Select all %(count)s parents"
+msgstr "Alle %(count)s übergeordneten Produkte auswählen"
+
+msgid "Select all %(count)s variants"
+msgstr "Alle %(count)s Varianten auswählen"
+
+msgid ""
+"And %(count)s more product(s) not shown. Use \"Select all\" above to include "
+"them."
+msgstr ""
+"Und %(count)s weitere(s) Produkt(e) werden nicht angezeigt. Verwenden Sie "
+"oben \"Alle auswählen\", um sie einzubeziehen."
+
 msgid "Select / deselect all variants"
 msgstr "Alle Varianten auswählen / abwählen"
 

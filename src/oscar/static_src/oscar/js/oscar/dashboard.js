@@ -559,26 +559,124 @@ var oscar = (function(o, $) {
         },
         child_product_bulk_action: {
             init: function() {
+                function syncParentToggles() {
+                    $('.select-all-children').each(function() {
+                        var pid = $(this).data('parent');
+                        var $ch = $('input[name="selected_products"][data-parent="' + pid + '"]');
+                        $(this).prop('checked',
+                            $ch.length > 0 && $ch.filter(':checked').length === $ch.length);
+                    });
+                }
+
+                // One entry per selectable product type.
+                var TYPES = [
+                    {
+                        itemClass:   'select-standalone',
+                        hiddenName:  'select_all_standalones',
+                        toggleSel:   '.select-all-standalones-toggle',
+                        itemsSel:    'input[type="checkbox"].select-standalone',
+                        linkSel:     '.select-all-standalones-link',
+                        labelSel:    '.select-all-standalones-text',
+                        counterSel:  '#standalone-selected-counter',
+                    },
+                    {
+                        itemClass:   'select-parent',
+                        hiddenName:  'select_all_parents',
+                        toggleSel:   '.select-all-parents-toggle',
+                        itemsSel:    'input[type="checkbox"].select-parent',
+                        linkSel:     '.select-all-parents-link',
+                        labelSel:    '.select-all-parents-text',
+                        counterSel:  '#parent-selected-counter',
+                    },
+                    {
+                        itemClass:   'select-child',
+                        hiddenName:  'select_all_children',
+                        toggleSel:   '.select-all-children-global',
+                        itemsSel:    'input[type="checkbox"].select-child',
+                        linkSel:     '.select-all-children-link',
+                        labelSel:    '.select-all-children-text',
+                        counterSel:  '#child-selected-counter',
+                        onSync:      syncParentToggles,
+                    },
+                ];
+
+                var byClass = {};
+                TYPES.forEach(function(t) { byClass[t.itemClass] = t; });
+
+                // Read the checkbox state for a type and derive all of its UI.
+                function syncType(t) {
+                    var $toggle = $(t.toggleSel);
+                    if (!$toggle.length) return;
+
+                    var $items  = $(t.itemsSel);
+                    var visible = $items.length;
+                    var checked = $items.filter(':checked').length;
+                    var allChecked = visible > 0 && checked === visible;
+                    var nothingHidden = visible >= t.total;
+
+                    // Across holds only while all visible are checked; with hidden
+                    // items it also needs the user to have clicked the link.
+                    if (!allChecked) t.acrossIntent = false;
+                    var across = allChecked && (nothingHidden || t.acrossIntent);
+
+                    $toggle.prop('checked', allChecked);
+                    $('input[name="' + t.hiddenName + '"]').val(across ? 'on' : '');
+
+                    $(t.linkSel).text(across ? t.acrossText : t.linkText)
+                                .toggleClass('text-muted fst-italic', across);
+
+                    $(t.counterSel).text('(' + (across ? t.total : checked) + ' / ' + t.total + ')');
+
+                    if (t.onSync) t.onSync();
+                }
+
+                TYPES.forEach(function(t) {
+                    var $toggle = $(t.toggleSel);
+                    if (!$toggle.length) return;
+
+                    t.total = parseInt($(t.linkSel).data('count'), 10) || 0;
+                    t.linkText = $(t.linkSel).text().trim();
+                    t.acrossText = $(t.linkSel).attr('data-across-label');
+                    t.acrossIntent = $('input[name="' + t.hiddenName + '"]').val() === 'on';
+
+                    // The across link and "visible" wording only make sense when
+                    // some products of this type are hidden.
+                    var hasHidden = t.total > $(t.itemsSel).length;
+                    $(t.linkSel).toggle(hasHidden);
+                    if (hasHidden) {
+                        var $label = $(t.labelSel);
+                        $label.text($label.attr('data-hidden-label'));
+                    }
+
+                    $toggle.on('change', function() {
+                        $(t.itemsSel).prop('checked', this.checked);
+                        syncType(t);
+                    });
+
+                    $(t.linkSel).on('click', function(e) {
+                        e.preventDefault();
+                        var across = $('input[name="' + t.hiddenName + '"]').val() === 'on';
+                        $(t.itemsSel).prop('checked', !across);
+                        t.acrossIntent = !across;
+                        syncType(t);
+                    });
+
+                    syncType(t);
+                });
+
+                // Sync the select all/across 
                 $('.select-all-children').on('change', function() {
-                    var parentId = $(this).data('parent');
-                    var checked = $(this).prop('checked');
-                    $('input[type="checkbox"][name="selected_products"][data-parent="' + parentId + '"]')
-                        .prop('checked', checked);
+                    var pid = $(this).data('parent');
+                    $('input[name="selected_products"][data-parent="' + pid + '"]')
+                        .prop('checked', this.checked);
+                    syncType(byClass['select-child']);
                 });
 
-                $('.select-all-standalones').on('change', function() {
-                    var checked = $(this).prop('checked');
-                    $('input[type="checkbox"].select-standalone').prop('checked', checked);
-                });
-
-                $('.select-all-parents').on('change', function() {
-                    var checked = $(this).prop('checked');
-                    $('input[type="checkbox"].select-parent').prop('checked', checked);
-                });
-
-                $('.select-all-children-global').on('change', function() {
-                    var checked = $(this).prop('checked');
-                    $('.select-all-children').prop('checked', checked).trigger('change');
+                $(document).on('change', 'input[name="selected_products"]', function() {
+                    var $cb = $(this);
+                    TYPES.forEach(function(t) {
+                        if ($cb.hasClass(t.itemClass)) syncType(t);
+                    });
                 });
             }
         },

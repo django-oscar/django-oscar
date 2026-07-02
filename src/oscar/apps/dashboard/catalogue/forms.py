@@ -467,8 +467,11 @@ class ChildrenBulkActionForm(forms.Form):
         required=False,
         error_messages={"required": _("Select at least one product.")},
     )
-    select_all = forms.BooleanField(
-        widget=forms.HiddenInput(), initial=False, required=False
+    # Checkboxes to select every product and variant of the initial set.
+    select_all_parents = forms.BooleanField(widget=forms.HiddenInput(), required=False)
+    select_all_children = forms.BooleanField(widget=forms.HiddenInput(), required=False)
+    select_all_standalones = forms.BooleanField(
+        widget=forms.HiddenInput(), required=False
     )
 
     def __init__(self, *args, products_queryset=None, **kwargs):
@@ -478,9 +481,13 @@ class ChildrenBulkActionForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        if not cleaned_data.get("select_all") and not cleaned_data.get(
-            "selected_products"
-        ):
+        has_selection = (
+            cleaned_data.get("select_all_parents")
+            or cleaned_data.get("select_all_children")
+            or cleaned_data.get("select_all_standalones")
+            or cleaned_data.get("selected_products")
+        )
+        if not has_selection:
             self.add_error("selected_products", _("Select at least one product."))
         return cleaned_data
 
@@ -548,11 +555,17 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             )
 
         has_global = bool(global_options)
-        for child in cleaned_data.get("selected_products", []):
-            if cleaned_data.get(f"price_{child.pk}") is None and not has_global:
-                self.add_error(
-                    f"price_{child.pk}",
-                    _("Enter a price, or set a base price above."),
+        if not has_global:
+            selected = cleaned_data.get("selected_products", [])
+            has_any_override = any(
+                cleaned_data.get(f"price_{child.pk}") is not None for child in selected
+            )
+            if selected and not has_any_override:
+                raise forms.ValidationError(
+                    _(
+                        "Enter at least one specific price, or set a base price above."
+                        " Products without a specific price will be skipped."
+                    )
                 )
         return cleaned_data
 

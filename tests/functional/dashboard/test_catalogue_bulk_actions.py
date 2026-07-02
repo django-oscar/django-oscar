@@ -224,7 +224,23 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
             params={"selected_products": [self.child1.pk]},
         )
         self.assertIsOk(page)
-        self.assertIn(f"price_{self.child1.pk}", page.context["form"].errors)
+        self.assertIn("__all__", page.context["form"].errors)
+
+    def test_submit_partial_overrides_only_updates_products_with_price(self):
+        self._seed_session("set_product_price")
+        response = self.post(
+            self._intermediate_url(),
+            params={
+                "selected_products": [self.child1.pk, self.child2.pk],
+                f"price_{self.child1.pk}": "11.00",
+                # child2 has no override and no global — should be skipped
+            },
+        )
+        self.assertRedirectsTo(response, "dashboard:catalogue-product-list")
+        self.child1.stockrecords.first().refresh_from_db()
+        self.child2.stockrecords.first().refresh_from_db()
+        self.assertEqual(self.child1.stockrecords.first().price, Decimal("11.00"))
+        self.assertEqual(self.child2.stockrecords.first().price, Decimal("5.00"))
 
 
 class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
@@ -257,37 +273,47 @@ class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
         self.assertIn(parent3, parents)
 
 
-class TestTooManyProductsSafeguard(ChildrenBulkActionTests):
+class TestSelectAllByType(ChildrenBulkActionTests):
     """
-    When the selectable queryset exceeds max_products_for_selection the view
-    skips the individual-checkbox table and instead shows a summary count,
-    pre-checks the hidden select_all field, and still executes the action
-    against the full queryset on POST.
+    The toolbar provides per-type "select all" checkboxes that include products
+    beyond the display limit. Structure counts are always the full selectable set.
     """
 
-    view_path = "oscar.apps.dashboard.catalogue.views.ChildProductSelectView.max_products_for_selection"
+    display_limit_path = "oscar.apps.dashboard.catalogue.views.ChildProductSelectView.max_display_products"
 
-    def test_get_sets_skip_product_selection_in_context(self):
+    def test_get_shows_per_type_counts_in_context(self):
         self._seed_session("make_products_public")
-        with patch(self.view_path, new=1):
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        self.assertEqual(page.context["child_count"], 2)
+        self.assertEqual(page.context["standalone_count"], 0)
+        self.assertEqual(page.context["parent_count"], 1)
+
+    def test_get_shows_hidden_count_when_display_limit_exceeded(self):
+        self._seed_session("make_products_public")
+        with patch(self.display_limit_path, new=1):
             page = self.get(self._intermediate_url())
         self.assertIsOk(page)
-        self.assertTrue(page.context["skip_product_selection"])
+        self.assertGreater(page.context["hidden_count"], 0)
 
-    def test_get_shows_product_counts_in_context(self):
+    def test_post_select_all_children_updates_all_children(self):
         self._seed_session("make_products_public")
-        with patch(self.view_path, new=1):
-            page = self.get(self._intermediate_url())
-        self.assertEqual(page.context["selected_child_count"], 2)
-        self.assertEqual(page.context["selected_standalone_count"], 0)
-        self.assertEqual(page.context["selected_parent_count"], 1)
+        response = self.post(
+            self._intermediate_url(),
+            params={"select_all_children": "on"},
+        )
+        self.assertIsRedirect(response)
+        self.child1.refresh_from_db()
+        self.child2.refresh_from_db()
+        self.assertTrue(self.child1.is_public)
+        self.assertTrue(self.child2.is_public)
 
-    def test_post_with_select_all_updates_all_products(self):
+    def test_post_select_all_children_includes_products_beyond_display_limit(self):
         self._seed_session("make_products_public")
-        with patch(self.view_path, new=1):
+        with patch(self.display_limit_path, new=1):
             response = self.post(
                 self._intermediate_url(),
-                params={"select_all": "on"},
+                params={"select_all_children": "on"},
             )
         self.assertIsRedirect(response)
         self.child1.refresh_from_db()

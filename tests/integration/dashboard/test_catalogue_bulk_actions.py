@@ -171,7 +171,7 @@ class TestSetProductPriceForm(TestCase):
             products_queryset=self.qs,
         )
         self.assertFalse(form.is_valid())
-        self.assertIn(f"price_{self.child1.pk}", form.errors)
+        self.assertIn("__all__", form.errors)
 
     def test_invalid_negative_override(self):
         form = SetChildrenPriceForm(

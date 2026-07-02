@@ -16,12 +16,12 @@
 {% block form_content %}
 {% if has_extra_fields %}
     <div class="card card-body mb-3">
-        <div class="table-header">
+        <div>
             <h3>{% block action_fields_header %}{% trans "Action parameters" %}{% endblock action_fields_header %}</h3>
         </div>
         {% block form_fields %}
         {% for field in form %}
-            {% if field.html_name != "selected_products" %}
+            {% if not field.field.widget.is_hidden and field.html_name != "selected_products" %}
                 {% include "oscar/dashboard/partials/form_field.html" %}
             {% endif %}
         {% endfor %}
@@ -33,98 +33,102 @@
 <div class="alert alert-danger">{{ form.selected_products.errors }}</div>
 {% endif %}
 
-{% with selected_values=form.selected_products.value %}
-{% if skip_product_selection %}
-<div class="alert alert-warning">
-    <strong>{% trans "Warning" %}:</strong>
-    {% trans "The amount selected products and their variants exceed the maximum total for selection. The action will be applied to the entire selection." %}
-</div>
-<div class="card card-body mb-3">
-    <h3>{% trans "Selected products" %}:</h3>
-    <span>{% trans "Stand-alone product" %}: {{selected_standalone_count}}</span>
-    <span>{% trans "Parent product" %}: {{selected_parent_count}}</span>
-    <span>{% trans "Variant" %}: {{selected_child_count}}</span>
-</div>
-{% else %}
-    <div class="card mb-3">
-        {% if parent_selectable or children_selectable %}
-        <div class="d-flex gap-4 px-3 py-2 border-bottom">
-            {% if standalone_selectable %}
-            <label class="d-flex align-items-center gap-1 text-muted small mb-0 user-select-none">
-                <input type="checkbox" class="select-all-standalones">
-                {% trans "Select all standalones" %}
-            </label>
-            {% endif %}
-            {% if parent_selectable %}
-            <label class="d-flex align-items-center gap-1 text-muted small mb-0 user-select-none">
-                <input type="checkbox" class="select-all-parents">
-                {% trans "Select all parents" %}
-            </label>
-            {% endif %}
-            {% if children_selectable %}
-            <label class="d-flex align-items-center gap-1 text-muted small mb-0 user-select-none">
-                <input type="checkbox" class="select-all-children-global">
-                {% trans "Select all variants" %}
-            </label>
-            {% endif %}
-        </div>
+<div class="card mb-3">
+    {% if standalone_selectable or parent_selectable or children_selectable %}
+    <div class="px-3 py-2 border-bottom d-flex flex-column gap-1">
+        {% if standalone_selectable %}
+        <label class="d-flex align-items-center gap-2 small text-muted mb-0 user-select-none bulk-select-label">
+            <input type="checkbox" class="select-all-standalones-toggle">
+            <span class="select-all-standalones-text" data-hidden-label="{% trans 'Select all visible standalones' %}">{% trans "Select all standalones" %}</span>
+            <span id="standalone-selected-counter"></span>
+            <a href="#" class="select-all-standalones-link" data-count="{{ standalone_count }}" data-across-label="{% blocktrans with count=standalone_count %}All {{ count }} selected.{% endblocktrans %}">{% blocktrans with count=standalone_count %}Select all {{ count }} standalones{% endblocktrans %}</a>
+            {{ form.select_all_standalones }}
+        </label>
         {% endif %}
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="width:40px;"></th>
-                        <th>{% trans "Title" %}</th>
-                        <th>{% trans "UPC" %}</th>
-                        {% block extra_column_headers %}<th>{% trans "Currently public" %}</th>{% endblock %}
-                    </tr>
-                </thead>
-                <tbody>
-                {% for row in display_rows %}
-                    
-                    <tr class="align-middle {% if row.is_group_header %}table-secondary{% endif %}">
-                        {% with product=row.product pk_str=row.product.pk|stringformat:"s" %}
-                            <td class="text-center {% if row.indent %}ps-4{% endif %}">
-                                {% if row.selectable %}
-                                <input type="checkbox" name="selected_products" value="{{ product.pk }}"
-                                    class="{% if row.product.is_parent %}select-parent{% elif row.product.is_child %}select-child{% elif row.product.is_standalone %}select-standalone{% endif %}"
-                                    {% if row.indent %}data-parent="{{ product.parent_id }}"{% endif %}
-                                    {% if not form.is_bound or pk_str in selected_values %}checked{% endif %}>
-                                {% endif %}
-                            </td>
-                            
-                            <td {% if row.indent %}class="ps-3"{% endif %}>
-                                {{ product.get_title }}
-                                {% if row.children_selectable %}
-                                    <small class="text-muted ms-2">({{ row.children|length }} {% trans "variants" %})</small>
-                                {% endif %}
-                            </td>
-                            
-                            <td>{{ product.upc|default:"-" }}</td>
-                            {% block extra_column_values %}<td>{% if product.is_public %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>{% endblock %}
-                        {% endwith %}
-                    </tr>
-                    {% if row.children_selectable %}
-                        <tr>
-                            <td colspan="999" class="ps-4">
-                                <input type="checkbox" class="select-all-children"
-                                    data-parent="{{ row.product.pk }}" title="{% trans 'Select / deselect all variants' %}">
-                                <small class="text-muted">{% trans "Select all variants" %}</small>
-                            </td>
-                        </tr>
-                    {% endif %}
-
-                {% empty %}
-                    <tr>
-                        <td class="text-muted px-3">{% trans "No products." %}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        {% if parent_selectable %}
+        <label class="d-flex align-items-center gap-2 small text-muted mb-0 user-select-none bulk-select-label">
+            <input type="checkbox" class="select-all-parents-toggle">
+            <span class="select-all-parents-text" data-hidden-label="{% trans 'Select all visible parents' %}">{% trans "Select all parents" %}</span>
+            <span id="parent-selected-counter"></span>
+            <a href="#" class="select-all-parents-link" data-count="{{ parent_count }}" data-across-label="{% blocktrans with count=parent_count %}All {{ count }} selected.{% endblocktrans %}">{% blocktrans with count=parent_count %}Select all {{ count }} parents{% endblocktrans %}</a>
+            {{ form.select_all_parents }}
+        </label>
+        {% endif %}
+        {% if children_selectable %}
+        <label class="d-flex align-items-center gap-2 small text-muted mb-0 user-select-none bulk-select-label">
+            <input type="checkbox" class="select-all-children-global">
+            <span class="select-all-children-text" data-hidden-label="{% trans 'Select all visible variants' %}">{% trans "Select all variants" %}</span>
+            <span id="child-selected-counter"></span>
+            <a href="#" class="select-all-children-link" data-count="{{ child_count }}" data-across-label="{% blocktrans with count=child_count %}All {{ count }} selected.{% endblocktrans %}">{% blocktrans with count=child_count %}Select all {{ count }} variants{% endblocktrans %}</a>
+            {{ form.select_all_children }}
+        </label>
+        {% endif %}
     </div>
-{% endif %}
-{% endwith %}
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width:40px;"></th>
+                    <th>{% trans "Title" %}</th>
+                    <th>{% trans "UPC" %}</th>
+                    {% block extra_column_headers %}<th>{% trans "Currently public" %}</th>{% endblock %}
+                </tr>
+            </thead>
+            <tbody>
+            {% with selected_values=form.selected_products.value %}
+            {% for row in display_rows %}
+                <tr class="align-middle {% if row.is_group_header %}table-secondary{% endif %}">
+                    {% with product=row.product pk_str=row.product.pk|stringformat:"s" %}
+                        <td class="text-center {% if row.indent %}ps-4{% endif %}">
+                            {% if row.selectable %}
+                            <input type="checkbox" name="selected_products" value="{{ product.pk }}"
+                                class="{% if row.product.is_parent %}select-parent{% elif row.product.is_child %}select-child{% elif row.product.is_standalone %}select-standalone{% endif %}"
+                                {% if row.indent %}data-parent="{{ product.parent_id }}"{% endif %}
+                                {% if not form.is_bound or pk_str in selected_values %}checked{% endif %}>
+                            {% endif %}
+                        </td>
+
+                        <td {% if row.indent %}class="ps-3"{% endif %}>
+                            {{ product.get_title }}
+                            {% if row.children_selectable %}
+                                <small class="text-muted ms-2">({{ row.children|length }} {% trans "variants" %})</small>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ product.upc|default:"-" }}</td>
+                        {% block extra_column_values %}<td>{% if product.is_public %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>{% endblock %}
+                    {% endwith %}
+                </tr>
+                {% if row.children_selectable %}
+                    <tr>
+                        <td colspan="999" class="ps-4">
+                            <input type="checkbox" class="select-all-children"
+                                data-parent="{{ row.product.pk }}" title="{% trans 'Select / deselect all variants' %}">
+                            <small class="text-muted">{% trans "Select all variants" %}</small>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% empty %}
+                <tr>
+                    <td class="text-muted px-3">{% trans "No products." %}</td>
+                </tr>
+            {% endfor %}
+            {% endwith %}
+            </tbody>
+            {% if hidden_count %}
+            <tfoot>
+                <tr>
+                    <td colspan="999" class="text-muted small px-3 py-2 border-top">
+                        {% blocktrans with count=hidden_count %}And {{ count }} more product(s) not shown. Use "Select all" above to include them.{% endblocktrans %}
+                    </td>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</div>
 {% endblock form_content %}
 
 {% block onbodyload %}
