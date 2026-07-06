@@ -529,6 +529,7 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
                 "Select the partners whose stockrecords should be updated. Only stockrecords belonging to the selected partners will be changed."
             ),
             widget=forms.SelectMultiple,
+            initial=partner_qs if partner_qs.count() == 1 else None,
         )
         for pk in qs.values_list("pk", flat=True):
             self.fields[f"price_{pk}"] = forms.DecimalField(
