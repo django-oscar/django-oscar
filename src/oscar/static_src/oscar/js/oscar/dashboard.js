@@ -623,7 +623,7 @@ var oscar = (function(o, $) {
                     $('input[name="' + t.hiddenName + '"]').val(across ? 'on' : '');
 
                     $(t.linkSel).text(across ? t.acrossText : t.linkText)
-                                .toggleClass('text-muted fst-italic', across);
+                        .toggleClass('text-muted fst-italic', across);
 
                     $(t.counterSel).text('(' + (across ? t.total : checked) + ' / ' + t.total + ')');
 
