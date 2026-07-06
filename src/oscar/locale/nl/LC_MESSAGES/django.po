@@ -9607,3 +9607,6 @@ msgstr "Selecteer de partners waarvan de stock records moeten worden bijgewerkt.
 
 msgid "Selected products"
 msgstr "Geselecteerde producten"
+
+msgid "I understand this action cannot be undone and I am absolutely sure I want to execute it"
+msgstr "Ik begrijp dat deze actie niet ongedaan kan worden gemaakt en ik weet absoluut zeker dat ik dit wil uitvoeren"

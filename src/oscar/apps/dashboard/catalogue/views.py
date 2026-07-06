@@ -334,15 +334,15 @@ class ChildProductSelectView(IntermediateBulkActionView):
             if displayed >= max_display:
                 break
             children = list(parent.children.all())
-            display_rows.append(
-                {
-                    "selectable": parent_selectable,
-                    "product": parent,
-                    "is_group_header": True,
-                    "children": children,
-                    "children_selectable": children_selectable,
-                }
-            )
+            parent_row = {
+                "selectable": parent_selectable,
+                "product": parent,
+                "is_group_header": True,
+                "children": children,
+                "children_selectable": children_selectable,
+                "children_shown": False,
+            }
+            display_rows.append(parent_row)
             displayed += 1
             if parent_selectable:
                 selectable_displayed += 1
@@ -360,6 +360,7 @@ class ChildProductSelectView(IntermediateBulkActionView):
                     )
                     displayed += 1
                     selectable_displayed += 1
+                    parent_row["children_shown"] = True
 
         return display_rows, selectable_displayed
 

@@ -30,6 +30,9 @@ class IntermediateBulkAction(AbstractBulkAction):
 
     form_class = None
     template = "oscar/dashboard/intermediate_bulk_action.html"
+    # Whether the confirmation page should require ticking an "this cannot be
+    # undone" checkbox before the form can be submitted.
+    require_irreversible_confirmation = False
 
     def get_context(self):
         return {}
@@ -273,6 +276,7 @@ class IntermediateBulkActionView(View):
             "action": self._action,
             "action_label": action.label,
             "cancel_url": self.get_cancel_url(),
+            "require_irreversible_confirmation": action.require_irreversible_confirmation,
         }
         ctx.update(action.get_context())
         ctx.update(kwargs)

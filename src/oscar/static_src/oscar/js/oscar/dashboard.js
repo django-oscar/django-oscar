@@ -643,11 +643,11 @@ var oscar = (function(o, $) {
                         ? $('input[name="' + t.hiddenName + '"]').val() === 'on'
                         : true;
 
-                    // The across link and "visible" wording only make sense when
-                    // some products of this type are hidden.
-                    var hasHidden = t.total > $(t.itemsSel).length;
+                    // use an alternative label if part of the products of this type are hidden.
+                    var visibleCount = $(t.itemsSel).length;
+                    var hasHidden = t.total > visibleCount;
                     $(t.linkSel).toggle(hasHidden);
-                    if (hasHidden) {
+                    if (hasHidden && visibleCount > 0) {
                         var $label = $(t.labelSel);
                         $label.text($label.attr('data-hidden-label'));
                     }

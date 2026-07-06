@@ -32,6 +32,17 @@
         {% endfor %}
         {% endblock form_content %}
 
+        {% block confirm_irreversible %}
+        {% if require_irreversible_confirmation %}
+        <div class="form-group mt-3">
+            <label>
+                <input type="checkbox" required>
+                {% trans "I understand this action cannot be undone and I am absolutely sure I want to execute it" %}
+            </label>
+        </div>
+        {% endif %}
+        {% endblock confirm_irreversible %}
+
         {% block action_buttons %}
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">

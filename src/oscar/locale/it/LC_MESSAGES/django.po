@@ -9619,3 +9619,6 @@ msgstr "Seleziona i partner i cui record di magazzino devono essere aggiornati. 
 
 msgid "Selected products"
 msgstr "Prodotti selezionati"
+
+msgid "I understand this action cannot be undone and I am absolutely sure I want to execute it"
+msgstr "Comprendo che questa azione non può essere annullata e sono assolutamente sicuro di volerla eseguire"

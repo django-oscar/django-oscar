@@ -99,6 +99,7 @@ class SetProductPriceAction(ProductIntermediateAction):
     form_class = SetChildrenPriceForm
     template = "oscar/dashboard/catalogue/product_children_bulk_action_set_price.html"
     supported_structures = [Product.CHILD, Product.STANDALONE]
+    require_irreversible_confirmation = True
 
     def filter_products_queryset(self, qs):
         return qs.filter(stockrecords__isnull=False).distinct()

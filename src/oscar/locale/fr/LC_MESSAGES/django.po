@@ -9630,3 +9630,6 @@ msgstr "Sélectionnez les partenaires dont les enregistrements de stock doivent 
 
 msgid "Selected products"
 msgstr "Produits sélectionnés"
+
+msgid "I understand this action cannot be undone and I am absolutely sure I want to execute it"
+msgstr "Je comprends que cette action est irréversible et je suis absolument certain de vouloir l'exécuter"

@@ -9636,3 +9636,6 @@ msgstr "Seleccione los socios cuyos registros de stock deben actualizarse. Solo 
 
 msgid "Selected products"
 msgstr "Productos seleccionados"
+
+msgid "I understand this action cannot be undone and I am absolutely sure I want to execute it"
+msgstr "Entiendo que esta acción no se puede deshacer y estoy absolutamente seguro de que quiero ejecutarla"

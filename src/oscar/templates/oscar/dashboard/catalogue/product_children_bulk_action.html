@@ -101,7 +101,7 @@
                         {% block extra_column_values %}<td>{% if product.is_public %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>{% endblock %}
                     {% endwith %}
                 </tr>
-                {% if row.children_selectable %}
+                {% if row.children_shown %}
                     <tr>
                         <td colspan="999" class="bulk-select-indent">
                             <input type="checkbox" class="select-all-children"
