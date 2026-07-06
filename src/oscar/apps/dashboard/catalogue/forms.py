@@ -523,13 +523,12 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
         partner_qs = Partner.objects.filter(stockrecords__product__in=qs).distinct()
         self.fields["partners"] = forms.ModelMultipleChoiceField(
             queryset=partner_qs,
-            required=False,
+            required=True,
             label=_("Partners"),
             help_text=_(
-                "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+                "Select the partners whose stockrecords should be updated. Only stockrecords belonging to the selected partners will be changed."
             ),
             widget=forms.SelectMultiple,
-            initial=partner_qs,
         )
         for pk in qs.values_list("pk", flat=True):
             self.fields[f"price_{pk}"] = forms.DecimalField(

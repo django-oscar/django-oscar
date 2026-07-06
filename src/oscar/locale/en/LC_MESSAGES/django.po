@@ -9183,7 +9183,7 @@ msgstr ""
 msgid "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners."
 msgstr ""
 
-msgid "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
+msgid "Select the partners whose stockrecords should be updated. Only stockrecords belonging to the selected partners will be changed."
 msgstr ""
 
 msgid "Selected products"

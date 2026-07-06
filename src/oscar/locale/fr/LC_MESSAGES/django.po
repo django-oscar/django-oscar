@@ -9625,8 +9625,8 @@ msgstr "Aucun produit."
 msgid "Specific price"
 msgstr "Prix spécifique"
 
-msgid "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
-msgstr "Seuls les enregistrements de stock des partenaires sélectionnés seront mis à jour. Désélectionnez un partenaire pour laisser ses prix inchangés."
+msgid "Select the partners whose stockrecords should be updated. Only stockrecords belonging to the selected partners will be changed."
+msgstr "Sélectionnez les partenaires dont les enregistrements de stock doivent être mis à jour. Seuls les enregistrements de stock des partenaires sélectionnés seront modifiés."
 
 msgid "Selected products"
 msgstr "Produits sélectionnés"

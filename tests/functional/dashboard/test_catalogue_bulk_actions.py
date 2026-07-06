@@ -28,6 +28,8 @@ class ChildrenBulkActionTests(WebTestCase):
         )
         create_stockrecord(self.child1, price=Decimal("5.00"))
         create_stockrecord(self.child2, price=Decimal("5.00"))
+        # Both stockrecords share the same (default) partner.
+        self.partner = self.child1.stockrecords.first().partner
 
     def _seed_session(self, action):
         return self.post(
@@ -125,6 +127,7 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
             self._intermediate_url(),
             params={
                 "selected_products": [self.child1.pk, self.child2.pk],
+                "partners": [self.partner.pk],
                 "new_price": "19.99",
             },
         )
@@ -142,6 +145,7 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
             self._intermediate_url(),
             params={
                 "selected_products": [self.child1.pk, self.child2.pk],
+                "partners": [self.partner.pk],
                 f"price_{self.child1.pk}": "11.00",
                 f"price_{self.child2.pk}": "22.00",
             },
@@ -171,6 +175,7 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
             self._intermediate_url(),
             params={
                 "selected_products": [self.child1.pk, self.child2.pk],
+                "partners": [self.partner.pk],
                 "increase_by_amount": "2.00",
             },
         )
@@ -186,6 +191,7 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
             self._intermediate_url(),
             params={
                 "selected_products": [self.child1.pk, self.child2.pk],
+                "partners": [self.partner.pk],
                 "increase_by_percentage": "10",
             },
         )
@@ -201,6 +207,7 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
             self._intermediate_url(),
             params={
                 "selected_products": [self.child1.pk],
+                "partners": [self.partner.pk],
                 "new_price": "5.00",
                 "increase_by_amount": "1.00",
             },
@@ -212,7 +219,11 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
         self._seed_session("set_product_price")
         page = self.post(
             self._intermediate_url(),
-            params={"selected_products": [self.child1.pk], "new_price": "-5"},
+            params={
+                "selected_products": [self.child1.pk],
+                "partners": [self.partner.pk],
+                "new_price": "-5",
+            },
         )
         self.assertIsOk(page)
         self.assertIn("new_price", page.context["form"].errors)
@@ -221,10 +232,25 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
         self._seed_session("set_product_price")
         page = self.post(
             self._intermediate_url(),
-            params={"selected_products": [self.child1.pk]},
+            params={
+                "selected_products": [self.child1.pk],
+                "partners": [self.partner.pk],
+            },
         )
         self.assertIsOk(page)
         self.assertIn("__all__", page.context["form"].errors)
+
+    def test_submit_without_partners_rerenders_with_error(self):
+        self._seed_session("set_product_price")
+        page = self.post(
+            self._intermediate_url(),
+            params={
+                "selected_products": [self.child1.pk],
+                "new_price": "19.99",
+            },
+        )
+        self.assertIsOk(page)
+        self.assertIn("partners", page.context["form"].errors)
 
     def test_submit_partial_overrides_only_updates_products_with_price(self):
         self._seed_session("set_product_price")
@@ -232,6 +258,7 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
             self._intermediate_url(),
             params={
                 "selected_products": [self.child1.pk, self.child2.pk],
+                "partners": [self.partner.pk],
                 f"price_{self.child1.pk}": "11.00",
                 # child2 has no override and no global — should be skipped
             },
