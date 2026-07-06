@@ -35,9 +35,9 @@
 
 <div class="card mb-3">
     {% if standalone_selectable or parent_selectable or children_selectable %}
-    <div class="px-3 py-2 border-bottom d-flex flex-column gap-1">
+    <div class="px-3 py-2 border-bottom d-flex flex-column bulk-select-toolbar">
         {% if standalone_selectable %}
-        <label class="d-flex align-items-center gap-2 small text-muted mb-0 user-select-none bulk-select-label">
+        <label class="d-flex align-items-center small text-muted mb-0 user-select-none bulk-select-label">
             <input type="checkbox" class="select-all-standalones-toggle">
             <span class="select-all-standalones-text" data-hidden-label="{% trans 'Select all visible standalones' %}">{% trans "Select all standalones" %}</span>
             <span id="standalone-selected-counter"></span>
@@ -46,7 +46,7 @@
         </label>
         {% endif %}
         {% if parent_selectable %}
-        <label class="d-flex align-items-center gap-2 small text-muted mb-0 user-select-none bulk-select-label">
+        <label class="d-flex align-items-center small text-muted mb-0 user-select-none bulk-select-label">
             <input type="checkbox" class="select-all-parents-toggle">
             <span class="select-all-parents-text" data-hidden-label="{% trans 'Select all visible parents' %}">{% trans "Select all parents" %}</span>
             <span id="parent-selected-counter"></span>
@@ -55,7 +55,7 @@
         </label>
         {% endif %}
         {% if children_selectable %}
-        <label class="d-flex align-items-center gap-2 small text-muted mb-0 user-select-none bulk-select-label">
+        <label class="d-flex align-items-center small text-muted mb-0 user-select-none bulk-select-label">
             <input type="checkbox" class="select-all-children-global">
             <span class="select-all-children-text" data-hidden-label="{% trans 'Select all visible variants' %}">{% trans "Select all variants" %}</span>
             <span id="child-selected-counter"></span>
@@ -81,7 +81,7 @@
             {% for row in display_rows %}
                 <tr class="align-middle {% if row.is_group_header %}table-secondary{% endif %}">
                     {% with product=row.product pk_str=row.product.pk|stringformat:"s" %}
-                        <td class="text-center {% if row.indent %}ps-4{% endif %}">
+                        <td class="text-center {% if row.indent %}bulk-select-indent{% endif %}">
                             {% if row.selectable %}
                             <input type="checkbox" name="selected_products" value="{{ product.pk }}"
                                 class="{% if row.product.is_parent %}select-parent{% elif row.product.is_child %}select-child{% elif row.product.is_standalone %}select-standalone{% endif %}"
@@ -90,10 +90,10 @@
                             {% endif %}
                         </td>
 
-                        <td {% if row.indent %}class="ps-3"{% endif %}>
+                        <td {% if row.indent %}class="bulk-select-indent-title"{% endif %}>
                             {{ product.get_title }}
                             {% if row.children_selectable %}
-                                <small class="text-muted ms-2">({{ row.children|length }} {% trans "variants" %})</small>
+                                <small class="text-muted bulk-select-variant-count">({{ row.children|length }} {% trans "variants" %})</small>
                             {% endif %}
                         </td>
 
@@ -103,7 +103,7 @@
                 </tr>
                 {% if row.children_selectable %}
                     <tr>
-                        <td colspan="999" class="ps-4">
+                        <td colspan="999" class="bulk-select-indent">
                             <input type="checkbox" class="select-all-children"
                                 data-parent="{{ row.product.pk }}" title="{% trans 'Select / deselect all variants' %}">
                             <small class="text-muted">{% trans "Select all variants" %}</small>

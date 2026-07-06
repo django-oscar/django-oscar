@@ -528,7 +528,7 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             help_text=_(
                 "Only stockrecords belonging to the selected partners will be updated. Deselect a partner to leave its prices unchanged."
             ),
-            widget=forms.CheckboxSelectMultiple,
+            widget=forms.SelectMultiple,
             initial=partner_qs,
         )
         for pk in qs.values_list("pk", flat=True):

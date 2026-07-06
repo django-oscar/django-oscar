@@ -77,6 +77,23 @@
   gap: 0.25rem;
 }
 
+.bulk-select-toolbar {
+  gap: 0.25rem;
+}
+
 .bulk-select-label {
   cursor: pointer;
+  gap: 0.5rem;
+}
+
+.bulk-select-indent {
+  padding-left: 1.5rem !important;
+}
+
+.bulk-select-indent-title {
+  padding-left: 1rem !important;
+}
+
+.bulk-select-variant-count {
+  margin-left: 0.5rem;
 }
