@@ -558,7 +558,9 @@ var oscar = (function(o, $) {
             }
         },
         child_product_bulk_action: {
-            init: function() {
+            init: function(options) {
+                var formBound = !!(options && options.formBound);
+
                 function syncParentToggles() {
                     $('.select-all-children').each(function() {
                         var pid = $(this).data('parent');
@@ -614,12 +616,12 @@ var oscar = (function(o, $) {
                     var allChecked = visible > 0 && checked === visible;
                     var nothingHidden = visible >= t.total;
 
-                    // Across holds only while all visible are checked; with hidden
-                    // items it also needs the user to have clicked the link.
-                    if (!allChecked) t.acrossIntent = false;
-                    var across = allChecked && (nothingHidden || t.acrossIntent);
+                    if (visible > 0 && !allChecked) t.acrossIntent = false;
+                    var across = visible === 0
+                        ? t.acrossIntent
+                        : allChecked && (nothingHidden || t.acrossIntent);
 
-                    $toggle.prop('checked', allChecked);
+                    $toggle.prop('checked', visible === 0 ? across : allChecked);
                     $('input[name="' + t.hiddenName + '"]').val(across ? 'on' : '');
 
                     $(t.linkSel).text(across ? t.acrossText : t.linkText)
@@ -637,7 +639,9 @@ var oscar = (function(o, $) {
                     t.total = parseInt($(t.linkSel).data('count'), 10) || 0;
                     t.linkText = $(t.linkSel).text().trim();
                     t.acrossText = $(t.linkSel).attr('data-across-label');
-                    t.acrossIntent = $('input[name="' + t.hiddenName + '"]').val() === 'on';
+                    t.acrossIntent = formBound
+                        ? $('input[name="' + t.hiddenName + '"]').val() === 'on'
+                        : true;
 
                     // The across link and "visible" wording only make sense when
                     // some products of this type are hidden.
@@ -650,6 +654,7 @@ var oscar = (function(o, $) {
 
                     $toggle.on('change', function() {
                         $(t.itemsSel).prop('checked', this.checked);
+                        if ($(t.itemsSel).length === 0) t.acrossIntent = this.checked;
                         syncType(t);
                     });
 

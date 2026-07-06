@@ -133,5 +133,5 @@
 
 {% block onbodyload %}
 {{ block.super }}
-oscar.dashboard.child_product_bulk_action.init();
+oscar.dashboard.child_product_bulk_action.init({formBound: {{ form.is_bound|yesno:"true,false" }}});
 {% endblock %}
