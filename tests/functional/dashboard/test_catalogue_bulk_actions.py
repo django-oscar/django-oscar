@@ -1,5 +1,6 @@
 from decimal import Decimal
 from unittest.mock import patch
+from urllib.parse import parse_qs, urlparse
 
 from django.urls import reverse
 
@@ -31,14 +32,22 @@ class ChildrenBulkActionTests(WebTestCase):
         # Both stockrecords share the same (default) partner.
         self.partner = self.child1.stockrecords.first().partner
 
+    def _token_from_redirect(self, response):
+        location = getattr(response, "location", "") or ""
+        return parse_qs(urlparse(location).query).get("key", [None])[0]
+
     def _seed_session(self, action):
-        return self.post(
+        response = self.post(
             reverse("dashboard:catalogue-product-list"),
             params={"action": action, "selected_product": [self.parent.pk]},
         )
+        self._token = self._token_from_redirect(response)
+        return response
 
     def _intermediate_url(self):
-        return reverse("dashboard:catalogue-product-children-bulk-action")
+        url = reverse("dashboard:catalogue-product-children-bulk-action")
+        token = getattr(self, "_token", None)
+        return "%s?key=%s" % (url, token) if token else url
 
 
 class TestMakeProductsPublicFlow(ChildrenBulkActionTests):
@@ -284,10 +293,11 @@ class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
         create_product(structure="child", parent=parent2)
         create_product(structure="child", parent=parent3)
 
-        self.post(
+        response = self.post(
             reverse("dashboard:catalogue-product-list"),
             params={"action": "make_products_public", "select_across": "1"},
         )
+        self._token = self._token_from_redirect(response)
         page = self.get(self._intermediate_url())
         self.assertIsOk(page)
         parents = [
@@ -298,6 +308,34 @@ class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
         self.assertIn(self.parent, parents)
         self.assertIn(parent2, parents)
         self.assertIn(parent3, parents)
+
+    def test_concurrent_actions_use_separate_tokens(self):
+        token1 = self._token_from_redirect(self._seed_session("make_products_public"))
+        token2 = self._token_from_redirect(
+            self._seed_session("make_products_non_public")
+        )
+        self.assertIsNotNone(token1)
+        self.assertNotEqual(token1, token2)
+        # Both buckets resolve independently; the second seed didn't clobber the first.
+        self._token = token1
+        self.assertIsOk(self.get(self._intermediate_url()))
+        self._token = token2
+        self.assertIsOk(self.get(self._intermediate_url()))
+
+    def test_submitting_one_action_leaves_other_bucket_intact(self):
+        token1 = self._token_from_redirect(self._seed_session("make_products_public"))
+        token2 = self._token_from_redirect(
+            self._seed_session("make_products_non_public")
+        )
+        # Complete the first action.
+        self._token = token1
+        self.post(
+            self._intermediate_url(),
+            params={"selected_products": [self.child1.pk]},
+        )
+        # The other tab's pending action is still usable.
+        self._token = token2
+        self.assertIsOk(self.get(self._intermediate_url()))
 
 
 class TestSelectAllByType(ChildrenBulkActionTests):

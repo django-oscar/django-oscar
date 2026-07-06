@@ -1,3 +1,5 @@
+import hashlib
+
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -164,6 +166,7 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
     intermediate_actions = {}
     bulk_intermediate_session_key = "bulk_intermediate"
+    bulk_intermediate_token_param = "key"
 
     def get_intermediate_url(self, request, action):
         raise NotImplementedError(
@@ -179,6 +182,16 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
         return super().post(request, *args, **kwargs)
 
+    def get_bulk_intermediate_token(self, action, object_ids):
+        """
+        Return a short token identifying this pending action + selection.
+
+        Each pending action is stored under its own session bucket keyed by
+        this token, so concurrent tabs don't overwrite each other's selection.
+        """
+        raw = "%s:%s" % (action, ",".join(str(pk) for pk in sorted(object_ids)))
+        return hashlib.sha256(raw.encode()).hexdigest()[:12]
+
     def _handle_intermediate_action(self, request, action, *args, **kwargs):
         object_ids = self.get_selected_ids(request)
 
@@ -189,16 +202,13 @@ class IntermediateBulkEditMixin(BulkEditMixin):
             )
             return redirect(self.get_error_url(request))
 
-        session_data = request.session.setdefault(
-            self.bulk_intermediate_session_key, {}
-        )
-
-        session_data["object_ids"] = object_ids
-        session_data["action"] = action
-
+        token = self.get_bulk_intermediate_token(action, object_ids)
+        buckets = request.session.setdefault(self.bulk_intermediate_session_key, {})
+        buckets[token] = {"object_ids": object_ids, "action": action}
         request.session.modified = True
 
-        return redirect(self.get_intermediate_url(request, action))
+        url = self.get_intermediate_url(request, action)
+        return redirect("%s?%s=%s" % (url, self.bulk_intermediate_token_param, token))
 
 
 class IntermediateBulkActionView(View):
@@ -215,14 +225,18 @@ class IntermediateBulkActionView(View):
 
     intermediate_actions = {}
     bulk_intermediate_session_key = "bulk_intermediate"
+    bulk_intermediate_token_param = "key"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._action = None
         self._selected_ids = []
+        self._token = None
 
     def dispatch(self, request, *args, **kwargs):
-        session_data = request.session.get(self.bulk_intermediate_session_key, {})
+        self._token = request.GET.get(self.bulk_intermediate_token_param)
+        buckets = request.session.get(self.bulk_intermediate_session_key, {})
+        session_data = buckets.get(self._token, {}) if self._token else {}
         self._action = session_data.get("action")
         self._selected_ids = session_data.get("object_ids", [])
         if (
@@ -290,8 +304,10 @@ class IntermediateBulkActionView(View):
         return action.execute(request, self.get_objects(form), form)
 
     def _clear_session(self, request):
-        request.session.pop(self.bulk_intermediate_session_key, None)
-        request.session.modified = True
+        buckets = request.session.get(self.bulk_intermediate_session_key, {})
+        if self._token in buckets:
+            del buckets[self._token]
+            request.session.modified = True
 
 
 class ObjectLookupView(View):
