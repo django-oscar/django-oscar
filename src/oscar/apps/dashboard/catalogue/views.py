@@ -197,7 +197,7 @@ class ChildProductSelectView(IntermediateBulkActionView):
 
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
 
-    max_display_products = 20
+    max_display_products = 200
 
     def get_cancel_url(self):
         return reverse("dashboard:catalogue-product-list")
