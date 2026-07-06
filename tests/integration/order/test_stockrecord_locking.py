@@ -70,9 +70,8 @@ class StockRecordDeadlockTest(TransactionTestCase):
         org_update = OrderCreator.update_stock_records
 
         def slow_update(*args, **kwargs):
-            result = org_update(creator, *args, **kwargs)
+            org_update(creator, *args, **kwargs)
             time.sleep(0.3)
-            return result
 
         creator.update_stock_records = slow_update
 
