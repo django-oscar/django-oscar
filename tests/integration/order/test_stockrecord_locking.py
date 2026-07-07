@@ -3,36 +3,16 @@ import time
 from unittest import skipUnless
 
 from django.contrib.auth.models import AnonymousUser
-from django.db import connection, connections
-from django.db.utils import OperationalError
+from django.db import connection
 from django.test import TransactionTestCase
 
-from oscar.apps.checkout import calculators
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.methods import Free
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class
 from oscar.test import factories
+from oscar.test.utils import place_order, run_concurrently
 
-StockRecord = get_model("partner", "StockRecord")
 SurchargeApplicator = get_class("checkout.applicator", "SurchargeApplicator")
-
-# Postgres SQLSTATE raised when the server detects a deadlock and kills one of
-# the transactions involved.
-DEADLOCK_SQLSTATE = "40P01"
-
-
-def place_order(creator, **kwargs):
-    """Place an order without the boilerplate (mirrors test_creator.place_order)."""
-    kwargs.setdefault("shipping_method", Free())
-    shipping_charge = kwargs["shipping_method"].calculate(kwargs["basket"])
-    kwargs["total"] = calculators.OrderTotalCalculator().calculate(
-        basket=kwargs["basket"],
-        shipping_charge=shipping_charge,
-        surcharges=kwargs["surcharges"],
-    )
-    kwargs["shipping_charge"] = shipping_charge
-    return creator.place_order(**kwargs)
 
 
 @skipUnless(
@@ -95,36 +75,12 @@ class StockRecordDeadlockTest(TransactionTestCase):
                 user=user,
             )
 
-        errors = self._run_concurrently(worker, num_threads=4)
+        errors = run_concurrently(worker, num_threads=4)
 
-        deadlocks = [
-            error
-            for error in errors
-            if isinstance(error, OperationalError)
-            and getattr(error.__cause__, "pgcode", None) == DEADLOCK_SQLSTATE
-        ]
-        self.assertEqual(deadlocks, [], "concurrent placements deadlocked")
         self.assertEqual(errors, [], "concurrent placements raised errors")
         self.assertEqual(Order.objects.count(), 4)
 
-    @staticmethod
-    def _run_concurrently(fn, num_threads):
-        errors = []
-
-        def target():
-            try:
-                fn()
-            except Exception as exc:
-                errors.append(exc)
-            finally:
-                connections.close_all()
-
-        threads = [
-            threading.Thread(target=target, name="thread-%d" % i)
-            for i in range(num_threads)
-        ]
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join(timeout=15)
-        return errors
+        self.sr_low.refresh_from_db()
+        self.sr_high.refresh_from_db()
+        self.assertEqual(self.sr_low.num_allocated, 4)
+        self.assertEqual(self.sr_high.num_allocated, 4)

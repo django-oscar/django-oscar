@@ -189,3 +189,21 @@ def run_concurrently(fn, kwargs=None, num_threads=5):
     # Retrieve exceptions
     exceptions = [exceptions.get(block=False) for i in range(num_threads)]
     return [exc for exc in exceptions if exc is not None]
+
+
+def place_order(creator, **kwargs):
+    """
+    Helper function to place an order without the boilerplate
+    """
+    Free = get_class("shipping.methods", "Free")
+    OrderTotalCalculator = get_class("checkout.calculators", "OrderTotalCalculator")
+
+    kwargs.setdefault("shipping_method", Free())
+    shipping_charge = kwargs["shipping_method"].calculate(kwargs["basket"])
+    kwargs["total"] = OrderTotalCalculator().calculate(
+        basket=kwargs["basket"],
+        shipping_charge=shipping_charge,
+        surcharges=kwargs["surcharges"],
+    )
+    kwargs["shipping_charge"] = shipping_charge
+    return creator.place_order(**kwargs)
