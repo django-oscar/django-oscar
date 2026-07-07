@@ -22,32 +22,13 @@ from oscar.apps.voucher.models import Voucher
 from oscar.core.loading import get_class
 from oscar.test import factories
 from oscar.test.basket import add_product
-from oscar.test.utils import run_concurrently
+from oscar.test.utils import place_order, run_concurrently
 
 Range = get_class("offer.models", "Range")
 Benefit = get_class("offer.models", "Benefit")
 
 SurchargeApplicator = get_class("checkout.applicator", "SurchargeApplicator")
 UK = get_class("partner.strategy", "UK")
-
-
-def place_order(creator, **kwargs):
-    """
-    Helper function to place an order without the boilerplate
-    """
-    if "shipping_method" not in kwargs:
-        kwargs["shipping_method"] = Free()
-
-    shipping_charge = kwargs["shipping_method"].calculate(kwargs["basket"])
-
-    kwargs["total"] = calculators.OrderTotalCalculator().calculate(
-        basket=kwargs["basket"],
-        shipping_charge=shipping_charge,
-        surcharges=kwargs["surcharges"],
-    )
-    kwargs["shipping_charge"] = shipping_charge
-
-    return creator.place_order(**kwargs)
 
 
 class TestOrderCreatorErrorCases(TestCase):

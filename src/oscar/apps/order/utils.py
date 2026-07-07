@@ -120,7 +120,12 @@ class OrderCreator(object):
             for voucher in basket.vouchers.all():
                 self.record_voucher_usage(order, voucher, user)
 
-            for line in basket.all_lines():
+            # Allocate stock in a deterministic (stock-record) order so that
+            # concurrent placements take the row locks in the same order and
+            # can't deadlock.
+            for line in sorted(
+                basket.all_lines(), key=lambda line: line.stockrecord_id
+            ):
                 self.create_line_models(order, line)
                 self.update_stock_records(line)
 
