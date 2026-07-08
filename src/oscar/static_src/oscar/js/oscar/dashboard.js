@@ -98,13 +98,13 @@ var oscar = (function(o, $) {
                     convert_urls: false,
                     plugins: "link lists",
                     style_formats: [
-                        { title: 'Text', block: 'p' },
-                        { title: 'Heading 1', block: 'h1' },
-                        { title: 'Heading 2', block: 'h2' },
-                        { title: 'Heading 3', block: 'h3' },
-                        { title: 'Heading 4', block: 'h4' },
-                        { title: 'Heading 5', block: 'h5' }
-                    ]
+                        {title: 'Text', block: 'p'},
+                        {title: 'Heading 1', block: 'h1'},
+                        {title: 'Heading 2', block: 'h2'},
+                        {title: 'Heading 3', block: 'h3'},
+                        {title: 'Heading 4', block: 'h4'},
+                        {title: 'Heading 5', block: 'h5'}
+                    ],
                     toolbar: "styles | bold italic blockquote | bullist numlist | link"
                 }
             };
