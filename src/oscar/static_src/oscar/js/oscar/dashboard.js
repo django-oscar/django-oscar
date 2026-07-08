@@ -96,7 +96,8 @@ var oscar = (function(o, $) {
                     statusbar: false,
                     menubar: false,
                     convert_urls: false,
-                    plugins: "link lists",style_formats: [
+                    plugins: "link lists",
+                    style_formats: [
                         { title: 'Text', block: 'p' },
                         { title: 'Heading 1', block: 'h1' },
                         { title: 'Heading 2', block: 'h2' },
