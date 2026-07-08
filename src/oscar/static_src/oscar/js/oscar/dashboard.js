@@ -102,8 +102,8 @@ var oscar = (function(o, $) {
                         {title: 'Heading 2', block: 'h2'},
                         {title: 'Heading 3', block: 'h3'},
                         {title: 'Heading 4', block: 'h4'},
-                        {title: 'Heading 5', block: 'h5'}
-                        {title: 'Heading 6', block: 'h6'},
+                        {title: 'Heading 5', block: 'h5'},
+                        {title: 'Heading 6', block: 'h6'}
                     ],
                     toolbar: "styles | bold italic blockquote | bullist numlist | link"
                 }
