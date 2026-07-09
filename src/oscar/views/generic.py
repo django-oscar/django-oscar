@@ -171,6 +171,8 @@ class IntermediateBulkEditMixin(BulkEditMixin):
     bulk_intermediate_session_key = "bulk_intermediate"
     bulk_intermediate_token_param = "key"
 
+    max_bulk_intermediate_ids = 1000
+
     def get_intermediate_url(self, request, action):
         raise NotImplementedError(
             "Subclasses of IntermediateBulkEditMixin must "
@@ -202,6 +204,21 @@ class IntermediateBulkEditMixin(BulkEditMixin):
             messages.error(
                 request,
                 _("You need to select some %ss") % self.get_checkbox_object_name(),
+            )
+            return redirect(self.get_error_url(request))
+
+        if len(object_ids) > self.max_bulk_intermediate_ids:
+            messages.error(
+                request,
+                _(
+                    "Too many %(object)ss selected (%(count)d). Narrow your"
+                    " selection to %(limit)d or fewer and try again."
+                )
+                % {
+                    "object": self.get_checkbox_object_name(),
+                    "count": len(object_ids),
+                    "limit": self.max_bulk_intermediate_ids,
+                },
             )
             return redirect(self.get_error_url(request))
 
