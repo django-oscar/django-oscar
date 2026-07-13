@@ -347,6 +347,10 @@ class TestSetProductPriceAction(TestCase):
 
     def _make_form(self, data):
         qs = Product.objects.filter(pk__in=[self.child1.pk, self.child2.pk])
+        # partners is required; these tests exercise pricing mechanics, not
+        # partner scoping, so default it to the shared partner unless a test
+        # supplies its own.
+        data.setdefault("partners", [self.sr1.partner.pk])
         form = SetProductPriceForm(data=data, products_queryset=qs)
         form.is_valid()
         return form
@@ -494,6 +498,7 @@ class TestSetProductPriceAction(TestCase):
             {
                 "selected_products": [self.child1.pk],
                 "new_price": "20.00",
+                "partners": [],
             }
         )
         with self.assertRaises(SuspiciousOperation):
