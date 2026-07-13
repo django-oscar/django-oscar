@@ -557,7 +557,7 @@ var oscar = (function(o, $) {
                 });
             }
         },
-        child_product_bulk_action: {
+        product_bulk_action: {
             init: function(options) {
                 var formBound = !!(options && options.formBound);
 

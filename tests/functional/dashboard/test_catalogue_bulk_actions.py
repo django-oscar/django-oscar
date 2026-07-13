@@ -13,7 +13,7 @@ Product = get_model("catalogue", "Product")
 DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
-class ChildrenBulkActionTests(WebTestCase):
+class ProductBulkActionTests(WebTestCase):
     is_staff = True
     csrf_checks = False
     permissions = DashboardPermission.get("catalogue", "view_product", "change_product")
@@ -45,17 +45,17 @@ class ChildrenBulkActionTests(WebTestCase):
         return response
 
     def _intermediate_url(self):
-        url = reverse("dashboard:catalogue-product-children-bulk-action")
+        url = reverse("dashboard:catalogue-product-bulk-action")
         token = getattr(self, "_token", None)
         return "%s?key=%s" % (url, token) if token else url
 
 
-class TestMakeProductsPublicFlow(ChildrenBulkActionTests):
+class TestMakeProductsPublicFlow(ProductBulkActionTests):
     def test_list_post_redirects_to_intermediate(self):
         response = self._seed_session("make_products_public")
         # assertIsRedirect only compares the path, not the ?key= token.
         self.assertIsRedirect(
-            response, reverse("dashboard:catalogue-product-children-bulk-action")
+            response, reverse("dashboard:catalogue-product-bulk-action")
         )
 
     def test_get_intermediate_view_renders_form(self):
@@ -92,7 +92,7 @@ class TestMakeProductsPublicFlow(ChildrenBulkActionTests):
         self.assertIsRedirect(response)
 
 
-class TestMakeProductsNonPublicFlow(ChildrenBulkActionTests):
+class TestMakeProductsNonPublicFlow(ProductBulkActionTests):
     def setUp(self):
         super().setUp()
         self.child1.is_public = True
@@ -121,12 +121,12 @@ class TestMakeProductsNonPublicFlow(ChildrenBulkActionTests):
         self.assertIn("Select at least one product.", form.errors["selected_products"])
 
 
-class TestSetProductPriceFlow(ChildrenBulkActionTests):
+class TestSetProductPriceFlow(ProductBulkActionTests):
     def test_list_post_redirects_to_intermediate(self):
         response = self._seed_session("set_product_price")
         # assertIsRedirect only compares the path, not the ?key= token.
         self.assertIsRedirect(
-            response, reverse("dashboard:catalogue-product-children-bulk-action")
+            response, reverse("dashboard:catalogue-product-bulk-action")
         )
 
     def test_get_shows_price_form(self):
@@ -285,7 +285,7 @@ class TestSetProductPriceFlow(ChildrenBulkActionTests):
         self.assertEqual(self.child2.stockrecords.first().price, Decimal("5.00"))
 
 
-class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
+class TestIntermediateBulkActionViewSessionGuard(ProductBulkActionTests):
     def test_get_without_session_redirects_with_warning(self):
         response = self.get(self._intermediate_url())
         self.assertIsRedirect(response)
@@ -344,13 +344,13 @@ class TestIntermediateBulkActionViewSessionGuard(ChildrenBulkActionTests):
         self.assertIsOk(self.get(self._intermediate_url()))
 
 
-class TestSelectAllByType(ChildrenBulkActionTests):
+class TestSelectAllByType(ProductBulkActionTests):
     """
     The toolbar provides per-type "select all" checkboxes that include products
     beyond the display limit. Structure counts are always the full selectable set.
     """
 
-    display_limit_path = "oscar.apps.dashboard.catalogue.views.ChildProductSelectView.max_display_products"
+    display_limit_path = "oscar.apps.dashboard.catalogue.views.ProductBulkActionConfirmView.max_display_products"
 
     def test_get_shows_per_type_counts_in_context(self):
         self._seed_session("make_products_public")
@@ -425,7 +425,7 @@ class TestSetProductPriceFlowPartnerIsolation(WebTestCase):
         return parse_qs(urlparse(location).query).get("key", [None])[0]
 
     def _intermediate_url(self):
-        url = reverse("dashboard:catalogue-product-children-bulk-action")
+        url = reverse("dashboard:catalogue-product-bulk-action")
         token = getattr(self, "_token", None)
         return "%s?key=%s" % (url, token) if token else url
 

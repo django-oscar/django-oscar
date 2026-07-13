@@ -115,7 +115,7 @@ class TestCatalogueViews(WebTestCase):
     def _intermediate_url_with_token(self, seed_response):
         location = getattr(seed_response, "location", "") or ""
         token = parse_qs(urlparse(location).query).get("key", [None])[0]
-        url = reverse("dashboard:catalogue-product-children-bulk-action")
+        url = reverse("dashboard:catalogue-product-bulk-action")
         return "%s?key=%s" % (url, token) if token else url
 
     def test_make_public(self):

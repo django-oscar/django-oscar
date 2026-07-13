@@ -453,7 +453,7 @@ class CategorySearchForm(forms.Form):
     name = forms.CharField(max_length=255, required=False, label=_("Name"))
 
 
-class ChildrenBulkActionForm(forms.Form):
+class ProductBulkActionForm(forms.Form):
     """
     Base form for intermediate bulk actions operating on products.
 
@@ -492,7 +492,7 @@ class ChildrenBulkActionForm(forms.Form):
         return cleaned_data
 
 
-class SetChildrenPriceForm(ChildrenBulkActionForm):
+class SetProductPriceForm(ProductBulkActionForm):
     new_price = forms.DecimalField(
         min_value=Decimal("0"),
         decimal_places=2,

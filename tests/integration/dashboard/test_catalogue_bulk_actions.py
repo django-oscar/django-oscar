@@ -15,10 +15,10 @@ from oscar.test.utils import RequestFactory
 Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
 Partner = get_model("partner", "Partner")
-ChildrenBulkActionForm = get_class(
-    "dashboard.catalogue.forms", "ChildrenBulkActionForm"
+ProductBulkActionForm = get_class(
+    "dashboard.catalogue.forms", "ProductBulkActionForm"
 )
-SetChildrenPriceForm = get_class("dashboard.catalogue.forms", "SetChildrenPriceForm")
+SetProductPriceForm = get_class("dashboard.catalogue.forms", "SetProductPriceForm")
 MakeProductsPublicAction = get_class(
     "dashboard.catalogue.bulk_actions", "MakeProductsPublicAction"
 )
@@ -30,7 +30,7 @@ SetProductPriceAction = get_class(
 )
 
 
-class TestChildrenBulkActionForm(TestCase):
+class TestProductBulkActionForm(TestCase):
     def setUp(self):
         self.parent = create_product(structure="parent")
         self.child1 = create_product(structure="child", parent=self.parent)
@@ -38,7 +38,7 @@ class TestChildrenBulkActionForm(TestCase):
         self.qs = Product.objects.filter(parent=self.parent)
 
     def test_valid_single_selection(self):
-        form = ChildrenBulkActionForm(
+        form = ProductBulkActionForm(
             data={"selected_products": [self.child1.pk]},
             products_queryset=self.qs,
         )
@@ -47,7 +47,7 @@ class TestChildrenBulkActionForm(TestCase):
         self.assertNotIn(self.child2, form.cleaned_data["selected_products"])
 
     def test_valid_multiple_selection(self):
-        form = ChildrenBulkActionForm(
+        form = ProductBulkActionForm(
             data={"selected_products": [self.child1.pk, self.child2.pk]},
             products_queryset=self.qs,
         )
@@ -56,14 +56,14 @@ class TestChildrenBulkActionForm(TestCase):
         self.assertIn(self.child2, form.cleaned_data["selected_products"])
 
     def test_invalid_no_selection(self):
-        form = ChildrenBulkActionForm(data={}, products_queryset=self.qs)
+        form = ProductBulkActionForm(data={}, products_queryset=self.qs)
         self.assertFalse(form.is_valid())
         self.assertIn("selected_products", form.errors)
         self.assertIn("Select at least one product.", form.errors["selected_products"])
 
     def test_invalid_pk_outside_queryset(self):
         restricted_qs = Product.objects.filter(pk=self.child1.pk)
-        form = ChildrenBulkActionForm(
+        form = ProductBulkActionForm(
             data={"selected_products": [self.child2.pk]},
             products_queryset=restricted_qs,
         )
@@ -71,7 +71,7 @@ class TestChildrenBulkActionForm(TestCase):
         self.assertIn("selected_products", form.errors)
 
     def test_no_products_queryset_kwarg_rejects_all(self):
-        form = ChildrenBulkActionForm(
+        form = ProductBulkActionForm(
             data={"selected_products": [self.child1.pk]},
         )
         self.assertFalse(form.is_valid())
@@ -89,7 +89,7 @@ class TestSetProductPriceForm(TestCase):
         self.qs = Product.objects.filter(parent=self.parent)
 
     def test_valid_base_price_only(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk, self.child2.pk],
                 "partners": [self.partner.pk],
@@ -101,7 +101,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertEqual(form.cleaned_data["new_price"], Decimal("9.99"))
 
     def test_valid_override_price_only(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -113,7 +113,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertEqual(form.get_specific_prices()[self.child1.pk], Decimal("7.50"))
 
     def test_valid_mixed_base_and_override(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk, self.child2.pk],
                 "partners": [self.partner.pk],
@@ -128,7 +128,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertNotIn(self.child2.pk, specific)
 
     def test_valid_increase_by_amount(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -139,7 +139,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_valid_negative_increase_by_amount(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -150,7 +150,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_valid_increase_by_percentage(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -161,7 +161,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_valid_negative_increase_by_percentage(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -172,7 +172,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_invalid_multiple_global_options(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -185,7 +185,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertIn("__all__", form.errors)
 
     def test_invalid_no_price_for_selected(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -196,7 +196,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertIn("__all__", form.errors)
 
     def test_invalid_negative_override(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -208,7 +208,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertIn(f"price_{self.child1.pk}", form.errors)
 
     def test_invalid_negative_base_price(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -220,7 +220,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertIn("new_price", form.errors)
 
     def test_valid_zero_price(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "partners": [self.partner.pk],
@@ -232,7 +232,7 @@ class TestSetProductPriceForm(TestCase):
         self.assertEqual(form.cleaned_data["new_price"], Decimal("0"))
 
     def test_invalid_without_partners(self):
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child1.pk],
                 "new_price": "9.99",
@@ -243,13 +243,13 @@ class TestSetProductPriceForm(TestCase):
         self.assertIn("partners", form.errors)
 
     def test_partners_field_is_required(self):
-        form = SetChildrenPriceForm(products_queryset=self.qs)
+        form = SetProductPriceForm(products_queryset=self.qs)
         self.assertTrue(form.fields["partners"].required)
 
     def test_single_partner_is_preselected(self):
         # setUp only ever creates stockrecords under one shared partner, so
         # there's no real choice to make: it's preselected automatically.
-        form = SetChildrenPriceForm(products_queryset=self.qs)
+        form = SetProductPriceForm(products_queryset=self.qs)
         self.assertEqual(
             list(form.fields["partners"].initial), [self.partner]
         )
@@ -258,7 +258,7 @@ class TestSetProductPriceForm(TestCase):
         # With a genuine choice between partners, nothing is preselected
         # (opt in).
         create_stockrecord(self.child2, price=Decimal("5.00"), partner_name="Partner 2")
-        form = SetChildrenPriceForm(products_queryset=self.qs)
+        form = SetProductPriceForm(products_queryset=self.qs)
         self.assertFalse(form.fields["partners"].initial)
 
 
@@ -276,7 +276,7 @@ class TestMakeProductsPublicAction(TestCase):
 
     def _make_form(self, children):
         qs = Product.objects.filter(pk__in=[c.pk for c in children])
-        form = ChildrenBulkActionForm(
+        form = ProductBulkActionForm(
             data={"selected_products": [c.pk for c in children]},
             products_queryset=qs,
         )
@@ -311,7 +311,7 @@ class TestMakeProductsNonPublicAction(TestCase):
 
     def _make_form(self, children):
         qs = Product.objects.filter(pk__in=[c.pk for c in children])
-        form = ChildrenBulkActionForm(
+        form = ProductBulkActionForm(
             data={"selected_products": [c.pk for c in children]},
             products_queryset=qs,
         )
@@ -347,7 +347,7 @@ class TestSetProductPriceAction(TestCase):
 
     def _make_form(self, data):
         qs = Product.objects.filter(pk__in=[self.child1.pk, self.child2.pk])
-        form = SetChildrenPriceForm(data=data, products_queryset=qs)
+        form = SetProductPriceForm(data=data, products_queryset=qs)
         form.is_valid()
         return form
 
@@ -530,7 +530,7 @@ class TestSetProductPriceActionPartnerIsolation(TestCase):
 
     def _make_form(self, data, products_queryset=None):
         qs = products_queryset or Product.objects.filter(pk=self.child.pk)
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data=data, products_queryset=qs, user=self.non_staff_user
         )
         form.is_valid()
@@ -617,7 +617,7 @@ class TestSetProductPriceActionPartnerIsolation(TestCase):
 
     def test_staff_user_can_update_both_partners(self):
         staff_user = UserFactory(is_staff=True)
-        form = SetChildrenPriceForm(
+        form = SetProductPriceForm(
             data={
                 "selected_products": [self.child.pk],
                 "partners": [self.partner_a.pk, self.partner_b.pk],

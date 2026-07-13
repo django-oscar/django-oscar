@@ -10,9 +10,9 @@ from django.utils.translation import gettext_lazy as _, ngettext
 from oscar.core.loading import get_classes, get_model
 from oscar.views.generic import BulkAction, IntermediateBulkAction
 
-ChildrenBulkActionForm, SetChildrenPriceForm = get_classes(
+ProductBulkActionForm, SetProductPriceForm = get_classes(
     "dashboard.catalogue.forms",
-    ("ChildrenBulkActionForm", "SetChildrenPriceForm"),
+    ("ProductBulkActionForm", "SetProductPriceForm"),
 )
 Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
@@ -54,8 +54,8 @@ class MakeNonPublicAction(BaseSetPublicStatusAction):
 class ProductIntermediateAction(IntermediateBulkAction):
     """Base class for a two-step bulk action that operates on products."""
 
-    form_class = ChildrenBulkActionForm
-    template = "oscar/dashboard/catalogue/product_children_bulk_action.html"
+    form_class = ProductBulkActionForm
+    template = "oscar/dashboard/catalogue/product_bulk_action.html"
     supported_structures = None
 
     def filter_products_queryset(self, qs):
@@ -97,8 +97,8 @@ class MakeProductsNonPublicAction(BaseSetProductsPublicStatusAction):
 
 class SetProductPriceAction(ProductIntermediateAction):
     label = _("Update product prices")
-    form_class = SetChildrenPriceForm
-    template = "oscar/dashboard/catalogue/product_children_bulk_action_set_price.html"
+    form_class = SetProductPriceForm
+    template = "oscar/dashboard/catalogue/product_bulk_action_set_price.html"
     supported_structures = [Product.CHILD, Product.STANDALONE]
     require_irreversible_confirmation = True
 

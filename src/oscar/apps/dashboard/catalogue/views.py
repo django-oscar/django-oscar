@@ -24,8 +24,8 @@ from oscar.views.generic import IntermediateBulkActionView, ObjectLookupView
     AttributeOptionGroupForm,
     OptionForm,
     CategorySearchForm,
-    ChildrenBulkActionForm,
-    SetChildrenPriceForm,
+    ProductBulkActionForm,
+    SetProductPriceForm,
 ) = get_classes(
     "dashboard.catalogue.forms",
     (
@@ -38,8 +38,8 @@ from oscar.views.generic import IntermediateBulkActionView, ObjectLookupView
         "AttributeOptionGroupForm",
         "OptionForm",
         "CategorySearchForm",
-        "ChildrenBulkActionForm",
-        "SetChildrenPriceForm",
+        "ProductBulkActionForm",
+        "SetProductPriceForm",
     ),
 )
 (
@@ -192,7 +192,7 @@ class ProductListView(
         return queryset.distinct()
 
 
-class ChildProductSelectView(IntermediateBulkActionView):
+class ProductBulkActionConfirmView(IntermediateBulkActionView):
     """Confirmation view for two-step bulk actions on child products."""
 
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
