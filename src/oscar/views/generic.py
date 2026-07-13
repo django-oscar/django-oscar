@@ -1,4 +1,5 @@
 import hashlib
+import time
 
 from django.contrib import messages
 from django.http import JsonResponse
@@ -9,6 +10,23 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import View
 
 from oscar.core.utils import safe_referrer
+
+
+def _prune_expired_bulk_intermediate_buckets(session, session_key, ttl_seconds):
+    """
+    Drop pending bulk-action buckets older than ttl_seconds, so an abandoned
+    action (never confirmed or cancelled) doesn't sit in the session forever.
+    """
+    buckets = session.get(session_key, {})
+    if not buckets:
+        return buckets
+    cutoff = time.time() - ttl_seconds
+    expired = [token for token, data in buckets.items() if data.get("created_at", 0) < cutoff]
+    for token in expired:
+        del buckets[token]
+    if expired:
+        session.modified = True
+    return buckets
 
 
 class AbstractBulkAction:
@@ -171,7 +189,9 @@ class IntermediateBulkEditMixin(BulkEditMixin):
     bulk_intermediate_session_key = "bulk_intermediate"
     bulk_intermediate_token_param = "key"
 
-    max_bulk_intermediate_ids = 1000
+    max_bulk_intermediate_ids = 500
+
+    bulk_intermediate_ttl_seconds = 60 * 60 * 24
 
     def get_intermediate_url(self, request, action):
         raise NotImplementedError(
@@ -223,8 +243,17 @@ class IntermediateBulkEditMixin(BulkEditMixin):
             return redirect(self.get_error_url(request))
 
         token = self.get_bulk_intermediate_token(action, object_ids)
+        _prune_expired_bulk_intermediate_buckets(
+            request.session,
+            self.bulk_intermediate_session_key,
+            self.bulk_intermediate_ttl_seconds,
+        )
         buckets = request.session.setdefault(self.bulk_intermediate_session_key, {})
-        buckets[token] = {"object_ids": object_ids, "action": action}
+        buckets[token] = {
+            "action": action,
+            "created_at": time.time(),
+            "object_ids": object_ids,
+        }
         request.session.modified = True
 
         url = self.get_intermediate_url(request, action)
@@ -246,6 +275,7 @@ class IntermediateBulkActionView(View):
     intermediate_actions = {}
     bulk_intermediate_session_key = "bulk_intermediate"
     bulk_intermediate_token_param = "key"
+    bulk_intermediate_ttl_seconds = 60 * 60 * 24
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -256,7 +286,19 @@ class IntermediateBulkActionView(View):
     def dispatch(self, request, *args, **kwargs):
         self._token = request.GET.get(self.bulk_intermediate_token_param)
         buckets = request.session.get(self.bulk_intermediate_session_key, {})
-        session_data = buckets.get(self._token, {}) if self._token else {}
+        session_data = buckets.get(self._token) if self._token else None
+        if session_data is not None:
+            # Actively using this pending action right now: refresh it so it
+            # isn't pruned as abandoned just because time has passed since
+            # it was created.
+            session_data["created_at"] = time.time()
+            request.session.modified = True
+        _prune_expired_bulk_intermediate_buckets(
+            request.session,
+            self.bulk_intermediate_session_key,
+            self.bulk_intermediate_ttl_seconds,
+        )
+        session_data = session_data or {}
         self._action = session_data.get("action")
         self._selected_ids = session_data.get("object_ids", [])
         if (
