@@ -222,6 +222,14 @@ class ChildProductSelectView(IntermediateBulkActionView):
             qs = Product.objects.filter(
                 Q(pk__in=self._selected_ids) | Q(parent_id__in=self._selected_ids)
             )
+            if not self.request.user.is_staff:
+                # Variants stocked by another partner must never be selectable.
+                # Parents aren't stock-bearing themselves, so leave them be.
+                user = self.request.user
+                qs = qs.filter(
+                    Q(structure=Product.PARENT)
+                    | Q(stockrecords__partner__users__pk=user.pk)
+                ).distinct()
             if action.supported_structures is not None:
                 qs = qs.filter(structure__in=action.supported_structures)
             self._selectable_qs = action.filter_products_queryset(qs)
@@ -273,6 +281,7 @@ class ChildProductSelectView(IntermediateBulkActionView):
         return {
             **super().get_form_kwargs(),
             "products_queryset": self.get_selectable_queryset(),
+            "user": self.request.user,
         }
 
     def get_objects(self, form):

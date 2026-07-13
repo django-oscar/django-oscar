@@ -474,7 +474,7 @@ class ChildrenBulkActionForm(forms.Form):
         widget=forms.HiddenInput(), required=False
     )
 
-    def __init__(self, *args, products_queryset=None, **kwargs):
+    def __init__(self, *args, products_queryset=None, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         if products_queryset is not None:
             self.fields["selected_products"].queryset = products_queryset
@@ -517,10 +517,20 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
         ),
     )
 
-    def __init__(self, *args, products_queryset=None, **kwargs):
-        super().__init__(*args, products_queryset=products_queryset, **kwargs)
+    def __init__(self, *args, products_queryset=None, user=None, **kwargs):
+        super().__init__(
+            *args, products_queryset=products_queryset, user=user, **kwargs
+        )
         qs = self.fields["selected_products"].queryset
         partner_qs = Partner.objects.filter(stockrecords__product__in=qs).distinct()
+        if user is not None and not user.is_staff:
+            partner_qs = partner_qs.filter(users__pk=user.pk)
+        partner_count = partner_qs.count()
+        # No real choice to make with only one partner, so don't ask non-staff
+        # users to pick it; still submitted as the initial hidden value.
+        single_partner_non_staff = (
+            user is not None and not user.is_staff and partner_count == 1
+        )
         self.fields["partners"] = forms.ModelMultipleChoiceField(
             queryset=partner_qs,
             required=True,
@@ -528,8 +538,12 @@ class SetChildrenPriceForm(ChildrenBulkActionForm):
             help_text=_(
                 "Select the partners whose stockrecords should be updated. Only stockrecords belonging to the selected partners will be changed."
             ),
-            widget=forms.SelectMultiple,
-            initial=partner_qs if partner_qs.count() == 1 else None,
+            widget=(
+                forms.MultipleHiddenInput
+                if single_partner_non_staff
+                else forms.SelectMultiple
+            ),
+            initial=partner_qs if partner_count == 1 else None,
         )
         for pk in qs.values_list("pk", flat=True):
             self.fields[f"price_{pk}"] = forms.DecimalField(

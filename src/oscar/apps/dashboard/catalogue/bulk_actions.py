@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.db.models import Case, DecimalField, F, Value, When
 from django.db.models.functions import Greatest
 from django.db.transaction import atomic
@@ -111,7 +112,22 @@ class SetProductPriceAction(ProductIntermediateAction):
         override_ids = [pk for pk in product_ids if pk in specific]
         rest_ids = [pk for pk in product_ids if pk not in specific]
         partners = form.cleaned_data.get("partners")
-        partner_filter = {"partner__in": partners} if partners else {}
+        if not partners:
+            raise SuspiciousOperation(
+                "At least one partner must be selected to update prices."
+            )
+
+        if not request.user.is_staff:
+            # Never trust the submitted partners as-is: a non-staff user must
+            # only ever be able to touch stockrecords of their own partners.
+            partners = partners.filter(pk__in=request.user.partners.all())
+            if not partners:
+                raise PermissionDenied(
+                    "You do not have permission to update prices for the"
+                    " selected partners."
+                )
+
+        partner_filter = {"partner__in": partners}
 
         count = 0
 

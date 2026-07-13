@@ -1,4 +1,5 @@
 from http import client as http_client
+from urllib.parse import parse_qs, urlparse
 
 from django.urls import reverse
 from django.test import TestCase
@@ -111,15 +112,20 @@ class TestCatalogueViews(WebTestCase):
         ]
         self.assertEqual(products_on_page, [product])
 
+    def _intermediate_url_with_token(self, seed_response):
+        location = getattr(seed_response, "location", "") or ""
+        token = parse_qs(urlparse(location).query).get("key", [None])[0]
+        url = reverse("dashboard:catalogue-product-children-bulk-action")
+        return "%s?key=%s" % (url, token) if token else url
+
     def test_make_public(self):
         a = create_product(upc="A", is_public=False)
-        intermediate_url = reverse("dashboard:catalogue-product-children-bulk-action")
-        self.post(
+        seed_response = self.post(
             reverse("dashboard:catalogue-product-list"),
             params={"action": "make_products_public", "selected_product": [a.id]},
         )
         response = self.post(
-            intermediate_url,
+            self._intermediate_url_with_token(seed_response),
             params={"selected_products": [a.id]},
         )
         self.assertIsRedirect(response)
@@ -128,13 +134,12 @@ class TestCatalogueViews(WebTestCase):
 
     def test_make_non_public(self):
         b = create_product(upc="B")
-        intermediate_url = reverse("dashboard:catalogue-product-children-bulk-action")
-        self.post(
+        seed_response = self.post(
             reverse("dashboard:catalogue-product-list"),
             params={"action": "make_products_non_public", "selected_product": [b.id]},
         )
         response = self.post(
-            intermediate_url,
+            self._intermediate_url_with_token(seed_response),
             params={"selected_products": [b.id]},
         )
         self.assertIsRedirect(response)

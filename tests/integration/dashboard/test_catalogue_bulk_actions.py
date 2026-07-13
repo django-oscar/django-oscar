@@ -1,13 +1,20 @@
 from decimal import Decimal
 
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.test import TestCase
 
 from oscar.core.loading import get_class, get_model
-from oscar.test.factories import create_product, create_stockrecord
+from oscar.test.factories import (
+    PartnerFactory,
+    UserFactory,
+    create_product,
+    create_stockrecord,
+)
 from oscar.test.utils import RequestFactory
 
 Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
+Partner = get_model("partner", "Partner")
 ChildrenBulkActionForm = get_class(
     "dashboard.catalogue.forms", "ChildrenBulkActionForm"
 )
@@ -235,12 +242,24 @@ class TestSetProductPriceForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn("partners", form.errors)
 
-    def test_partners_field_is_required_and_opt_in(self):
-        # Partners must be chosen explicitly (opt in); nothing is preselected.
+    def test_partners_field_is_required(self):
         form = SetChildrenPriceForm(products_queryset=self.qs)
-        field = form.fields["partners"]
-        self.assertTrue(field.required)
-        self.assertFalse(field.initial)
+        self.assertTrue(form.fields["partners"].required)
+
+    def test_single_partner_is_preselected(self):
+        # setUp only ever creates stockrecords under one shared partner, so
+        # there's no real choice to make: it's preselected automatically.
+        form = SetChildrenPriceForm(products_queryset=self.qs)
+        self.assertEqual(
+            list(form.fields["partners"].initial), [self.partner]
+        )
+
+    def test_multiple_partners_are_not_preselected(self):
+        # With a genuine choice between partners, nothing is preselected
+        # (opt in).
+        create_stockrecord(self.child2, price=Decimal("5.00"), partner_name="Partner 2")
+        form = SetChildrenPriceForm(products_queryset=self.qs)
+        self.assertFalse(form.fields["partners"].initial)
 
 
 class TestMakeProductsPublicAction(TestCase):
@@ -321,7 +340,10 @@ class TestSetProductPriceAction(TestCase):
         self.sr1 = create_stockrecord(self.child1, price=Decimal("5.00"))
         self.sr2 = create_stockrecord(self.child2, price=Decimal("5.00"))
         self.action = SetProductPriceAction()
-        self.request = RequestFactory().get("/")
+        # A staff user: these tests exercise the general price-update
+        # mechanics, not partner scoping (see TestSetProductPriceActionPartnerIsolation).
+        staff_user = UserFactory(is_staff=True)
+        self.request = RequestFactory().get("/", user=staff_user)
 
     def _make_form(self, data):
         qs = Product.objects.filter(pk__in=[self.child1.pk, self.child2.pk])
@@ -465,21 +487,17 @@ class TestSetProductPriceAction(TestCase):
         self.assertEqual(self.sr1.price, Decimal("20.00"))
         self.assertEqual(sr1_p2.price, Decimal("5.00"))
 
-    def test_empty_partner_filter_updates_all_partners(self):
-        sr1_p2 = create_stockrecord(
-            self.child1, price=Decimal("5.00"), partner_name="Partner 2"
-        )
+    def test_no_partners_raises(self):
+        # partners is required on the form; execute() must never silently
+        # fall back to "update every partner" when it's missing.
         form = self._make_form(
             {
                 "selected_products": [self.child1.pk],
                 "new_price": "20.00",
             }
         )
-        self.action.execute(self.request, self._objects(form), form)
-        self.sr1.refresh_from_db()
-        sr1_p2.refresh_from_db()
-        self.assertEqual(self.sr1.price, Decimal("20.00"))
-        self.assertEqual(sr1_p2.price, Decimal("20.00"))
+        with self.assertRaises(SuspiciousOperation):
+            self.action.execute(self.request, self._objects(form), form)
 
     def test_returns_none(self):
         form = self._make_form(
@@ -487,3 +505,133 @@ class TestSetProductPriceAction(TestCase):
         )
         result = self.action.execute(self.request, self._objects(form), form)
         self.assertIsNone(result)
+
+
+class TestSetProductPriceActionPartnerIsolation(TestCase):
+    """A non-staff partner user must never be able to update another
+    partner's stockrecords, however the request is constructed."""
+
+    def setUp(self):
+        self.partner_a = PartnerFactory(name="Partner A")
+        self.partner_b = PartnerFactory(name="Partner B")
+        self.non_staff_user = UserFactory(is_staff=False)
+        self.partner_a.users.add(self.non_staff_user)
+
+        self.parent = create_product(structure="parent")
+        self.child = create_product(structure="child", parent=self.parent)
+        self.sr_a = create_stockrecord(
+            self.child, price=Decimal("5.00"), partner_name="Partner A"
+        )
+        self.sr_b = create_stockrecord(
+            self.child, price=Decimal("5.00"), partner_name="Partner B"
+        )
+
+        self.action = SetProductPriceAction()
+
+    def _make_form(self, data, products_queryset=None):
+        qs = products_queryset or Product.objects.filter(pk=self.child.pk)
+        form = SetChildrenPriceForm(
+            data=data, products_queryset=qs, user=self.non_staff_user
+        )
+        form.is_valid()
+        return form
+
+    def test_partner_choices_exclude_other_partners_stockrecord(self):
+        form = self._make_form({"selected_products": [self.child.pk]})
+        choices = set(form.fields["partners"].queryset)
+        self.assertIn(self.partner_a, choices)
+        self.assertNotIn(self.partner_b, choices)
+
+    def test_submitting_foreign_partner_pk_is_rejected_by_form(self):
+        form = self._make_form(
+            {
+                "selected_products": [self.child.pk],
+                "partners": [self.partner_b.pk],
+                "new_price": "20.00",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("partners", form.errors)
+
+    def test_execute_never_updates_other_partners_stockrecord(self):
+        # Even if cleaned_data somehow carried the foreign partner (e.g. a
+        # bypassed/forged form), execute() must not trust it.
+        form = self._make_form(
+            {
+                "selected_products": [self.child.pk],
+                "partners": [self.partner_a.pk],
+                "new_price": "20.00",
+            }
+        )
+        self.assertTrue(form.is_valid())
+        form.cleaned_data["partners"] = Partner.objects.filter(
+            pk__in=[self.partner_a.pk, self.partner_b.pk]
+        )
+
+        request = RequestFactory().get("/", user=self.non_staff_user)
+        self.action.execute(request, [self.child], form)
+
+        self.sr_a.refresh_from_db()
+        self.sr_b.refresh_from_db()
+        self.assertEqual(self.sr_a.price, Decimal("20.00"))
+        self.assertEqual(self.sr_b.price, Decimal("5.00"))
+
+    def test_execute_raises_when_no_partners_provided(self):
+        # partners is required on the form; execute() must never silently
+        # default to "just my own partners" (or worse, "every partner").
+        form = self._make_form(
+            {
+                "selected_products": [self.child.pk],
+                "new_price": "20.00",
+            }
+        )
+        request = RequestFactory().get("/", user=self.non_staff_user)
+        with self.assertRaises(SuspiciousOperation):
+            self.action.execute(request, [self.child], form)
+
+        self.sr_a.refresh_from_db()
+        self.sr_b.refresh_from_db()
+        self.assertEqual(self.sr_a.price, Decimal("5.00"))
+        self.assertEqual(self.sr_b.price, Decimal("5.00"))
+
+    def test_execute_raises_when_selection_intersects_to_nothing(self):
+        # A non-staff user submitting only a foreign partner must raise,
+        # never silently fall back to updating every partner.
+        form = self._make_form(
+            {
+                "selected_products": [self.child.pk],
+                "partners": [self.partner_b.pk],
+                "new_price": "20.00",
+            },
+        )
+        form.cleaned_data["partners"] = Partner.objects.filter(pk=self.partner_b.pk)
+
+        request = RequestFactory().get("/", user=self.non_staff_user)
+        with self.assertRaises(PermissionDenied):
+            self.action.execute(request, [self.child], form)
+
+        self.sr_a.refresh_from_db()
+        self.sr_b.refresh_from_db()
+        self.assertEqual(self.sr_a.price, Decimal("5.00"))
+        self.assertEqual(self.sr_b.price, Decimal("5.00"))
+
+    def test_staff_user_can_update_both_partners(self):
+        staff_user = UserFactory(is_staff=True)
+        form = SetChildrenPriceForm(
+            data={
+                "selected_products": [self.child.pk],
+                "partners": [self.partner_a.pk, self.partner_b.pk],
+                "new_price": "20.00",
+            },
+            products_queryset=Product.objects.filter(pk=self.child.pk),
+            user=staff_user,
+        )
+        self.assertTrue(form.is_valid())
+
+        request = RequestFactory().get("/", user=staff_user)
+        self.action.execute(request, [self.child], form)
+
+        self.sr_a.refresh_from_db()
+        self.sr_b.refresh_from_db()
+        self.assertEqual(self.sr_a.price, Decimal("20.00"))
+        self.assertEqual(self.sr_b.price, Decimal("20.00"))

@@ -53,7 +53,10 @@ class ChildrenBulkActionTests(WebTestCase):
 class TestMakeProductsPublicFlow(ChildrenBulkActionTests):
     def test_list_post_redirects_to_intermediate(self):
         response = self._seed_session("make_products_public")
-        self.assertIsRedirect(response, self._intermediate_url())
+        # assertIsRedirect only compares the path, not the ?key= token.
+        self.assertIsRedirect(
+            response, reverse("dashboard:catalogue-product-children-bulk-action")
+        )
 
     def test_get_intermediate_view_renders_form(self):
         self._seed_session("make_products_public")
@@ -121,7 +124,10 @@ class TestMakeProductsNonPublicFlow(ChildrenBulkActionTests):
 class TestSetProductPriceFlow(ChildrenBulkActionTests):
     def test_list_post_redirects_to_intermediate(self):
         response = self._seed_session("set_product_price")
-        self.assertIsRedirect(response, self._intermediate_url())
+        # assertIsRedirect only compares the path, not the ?key= token.
+        self.assertIsRedirect(
+            response, reverse("dashboard:catalogue-product-children-bulk-action")
+        )
 
     def test_get_shows_price_form(self):
         self._seed_session("set_product_price")
@@ -385,3 +391,102 @@ class TestSelectAllByType(ChildrenBulkActionTests):
         self.child2.refresh_from_db()
         self.assertTrue(self.child1.is_public)
         self.assertTrue(self.child2.is_public)
+
+
+class TestSetProductPriceFlowPartnerIsolation(WebTestCase):
+    """
+    Full-stack check that a non-staff partner user can never see or edit
+    another partner's variants/stockrecords through the bulk price flow.
+    """
+
+    is_staff = False
+    csrf_checks = False
+    permissions = DashboardPermission.partner_dashboard_access
+
+    def setUp(self):
+        super().setUp()
+        self.parent = create_product(structure="parent")
+        self.child_own = create_product(structure="child", parent=self.parent)
+        self.child_foreign = create_product(structure="child", parent=self.parent)
+
+        self.sr_own = create_stockrecord(
+            self.child_own,
+            price=Decimal("5.00"),
+            partner_name="Own Partner",
+            partner_users=[self.user],
+        )
+        self.sr_foreign = create_stockrecord(
+            self.child_foreign, price=Decimal("5.00"), partner_name="Foreign Partner"
+        )
+        self.partner_own = self.sr_own.partner
+
+    def _token_from_redirect(self, response):
+        location = getattr(response, "location", "") or ""
+        return parse_qs(urlparse(location).query).get("key", [None])[0]
+
+    def _intermediate_url(self):
+        url = reverse("dashboard:catalogue-product-children-bulk-action")
+        token = getattr(self, "_token", None)
+        return "%s?key=%s" % (url, token) if token else url
+
+    def _seed_session(self):
+        response = self.post(
+            reverse("dashboard:catalogue-product-list"),
+            params={"action": "set_product_price", "selected_product": [self.parent.pk]},
+        )
+        self._token = self._token_from_redirect(response)
+        return response
+
+    def test_foreign_partner_variant_not_in_selectable_products(self):
+        self._seed_session()
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        selectable_pks = {
+            p.pk for p in page.context["form"].fields["selected_products"].queryset
+        }
+        self.assertIn(self.child_own.pk, selectable_pks)
+        self.assertNotIn(self.child_foreign.pk, selectable_pks)
+
+    def test_foreign_partner_variant_not_in_display_rows(self):
+        self._seed_session()
+        page = self.get(self._intermediate_url())
+        displayed_pks = {row["product"].pk for row in page.context["display_rows"]}
+        self.assertIn(self.child_own.pk, displayed_pks)
+        self.assertNotIn(self.child_foreign.pk, displayed_pks)
+
+    def test_partners_field_hidden_for_single_partner(self):
+        self._seed_session()
+        page = self.get(self._intermediate_url())
+        field = page.context["form"].fields["partners"]
+        self.assertTrue(field.widget.is_hidden)
+
+    def test_submit_only_updates_own_partners_stockrecord(self):
+        self._seed_session()
+        response = self.post(
+            self._intermediate_url(),
+            params={
+                "selected_products": [self.child_own.pk],
+                "partners": [self.partner_own.pk],
+                "new_price": "20.00",
+            },
+        )
+        self.assertRedirectsTo(response, "dashboard:catalogue-product-list")
+        self.sr_own.refresh_from_db()
+        self.sr_foreign.refresh_from_db()
+        self.assertEqual(self.sr_own.price, Decimal("20.00"))
+        self.assertEqual(self.sr_foreign.price, Decimal("5.00"))
+
+    def test_forcing_foreign_product_into_selection_is_rejected(self):
+        self._seed_session()
+        page = self.post(
+            self._intermediate_url(),
+            params={
+                "selected_products": [self.child_foreign.pk],
+                "partners": [self.partner_own.pk],
+                "new_price": "20.00",
+            },
+        )
+        self.assertIsOk(page)
+        self.assertIn("selected_products", page.context["form"].errors)
+        self.sr_foreign.refresh_from_db()
+        self.assertEqual(self.sr_foreign.price, Decimal("5.00"))
