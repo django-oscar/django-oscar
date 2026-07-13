@@ -420,6 +420,7 @@ class TestSetProductPriceFlowPartnerIsolation(WebTestCase):
             self.child_foreign, price=Decimal("5.00"), partner_name="Foreign Partner"
         )
         self.partner_own = self.sr_own.partner
+        self._token = None
 
     def _token_from_redirect(self, response):
         location = getattr(response, "location", "") or ""
