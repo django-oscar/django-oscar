@@ -15,9 +15,7 @@ from oscar.test.utils import RequestFactory
 Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
 Partner = get_model("partner", "Partner")
-ProductBulkActionForm = get_class(
-    "dashboard.catalogue.forms", "ProductBulkActionForm"
-)
+ProductBulkActionForm = get_class("dashboard.catalogue.forms", "ProductBulkActionForm")
 SetProductPriceForm = get_class("dashboard.catalogue.forms", "SetProductPriceForm")
 MakeProductsPublicAction = get_class(
     "dashboard.catalogue.bulk_actions", "MakeProductsPublicAction"
@@ -250,9 +248,7 @@ class TestSetProductPriceForm(TestCase):
         # setUp only ever creates stockrecords under one shared partner, so
         # there's no real choice to make: it's preselected automatically.
         form = SetProductPriceForm(products_queryset=self.qs)
-        self.assertEqual(
-            list(form.fields["partners"].initial), [self.partner]
-        )
+        self.assertEqual(list(form.fields["partners"].initial), [self.partner])
 
     def test_multiple_partners_are_not_preselected(self):
         # With a genuine choice between partners, nothing is preselected

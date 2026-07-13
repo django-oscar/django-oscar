@@ -432,7 +432,10 @@ class TestSetProductPriceFlowPartnerIsolation(WebTestCase):
     def _seed_session(self):
         response = self.post(
             reverse("dashboard:catalogue-product-list"),
-            params={"action": "set_product_price", "selected_product": [self.parent.pk]},
+            params={
+                "action": "set_product_price",
+                "selected_product": [self.parent.pk],
+            },
         )
         self._token = self._token_from_redirect(response)
         return response
