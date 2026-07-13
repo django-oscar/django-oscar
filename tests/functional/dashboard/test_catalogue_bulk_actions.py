@@ -31,6 +31,7 @@ class ProductBulkActionTests(WebTestCase):
         create_stockrecord(self.child2, price=Decimal("5.00"))
         # Both stockrecords share the same (default) partner.
         self.partner = self.child1.stockrecords.first().partner
+        self._token = None
 
     def _token_from_redirect(self, response):
         location = getattr(response, "location", "") or ""
