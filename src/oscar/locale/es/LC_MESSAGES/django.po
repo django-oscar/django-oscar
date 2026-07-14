@@ -9459,6 +9459,13 @@ msgstr "Retornar a los resultados de la búsqueda"
 msgid "You need to select some %ss"
 msgstr "Selecciona algunos %ss."
 
+msgid ""
+"Too many %(object)ss selected (%(count)d). Narrow your selection to "
+"%(limit)d or fewer and try again."
+msgstr ""
+"Se han seleccionado demasiados %(object)ss (%(count)d). Reduce tu "
+"selección a %(limit)d o menos e inténtalo de nuevo."
+
 msgid "Make public"
 msgstr "Hacer público"
 

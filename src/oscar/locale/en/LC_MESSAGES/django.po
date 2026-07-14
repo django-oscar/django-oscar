@@ -9120,6 +9120,11 @@ msgstr ""
 msgid "You need to select some %ss"
 msgstr ""
 
+msgid ""
+"Too many %(object)ss selected (%(count)d). Narrow your selection to "
+"%(limit)d or fewer and try again."
+msgstr ""
+
 #, python-format
 msgid "Public status was successfully updated to %(status)s for %(count)d record."
 msgid_plural "Public status was successfully updated to %(status)s for %(count)d objects."

@@ -9430,6 +9430,13 @@ msgstr "Terug naar zoekresultaten"
 msgid "You need to select some %ss"
 msgstr "U moet %ss selecteren"
 
+msgid ""
+"Too many %(object)ss selected (%(count)d). Narrow your selection to "
+"%(limit)d or fewer and try again."
+msgstr ""
+"Te veel %(object)ss geselecteerd (%(count)d). Beperk uw selectie tot "
+"%(limit)d of minder en probeer het opnieuw."
+
 msgid "Make public"
 msgstr "Openbaar maken"
 
