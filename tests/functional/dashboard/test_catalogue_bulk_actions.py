@@ -495,3 +495,19 @@ class TestSetProductPriceFlowPartnerIsolation(WebTestCase):
         self.assertIn("selected_products", page.context["form"].errors)
         self.sr_foreign.refresh_from_db()
         self.assertEqual(self.sr_foreign.price, Decimal("5.00"))
+
+    def test_cheapest_price_never_shows_a_foreign_partners_lower_price(self):
+        # child_own already has sr_own at 5.00 under "Own Partner". Give it
+        # an even cheaper stockrecord under a foreign partner too.
+        create_stockrecord(
+            self.child_own, price=Decimal("1.00"), partner_name="Foreign Partner"
+        )
+        self._seed_session()
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        products_by_pk = {
+            row["product"].pk: row["product"] for row in page.context["display_rows"]
+        }
+        self.assertEqual(
+            products_by_pk[self.child_own.pk].cheapest_price, Decimal("5.00")
+        )
