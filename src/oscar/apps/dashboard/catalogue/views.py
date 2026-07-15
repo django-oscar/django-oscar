@@ -11,8 +11,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
-from oscar.core.loading import get_classes, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views.generic import IntermediateBulkActionView, ObjectLookupView
+
+partner_product_visibility_q = get_class(
+    "dashboard.catalogue.utils", "partner_product_visibility_q"
+)
 
 (
     ProductForm,
@@ -197,7 +201,7 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
 
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
 
-    max_display_products = 200
+    max_displayable_products = 200
 
     def get_cancel_url(self):
         return reverse("dashboard:catalogue-product-list")
@@ -224,11 +228,8 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             )
             if not self.request.user.is_staff:
                 # Variants stocked by another partner must never be selectable.
-                # Parents aren't stock-bearing themselves, so leave them be.
-                user = self.request.user
                 qs = qs.filter(
-                    Q(structure=Product.PARENT)
-                    | Q(stockrecords__partner__users__pk=user.pk)
+                    partner_product_visibility_q(self.request.user)
                 ).distinct()
             if action.supported_structures is not None:
                 qs = qs.filter(structure__in=action.supported_structures)
@@ -260,14 +261,7 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             # Only show parents that have selectable children
             base = base.filter(children__in=selectable_qs)
 
-        children_qs = self._annotate_cheapest_price(
-            selectable_qs.filter(structure=Product.CHILD)
-        )
-        return (
-            self._annotate_cheapest_price(base)
-            .prefetch_related(Prefetch("children", queryset=children_qs))
-            .distinct()
-        )
+        return self._annotate_cheapest_price(base).distinct()
 
     def get_standalone_queryset(self):
         """Standalone products from the original selection that are selectable."""
@@ -317,13 +311,18 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
         Build the list of table rows and count how many selectable products
         were included.
         """
-        parents = self.get_parent_queryset()
+        children_qs = self._annotate_cheapest_price(
+            self.get_selectable_queryset().filter(structure=Product.CHILD)
+        )
+        parents = self.get_parent_queryset().prefetch_related(
+            Prefetch("children", queryset=children_qs)
+        )
         standalone = self.get_standalone_queryset()
 
         display_rows = []
         displayed = 0
         selectable_displayed = 0
-        max_display = self.max_display_products
+        max_display = self.max_displayable_products
 
         for product in standalone:
             if displayed >= max_display:

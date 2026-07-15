@@ -7,12 +7,15 @@ from django.db.models.functions import Greatest
 from django.db.transaction import atomic
 from django.utils.translation import gettext_lazy as _, ngettext
 
-from oscar.core.loading import get_classes, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views.generic import BulkAction, IntermediateBulkAction
 
 ProductBulkActionForm, SetProductPriceForm = get_classes(
     "dashboard.catalogue.forms",
     ("ProductBulkActionForm", "SetProductPriceForm"),
+)
+partner_product_visibility_q = get_class(
+    "dashboard.catalogue.utils", "partner_product_visibility_q"
 )
 Product = get_model("catalogue", "Product")
 StockRecord = get_model("partner", "StockRecord")
@@ -70,10 +73,17 @@ class BaseSetProductsPublicStatusAction(ProductIntermediateAction):
 
     @atomic
     def execute(self, request, objects, form):
-        count = Product.objects.filter(pk__in=[r.pk for r in objects]).update(
-            is_public=self.is_public
-        )
+        qs = Product.objects.filter(pk__in=[r.pk for r in objects])
+
+        if not request.user.is_staff:
+            allowed = qs.filter(
+                partner_product_visibility_q(request.user)
+            ).values("pk")
+            qs = Product.objects.filter(pk__in=allowed)
+
+        count = qs.update(is_public=self.is_public)
         status = _("public") if self.is_public else _("non-public")
+
         messages.success(
             request,
             ngettext(
@@ -143,6 +153,7 @@ class SetProductPriceAction(ProductIntermediateAction):
                         if pk in override_ids
                     ],
                     output_field=DecimalField(),
+                    default=F("price"),
                 )
             )
 

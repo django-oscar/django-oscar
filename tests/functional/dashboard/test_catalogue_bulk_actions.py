@@ -351,7 +351,7 @@ class TestSelectAllByType(ProductBulkActionTests):
     beyond the display limit. Structure counts are always the full selectable set.
     """
 
-    display_limit_path = "oscar.apps.dashboard.catalogue.views.ProductBulkActionConfirmView.max_display_products"
+    display_limit_path = "oscar.apps.dashboard.catalogue.views.ProductBulkActionConfirmView.max_displayable_products"
 
     def test_get_shows_per_type_counts_in_context(self):
         self._seed_session("make_products_public")

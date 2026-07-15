@@ -268,7 +268,9 @@ class TestMakeProductsPublicAction(TestCase):
             structure="child", parent=self.parent, is_public=False
         )
         self.action = MakeProductsPublicAction()
-        self.request = RequestFactory().get("/")
+        # A staff user: these tests exercise the general toggle mechanics,
+        # not partner scoping (see TestSetProductsPublicStatusPartnerIsolation).
+        self.request = RequestFactory().get("/", user=UserFactory(is_staff=True))
 
     def _make_form(self, children):
         qs = Product.objects.filter(pk__in=[c.pk for c in children])
@@ -303,7 +305,9 @@ class TestMakeProductsNonPublicAction(TestCase):
             structure="child", parent=self.parent, is_public=True
         )
         self.action = MakeProductsNonPublicAction()
-        self.request = RequestFactory().get("/")
+        # A staff user: these tests exercise the general toggle mechanics,
+        # not partner scoping (see TestSetProductsPublicStatusPartnerIsolation).
+        self.request = RequestFactory().get("/", user=UserFactory(is_staff=True))
 
     def _make_form(self, children):
         qs = Product.objects.filter(pk__in=[c.pk for c in children])
@@ -326,6 +330,94 @@ class TestMakeProductsNonPublicAction(TestCase):
         form = self._make_form([self.child1])
         result = self.action.execute(self.request, [self.child1], form)
         self.assertIsNone(result)
+
+
+class TestSetProductsPublicStatusPartnerIsolation(TestCase):
+    """A non-staff partner user must only be able to change the public
+    status of products where at least one stockrecord is their own."""
+
+    def setUp(self):
+        self.partner_own = PartnerFactory(name="Own Partner")
+        self.non_staff_user = UserFactory(is_staff=False)
+        self.partner_own.users.add(self.non_staff_user)
+
+        self.standalone_own = create_product(
+            structure="standalone", is_public=False
+        )
+        create_stockrecord(self.standalone_own, partner_name="Own Partner")
+
+        self.standalone_foreign = create_product(
+            structure="standalone", is_public=False
+        )
+        create_stockrecord(self.standalone_foreign, partner_name="Foreign Partner")
+
+        self.parent_with_own_child = create_product(
+            structure="parent", is_public=False
+        )
+        self.child_own = create_product(
+            structure="child", parent=self.parent_with_own_child, is_public=False
+        )
+        create_stockrecord(self.child_own, partner_name="Own Partner")
+
+        self.parent_foreign_only = create_product(
+            structure="parent", is_public=False
+        )
+        self.child_foreign = create_product(
+            structure="child", parent=self.parent_foreign_only, is_public=False
+        )
+        create_stockrecord(self.child_foreign, partner_name="Foreign Partner")
+
+        self.action = MakeProductsPublicAction()
+
+    def _make_form(self, products):
+        qs = Product.objects.filter(pk__in=[p.pk for p in products])
+        form = ProductBulkActionForm(
+            data={"selected_products": [p.pk for p in products]},
+            products_queryset=qs,
+        )
+        form.is_valid()
+        return form
+
+    def test_non_staff_only_updates_own_partners_standalone(self):
+        products = [self.standalone_own, self.standalone_foreign]
+        request = RequestFactory().get("/", user=self.non_staff_user)
+        self.action.execute(request, products, self._make_form(products))
+
+        self.standalone_own.refresh_from_db()
+        self.standalone_foreign.refresh_from_db()
+        self.assertTrue(self.standalone_own.is_public)
+        self.assertFalse(self.standalone_foreign.is_public)
+
+    def test_non_staff_can_update_parent_via_own_child_stockrecord(self):
+        request = RequestFactory().get("/", user=self.non_staff_user)
+        self.action.execute(
+            request,
+            [self.parent_with_own_child],
+            self._make_form([self.parent_with_own_child]),
+        )
+        self.parent_with_own_child.refresh_from_db()
+        self.assertTrue(self.parent_with_own_child.is_public)
+
+    def test_non_staff_cannot_update_parent_with_only_foreign_children(self):
+        request = RequestFactory().get("/", user=self.non_staff_user)
+        self.action.execute(
+            request,
+            [self.parent_foreign_only],
+            self._make_form([self.parent_foreign_only]),
+        )
+        self.parent_foreign_only.refresh_from_db()
+        self.assertFalse(self.parent_foreign_only.is_public)
+
+    def test_staff_updates_regardless_of_partner(self):
+        staff_user = UserFactory(is_staff=True)
+        products = [self.standalone_own, self.standalone_foreign]
+        request = RequestFactory().get("/", user=staff_user)
+        self.action.execute(request, products, self._make_form(products))
+
+        self.standalone_own.refresh_from_db()
+        self.standalone_foreign.refresh_from_db()
+        self.assertTrue(self.standalone_own.is_public)
+        self.assertTrue(self.standalone_foreign.is_public)
 
 
 class TestSetProductPriceAction(TestCase):

@@ -1,7 +1,6 @@
-from django.db.models import Q
 from django.urls import reverse
 
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_class, get_classes
 from oscar.views.generic import BulkEditMixin, IntermediateBulkEditMixin
 
 (
@@ -20,6 +19,9 @@ from oscar.views.generic import BulkEditMixin, IntermediateBulkEditMixin
         "SetProductPriceAction",
     ),
 )
+partner_product_visibility_q = get_class(
+    "dashboard.catalogue.utils", "partner_product_visibility_q"
+)
 
 
 class PartnerProductFilterMixin:
@@ -34,10 +36,7 @@ class PartnerProductFilterMixin:
         if user.is_staff:
             return queryset
 
-        return queryset.filter(
-            Q(children__stockrecords__partner__users__pk=user.pk)
-            | Q(stockrecords__partner__users__pk=user.pk)
-        ).distinct()
+        return queryset.filter(partner_product_visibility_q(user)).distinct()
 
 
 class ProductBulkActionMixin(IntermediateBulkEditMixin):
