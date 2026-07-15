@@ -238,9 +238,10 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
 
     def _annotate_cheapest_price(self, qs):
         """Annotate a product queryset with cheapest_price and cheapest_price_currency."""
-        cheapest_sr = StockRecord.objects.filter(product=OuterRef("pk")).order_by(
-            "price"
-        )
+        cheapest_sr = StockRecord.objects.filter(product=OuterRef("pk"))
+        if not self.request.user.is_staff:
+            cheapest_sr = cheapest_sr.filter(partner__users__pk=self.request.user.pk)
+        cheapest_sr = cheapest_sr.order_by("price")
         return qs.annotate(
             cheapest_price=Subquery(cheapest_sr.values("price")[:1]),
             cheapest_price_currency=Subquery(cheapest_sr.values("price_currency")[:1]),
