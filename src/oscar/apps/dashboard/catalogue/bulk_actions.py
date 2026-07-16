@@ -71,9 +71,9 @@ class BaseSetProductsPublicStatusAction(ProductIntermediateAction):
     @atomic
     def execute(self, request, objects, form):
         if not request.user.is_staff:
-            allowed = objects.filter(
-                partner_product_visibility_q(request.user)
-            ).values("pk")
+            allowed = objects.filter(partner_product_visibility_q(request.user)).values(
+                "pk"
+            )
             objects = Product.objects.filter(pk__in=allowed)
 
         count = objects.update(is_public=self.is_public)

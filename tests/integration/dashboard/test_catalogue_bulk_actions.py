@@ -347,9 +347,7 @@ class TestSetProductsPublicStatusPartnerIsolation(TestCase):
         self.non_staff_user = UserFactory(is_staff=False)
         self.partner_own.users.add(self.non_staff_user)
 
-        self.standalone_own = create_product(
-            structure="standalone", is_public=False
-        )
+        self.standalone_own = create_product(structure="standalone", is_public=False)
         create_stockrecord(self.standalone_own, partner_name="Own Partner")
 
         self.standalone_foreign = create_product(
@@ -357,17 +355,13 @@ class TestSetProductsPublicStatusPartnerIsolation(TestCase):
         )
         create_stockrecord(self.standalone_foreign, partner_name="Foreign Partner")
 
-        self.parent_with_own_child = create_product(
-            structure="parent", is_public=False
-        )
+        self.parent_with_own_child = create_product(structure="parent", is_public=False)
         self.child_own = create_product(
             structure="child", parent=self.parent_with_own_child, is_public=False
         )
         create_stockrecord(self.child_own, partner_name="Own Partner")
 
-        self.parent_foreign_only = create_product(
-            structure="parent", is_public=False
-        )
+        self.parent_foreign_only = create_product(structure="parent", is_public=False)
         self.child_foreign = create_product(
             structure="child", parent=self.parent_foreign_only, is_public=False
         )

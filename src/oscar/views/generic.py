@@ -21,7 +21,9 @@ def _prune_expired_bulk_intermediate_buckets(session, session_key, ttl_seconds):
     if not buckets:
         return buckets
     cutoff = time.time() - ttl_seconds
-    expired = [token for token, data in buckets.items() if data.get("created_at", 0) < cutoff]
+    expired = [
+        token for token, data in buckets.items() if data.get("created_at", 0) < cutoff
+    ]
     for token in expired:
         del buckets[token]
     if expired:
