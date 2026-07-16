@@ -73,6 +73,7 @@
                     <th class="text-center" style="width:40px;"></th>
                     <th>{% trans "Title" %}</th>
                     <th>{% trans "UPC" %}</th>
+                    <th>{% trans "Stockrecords" %}</th>
                     {% block extra_column_headers %}<th>{% trans "Currently public" %}</th>{% endblock %}
                 </tr>
             </thead>
@@ -98,6 +99,7 @@
                         </td>
 
                         <td>{{ product.upc|default:"-" }}</td>
+                        <td>{{ product.stockrecord_count }}</td>
                         {% block extra_column_values %}<td>{% if product.is_public %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>{% endblock %}
                     {% endwith %}
                 </tr>

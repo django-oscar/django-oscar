@@ -2,7 +2,7 @@
 
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import OuterRef, Prefetch, Q, Subquery
+from django.db.models import Count, OuterRef, Prefetch, Q, Subquery
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -236,15 +236,24 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             self._selectable_qs = action.filter_products_queryset(qs)
         return self._selectable_qs
 
-    def _annotate_cheapest_price(self, qs):
-        """Annotate a product queryset with cheapest_price and cheapest_price_currency."""
+    def _annotate_stockrecords_and_cheapest_price(self, qs, stockrecord_relation="stockrecords"):
         cheapest_sr = StockRecord.objects.filter(product=OuterRef("pk"))
+        stockrecord_count_filter = Q()
         if not self.request.user.is_staff:
             cheapest_sr = cheapest_sr.filter(partner__users__pk=self.request.user.pk)
+            stockrecord_count_filter = Q(
+                **{
+                    "%s__partner__users__pk"
+                    % stockrecord_relation: self.request.user.pk
+                }
+            )
         cheapest_sr = cheapest_sr.order_by("price")
         return qs.annotate(
             cheapest_price=Subquery(cheapest_sr.values("price")[:1]),
             cheapest_price_currency=Subquery(cheapest_sr.values("price_currency")[:1]),
+            stockrecord_count=Count(
+                stockrecord_relation, filter=stockrecord_count_filter, distinct=True
+            ),
         )
 
     def get_parent_queryset(self):
@@ -262,11 +271,13 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             # Only show parents that have selectable children
             base = base.filter(children__in=selectable_qs)
 
-        return self._annotate_cheapest_price(base).distinct()
+        return self._annotate_stockrecords_and_cheapest_price(
+            base, stockrecord_relation="children__stockrecords"
+        ).distinct()
 
     def get_standalone_queryset(self):
         """Standalone products from the original selection that are selectable."""
-        return self._annotate_cheapest_price(
+        return self._annotate_stockrecords_and_cheapest_price(
             self.get_selectable_queryset().filter(
                 pk__in=self._selected_ids, structure=Product.STANDALONE
             )
@@ -316,7 +327,7 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
         Build the list of table rows and count how many selectable products
         were included.
         """
-        children_qs = self._annotate_cheapest_price(
+        children_qs = self._annotate_stockrecords_and_cheapest_price(
             self.get_selectable_queryset().filter(structure=Product.CHILD)
         )
         parents = self.get_parent_queryset().prefetch_related(
