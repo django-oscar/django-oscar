@@ -8,6 +8,7 @@ from django.template.response import TemplateResponse
 from django.utils.encoding import smart_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import View
+from django.conf import settings
 
 from oscar.core.utils import safe_referrer
 
@@ -184,12 +185,11 @@ class IntermediateBulkEditMixin(BulkEditMixin):
     """
 
     intermediate_actions = {}
-    bulk_intermediate_session_key = "bulk_intermediate"
-    bulk_intermediate_token_param = "key"
+    bulk_intermediate_session_key = settings.OSCAR_BULK_INTERMEDIATE_SESSION_KEY
+    bulk_intermediate_token_param = settings.OSCAR_BULK_INTERMEDIATE_TOKEN_PARAM
+    bulk_intermediate_ttl_seconds = settings.OSCAR_BULK_INTERMEDIATE_SESSION_TTL_SECONDS
 
-    max_bulk_intermediate_ids = 500
-
-    bulk_intermediate_ttl_seconds = 60 * 60 * 24
+    max_bulk_intermediate_ids = settings.OSCAR_MAX_BULK_INTERMEDIATE_IDS
 
     def get_intermediate_url(self, request, action):
         raise NotImplementedError(

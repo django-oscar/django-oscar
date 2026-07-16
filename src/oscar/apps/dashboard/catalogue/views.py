@@ -201,7 +201,9 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
 
     intermediate_actions = ProductBulkActionMixin.intermediate_actions
 
-    max_displayable_products = 200
+    max_displayable_products = (
+        settings.OSCAR_PRODUCT_BULK_ACTION_MAX_DISPLAYABLE_PRODUCTS
+    )
 
     def get_cancel_url(self):
         return reverse("dashboard:catalogue-product-list")
