@@ -1,0 +1,58 @@
+{% extends 'oscar/dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Confirm action" %} | {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Confirm action" %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="page-header">
+        <h1>{% trans "Confirm" %}: {{ action_label }}</h1>
+    </div>
+
+    {% block prepend_form %}{% endblock prepend_form %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% block form_content %}
+        {% for field in form %}
+            {% include "oscar/dashboard/partials/form_field.html" %}
+        {% endfor %}
+        {% endblock form_content %}
+
+        {% block confirm_irreversible %}
+        {% if require_irreversible_confirmation %}
+        <div class="form-group mt-3">
+            <label>
+                <input type="checkbox" required>
+                {% trans "I understand this action cannot be undone and I am absolutely sure I want to execute it" %}
+            </label>
+        </div>
+        {% endif %}
+        {% endblock confirm_irreversible %}
+
+        {% block action_buttons %}
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">
+                {% trans "Apply" %}: {{ action_label }}
+            </button>
+            <a href="{{ cancel_url }}" class="btn btn-secondary ml-2">{% trans "Cancel" %}</a>
+        </div>
+        {% endblock action_buttons %}
+    </form>
+
+    {% block append_form %}{% endblock append_form %}
+    
+{% endblock %}

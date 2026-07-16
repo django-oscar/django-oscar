@@ -560,6 +560,134 @@ var oscar = (function(o, $) {
                 });
             }
         },
+        product_bulk_action: {
+            init: function(options) {
+                var formBound = !!(options && options.formBound);
+
+                function syncParentToggles() {
+                    $('.select-all-children').each(function() {
+                        var pid = $(this).data('parent');
+                        var $ch = $('input[name="selected_products"][data-parent="' + pid + '"]');
+                        $(this).prop('checked',
+                            $ch.length > 0 && $ch.filter(':checked').length === $ch.length);
+                    });
+                }
+
+                // One entry per selectable product type.
+                var TYPES = [
+                    {
+                        itemClass:   'select-standalone',
+                        hiddenName:  'select_all_standalones',
+                        toggleSel:   '.select-all-standalones-toggle',
+                        itemsSel:    'input[type="checkbox"].select-standalone',
+                        linkSel:     '.select-all-standalones-link',
+                        labelSel:    '.select-all-standalones-text',
+                        counterSel:  '#standalone-selected-counter',
+                    },
+                    {
+                        itemClass:   'select-parent',
+                        hiddenName:  'select_all_parents',
+                        toggleSel:   '.select-all-parents-toggle',
+                        itemsSel:    'input[type="checkbox"].select-parent',
+                        linkSel:     '.select-all-parents-link',
+                        labelSel:    '.select-all-parents-text',
+                        counterSel:  '#parent-selected-counter',
+                    },
+                    {
+                        itemClass:   'select-child',
+                        hiddenName:  'select_all_children',
+                        toggleSel:   '.select-all-children-global',
+                        itemsSel:    'input[type="checkbox"].select-child',
+                        linkSel:     '.select-all-children-link',
+                        labelSel:    '.select-all-children-text',
+                        counterSel:  '#child-selected-counter',
+                        onSync:      syncParentToggles,
+                    },
+                ];
+
+                var byClass = {};
+                TYPES.forEach(function(t) { byClass[t.itemClass] = t; });
+
+                // Read the checkbox state for a type and derive all of its UI.
+                function syncType(t) {
+                    var $toggle = $(t.toggleSel);
+                    if (!$toggle.length) return;
+
+                    var $items  = $(t.itemsSel);
+                    var visible = $items.length;
+                    var checked = $items.filter(':checked').length;
+                    var allChecked = visible > 0 && checked === visible;
+                    var nothingHidden = visible >= t.total;
+
+                    if (visible > 0 && !allChecked) t.acrossIntent = false;
+                    var across = visible === 0
+                        ? t.acrossIntent
+                        : allChecked && (nothingHidden || t.acrossIntent);
+
+                    $toggle.prop('checked', visible === 0 ? across : allChecked);
+                    $('input[name="' + t.hiddenName + '"]').val(across ? 'on' : '');
+
+                    $(t.linkSel).text(across ? t.acrossText : t.linkText)
+                        .toggleClass('text-muted fst-italic', across);
+
+                    $(t.counterSel).text('(' + (across ? t.total : checked) + ' / ' + t.total + ')');
+
+                    if (t.onSync) t.onSync();
+                }
+
+                TYPES.forEach(function(t) {
+                    var $toggle = $(t.toggleSel);
+                    if (!$toggle.length) return;
+
+                    t.total = parseInt($(t.linkSel).data('count'), 10) || 0;
+                    t.linkText = $(t.linkSel).text().trim();
+                    t.acrossText = $(t.linkSel).attr('data-across-label');
+                    t.acrossIntent = formBound
+                        ? $('input[name="' + t.hiddenName + '"]').val() === 'on'
+                        : true;
+
+                    // use an alternative label if part of the products of this type are hidden.
+                    var visibleCount = $(t.itemsSel).length;
+                    var hasHidden = t.total > visibleCount;
+                    $(t.linkSel).toggle(hasHidden);
+                    if (hasHidden && visibleCount > 0) {
+                        var $label = $(t.labelSel);
+                        $label.text($label.attr('data-hidden-label'));
+                    }
+
+                    $toggle.on('change', function() {
+                        $(t.itemsSel).prop('checked', this.checked);
+                        if ($(t.itemsSel).length === 0) t.acrossIntent = this.checked;
+                        syncType(t);
+                    });
+
+                    $(t.linkSel).on('click', function(e) {
+                        e.preventDefault();
+                        var across = $('input[name="' + t.hiddenName + '"]').val() === 'on';
+                        $(t.itemsSel).prop('checked', !across);
+                        t.acrossIntent = !across;
+                        syncType(t);
+                    });
+
+                    syncType(t);
+                });
+
+                // Sync the select all/across 
+                $('.select-all-children').on('change', function() {
+                    var pid = $(this).data('parent');
+                    $('input[name="selected_products"][data-parent="' + pid + '"]')
+                        .prop('checked', this.checked);
+                    syncType(byClass['select-child']);
+                });
+
+                $(document).on('change', 'input[name="selected_products"]', function() {
+                    var $cb = $(this);
+                    TYPES.forEach(function(t) {
+                        if ($cb.hasClass(t.itemClass)) syncType(t);
+                    });
+                });
+            }
+        },
     };
 
     return o;

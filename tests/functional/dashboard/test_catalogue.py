@@ -1,4 +1,5 @@
 from http import client as http_client
+from urllib.parse import parse_qs, urlparse
 
 from django.urls import reverse
 from django.test import TestCase
@@ -37,7 +38,7 @@ class TestCatalogueViews(WebTestCase):
     is_staff = True
     csrf_checks = False
     permissions = DashboardPermission.get(
-        "catalogue", "view_product", "view_category"
+        "catalogue", "view_product", "change_product", "view_category"
     ) + DashboardPermission.get("partner", "view_stockalert")
 
     def test_exist(self):
@@ -111,18 +112,36 @@ class TestCatalogueViews(WebTestCase):
         ]
         self.assertEqual(products_on_page, [product])
 
+    def _intermediate_url_with_token(self, seed_response):
+        location = getattr(seed_response, "location", "") or ""
+        token = parse_qs(urlparse(location).query).get("key", [None])[0]
+        url = reverse("dashboard:catalogue-product-bulk-action")
+        return "%s?key=%s" % (url, token) if token else url
+
     def test_make_public(self):
         a = create_product(upc="A", is_public=False)
-        params = {"action": "make_public", "selected_product": [a.id]}
-        response = self.post(reverse("dashboard:catalogue-product-list"), params=params)
+        seed_response = self.post(
+            reverse("dashboard:catalogue-product-list"),
+            params={"action": "make_products_public", "selected_product": [a.id]},
+        )
+        response = self.post(
+            self._intermediate_url_with_token(seed_response),
+            params={"selected_products": [a.id]},
+        )
         self.assertIsRedirect(response)
         a.refresh_from_db()
         self.assertTrue(a.is_public)
 
     def test_make_non_public(self):
         b = create_product(upc="B")
-        params = {"action": "make_non_public", "selected_product": [b.id]}
-        response = self.post(reverse("dashboard:catalogue-product-list"), params=params)
+        seed_response = self.post(
+            reverse("dashboard:catalogue-product-list"),
+            params={"action": "make_products_non_public", "selected_product": [b.id]},
+        )
+        response = self.post(
+            self._intermediate_url_with_token(seed_response),
+            params={"selected_products": [b.id]},
+        )
         self.assertIsRedirect(response)
         b.refresh_from_db()
         self.assertFalse(b.is_public)

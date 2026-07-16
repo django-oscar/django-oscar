@@ -7475,8 +7475,8 @@ msgid ""
 msgstr "\nSupprimer le produit <strong>%(title)s</strong> - êtes-vous sûr ?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:45
-msgid "This will also delete the following child products:"
-msgstr "Ceci supprimera également les produits enfants suivants :"
+msgid "This will also delete the following variants:"
+msgstr "Ceci supprimera également les variantes suivantes :"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:33
 msgid "Create new product"
@@ -9452,3 +9452,191 @@ msgstr "Retour aux résultats de recherche"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Vous devez sélectionner des %ss"
+
+msgid ""
+"Too many %(object)ss selected (%(count)d). Narrow your selection to "
+"%(limit)d or fewer and try again."
+msgstr ""
+"Trop de %(object)ss sélectionnés (%(count)d). Réduisez votre sélection à "
+"%(limit)d ou moins et réessayez."
+
+msgid "Make public"
+msgstr "Rendre public"
+
+msgid "Make non-public"
+msgstr "Rendre non public"
+
+msgid "Make products public"
+msgstr "Rendre les produits publics"
+
+msgid "Make products non-public"
+msgstr "Rendre les produits non publics"
+
+msgid "Update product prices"
+msgstr "Mettre à jour le prix des produits"
+
+msgid "No pending bulk action. Please select items and try again."
+msgstr "Aucune action groupée en attente. Veuillez sélectionner des éléments et réessayer."
+
+msgid "Select at least one product."
+msgstr "Sélectionnez au moins un produit."
+
+#, python-format
+msgid "Price updated on %(count)d stockrecord."
+msgid_plural "Price updated on %(count)d stockrecords."
+msgstr[0] "Prix mis à jour pour %(count)d fiche de stock."
+msgstr[1] "Prix mis à jour pour %(count)d fiches de stock."
+
+#~ #, python-format
+#~ msgid "Public status was successfully updated for %(count)d record."
+#~ msgid_plural "Public status was successfully updated for %(count)d records."
+#~ msgstr[0] "Statut public mis à jour avec succès pour %(count)d enregistrement."
+#~ msgstr[1] "Statut public mis à jour avec succès pour %(count)d enregistrements."
+
+#~ #, python-format
+#~ msgid "Updated %(count)d variant."
+#~ msgid_plural "Updated %(count)d variants."
+#~ msgstr[0] "%(count)d variante mise à jour."
+#~ msgstr[1] "%(count)d variantes mises à jour."
+
+msgid "New price"
+msgstr "Nouveau prix"
+
+msgid "Lowest current price"
+msgstr "Prix actuel le plus bas"
+
+#~ msgid "All variants without a specific price will be set to this price."
+#~ msgstr "Toutes les variantes sans prix spécifique seront définies à ce prix."
+
+msgid "Increase by amount"
+msgstr "Augmenter d'un montant"
+
+msgid "Adds a fixed amount to each product's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+msgstr "Ajoute un montant fixe au prix actuel de chaque produit. Utilisez une valeur négative pour diminuer. Ex. : 2,00 fait passer 10,00 € à 12,00 € ; -3,00 le ramène à 7,00 €. Les prix ne descendront pas en dessous de 0,00 €."
+
+msgid "Increase by percentage"
+msgstr "Augmenter d'un pourcentage"
+
+msgid "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+msgstr "Ajoute un pourcentage du prix actuel de chaque produit. Utilisez une valeur négative pour diminuer. Ex. : 10 fait passer 10,00 € à 11,00 € ; -10 le ramène à 9,00 €. Les prix ne descendront pas en dessous de 0,00 €."
+
+msgid "Only one of new price, increase by amount, or increase by percentage can be set at a time."
+msgstr "Un seul des champs suivants peut être défini à la fois : nouveau prix, augmenter d'un montant ou augmenter d'un pourcentage."
+
+msgid "Enter a price, or set a base price above."
+msgstr "Saisissez un prix ou définissez un prix de base ci-dessus."
+
+msgid "Confirm action"
+msgstr "Confirmer l'action"
+
+msgid "Confirm"
+msgstr "Confirmer"
+
+msgid "Apply"
+msgstr "Appliquer"
+
+msgid "Confirm variant action"
+msgstr "Confirmer l'action sur la variante"
+
+msgid "Action parameters"
+msgstr "Paramètres de l'action"
+
+msgid "Select / deselect all"
+msgstr "Tout sélectionner / désélectionner"
+
+msgid "variants"
+msgstr "variantes"
+
+msgid "Currently public"
+msgstr "Actuellement public"
+
+msgid "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners."
+msgstr "Cette action mettra à jour <strong>tous les enregistrements de stock existants</strong> de chaque produit sélectionné au sein des partenaires sélectionnés."
+
+msgid "Current price"
+msgstr "Prix actuel"
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d record."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d objects."
+msgstr[0] "Statut public mis à jour avec succès en %(status)s pour %(count)d enregistrement."
+msgstr[1] "Statut public mis à jour avec succès en %(status)s pour %(count)d enregistrements."
+
+#, python-format
+msgid "Public status was successfully updated to %(status)s for %(count)d product."
+msgid_plural "Public status was successfully updated to %(status)s for %(count)d products."
+msgstr[0] "Statut public mis à jour avec succès en %(status)s pour %(count)d produit."
+msgstr[1] "Statut public mis à jour avec succès en %(status)s pour %(count)d produits."
+
+msgid "Set price to a specific amount."
+msgstr "Définir le prix à un montant spécifique."
+
+msgid "Public"
+msgstr "Public"
+
+msgid "Non-public"
+msgstr "Non public"
+
+msgid "public"
+msgstr "public"
+
+msgid "non-public"
+msgstr "non public"
+
+msgid "Select all standalones"
+msgstr "Sélectionner tous les produits autonomes"
+
+msgid "Select all parents"
+msgstr "Sélectionner tous les produits parents"
+
+msgid "Select all variants"
+msgstr "Sélectionner toutes les variantes"
+
+msgid "Select all visible standalones"
+msgstr "Sélectionner tous les produits autonomes visibles"
+
+msgid "Select all visible parents"
+msgstr "Sélectionner tous les produits parents visibles"
+
+msgid "Select all visible variants"
+msgstr "Sélectionner toutes les variantes visibles"
+
+msgid "All %(count)s selected."
+msgstr "%(count)s sélectionnés."
+
+msgid "Select all %(count)s standalones"
+msgstr "Sélectionner les %(count)s produits autonomes"
+
+msgid "Select all %(count)s parents"
+msgstr "Sélectionner les %(count)s produits parents"
+
+msgid "Select all %(count)s variants"
+msgstr "Sélectionner les %(count)s variantes"
+
+msgid ""
+"And %(count)s more product(s) not shown. Use \"Select all\" above to include "
+"them."
+msgstr ""
+"Et %(count)s produit(s) supplémentaire(s) non affiché(s). Utilisez \"Tout "
+"sélectionner\" ci-dessus pour les inclure."
+
+msgid "Select / deselect all variants"
+msgstr "Sélectionner / désélectionner toutes les variantes"
+
+msgid "The amount selected products and their variants exceed the maximum total for selection. The action will be applied to the entire selection."
+msgstr "Le nombre de produits sélectionnés et leurs variantes dépasse le maximum autorisé pour la sélection. L'action sera appliquée à l'ensemble de la sélection."
+
+msgid "No products."
+msgstr "Aucun produit."
+
+msgid "Specific price"
+msgstr "Prix spécifique"
+
+msgid "Select the partners whose stockrecords should be updated. Only stockrecords belonging to the selected partners will be changed."
+msgstr "Sélectionnez les partenaires dont les enregistrements de stock doivent être mis à jour. Seuls les enregistrements de stock des partenaires sélectionnés seront modifiés."
+
+msgid "Selected products"
+msgstr "Produits sélectionnés"
+
+msgid "I understand this action cannot be undone and I am absolutely sure I want to execute it"
+msgstr "Je comprends que cette action est irréversible et je suis absolument certain de vouloir l'exécuter"

@@ -8,6 +8,14 @@ from oscar.utils.deprecation import RemovedInOscar32Warning
 register = template.Library()
 
 
+@register.filter
+def child_price_field(form, child_pk):
+    field_name = f"price_{child_pk}"
+    if field_name in form.fields:
+        return form[field_name]
+    return ""
+
+
 # pylint: disable=unused-argument
 @register.tag
 def annotate_form_field(parser, token):

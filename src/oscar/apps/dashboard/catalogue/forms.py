@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django import forms
 from django.core import exceptions
 from django.utils.translation import gettext_lazy as _
@@ -12,6 +14,7 @@ ProductClass = get_model("catalogue", "ProductClass")
 ProductAttribute = get_model("catalogue", "ProductAttribute")
 Category = get_model("catalogue", "Category")
 StockRecord = get_model("partner", "StockRecord")
+Partner = get_model("partner", "Partner")
 ProductCategory = get_model("catalogue", "ProductCategory")
 ProductImage = get_model("catalogue", "ProductImage")
 ProductRecommendation = get_model("catalogue", "ProductRecommendation")
@@ -448,3 +451,142 @@ class OptionForm(forms.ModelForm):
 
 class CategorySearchForm(forms.Form):
     name = forms.CharField(max_length=255, required=False, label=_("Name"))
+
+
+class ProductBulkActionForm(forms.Form):
+    """
+    Base form for intermediate bulk actions operating on products.
+
+    Validates that at least one product is selected and that the selected
+    PKs belong to the allowed products queryset. Pass products_queryset to
+    __init__ to restrict which products are valid
+    """
+
+    selected_products = forms.ModelMultipleChoiceField(
+        queryset=Product.objects.none(),
+        required=False,
+        error_messages={"required": _("Select at least one product.")},
+    )
+    # Checkboxes to select every product and variant of the initial set.
+    select_all_parents = forms.BooleanField(widget=forms.HiddenInput(), required=False)
+    select_all_children = forms.BooleanField(widget=forms.HiddenInput(), required=False)
+    select_all_standalones = forms.BooleanField(
+        widget=forms.HiddenInput(), required=False
+    )
+
+    def __init__(self, *args, products_queryset=None, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if products_queryset is not None:
+            self.fields["selected_products"].queryset = products_queryset
+
+    def clean(self):
+        cleaned_data = super().clean()
+        has_selection = (
+            cleaned_data.get("select_all_parents")
+            or cleaned_data.get("select_all_children")
+            or cleaned_data.get("select_all_standalones")
+            or cleaned_data.get("selected_products")
+        )
+        if not has_selection:
+            self.add_error("selected_products", _("Select at least one product."))
+        return cleaned_data
+
+
+class SetProductPriceForm(ProductBulkActionForm):
+    new_price = forms.DecimalField(
+        min_value=Decimal("0"),
+        decimal_places=2,
+        label=_("New price"),
+        required=False,
+        help_text=_("Set price to a specific amount."),
+    )
+    increase_by_amount = forms.DecimalField(
+        decimal_places=2,
+        label=_("Increase by amount"),
+        required=False,
+        help_text=_(
+            "Adds a fixed amount to each product's current price. Use a negative value to decrease. E.g. 2.00 raises €10.00 to €12.00; -3.00 lowers it to €7.00. Prices will not go below €0.00."
+        ),
+    )
+    increase_by_percentage = forms.DecimalField(
+        decimal_places=2,
+        label=_("Increase by percentage"),
+        required=False,
+        help_text=_(
+            "Adds a percentage of each product's current price. Use a negative value to decrease. E.g. 10 raises €10.00 to €11.00; -10 lowers it to €9.00. Prices will not go below €0.00."
+        ),
+    )
+
+    def __init__(self, *args, products_queryset=None, user=None, **kwargs):
+        super().__init__(
+            *args, products_queryset=products_queryset, user=user, **kwargs
+        )
+        qs = self.fields["selected_products"].queryset
+        partner_qs = Partner.objects.filter(stockrecords__product__in=qs).distinct()
+        if user is not None and not user.is_staff:
+            partner_qs = partner_qs.filter(users__pk=user.pk)
+        partner_count = partner_qs.count()
+        # No real choice to make with only one partner, so don't ask non-staff
+        # users to pick it; still submitted as the initial hidden value.
+        single_partner_non_staff = (
+            user is not None and not user.is_staff and partner_count == 1
+        )
+        self.fields["partners"] = forms.ModelMultipleChoiceField(
+            queryset=partner_qs,
+            required=True,
+            label=_("Partners"),
+            help_text=_(
+                "Select the partners whose stockrecords should be updated. Only stockrecords belonging to the selected partners will be changed."
+            ),
+            widget=(
+                forms.MultipleHiddenInput
+                if single_partner_non_staff
+                else forms.SelectMultiple
+            ),
+            initial=partner_qs if partner_count == 1 else None,
+        )
+        for pk in qs.values_list("pk", flat=True):
+            self.fields[f"price_{pk}"] = forms.DecimalField(
+                min_value=0,
+                decimal_places=2,
+                label="",
+                required=False,
+            )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        base = cleaned_data.get("new_price")
+        amount = cleaned_data.get("increase_by_amount")
+        percentage = cleaned_data.get("increase_by_percentage")
+
+        global_options = [v for v in [base, amount, percentage] if v is not None]
+        if len(global_options) > 1:
+            raise forms.ValidationError(
+                _(
+                    "Only one of new price, increase by amount, or increase by"
+                    " percentage can be set at a time."
+                )
+            )
+
+        has_global = bool(global_options)
+        if not has_global:
+            selected = cleaned_data.get("selected_products", [])
+            has_any_override = any(
+                cleaned_data.get(f"price_{child.pk}") is not None for child in selected
+            )
+            if selected and not has_any_override:
+                raise forms.ValidationError(
+                    _(
+                        "Enter at least one specific price, or set a base price above."
+                        " Products without a specific price will be skipped."
+                    )
+                )
+        return cleaned_data
+
+    def get_specific_prices(self):
+        """Return {child_pk: price} only for children with an explicit per-product override."""
+        return {
+            int(key[6:]): value
+            for key, value in self.cleaned_data.items()
+            if key.startswith("price_") and value is not None
+        }

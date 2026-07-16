@@ -42,7 +42,7 @@
 
         {% if product.is_parent %}
             <p>
-                {% trans "This will also delete the following child products:" %}
+                {% trans "This will also delete the following variants:" %}
                 <ul>
                     {% for child in product.children.all %}
                         <li><strong>{{ child.get_title }}</strong></li>
