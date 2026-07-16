@@ -1195,13 +1195,71 @@ class AbstractRange(models.Model):
                 ):
                     _filter |= Q(parent__categories__in=expanded_range_categories)
 
+        # extend exclusion filter if excluded_categories exist
+        _exclude_filter = Q()
+        if self.excluded_categories.exists():
+            if use_productcategory_materialised_view():
+                excluded_product_ids = ProductCategoryHierarchy.objects.filter(
+                    category_id__in=self.excluded_categories.values_list(
+                        "id", flat=True
+                    )
+                ).values_list("product_id", flat=True)
+
+                _exclude_filter |= Q(id__in=excluded_product_ids)
+                _exclude_filter |= Q(parent__id__in=excluded_product_ids)
+
+            else:
+                expanded_excluded_categories = ExpandDownwardsCategoryQueryset(
+                    self.excluded_categories.values("id")
+                )
+                _exclude_filter |= Q(categories__in=expanded_excluded_categories)
+                if (
+                    Product.objects.exclude(parent=None)
+                    .filter(parent__categories__in=expanded_excluded_categories)
+                    .exists()
+                ):
+                    _exclude_filter |= Q(
+                        parent__categories__in=expanded_excluded_categories
+                    )
+
         qs = Product.objects.filter(_filter, ~Q(excludes=self))
+        if _exclude_filter:
+            qs = qs.exclude(_exclude_filter)
 
         if Product.objects.filter(parent__excludes=self).exists():
             qs = qs.filter(~Q(parent__excludes=self))
 
         # make sure to filter out duplicates originating from a join
         return qs.distinct()
+
+    def get_products_effectively_excluded(self):
+        if self.proxy:
+            return self.proxy.get_products_effectively_excluded()
+        return self.products_excluded
+
+    @cached_property
+    def products_excluded(self):
+        """
+        Returns a queryset of products that are effectively excluded by this
+        range's rules. Includes products explicitly in excluded_products and
+        products whose categories are in excluded_categories.
+        """
+        Product = self.excluded_products.model
+        explicitly_excluded_ids = self.excluded_products.values_list("id", flat=True)
+
+        category_excluded_q = Q()
+        if self.excluded_categories.exists():
+            expanded_excluded_categories = ExpandDownwardsCategoryQueryset(
+                self.excluded_categories.values("id")
+            )
+            category_excluded_q |= Q(categories__in=expanded_excluded_categories)
+            category_excluded_q |= Q(
+                parent__categories__in=expanded_excluded_categories
+            )
+
+        return Product.objects.filter(
+            Q(id__in=explicitly_excluded_ids) | category_excluded_q
+        ).distinct()
 
     @property
     def is_editable(self):
