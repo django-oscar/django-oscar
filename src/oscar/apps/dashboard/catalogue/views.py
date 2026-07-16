@@ -236,7 +236,9 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             self._selectable_qs = action.filter_products_queryset(qs)
         return self._selectable_qs
 
-    def _annotate_stockrecords_and_cheapest_price(self, qs, stockrecord_relation="stockrecords"):
+    def _annotate_stockrecords_and_cheapest_price(
+        self, qs, stockrecord_relation="stockrecords"
+    ):
         cheapest_sr = StockRecord.objects.filter(product=OuterRef("pk"))
         stockrecord_count_filter = Q()
         if not self.request.user.is_staff:
