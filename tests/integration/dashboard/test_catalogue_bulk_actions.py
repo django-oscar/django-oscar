@@ -272,18 +272,21 @@ class TestMakeProductsPublicAction(TestCase):
         # not partner scoping (see TestSetProductsPublicStatusPartnerIsolation).
         self.request = RequestFactory().get("/", user=UserFactory(is_staff=True))
 
+    def _qs(self, children):
+        return Product.objects.filter(pk__in=[c.pk for c in children])
+
     def _make_form(self, children):
-        qs = Product.objects.filter(pk__in=[c.pk for c in children])
         form = ProductBulkActionForm(
             data={"selected_products": [c.pk for c in children]},
-            products_queryset=qs,
+            products_queryset=self._qs(children),
         )
         form.is_valid()
         return form
 
     def test_sets_is_public_true(self):
-        form = self._make_form([self.child1, self.child2])
-        self.action.execute(self.request, [self.child1, self.child2], form)
+        children = [self.child1, self.child2]
+        form = self._make_form(children)
+        self.action.execute(self.request, self._qs(children), form)
         self.child1.refresh_from_db()
         self.child2.refresh_from_db()
         self.assertTrue(self.child1.is_public)
@@ -291,7 +294,7 @@ class TestMakeProductsPublicAction(TestCase):
 
     def test_returns_none(self):
         form = self._make_form([self.child1])
-        result = self.action.execute(self.request, [self.child1], form)
+        result = self.action.execute(self.request, self._qs([self.child1]), form)
         self.assertIsNone(result)
 
 
@@ -309,18 +312,21 @@ class TestMakeProductsNonPublicAction(TestCase):
         # not partner scoping (see TestSetProductsPublicStatusPartnerIsolation).
         self.request = RequestFactory().get("/", user=UserFactory(is_staff=True))
 
+    def _qs(self, children):
+        return Product.objects.filter(pk__in=[c.pk for c in children])
+
     def _make_form(self, children):
-        qs = Product.objects.filter(pk__in=[c.pk for c in children])
         form = ProductBulkActionForm(
             data={"selected_products": [c.pk for c in children]},
-            products_queryset=qs,
+            products_queryset=self._qs(children),
         )
         form.is_valid()
         return form
 
     def test_sets_is_public_false(self):
-        form = self._make_form([self.child1, self.child2])
-        self.action.execute(self.request, [self.child1, self.child2], form)
+        children = [self.child1, self.child2]
+        form = self._make_form(children)
+        self.action.execute(self.request, self._qs(children), form)
         self.child1.refresh_from_db()
         self.child2.refresh_from_db()
         self.assertFalse(self.child1.is_public)
@@ -328,7 +334,7 @@ class TestMakeProductsNonPublicAction(TestCase):
 
     def test_returns_none(self):
         form = self._make_form([self.child1])
-        result = self.action.execute(self.request, [self.child1], form)
+        result = self.action.execute(self.request, self._qs([self.child1]), form)
         self.assertIsNone(result)
 
 
@@ -369,11 +375,13 @@ class TestSetProductsPublicStatusPartnerIsolation(TestCase):
 
         self.action = MakeProductsPublicAction()
 
+    def _qs(self, products):
+        return Product.objects.filter(pk__in=[p.pk for p in products])
+
     def _make_form(self, products):
-        qs = Product.objects.filter(pk__in=[p.pk for p in products])
         form = ProductBulkActionForm(
             data={"selected_products": [p.pk for p in products]},
-            products_queryset=qs,
+            products_queryset=self._qs(products),
         )
         form.is_valid()
         return form
@@ -381,7 +389,7 @@ class TestSetProductsPublicStatusPartnerIsolation(TestCase):
     def test_non_staff_only_updates_own_partners_standalone(self):
         products = [self.standalone_own, self.standalone_foreign]
         request = RequestFactory().get("/", user=self.non_staff_user)
-        self.action.execute(request, products, self._make_form(products))
+        self.action.execute(request, self._qs(products), self._make_form(products))
 
         self.standalone_own.refresh_from_db()
         self.standalone_foreign.refresh_from_db()
@@ -392,7 +400,7 @@ class TestSetProductsPublicStatusPartnerIsolation(TestCase):
         request = RequestFactory().get("/", user=self.non_staff_user)
         self.action.execute(
             request,
-            [self.parent_with_own_child],
+            self._qs([self.parent_with_own_child]),
             self._make_form([self.parent_with_own_child]),
         )
         self.parent_with_own_child.refresh_from_db()
@@ -402,7 +410,7 @@ class TestSetProductsPublicStatusPartnerIsolation(TestCase):
         request = RequestFactory().get("/", user=self.non_staff_user)
         self.action.execute(
             request,
-            [self.parent_foreign_only],
+            self._qs([self.parent_foreign_only]),
             self._make_form([self.parent_foreign_only]),
         )
         self.parent_foreign_only.refresh_from_db()
@@ -412,7 +420,7 @@ class TestSetProductsPublicStatusPartnerIsolation(TestCase):
         staff_user = UserFactory(is_staff=True)
         products = [self.standalone_own, self.standalone_foreign]
         request = RequestFactory().get("/", user=staff_user)
-        self.action.execute(request, products, self._make_form(products))
+        self.action.execute(request, self._qs(products), self._make_form(products))
 
         self.standalone_own.refresh_from_db()
         self.standalone_foreign.refresh_from_db()
@@ -444,7 +452,7 @@ class TestSetProductPriceAction(TestCase):
         return form
 
     def _objects(self, form):
-        return list(form.cleaned_data["selected_products"])
+        return form.cleaned_data["selected_products"]
 
     def test_base_price_updates_all(self):
         form = self._make_form(
@@ -662,7 +670,7 @@ class TestSetProductPriceActionPartnerIsolation(TestCase):
         )
 
         request = RequestFactory().get("/", user=self.non_staff_user)
-        self.action.execute(request, [self.child], form)
+        self.action.execute(request, Product.objects.filter(pk=self.child.pk), form)
 
         self.sr_a.refresh_from_db()
         self.sr_b.refresh_from_db()
@@ -680,7 +688,7 @@ class TestSetProductPriceActionPartnerIsolation(TestCase):
         )
         request = RequestFactory().get("/", user=self.non_staff_user)
         with self.assertRaises(SuspiciousOperation):
-            self.action.execute(request, [self.child], form)
+            self.action.execute(request, Product.objects.filter(pk=self.child.pk), form)
 
         self.sr_a.refresh_from_db()
         self.sr_b.refresh_from_db()
@@ -701,7 +709,7 @@ class TestSetProductPriceActionPartnerIsolation(TestCase):
 
         request = RequestFactory().get("/", user=self.non_staff_user)
         with self.assertRaises(PermissionDenied):
-            self.action.execute(request, [self.child], form)
+            self.action.execute(request, Product.objects.filter(pk=self.child.pk), form)
 
         self.sr_a.refresh_from_db()
         self.sr_b.refresh_from_db()
@@ -722,7 +730,7 @@ class TestSetProductPriceActionPartnerIsolation(TestCase):
         self.assertTrue(form.is_valid())
 
         request = RequestFactory().get("/", user=staff_user)
-        self.action.execute(request, [self.child], form)
+        self.action.execute(request, Product.objects.filter(pk=self.child.pk), form)
 
         self.sr_a.refresh_from_db()
         self.sr_b.refresh_from_db()

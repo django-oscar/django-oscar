@@ -74,8 +74,8 @@ class UpdateView(BulkEditMixin, generic.View):
     actions = ("archive", "delete")
     checkbox_object_name = "notification"
 
-    def get_object_dict(self, ids):
-        return self.model.objects.filter(recipient=self.request.user).in_bulk(ids)
+    def get_objects(self, ids):
+        return self.model.objects.filter(recipient=self.request.user, pk__in=ids)
 
     def get_success_response(self):
         return redirect_to_referrer(self.request, "communication:notifications-inbox")

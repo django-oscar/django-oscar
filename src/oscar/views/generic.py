@@ -168,11 +168,7 @@ class BulkEditMixin:
         return redirect(self.get_success_url(request))
 
     def get_objects(self, ids):
-        object_dict = self.get_object_dict(ids)
-        return [object_dict[id] for id in ids if id in object_dict]
-
-    def get_object_dict(self, ids):
-        return self.get_queryset().in_bulk(ids)
+        return self.get_queryset().filter(pk__in=ids)
 
 
 class IntermediateBulkEditMixin(BulkEditMixin):

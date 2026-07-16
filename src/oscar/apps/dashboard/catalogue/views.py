@@ -282,7 +282,11 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
     def get_objects(self, form):
         cd = form.cleaned_data
         qs = self.get_selectable_queryset()
-        pks = {p.pk for p in cd.get("selected_products", [])}
+        pks = set(
+            cd.get("selected_products", Product.objects.none()).values_list(
+                "pk", flat=True
+            )
+        )
         if cd.get("select_all_parents"):
             pks.update(qs.filter(structure=Product.PARENT).values_list("pk", flat=True))
         if cd.get("select_all_children"):
@@ -291,7 +295,7 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             pks.update(
                 qs.filter(structure=Product.STANDALONE).values_list("pk", flat=True)
             )
-        return list(qs.filter(pk__in=pks))
+        return qs.filter(pk__in=pks)
 
     def get_structure_counts(self):
         """

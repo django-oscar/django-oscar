@@ -26,12 +26,9 @@ class BaseSetPublicStatusAction(BulkAction):
 
     @atomic
     def execute(self, request, objects):
-        if not objects:
+        count = objects.update(is_public=self.is_public)
+        if not count:
             return
-        model = type(objects[0])
-        count = model.objects.filter(pk__in=[r.pk for r in objects]).update(
-            is_public=self.is_public
-        )
         status = _("Public") if self.is_public else _("Non-public")
         messages.success(
             request,
@@ -73,15 +70,13 @@ class BaseSetProductsPublicStatusAction(ProductIntermediateAction):
 
     @atomic
     def execute(self, request, objects, form):
-        qs = Product.objects.filter(pk__in=[r.pk for r in objects])
-
         if not request.user.is_staff:
-            allowed = qs.filter(
+            allowed = objects.filter(
                 partner_product_visibility_q(request.user)
             ).values("pk")
-            qs = Product.objects.filter(pk__in=allowed)
+            objects = Product.objects.filter(pk__in=allowed)
 
-        count = qs.update(is_public=self.is_public)
+        count = objects.update(is_public=self.is_public)
         status = _("public") if self.is_public else _("non-public")
 
         messages.success(
@@ -117,7 +112,7 @@ class SetProductPriceAction(ProductIntermediateAction):
 
     @atomic
     def execute(self, request, objects, form):
-        product_ids = [r.pk for r in objects]
+        product_ids = list(objects.values_list("pk", flat=True))
         specific = form.get_specific_prices()
         override_ids = [pk for pk in product_ids if pk in specific]
         rest_ids = [pk for pk in product_ids if pk not in specific]
