@@ -132,6 +132,10 @@ class AbstractCategory(MP_Node):
     Uses :py:mod:`django-treebeard`.
     """
 
+    # Treebeard's MP_Node provides its tree API (get_parent, get_children,
+    # get_ancestors, fix_tree, ...) in ways pylint can't infer statically.
+    # pylint: disable=no-member
+
     #: Allow comparison of categories on a limited number of fields by ranges.
     #: When the Category model is overwritten to provide CMS content, defining
     #: this avoids fetching a lot of unneeded extra data from the database.
