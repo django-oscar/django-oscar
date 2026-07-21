@@ -120,13 +120,17 @@ class OrderCreator(object):
             for voucher in basket.vouchers.all():
                 self.record_voucher_usage(order, voucher, user)
 
+            # Create the lines in basket order, so that the resulting line pks
+            # preserve the order the customer saw in their basket.
+            for line in basket.all_lines():
+                self.create_line_models(order, line)
+
             # Allocate stock in a deterministic (stock-record) order so that
             # concurrent placements take the row locks in the same order and
             # can't deadlock.
             for line in sorted(
                 basket.all_lines(), key=lambda line: line.stockrecord_id
             ):
-                self.create_line_models(order, line)
                 self.update_stock_records(line)
 
         # Send signal for analytics to pick up

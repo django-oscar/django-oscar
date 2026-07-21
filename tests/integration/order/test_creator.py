@@ -132,6 +132,26 @@ class TestSuccessfulOrderCreation(TestCase):
         lines = order.lines.all()
         self.assertEqual(1, len(lines))
 
+    def test_creates_lines_in_basket_order(self):
+        first = factories.create_product(title="First")
+        second = factories.create_product(title="Second")
+        factories.create_stockrecord(second, price=D("12.00"), num_in_stock=5)
+        factories.create_stockrecord(first, price=D("12.00"), num_in_stock=5)
+        self.assertGreater(first.stockrecords.get().pk, second.stockrecords.get().pk)
+
+        add_product(self.basket, product=first)
+        add_product(self.basket, product=second)
+
+        place_order(
+            self.creator,
+            surcharges=self.surcharges,
+            basket=self.basket,
+            order_number="1234",
+        )
+
+        order = Order.objects.get(number="1234")
+        self.assertEqual([line.product for line in order.lines.all()], [first, second])
+
     def test_sets_correct_order_status(self):
         add_product(self.basket, D("12.00"))
         place_order(
