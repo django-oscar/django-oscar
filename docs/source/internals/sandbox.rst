@@ -106,3 +106,11 @@ To run the Oscar sandbox using `Docker`_, run the following commands:
 
     $ docker pull oscarcommerce/django-oscar-sandbox
     $ docker run -p 8080:8080/tcp oscarcommerce/django-oscar-sandbox:latest
+
+If you want to run locally using docker, you can use docker compose:
+
+.. code-block:: bash
+
+    $ docker compose up
+
+In both case, sandbox site is available at http://localhost:8080/
