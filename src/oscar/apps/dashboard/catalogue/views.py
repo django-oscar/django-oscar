@@ -85,6 +85,8 @@ class ReadOnlyUpdateViewMixin:
     def get_readonly_status(self):
         if self.request.user.is_superuser:
             return False
+        if self.request.user.has_perm("partner.dashboard_access"):
+            return False
         return not self.request.user.has_perm(self.change_permission_codename)
 
     def get_context_data(self, **kwargs):

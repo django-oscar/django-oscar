@@ -206,8 +206,7 @@
                             {% endfor %}
                         </ol>
                         <p class="form-text">
-                            {% trans 'Drag images to re-order them. Space for additional images will appear when images
-                            are added.' %}
+                            {% trans 'Drag images to re-order them. Space for additional images will appear when images are added.' %}
                         </p>
                     </div>
                     {% endblock product_images_content %}
@@ -241,33 +240,24 @@
                             <tr>
                                 <td colspan="{% if product_class.track_stock %}10{% else %}7{% endif %}">
                                     {% for error in stockrecord_form.non_field_errors %}
-                                    <span class="error-block errorlist"><i class="fas fa-exclamation"></i> {{ error
-                                        }}</span>
+                                    <span class="error-block errorlist"><i class="fas fa-exclamation"></i> {{ error }}</span>
                                     {% endfor %}
                                 </td>
                             </tr>
                             {% endif %}
                             <tr>
-                                <td>{% include "oscar/dashboard/partials/form_field.html" with
-                                    field=stockrecord_form.partner nolabel=True %}</td>
-                                <td>{% include "oscar/dashboard/partials/form_field.html" with
-                                    field=stockrecord_form.partner_sku nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
                                 {% if product_class.track_stock %}
-                                <td>{% include "oscar/dashboard/partials/form_field.html" with
-                                    field=stockrecord_form.num_in_stock nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
                                 <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
-                                <td>{% include "oscar/dashboard/partials/form_field.html" with
-                                    field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
                                 {% endif %}
-                                <td>{% include "oscar/dashboard/partials/form_field.html" with
-                                    field=stockrecord_form.price_currency nolabel=True %}</td>
-                                <td>{% include "oscar/dashboard/partials/form_field.html" with
-                                    field=stockrecord_form.price nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.price nolabel=True %}</td>
                                 <td>
-                                    {% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.id
-                                    nolabel=True %}
-                                    {% include "oscar/dashboard/partials/form_field.html" with
-                                    field=stockrecord_form.DELETE nolabel=True %}
+                                    {% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.id nolabel=True %}
+                                    {% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True %}
                                 </td>
                             </tr>
                             {% endfor %}
@@ -285,8 +275,7 @@
                         <caption>
                             {% trans "Variants" %}
                             {% if not readonly %}
-                            <button class="btn btn-primary float-right" {% if not product.can_be_parent %}disabled{%
-                                endif %} name="action" type="submit" value="create-child"
+                            <button class="btn btn-primary float-right" {% if not product.can_be_parent %}disabled{% endif %} name="action" type="submit" value="create-child"
                                 data-loading-text="{% trans 'Adding...' %}">
                                 <i class="fas fa-plus-circle"></i> {% trans "Add variant" %}
                             </button>
@@ -352,8 +341,7 @@
                         {% for recommended_form in recommended_formset %}
                         <tr>
                             <td class="form-inline">
-                                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=recommended_form
-                                %}
+                                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=recommended_form %}
                             </td>
                         </tr>
                         {% endfor %}
