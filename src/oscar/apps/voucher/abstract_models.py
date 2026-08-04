@@ -248,12 +248,22 @@ class AbstractVoucher(models.Model):
         """
         Records a usage of this voucher in an order.
         """
-        if user.is_authenticated:
-            self.applications.create(voucher=self, order=order, user=user)
-        else:
-            self.applications.create(voucher=self, order=order)
-        self.num_orders += 1
-        self.save()
+        from django.core import exceptions
+        from django.db import transaction
+
+        with transaction.atomic():
+            voucher = self.__class__.objects.select_for_update().get(pk=self.pk)
+            is_available, message = voucher.is_available_to_user(user)
+            if not is_available:
+                raise exceptions.ValidationError(message)
+
+            if user.is_authenticated:
+                voucher.applications.create(voucher=voucher, order=order, user=user)
+            else:
+                voucher.applications.create(voucher=voucher, order=order)
+            voucher.num_orders += 1
+            voucher.save()
+            self.num_orders = voucher.num_orders
 
     record_usage.alters_data = True
 
