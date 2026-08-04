@@ -16,8 +16,6 @@ class CustomerConfig(OscarConfig):
 
     # pylint: disable=attribute-defined-outside-init, reimported, unused-import
     def ready(self):
-        from . import receivers
-        from .alerts import receivers
 
         self.summary_view = get_class("customer.views", "AccountSummaryView")
         self.order_history_view = get_class("customer.views", "OrderHistoryView")
@@ -46,6 +44,7 @@ class CustomerConfig(OscarConfig):
         self.profile_view = get_class("customer.views", "ProfileView")
         self.profile_update_view = get_class("customer.views", "ProfileUpdateView")
         self.profile_delete_view = get_class("customer.views", "ProfileDeleteView")
+        self.email_change_verify_view = get_class("customer.views", "EmailChangeVerifyView")
         self.change_password_view = get_class("customer.views", "ChangePasswordView")
 
         self.notification_inbox_view = get_class(
@@ -129,6 +128,11 @@ class CustomerConfig(OscarConfig):
                 "profile/delete/",
                 login_required(self.profile_delete_view.as_view()),
                 name="profile-delete",
+            ),
+            path(
+                "profile/email-change-verify/<str:token>/",
+                self.email_change_verify_view.as_view(),
+                name="email-change-verify",
             ),
             # Order history
             path(

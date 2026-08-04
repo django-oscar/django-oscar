@@ -1,4 +1,3 @@
-from django.utils.translation import gettext_lazy as _
 
 from oscar.core.loading import get_class
 from oscar.apps.search.signals import user_search

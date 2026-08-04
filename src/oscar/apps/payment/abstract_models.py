@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.core import exceptions
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -184,7 +185,6 @@ class AbstractSource(models.Model):
         Convenience method for recording refunds against this source
         """
         if amount > self.amount_available_for_refund:
-            from django.core import exceptions
             raise exceptions.ValidationError(_("Cannot refund more than amount debited."))
             
         self.amount_refunded += amount

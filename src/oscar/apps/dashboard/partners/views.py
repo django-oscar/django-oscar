@@ -206,11 +206,7 @@ class PartnerUserLinkView(generic.View):
         user = get_object_or_404(User, pk=user_pk)
         name = user.get_full_name() or user.email
         partner = get_object_or_404(Partner, pk=partner_pk)
-        
-        if not request.user.is_staff and not partner.users.filter(pk=request.user.pk).exists():
-            from django.core.exceptions import PermissionDenied
-            raise PermissionDenied
-            
+
         if self.link_user(user, partner):
             messages.success(
                 request,
@@ -265,11 +261,7 @@ class PartnerUserUnlinkView(generic.View):
         user = get_object_or_404(User, pk=user_pk)
         name = user.get_full_name() or user.email
         partner = get_object_or_404(Partner, pk=partner_pk)
-        
-        if not request.user.is_staff and not partner.users.filter(pk=request.user.pk).exists():
-            from django.core.exceptions import PermissionDenied
-            raise PermissionDenied
-            
+
         if self.unlink_user(user, partner):
             msg = render_to_string(
                 "oscar/dashboard/partners/messages/user_unlinked.html",

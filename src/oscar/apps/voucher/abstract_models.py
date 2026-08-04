@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.core import exceptions
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -248,9 +248,6 @@ class AbstractVoucher(models.Model):
         """
         Records a usage of this voucher in an order.
         """
-        from django.core import exceptions
-        from django.db import transaction
-
         with transaction.atomic():
             voucher = self.__class__.objects.select_for_update().get(pk=self.pk)
             is_available, message = voucher.is_available_to_user(user)
