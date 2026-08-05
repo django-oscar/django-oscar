@@ -1,0 +1,47 @@
+========================================
+Oscar 4.2 release notes
+========================================
+
+:release: unreleased
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_4.2:
+
+Compatibility
+~~~~~~~~~~~~~
+
+- Added Django 6.0 support. ([#4564](https://github.com/django-oscar/django-oscar/pull/4564)) — by @jobcase-ebrake
+- Added compatibility with django-treebeard 5.0. ([#4556](https://github.com/django-oscar/django-oscar/pull/4556)) — by @solarissmoke
+
+.. _new_in_4.2:
+
+What's new in Oscar 4.2
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Bulk actions in the catalogue dashboard — Reworked bulk actions with an intermediate confirmation step, added bulk updating of public visibility for products and categories, and an option to select objects across all pages. ([#4570](https://github.com/django-oscar/django-oscar/pull/4570), [#4537](https://github.com/django-oscar/django-oscar/pull/4537), [#4535](https://github.com/django-oscar/django-oscar/pull/4535)) — by @mr-sphere, @samar-hassan
+- Guest checkout for customers with an existing account — Allow customers who already have an account to check out as a guest. ([#4581](https://github.com/django-oscar/django-oscar/pull/4581)) — by @samar-hassan
+- Custom granular permission checks for dashboards. ([#4507](https://github.com/django-oscar/django-oscar/pull/4507)) — by @mfarhan943
+- Added a category search form to the dashboard. ([#4536](https://github.com/django-oscar/django-oscar/pull/4536)) — by @samar-hassan
+- Made email search more flexible. ([#4558](https://github.com/django-oscar/django-oscar/pull/4558)) — by @samar-hassan
+- Added more heading options to TinyMCE. ([#4595](https://github.com/django-oscar/django-oscar/pull/4595)) — by @mr-sphere
+
+Fixes & Improvements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Preserved basket line order when creating order lines. ([#4598](https://github.com/django-oscar/django-oscar/pull/4598)) — by @samar-hassan
+- Prevented a deadlock between concurrent order placements. ([#4594](https://github.com/django-oscar/django-oscar/pull/4594)) — by @samar-hassan
+- Fixed a warning caused by the Category manager not subclassing Treebeard's manager. ([#4583](https://github.com/django-oscar/django-oscar/pull/4583)) — by @solarissmoke
+- Corrected the namespace for ``notifications-inbox``. ([#4567](https://github.com/django-oscar/django-oscar/pull/4567)) — by @janheini
+- Added a ``code`` field to the product review model. ([#4552](https://github.com/django-oscar/django-oscar/pull/4552)) — by @samar-hassan
+- Added a ``code`` field to the address models. ([#4551](https://github.com/django-oscar/django-oscar/pull/4551)) — by @samar-hassan
+- Enabled extending the ``ShippingEventQuantity`` model. ([#4577](https://github.com/django-oscar/django-oscar/pull/4577)) — by @samar-hassan
+- Added a hook to reorder line attributes. ([#4582](https://github.com/django-oscar/django-oscar/pull/4582)) — by @viggo-devries
+- Added missing search fields to the Django admin models. ([#4543](https://github.com/django-oscar/django-oscar/pull/4543)) — by @samar-hassan
+- Defined bulk action variables in the ``__init__`` method. ([#4538](https://github.com/django-oscar/django-oscar/pull/4538)) — by @samar-hassan
+- Added an early exit when there are no options. ([#4578](https://github.com/django-oscar/django-oscar/pull/4578)) — by @mr-sphere
+- Added the customer email to the report. ([#4576](https://github.com/django-oscar/django-oscar/pull/4576)) — by @wiktor-highbiza
+- Removed Node Sass in favour of Dart Sass. ([#4568](https://github.com/django-oscar/django-oscar/pull/4568)) — by @jwayodi
+- Removed a broken Transifex link from the README. ([#4571](https://github.com/django-oscar/django-oscar/pull/4571)) — by @yachikadev
