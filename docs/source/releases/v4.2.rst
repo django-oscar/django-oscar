@@ -2,7 +2,7 @@
 Oscar 4.2 release notes
 ========================================
 
-:release: unreleased
+:release: released
 
 .. contents::
     :local:
