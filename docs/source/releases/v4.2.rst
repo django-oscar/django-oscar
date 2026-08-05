@@ -2,7 +2,7 @@
 Oscar 4.2 release notes
 ========================================
 
-:release: released
+:release: 2026-08-05
 
 .. contents::
     :local:
