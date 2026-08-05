@@ -1,6 +1,7 @@
 # pylint: disable=attribute-defined-outside-init
 from django.contrib import messages
 from django.contrib.auth.models import Permission
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -98,8 +99,15 @@ class PartnerManageView(generic.UpdateView):
     form_class = PartnerAddressForm
     success_url = reverse_lazy("dashboard:partner-list")
 
+    def dispatch(self, request, *args, **kwargs):
+        self.partner = get_object_or_404(Partner, pk=kwargs.get("pk"))
+        if not request.user.is_staff and not request.user.partners.filter(
+            pk=self.partner.pk
+        ).exists():
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
     def get_object(self, queryset=None):
-        self.partner = get_object_or_404(Partner, pk=self.kwargs["pk"])
         address = self.partner.primary_address
         if address is None:
             address = self.partner.addresses.model(partner=self.partner)
@@ -148,6 +156,10 @@ class PartnerUserCreateView(generic.CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.partner = get_object_or_404(Partner, pk=kwargs.get("partner_pk", None))
+        if not request.user.is_staff and not request.user.partners.filter(
+            pk=self.partner.pk
+        ).exists():
+            raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -174,6 +186,10 @@ class PartnerUserSelectView(generic.ListView):
 
     def dispatch(self, request, *args, **kwargs):
         self.partner = get_object_or_404(Partner, pk=kwargs.get("partner_pk", None))
+        if not request.user.is_staff and not request.user.partners.filter(
+            pk=self.partner.pk
+        ).exists():
+            raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -198,6 +214,14 @@ class PartnerUserSelectView(generic.ListView):
 
 
 class PartnerUserLinkView(generic.View):
+    def dispatch(self, request, *args, **kwargs):
+        self.partner = get_object_or_404(Partner, pk=kwargs.get("partner_pk"))
+        if not request.user.is_staff and not request.user.partners.filter(
+            pk=self.partner.pk
+        ).exists():
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, user_pk, partner_pk):
         # need to allow GET to make Undo link in PartnerUserUnlinkView work
         return self.post(request, user_pk, partner_pk)
@@ -205,19 +229,18 @@ class PartnerUserLinkView(generic.View):
     def post(self, request, user_pk, partner_pk):
         user = get_object_or_404(User, pk=user_pk)
         name = user.get_full_name() or user.email
-        partner = get_object_or_404(Partner, pk=partner_pk)
 
-        if self.link_user(user, partner):
+        if self.link_user(user, self.partner):
             messages.success(
                 request,
                 _("User '%(name)s' was linked to '%(partner_name)s'")
-                % {"name": name, "partner_name": partner.name},
+                % {"name": name, "partner_name": self.partner.name},
             )
         else:
             messages.info(
                 request,
                 _("User '%(name)s' is already linked to '%(partner_name)s'")
-                % {"name": name, "partner_name": partner.name},
+                % {"name": name, "partner_name": self.partner.name},
             )
         return redirect("dashboard:partner-manage", pk=partner_pk)
 
@@ -239,6 +262,14 @@ class PartnerUserLinkView(generic.View):
 
 
 class PartnerUserUnlinkView(generic.View):
+    def dispatch(self, request, *args, **kwargs):
+        self.partner = get_object_or_404(Partner, pk=kwargs.get("partner_pk"))
+        if not request.user.is_staff and not request.user.partners.filter(
+            pk=self.partner.pk
+        ).exists():
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
     def unlink_user(self, user, partner):
         """
         Unlinks a user from a partner, and removes the dashboard permission
@@ -260,14 +291,13 @@ class PartnerUserUnlinkView(generic.View):
     def post(self, request, user_pk, partner_pk):
         user = get_object_or_404(User, pk=user_pk)
         name = user.get_full_name() or user.email
-        partner = get_object_or_404(Partner, pk=partner_pk)
 
-        if self.unlink_user(user, partner):
+        if self.unlink_user(user, self.partner):
             msg = render_to_string(
                 "oscar/dashboard/partners/messages/user_unlinked.html",
                 {
                     "user_name": name,
-                    "partner_name": partner.name,
+                    "partner_name": self.partner.name,
                     "user_pk": user_pk,
                     "partner_pk": partner_pk,
                 },
@@ -277,7 +307,7 @@ class PartnerUserUnlinkView(generic.View):
             messages.error(
                 request,
                 _("User '%(name)s' is not linked to '%(partner_name)s'")
-                % {"name": name, "partner_name": partner.name},
+                % {"name": name, "partner_name": self.partner.name},
             )
         return redirect("dashboard:partner-manage", pk=partner_pk)
 
@@ -291,8 +321,15 @@ class PartnerUserUpdateView(generic.UpdateView):
     template_name = "oscar/dashboard/partners/partner_user_form.html"
     form_class = ExistingUserForm
 
+    def dispatch(self, request, *args, **kwargs):
+        self.partner = get_object_or_404(Partner, pk=kwargs.get("partner_pk"))
+        if not request.user.is_staff and not request.user.partners.filter(
+            pk=self.partner.pk
+        ).exists():
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
     def get_object(self, queryset=None):
-        self.partner = get_object_or_404(Partner, pk=self.kwargs["partner_pk"])
         return get_object_or_404(
             User, pk=self.kwargs["user_pk"], partners__pk=self.kwargs["partner_pk"]
         )

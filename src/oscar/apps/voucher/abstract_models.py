@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.core import exceptions
-from django.db import models, transaction
+from django.db import IntegrityError, models, transaction
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -254,10 +254,17 @@ class AbstractVoucher(models.Model):
             if not is_available:
                 raise exceptions.ValidationError(message)
 
-            if user.is_authenticated:
-                voucher.applications.create(voucher=voucher, order=order, user=user)
-            else:
-                voucher.applications.create(voucher=voucher, order=order)
+            try:
+                if user.is_authenticated:
+                    voucher.applications.create(
+                        voucher=voucher, order=order, user=user
+                    )
+                else:
+                    voucher.applications.create(voucher=voucher, order=order)
+            except IntegrityError as exc:
+                raise exceptions.ValidationError(
+                    _("This voucher has already been used")
+                ) from exc
             voucher.num_orders += 1
             voucher.save()
             self.num_orders = voucher.num_orders
@@ -320,6 +327,12 @@ class AbstractVoucherApplication(models.Model):
         ordering = ["-date_created"]
         verbose_name = _("Voucher Application")
         verbose_name_plural = _("Voucher Applications")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["voucher", "user"],
+                name="voucher_application_unique_voucher_user",
+            ),
+        ]
 
     def __str__(self):
         return _("'%(voucher)s' used by '%(user)s'") % {
