@@ -204,7 +204,7 @@ class AbstractVoucher(models.Model):
         """
         is_available, message = False, ""
         if self.usage == self.SINGLE_USE:
-            is_available = not self.applications.exists()
+            is_available = self.num_orders == 0
             if not is_available:
                 message = _("This voucher has already been used")
         elif self.usage == self.MULTI_USE:
