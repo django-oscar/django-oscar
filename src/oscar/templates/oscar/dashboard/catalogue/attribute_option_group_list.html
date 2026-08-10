@@ -17,8 +17,8 @@
 {% endblock %}
 
 {% block header %}
-    <div class="page-header">
     {% has_dashboard_permission "catalogue-attribute-option-group-create" "catalogue_dashboard" as can_create_attribute_option_group %}
+    <div class="page-header">
     {% if can_create_attribute_option_group %}
     <a href="{% url 'dashboard:catalogue-attribute-option-group-create' %}?{{ querystring }}" class="btn btn-primary float-right">
     {% endif %}

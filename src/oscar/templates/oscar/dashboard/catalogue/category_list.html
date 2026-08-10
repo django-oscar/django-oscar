@@ -1,6 +1,7 @@
 {% extends 'oscar/dashboard/layout.html' %}
 {% load category_tags %}
 {% load i18n %}
+{% load dashboard_tags %}
 {% load render_table from django_tables2 %}
 
 {% block body_class %}{{ block.super }} catalogue{% endblock %}
@@ -23,9 +24,8 @@
 {% endblock %}
 
 {% block header %}
-    <div class="page-header">
-    {% load dashboard_tags %}
     {% has_dashboard_permission "catalogue-category-create" "catalogue_dashboard" as can_create_category %}
+    <div class="page-header">
     {% if can_create_category %}
     <a href="{% url 'dashboard:catalogue-category-create' %}" class="btn btn-primary float-right"><i class="fas fa-plus-circle"></i> {% trans "Create new category" %}</a>
     {% endif %}
