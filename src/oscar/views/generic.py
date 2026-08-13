@@ -2,7 +2,7 @@ import hashlib
 import time
 
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpResponseBase, JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.encoding import smart_str
@@ -164,9 +164,12 @@ class BulkEditMixin:
         action_handler = actions[action]
 
         if hasattr(action_handler, "execute"):
-            action_handler.execute(request, objects)
+            response = action_handler.execute(request, objects)
         else:
-            getattr(self, action)(request, objects)
+            response = getattr(self, action)(request, objects)
+
+        if isinstance(response, HttpResponseBase):
+            return response
 
         return redirect(self.get_success_url(request))
 
