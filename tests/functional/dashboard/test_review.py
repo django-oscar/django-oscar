@@ -1,4 +1,5 @@
 from datetime import timedelta, timezone as datetime_timezone
+from http import client as http_client
 
 from django.urls import reverse
 from django.utils import timezone
@@ -39,8 +40,10 @@ class ReviewsDashboardTests(WebTestCase):
         list_page = self.get(reverse("dashboard:reviews-list"))
         form = list_page.forms["update_reviews_form"]
         form["selected_review"] = [3, 2]
-        form.submit("update")
+        response = form.submit("update")
 
+        self.assertEqual(http_client.FOUND, response.status_code)
+        self.assertIn(reverse("dashboard:reviews-list"), response.headers["Location"])
         self.assertEqual(ProductReview.objects.get(pk=1).status, 0)
         self.assertEqual(ProductReview.objects.get(pk=2).status, 1)
         self.assertEqual(ProductReview.objects.get(pk=3).status, 1)
