@@ -38,7 +38,10 @@ class TestOrderListDashboard(WebTestCase):
         page = self.get(reverse("dashboard:order-list"))
         form = page.forms["orders_form"]
         form["selected_order"].checked = True
-        form.submit("download_selected")
+        response = form.submit(name="action", value="download_selected_orders")
+        self.assertEqual(http_client.OK, response.status_code)
+        self.assertEqual(response.headers["Content-Type"], "text/csv")
+        self.assertIn("orders.csv", response.headers["Content-Disposition"])
 
     def test_allows_order_number_search(self):
         page = self.get(reverse("dashboard:order-list"))
