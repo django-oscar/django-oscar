@@ -230,6 +230,22 @@ There are also several predefined availability policies:
    :members: Unavailable, Available, StockRequired
    :noindex:
 
+Custom purchase rules, such as capping the quantity of a product that can be
+bought in one order, should be enforced by overriding ``is_purchase_permitted``
+in a custom availability policy, rather than by raising exceptions from a
+``Basket``/``Line`` model signal handler — signal handlers run inside
+``save()``, so an exception raised there isn't caught anywhere in Oscar's
+basket or checkout flow and surfaces to the customer as an unhandled error.
+For example:
+
+.. code-block:: python
+
+   class MaxQuantityAvailability(Available):
+       def is_purchase_permitted(self, quantity):
+           if quantity > 4:
+               return False, _("You can only buy a maximum of 4 of this product")
+           return super().is_purchase_permitted(quantity)
+
 Strategy mixins
 ---------------
 
