@@ -106,6 +106,26 @@ class TestDashboardVoucherSets:
         assert response.context_data["page_obj"]
         assert response.status_code == 200
 
+    @pytest.mark.parametrize(
+        ("sort", "first_total", "second_total"),
+        (
+            ("num_basket_additions", 1, 3),
+            ("num_orders", 2, 4),
+        ),
+    )
+    def test_voucher_set_list_view_sorts_by_usage_totals(
+        self, rf, sort, first_total, second_total
+    ):
+        first_set = voucher.VoucherSetFactory(count=1)
+        second_set = voucher.VoucherSetFactory(count=1)
+        first_set.vouchers.update(**{sort: first_total})
+        second_set.vouchers.update(**{sort: second_total})
+
+        request = rf.get("/", {"sort": sort, "dir": "desc"})
+        response = views.VoucherSetListView.as_view()(request)
+
+        assert list(response.context_data["voucher_sets"]) == [second_set, first_set]
+
     def test_voucher_set_detail_view(self, rf):
         voucher.VoucherSetFactory(count=10)
         vs2 = voucher.VoucherSetFactory(count=15)
