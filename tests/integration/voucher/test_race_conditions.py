@@ -32,7 +32,6 @@ from django.test import TestCase, TransactionTestCase
 from oscar.apps.voucher.models import Voucher
 from oscar.test.factories import OrderFactory, UserFactory, VoucherFactory
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -75,8 +74,7 @@ class _ThreadRunner:
         ``args_list`` – list of ``(args_tuple, kwargs_dict)`` items, one per thread.
         """
         threads = [
-            threading.Thread(target=self._run, args=a, kwargs=k)
-            for a, k in args_list
+            threading.Thread(target=self._run, args=a, kwargs=k) for a, k in args_list
         ]
         for t in threads:
             t.start()

@@ -250,6 +250,7 @@ class AbstractVoucher(models.Model):
         """
         with transaction.atomic():
             voucher = type(self).objects.select_for_update().get(pk=self.pk)
+
             is_available, message = voucher.is_available_to_user(user)
             if not is_available:
                 raise exceptions.ValidationError(message)
@@ -258,8 +259,10 @@ class AbstractVoucher(models.Model):
                 voucher.applications.create(voucher=voucher, order=order, user=user)
             else:
                 voucher.applications.create(voucher=voucher, order=order)
+
             voucher.num_orders += 1
-            voucher.save()
+            voucher.save(update_fields=["num_orders"])
+
             self.num_orders = voucher.num_orders
 
     record_usage.alters_data = True
