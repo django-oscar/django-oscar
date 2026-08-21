@@ -1,7 +1,6 @@
 from urllib.parse import quote
 
 from django.http import Http404, HttpResponsePermanentRedirect
-from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 
 from oscar.apps.catalogue.signals import product_viewed

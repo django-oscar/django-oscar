@@ -10,4 +10,4 @@ class AnalyticsConfig(OscarConfig):
 
     # pylint: disable=unused-import
     def ready(self):
-        from . import receivers
+        pass
