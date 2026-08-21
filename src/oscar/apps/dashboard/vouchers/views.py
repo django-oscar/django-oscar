@@ -4,7 +4,7 @@ import csv
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -312,6 +312,10 @@ class VoucherSetListView(generic.ListView):
 
     def get_queryset(self):
         qs = self.model.objects.all().order_by("-date_created")
+        qs = qs.alias(
+            num_basket_additions=Sum("vouchers__num_basket_additions"),
+            num_orders=Sum("vouchers__num_orders"),
+        )
         qs = sort_queryset(
             qs,
             self.request,
