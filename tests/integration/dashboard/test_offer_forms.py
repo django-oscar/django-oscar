@@ -5,7 +5,7 @@ from django.test import TestCase
 
 from oscar.apps.dashboard.offers import forms
 from oscar.apps.offer.custom import create_benefit, create_condition
-from oscar.apps.offer.models import Benefit, Range
+from oscar.apps.offer.models import Benefit, Condition, Range
 from oscar.test.factories import create_product
 from tests._site.model_tests_app.models import CustomBenefitModel, CustomConditionModel
 
@@ -161,6 +161,35 @@ class TestBenefitForm(TestCase):
             form.clean(),
         )
 
+    def test_switch_from_custom_benefit_creates_new_benefit(self):
+        """
+        Switching a form that is bound to a pre-defined benefit back to a
+        non-pre-defined one should create a fresh benefit rather than
+        overwriting the shared pre-defined instance.
+        """
+        predefined = create_benefit(CustomBenefitModel)
+        original_id = predefined.id
+
+        form = forms.BenefitForm(
+            instance=predefined,
+            data={
+                "range": self.range.id,
+                "type": Benefit.FIXED,
+                "value": 5,
+                "custom_benefit": "",
+            },
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        benefit = form.save()
+
+        # A new, non-pre-defined benefit is returned
+        self.assertNotEqual(benefit.id, original_id)
+        self.assertFalse(benefit.proxy_class)
+
+        # The original pre-defined benefit is left untouched
+        original = Benefit.objects.get(id=original_id)
+        self.assertTrue(original.proxy_class)
+
 
 class TestConditionForm(TestCase):
     def setUp(self):
@@ -237,3 +266,32 @@ class TestConditionForm(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertRaises(ValidationError, form.clean)
+
+    def test_switch_from_custom_condition_creates_new_condition(self):
+        """
+        Switching a form that is bound to a pre-defined condition back to a
+        non-pre-defined one should create a fresh condition rather than
+        overwriting the shared pre-defined instance.
+        """
+        predefined = create_condition(CustomConditionModel)
+        original_id = predefined.id
+
+        form = forms.ConditionForm(
+            instance=predefined,
+            data={
+                "range": self.range.id,
+                "type": "Count",
+                "value": 3,
+                "custom_condition": "",
+            },
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        condition = form.save()
+
+        # A new, non-pre-defined condition is returned
+        self.assertNotEqual(condition.id, original_id)
+        self.assertFalse(condition.proxy_class)
+
+        # The original pre-defined condition is left untouched
+        original = Condition.objects.get(id=original_id)
+        self.assertTrue(original.proxy_class)

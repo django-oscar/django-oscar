@@ -172,6 +172,12 @@ class ConditionForm(forms.ModelForm):
         # we simply return the instance that has been chosen
         if self.cleaned_data["custom_condition"]:
             return Condition.objects.get(id=self.cleaned_data["custom_condition"])
+        # The form may have been bound to a pre-defined condition. When switching
+        # back to a non-pre-defined one we must not overwrite that shared
+        # instance, so create a fresh condition instead.
+        if self.instance.proxy_class:
+            self.instance.pk = None
+            self.instance.proxy_class = None
         return super().save(*args, **kwargs)
 
 
@@ -237,6 +243,12 @@ class BenefitForm(forms.ModelForm):
         # we simply return the instance that has been chosen
         if self.cleaned_data["custom_benefit"]:
             return Benefit.objects.get(id=self.cleaned_data["custom_benefit"])
+        # The form may have been bound to a pre-defined benefit. When switching
+        # back to a non-pre-defined one we must not overwrite that shared
+        # instance, so create a fresh benefit instead.
+        if self.instance.proxy_class:
+            self.instance.pk = None
+            self.instance.proxy_class = None
         return super().save(*args, **kwargs)
 
 
