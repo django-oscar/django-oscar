@@ -42,7 +42,6 @@ Pricing, stock and availability
 .. toctree::
     :maxdepth: 1
 
-    enforcing_stock_rules
     how_to_configure_stock_messaging
 
 Payment
