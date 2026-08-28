@@ -1,5 +1,5 @@
 # pylint: disable=E1101
-from urllib.parse import quote
+from urllib.parse import unquote
 
 from django.contrib import messages
 from django.http import Http404, HttpResponsePermanentRedirect
@@ -74,7 +74,7 @@ class ProductCategoryView(BaseSearchView):
             # Categories are fetched by primary key to allow slug changes.
             # If the slug has changed, issue a redirect.
             expected_path = category.get_absolute_url()
-            if expected_path != quote(current_path):
+            if unquote(expected_path) != unquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_category(self):
