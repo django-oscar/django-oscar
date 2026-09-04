@@ -3,6 +3,7 @@ from decimal import ROUND_DOWN, Decimal
 from unittest.mock import patch
 
 import pytest
+from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase, override_settings
 
 from oscar.apps.offer.models import Benefit
@@ -66,3 +67,13 @@ class TestBenefit(TestCase):
         decimal = Decimal(10.05)
 
         self.assertEqual(benefit.round(decimal), round_func_mock(decimal))
+
+
+@pytest.mark.django_db
+class TestBenefitWithoutRange:
+    def test_get_applicable_lines_raises_when_no_range_is_set(self):
+        benefit = Benefit(type=Benefit.PERCENTAGE, value=10)
+        basket = factories.create_basket(empty=True)
+
+        with pytest.raises(ImproperlyConfigured):
+            benefit.proxy().get_applicable_lines(offer=None, basket=basket)
