@@ -74,6 +74,9 @@ class UpdateView(BulkEditMixin, generic.View):
     actions = ("archive", "delete")
     checkbox_object_name = "notification"
 
+    def get_queryset(self):
+        return self.model._default_manager.filter(recipient=self.request.user)
+
     def get_objects(self, ids):
         return self.model.objects.filter(recipient=self.request.user, pk__in=ids)
 

@@ -34,3 +34,43 @@ class TestAUserWithUnreadNotifications(WebTestCase):
         self.assertEqual(http_client.OK, response.status_code)
         n.refresh_from_db()
         self.assertTrue(n.is_read)
+
+
+class TestNotificationBulkActions(WebTestCase):
+    csrf_checks = False
+
+    def setUp(self):
+        super().setUp()
+        Dispatcher().notify_user(self.user, "Test message")
+        self.notification = Notification.objects.get(recipient=self.user)
+
+    def test_can_archive_selected_notification(self):
+        response = self.post(
+            reverse("customer:notifications-update"),
+            params={"action": "archive", "selected_notification": self.notification.id},
+        )
+        self.assertEqual(http_client.FOUND, response.status_code)
+        self.notification.refresh_from_db()
+        self.assertEqual(self.notification.location, Notification.ARCHIVE)
+
+    def test_can_delete_selected_notification(self):
+        self.post(
+            reverse("customer:notifications-update"),
+            params={"action": "delete", "selected_notification": self.notification.id},
+        )
+        self.assertFalse(Notification.objects.filter(pk=self.notification.pk).exists())
+
+    def test_cannot_act_on_another_users_notification(self):
+        other_user = UserFactory()
+        Dispatcher().notify_user(other_user, "Other message")
+        other_notification = Notification.objects.get(recipient=other_user)
+
+        self.post(
+            reverse("customer:notifications-update"),
+            params={
+                "action": "delete",
+                "selected_notification": other_notification.id,
+            },
+        )
+
+        self.assertTrue(Notification.objects.filter(pk=other_notification.pk).exists())
