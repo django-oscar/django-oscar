@@ -20,9 +20,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         self.permissions_map = {
             # Product views
             "catalogue-product": (
-                DashboardPermission.get(
-                    "catalogue", "view_product", "add_product", "change_product"
-                ),
+                DashboardPermission.get("catalogue", "view_product"),
                 DashboardPermission.partner_dashboard_access,
             ),
             "catalogue-product-create": (
@@ -64,7 +62,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 "catalogue", "view_category", "add_category"
             ),
             "catalogue-category-update": DashboardPermission.get(
-                "catalogue", "view_category", "change_category"
+                "catalogue", "view_category"
             ),
             "catalogue-category-delete": DashboardPermission.get(
                 "catalogue", "view_category", "delete_category"
@@ -77,7 +75,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 "catalogue", "view_productclass"
             ),
             "catalogue-class-update": DashboardPermission.get(
-                "catalogue", "view_productclass", "change_productclass"
+                "catalogue", "view_productclass"
             ),
             "catalogue-class-delete": DashboardPermission.get(
                 "catalogue", "view_productclass", "delete_productclass"
@@ -92,9 +90,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 "add_attributeoptiongroup",
             ),
             "catalogue-attribute-option-group-update": DashboardPermission.get(
-                "catalogue",
-                "view_attributeoptiongroup",
-                "change_attributeoptiongroup",
+                "catalogue", "view_attributeoptiongroup"
             ),
             "catalogue-attribute-option-group-delete": DashboardPermission.get(
                 "catalogue",
@@ -109,7 +105,7 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 "catalogue", "view_option", "add_option"
             ),
             "catalogue-option-update": DashboardPermission.get(
-                "catalogue", "view_option", "change_option"
+                "catalogue", "view_option"
             ),
             "catalogue-option-delete": DashboardPermission.get(
                 "catalogue", "view_option", "delete_option"

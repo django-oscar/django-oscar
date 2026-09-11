@@ -94,6 +94,52 @@ AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 Option = get_model("catalogue", "Option")
 
 
+class ReadOnlyUpdateViewMixin:
+    readonly_title_prefix = _("View")
+
+    def get_readonly_status(self):
+        if self.request.user.is_superuser:
+            return False
+        if self.request.user.has_perm("partner.dashboard_access"):
+            return False
+        return not self.request.user.has_perm(self.change_permission_codename)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        readonly = self.get_readonly_status()
+        ctx["readonly"] = readonly
+        if readonly:
+            if "title" in ctx:
+                ctx["title"] = f"{self.readonly_title_prefix} {ctx['title']}"
+
+            # Handle form in context
+            if "form" in ctx:
+                for field in ctx["form"].fields.values():
+                    field.disabled = True
+
+            # Handle formsets if they exist in view
+            if hasattr(self, "formsets"):
+                for ctx_name in self.formsets:
+                    if ctx_name in ctx:
+                        for form in ctx[ctx_name]:
+                            for field in form.fields.values():
+                                field.disabled = True
+        return ctx
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.get_readonly_status():
+            for field in form.fields.values():
+                field.disabled = True
+        return form
+
+    def post(self, request, *args, **kwargs):
+        if self.get_readonly_status():
+            messages.error(request, _("You do not have permission to edit this."))
+            return redirect(request.path)
+        return super().post(request, *args, **kwargs)
+
+
 class ProductListView(
     ProductBulkActionMixin, PartnerProductFilterMixin, SingleTableView
 ):
@@ -454,7 +500,10 @@ class ProductCreateRedirectView(generic.RedirectView):
             return self.get_invalid_product_class_url()
 
 
-class ProductCreateUpdateView(PartnerProductFilterMixin, generic.UpdateView):
+class ProductCreateUpdateView(
+    ReadOnlyUpdateViewMixin, PartnerProductFilterMixin, generic.UpdateView
+):
+    change_permission_codename = "catalogue.change_product"
     """
     Dashboard view that is can both create and update products of all kinds.
     It can be used in three different ways, each of them with a unique URL
@@ -553,6 +602,8 @@ class ProductCreateUpdateView(PartnerProductFilterMixin, generic.UpdateView):
         ctx["product_class"] = self.product_class
         ctx["parent"] = self.parent
         ctx["title"] = self.get_page_title()
+        if ctx.get("readonly"):
+            ctx["title"] = f"{self.readonly_title_prefix} {ctx['title']}"
 
         for ctx_name, formset_class in self.formsets.items():
             if ctx_name not in ctx:
@@ -906,7 +957,10 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
         return initial
 
 
-class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
+class CategoryUpdateView(
+    ReadOnlyUpdateViewMixin, CategoryListMixin, generic.UpdateView
+):
+    change_permission_codename = "catalogue.change_category"
     template_name = "oscar/dashboard/catalogue/category_form.html"
     model = Category
     form_class = CategoryForm
@@ -914,6 +968,8 @@ class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["title"] = _("Update category '%s'") % self.object.name
+        if ctx.get("readonly"):
+            ctx["title"] = f"{self.readonly_title_prefix} {ctx['title']}"
         return ctx
 
     def get_success_url(self):
@@ -1028,7 +1084,8 @@ class ProductClassCreateView(ProductClassCreateUpdateView):
         return reverse("dashboard:catalogue-class-list")
 
 
-class ProductClassUpdateView(ProductClassCreateUpdateView):
+class ProductClassUpdateView(ReadOnlyUpdateViewMixin, ProductClassCreateUpdateView):
+    change_permission_codename = "catalogue.change_productclass"
     creating = False
 
     def get_title(self):
@@ -1168,8 +1225,11 @@ class AttributeOptionGroupCreateView(
 
 
 class AttributeOptionGroupUpdateView(
-    PopUpWindowUpdateMixin, AttributeOptionGroupCreateUpdateView
+    ReadOnlyUpdateViewMixin,
+    PopUpWindowUpdateMixin,
+    AttributeOptionGroupCreateUpdateView,
 ):
+    change_permission_codename = "catalogue.change_attributeoptiongroup"
     creating = False
 
     def get_object(self, queryset=None):
@@ -1290,7 +1350,10 @@ class OptionCreateView(PopUpWindowCreateMixin, OptionCreateUpdateView):
         return reverse("dashboard:catalogue-option-list")
 
 
-class OptionUpdateView(PopUpWindowUpdateMixin, OptionCreateUpdateView):
+class OptionUpdateView(
+    ReadOnlyUpdateViewMixin, PopUpWindowUpdateMixin, OptionCreateUpdateView
+):
+    change_permission_codename = "catalogue.change_option"
     creating = False
 
     def get_object(self, queryset=None):
