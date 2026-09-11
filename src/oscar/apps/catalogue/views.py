@@ -1,4 +1,4 @@
-from urllib.parse import quote
+from urllib.parse import unquote
 
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.utils.translation import gettext_lazy as _
@@ -66,7 +66,7 @@ class ProductDetailView(DetailView):
 
         if self.enforce_paths:
             expected_path = product.get_absolute_url()
-            if quote(expected_path) != quote(current_path):
+            if unquote(expected_path) != unquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_context_data(self, **kwargs):
