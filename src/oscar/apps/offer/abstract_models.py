@@ -794,6 +794,12 @@ class AbstractBenefit(BaseOfferMixin, models.Model):
         """
         if range is None:
             range = self.range
+        if range is None:
+            raise exceptions.ImproperlyConfigured(
+                "Benefit of type %r has no range set. Custom benefit "
+                "classes must either set a range or override "
+                "get_applicable_lines." % self.type
+            )
         line_tuples = []
         for line in basket.all_lines():
             product = line.product
