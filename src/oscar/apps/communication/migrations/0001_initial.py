@@ -7,7 +7,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 import oscar.models.fields.autoslugfield
 from django.utils.module_loading import import_string
-from django.conf import settings
 
 models_AutoField = import_string(settings.DEFAULT_AUTO_FIELD)
 

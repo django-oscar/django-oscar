@@ -14,7 +14,6 @@ class OfferConfig(OscarConfig):
 
     # pylint: disable=attribute-defined-outside-init, W0611, W0201
     def ready(self):
-        from . import receivers
 
         self.detail_view = get_class("offer.views", "OfferDetailView")
         self.list_view = get_class("offer.views", "OfferListView")
