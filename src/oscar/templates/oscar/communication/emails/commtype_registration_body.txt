@@ -1,1 +1,3 @@
-{% load i18n %}{% trans 'Thank you for registering.' %}
+{% extends "oscar/communication/emails/base.txt" %}
+{% load i18n %}
+{% block body %}{% trans 'Thank you for registering.' %}{% endblock %}
