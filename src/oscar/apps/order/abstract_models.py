@@ -866,12 +866,14 @@ class AbstractLine(models.Model):
                 _("'%(title)s' is no longer available") % {"title": self.title}
             )
 
-        try:
-            basket_line = basket.lines.get(product=self.product)
-        except basket.lines.model.DoesNotExist:
-            desired_qty = self.quantity
-        else:
-            desired_qty = basket_line.quantity + self.quantity
+        options = [
+            {"option": attribute.option, "value": attribute.value}
+            for attribute in self.attributes.all()
+            if attribute.option
+        ]
+        desired_qty = self.quantity + basket.line_quantity(
+            self.product, self.stockrecord, options
+        )
 
         result = strategy.fetch_for_product(self.product)
         is_available, reason = result.availability.is_purchase_permitted(
