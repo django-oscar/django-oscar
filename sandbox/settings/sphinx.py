@@ -1,4 +1,4 @@
-from settings import *
+from .base import *
 
 # Remove debug toolbar
 try:
