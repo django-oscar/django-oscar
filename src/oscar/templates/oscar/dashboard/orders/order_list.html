@@ -87,7 +87,8 @@
                     <div class="float-right">
                         <div class="form-inline">
                             <label>{% trans "Download selected orders as a CSV" %}</label>
-                            <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders" data-loading-text="{% trans 'Submitting...' %}">{% trans "Download" %}</button>
+                            {# data-loading-text is deliberately not used here so that the button doesn't stay disabled after a CSV download has started #}
+                            <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders">{% trans "Download" %}</button>
                         </div>
                     </div>
                 </caption>
