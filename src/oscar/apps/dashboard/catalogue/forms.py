@@ -167,24 +167,25 @@ def _attr_datetime_field(attribute):
     )
 
 
-def _attr_option_field(attribute):
-    # No option group means there is nothing to choose from; skip the field
+def _attr_option_queryset(attribute):
     if attribute.option_group_id is None:
-        return None
+        return AttributeOption.objects.none()
+    return attribute.option_group.options.all()
+
+
+def _attr_option_field(attribute):
     return forms.ModelChoiceField(
         label=attribute.name,
         required=attribute.required,
-        queryset=attribute.option_group.options.all(),
+        queryset=_attr_option_queryset(attribute),
     )
 
 
 def _attr_multi_option_field(attribute):
-    if attribute.option_group_id is None:
-        return None
     return forms.ModelMultipleChoiceField(
         label=attribute.name,
         required=attribute.required,
-        queryset=attribute.option_group.options.all(),
+        queryset=_attr_option_queryset(attribute),
     )
 
 

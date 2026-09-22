@@ -68,7 +68,7 @@ class TestProductFormOptionAttributes(TestCase):
             option_group=option_group,
         )
 
-    def test_option_attribute_without_option_group_is_skipped(self):
+    def test_option_attribute_without_option_group_has_empty_choices(self):
         for attribute_type in ("option", "multi_option"):
             with self.subTest(attribute_type=attribute_type):
                 self.product_class.attributes.all().delete()
@@ -76,7 +76,10 @@ class TestProductFormOptionAttributes(TestCase):
 
                 form = forms.ProductForm(self.product_class)
 
-                self.assertNotIn("attr_size", form.fields)
+                self.assertIn("attr_size", form.fields)
+                field = form.fields["attr_size"]
+                self.assertEqual(list(field.queryset), [])
+                self.assertTrue(field.help_text)
 
     def test_option_attribute_with_option_group_gets_a_field(self):
         for attribute_type in ("option", "multi_option"):
@@ -89,4 +92,6 @@ class TestProductFormOptionAttributes(TestCase):
                 form = forms.ProductForm(self.product_class)
 
                 self.assertIn("attr_size", form.fields)
-                self.assertEqual(list(form.fields["attr_size"].queryset), [option])
+                field = form.fields["attr_size"]
+                self.assertEqual(list(field.queryset), [option])
+                self.assertFalse(field.help_text)
