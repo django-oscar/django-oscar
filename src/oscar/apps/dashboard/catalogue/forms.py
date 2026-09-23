@@ -167,11 +167,17 @@ def _attr_datetime_field(attribute):
     )
 
 
+def _attr_option_queryset(attribute):
+    if attribute.option_group_id is None:
+        return AttributeOption.objects.none()
+    return attribute.option_group.options.all()
+
+
 def _attr_option_field(attribute):
     return forms.ModelChoiceField(
         label=attribute.name,
         required=attribute.required,
-        queryset=attribute.option_group.options.all(),
+        queryset=_attr_option_queryset(attribute),
     )
 
 
@@ -179,7 +185,7 @@ def _attr_multi_option_field(attribute):
     return forms.ModelMultipleChoiceField(
         label=attribute.name,
         required=attribute.required,
-        queryset=attribute.option_group.options.all(),
+        queryset=_attr_option_queryset(attribute),
     )
 
 
@@ -297,7 +303,7 @@ class ProductForm(SEOFormMixin, forms.ModelForm):
         For each attribute specified by the product class, this method
         dynamically adds form fields to the product form.
         """
-        for attribute in product_class.attributes.all():
+        for attribute in product_class.attributes.select_related("option_group"):
             field = self.get_attribute_field(attribute)
             if field:
                 self.fields["attr_%s" % attribute.code] = field
