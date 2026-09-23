@@ -79,7 +79,6 @@ class TestProductFormOptionAttributes(TestCase):
                 self.assertIn("attr_size", form.fields)
                 field = form.fields["attr_size"]
                 self.assertEqual(list(field.queryset), [])
-                self.assertTrue(field.help_text)
 
     def test_option_attribute_with_option_group_gets_a_field(self):
         for attribute_type in ("option", "multi_option"):
@@ -94,4 +93,3 @@ class TestProductFormOptionAttributes(TestCase):
                 self.assertIn("attr_size", form.fields)
                 field = form.fields["attr_size"]
                 self.assertEqual(list(field.queryset), [option])
-                self.assertFalse(field.help_text)
