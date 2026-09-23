@@ -23,23 +23,36 @@ class ReportsDashboardTests(WebTestCase):
         response.forms["generate_report_form"].submit()
         self.assertIsOk(response)
 
-    def test_conditional_offers_with_date_range(self):
+    def test_conditional_offers_with_date_range_is_rejected(self):
         url = reverse("dashboard:reports-index")
         response = self.get(url)
 
         response.forms["generate_report_form"]["report_type"] = "conditional-offers"
         response.forms["generate_report_form"]["date_from"] = "2017-01-01"
         response.forms["generate_report_form"]["date_to"] = "2017-12-31"
-        response.forms["generate_report_form"].submit()
+        response = response.forms["generate_report_form"].submit()
         self.assertIsOk(response)
+        self.assertContains(response, "can&#x27;t be used with the")
 
-    def test_conditional_offers_with_date_range_download(self):
+    def test_orders_with_date_range(self):
         url = reverse("dashboard:reports-index")
         response = self.get(url)
 
-        response.forms["generate_report_form"]["report_type"] = "conditional-offers"
+        response.forms["generate_report_form"]["report_type"] = "order_report"
+        response.forms["generate_report_form"]["date_from"] = "2017-01-01"
+        response.forms["generate_report_form"]["date_to"] = "2017-12-31"
+        response = response.forms["generate_report_form"].submit()
+        self.assertIsOk(response)
+        self.assertNotContains(response, "can&#x27;t be used with the")
+
+    def test_orders_with_date_range_download(self):
+        url = reverse("dashboard:reports-index")
+        response = self.get(url)
+
+        response.forms["generate_report_form"]["report_type"] = "order_report"
         response.forms["generate_report_form"]["date_from"] = "2017-01-01"
         response.forms["generate_report_form"]["date_to"] = "2017-12-31"
         response.forms["generate_report_form"]["download"] = "true"
-        response.forms["generate_report_form"].submit()
+        response = response.forms["generate_report_form"].submit()
         self.assertIsOk(response)
+        self.assertEqual(response.content_type, "text/csv")

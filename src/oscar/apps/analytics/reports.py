@@ -34,6 +34,7 @@ class ProductReportHTMLFormatter(ReportHTMLFormatter):
 class ProductReportGenerator(ReportGenerator):
     code = "product_analytics"
     description = _("Product analytics")
+    supports_date_range = False
     model_class = ProductRecord
 
     formatters = {
@@ -90,6 +91,7 @@ class UserReportHTMLFormatter(ReportHTMLFormatter):
 class UserReportGenerator(ReportGenerator):
     code = "user_analytics"
     description = _("User analytics")
+    supports_date_range = False
     queryset = UserRecord._default_manager.select_related().all()
 
     formatters = {

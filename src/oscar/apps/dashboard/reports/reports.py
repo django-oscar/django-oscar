@@ -19,6 +19,7 @@ class ReportGenerator(object):
     code = ""
     description = "<insert report description>"
     date_range_field_name = None
+    supports_date_range = True
     model_class = None
     queryset = None
 
@@ -31,6 +32,15 @@ class ReportGenerator(object):
         self.formatter = self.formatters[formatter_name]()
         self.queryset = self.get_queryset()
         self.queryset = self.filter_with_date_range(self.queryset)
+
+    @classmethod
+    def get_unsupported_form_fields(cls):
+        """
+        Returns the names of the report form fields this report doesn't use
+        """
+        if not cls.supports_date_range:
+            return ["date_from", "date_to"]
+        return []
 
     def report_description(self):
         return _("%(report_filter)s between %(start_date)s and %(end_date)s") % {
