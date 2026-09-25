@@ -21,7 +21,7 @@ def remove_duplicate_attributes(apps, schema_editor):
     Removes duplicate attributes that have the same code and product class.
     """
     ProductAttribute = apps.get_model('catalogue', 'ProductAttribute')
-    ProductAttributeValue = apps.get_model('catalogue', 'ProductAttributeValue')
+    apps.get_model('catalogue', 'ProductAttributeValue')
     ProductClass = apps.get_model("catalogue", "ProductClass")
 
     # Instead of iterating over all attributes, we concat the code and product class pk

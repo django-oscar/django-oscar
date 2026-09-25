@@ -4,7 +4,8 @@ import os
 from oscar.defaults import *  # noqa
 
 # Path helper
-location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
+def location(x):
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
 ALLOWED_HOSTS = ["test", ".oscarcommerce.com"]
 
