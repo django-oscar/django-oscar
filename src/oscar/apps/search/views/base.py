@@ -13,7 +13,8 @@ class BaseSearchView(BaseFacetedSearchView):
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
     def get_queryset(self):
-        return base_sqs()
+        self.queryset = base_sqs()
+        return self.queryset
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -25,7 +26,8 @@ class BaseSearchView(BaseFacetedSearchView):
         if self.queryset.query.backend.include_spelling:
             # Note, this triggers an extra call to the search backend
             suggestion = form.get_suggestion()
-            if suggestion != context["query"]:
+            # An invalid form does not provide a query to compare against.
+            if suggestion != context.get("query"):
                 context["suggestion"] = suggestion
 
         # Convert facet data into a more useful data structure
