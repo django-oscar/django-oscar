@@ -3455,9 +3455,10 @@ msgstr "Berichte-Dashboard"
 msgid "Report Type"
 msgstr "Berichtstyp"
 
-#: apps/dashboard/reports/forms.py:20
-msgid "Only the offer and order reports use the selected date range"
-msgstr "Nur Angebot- und Bestellberichte nutzen den ausgewählten Datumsbereich"
+#: apps/dashboard/reports/forms.py:72
+#, python-format
+msgid "%(field)s can't be used with the %(report)s report"
+msgstr "%(field)s kann nicht mit dem Bericht %(report)s verwendet werden"
 
 #: apps/dashboard/reports/forms.py:27
 msgid "The report is inclusive of this date"
