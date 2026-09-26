@@ -23,9 +23,11 @@ from oscar.apps.order.models import (
     ShippingEventType,
 )
 from oscar.apps.order.signals import order_line_status_changed, order_status_changed
+from oscar.apps.partner.strategy import Selector
 from oscar.test.basket import add_product
 from oscar.test.contextmanagers import mock_signal_receiver
 from oscar.test.factories import (
+    OptionFactory,
     OrderFactory,
     OrderLineFactory,
     ShippingAddressFactory,
@@ -33,6 +35,8 @@ from oscar.test.factories import (
     create_basket,
     create_offer,
     create_order,
+    create_product,
+    create_stockrecord,
     create_voucher,
 )
 
@@ -274,6 +278,102 @@ class LineTests(TestCase):
         self.assertIsNone(line.stockrecord)
         self.assertEqual(product.title, line.title)
         self.assertEqual(product.upc, line.upc)
+
+
+class LineReorderingTests(TestCase):
+    def setUp(self):
+        self.option = OptionFactory(name="Engraving", code="engraving")
+        order_basket = create_basket(empty=True)
+        self.product = create_product(price=D("10.00"), num_in_stock=10)
+        order_basket.add_product(
+            self.product,
+            quantity=2,
+            options=[{"option": self.option, "value": "Original"}],
+        )
+        self.line = create_order(basket=order_basket).lines.get()
+        self.basket = create_basket(empty=True)
+        self.strategy = mock.Mock()
+        purchase_info = self.strategy.fetch_for_product.return_value
+        purchase_info.stockrecord = self.product.stockrecords.get()
+        self.availability = purchase_info.availability
+        self.availability.is_purchase_permitted.return_value = (True, None)
+
+    def test_checks_quantity_of_matching_product_options(self):
+        self.basket.add_product(
+            self.product,
+            quantity=3,
+            options=[{"option": self.option, "value": "Original"}],
+        )
+        self.basket.add_product(
+            self.product,
+            quantity=4,
+            options=[{"option": self.option, "value": "Different"}],
+        )
+
+        result = self.line.is_available_to_reorder(self.basket, self.strategy)
+
+        self.assertEqual((True, None), result)
+        self.availability.is_purchase_permitted.assert_called_once_with(quantity=5)
+
+    def test_ignores_basket_lines_with_different_product_options(self):
+        self.basket.add_product(
+            self.product,
+            quantity=3,
+            options=[{"option": self.option, "value": "First"}],
+        )
+        self.basket.add_product(
+            self.product,
+            quantity=4,
+            options=[{"option": self.option, "value": "Second"}],
+        )
+
+        result = self.line.is_available_to_reorder(self.basket, self.strategy)
+
+        self.assertEqual((True, None), result)
+        self.availability.is_purchase_permitted.assert_called_once_with(quantity=2)
+
+    def test_checks_availability_against_current_stockrecord(self):
+        self.product.stockrecords.get().delete()
+        create_stockrecord(self.product, price=D("10.00"), num_in_stock=5)
+        self.line.refresh_from_db()
+        self.basket.add_product(
+            self.product,
+            quantity=4,
+            options=[{"option": self.option, "value": "Original"}],
+        )
+
+        is_available, reason = self.line.is_available_to_reorder(
+            self.basket, Selector().strategy()
+        )
+
+        self.assertIsNone(self.line.stockrecord)
+        self.assertFalse(is_available)
+        self.assertIsNotNone(reason)
+
+    def test_uses_current_stockrecord_when_original_was_replaced(self):
+        self.product.stockrecords.get().delete()
+        create_stockrecord(self.product, price=D("10.00"), num_in_stock=5)
+        self.line.refresh_from_db()
+        self.basket.add_product(
+            self.product,
+            quantity=2,
+            options=[{"option": self.option, "value": "Original"}],
+        )
+
+        result = self.line.is_available_to_reorder(self.basket, Selector().strategy())
+
+        self.assertEqual((True, None), result)
+
+    def test_not_available_when_product_has_no_stockrecord(self):
+        self.product.stockrecords.get().delete()
+        self.line.refresh_from_db()
+
+        is_available, reason = self.line.is_available_to_reorder(
+            self.basket, Selector().strategy()
+        )
+
+        self.assertFalse(is_available)
+        self.assertEqual("'%s' is no longer available" % self.line.title, str(reason))
 
 
 class LineStatusTests(TestCase):
