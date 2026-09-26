@@ -1,4 +1,5 @@
 import pytest
+from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
@@ -28,6 +29,12 @@ class CommunicationTypeTest(TestCase):
         ctx = {"name": "world"}
         messages = et.get_messages(ctx)
         assert "Hello world" == messages["subject"]
+
+    def test_file_template_subject_is_not_html_escaped(self):
+        et = CommunicationEventType(code="PASSWORD_RESET")
+        ctx = {"site": Site(name="Joe's Pizza")}
+        messages = et.get_messages(ctx)
+        assert "Resetting your password at Joe's Pizza." == messages["subject"]
 
     def test_new_line_in_subject_is_removed(self):
         subjects = [

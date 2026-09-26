@@ -1,1 +1,1 @@
-{% load i18n %}{% trans 'Thank you for registering.' %}
+{% load i18n %}{% autoescape off %}{% trans 'Thank you for registering.' %}{% endautoescape %}
