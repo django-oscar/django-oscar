@@ -73,6 +73,16 @@ class TestProductDetailView(WebTestCase):
             response = self.app.get(response["Location"])
             self.assertIsNotRedirect(response)
 
+    def test_does_not_go_into_redirect_loop_with_unicode_slug(self):
+        "when a product slug contains unicode characters, there should be no redirect loop"
+        product = create_product(slug="گوشی-موبایل", is_public=True)
+        # Using a valid slug but unquoted
+        kwargs = {"product_slug": "گوشی-موبایل", "pk": product.id}
+        url = reverse("catalogue:detail", kwargs=kwargs)
+
+        response = self.app.get(url)
+        self.assertEqual(response.status_code, http_client.OK)
+
 
 class TestProductListView(WebTestCase):
     def setUp(self):
