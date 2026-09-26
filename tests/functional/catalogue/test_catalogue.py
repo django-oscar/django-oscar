@@ -79,7 +79,7 @@ class TestProductDetailView(WebTestCase):
         # Using a valid slug but unquoted
         kwargs = {"product_slug": "گوشی-موبایل", "pk": product.id}
         url = reverse("catalogue:detail", kwargs=kwargs)
-        
+
         response = self.app.get(url)
         self.assertEqual(response.status_code, http_client.OK)
 
