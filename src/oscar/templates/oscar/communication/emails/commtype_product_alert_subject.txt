@@ -1,1 +1,1 @@
-{% load i18n %}{% blocktrans with title=alert.product.get_title|safe  %}{{ title }} is back in stock{% endblocktrans %}
+{% load i18n %}{% autoescape off %}{% blocktrans with title=alert.product.get_title|safe  %}{{ title }} is back in stock{% endblocktrans %}{% endautoescape %}
