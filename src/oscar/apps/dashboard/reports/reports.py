@@ -19,7 +19,6 @@ class ReportGenerator(object):
     code = ""
     description = "<insert report description>"
     date_range_field_name = None
-    supports_date_range = True
     model_class = None
     queryset = None
 
@@ -38,7 +37,7 @@ class ReportGenerator(object):
         """
         Returns the names of the report form fields this report doesn't use
         """
-        if not cls.supports_date_range:
+        if not cls.date_range_field_name:
             return ["date_from", "date_to"]
         return []
 

@@ -38,7 +38,6 @@ class VoucherReportHTMLFormatter(ReportHTMLFormatter):
 class VoucherReportGenerator(ReportGenerator):
     code = "vouchers"
     description = _("Voucher performance")
-    supports_date_range = False
     model_class = Voucher
 
     formatters = {

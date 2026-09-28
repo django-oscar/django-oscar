@@ -32,7 +32,6 @@ class OfferReportHTMLFormatter(ReportHTMLFormatter):
 class OfferReportGenerator(ReportGenerator):
     code = "conditional-offers"
     description = _("Offer performance")
-    supports_date_range = False
     model_class = OrderDiscount
 
     formatters = {
