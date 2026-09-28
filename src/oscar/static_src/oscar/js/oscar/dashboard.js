@@ -321,6 +321,25 @@ var oscar = (function(o, $) {
                 }
             }
         },
+        reports: {
+            init: function() {
+                var $reportType = $('#id_report_type');
+                oscar.dashboard.reports.toggleUnsupportedFields($reportType);
+                $reportType.change(function() {
+                    oscar.dashboard.reports.toggleUnsupportedFields($reportType);
+                });
+            },
+            toggleUnsupportedFields: function($reportType) {
+                var unsupportedFields = JSON.parse($reportType.attr('data-unsupported-fields') || '{}'),
+                    unsupported = unsupportedFields[$reportType.val()] || [];
+                $.each(unsupportedFields, function(code, fieldIds) {
+                    $.each(fieldIds, function(i, fieldId) {
+                        var disabled = unsupported.indexOf(fieldId) !== -1;
+                        $('#' + fieldId).prop('disabled', disabled).closest('.form-group').toggle(!disabled);
+                    });
+                });
+            }
+        },
         product_attributes: {
             init: function(){
                 var type_selects = $("select[name$=type]");

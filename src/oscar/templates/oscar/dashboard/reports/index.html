@@ -43,3 +43,8 @@
     {% endblock %}
 
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.dashboard.reports.init();
+{% endblock %}

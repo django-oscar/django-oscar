@@ -3468,9 +3468,10 @@ msgstr "Tableau de bord des rapports"
 msgid "Report Type"
 msgstr "Type de rapport"
 
-#: apps/dashboard/reports/forms.py:20
-msgid "Only the offer and order reports use the selected date range"
-msgstr "Seuls les rapports de commande et d'offre utilisent la période de date sélectionnée"
+#: apps/dashboard/reports/forms.py:72
+#, python-format
+msgid "%(field)s can't be used with the %(report)s report"
+msgstr "%(field)s ne peut pas être utilisé avec le rapport %(report)s"
 
 #: apps/dashboard/reports/forms.py:27
 msgid "The report is inclusive of this date"

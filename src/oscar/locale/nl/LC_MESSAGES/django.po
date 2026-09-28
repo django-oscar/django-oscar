@@ -3455,9 +3455,10 @@ msgstr "Rapportering dashboard"
 msgid "Report Type"
 msgstr "Rapport Type"
 
-#: apps/dashboard/reports/forms.py:20
-msgid "Only the offer and order reports use the selected date range"
-msgstr "Alleen de aanbod en bestelling rapporten gebruiken het geselecteerde datumbereik"
+#: apps/dashboard/reports/forms.py:72
+#, python-format
+msgid "%(field)s can't be used with the %(report)s report"
+msgstr "%(field)s kan niet gebruikt worden bij het rapport %(report)s"
 
 #: apps/dashboard/reports/forms.py:27
 msgid "The report is inclusive of this date"
