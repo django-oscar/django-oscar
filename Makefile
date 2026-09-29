@@ -114,7 +114,7 @@ todo: ## Look for areas of the code that need updating when some event has taken
 	-grep -rnH "django.VERSION" src/oscar/apps
 
 package: clean
-	pip install --upgrade pip twine wheel
+	pip install --upgrade pip setuptools twine wheel
 	npm ci
 	rm -rf src/oscar/static/
 	rm -rf dist/

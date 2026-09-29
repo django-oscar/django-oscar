@@ -1,0 +1,37 @@
+========================================
+Oscar 4.2.1 release notes
+========================================
+
+:release: 2026-09-29
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_4.2.1:
+
+Compatibility
+~~~~~~~~~~~~~
+
+Oscar 4.2.1 is a bugfix release. It has the same compatibility as
+:doc:`Oscar 4.2 <v4.2>` and requires no data migrations.
+
+Fixes & Improvements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Fixed a redirect loop when a product has a Unicode slug. ([#4619](https://github.com/django-oscar/django-oscar/pull/4619)) — by @keyanskv
+- Fixed ``MultipleObjectsReturned`` when reordering a product that has multiple option variants in the basket. ([#4624](https://github.com/django-oscar/django-oscar/pull/4624)) — by @wakqasahmed
+- Fixed the search and category views crashing on an invalid form. ([#4625](https://github.com/django-oscar/django-oscar/pull/4625)) — by @tunglambk
+- Fixed voucher set usage sorting in the dashboard. ([#4616](https://github.com/django-oscar/django-oscar/pull/4616)) — by @tunglambk
+- Fixed switching an offer benefit or condition back from a pre-defined one, which previously mutated the shared instance. ([#4617](https://github.com/django-oscar/django-oscar/pull/4617)) — by @ChrisJr404
+- Fixed an error in the product form when an attribute has an empty option group. ([#4629](https://github.com/django-oscar/django-oscar/pull/4629)) — by @mr-sphere
+- Fixed bulk notification archive/delete by adding a scoped ``get_queryset`` to the notification update view. ([#4623](https://github.com/django-oscar/django-oscar/pull/4623)) — by @samar-hassan
+- Fixed bulk actions silently discarding a returned ``HttpResponse``. ([#4614](https://github.com/django-oscar/django-oscar/pull/4614)) — by @johnwaghorn
+- Raised ``ImproperlyConfigured`` when a custom benefit has no range, instead of failing obscurely. ([#4620](https://github.com/django-oscar/django-oscar/pull/4620)) — by @wakqasahmed
+- Email subject templates are no longer HTML-escaped, so characters such as apostrophes in the site name render correctly in the subject line. ([#4631](https://github.com/django-oscar/django-oscar/pull/4631)) — by @wakqasahmed
+- Hid the date-range fields on report types that don't use them, and reject them server-side. ([#4630](https://github.com/django-oscar/django-oscar/pull/4630)) — by @mr-sphere
+- Stopped the dashboard order CSV "Download" button from getting stuck disabled after it is clicked. ([#4626](https://github.com/django-oscar/django-oscar/pull/4626)) — by @johnwaghorn
+- Fixed the ``zh-Hans``/``zh-Hant`` translations never loading by renaming the locale directories to the names Django expects. ([#4621](https://github.com/django-oscar/django-oscar/pull/4621)) — by @juneja-varun
+- Renamed the Norwegian locale directory from ``nb_NO`` to ``nb`` to match Django's convention. ([#4632](https://github.com/django-oscar/django-oscar/pull/4632)) — by @Aman8883
+- Updated the CDN version of jQuery to 3.7.1 to match the bundled version. ([#4544](https://github.com/django-oscar/django-oscar/pull/4544)) — by @janheini
+- Removed the broken ``enforcing_stock_rules`` how-to page from the documentation. ([#4615](https://github.com/django-oscar/django-oscar/pull/4615)) — by @juneja-varun
