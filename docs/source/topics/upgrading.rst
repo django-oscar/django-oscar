@@ -24,7 +24,7 @@ will pick up the new migrations from Oscar directly.
 For instance,  if you have ``oscar.apps.core.shipping`` in your
 ``INSTALLED_APPS`` then you can simply run::
 
-    ./manage.py makemigrations shipping
+    ./manage.py migrate shipping
 
 to migrate your shipping app.
 
