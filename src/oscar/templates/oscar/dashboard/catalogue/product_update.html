@@ -4,389 +4,403 @@
 {% block body_class %}{{ block.super }} create-page catalogue{% endblock %}
 
 {% block title %}
-    {{ title }} | {% trans "Products" %} | {{ block.super }}
+{{ title }} | {% trans "Products" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
-            </li>
-            {% if parent %}
-                <li class="breadcrumb-item">
-                    <a href="{% url 'dashboard:catalogue-product' parent.id %}">{{ parent.title }}</a>
-                </li>
-            {% endif %}
-            <li class="breadcrumb-item active" aria-current="page">
-                {{ title }}
-            </li>
-        </ol>
-     </nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
+        </li>
+        {% if parent %}
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard:catalogue-product' parent.id %}">{{ parent.title }}</a>
+        </li>
+        {% endif %}
+        <li class="breadcrumb-item active" aria-current="page">
+            {{ title }}
+        </li>
+    </ol>
+</nav>
 {% endblock %}
 
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <form id="create_update_product_form" action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="tab-nav-errors" autocomplete="off">
-        {% csrf_token %}
+<form id="create_update_product_form" action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}"
+    method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data"
+    data-behaviour="tab-nav-errors" autocomplete="off">
+    {% csrf_token %}
 
-        {% if parent %}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="alert alert-info">
-                        {% url 'dashboard:catalogue-product' pk=parent.id as parent_url %}
-                        {% blocktrans with title=parent.title %}
-                            You are currently editing a product variant of
-                            <a href="{{ parent_url }}">{{ title }}</a>.
-                        {% endblocktrans %}
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-
-        <div class="row">
-
-            {% block tab_nav %}
-                <div class="col-md-3">
-                    <div class="tab-nav sticky-top">
-                        <div class="table-header">
-                            <h3>{% trans "Sections" %}</h3>
-                        </div>
-                        <ul class="nav flex-column bs-docs-sidenav" id="product_update_tabs">
-                            {% comment %}
-                                The navigation below is filtered heavily on the product structure.
-                                This intentionally is the only place where filtering is done, as
-                                deployments are likely to want to override certain aspects of what
-                                data is stored on products of a certain structure. This means that
-                                only one template block (instead of all affected) has to be altered.
-                            {% endcomment %}
-                            {% block tabs %}
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#product_details" data-toggle="tab">
-                                        {% trans 'Product details' %}
-                                    </a>
-                                </li>
-                                {% if not parent %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#product_category" data-toggle="tab">
-                                            {% trans 'Categories' %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if product_class.has_attributes %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#product_attributes" data-toggle="tab">
-                                            {% trans 'Attributes' %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                <li class="nav-item">
-                                  <a class="nav-link" href="#product_images" data-toggle="tab">
-                                      {% trans 'Images' %}
-                                  </a>
-                                </li>
-                                {% if not product.is_parent %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#product_stock" data-toggle="tab">
-                                            {% trans 'Stock and pricing' %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if user.is_staff and not parent %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#child_products" data-toggle="tab">
-                                            {% trans 'Variants' %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if not parent %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#product_recommended" data-toggle="tab">
-                                            {% trans 'Upselling' %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#seo" data-toggle="tab">
-                                        {% trans 'Search engine optimisation' %}
-                                    </a>
-                                </li>
-                            {% endblock tabs %}
-                        </ul>
-                    </div>
-                </div>
-            {% endblock tab_nav %}
-
-            <div class="col-md-9">
-                <div class="tab-content">
-                    {% block tab_content %}
-                        {% block product_details %}
-                            <div class="tab-pane active" id="product_details">
-                                <div class="table-header">
-                                    <h3>{% trans "Product details" %}</h3>
-                                </div>
-                                <div class="card card-body product-details">
-                                    {% block product_details_content %}
-                                        <span class="error-block">{{ form.non_field_errors }}</span>
-                                        {% for field in form.hidden_fields %}
-                                            {{ field }}
-                                        {% endfor %}
-
-                                        {% for field in form.primary_form_fields %}
-                                            {% if 'attr' not in field.id_for_label %}
-                                                {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endblock product_details_content %}
-                                </div>
-                            </div>
-                        {% endblock product_details %}
-
-                        {% block product_categories %}
-                            <div class="tab-pane" id="product_category">
-                                {% block product_categories_content %}
-                                    <table class="table table-striped table-bordered">
-                                        <caption>{% trans "Category" %}</caption>
-                                        {{ category_formset.management_form }}
-                                        {{ category_formset.non_form_errors }}
-                                        {% for category_form in category_formset %}
-                                            <tr>
-                                                <td class="form-inline">
-                                                    {% include "oscar/dashboard/partials/form_fields_inline.html" with form=category_form %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                {% endblock product_categories_content %}
-                            </div>
-                        {% endblock product_categories %}
-
-                        {% block product_attributes %}
-                            <div class="tab-pane" id="product_attributes">
-                                {% block product_attributes_content %}
-                                    <table class="table table-striped table-bordered">
-                                        <caption>
-                                            {% trans "Attributes" %}
-                                            <span class="badge badge-success">
-                                                {% trans "Product Type:" %} {{ product_class }}
-                                            </span>
-                                        </caption>
-                                        {% for field in form %}
-                                            {% if 'attr' in field.id_for_label %}
-                                                <tr>
-                                                    <td>
-                                                        {% include "oscar/dashboard/partials/form_field.html" %}
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </table>
-                                {% endblock product_attributes_content %}
-                            </div>
-                        {% endblock product_attributes %}
-
-                        {% block product_images %}
-                            <div class="tab-pane" id="product_images">
-                                {% block product_images_content %}
-                                    <div class="table-header">
-                                        <h3>{% trans "Upload, change or remove images" %}</h3>
-                                    </div>
-                                    <div class="card card-body">
-                                        {{ image_formset.management_form }}
-                                        {{ image_formset.non_form_errors }}
-                                        <ol class='upload-image'>
-                                            {% for image_form in image_formset %}
-                                                {% include "oscar/dashboard/partials/product_images.html" with form=image_form %}
-                                            {% endfor %}
-                                        </ol>
-                                        <p class="form-text">
-                                            {% trans 'Drag images to re-order them. Space for additional images will appear when images are added.' %}
-                                        </p>
-                                    </div>
-                                {% endblock product_images_content %}
-                            </div>
-                        {% endblock product_images %}
-
-                        {% block stockrecords %}
-                            <div class="tab-pane" id="product_stock">
-                                {% block stockrecords_content %}
-                                    <table class="table table-striped table-bordered">
-                                        <caption>{% trans "Stock and pricing" %}</caption>
-                                        {{ stockrecord_formset.management_form }}
-                                        {{ stockrecord_formset.non_form_errors }}
-                                        <thead>
-                                            <tr>
-                                                <th>{% trans "Partner" %}</th>
-                                                <th>{% trans "SKU" %}</th>
-                                                {% if product_class.track_stock %}
-                                                    <th>{% trans "Num in stock" %}</th>
-                                                    <th>{% trans "Num allocated" %}</th>
-                                                    <th>{% trans "Low stock threshold" %}</th>
-                                                {% endif %}
-                                                <th>{% trans "Currency" %}</th>
-                                                <th>{% trans "Price" %}</th>
-                                                <th>{% trans "Delete?" %}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for stockrecord_form in stockrecord_formset %}
-                                                {% if stockrecord_form.non_field_errors %}
-                                                <tr>
-                                                    <td colspan="{% if product_class.track_stock %}10{% else %}7{% endif %}">
-                                                        {% for error in stockrecord_form.non_field_errors  %}
-                                                            <span class="error-block errorlist"><i class="fas fa-exclamation"></i> {{ error }}</span>
-                                                        {% endfor %}
-                                                    </td>
-                                                </tr>
-                                                {% endif %}
-                                                <tr>
-                                                    <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
-                                                    <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
-                                                    {% if product_class.track_stock %}
-                                                        <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
-                                                        <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
-                                                        <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
-                                                    {% endif %}
-                                                    <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>
-                                                    <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.price nolabel=True %}</td>
-                                                    <td>
-                                                        {% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.id nolabel=True %}
-                                                        {% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True %}
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                {% endblock stockrecords_content %}
-                            </div>
-                        {% endblock stockrecords %}
-
-                        {% block child_products %}
-                            {% with children=product.children.all %}
-                                <div class="tab-pane" id="child_products">
-                                    {% block child_products_content %}
-                                        <table class='table table-striped table-bordered'>
-                                            <caption>
-                                                {% trans "Variants" %}
-                                                <button class="btn btn-primary float-right" {% if not product.can_be_parent %}disabled{% endif %} name="action" type="submit" value="create-child" data-loading-text="{% trans 'Adding...' %}">
-                                                    <i class="fas fa-plus-circle"></i> {% trans "Add variant" %}
-                                                </button>
-                                            </caption>
-                                            {% if children %}
-                                                <tr>
-                                                    <th>{% trans "Title" %}</th>
-                                                    <th>{% trans "Attributes" %}</th>
-                                                    <th>{% trans "Stock records" %}</th>
-                                                    <th>{% trans "Is public?" %}</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                                {% for child in children %}
-                                                    <tr>
-                                                        <td>{{ child.get_title }}</td>
-                                                        <td>{{ child.attribute_summary }}</td>
-                                                        <td>{{ child.stockrecords.count }}</td>
-                                                        <td>{% if child.is_public %}<span class="true">✔</span>{% else %}<span class="false">✘</span>{% endif %}</td>
-                                                        <td>
-                                                            <a href="{% url 'dashboard:catalogue-product' pk=child.id %}" class="btn btn-primary">
-                                                                {% trans "Edit" %}
-                                                            </a>
-                                                            <a href="{% url 'dashboard:catalogue-product-delete' pk=child.id %}" class="btn btn-danger">
-                                                                {% trans "Delete" %}
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            {% else %}
-                                                <tr>
-                                                    <td colspan="5">
-                                                        {% if product.can_be_parent %}
-                                                            {% trans 'This product does not have any variants.' %}
-                                                        {% else %}
-                                                            {% trans "One can't add variants to this product at this point." %}
-                                                            {% if product.pk is None %}
-                                                                {% trans "Please save the product before trying to add variants." %}
-                                                            {% elif product.has_stockrecords %}
-                                                                {% trans 'This is likely because this product still has stock records.' %}
-                                                            {% endif %}
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        </table>
-                                    {% endblock child_products_content %}
-                                </div>
-                            {% endwith %}
-                        {% endblock child_products %}
-
-                        {% block recommended_products %}
-                            <div class="tab-pane" id="product_recommended">
-                                {% block recommended_products_content %}
-                                    <table class="table table-striped table-bordered">
-                                        <caption>{% trans "Recommended products" %}</caption>
-                                        {{ recommended_formset.management_form }}
-                                        {{ recommended_formset.non_form_errors }}
-                                        {% for recommended_form in recommended_formset %}
-                                            <tr>
-                                                <td class="form-inline">
-                                                    {% include "oscar/dashboard/partials/form_fields_inline.html" with form=recommended_form %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                {% endblock recommended_products_content %}
-                            </div>
-                        {% endblock recommended_products %}
-
-                        {% block seo %}
-                            <div class="tab-pane" id="seo">
-                                <div class="table-header">
-                                    <h3>{% trans "Search engine optimisation" %}</h3>
-                                </div>
-                                <div class="card card-body">
-                                    {% block seo_content %}
-                                        {% for field in form.seo_form_fields %}
-                                            {% if 'attr' not in field.id_for_label %}
-                                                {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endblock seo_content %}
-                                </div>
-                            </div>
-                        {% endblock seo %}
-                    {% endblock tab_content %}
-                </div>
+    {% if parent %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                {% url 'dashboard:catalogue-product' pk=parent.id as parent_url %}
+                {% blocktrans with title=parent.title %}
+                You are currently editing a product variant of
+                <a href="{{ parent_url }}">{{ title }}</a>.
+                {% endblocktrans %}
             </div>
         </div>
+    </div>
+    {% endif %}
 
-        {% block fixed_actions_group %}
-            <div class="fixed-actions-group">
-                <div class="form-group">
-                    <div class="float-right">
-                        <a href="{% url 'dashboard:catalogue-product-list' %}">
-                            {% trans "Cancel" %}
-                        </a>
-                        {% trans "or" %}
-                        {% if parent %}
-                            <button class="btn btn-secondary" name="action" type="submit" value="create-another-child" data-loading-text="{% trans 'Saving...' %}">
-                                {% trans "Save and add another variant" %}
-                            </button>
-                        {% endif %}
-                        <button class="btn btn-secondary" name="action" type="submit" value="continue" data-loading-text="{% trans 'Saving...' %}">
-                            {% trans "Save and continue editing" %}
-                        </button>
-                        <button class="btn btn-primary" name="action" type="submit" value="save" data-loading-text="{% trans 'Saving...' %}">
-                            {% trans "Save" %}
-                        </button>
-                    </div>
-                    {% if product %}
-                        <a class="btn btn-success" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
-                    {% endif %}
+    <div class="row">
+
+        {% block tab_nav %}
+        <div class="col-md-3">
+            <div class="tab-nav sticky-top">
+                <div class="table-header">
+                    <h3>{% trans "Sections" %}</h3>
                 </div>
+                <ul class="nav flex-column bs-docs-sidenav" id="product_update_tabs">
+                    {% comment %}
+                    The navigation below is filtered heavily on the product structure.
+                    This intentionally is the only place where filtering is done, as
+                    deployments are likely to want to override certain aspects of what
+                    data is stored on products of a certain structure. This means that
+                    only one template block (instead of all affected) has to be altered.
+                    {% endcomment %}
+                    {% block tabs %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#product_details" data-toggle="tab">
+                            {% trans 'Product details' %}
+                        </a>
+                    </li>
+                    {% if not parent %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#product_category" data-toggle="tab">
+                            {% trans 'Categories' %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if product_class.has_attributes %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#product_attributes" data-toggle="tab">
+                            {% trans 'Attributes' %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#product_images" data-toggle="tab">
+                            {% trans 'Images' %}
+                        </a>
+                    </li>
+                    {% if not product.is_parent %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#product_stock" data-toggle="tab">
+                            {% trans 'Stock and pricing' %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_staff and not parent %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#child_products" data-toggle="tab">
+                            {% trans 'Variants' %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if not parent %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#product_recommended" data-toggle="tab">
+                            {% trans 'Upselling' %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#seo" data-toggle="tab">
+                            {% trans 'Search engine optimisation' %}
+                        </a>
+                    </li>
+                    {% endblock tabs %}
+                </ul>
             </div>
-        {% endblock fixed_actions_group %}
-    </form>
+        </div>
+        {% endblock tab_nav %}
+
+        <div class="col-md-9">
+            <div class="tab-content">
+                {% block tab_content %}
+                {% block product_details %}
+                <div class="tab-pane active" id="product_details">
+                    <div class="table-header">
+                        <h3>{% trans "Product details" %}</h3>
+                    </div>
+                    <div class="card card-body product-details">
+                        {% block product_details_content %}
+                        <span class="error-block">{{ form.non_field_errors }}</span>
+                        {% for field in form.hidden_fields %}
+                        {{ field }}
+                        {% endfor %}
+
+                        {% for field in form.primary_form_fields %}
+                        {% if 'attr' not in field.id_for_label %}
+                        {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
+                        {% endif %}
+                        {% endfor %}
+                        {% endblock product_details_content %}
+                    </div>
+                </div>
+                {% endblock product_details %}
+
+                {% block product_categories %}
+                <div class="tab-pane" id="product_category">
+                    {% block product_categories_content %}
+                    <table class="table table-striped table-bordered">
+                        <caption>{% trans "Category" %}</caption>
+                        {{ category_formset.management_form }}
+                        {{ category_formset.non_form_errors }}
+                        {% for category_form in category_formset %}
+                        <tr>
+                            <td class="form-inline">
+                                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=category_form %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endblock product_categories_content %}
+                </div>
+                {% endblock product_categories %}
+
+                {% block product_attributes %}
+                <div class="tab-pane" id="product_attributes">
+                    {% block product_attributes_content %}
+                    <table class="table table-striped table-bordered">
+                        <caption>
+                            {% trans "Attributes" %}
+                            <span class="badge badge-success">
+                                {% trans "Product Type:" %} {{ product_class }}
+                            </span>
+                        </caption>
+                        {% for field in form %}
+                        {% if 'attr' in field.id_for_label %}
+                        <tr>
+                            <td>
+                                {% include "oscar/dashboard/partials/form_field.html" %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                    {% endblock product_attributes_content %}
+                </div>
+                {% endblock product_attributes %}
+
+                {% block product_images %}
+                <div class="tab-pane" id="product_images">
+                    {% block product_images_content %}
+                    <div class="table-header">
+                        <h3>{% trans "Upload, change or remove images" %}</h3>
+                    </div>
+                    <div class="card card-body">
+                        {{ image_formset.management_form }}
+                        {{ image_formset.non_form_errors }}
+                        <ol class='upload-image'>
+                            {% for image_form in image_formset %}
+                            {% include "oscar/dashboard/partials/product_images.html" with form=image_form %}
+                            {% endfor %}
+                        </ol>
+                        <p class="form-text">
+                            {% trans 'Drag images to re-order them. Space for additional images will appear when images are added.' %}
+                        </p>
+                    </div>
+                    {% endblock product_images_content %}
+                </div>
+                {% endblock product_images %}
+
+                {% block stockrecords %}
+                <div class="tab-pane" id="product_stock">
+                    {% block stockrecords_content %}
+                    <table class="table table-striped table-bordered">
+                        <caption>{% trans "Stock and pricing" %}</caption>
+                        {{ stockrecord_formset.management_form }}
+                        {{ stockrecord_formset.non_form_errors }}
+                        <thead>
+                            <tr>
+                                <th>{% trans "Partner" %}</th>
+                                <th>{% trans "SKU" %}</th>
+                                {% if product_class.track_stock %}
+                                <th>{% trans "Num in stock" %}</th>
+                                <th>{% trans "Num allocated" %}</th>
+                                <th>{% trans "Low stock threshold" %}</th>
+                                {% endif %}
+                                <th>{% trans "Currency" %}</th>
+                                <th>{% trans "Price" %}</th>
+                                <th>{% trans "Delete?" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stockrecord_form in stockrecord_formset %}
+                            {% if stockrecord_form.non_field_errors %}
+                            <tr>
+                                <td colspan="{% if product_class.track_stock %}10{% else %}7{% endif %}">
+                                    {% for error in stockrecord_form.non_field_errors %}
+                                    <span class="error-block errorlist"><i class="fas fa-exclamation"></i> {{ error }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
+                                {% if product_class.track_stock %}
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
+                                <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
+                                {% endif %}
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>
+                                <td>{% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.price nolabel=True %}</td>
+                                <td>
+                                    {% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.id nolabel=True %}
+                                    {% include "oscar/dashboard/partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endblock stockrecords_content %}
+                </div>
+                {% endblock stockrecords %}
+
+                {% block child_products %}
+                {% with children=product.children.all %}
+                <div class="tab-pane" id="child_products">
+                    {% block child_products_content %}
+                    <table class='table table-striped table-bordered'>
+                        <caption>
+                            {% trans "Variants" %}
+                            {% if not readonly %}
+                            <button class="btn btn-primary float-right" {% if not product.can_be_parent %}disabled{% endif %} name="action" type="submit" value="create-child"
+                                data-loading-text="{% trans 'Adding...' %}">
+                                <i class="fas fa-plus-circle"></i> {% trans "Add variant" %}
+                            </button>
+                            {% endif %}
+                        </caption>
+                        {% if children %}
+                        <tr>
+                            <th>{% trans "Title" %}</th>
+                            <th>{% trans "Attributes" %}</th>
+                            <th>{% trans "Stock records" %}</th>
+                            <th>{% trans "Is public?" %}</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        {% for child in children %}
+                        <tr>
+                            <td>{{ child.get_title }}</td>
+                            <td>{{ child.attribute_summary }}</td>
+                            <td>{{ child.stockrecords.count }}</td>
+                            <td>{% if child.is_public %}<span class="true">✔</span>{% else %}<span
+                                    class="false">✘</span>{% endif %}</td>
+                            <td>
+                                <a href="{% url 'dashboard:catalogue-product' pk=child.id %}" class="btn btn-primary">
+                                    {% if not readonly %}{% trans "Edit" %}{% else %}{% trans "View" %}{% endif %}
+                                </a>
+                                {% if not readonly %}
+                                <a href="{% url 'dashboard:catalogue-product-delete' pk=child.id %}"
+                                    class="btn btn-danger">
+                                    {% trans "Delete" %}
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5">
+                                {% if product.can_be_parent %}
+                                {% trans 'This product does not have any variants.' %}
+                                {% else %}
+                                {% trans "One can't add variants to this product at this point." %}
+                                {% if product.pk is None %}
+                                {% trans "Please save the product before trying to add variants." %}
+                                {% elif product.has_stockrecords %}
+                                {% trans 'This is likely because this product still has stock records.' %}
+                                {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                    {% endblock child_products_content %}
+                </div>
+                {% endwith %}
+                {% endblock child_products %}
+
+                {% block recommended_products %}
+                <div class="tab-pane" id="product_recommended">
+                    {% block recommended_products_content %}
+                    <table class="table table-striped table-bordered">
+                        <caption>{% trans "Recommended products" %}</caption>
+                        {{ recommended_formset.management_form }}
+                        {{ recommended_formset.non_form_errors }}
+                        {% for recommended_form in recommended_formset %}
+                        <tr>
+                            <td class="form-inline">
+                                {% include "oscar/dashboard/partials/form_fields_inline.html" with form=recommended_form %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endblock recommended_products_content %}
+                </div>
+                {% endblock recommended_products %}
+
+                {% block seo %}
+                <div class="tab-pane" id="seo">
+                    <div class="table-header">
+                        <h3>{% trans "Search engine optimisation" %}</h3>
+                    </div>
+                    <div class="card card-body">
+                        {% block seo_content %}
+                        {% for field in form.seo_form_fields %}
+                        {% if 'attr' not in field.id_for_label %}
+                        {% include 'oscar/dashboard/partials/form_field.html' with field=field %}
+                        {% endif %}
+                        {% endfor %}
+                        {% endblock seo_content %}
+                    </div>
+                </div>
+                {% endblock seo %}
+                {% endblock tab_content %}
+            </div>
+        </div>
+    </div>
+
+    {% block fixed_actions_group %}
+    <div class="fixed-actions-group">
+        <div class="form-group">
+            <div class="float-right">
+                <a href="{% url 'dashboard:catalogue-product-list' %}">
+                    {% trans "Cancel" %}
+                </a>
+                {% trans "or" %}
+                {% if not readonly %}
+                {% if parent %}
+                <button class="btn btn-secondary" name="action" type="submit" value="create-another-child"
+                    data-loading-text="{% trans 'Saving...' %}">
+                    {% trans "Save and add another variant" %}
+                </button>
+                {% endif %}
+                <button class="btn btn-secondary" name="action" type="submit" value="continue"
+                    data-loading-text="{% trans 'Saving...' %}">
+                    {% trans "Save and continue editing" %}
+                </button>
+                <button class="btn btn-primary" name="action" type="submit" value="save"
+                    data-loading-text="{% trans 'Saving...' %}">
+                    {% trans "Save" %}
+                </button>
+                {% endif %}
+            </div>
+            {% if product %}
+            <a class="btn btn-success" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endblock fixed_actions_group %}
+</form>
 {% endblock dashboard_content %}
