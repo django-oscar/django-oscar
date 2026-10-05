@@ -20,7 +20,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     title_exact = indexes.CharField(model_attr="title", null=True, indexed=False)
 
     # Fields for faceting
-    product_class = indexes.CharField(null=True, faceted=False)
+    product_class = indexes.CharField(null=True, faceted=True)
     category = indexes.MultiValueField(null=True, faceted=True)
     price = indexes.FloatField(null=True, faceted=True)
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
