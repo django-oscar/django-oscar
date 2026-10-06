@@ -538,7 +538,7 @@ class ProductCreateUpdateView(PartnerProductFilterMixin, generic.UpdateView):
                     ProductClass, slug=product_class_slug
                 )
             else:
-                self.parent = get_object_or_404(Product, pk=parent_pk)
+                self.parent = get_object_or_404(self.get_queryset(), pk=parent_pk)
                 self.product_class = self.parent.product_class
 
             return None  # success

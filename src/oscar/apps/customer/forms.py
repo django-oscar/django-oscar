@@ -266,6 +266,26 @@ class UserForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if "email" in self.fields:
             self.fields["email"].required = True
+        self.fields["password"] = forms.CharField(
+            widget=forms.PasswordInput,
+            required=False,
+            label=_("Confirm password"),
+            help_text=_("Required if changing your email address")
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        password = cleaned_data.get("password")
+        if email and email != self.user.email:
+            if not password:
+                self.add_error(
+                    "password", 
+                    _("Please confirm your password to change your email address")
+                )
+            elif not self.user.check_password(password):
+                self.add_error("password", _("Incorrect password"))
+        return cleaned_data
 
     def clean_email(self):
         """
@@ -328,14 +348,35 @@ if Profile:
             for field_name in user_field_names:
                 self.fields[field_name].initial = getattr(user, field_name)
 
+            self.fields["password"] = forms.CharField(
+                widget=forms.PasswordInput,
+                required=False,
+                label=_("Confirm password"),
+                help_text=_("Required if changing your email address")
+            )
+
             # Ensure order of fields is email, user fields then profile fields
-            self.field_order = user_field_names + profile_field_names
+            self.field_order = user_field_names + profile_field_names + ["password"]
             self.order_fields(self.field_order)
 
         class Meta:
             model = Profile
             # pylint: disable=modelform-uses-exclude
             exclude = ("user",)
+
+        def clean(self):
+            cleaned_data = super().clean()
+            email = cleaned_data.get("email")
+            password = cleaned_data.get("password")
+            if email and email != self.instance.user.email:
+                if not password:
+                    self.add_error(
+                        "password", 
+                        _("Please confirm your password to change your email address")
+                    )
+                elif not self.instance.user.check_password(password):
+                    self.add_error("password", _("Incorrect password"))
+            return cleaned_data
 
         def clean_email(self):
             email = normalise_email(self.cleaned_data["email"])

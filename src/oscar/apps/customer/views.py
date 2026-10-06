@@ -329,20 +329,29 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
         except User.DoesNotExist:
             old_user = None
 
-        form.save()
-
         # We have to look up the email address from the form's
         # cleaned data because the object created by form.save() can
         # either be a user or profile instance depending whether a profile
         # class has been specified by the AUTH_PROFILE_MODULE setting.
         new_email = form.cleaned_data.get("email")
-        if new_email and old_user and new_email != old_user.email:
+        email_changed = new_email and old_user and new_email != old_user.email
+        
+        if email_changed:
+            form.cleaned_data["email"] = old_user.email
+            if hasattr(form, "instance"):
+                form.instance.email = old_user.email
+
+        form.save()
+
+        if email_changed:
             # Email address has changed - send a confirmation email to the old
             # address including a password reset link in case this is a
             # suspicious change.
             self.send_email_changed_email(old_user, new_email)
-
-        messages.success(self.request, _("Profile updated"))
+            self.send_email_change_verify_email(old_user, new_email)
+            messages.success(self.request, _("Profile updated. A verification email has been sent to your new email address."))
+        else:
+            messages.success(self.request, _("Profile updated"))
         return redirect(self.get_success_url())
 
     def send_email_changed_email(self, old_user, new_email):
@@ -354,6 +363,47 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
             "request": self.request,
         }
         CustomerDispatcher().send_email_changed_email_for_user(old_user, extra_context)
+
+    def send_email_change_verify_email(self, user, new_email):
+        from django.core.signing import TimestampSigner
+        signer = TimestampSigner()
+        token = signer.sign(f"{user.pk}:{new_email}")
+        verify_url = reverse("customer:email-change-verify", kwargs={"token": token})
+        
+        extra_context = {
+            "user": user,
+            "new_email": new_email,
+            "verify_url": self.request.build_absolute_uri(verify_url),
+            "request": self.request,
+        }
+        CustomerDispatcher().send_email_change_verify_email_for_user(user, extra_context)
+
+class EmailChangeVerifyView(generic.View):
+    def get(self, request, token):
+        from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
+        from oscar.apps.customer.utils import normalise_email
+        signer = TimestampSigner()
+        try:
+            # Token is valid for 1 day
+            data = signer.unsign(token, max_age=86400)
+            user_pk, new_email = data.split(':', 1)
+        except (BadSignature, SignatureExpired):
+            messages.error(request, _("The email verification link is invalid or has expired."))
+            return redirect(settings.LOGIN_REDIRECT_URL)
+
+        user = get_object_or_404(User, pk=user_pk)
+        
+        # Check if email is already taken by someone else
+        email = normalise_email(new_email)
+        if User._default_manager.filter(email__iexact=email).exclude(pk=user.pk).exists():
+            messages.error(request, _("A user with this email address already exists."))
+            return redirect(settings.LOGIN_REDIRECT_URL)
+            
+        user.email = email
+        user.save()
+        
+        messages.success(request, _("Your email address has been updated successfully."))
+        return redirect(settings.LOGIN_REDIRECT_URL)
 
 
 class ProfileDeleteView(PageTitleMixin, generic.FormView):

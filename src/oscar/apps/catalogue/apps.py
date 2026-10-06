@@ -15,7 +15,6 @@ class CatalogueOnlyConfig(OscarConfig):
 
     # pylint: disable=attribute-defined-outside-init, unused-import
     def ready(self):
-        from . import receivers
 
         super().ready()
 
@@ -52,7 +51,6 @@ class CatalogueReviewsOnlyConfig(OscarConfig):
 
     # pylint: disable=attribute-defined-outside-init, unused-import
     def ready(self):
-        from . import receivers
 
         super().ready()
 
