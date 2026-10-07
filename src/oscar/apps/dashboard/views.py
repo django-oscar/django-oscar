@@ -171,16 +171,21 @@ class IndexView(TemplateView):
             .values("status")
             .annotate(freq=Count("id")),
         }
-        if user.is_staff:
-            stats.update(
-                offer_maps=(
-                    ConditionalOffer.objects.filter(end_datetime__gt=now())
-                    .values("offer_type")
-                    .annotate(count=Count("id"))
-                    .order_by("offer_type")
-                ),
-                total_vouchers=self.get_active_vouchers().count(),
-            )
+        can_view_offers = user.is_staff or user.has_perm("offer.view_conditionaloffer")
+        can_view_vouchers = user.is_staff or user.has_perm("voucher.view_voucher")
+
+        if can_view_offers or can_view_vouchers:
+            if can_view_offers:
+                stats.update(
+                    offer_maps=(
+                        ConditionalOffer.objects.filter(end_datetime__gt=now())
+                        .values("offer_type")
+                        .annotate(count=Count("id"))
+                        .order_by("offer_type")
+                    )
+                )
+            if can_view_vouchers:
+                stats.update(total_vouchers=self.get_active_vouchers().count())
         return stats
 
 
