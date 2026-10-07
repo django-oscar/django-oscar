@@ -61,7 +61,7 @@ docs = [
     "sphinxcontrib-spelling==8.0.1",
     "sphinx_rtd_theme==3.1.0",
     "sphinx-issues==5.0.1",
-    "sorl-thumbnail>=12.10.0,<13.0.0",
+    "sorl-thumbnail>=12.10.0,<14.0.0",
     "easy-thumbnails>=2.9,<2.11",
 ]
 test = [
@@ -80,14 +80,14 @@ test = [
     "pylint-django>=2.5.5,<2.8.0",
     "black>=24.4.2",
     "psycopg2-binary>=2.8,<2.10",
-    "sorl-thumbnail>=12.10.0,<13.0.0",
+    "sorl-thumbnail>=12.10.0,<14.0.0",
     "easy-thumbnails>=2.9,<2.11",
     "django-environ>=0.4,<0.13",
     "whitenoise>=6.7.0,<6.12",
     "pycountry"
 ]
 sorl-thumbnail = [
-    "sorl-thumbnail>=12.10.0,<13.0.0",
+    "sorl-thumbnail>=12.10.0,<14.0.0",
 ]
 easy-thumbnails = [
     "easy-thumbnails>=2.9,<2.11",
