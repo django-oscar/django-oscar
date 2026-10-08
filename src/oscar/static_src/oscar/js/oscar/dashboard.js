@@ -251,12 +251,16 @@ var oscar = (function(o, $) {
         initForms: function() {
             // Disable buttons when they are clicked and show a "loading" message taken from the
             // data-loading-text attribute.
-            // Do not disable if button is inside a form with invalid fields.
+            // Do not disable if button is inside a form with invalid fields, or if the form
+            // requests a CSV download as the page won't reload.
             // This uses a delegated event so that it keeps working for forms that are reloaded
             // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
             $(document.body).on('click', '[data-loading-text]', function(){
                 var $btn_or_input = $(this),
                     form = $btn_or_input.parents("form");
+                if ($('[name="response_format"]:checked', form).val() === 'csv') {
+                    return;
+                }
                 if (!form || $(":invalid", form).length == 0) {
                     var d = 'disabled',
                         val = $btn_or_input.is('input') ? 'val' : 'html';
@@ -388,12 +392,12 @@ var oscar = (function(o, $) {
             },
         },
         bulk_actions: (function() {
-            var $allInputs, 
-                $countMessage, 
-                $allSelectedMessage, 
-                $selectAllQuestion, 
-                $clearSelections, 
-                $selectionCount, 
+            var $allInputs,
+                $countMessage,
+                $allSelectedMessage,
+                $selectAllQuestion,
+                $clearSelections,
+                $selectionCount,
                 recordsInPage;
 
             function reset() {
@@ -691,7 +695,7 @@ var oscar = (function(o, $) {
                     syncType(t);
                 });
 
-                // Sync the select all/across 
+                // Sync the select all/across
                 $('.select-all-children').on('change', function() {
                     var pid = $(this).data('parent');
                     $('input[name="selected_products"][data-parent="' + pid + '"]')

@@ -43,6 +43,16 @@ class TestOrderListDashboard(WebTestCase):
         self.assertEqual(response.headers["Content-Type"], "text/csv")
         self.assertIn("orders.csv", response.headers["Content-Disposition"])
 
+    def test_advanced_search_downloads_to_csv_without_error(self):
+        address = ShippingAddressFactory()
+        create_order(shipping_address=address)
+        page = self.get(reverse("dashboard:order-list"))
+        advanced_search_form = page.forms["advanced_search_form"]
+        advanced_search_form["response_format"] = "csv"
+        response = advanced_search_form.submit()
+        self.assertEqual(response.headers["Content-Type"], "text/csv")
+        self.assertIn("orders.csv", response.headers["Content-Disposition"])
+
     def test_allows_order_number_search(self):
         page = self.get(reverse("dashboard:order-list"))
         form = page.forms["search_form"]
