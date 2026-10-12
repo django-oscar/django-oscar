@@ -11,6 +11,7 @@ from oscar.test.factories import (
     PartnerFactory,
     ProductAttributeFactory,
     ProductFactory,
+    StockRecordFactory,
     create_product,
 )
 from oscar.test.testcases import WebTestCase, add_permissions
@@ -47,9 +48,19 @@ class TestCatalogueViews(WebTestCase):
             reverse("dashboard:catalogue-category-list"),
             reverse("dashboard:stock-alert-list"),
             reverse("dashboard:catalogue-product-lookup"),
+            reverse("dashboard:catalogue-partner-lookup"),
         ]
         for url in urls:
             self.assertIsOk(self.get(url))
+
+    def test_partner_lookup_filters_by_name(self):
+        partner = PartnerFactory(name="Findable partner")
+        PartnerFactory(name="Someone else")
+        response = self.get(
+            reverse("dashboard:catalogue-partner-lookup"), params={"q": "Findable"}
+        )
+        ids = [result["id"] for result in response.json["results"]]
+        self.assertEqual(ids, [partner.id])
 
     def test_upc_filter(self):
         product1 = create_product(upc="123")
@@ -181,7 +192,9 @@ class TestAStaffUser(WebTestCase):
         form["upc"] = "123456"
         form["title"] = "new product"
         form["productcategory_set-0-category"] = category.id
-        form["stockrecords-0-partner"] = self.partner.id
+        # The partner field is a remote select (see #4565); the choices are
+        # loaded with AJAX, so WebTest can't find the option in the markup.
+        form["stockrecords-0-partner"].force_value(self.partner.id)
         form["stockrecords-0-partner_sku"] = "14"
         form["stockrecords-0-num_in_stock"] = "555"
         form["stockrecords-0-price"] = "13.99"
@@ -193,6 +206,18 @@ class TestAStaffUser(WebTestCase):
         self.assertRedirects(
             page, reverse("dashboard:catalogue-product", kwargs={"pk": product.id})
         )
+
+    def test_can_change_the_partner_of_a_stockrecord(self):
+        old_partner = PartnerFactory(users=[self.user])
+        new_partner = PartnerFactory(users=[self.user])
+        product = ProductFactory(stockrecords=[])
+        StockRecordFactory(product=product, partner=old_partner)
+        url = reverse("dashboard:catalogue-product", kwargs={"pk": product.id})
+        form = self.get(url).forms["create_update_product_form"]
+        form["stockrecords-0-partner"].force_value(new_partner.id)
+        form.submit()
+
+        self.assertEqual(product.stockrecords.get().partner, new_partner)
 
     def test_can_update_a_product_without_stockrecord(self):
         new_title = "foobar"
@@ -342,6 +367,13 @@ class TestANonStaffUser(TestAStaffUser):
         response = self.get(url, status="*")
         self.assertEqual(http_client.FORBIDDEN, response.status_code)
 
+    def test_partner_lookup_only_returns_her_partners(self):
+        other_partner = PartnerFactory(name="Someone else")
+        response = self.get(reverse("dashboard:catalogue-partner-lookup"))
+        ids = [result["id"] for result in response.json["results"]]
+        self.assertIn(self.partner.id, ids)
+        self.assertNotIn(other_partner.id, ids)
+
     # Tests below can't work because they don't create a stockrecord
 
     def test_can_create_a_product_without_stockrecord(self):
@@ -367,6 +399,34 @@ class TestANonStaffUser(TestAStaffUser):
 
     def test_cant_create_child_product_for_invalid_parents(self):
         pass
+
+
+class TestProductUpdatePageWeight(WebTestCase):
+    """Regression test for #4565.
+
+    The partner field rendered every partner as an <option> in every
+    stockrecord row, so the page grew with partners * stockrecords.
+    """
+
+    is_staff = True
+    permissions = DashboardPermission.get(
+        "catalogue", "view_product", "change_product", "add_product"
+    )
+
+    def test_page_weight_does_not_scale_with_partner_count(self):
+        partners = PartnerFactory.create_batch(4)
+        product = ProductFactory(stockrecords=[])
+        for partner in partners:
+            StockRecordFactory(product=product, partner=partner)
+        url = reverse("dashboard:catalogue-product", kwargs={"pk": product.id})
+
+        before = len(self.get(url).body)
+        # Adding 100 partners used to add a full <option> to each of the five
+        # stockrecord selects on this page: about 200 bytes per partner.
+        PartnerFactory.create_batch(100)
+        after = len(self.get(url).body)
+
+        self.assertLess((after - before) / 100, 10)
 
 
 class TestProductCreatePageWithUnicodeSlug(TestCase):
