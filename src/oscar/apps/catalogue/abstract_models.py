@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 from datetime import date, datetime
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -1599,36 +1600,76 @@ class MissingProductImage(object):
 
     def symlink_missing_image(self, media_file_path):
         if os.path.islink(media_file_path):
-            # broken link, remove it to create it anew
+            # Broken symlink — remove it so we can recreate it below.
             os.unlink(media_file_path)
+
         static_file_path = find("oscar/img/%s" % self.name)
-        if static_file_path is not None:
+        if static_file_path is None:
+            raise ImproperlyConfigured(
+                "Oscar could not find the 'missing image' placeholder "
+                "'oscar/img/%s' in any of your STATICFILES_DIRS or installed "
+                "apps.  Make sure django-oscar's static files are collected "
+                "and STATICFILES_DIRS / INSTALLED_APPS are configured correctly."
+                % self.name
+            )
+
+        # Ensure the destination directory exists before we try anything.
+        media_file_dir = os.path.dirname(media_file_path)
+        if not os.path.exists(media_file_dir):
             try:
-                # Check that the target directory exists, and attempt to
-                # create it if it doesn't.
-                media_file_dir = os.path.dirname(media_file_path)
-                if not os.path.exists(media_file_dir):
-                    os.makedirs(media_file_dir)
-                os.symlink(static_file_path, media_file_path)
-            except OSError:
+                os.makedirs(media_file_dir)
+            except OSError as exc:
                 raise ImproperlyConfigured(
-                    (
-                        "Please copy/symlink the "
-                        "'missing image' image at %s into your MEDIA_ROOT at %s. "
-                        "This exception was raised because Oscar was unable to "
-                        "symlink it for you."
+                    "Oscar could not create the directory '%s' needed to install "
+                    "the 'missing image' placeholder. "
+                    "Please create it manually or adjust MEDIA_ROOT (%s)."
+                    % (media_file_dir, settings.MEDIA_ROOT)
+                ) from exc
+
+        # Attempt to create a symlink first (fastest, saves disk space).
+        try:
+            os.symlink(static_file_path, media_file_path)
+        except OSError as symlink_exc:
+            # Symlinks may be unsupported (e.g. Windows, certain Docker mounts,
+            # FAT/exFAT filesystems).  Fall back to a plain file copy so Oscar
+            # remains usable in those environments.
+            logging.warning(
+                "Oscar could not create a symlink for the 'missing image' "
+                "placeholder at %s (reason: %s). "
+                "Attempting to copy the file instead.",
+                media_file_path,
+                symlink_exc,
+            )
+            try:
+                shutil.copy2(static_file_path, media_file_path)
+            except OSError as copy_exc:
+                raise ImproperlyConfigured(
+                    "Oscar was unable to either symlink or copy the "
+                    "'missing image' placeholder from %s into your MEDIA_ROOT "
+                    "at %s. "
+                    "Please copy/symlink it there manually. "
+                    "Symlink error: %s. Copy error: %s."
+                    % (
+                        static_file_path,
+                        settings.MEDIA_ROOT,
+                        symlink_exc,
+                        copy_exc,
                     )
-                    % (static_file_path, settings.MEDIA_ROOT),
-                )
+                ) from copy_exc
             else:
                 logging.info(
-                    (
-                        "Symlinked the 'missing image' image at %s into your "
-                        "MEDIA_ROOT at %s"
-                    ),
+                    "Copied the 'missing image' placeholder from %s into "
+                    "your MEDIA_ROOT at %s (symlink was not supported).",
                     static_file_path,
                     settings.MEDIA_ROOT,
                 )
+        else:
+            logging.info(
+                "Symlinked the 'missing image' image at %s into your "
+                "MEDIA_ROOT at %s",
+                static_file_path,
+                settings.MEDIA_ROOT,
+            )
 
 
 class AbstractProductImage(models.Model):
