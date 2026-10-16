@@ -1,0 +1,21 @@
+========================================
+Oscar 4.3 release notes
+========================================
+
+:release: unreleased
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _backwards_incompatible_in_4.3:
+
+Backwards incompatible changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- The ``OSCAR_MAX_BULK_INTERMEDIATE_IDS`` setting has been removed. The limit on
+  how many objects a two-step (intermediate) bulk action may apply to is now
+  controlled by ``OSCAR_MAX_BULK_SELECTION`` (default ``None``, i.e. no limit).
+  If you set ``OSCAR_MAX_BULK_INTERMEDIATE_IDS`` in your project settings, rename
+  it to ``OSCAR_MAX_BULK_SELECTION``.

@@ -1,8 +1,10 @@
+import copy
 import hashlib
 import time
 
 from django.contrib import messages
-from django.http import HttpResponseBase, JsonResponse
+from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpResponseBase, JsonResponse, QueryDict
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.encoding import smart_str
@@ -177,6 +179,67 @@ class BulkEditMixin:
         return self.get_queryset().filter(pk__in=ids)
 
 
+class BulkSelection:
+    """
+    The objects a pending two-step bulk action applies to.
+
+    A selection is the path and query string of the list view it was made on, so
+    it takes the same space in the session whether it holds ten objects or a
+    million.
+    When the user ticked objects on the list, ``ids`` narrows the query to those.
+    ``count`` is the number of objects in the selection when it was last shown
+    to the user, to notice when the selection changed before it is executed.
+    """
+
+    def __init__(self, action, path=None, query="", ids=None, count=0, created_at=None):
+        self.action = action
+        self.path = path
+        self.query = query
+        self.ids = ids
+        self.count = count
+        self.created_at = time.time() if created_at is None else created_at
+
+    def to_session(self):
+        return {
+            "action": self.action,
+            "path": self.path,
+            "query": self.query,
+            "ids": self.ids,
+            "count": self.count,
+            "created_at": self.created_at,
+        }
+
+    @classmethod
+    def from_session(cls, data):
+        if "object_ids" in data:
+            # stored before selections were queries
+            return cls(
+                data.get("action"),
+                ids=data["object_ids"],
+                count=len(data["object_ids"]),
+                created_at=data.get("created_at"),
+            )
+        return cls(
+            data.get("action"),
+            path=data.get("path"),
+            query=data.get("query", ""),
+            ids=data.get("ids"),
+            count=data.get("count", 0),
+            created_at=data.get("created_at"),
+        )
+
+    def get_token(self):
+        """
+        A short token identifying this pending action + selection.
+
+        Each pending action is stored under its own session bucket keyed by
+        this token, so concurrent tabs don't overwrite each other's selection.
+        """
+        ids = "*" if self.ids is None else ",".join(str(pk) for pk in sorted(self.ids))
+        raw = "%s:%s:%s:%s" % (self.action, self.path, self.query, ids)
+        return hashlib.sha256(raw.encode()).hexdigest()[:12]
+
+
 class IntermediateBulkEditMixin(BulkEditMixin):
     """
     Extension of BulkEditMixin
@@ -185,6 +248,10 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
     Actions with an intermediate step should be specified by
     putting the keys from actions into intermediate_actions
+
+    The selection is stored as the list's query, see ``BulkSelection``. The
+    intermediate view gets the objects back from this view through
+    ``get_bulk_selection_queryset``, so all filtering of the list applies.
     """
 
     intermediate_actions = {}
@@ -192,7 +259,12 @@ class IntermediateBulkEditMixin(BulkEditMixin):
     bulk_intermediate_token_param = settings.OSCAR_BULK_INTERMEDIATE_TOKEN_PARAM
     bulk_intermediate_ttl_seconds = settings.OSCAR_BULK_INTERMEDIATE_SESSION_TTL_SECONDS
 
-    max_bulk_intermediate_ids = settings.OSCAR_MAX_BULK_INTERMEDIATE_IDS
+    # the most objects a selection may hold, None for no limit. Ticked objects
+    # need no limit of their own: they are at most one page of the list.
+    max_bulk_selection = getattr(settings, "OSCAR_MAX_BULK_SELECTION", None)
+
+    # query parameters of the list that don't change which objects it holds
+    bulk_selection_ignored_params = ("page",)
 
     def get_intermediate_url(self, request, action):
         raise NotImplementedError(
@@ -208,53 +280,81 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
         return super().post(request, *args, **kwargs)
 
-    def get_bulk_intermediate_token(self, action, object_ids):
-        """
-        Return a short token identifying this pending action + selection.
+    def get_bulk_selection_query(self, request):
+        query = request.GET.copy()
+        for param in self.bulk_selection_ignored_params:
+            query.pop(param, None)
+        return query.urlencode()
 
-        Each pending action is stored under its own session bucket keyed by
-        this token, so concurrent tabs don't overwrite each other's selection.
+    @classmethod
+    def get_bulk_selection_queryset(cls, request, selection):
         """
-        raw = "%s:%s" % (action, ",".join(str(pk) for pk in sorted(object_ids)))
-        return hashlib.sha256(raw.encode()).hexdigest()[:12]
+        The objects in ``selection``, as ``request.user`` sees them now on the
+        list with the selection's query.
+        """
+        list_request = copy.copy(request)
+        list_request.method = "GET"
+        list_request.GET = QueryDict(selection.query)
+        list_request.POST = QueryDict()
+        view = cls()
+        view.setup(list_request)
+        if selection.ids is None:
+            return view.get_select_across_queryset()
+        return view.get_selected_queryset(selection.ids)
+
+    def get_selected_queryset(self, ids):
+        """The ticked objects ``ids`` that are on the list."""
+        return self.get_select_across_queryset().filter(pk__in=ids)
+
+    def _too_many_error(self, request, count, limit):
+        messages.error(
+            request,
+            _(
+                "Too many %(object)ss selected (%(count)d). Narrow your"
+                " selection to %(limit)d or fewer and try again."
+            )
+            % {
+                "object": self.get_checkbox_object_name(),
+                "count": count,
+                "limit": limit,
+            },
+        )
+        return redirect(self.get_error_url(request))
 
     def _handle_intermediate_action(self, request, action, *args, **kwargs):
-        object_ids = self.get_selected_ids(request)
+        selection = BulkSelection(
+            action, path=request.path, query=self.get_bulk_selection_query(request)
+        )
 
-        if not object_ids:
+        select_across = request.POST.get(self.select_across_param, "").lower()
+        if select_across != "1":
+            selection.ids = self.get_selected_ids(request)
+
+        selection.count = self.get_bulk_selection_queryset(request, selection).count()
+
+        if not selection.count:
             messages.error(
                 request,
                 _("You need to select some %ss") % self.get_checkbox_object_name(),
             )
             return redirect(self.get_error_url(request))
 
-        if len(object_ids) > self.max_bulk_intermediate_ids:
-            messages.error(
-                request,
-                _(
-                    "Too many %(object)ss selected (%(count)d). Narrow your"
-                    " selection to %(limit)d or fewer and try again."
-                )
-                % {
-                    "object": self.get_checkbox_object_name(),
-                    "count": len(object_ids),
-                    "limit": self.max_bulk_intermediate_ids,
-                },
+        if (
+            self.max_bulk_selection is not None
+            and selection.count > self.max_bulk_selection
+        ):
+            return self._too_many_error(
+                request, selection.count, self.max_bulk_selection
             )
-            return redirect(self.get_error_url(request))
 
-        token = self.get_bulk_intermediate_token(action, object_ids)
+        token = selection.get_token()
         _prune_expired_bulk_intermediate_buckets(
             request.session,
             self.bulk_intermediate_session_key,
             self.bulk_intermediate_ttl_seconds,
         )
         buckets = request.session.setdefault(self.bulk_intermediate_session_key, {})
-        buckets[token] = {
-            "action": action,
-            "created_at": time.time(),
-            "object_ids": object_ids,
-        }
+        buckets[token] = selection.to_session()
         request.session.modified = True
 
         url = self.get_intermediate_url(request, action)
@@ -266,11 +366,19 @@ class IntermediateBulkActionView(View):
     Generic view for the confirmation step of a two-step bulk action.
     Pair with ``IntermediateBulkEditMixin`` on the originating list view.
 
-    Reads the pending action and selected IDs from the session, renders
+    Reads the pending action and selection from the session, renders
     the action's template with its form on GET, and dispatches to
     ``execute_action`` on POST.
 
-    Subclasses must implement ``get_cancel_url``, ``get_success_url`` and ``get_objects``.
+    When the number of selected objects changed since the user last saw it,
+    a GET shows a message, and a POST shows the page again instead of
+    executing, so the user confirms what is actually selected.
+
+    The selected objects are found again through the list view the selection
+    was made on, see ``get_list_view_class``.
+
+    Subclasses must implement ``get_cancel_url``, ``get_success_url`` and
+    ``get_objects``.
     """
 
     intermediate_actions = {}
@@ -278,11 +386,16 @@ class IntermediateBulkActionView(View):
     bulk_intermediate_token_param = "key"
     bulk_intermediate_ttl_seconds = 60 * 60 * 24
 
+    #: the list view the selection was made on, used to resolve it again
+    list_view_class = None
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._action = None
-        self._selected_ids = []
         self._token = None
+        self.selection = None
+        self._selection_queryset = None
+        self._selection_count = None
 
     def dispatch(self, request, *args, **kwargs):
         self._token = request.GET.get(self.bulk_intermediate_token_param)
@@ -299,12 +412,12 @@ class IntermediateBulkActionView(View):
             self.bulk_intermediate_session_key,
             self.bulk_intermediate_ttl_seconds,
         )
-        session_data = session_data or {}
-        self._action = session_data.get("action")
-        self._selected_ids = session_data.get("object_ids", [])
+        if session_data is not None:
+            self.selection = BulkSelection.from_session(session_data)
+            self._action = self.selection.action
         if (
-            not self._action
-            or not self._selected_ids
+            self.selection is None
+            or not self._action
             or self._action not in self.intermediate_actions
         ):
             messages.warning(
@@ -319,6 +432,59 @@ class IntermediateBulkActionView(View):
 
     def get_success_url(self):
         raise NotImplementedError
+
+    def get_list_view_class(self):
+        """The list view the selection was made on."""
+        if self.list_view_class is None:
+            raise ImproperlyConfigured(
+                "%s must set list_view_class" % type(self).__name__
+            )
+        return self.list_view_class
+
+    def get_selection_queryset(self):
+        """The selected objects, as they are now."""
+        if self._selection_queryset is None:
+            self._selection_queryset = (
+                self.get_list_view_class().get_bulk_selection_queryset(
+                    self.request, self.selection
+                )
+            )
+        return self._selection_queryset
+
+    def get_selection_count(self):
+        if self._selection_count is None:
+            self._selection_count = self.get_selection_queryset().count()
+        return self._selection_count
+
+    def selection_changed(self):
+        """
+        Whether the number of selected objects changed since the user last saw
+        it. The new number is stored, so the next page compares with this one.
+        """
+        count = self.get_selection_count()
+        if count == self.selection.count:
+            return False
+        self._selection_changed_message(self.selection.count, count)
+        self.selection.count = count
+        self._save_selection()
+        return True
+
+    def _selection_changed_message(self, old_count, new_count):
+        messages.warning(
+            self.request,
+            _(
+                "The selection changed since it was made: it held %(old)d"
+                " items and now holds %(new)d. Check the selection before you"
+                " continue."
+            )
+            % {"old": old_count, "new": new_count},
+        )
+
+    def _save_selection(self):
+        buckets = self.request.session.get(self.bulk_intermediate_session_key, {})
+        buckets[self._token] = self.selection.to_session()
+        self.request.session[self.bulk_intermediate_session_key] = buckets
+        self.request.session.modified = True
 
     def get_form_kwargs(self):
         return {}
@@ -337,6 +503,7 @@ class IntermediateBulkActionView(View):
             "action_label": action.label,
             "cancel_url": self.get_cancel_url(),
             "require_irreversible_confirmation": action.require_irreversible_confirmation,
+            "selection_count": self.get_selection_count(),
         }
         ctx.update(action.get_context())
         ctx.update(kwargs)
@@ -346,11 +513,15 @@ class IntermediateBulkActionView(View):
         return self.intermediate_actions[self._action].template
 
     def get(self, request, *args, **kwargs):
+        self.selection_changed()
         return TemplateResponse(
             request, self.get_template_name(), self.get_context_data()
         )
 
     def post(self, request, *args, **kwargs):
+        if self.selection_changed():
+            # never execute on a selection the user hasn't seen
+            return redirect(request.get_full_path())
         form = self.get_form(data=request.POST)
         if not form.is_valid():
             return TemplateResponse(

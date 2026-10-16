@@ -480,8 +480,17 @@ class ProductBulkActionForm(forms.Form):
         widget=forms.HiddenInput(), required=False
     )
 
-    def __init__(self, *args, products_queryset=None, user=None, **kwargs):
+    def __init__(
+        self,
+        *args,
+        products_queryset=None,
+        user=None,
+        can_display_products=True,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
+        # whether the products are listed one by one, or only selected by type
+        self.can_display_products = can_display_products
         if products_queryset is not None:
             self.fields["selected_products"].queryset = products_queryset
 
@@ -523,9 +532,20 @@ class SetProductPriceForm(ProductBulkActionForm):
         ),
     )
 
-    def __init__(self, *args, products_queryset=None, user=None, **kwargs):
+    def __init__(
+        self,
+        *args,
+        products_queryset=None,
+        user=None,
+        can_display_products=True,
+        **kwargs,
+    ):
         super().__init__(
-            *args, products_queryset=products_queryset, user=user, **kwargs
+            *args,
+            products_queryset=products_queryset,
+            user=user,
+            can_display_products=can_display_products,
+            **kwargs,
         )
         qs = self.fields["selected_products"].queryset
         partner_qs = Partner.objects.filter(stockrecords__product__in=qs).distinct()
@@ -551,7 +571,9 @@ class SetProductPriceForm(ProductBulkActionForm):
             ),
             initial=partner_qs if partner_count == 1 else None,
         )
-        for pk in qs.values_list("pk", flat=True):
+        # a specific price can only be entered for a listed product
+        price_pks = qs.values_list("pk", flat=True) if can_display_products else []
+        for pk in price_pks:
             self.fields[f"price_{pk}"] = forms.DecimalField(
                 min_value=0,
                 decimal_places=2,
@@ -575,6 +597,13 @@ class SetProductPriceForm(ProductBulkActionForm):
             )
 
         has_global = bool(global_options)
+        if not has_global and not self.can_display_products:
+            raise forms.ValidationError(
+                _(
+                    "Set a new price, an amount or a percentage. Specific prices"
+                    " can only be entered when the products are listed."
+                )
+            )
         if not has_global:
             selected = cleaned_data.get("selected_products", [])
             has_any_override = any(

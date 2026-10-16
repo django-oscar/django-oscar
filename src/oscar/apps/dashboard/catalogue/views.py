@@ -211,6 +211,13 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
     def get_success_url(self):
         return reverse("dashboard:catalogue-product-list")
 
+    def get_list_view_class(self):
+        return get_class("dashboard.catalogue.views", "ProductListView")
+
+    def _get_selected_pks(self):
+        """The selected products as a subquery, never as a list of ids."""
+        return self.get_selection_queryset().order_by().values("pk")
+
     def _get_action(self):
         return self.intermediate_actions.get(self._action)
 
@@ -225,9 +232,8 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
         """Products that the user can select for this action."""
         if not hasattr(self, "_selectable_qs"):
             action = self._get_action()
-            qs = Product.objects.filter(
-                Q(pk__in=self._selected_ids) | Q(parent_id__in=self._selected_ids)
-            )
+            selected = self._get_selected_pks()
+            qs = Product.objects.filter(Q(pk__in=selected) | Q(parent_id__in=selected))
             if not self.request.user.is_staff:
                 # Variants stocked by another partner must never be selectable.
                 qs = qs.filter(
@@ -267,7 +273,7 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
         children_selectable = self._is_structure_supported(Product.CHILD)
 
         base = Product.objects.filter(
-            pk__in=self._selected_ids, structure=Product.PARENT
+            pk__in=self._get_selected_pks(), structure=Product.PARENT
         )
         if not parent_selectable and not children_selectable:
             base = base.none()
@@ -283,7 +289,7 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
         """Standalone products from the original selection that are selectable."""
         return self._annotate_stockrecords_and_cheapest_price(
             self.get_selectable_queryset().filter(
-                pk__in=self._selected_ids, structure=Product.STANDALONE
+                pk__in=self._get_selected_pks(), structure=Product.STANDALONE
             )
         )
 
@@ -292,27 +298,47 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             **super().get_form_kwargs(),
             "products_queryset": self.get_selectable_queryset(),
             "user": self.request.user,
+            "can_display_products": self.can_display_products(),
         }
 
     def get_objects(self, form):
         cd = form.cleaned_data
         qs = self.get_selectable_queryset()
-        pks = set(
-            cd.get("selected_products", Product.objects.none()).values_list(
-                "pk", flat=True
-            )
+        # build a filter instead of a list of ids, a type can hold any number
+        selected = Q(
+            pk__in=cd.get("selected_products", Product.objects.none()).values("pk")
         )
         if cd.get("select_all_parents"):
-            pks.update(qs.filter(structure=Product.PARENT).values_list("pk", flat=True))
+            selected |= Q(structure=Product.PARENT)
         if cd.get("select_all_children"):
-            pks.update(qs.filter(structure=Product.CHILD).values_list("pk", flat=True))
+            selected |= Q(structure=Product.CHILD)
         if cd.get("select_all_standalones"):
-            pks.update(
-                qs.filter(structure=Product.STANDALONE).values_list("pk", flat=True)
-            )
-        return qs.filter(pk__in=pks)
+            selected |= Q(structure=Product.STANDALONE)
+        return qs.filter(selected)
 
     def get_structure_counts(self):
+        if not hasattr(self, "_structure_counts"):
+            self._structure_counts = self._count_structures()
+        return self._structure_counts
+
+    def get_displayable_count(self):
+        """The number of products the table would show."""
+        standalone_count, parent_count, child_count = self.get_structure_counts()
+        children_selectable = self._is_structure_supported(Product.CHILD)
+        return (
+            standalone_count
+            + parent_count
+            + (child_count if children_selectable else 0)
+        )
+
+    def can_display_products(self):
+        """
+        Whether the products are listed one by one. A larger selection only
+        offers to select products by type.
+        """
+        return self.get_displayable_count() <= self.max_displayable_products
+
+    def _count_structures(self):
         """
         Return (standalone_count, parent_count, child_count) for the selectable queryset.
 
@@ -398,16 +424,15 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
         children_selectable = self._is_structure_supported(Product.CHILD)
 
         standalone_count, parent_count, child_count = self.get_structure_counts()
+        total_displayable = self.get_displayable_count()
 
-        display_rows, selectable_displayed = self.build_display_rows(
-            parent_selectable, children_selectable
-        )
-
-        total_displayable = (
-            standalone_count
-            + parent_count
-            + (child_count if children_selectable else 0)
-        )
+        if self.can_display_products():
+            display_rows, selectable_displayed = self.build_display_rows(
+                parent_selectable, children_selectable
+            )
+        else:
+            # too many to list, the products are selected by type
+            display_rows, selectable_displayed = [], 0
         hidden_count = max(0, total_displayable - selectable_displayed)
 
         context = super().get_context_data(
@@ -420,6 +445,9 @@ class ProductBulkActionConfirmView(IntermediateBulkActionView):
             parent_count=parent_count,
             child_count=child_count,
             hidden_count=hidden_count,
+            can_display_products=self.can_display_products(),
+            displayable_count=total_displayable,
+            max_displayable_products=self.max_displayable_products,
             **kwargs,
         )
         context["has_extra_fields"] = any(

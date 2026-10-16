@@ -112,10 +112,13 @@ class SetProductPriceAction(ProductIntermediateAction):
 
     @atomic
     def execute(self, request, objects, form):
-        product_ids = list(objects.values_list("pk", flat=True))
         specific = form.get_specific_prices()
-        override_ids = [pk for pk in product_ids if pk in specific]
-        rest_ids = [pk for pk in product_ids if pk not in specific]
+        # specific prices only exist for listed products, so this list is short;
+        # the rest is used as a subquery, as it can hold any number of products
+        override_ids = list(
+            objects.filter(pk__in=specific.keys()).values_list("pk", flat=True)
+        )
+        rest = objects.exclude(pk__in=override_ids).order_by().values("pk")
         partners = form.cleaned_data.get("partners")
         if not partners:
             raise SuspiciousOperation(
@@ -152,26 +155,20 @@ class SetProductPriceAction(ProductIntermediateAction):
                 )
             )
 
-        if rest_ids:
-            qs = StockRecord.objects.filter(
-                product_id__in=rest_ids,
-                **partner_filter,
-            )
-            base = form.cleaned_data.get("new_price")
-            amount = form.cleaned_data.get("increase_by_amount")
-            percentage = form.cleaned_data.get("increase_by_percentage")
+        qs = StockRecord.objects.filter(product_id__in=rest, **partner_filter)
+        base = form.cleaned_data.get("new_price")
+        amount = form.cleaned_data.get("increase_by_amount")
+        percentage = form.cleaned_data.get("increase_by_percentage")
 
-            if base is not None:
-                count += qs.update(price=base)
-            elif amount is not None:
-                count += qs.update(
-                    price=Greatest(F("price") + amount, Value(Decimal("0")))
-                )
-            elif percentage is not None:
-                multiplier = Decimal("1") + percentage / Decimal("100")
-                count += qs.update(
-                    price=Greatest(F("price") * multiplier, Value(Decimal("0")))
-                )
+        if base is not None:
+            count += qs.update(price=base)
+        elif amount is not None:
+            count += qs.update(price=Greatest(F("price") + amount, Value(Decimal("0"))))
+        elif percentage is not None:
+            multiplier = Decimal("1") + percentage / Decimal("100")
+            count += qs.update(
+                price=Greatest(F("price") * multiplier, Value(Decimal("0")))
+            )
 
         messages.success(
             request,
