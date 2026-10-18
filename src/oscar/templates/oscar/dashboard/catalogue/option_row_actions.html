@@ -3,8 +3,6 @@
 {% load dashboard_tags %}
 {% has_dashboard_permission "catalogue-option-update" "catalogue_dashboard" as can_update_option %}
 {% has_dashboard_permission "catalogue-option-delete" "catalogue_dashboard" as can_delete_option %}
-
-
 <div class="btn-toolbar">
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -17,7 +15,9 @@
             </a>
             {% endif %}
             {% if can_delete_option %}
-            <a class="dropdown-item" href="{% url 'dashboard:catalogue-option-delete' pk=record.id %}{% querystring %}">{% trans "Delete" %}</a>
+            <a class="dropdown-item" href="{% url 'dashboard:catalogue-option-delete' pk=record.id %}{% querystring %}">
+                {% trans "Delete" %}
+            </a>
             {% endif %}
         </div>
     </div>

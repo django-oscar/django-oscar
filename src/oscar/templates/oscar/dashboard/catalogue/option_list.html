@@ -19,9 +19,9 @@
 {% block header %}
     {% has_dashboard_permission "catalogue-option-create" "catalogue_dashboard" as can_create_option %}
     <div class="page-header">
-    {% if can_create_option %}
-    <a href="{% url 'dashboard:catalogue-option-create' %}" class="btn btn-primary float-right"><i class="fas fa-plus-circle"></i> {% trans "Create new Option" %}</a>
-    {% endif %}
+        {% if can_create_option %}
+        <a href="{% url 'dashboard:catalogue-option-create' %}" class="btn btn-primary float-right"><i class="fas fa-plus-circle"></i> {% trans "Create new Option" %}</a>
+        {% endif %}
         <h1>{% trans "Option" %}</h1>
     </div>
 {% endblock header %}
