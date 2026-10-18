@@ -91,7 +91,24 @@ class TestDashboardIndexForStaffUser(WebTestCase):
 
     def test_has_stats_vars_in_context(self):
         response = self.get(reverse("dashboard:index"))
-        for key in GENERIC_STATS_KEYS + STAFF_STATS_KEYS:
+        for key in GENERIC_STATS_KEYS:
+            self.assertInContext(response, key)
+
+    def test_offer_and_voucher_stats_hidden_without_view_permissions(self):
+        response = self.get(reverse("dashboard:index"))
+        for key in STAFF_STATS_KEYS:
+            self.assertNotInContext(response, key)
+
+
+class TestDashboardIndexForStaffUserWithOfferVoucherPermissions(WebTestCase):
+    is_staff = True
+    permissions = DashboardPermission.get(
+        "offer", "view_conditionaloffer"
+    ) + DashboardPermission.get("voucher", "view_voucher")
+
+    def test_offer_and_voucher_stats_in_context(self):
+        response = self.get(reverse("dashboard:index"))
+        for key in STAFF_STATS_KEYS:
             self.assertInContext(response, key)
 
     def test_login_redirects_to_dashboard_index(self):
@@ -130,6 +147,19 @@ class TestDashboardIndexForPartnerUser(WebTestCase):
             self.assertInContext(response, key)
         for key in STAFF_STATS_KEYS:
             self.assertNotInContext(response, key)
+
+
+class TestDashboardIndexForPartnerUserWithOfferVoucherPermissions(WebTestCase):
+    permissions = (
+        DashboardPermission.partner_dashboard_access
+        + DashboardPermission.get("offer", "view_conditionaloffer")
+        + DashboardPermission.get("voucher", "view_voucher")
+    )
+
+    def test_offer_and_voucher_stats_in_context(self):
+        response = self.get(reverse("dashboard:index"))
+        for key in STAFF_STATS_KEYS:
+            self.assertInContext(response, key)
 
 
 class TestDashboardIndexStatsForNonStaffUser(WebTestCase):

@@ -81,13 +81,21 @@ Option = get_model("catalogue", "Option")
 
 class ReadOnlyUpdateViewMixin:
     readonly_title_prefix = _("View")
+    add_permission_codename = None
+
+    def is_creating(self):
+        # self.creating is only set in get_object(), which runs after post()
+        return getattr(self, "creating", False) or (
+            self.add_permission_codename is not None and "pk" not in self.kwargs
+        )
 
     def get_readonly_status(self):
-        if self.request.user.is_superuser:
+        user = self.request.user
+        if user.is_superuser or user.has_perm("partner.dashboard_access"):
             return False
-        if self.request.user.has_perm("partner.dashboard_access"):
-            return False
-        return not self.request.user.has_perm(self.change_permission_codename)
+        if self.is_creating():
+            return not user.has_perm(self.add_permission_codename)
+        return not user.has_perm(self.change_permission_codename)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -256,6 +264,7 @@ class ProductCreateUpdateView(
     ReadOnlyUpdateViewMixin, PartnerProductFilterMixin, generic.UpdateView
 ):
     change_permission_codename = "catalogue.change_product"
+    add_permission_codename = "catalogue.add_product"
     """
     Dashboard view that is can both create and update products of all kinds.
     It can be used in three different ways, each of them with a unique URL

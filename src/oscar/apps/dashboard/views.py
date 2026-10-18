@@ -171,8 +171,8 @@ class IndexView(TemplateView):
             .values("status")
             .annotate(freq=Count("id")),
         }
-        can_view_offers = user.is_staff or user.has_perm("offer.view_conditionaloffer")
-        can_view_vouchers = user.is_staff or user.has_perm("voucher.view_voucher")
+        can_view_offers = user.has_perm("offer.view_conditionaloffer")
+        can_view_vouchers = user.has_perm("voucher.view_voucher")
 
         if can_view_offers or can_view_vouchers:
             if can_view_offers:

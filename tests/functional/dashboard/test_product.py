@@ -128,6 +128,37 @@ class TestCreateParentProduct(ProductWebTest):
         self.assertContains(response, "Product with this UPC already exists.")
 
 
+class TestCreateProductWithoutChangePermission(ProductWebTest):
+    is_staff = True
+    permissions = DashboardPermission.get(
+        "catalogue",
+        "view_product",
+        "add_product",
+    )
+
+    def setUp(self):
+        self.pclass = ProductClassFactory(name="Books", slug="books")
+        super().setUp()
+
+    def test_can_create_product_with_only_add_permission(self):
+        category = CategoryFactory()
+        url = reverse(
+            "dashboard:catalogue-product-create",
+            kwargs={"product_class_slug": self.pclass.slug},
+        )
+        page = self.get(url)
+        self.assertFalse(page.context["readonly"])
+
+        product_form = page.forms["create_update_product_form"]
+        product_form["title"] = "testing"
+        product_form["structure"] = "parent"
+        product_form["productcategory_set-0-category"] = category.id
+        response = product_form.submit()
+
+        self.assertIsRedirect(response)
+        self.assertEqual(Product.objects.count(), 1)
+
+
 class TestCreateChildProduct(ProductWebTest):
     is_staff = True
 

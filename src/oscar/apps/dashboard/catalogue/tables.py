@@ -14,7 +14,6 @@ Product = get_model("catalogue", "Product")
 Category = get_model("catalogue", "Category")
 AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 Option = get_model("catalogue", "Option")
-DashboardPermission = get_class("dashboard.permissions", "DashboardPermission")
 
 
 class ProductTable(DashboardTable):
