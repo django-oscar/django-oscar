@@ -187,16 +187,33 @@ class BulkSelection:
     it takes the same space in the session whether it holds ten objects or a
     million.
     When the user ticked objects on the list, ``ids`` narrows the query to those.
-    ``count`` is the number of objects in the selection when it was last shown
-    to the user, to notice when the selection changed before it is executed.
+
+    To notice when the selection changed before it is executed, we keep what
+    the user last saw: ``count`` always, and for a ticked selection also
+    ``fingerprint``, the sorted ids that were present. Comparing the count is
+    enough for a select-across selection (it may hold any number of objects, so
+    recording every id is not affordable, and it really means "everything
+    matching the filter"), but a ticked selection compares the ids themselves,
+    so a change that leaves the count the same -- one object drops out as
+    another reappears -- is still caught.
     """
 
-    def __init__(self, action, path=None, query="", ids=None, count=0, created_at=None):
+    def __init__(
+        self,
+        action,
+        path=None,
+        query="",
+        ids=None,
+        count=0,
+        created_at=None,
+        fingerprint=None,
+    ):
         self.action = action
         self.path = path
         self.query = query
         self.ids = ids
         self.count = count
+        self.fingerprint = fingerprint
         self.created_at = time.time() if created_at is None else created_at
 
     def to_session(self):
@@ -206,6 +223,7 @@ class BulkSelection:
             "query": self.query,
             "ids": self.ids,
             "count": self.count,
+            "fingerprint": self.fingerprint,
             "created_at": self.created_at,
         }
 
@@ -217,6 +235,7 @@ class BulkSelection:
                 data.get("action"),
                 ids=data["object_ids"],
                 count=len(data["object_ids"]),
+                fingerprint=sorted(data["object_ids"]),
                 created_at=data.get("created_at"),
             )
         return cls(
@@ -225,6 +244,7 @@ class BulkSelection:
             query=data.get("query", ""),
             ids=data.get("ids"),
             count=data.get("count", 0),
+            fingerprint=data.get("fingerprint"),
             created_at=data.get("created_at"),
         )
 
@@ -330,7 +350,15 @@ class IntermediateBulkEditMixin(BulkEditMixin):
         if select_across != "1":
             selection.ids = self.get_selected_ids(request)
 
-        selection.count = self.get_bulk_selection_queryset(request, selection).count()
+        queryset = self.get_bulk_selection_queryset(request, selection)
+        if selection.ids is None:
+            # select-across: track only the size, the set may be unbounded
+            selection.count = queryset.count()
+        else:
+            # ticked: remember exactly which objects are selected, so the
+            # confirmation step can tell the set apart, not only its size
+            selection.fingerprint = sorted(queryset.values_list("pk", flat=True))
+            selection.count = len(selection.fingerprint)
 
         if not selection.count:
             messages.error(
@@ -458,14 +486,43 @@ class IntermediateBulkActionView(View):
 
     def selection_changed(self):
         """
-        Whether the number of selected objects changed since the user last saw
-        it. The new number is stored, so the next page compares with this one.
+        Whether the selection changed since the user last saw it. What was seen
+        is stored, so the next page compares against this one.
+
+        A select-across selection compares only the count: it may hold any
+        number of objects, so recording every id is not affordable, and it
+        really means "everything matching the filter", recomputed on apply. A
+        ticked selection compares the ids themselves, so a change that leaves
+        the count the same -- one object drops out as another reappears -- is
+        still caught.
         """
+        if self.selection.ids is None:
+            return self._count_changed()
+        return self._membership_changed()
+
+    def _count_changed(self):
         count = self.get_selection_count()
         if count == self.selection.count:
             return False
         self._selection_changed_message(self.selection.count, count)
         self.selection.count = count
+        self._save_selection()
+        return True
+
+    def _membership_changed(self):
+        present = sorted(self.get_selection_queryset().values_list("pk", flat=True))
+        if self.selection.fingerprint is None:
+            # stored before fingerprints existed, adopt what is there as the
+            # baseline without warning
+            self.selection.fingerprint = present
+            self.selection.count = len(present)
+            self._save_selection()
+            return False
+        if present == self.selection.fingerprint:
+            return False
+        self._selection_changed_message(len(self.selection.fingerprint), len(present))
+        self.selection.fingerprint = present
+        self.selection.count = len(present)
         self._save_selection()
         return True
 
@@ -504,6 +561,7 @@ class IntermediateBulkActionView(View):
             "cancel_url": self.get_cancel_url(),
             "require_irreversible_confirmation": action.require_irreversible_confirmation,
             "selection_count": self.get_selection_count(),
+            "selection_is_across": self.selection.ids is None,
         }
         ctx.update(action.get_context())
         ctx.update(kwargs)

@@ -681,6 +681,29 @@ class TestQuerySelection(ProductBulkActionTests):
         self.assertEqual(page.context["selection_count"], 1)
         self.assertEqual(page.context["child_count"], 2)
 
+    def test_ticked_selection_change_with_same_count_is_caught(self):
+        # a ticked selection stores the exact ids last shown, so a change that
+        # keeps the count the same -- one product drops out as another
+        # reappears -- is still noticed. The count alone would not reveal it.
+        other = create_product()
+        self._seed_session("make_products_public")
+        session = self.app.session
+        bucket = session["bulk_intermediate"][self._token]
+        self.assertEqual(bucket["count"], 1)
+        # the page last showed a different product, though just as many
+        bucket["fingerprint"] = [other.pk]
+        session["bulk_intermediate"][self._token] = bucket
+        session.save()
+
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        self.assertEqual(page.context["selection_count"], 1)
+        self.assertTrue(any("selection changed" in m for m in self._messages(page)))
+
+        # once shown, the next visit is quiet
+        page = self.get(self._intermediate_url())
+        self.assertFalse(any("selection changed" in m for m in self._messages(page)))
+
 
 class TestQuerySelectionPartnerIsolation(TestSetProductPriceFlowPartnerIsolation):
     def test_select_all_holds_only_own_products(self):
