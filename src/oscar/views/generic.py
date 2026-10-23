@@ -1,8 +1,10 @@
+import copy
 import hashlib
 import time
 
 from django.contrib import messages
-from django.http import HttpResponseBase, JsonResponse
+from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpResponseBase, JsonResponse, QueryDict
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.encoding import smart_str
@@ -177,14 +179,97 @@ class BulkEditMixin:
         return self.get_queryset().filter(pk__in=ids)
 
 
+class BulkSelection:
+    """
+    The objects a pending two-step bulk action applies to.
+
+    Stored as the list's path and query rather than its object ids, so it takes
+    the same session space for ten objects or a million; ``ids`` narrows it to
+    the objects the user ticked.
+
+    To catch a selection that changed before it runs, we keep what the user last
+    saw and compare against it: ``count`` for a select-across selection, and
+    ``fingerprint`` (the sorted ids) for a ticked one, which also catches a
+    change that leaves the count the same.
+    """
+
+    def __init__(
+        self,
+        action,
+        path=None,
+        query="",
+        view_kwargs=None,
+        ids=None,
+        count=0,
+        created_at=None,
+        fingerprint=None,
+    ):
+        self.action = action
+        self.path = path
+        self.query = query
+        # URL kwargs of the list, so a list that filters on the path too can be
+        # re-resolved
+        self.view_kwargs = view_kwargs or {}
+        self.ids = ids
+        self.count = count
+        self.fingerprint = fingerprint
+        self.created_at = time.time() if created_at is None else created_at
+
+    def to_session(self):
+        return {
+            "action": self.action,
+            "path": self.path,
+            "query": self.query,
+            "view_kwargs": self.view_kwargs,
+            "ids": self.ids,
+            "count": self.count,
+            "fingerprint": self.fingerprint,
+            "created_at": self.created_at,
+        }
+
+    @classmethod
+    def from_session(cls, data):
+        if "object_ids" in data:
+            # stored before selections were queries
+            return cls(
+                data.get("action"),
+                ids=data["object_ids"],
+                count=len(data["object_ids"]),
+                fingerprint=sorted(data["object_ids"]),
+                created_at=data.get("created_at"),
+            )
+        return cls(
+            data.get("action"),
+            path=data.get("path"),
+            query=data.get("query", ""),
+            view_kwargs=data.get("view_kwargs"),
+            ids=data.get("ids"),
+            count=data.get("count", 0),
+            fingerprint=data.get("fingerprint"),
+            created_at=data.get("created_at"),
+        )
+
+    def get_token(self):
+        """
+        A short token identifying this pending action + selection.
+
+        Each pending action is stored under its own session bucket keyed by
+        this token, so concurrent tabs don't overwrite each other's selection.
+        """
+        ids = "*" if self.ids is None else ",".join(str(pk) for pk in sorted(self.ids))
+        raw = "%s:%s:%s:%s" % (self.action, self.path, self.query, ids)
+        return hashlib.sha256(raw.encode()).hexdigest()[:12]
+
+
 class IntermediateBulkEditMixin(BulkEditMixin):
     """
-    Extension of BulkEditMixin
-    Allows for bulk actions with an intermediate step that contains a form.
-    So the user can input extra parameters to the bulk action.
+    A list view whose bulk actions have an intermediate step -- a confirmation
+    form on which the user enters extra parameters before the action runs.
 
-    Actions with an intermediate step should be specified by
-    putting the keys from actions into intermediate_actions
+    List the two-step actions' keys in ``intermediate_actions``. The selection
+    is stored as the list's query (see ``BulkSelection``) and re-resolved by the
+    confirmation view through ``resolve_bulk_selection``, so all of the list's
+    filtering applies.
     """
 
     intermediate_actions = {}
@@ -192,7 +277,12 @@ class IntermediateBulkEditMixin(BulkEditMixin):
     bulk_intermediate_token_param = settings.OSCAR_BULK_INTERMEDIATE_TOKEN_PARAM
     bulk_intermediate_ttl_seconds = settings.OSCAR_BULK_INTERMEDIATE_SESSION_TTL_SECONDS
 
-    max_bulk_intermediate_ids = settings.OSCAR_MAX_BULK_INTERMEDIATE_IDS
+    # the most objects a selection may hold, None for no limit. Ticked objects
+    # need no limit of their own: they are at most one page of the list.
+    max_bulk_selection = getattr(settings, "OSCAR_MAX_BULK_SELECTION", None)
+
+    # query parameters of the list that don't change which objects it holds
+    bulk_selection_ignored_params = ("page",)
 
     def get_intermediate_url(self, request, action):
         raise NotImplementedError(
@@ -208,53 +298,120 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
         return super().post(request, *args, **kwargs)
 
-    def get_bulk_intermediate_token(self, action, object_ids):
-        """
-        Return a short token identifying this pending action + selection.
+    def get_bulk_selection_query(self, request):
+        query = request.GET.copy()
+        for param in self.bulk_selection_ignored_params:
+            query.pop(param, None)
+        return query.urlencode()
 
-        Each pending action is stored under its own session bucket keyed by
-        this token, so concurrent tabs don't overwrite each other's selection.
+    @classmethod
+    def resolve_bulk_selection(cls, selection, request):
         """
-        raw = "%s:%s" % (action, ",".join(str(pk) for pk in sorted(object_ids)))
-        return hashlib.sha256(raw.encode()).hexdigest()[:12]
+        Return the objects in ``selection``, as ``request.user`` sees them on
+        the list.
+
+        It is the only method the two-step machinery needs from a list view:
+        the selection and the current request in, a queryset out, with how the
+        list is built kept private. Override it when a list view resolves its
+        selection differently from the default below.
+
+        The default rebuilds the list view and runs its ``get_queryset`` with
+        the selection's stored filters (its query string and URL kwargs), so any
+        filtering the list does on the request -- including a project's own
+        overrides -- is applied. A list view is re-usable without changes; the
+        reason to override this method is to resolve a selection some way other
+        than re-running ``get_queryset``.
+        """
+        view = cls._list_view_for_selection(selection, request)
+        if selection.ids is None:
+            return view.get_select_across_queryset()
+        return view.get_selected_queryset(selection.ids)
+
+    @classmethod
+    def _list_view_for_selection(cls, selection, request):
+        """
+        Rebuild the list view as it was when the selection was made.
+
+        The current request is copied and only the fields that carry the
+        selection are overridden -- its query string, path and URL kwargs, with
+        the method forced to GET and the POST data dropped. Everything else the
+        list's ``get_queryset`` may read (user, session, basket, strategy,
+        headers) is the live request's, so the queryset resolves just as the
+        list would have built it for this request.
+        """
+        list_request = copy.copy(request)
+        list_request.method = "GET"
+        list_request.path = selection.path or "/"
+        list_request.GET = QueryDict(selection.query)
+        list_request.POST = QueryDict()
+        view = cls()
+        view.setup(list_request, **selection.view_kwargs)
+        return view
+
+    def get_selected_queryset(self, ids):
+        """The ticked objects ``ids`` that are on the list."""
+        return self.get_select_across_queryset().filter(pk__in=ids)
+
+    def _too_many_error(self, request, count, limit):
+        messages.error(
+            request,
+            _(
+                "Too many %(object)ss selected (%(count)d). Narrow your"
+                " selection to %(limit)d or fewer and try again."
+            )
+            % {
+                "object": self.get_checkbox_object_name(),
+                "count": count,
+                "limit": limit,
+            },
+        )
+        return redirect(self.get_error_url(request))
 
     def _handle_intermediate_action(self, request, action, *args, **kwargs):
-        object_ids = self.get_selected_ids(request)
+        selection = BulkSelection(
+            action,
+            path=request.path,
+            query=self.get_bulk_selection_query(request),
+            view_kwargs=dict(self.kwargs),
+        )
 
-        if not object_ids:
+        select_across = request.POST.get(self.select_across_param, "").lower()
+        if select_across != "1":
+            selection.ids = self.get_selected_ids(request)
+
+        queryset = self.resolve_bulk_selection(selection, request)
+        if selection.ids is None:
+            # select-across: track only the size, the set may be unbounded
+            selection.count = queryset.count()
+        else:
+            # ticked: remember exactly which objects are selected, so the
+            # confirmation step can tell the set apart, not only its size
+            selection.fingerprint = sorted(queryset.values_list("pk", flat=True))
+            selection.count = len(selection.fingerprint)
+
+        if not selection.count:
             messages.error(
                 request,
                 _("You need to select some %ss") % self.get_checkbox_object_name(),
             )
             return redirect(self.get_error_url(request))
 
-        if len(object_ids) > self.max_bulk_intermediate_ids:
-            messages.error(
-                request,
-                _(
-                    "Too many %(object)ss selected (%(count)d). Narrow your"
-                    " selection to %(limit)d or fewer and try again."
-                )
-                % {
-                    "object": self.get_checkbox_object_name(),
-                    "count": len(object_ids),
-                    "limit": self.max_bulk_intermediate_ids,
-                },
+        if (
+            self.max_bulk_selection is not None
+            and selection.count > self.max_bulk_selection
+        ):
+            return self._too_many_error(
+                request, selection.count, self.max_bulk_selection
             )
-            return redirect(self.get_error_url(request))
 
-        token = self.get_bulk_intermediate_token(action, object_ids)
+        token = selection.get_token()
         _prune_expired_bulk_intermediate_buckets(
             request.session,
             self.bulk_intermediate_session_key,
             self.bulk_intermediate_ttl_seconds,
         )
         buckets = request.session.setdefault(self.bulk_intermediate_session_key, {})
-        buckets[token] = {
-            "action": action,
-            "created_at": time.time(),
-            "object_ids": object_ids,
-        }
+        buckets[token] = selection.to_session()
         request.session.modified = True
 
         url = self.get_intermediate_url(request, action)
@@ -263,14 +420,17 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
 class IntermediateBulkActionView(View):
     """
-    Generic view for the confirmation step of a two-step bulk action.
-    Pair with ``IntermediateBulkEditMixin`` on the originating list view.
+    Confirmation step of a two-step bulk action; pair with
+    ``IntermediateBulkEditMixin`` on the originating list view.
 
-    Reads the pending action and selected IDs from the session, renders
-    the action's template with its form on GET, and dispatches to
-    ``execute_action`` on POST.
+    Reads the pending action and selection from the session, renders the
+    action's form on GET, and runs ``execute_action`` on POST. The selected
+    objects are re-resolved through the list view (see ``get_list_view_class``).
+    If the selection changed since the user last saw it, a GET warns and a POST
+    redraws instead of executing, so the action only runs on what was confirmed.
 
-    Subclasses must implement ``get_cancel_url``, ``get_success_url`` and ``get_objects``.
+    Subclasses must implement ``get_cancel_url``, ``get_success_url`` and
+    ``get_objects``.
     """
 
     intermediate_actions = {}
@@ -278,11 +438,16 @@ class IntermediateBulkActionView(View):
     bulk_intermediate_token_param = "key"
     bulk_intermediate_ttl_seconds = 60 * 60 * 24
 
+    #: the list view the selection was made on, used to resolve it again
+    list_view_class = None
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._action = None
-        self._selected_ids = []
         self._token = None
+        self.selection = None
+        self._selection_queryset = None
+        self._selection_count = None
 
     def dispatch(self, request, *args, **kwargs):
         self._token = request.GET.get(self.bulk_intermediate_token_param)
@@ -299,12 +464,12 @@ class IntermediateBulkActionView(View):
             self.bulk_intermediate_session_key,
             self.bulk_intermediate_ttl_seconds,
         )
-        session_data = session_data or {}
-        self._action = session_data.get("action")
-        self._selected_ids = session_data.get("object_ids", [])
+        if session_data is not None:
+            self.selection = BulkSelection.from_session(session_data)
+            self._action = self.selection.action
         if (
-            not self._action
-            or not self._selected_ids
+            self.selection is None
+            or not self._action
             or self._action not in self.intermediate_actions
         ):
             messages.warning(
@@ -319,6 +484,85 @@ class IntermediateBulkActionView(View):
 
     def get_success_url(self):
         raise NotImplementedError
+
+    def get_list_view_class(self):
+        """The list view the selection was made on."""
+        if self.list_view_class is None:
+            raise ImproperlyConfigured(
+                "%s must set list_view_class" % type(self).__name__
+            )
+        return self.list_view_class
+
+    def get_selection_queryset(self):
+        """The selected objects, as they are now."""
+        if self._selection_queryset is None:
+            self._selection_queryset = (
+                self.get_list_view_class().resolve_bulk_selection(
+                    self.selection, self.request
+                )
+            )
+        return self._selection_queryset
+
+    def get_selection_count(self):
+        if self._selection_count is None:
+            self._selection_count = self.get_selection_queryset().count()
+        return self._selection_count
+
+    def selection_changed(self):
+        """
+        Whether the selection changed since the user last saw it, storing what
+        is seen now so the next page compares against it.
+
+        A select-across selection compares only the count (it may be any size,
+        and means "everything matching the filter"); a ticked selection compares
+        the ids, so a change that keeps the count the same is still caught.
+        """
+        if self.selection.ids is None:
+            return self._count_changed()
+        return self._membership_changed()
+
+    def _count_changed(self):
+        count = self.get_selection_count()
+        if count == self.selection.count:
+            return False
+        self._selection_changed_message(self.selection.count, count)
+        self.selection.count = count
+        self._save_selection()
+        return True
+
+    def _membership_changed(self):
+        present = sorted(self.get_selection_queryset().values_list("pk", flat=True))
+        if self.selection.fingerprint is None:
+            # stored before fingerprints existed, adopt what is there as the
+            # baseline without warning
+            self.selection.fingerprint = present
+            self.selection.count = len(present)
+            self._save_selection()
+            return False
+        if present == self.selection.fingerprint:
+            return False
+        self._selection_changed_message(len(self.selection.fingerprint), len(present))
+        self.selection.fingerprint = present
+        self.selection.count = len(present)
+        self._save_selection()
+        return True
+
+    def _selection_changed_message(self, old_count, new_count):
+        messages.warning(
+            self.request,
+            _(
+                "The selection changed since it was made: it held %(old)d"
+                " items and now holds %(new)d. Check the selection before you"
+                " continue."
+            )
+            % {"old": old_count, "new": new_count},
+        )
+
+    def _save_selection(self):
+        buckets = self.request.session.get(self.bulk_intermediate_session_key, {})
+        buckets[self._token] = self.selection.to_session()
+        self.request.session[self.bulk_intermediate_session_key] = buckets
+        self.request.session.modified = True
 
     def get_form_kwargs(self):
         return {}
@@ -337,6 +581,8 @@ class IntermediateBulkActionView(View):
             "action_label": action.label,
             "cancel_url": self.get_cancel_url(),
             "require_irreversible_confirmation": action.require_irreversible_confirmation,
+            "selection_count": self.get_selection_count(),
+            "selection_is_across": self.selection.ids is None,
         }
         ctx.update(action.get_context())
         ctx.update(kwargs)
@@ -346,11 +592,15 @@ class IntermediateBulkActionView(View):
         return self.intermediate_actions[self._action].template
 
     def get(self, request, *args, **kwargs):
+        self.selection_changed()
         return TemplateResponse(
             request, self.get_template_name(), self.get_context_data()
         )
 
     def post(self, request, *args, **kwargs):
+        if self.selection_changed():
+            # never execute on a selection the user hasn't seen
+            return redirect(request.get_full_path())
         form = self.get_form(data=request.POST)
         if not form.is_valid():
             return TemplateResponse(

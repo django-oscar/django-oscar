@@ -6,6 +6,11 @@
     <strong>{% trans "Warning" %}:</strong>
     {% trans "This action will update <strong>all existing stockrecords</strong> of each selected product within the selected partners." %}
 </div>
+{% if not can_display_products %}
+<div class="alert alert-info" id="bulk-price-not-listed">
+    {% blocktrans with count=displayable_count limit=max_displayable_products %}This selection holds {{ count }} products. Products are only listed one by one when there are {{ limit }} or fewer, so you can't enter a specific price per product here. The new price, amount or percentage you set applies to all products of the types you include.{% endblocktrans %}
+</div>
+{% endif %}
 {% endblock prepend_form %}
 
 {% block form_fields %}

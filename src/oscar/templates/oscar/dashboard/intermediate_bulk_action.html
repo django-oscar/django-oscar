@@ -17,6 +17,18 @@
         <h1>{% trans "Confirm" %}: {{ action_label }}</h1>
     </div>
 
+    {% block selection_summary %}
+    {% if selection_count %}
+    <div class="alert alert-info" id="bulk-selection-summary">
+        {% if selection_is_across %}
+        {% blocktrans count count=selection_count %}This action will apply to the {{ count }} item that currently matches your selection. The exact set is recalculated when you apply, so it reflects any change made in the meantime.{% plural %}This action will apply to the {{ count }} items that currently match your selection. The exact set is recalculated when you apply, so it reflects any changes made in the meantime.{% endblocktrans %}
+        {% else %}
+        {% blocktrans count count=selection_count %}This action will apply to the {{ count }} item you selected.{% plural %}This action will apply to the {{ count }} items you selected.{% endblocktrans %}
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endblock selection_summary %}
+
     {% block prepend_form %}{% endblock prepend_form %}
 
     <form method="post">

@@ -1,6 +1,7 @@
+import time
 from decimal import Decimal
 from unittest.mock import patch
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse
 
 from django.urls import reverse
 
@@ -511,3 +512,209 @@ class TestSetProductPriceFlowPartnerIsolation(WebTestCase):
         self.assertEqual(
             products_by_pk[self.child_own.pk].cheapest_price, Decimal("5.00")
         )
+
+
+class TestQuerySelection(ProductBulkActionTests):
+    """
+    "Select all" stores the list's query instead of the product ids, so a
+    selection can hold any number of products.
+    """
+
+    list_view_path = "oscar.apps.dashboard.catalogue.views.ProductListView"
+    display_limit_path = "oscar.apps.dashboard.catalogue.views.ProductBulkActionConfirmView.max_displayable_products"
+
+    def _select_all(self, action="make_products_public", query=""):
+        url = reverse("dashboard:catalogue-product-list") + query
+        response = self.post(url, params={"action": action, "select_across": "1"})
+        self._token = self._token_from_redirect(response)
+        return response
+
+    def _session_bucket(self):
+        return self.app.session["bulk_intermediate"][self._token]
+
+    def _messages(self, page):
+        return [str(message) for message in page.context["messages"]]
+
+    def test_select_all(self):
+        standalones = [create_product(is_public=False) for _ in range(3)]
+        self._select_all()
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        self.assertEqual(page.context["selection_count"], 4)
+
+        self.post(
+            self._intermediate_url(),
+            params={"select_all_standalones": "on", "select_all_children": "on"},
+        )
+        for product in standalones + [self.child1, self.child2]:
+            product.refresh_from_db()
+            self.assertTrue(product.is_public)
+
+    def test_selection_follows_the_list_search(self):
+        other = create_product(title="Something else")
+        self._select_all(query="?" + urlencode({"title": self.parent.title}))
+        page = self.get(self._intermediate_url())
+        self.assertEqual(page.context["selection_count"], 1)
+        self.assertEqual(page.context["parent_count"], 1)
+        self.assertEqual(page.context["standalone_count"], 0)
+        self.assertNotIn(
+            other, [row["product"] for row in page.context["display_rows"]]
+        )
+
+    def test_ticked_products_are_stored_as_ids(self):
+        self._seed_session("make_products_public")
+        bucket = self._session_bucket()
+        self.assertEqual(bucket["ids"], [self.parent.pk])
+
+    def test_a_full_page_can_be_ticked(self):
+        # ticked products are not capped; they are at most one page of the list
+        others = [create_product() for _ in range(3)]
+        ticked = [self.parent.pk] + [product.pk for product in others]
+        response = self.post(
+            reverse("dashboard:catalogue-product-list"),
+            params={"action": "make_products_public", "selected_product": ticked},
+        )
+        self._token = self._token_from_redirect(response)
+        self.assertEqual(sorted(self._session_bucket()["ids"]), sorted(ticked))
+        page = self.get(self._intermediate_url())
+        self.assertEqual(page.context["selection_count"], 4)
+
+    def test_max_bulk_selection(self):
+        create_product()
+        with patch("%s.max_bulk_selection" % self.list_view_path, new=1):
+            response = self._select_all()
+        page = response.follow()
+        self.assertTrue(any("Too many" in m for m in self._messages(page)))
+        self.assertIsNone(self._token)
+
+    def test_small_selection_is_listed(self):
+        self._select_all(action="set_product_price")
+        page = self.get(self._intermediate_url())
+        self.assertTrue(page.context["can_display_products"])
+        self.assertTrue(page.context["display_rows"])
+        self.assertNotContains(page, 'id="bulk-price-not-listed"')
+        self.assertNotContains(page, 'id="bulk-list-limit-hint"')
+
+    def test_large_selection_is_selected_by_type(self):
+        self._select_all(action="set_product_price")
+        with patch(self.display_limit_path, new=1):
+            page = self.get(self._intermediate_url())
+        self.assertFalse(page.context["can_display_products"])
+        self.assertEqual(page.context["display_rows"], [])
+        self.assertContains(page, "too many to list")
+        self.assertContains(page, "listed one by one up to 1 products")
+        self.assertContains(
+            page, "<code>OSCAR_PRODUCT_BULK_ACTION_MAX_DISPLAYABLE_PRODUCTS</code>"
+        )
+        # the price action explains why there are no specific prices
+        self.assertContains(page, 'id="bulk-price-not-listed"')
+        self.assertContains(page, "when there are 1 or fewer")
+        # no specific price fields for products that aren't listed
+        self.assertFalse(
+            [name for name in page.context["form"].fields if name.startswith("price_")]
+        )
+
+    def test_large_selection_price(self):
+        self._select_all(action="set_product_price")
+        with patch(self.display_limit_path, new=1):
+            response = self.post(
+                self._intermediate_url(),
+                params={
+                    "select_all_children": "on",
+                    "partners": [self.partner.pk],
+                    "new_price": "7.50",
+                },
+            )
+        self.assertRedirectsTo(response, "dashboard:catalogue-product-list")
+        for child in (self.child1, self.child2):
+            self.assertEqual(
+                child.stockrecords.get().price, Decimal("7.50"), child.title
+            )
+
+    def test_changed_selection_is_shown(self):
+        self._select_all()
+        create_product()
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        self.assertTrue(any("selection changed" in m for m in self._messages(page)))
+        self.assertEqual(page.context["selection_count"], 2)
+        self.assertEqual(self._session_bucket()["count"], 2)
+
+        # the next page compares with what was shown
+        page = self.get(self._intermediate_url())
+        self.assertFalse(any("selection changed" in m for m in self._messages(page)))
+
+    def test_changed_selection_is_not_executed(self):
+        self._select_all()
+        self.get(self._intermediate_url())
+        added = create_product(is_public=False)
+
+        response = self.post(
+            self._intermediate_url(), params={"select_all_standalones": "on"}
+        )
+        self.assertEqual(
+            response.location, self._intermediate_url().replace("http://testserver", "")
+        )
+        added.refresh_from_db()
+        self.assertFalse(added.is_public)
+        page = response.follow()
+        self.assertTrue(any("selection changed" in m for m in self._messages(page)))
+
+        # submitting again executes on the selection that was shown
+        self.post(self._intermediate_url(), params={"select_all_standalones": "on"})
+        added.refresh_from_db()
+        self.assertTrue(added.is_public)
+
+    def test_selection_stored_as_ids_before_new_query_based_change(self):
+        self._seed_session("make_products_public")
+        session = self.app.session
+        session["bulk_intermediate"][self._token] = {
+            "action": "make_products_public",
+            "created_at": time.time(),
+            "object_ids": [self.parent.pk],
+        }
+        session.save()
+
+        # without a path, the selection was made on the list at the cancel url
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        self.assertEqual(page.context["selection_count"], 1)
+        self.assertEqual(page.context["child_count"], 2)
+
+    def test_ticked_selection_change_with_same_count_is_caught(self):
+        # a ticked selection stores the exact ids last shown, so a change that
+        # keeps the count the same -- one product drops out as another
+        # reappears -- is still noticed. The count alone would not reveal it.
+        other = create_product()
+        self._seed_session("make_products_public")
+        session = self.app.session
+        bucket = session["bulk_intermediate"][self._token]
+        self.assertEqual(bucket["count"], 1)
+        # the page last showed a different product, though just as many
+        bucket["fingerprint"] = [other.pk]
+        session["bulk_intermediate"][self._token] = bucket
+        session.save()
+
+        page = self.get(self._intermediate_url())
+        self.assertIsOk(page)
+        self.assertEqual(page.context["selection_count"], 1)
+        self.assertTrue(any("selection changed" in m for m in self._messages(page)))
+
+        # once shown, the next visit is quiet
+        page = self.get(self._intermediate_url())
+        self.assertFalse(any("selection changed" in m for m in self._messages(page)))
+
+
+class TestQuerySelectionPartnerIsolation(TestSetProductPriceFlowPartnerIsolation):
+    def test_select_all_holds_only_own_products(self):
+        foreign = create_product()
+        create_stockrecord(foreign, partner_name="Foreign Partner")
+        response = self.post(
+            reverse("dashboard:catalogue-product-list"),
+            params={"action": "set_product_price", "select_across": "1"},
+        )
+        self._token = self._token_from_redirect(response)
+        page = self.get(self._intermediate_url())
+        self.assertEqual(page.context["selection_count"], 1)
+        self.assertEqual(page.context["standalone_count"], 0)
+        self.assertEqual(page.context["child_count"], 1)

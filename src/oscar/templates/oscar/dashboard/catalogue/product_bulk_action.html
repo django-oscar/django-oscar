@@ -66,6 +66,15 @@
     </div>
     {% endif %}
 
+    {% if not can_display_products %}
+    <p class="text-muted px-3 py-2 mb-0">
+        {% blocktrans count count=displayable_count %}This selection holds {{ count }} product, too many to list. Choose above which types of products to include.{% plural %}This selection holds {{ count }} products, too many to list. Choose above which types of products to include.{% endblocktrans %}
+        <br>
+        <small id="bulk-list-limit-hint">
+            {% blocktrans with limit=max_displayable_products setting="<code>OSCAR_PRODUCT_BULK_ACTION_MAX_DISPLAYABLE_PRODUCTS</code>" %}Products are listed one by one up to {{ limit }} products. This limit is set by the {{ setting }} setting.{% endblocktrans %}
+        </small>
+    </p>
+    {% else %}
     <div class="table-responsive">
         <table class="table table-sm mb-0">
             <thead>
@@ -130,6 +139,7 @@
             {% endif %}
         </table>
     </div>
+    {% endif %}
 </div>
 {% endblock form_content %}
 
