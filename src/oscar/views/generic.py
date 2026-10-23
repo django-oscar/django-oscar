@@ -183,19 +183,14 @@ class BulkSelection:
     """
     The objects a pending two-step bulk action applies to.
 
-    A selection is the path and query string of the list view it was made on, so
-    it takes the same space in the session whether it holds ten objects or a
-    million.
-    When the user ticked objects on the list, ``ids`` narrows the query to those.
+    Stored as the list's path and query rather than its object ids, so it takes
+    the same session space for ten objects or a million; ``ids`` narrows it to
+    the objects the user ticked.
 
-    To notice when the selection changed before it is executed, we keep what
-    the user last saw: ``count`` always, and for a ticked selection also
-    ``fingerprint``, the sorted ids that were present. Comparing the count is
-    enough for a select-across selection (it may hold any number of objects, so
-    recording every id is not affordable, and it really means "everything
-    matching the filter"), but a ticked selection compares the ids themselves,
-    so a change that leaves the count the same -- one object drops out as
-    another reappears -- is still caught.
+    To catch a selection that changed before it runs, we keep what the user last
+    saw and compare against it: ``count`` for a select-across selection, and
+    ``fingerprint`` (the sorted ids) for a ticked one, which also catches a
+    change that leaves the count the same.
     """
 
     def __init__(
@@ -203,6 +198,7 @@ class BulkSelection:
         action,
         path=None,
         query="",
+        view_kwargs=None,
         ids=None,
         count=0,
         created_at=None,
@@ -211,6 +207,9 @@ class BulkSelection:
         self.action = action
         self.path = path
         self.query = query
+        # URL kwargs of the list, so a list that filters on the path too can be
+        # re-resolved
+        self.view_kwargs = view_kwargs or {}
         self.ids = ids
         self.count = count
         self.fingerprint = fingerprint
@@ -221,6 +220,7 @@ class BulkSelection:
             "action": self.action,
             "path": self.path,
             "query": self.query,
+            "view_kwargs": self.view_kwargs,
             "ids": self.ids,
             "count": self.count,
             "fingerprint": self.fingerprint,
@@ -242,6 +242,7 @@ class BulkSelection:
             data.get("action"),
             path=data.get("path"),
             query=data.get("query", ""),
+            view_kwargs=data.get("view_kwargs"),
             ids=data.get("ids"),
             count=data.get("count", 0),
             fingerprint=data.get("fingerprint"),
@@ -262,16 +263,13 @@ class BulkSelection:
 
 class IntermediateBulkEditMixin(BulkEditMixin):
     """
-    Extension of BulkEditMixin
-    Allows for bulk actions with an intermediate step that contains a form.
-    So the user can input extra parameters to the bulk action.
+    A list view whose bulk actions have an intermediate step -- a confirmation
+    form on which the user enters extra parameters before the action runs.
 
-    Actions with an intermediate step should be specified by
-    putting the keys from actions into intermediate_actions
-
-    The selection is stored as the list's query, see ``BulkSelection``. The
-    intermediate view gets the objects back from this view through
-    ``get_bulk_selection_queryset``, so all filtering of the list applies.
+    List the two-step actions' keys in ``intermediate_actions``. The selection
+    is stored as the list's query (see ``BulkSelection``) and re-resolved by the
+    confirmation view through ``resolve_bulk_selection``, so all of the list's
+    filtering applies.
     """
 
     intermediate_actions = {}
@@ -307,20 +305,48 @@ class IntermediateBulkEditMixin(BulkEditMixin):
         return query.urlencode()
 
     @classmethod
-    def get_bulk_selection_queryset(cls, request, selection):
+    def resolve_bulk_selection(cls, selection, request):
         """
-        The objects in ``selection``, as ``request.user`` sees them now on the
-        list with the selection's query.
+        Return the objects in ``selection``, as ``request.user`` sees them on
+        the list.
+
+        It is the only method the two-step machinery needs from a list view:
+        the selection and the current request in, a queryset out, with how the
+        list is built kept private. Override it when a list view resolves its
+        selection differently from the default below.
+
+        The default rebuilds the list view and runs its ``get_queryset`` with
+        the selection's stored filters (its query string and URL kwargs), so any
+        filtering the list does on the request -- including a project's own
+        overrides -- is applied. A list view is re-usable without changes; the
+        reason to override this method is to resolve a selection some way other
+        than re-running ``get_queryset``.
         """
-        list_request = copy.copy(request)
-        list_request.method = "GET"
-        list_request.GET = QueryDict(selection.query)
-        list_request.POST = QueryDict()
-        view = cls()
-        view.setup(list_request)
+        view = cls._list_view_for_selection(selection, request)
         if selection.ids is None:
             return view.get_select_across_queryset()
         return view.get_selected_queryset(selection.ids)
+
+    @classmethod
+    def _list_view_for_selection(cls, selection, request):
+        """
+        Rebuild the list view as it was when the selection was made.
+
+        The current request is copied and only the fields that carry the
+        selection are overridden -- its query string, path and URL kwargs, with
+        the method forced to GET and the POST data dropped. Everything else the
+        list's ``get_queryset`` may read (user, session, basket, strategy,
+        headers) is the live request's, so the queryset resolves just as the
+        list would have built it for this request.
+        """
+        list_request = copy.copy(request)
+        list_request.method = "GET"
+        list_request.path = selection.path or "/"
+        list_request.GET = QueryDict(selection.query)
+        list_request.POST = QueryDict()
+        view = cls()
+        view.setup(list_request, **selection.view_kwargs)
+        return view
 
     def get_selected_queryset(self, ids):
         """The ticked objects ``ids`` that are on the list."""
@@ -343,14 +369,17 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
     def _handle_intermediate_action(self, request, action, *args, **kwargs):
         selection = BulkSelection(
-            action, path=request.path, query=self.get_bulk_selection_query(request)
+            action,
+            path=request.path,
+            query=self.get_bulk_selection_query(request),
+            view_kwargs=dict(self.kwargs),
         )
 
         select_across = request.POST.get(self.select_across_param, "").lower()
         if select_across != "1":
             selection.ids = self.get_selected_ids(request)
 
-        queryset = self.get_bulk_selection_queryset(request, selection)
+        queryset = self.resolve_bulk_selection(selection, request)
         if selection.ids is None:
             # select-across: track only the size, the set may be unbounded
             selection.count = queryset.count()
@@ -391,19 +420,14 @@ class IntermediateBulkEditMixin(BulkEditMixin):
 
 class IntermediateBulkActionView(View):
     """
-    Generic view for the confirmation step of a two-step bulk action.
-    Pair with ``IntermediateBulkEditMixin`` on the originating list view.
+    Confirmation step of a two-step bulk action; pair with
+    ``IntermediateBulkEditMixin`` on the originating list view.
 
-    Reads the pending action and selection from the session, renders
-    the action's template with its form on GET, and dispatches to
-    ``execute_action`` on POST.
-
-    When the number of selected objects changed since the user last saw it,
-    a GET shows a message, and a POST shows the page again instead of
-    executing, so the user confirms what is actually selected.
-
-    The selected objects are found again through the list view the selection
-    was made on, see ``get_list_view_class``.
+    Reads the pending action and selection from the session, renders the
+    action's form on GET, and runs ``execute_action`` on POST. The selected
+    objects are re-resolved through the list view (see ``get_list_view_class``).
+    If the selection changed since the user last saw it, a GET warns and a POST
+    redraws instead of executing, so the action only runs on what was confirmed.
 
     Subclasses must implement ``get_cancel_url``, ``get_success_url`` and
     ``get_objects``.
@@ -473,8 +497,8 @@ class IntermediateBulkActionView(View):
         """The selected objects, as they are now."""
         if self._selection_queryset is None:
             self._selection_queryset = (
-                self.get_list_view_class().get_bulk_selection_queryset(
-                    self.request, self.selection
+                self.get_list_view_class().resolve_bulk_selection(
+                    self.selection, self.request
                 )
             )
         return self._selection_queryset
@@ -486,15 +510,12 @@ class IntermediateBulkActionView(View):
 
     def selection_changed(self):
         """
-        Whether the selection changed since the user last saw it. What was seen
-        is stored, so the next page compares against this one.
+        Whether the selection changed since the user last saw it, storing what
+        is seen now so the next page compares against it.
 
-        A select-across selection compares only the count: it may hold any
-        number of objects, so recording every id is not affordable, and it
-        really means "everything matching the filter", recomputed on apply. A
-        ticked selection compares the ids themselves, so a change that leaves
-        the count the same -- one object drops out as another reappears -- is
-        still caught.
+        A select-across selection compares only the count (it may be any size,
+        and means "everything matching the filter"); a ticked selection compares
+        the ids, so a change that keeps the count the same is still caught.
         """
         if self.selection.ids is None:
             return self._count_changed()
