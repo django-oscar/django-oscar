@@ -10,4 +10,4 @@ class VoucherConfig(OscarConfig):
 
     def ready(self):
         # pylint: disable=unused-import
-        from . import receivers
+        pass

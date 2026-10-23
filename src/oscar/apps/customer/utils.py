@@ -47,6 +47,14 @@ class CustomerDispatcher:
         )
         self.dispatcher.dispatch_user_messages(user, messages)
 
+    EMAIL_CHANGE_VERIFY_EVENT_CODE = "EMAIL_CHANGE_VERIFY"
+
+    def send_email_change_verify_email_for_user(self, user, extra_context):
+        messages = self.dispatcher.get_messages(
+            self.EMAIL_CHANGE_VERIFY_EVENT_CODE, extra_context
+        )
+        self.dispatcher.dispatch_user_messages(user, messages)
+
 
 def get_password_reset_url(user, token_generator=default_token_generator):
     """
