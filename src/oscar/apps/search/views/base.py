@@ -26,6 +26,11 @@ class BaseSearchView(BaseFacetedSearchView):
         if self.queryset.query.backend.include_spelling:
             # Note, this triggers an extra call to the search backend
             suggestion = form.get_suggestion()
+            if suggestion is None and context.get("query"):
+                # The form spellchecks its own queryset, which does not carry
+                # the query.  Solr only returns a suggestion for the query that
+                # actually ran, so fall back to the queryset the view searched.
+                suggestion = self.queryset.spelling_suggestion()
             # An invalid form does not provide a query to compare against.
             if suggestion != context.get("query"):
                 context["suggestion"] = suggestion
