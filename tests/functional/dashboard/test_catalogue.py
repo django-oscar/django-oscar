@@ -146,6 +146,24 @@ class TestCatalogueViews(WebTestCase):
         b.refresh_from_db()
         self.assertFalse(b.is_public)
 
+    def test_product_lookup_includes_child_products(self):
+        parent = create_product(title="Lookup shirt", structure="parent")
+        child = create_product(title="Lookup shirt small", parent=parent)
+        hidden = create_product(title="Lookup shirt hidden", is_public=False)
+        url = reverse("dashboard:catalogue-product-lookup")
+
+        results = self.get(url, params={"q": child.title}).json["results"]
+        self.assertIn(child.pk, [r["id"] for r in results])
+
+        results = self.get(url, params={"q": "Lookup shirt"}).json["results"]
+        ids = [r["id"] for r in results]
+        self.assertIn(parent.pk, ids)
+        self.assertIn(child.pk, ids)
+        self.assertNotIn(hidden.pk, ids)
+
+        results = self.get(url, params={"initial": child.pk}).json["results"]
+        self.assertEqual([r["id"] for r in results], [child.pk])
+
 
 class TestAStaffUser(WebTestCase):
     is_staff = True
