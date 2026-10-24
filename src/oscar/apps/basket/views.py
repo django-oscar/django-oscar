@@ -218,7 +218,9 @@ class BasketView(ModelFormSetView):
             ctx = self.get_context_data(formset=formset, basket=self.request.basket)
             return self.json_response(ctx, flash_messages)
 
-        BasketMessageGenerator().apply_messages(self.request, offers_before)
+        BasketMessageGenerator().apply_messages(
+            self.request, offers_before, include_buttons=False
+        )
 
         return response
 
