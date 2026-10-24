@@ -192,11 +192,14 @@ class BasketView(ModelFormSetView):
 
         # If AJAX submission, don't redirect but reload the basket content HTML
         if is_ajax(self.request):
-            # Reload basket and apply offers again
-            self.request.basket = get_model("basket", "Basket").objects.get(
-                id=self.request.basket.id
-            )
-            self.request.basket.strategy = self.request.strategy
+            # Reload basket and apply offers again. An anonymous user whose
+            # basket cookie has expired gets a new, unsaved basket, which
+            # can't be reloaded from the database.
+            if self.request.basket.id is not None:
+                self.request.basket = get_model("basket", "Basket").objects.get(
+                    id=self.request.basket.id
+                )
+                self.request.basket.strategy = self.request.strategy
             Applicator().apply(self.request.basket, self.request.user, self.request)
             offers_after = self.request.basket.applied_offers()
 
