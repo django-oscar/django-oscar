@@ -456,7 +456,7 @@ class AbstractConditionalOffer(models.Model):
             restrictions.append({"description": desc, "is_satisfied": True})
 
         if self.max_basket_applications:
-            if self.max_user_applications == 1:
+            if self.max_basket_applications == 1:
                 desc = _("Limited to 1 use per basket")
             else:
                 desc = _("Limited to %(total)d uses per basket") % {
