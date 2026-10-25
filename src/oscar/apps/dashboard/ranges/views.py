@@ -137,6 +137,9 @@ class RangeProductListView(BulkEditMixin, ListView):
         ctx = super().get_context_data(**kwargs)
         product_range = self.get_product_range()
         ctx["range"] = product_range
+        ctx["products_effectively_excluded"] = (
+            product_range.get_products_effectively_excluded()
+        )
         if "form" not in ctx:
             ctx["form"] = self.form_class(
                 product_range,

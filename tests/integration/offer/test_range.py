@@ -387,3 +387,88 @@ class TestRangeQuerySet(TestCase):
             0,
             "No ranges should contain child2 after explicitly removing it from the only range that contained it",
         )
+
+
+class TestExcludedCategoryInPartialRange(TestCase):
+    """
+    Tests for bug #4479 — excluded_categories should remove products from
+    all_products() even when includes_all_products=False.
+    """
+
+    def setUp(self):
+        self.range = models.Range.objects.create(
+            name="Partial range with excluded category",
+            includes_all_products=False,
+        )
+        self.included_category = catalogue_models.Category.add_root(name="Sneakers")
+        self.excluded_category = catalogue_models.Category.add_root(name="Nike")
+
+        self.product_included = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=self.product_included, category=self.included_category
+        )
+
+        self.product_excluded = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=self.product_excluded, category=self.excluded_category
+        )
+
+        self.range.included_categories.add(self.included_category)
+        self.range.excluded_categories.add(self.excluded_category)
+
+    def test_excluded_category_product_not_in_all_products(self):
+        all_products = self.range.all_products()
+        self.assertIn(self.product_included, all_products)
+        self.assertNotIn(self.product_excluded, all_products)
+
+    @override_settings(OSCAR_CATALOGUE_USE_POSTGRES_MATERIALISED_VIEWS=True)
+    def test_excluded_category_product_not_in_all_products_materialised(self):
+        self.product_included.categories.add(self.included_category)
+        self.product_excluded.categories.add(self.excluded_category)
+        all_products = self.range.all_products()
+        self.assertIn(self.product_included, all_products)
+        self.assertNotIn(self.product_excluded, all_products)
+
+
+class TestGetProductsEffectivelyExcluded(TestCase):
+    """
+    Tests for get_products_effectively_excluded() — powers the dashboard
+    excluded products table (bug #4479).
+    """
+
+    def setUp(self):
+        self.range = models.Range.objects.create(
+            name="Range for exclusion display",
+            includes_all_products=False,
+        )
+        self.included_category = catalogue_models.Category.add_root(name="Footwear")
+        self.excluded_category = catalogue_models.Category.add_root(name="Boots")
+
+        self.product_included = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=self.product_included, category=self.included_category
+        )
+
+        self.product_excluded_by_category = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=self.product_excluded_by_category, category=self.excluded_category
+        )
+
+        self.product_excluded_explicitly = create_product()
+
+        self.range.included_categories.add(self.included_category)
+        self.range.excluded_categories.add(self.excluded_category)
+        self.range.excluded_products.add(self.product_excluded_explicitly)
+
+    def test_category_derived_exclusions_appear(self):
+        excluded = self.range.get_products_effectively_excluded()
+        self.assertIn(self.product_excluded_by_category, excluded)
+
+    def test_explicit_exclusions_appear(self):
+        excluded = self.range.get_products_effectively_excluded()
+        self.assertIn(self.product_excluded_explicitly, excluded)
+
+    def test_included_products_do_not_appear(self):
+        excluded = self.range.get_products_effectively_excluded()
+        self.assertNotIn(self.product_included, excluded)
+
