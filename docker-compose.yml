@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${COMPOSE_PROJECT_NAME}
+      - POSTGRES_USER=${COMPOSE_PROJECT_NAME}_user
+      - POSTGRES_PASSWORD=${COMPOSE_PROJECT_NAME}_pwd
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - DATABASE_ENGINE=django.db.backends.postgresql
+      - DATABASE_NAME=${COMPOSE_PROJECT_NAME}
+      - DATABASE_USER=${COMPOSE_PROJECT_NAME}_user
+      - DATABASE_PASSWORD=${COMPOSE_PROJECT_NAME}_pwd
+      - DATABASE_HOST=db
+    tty: true
+
+volumes:
+  postgres:
+    name: ${COMPOSE_PROJECT_NAME}_postgres
