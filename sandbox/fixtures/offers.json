@@ -120,7 +120,7 @@
         "model": "offer.benefit",
         "fields": {
             "range": null,
-            "proxy_class": "apps.offers.ChangesOwnerName",
+            "proxy_class": "oscarsandbox.apps.offers.ChangesOwnerName",
             "type": "",
             "max_affected_items": null,
             "value": null
