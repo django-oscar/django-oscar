@@ -43,9 +43,9 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -63,15 +63,15 @@ jobs:
       run: |
         coverage run --parallel --omit='*migrations*' -m pytest -x
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5.5.2
+      uses: codecov/codecov-action@v7.0.0
       with:
         fail_ci_if_error: false
   lint_python:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: '3.12'
     - name: Install dependencies
@@ -83,9 +83,9 @@ jobs:
   lint_js:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up NodeJS
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: '20'
     - name: Install dependencies
@@ -97,9 +97,9 @@ jobs:
   sandbox:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: '3.12'
     - name: Build sandbox
@@ -109,9 +109,9 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: '3.12'
     - name: Build docs
