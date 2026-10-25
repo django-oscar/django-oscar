@@ -86,7 +86,13 @@ class Applicator(object):
         for voucher in basket.vouchers.all():
             available_to_user, __ = voucher.is_available_to_user(user=user)
             if voucher.is_active() and available_to_user:
-                basket_offers = voucher.offers.all()
+                # A voucher can stay active after its offer is suspended or
+                # outside its dates. Site offers already exclude those.
+                basket_offers = [
+                    offer
+                    for offer in voucher.offers.all()
+                    if offer.is_available(user=user)
+                ]
                 for offer in basket_offers:
                     offer.set_voucher(voucher)
                 offers = list(chain(offers, basket_offers))
