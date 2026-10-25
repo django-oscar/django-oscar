@@ -978,6 +978,21 @@ class ProductLookupView(ObjectLookupView):
         return qs.filter(Q(title__icontains=term) | Q(parent__title__icontains=term))
 
 
+class PartnerLookupView(ObjectLookupView):
+    model = Partner
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        # Restrict accessible partners for non-staff users, matching
+        # StockRecordForm.
+        if not self.request.user.is_staff:
+            qs = qs.filter(users=self.request.user)
+        return qs
+
+    def lookup_filter(self, qs, term):
+        return qs.filter(name__icontains=term)
+
+
 class ProductClassCreateUpdateView(generic.UpdateView):
     template_name = "oscar/dashboard/catalogue/product_class_form.html"
     model = ProductClass
