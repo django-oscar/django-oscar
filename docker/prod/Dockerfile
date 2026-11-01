@@ -38,6 +38,7 @@ RUN pip install /wheels/*.whl \
         pycountry \
         "djangorestframework>=3.15,<4" \
         "django-oscar-api>=3.3,<3.4" \
+        "stripe>=12,<17" \
         "gunicorn>=23,<24" \
     && rm -rf /wheels
 
