@@ -9,6 +9,7 @@ from oscar.core.loading import get_model
 from oscar.test.basket import add_product
 from oscar.test.factories import (
     BasketFactory,
+    CountryFactory,
     UserAddressFactory,
     create_order,
     create_product,
@@ -249,3 +250,64 @@ class ProductReviewApiTest(TestCase):
 
     def test_my_reviews_require_authentication(self):
         self.assertEqual(self.client.get(reverse("api-my-reviews")).status_code, 401)
+
+
+class UserAddressApiTest(TestCase):
+    """Address book edited from the app (oscarapi /api/useraddresses/)"""
+
+    def setUp(self):
+        CountryFactory(iso_3166_1_a2="FR", printable_name="France")
+        self.user = User.objects.create_user("jdoe", "jdoe@example.com", "s3cret-pass")
+        self.auth = {
+            "HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=self.user).key}"
+        }
+        self.address = {
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "line1": "1 rue de la Paix",
+            "line4": "Paris",
+            "postcode": "75002",
+            "country": "http://testserver" + reverse("country-detail", args=["FR"]),
+            "is_default_for_shipping": True,
+        }
+
+    def post(self, data):
+        return self.client.post(
+            reverse("useraddress-list"), data, content_type="application/json", **self.auth
+        )
+
+    def test_create_update_and_delete_an_address(self):
+        created = self.post(self.address)
+        self.assertEqual(created.status_code, 201)
+        url = reverse("useraddress-detail", args=[created.json()["id"]])
+
+        updated = self.client.put(
+            url, {**self.address, "line2": "Bat B"}, content_type="application/json", **self.auth
+        )
+        self.assertEqual(updated.json()["line2"], "Bat B")
+
+        self.assertEqual(self.client.delete(url, **self.auth).status_code, 204)
+        self.assertEqual(self.client.get(reverse("useraddress-list"), **self.auth).json(), [])
+
+    def test_only_one_default_shipping_address(self):
+        first = self.post(self.address).json()["id"]
+        self.post({**self.address, "line1": "2 rue Royale"})
+
+        addresses = self.client.get(reverse("useraddress-list"), **self.auth).json()
+        defaults = {a["id"]: a["is_default_for_shipping"] for a in addresses}
+        self.assertFalse(defaults[first])
+        self.assertEqual(sum(defaults.values()), 1)
+
+    def test_same_address_twice_is_refused_with_406(self):
+        self.post(self.address)
+        self.assertEqual(self.post(self.address).status_code, 406)
+
+    def test_addresses_of_other_users_are_hidden(self):
+        address_id = self.post(self.address).json()["id"]
+        other = User.objects.create_user("other", "other@example.com", "s3cret-pass")
+        other_auth = {"HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=other).key}"}
+
+        response = self.client.delete(
+            reverse("useraddress-detail", args=[address_id]), **other_auth
+        )
+        self.assertEqual(response.status_code, 404)
