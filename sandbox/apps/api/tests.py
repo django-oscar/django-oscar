@@ -3,7 +3,8 @@ from django.test import TestCase
 from django.urls import reverse
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
-from oscar.test.factories import create_product
+from oscar.test.factories import UserAddressFactory, create_order, create_product
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
@@ -94,3 +95,45 @@ class MobileCatalogueTest(TestCase):
         self.assertEqual([c["name"] for c in children], ["Shirts"])
         self.assertEqual(children[0]["parent_id"], self.clothing.pk)
         self.assertFalse(children[0]["has_children"])
+
+
+class UserDetailsTest(TestCase):
+    """The app profile screen reads the signed-in user, orders and addresses"""
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            "jdoe", "jdoe@example.com", "s3cret-pass", first_name="Jane", last_name="Doe"
+        )
+        token = Token.objects.create(user=self.user)
+        self.auth = {"HTTP_AUTHORIZATION": f"Token {token.key}"}
+
+    def test_login_get_returns_the_user(self):
+        response = self.client.get(reverse("api-login"), **self.auth)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {
+                "id": self.user.pk,
+                "email": "jdoe@example.com",
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "date_joined": response.json()["date_joined"],
+            },
+        )
+
+    def test_login_get_requires_authentication(self):
+        self.assertEqual(self.client.get(reverse("api-login")).status_code, 405)
+
+    def test_orders_and_addresses_are_lists_of_the_user(self):
+        other = User.objects.create_user("other", "other@example.com", "s3cret-pass")
+        create_order(user=self.user)
+        create_order(user=other)
+        UserAddressFactory(user=self.user)
+        UserAddressFactory(user=other, line1="2 Other Road")
+
+        orders = self.client.get(reverse("order-list"), **self.auth).json()
+        addresses = self.client.get(reverse("useraddress-list"), **self.auth).json()
+
+        self.assertEqual([o["email"] for o in orders], ["jdoe@example.com"])
+        self.assertEqual(len(addresses), 1)
+        self.assertEqual(addresses[0]["line1"], "1 King Road")

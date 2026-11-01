@@ -413,6 +413,9 @@ REST_FRAMEWORK = {
 }
 
 OSCARAPI_ENABLE_REGISTRATION = True
+# GET /api/login/ returns the signed-in user, read by the app profile screen
+OSCARAPI_EXPOSE_USER_DETAILS = env.bool('OSCARAPI_EXPOSE_USER_DETAILS', default=True)
+OSCARAPI_USER_FIELDS = env.list('OSCARAPI_USER_FIELDS', default=('id', 'email', 'first_name', 'last_name', 'date_joined'))
 # Product and category views tailored for the mobile app, see apps/api/
 OSCARAPI_OVERRIDE_MODULES = ['apps.api']
 
