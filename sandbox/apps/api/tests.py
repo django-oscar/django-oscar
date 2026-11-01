@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.cache import cache
-from django.test import TestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -11,6 +11,11 @@ from oscar.core.loading import get_model
 from oscar.test.basket import add_product
 from oscar.test.factories import (
     BasketFactory,
+    BenefitFactory,
+    ConditionalOfferFactory,
+    ConditionFactory,
+    RangeFactory,
+    VoucherFactory,
     CountryFactory,
     UserAddressFactory,
     create_order,
@@ -392,3 +397,131 @@ class PasswordResetApiTest(TestCase):
     def test_reset_requests_are_throttled(self):
         statuses = [self.reset("jdoe@example.com").status_code for _ in range(6)]
         self.assertEqual(statuses, [204] * 5 + [429])
+
+
+class CartApiTest(TestCase):
+    def setUp(self):
+        self.shirt = create_product(title="Linen Shirt", price=Decimal("12.00"), num_in_stock=3)
+        self.book = create_product(title="Cookbook", price=Decimal("5.00"), num_in_stock=10)
+        self.user = User.objects.create_user("jdoe", "jdoe@example.com", "s3cret-pass")
+        self.auth = {"HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=self.user).key}"}
+
+    def voucher(self, code="WELCOME10", min_items=1):
+        everything = RangeFactory(includes_all_products=True)
+        offer = ConditionalOfferFactory(
+            offer_type="Voucher",
+            condition=ConditionFactory(range=everything, type="Count", value=min_items),
+            benefit=BenefitFactory(range=everything, type="Percentage", value=10),
+        )
+        voucher = VoucherFactory(code=code)
+        voucher.offers.add(offer)
+        return voucher
+
+    def add(self, product, quantity=1, client=None, **auth):
+        return (client or self.client).post(
+            reverse("api-cart-lines"),
+            {"product": product.pk, "quantity": quantity},
+            content_type="application/json",
+            **auth,
+        )
+
+    def patch(self, line_id, quantity):
+        return self.client.patch(
+            reverse("api-cart-line", args=[line_id]),
+            {"quantity": quantity},
+            content_type="application/json",
+            **self.auth,
+        )
+
+    def test_guest_cart_with_products_and_totals(self):
+        response = self.add(self.shirt, 2)
+        self.assertEqual(response.status_code, 201)
+        self.add(self.book)
+
+        cart = self.client.get(reverse("api-cart")).json()
+        self.assertEqual(cart["num_items"], 3)
+        self.assertEqual(
+            [(l["product"]["title"], l["quantity"], l["price_incl_tax"]) for l in cart["lines"]],
+            [("Linen Shirt", 2, "24.00"), ("Cookbook", 1, "5.00")],
+        )
+        self.assertEqual(cart["total_incl_tax"], "29.00")
+
+    def test_stock_is_checked_when_adding_and_changing_quantities(self):
+        self.assertEqual(self.add(self.shirt, 2, **self.auth).status_code, 201)
+        response = self.add(self.shirt, 2, **self.auth)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("quantity", response.json())
+
+        line_id = self.client.get(reverse("api-cart"), **self.auth).json()["lines"][0]["id"]
+        self.assertEqual(self.patch(line_id, 9).status_code, 400)
+        self.assertEqual(self.patch(line_id, 3).json()["lines"][0]["quantity"], 3)
+
+    def test_quantity_0_and_delete_remove_lines(self):
+        self.add(self.shirt, **self.auth)
+        self.add(self.book, **self.auth)
+        lines = self.client.get(reverse("api-cart"), **self.auth).json()["lines"]
+
+        self.assertEqual(len(self.patch(lines[0]["id"], 0).json()["lines"]), 1)
+        cart = self.client.delete(reverse("api-cart-line", args=[lines[1]["id"]]), **self.auth)
+        self.assertEqual(cart.json()["lines"], [])
+
+    def test_voucher_is_applied_and_removed(self):
+        self.voucher()
+        self.add(self.shirt, 2, **self.auth)
+
+        cart = self.client.post(
+            reverse("api-cart-vouchers"), {"code": "welcome10"},
+            content_type="application/json", **self.auth,
+        ).json()
+        self.assertEqual(cart["total_incl_tax_excl_discounts"], "24.00")
+        self.assertEqual(cart["total_incl_tax"], "21.60")
+        self.assertEqual([(v["code"], v["amount"]) for v in cart["vouchers"]], [("WELCOME10", "2.40")])
+
+        cart = self.client.delete(reverse("api-cart-voucher", args=["WELCOME10"]), **self.auth).json()
+        self.assertEqual(cart["vouchers"], [])
+        self.assertEqual(cart["total_incl_tax"], "24.00")
+
+    def test_voucher_errors(self):
+        self.voucher(code="BULK", min_items=5)
+        self.add(self.book, **self.auth)
+
+        for code, error in (("NOPE", "Voucher code unknown"),
+                            ("BULK", "Your basket does not qualify for a voucher discount")):
+            response = self.client.post(
+                reverse("api-cart-vouchers"), {"code": code},
+                content_type="application/json", **self.auth,
+            )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.json()["non_field_errors"], [error])
+
+    def test_guest_cart_is_merged_into_the_account_cart(self):
+        self.add(self.book, **self.auth)
+        guest = Client()  # keeps the session cookie, like the app
+        self.add(self.shirt, 2, client=guest)
+
+        cart = guest.get(reverse("api-cart"), **self.auth).json()
+        self.assertEqual(
+            sorted((l["product"]["title"], l["quantity"]) for l in cart["lines"]),
+            [("Cookbook", 1), ("Linen Shirt", 2)],
+        )
+        # merged once: the guest basket is gone
+        self.assertEqual(guest.get(reverse("api-cart"), **self.auth).json()["num_items"], 3)
+
+    def test_accounts_do_not_share_carts(self):
+        self.add(self.shirt, **self.auth)
+        other = User.objects.create_user("other", "other@example.com", "s3cret-pass")
+        other_auth = {"HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=other).key}"}
+
+        self.assertEqual(Client().get(reverse("api-cart"), **other_auth).json()["lines"], [])
+        line_id = self.client.get(reverse("api-cart"), **self.auth).json()["lines"][0]["id"]
+        response = Client().delete(reverse("api-cart-line", args=[line_id]), **other_auth)
+        self.assertEqual(response.status_code, 404)
+
+    def test_failed_first_guest_request_answers_json(self):
+        # the session is not saved during the (rolled back) request
+        response = Client().post(
+            reverse("api-cart-lines"), {"product": 999999, "quantity": 1},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response["Content-Type"], "application/json")
