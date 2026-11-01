@@ -1,9 +1,17 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
-from oscar.test.factories import UserAddressFactory, create_order, create_product
+from oscar.test.basket import add_product
+from oscar.test.factories import (
+    BasketFactory,
+    UserAddressFactory,
+    create_order,
+    create_product,
+)
 from rest_framework.authtoken.models import Token
 
 User = get_user_model()
@@ -137,3 +145,25 @@ class UserDetailsTest(TestCase):
         self.assertEqual([o["email"] for o in orders], ["jdoe@example.com"])
         self.assertEqual(len(addresses), 1)
         self.assertEqual(addresses[0]["line1"], "1 King Road")
+
+    def test_order_history_has_ids_and_line_titles(self):
+        basket = BasketFactory()
+        add_product(basket, Decimal("12.00"), 2, create_product(title="Linen Shirt"))
+        order = create_order(user=self.user, basket=basket)
+        other_order = create_order(
+            user=User.objects.create_user("other", "other@example.com", "s3cret-pass")
+        )
+
+        orders = self.client.get(reverse("order-list"), **self.auth).json()
+        lines = self.client.get(
+            reverse("order-lines-list", args=[order.pk]), **self.auth
+        ).json()
+        other_lines = self.client.get(
+            reverse("order-lines-list", args=[other_order.pk]), **self.auth
+        ).json()
+
+        self.assertEqual([o["id"] for o in orders], [order.pk])
+        self.assertEqual(
+            [(line["title"], line["quantity"]) for line in lines], [("Linen Shirt", 2)]
+        )
+        self.assertEqual(other_lines, [])

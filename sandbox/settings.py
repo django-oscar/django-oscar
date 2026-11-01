@@ -416,6 +416,20 @@ OSCARAPI_ENABLE_REGISTRATION = True
 # GET /api/login/ returns the signed-in user, read by the app profile screen
 OSCARAPI_EXPOSE_USER_DETAILS = env.bool('OSCARAPI_EXPOSE_USER_DETAILS', default=True)
 OSCARAPI_USER_FIELDS = env.list('OSCARAPI_USER_FIELDS', default=('id', 'email', 'first_name', 'last_name', 'date_joined'))
+# oscarapi 3.3 defaults + the order "id" and the line "title" for the app's
+# order history (a line's product may no longer exist)
+OSCARAPI_ORDER_FIELDS = (
+    'id', 'number', 'basket', 'url', 'lines', 'owner', 'billing_address',
+    'currency', 'total_incl_tax', 'total_excl_tax', 'shipping_incl_tax',
+    'shipping_excl_tax', 'shipping_address', 'shipping_method', 'shipping_code',
+    'status', 'email', 'date_placed', 'payment_url', 'offer_discounts',
+    'voucher_discounts', 'surcharges',
+)
+OSCARAPI_ORDERLINE_FIELDS = (
+    'attributes', 'url', 'product', 'title', 'stockrecord', 'quantity',
+    'price_currency', 'price_excl_tax', 'price_incl_tax',
+    'price_incl_tax_excl_discounts', 'price_excl_tax_excl_discounts', 'order',
+)
 # Product and category views tailored for the mobile app, see apps/api/
 OSCARAPI_OVERRIDE_MODULES = ['apps.api']
 
