@@ -1,6 +1,7 @@
 """
 Overrides of oscarapi.views.product, loaded through OSCARAPI_OVERRIDE_MODULES.
 """
+from django.db.models import Count, Q
 from oscar.core.loading import get_class, get_model
 from oscarapi.views import product as core_views
 from rest_framework.pagination import PageNumberPagination
@@ -13,6 +14,18 @@ from apps.api.mobile_serializers import (
 Selector = get_class("partner.strategy", "Selector")
 Category = get_model("catalogue", "Category")
 Product = get_model("catalogue", "Product")
+ProductReview = get_model("reviews", "ProductReview")
+
+
+def with_reviews_count(queryset):
+    """Number of approved reviews, read by MobileProductSerializer"""
+    return queryset.annotate(
+        reviews_count=Count(
+            "reviews",
+            filter=Q(reviews__status=ProductReview.APPROVED),
+            distinct=True,
+        )
+    )
 
 
 class MobileStrategyMixin:
@@ -38,7 +51,7 @@ class ProductList(MobileStrategyMixin, core_views.ProductList):
     the core ``?structure=`` filter.
     """
 
-    queryset = (
+    queryset = with_reviews_count(
         Product.objects.browsable()
         .prefetch_related("images", "categories", "stockrecords")
         .order_by("-date_created", "-id")
@@ -61,7 +74,7 @@ class ProductList(MobileStrategyMixin, core_views.ProductList):
 
 
 class ProductDetail(MobileStrategyMixin, core_views.ProductDetail):
-    queryset = Product.objects.browsable()
+    queryset = with_reviews_count(Product.objects.browsable())
     serializer_class = MobileProductSerializer
 
 

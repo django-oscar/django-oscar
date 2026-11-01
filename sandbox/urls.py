@@ -24,6 +24,7 @@ urlpatterns = [
     # REST API for the mobile app, kept outside i18n_patterns so its URLs are
     # stable. EmailBackend lets obtain_auth_token take the email as username.
     path('api/auth/token/', obtain_auth_token, name='api-auth-token'),
+    path('api/', include('apps.api.urls')),
     path('api/', include('oscarapi.urls')),
 
     # include a basic sitemap

@@ -1,10 +1,11 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
+from oscar.core.loading import get_model
 from oscar.test.basket import add_product
 from oscar.test.factories import (
     BasketFactory,
@@ -15,6 +16,7 @@ from oscar.test.factories import (
 from rest_framework.authtoken.models import Token
 
 User = get_user_model()
+ProductReview = get_model("reviews", "ProductReview")
 
 
 class AuthTokenTest(TestCase):
@@ -167,3 +169,83 @@ class UserDetailsTest(TestCase):
             [(line["title"], line["quantity"]) for line in lines], [("Linen Shirt", 2)]
         )
         self.assertEqual(other_lines, [])
+
+
+class ProductReviewApiTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            "jdoe", "jdoe@example.com", "s3cret-pass", first_name="Jane", last_name="Doe"
+        )
+        self.auth = {
+            "HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=self.user).key}"
+        }
+        self.product = create_product(title="Linen Shirt", price=12, num_in_stock=3)
+        self.url = reverse("api-product-reviews", args=[self.product.pk])
+
+    def review(self, **data):
+        payload = {"score": 4, "title": "Nice", "body": "Fits well."}
+        payload.update(data)
+        return self.client.post(
+            self.url, payload, content_type="application/json", **self.auth
+        )
+
+    @override_settings(OSCAR_MODERATE_REVIEWS=False)
+    def test_review_is_listed_and_counted_on_the_product(self):
+        response = self.review()
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["status"], "approved")
+
+        reviews = self.client.get(self.url).json()
+        self.assertEqual(
+            [(r["score"], r["title"], r["reviewer"]) for r in reviews],
+            [(4, "Nice", "Jane Doe")],
+        )
+        self.assertNotIn("email", reviews[0])
+
+        product = self.client.get(
+            reverse("product-detail", args=[self.product.pk])
+        ).json()
+        self.assertEqual(product["reviews_count"], 1)
+        self.assertEqual(product["rating"], 4.0)
+        listed = self.client.get(reverse("product-list")).json()["results"]
+        self.assertEqual(listed[0]["reviews_count"], 1)
+
+    def test_one_review_per_product(self):
+        self.review()
+        response = self.review(title="Again")
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("non_field_errors", response.json())
+
+    def test_writing_a_review_requires_authentication(self):
+        response = self.client.post(
+            self.url,
+            {"score": 4, "title": "Nice", "body": "Fits well."},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_score_must_be_between_1_and_5(self):
+        self.assertEqual(self.review(score=0).status_code, 400)
+        self.assertEqual(self.review(score=6).status_code, 400)
+
+    @override_settings(OSCAR_MODERATE_REVIEWS=True)
+    def test_moderated_reviews_are_only_listed_for_their_author(self):
+        review_id = self.review().json()["id"]
+
+        self.assertEqual(self.client.get(self.url).json(), [])
+        mine = self.client.get(reverse("api-my-reviews"), **self.auth).json()
+        self.assertEqual(
+            [(r["product"], r["product_title"], r["status"]) for r in mine],
+            [(self.product.pk, "Linen Shirt", "pending")],
+        )
+
+        # approved in the dashboard: published and counted
+        review = ProductReview.objects.get(pk=review_id)
+        review.status = ProductReview.APPROVED
+        review.save()
+        self.assertEqual([r["id"] for r in self.client.get(self.url).json()], [review_id])
+        product = self.client.get(reverse("product-detail", args=[self.product.pk])).json()
+        self.assertEqual(product["reviews_count"], 1)
+
+    def test_my_reviews_require_authentication(self):
+        self.assertEqual(self.client.get(reverse("api-my-reviews")).status_code, 401)

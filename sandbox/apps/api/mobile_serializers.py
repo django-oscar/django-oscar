@@ -11,6 +11,7 @@ from oscarapi.utils.loading import get_api_class, get_api_classes
 
 Category = get_model("catalogue", "Category")
 Product = get_model("catalogue", "Product")
+ProductReview = get_model("reviews", "ProductReview")
 
 (
     CategorySerializer,
@@ -58,6 +59,8 @@ class MobileProductSerializer(serializers.ModelSerializer):
     categories = MobileProductCategorySerializer(many=True, read_only=True)
     price = serializers.SerializerMethodField()
     availability = serializers.SerializerMethodField()
+    # Annotated by the product views (number of approved reviews)
+    reviews_count = serializers.IntegerField(read_only=True, default=0)
 
     class Meta:
         model = Product
@@ -68,6 +71,7 @@ class MobileProductSerializer(serializers.ModelSerializer):
             "description",
             "structure",
             "rating",
+            "reviews_count",
             "images",
             "categories",
             "price",
@@ -84,3 +88,46 @@ class MobileProductSerializer(serializers.ModelSerializer):
         return AvailabilitySerializer(
             self._purchase_info(obj).availability, context=self.context
         ).data
+
+
+class MobileReviewSerializer(serializers.ModelSerializer):
+    """
+    Product review for the app: ``reviewer`` is a display name (never the
+    email), ``status`` is approved / pending / rejected (moderation).
+    """
+
+    STATUS_NAMES = {
+        ProductReview.APPROVED: "approved",
+        ProductReview.FOR_MODERATION: "pending",
+        ProductReview.REJECTED: "rejected",
+    }
+
+    product = serializers.IntegerField(source="product_id", read_only=True)
+    product_title = serializers.SerializerMethodField()
+    score = serializers.IntegerField(min_value=1, max_value=5)
+    reviewer = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductReview
+        fields = (
+            "id",
+            "product",
+            "product_title",
+            "score",
+            "title",
+            "body",
+            "reviewer",
+            "status",
+            "date_created",
+        )
+        read_only_fields = ("id", "date_created")
+
+    def get_product_title(self, obj):
+        return obj.product.get_title() if obj.product else ""
+
+    def get_reviewer(self, obj):
+        return str(obj.reviewer_name)
+
+    def get_status(self, obj):
+        return self.STATUS_NAMES.get(obj.status, "pending")

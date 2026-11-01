@@ -398,6 +398,8 @@ OSCAR_THEME = env('OSCAR_THEME', default='default')
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
+# Reviews (site and mobile app) are published once approved in the dashboard
+OSCAR_MODERATE_REVIEWS = True
 
 # ========
 # REST API
