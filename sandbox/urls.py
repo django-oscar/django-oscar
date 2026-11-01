@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.contrib.sitemaps import views
 from django.urls import include, path
 from oscar.views import handler403, handler404, handler500
+from rest_framework.authtoken.views import obtain_auth_token
 
 from apps.sitemaps import base_sitemaps
 
@@ -19,6 +20,11 @@ urlpatterns = [
 
     # i18n URLS need to live outside of i18n_patterns scope of Oscar
     path('i18n/', include(django.conf.urls.i18n)),
+
+    # REST API for the mobile app, kept outside i18n_patterns so its URLs are
+    # stable. EmailBackend lets obtain_auth_token take the email as username.
+    path('api/auth/token/', obtain_auth_token, name='api-auth-token'),
+    path('api/', include('oscarapi.urls')),
 
     # include a basic sitemap
     path('sitemap.xml', views.index,

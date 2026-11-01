@@ -36,6 +36,8 @@ RUN pip install /wheels/*.whl \
         "psycopg2-binary>=2.8,<2.10" \
         "Whoosh>=2.7,<2.8" \
         pycountry \
+        "djangorestframework>=3.15,<4" \
+        "django-oscar-api>=3.3,<3.4" \
         "gunicorn>=23,<24" \
     && rm -rf /wheels
 

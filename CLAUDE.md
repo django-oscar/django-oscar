@@ -6,6 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Django Oscar: a domain-driven e-commerce framework for Django, distributed as the `django-oscar` package (source in `src/oscar/`). Supported matrix (CI): Python 3.10–3.14, Django 4.2 / 5.2 / 6.0.
 
+### Khafa project
+
+This fork (Oscar 4.2.1) runs the khafa shop: the site is `sandbox/` (settings via env, Postgres, prod behind host nginx, see `docker-compose.prod.yml`). It is also the **backend of the Flutter mobile app** (`/workspace`), which is migrating here from WooCommerce:
+- REST API via **django-oscar-api** 3.3 (DRF), mounted at `/api/` in `sandbox/urls.py`, **outside** `i18n_patterns`
+- Mobile overrides in `sandbox/apps/api/` (`OSCARAPI_OVERRIDE_MODULES = ['apps.api']`): product list/detail with inline price and availability, `?category=<id>` filter (descendants included), categories with `id`/`parent_id`/`has_children` and `?parent=<id>`
+- Mobile auth: DRF token (`Authorization: Token <t>`) from `/api/auth/token/` (email as `username`, via `EmailBackend`); registration via `/api/register/` (`OSCARAPI_ENABLE_REGISTRATION`)
+- API tests: `cd sandbox && ./manage.py test apps.api` (needs a writable `whoosh_index`, or `HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.BaseSignalProcessor'` in a test settings module). If the API output changes, regenerate the Flutter fixtures in `/workspace/test/fixtures/oscar/`
+- Deps: `djangorestframework` and `django-oscar-api` are in the `test` extra of `pyproject.toml` (installed by `make install`) and must be in `docker/prod/Dockerfile`
+- Project-specific customisations go in `sandbox/` (`settings.py`, `urls.py`, `apps/`), not in `src/oscar/`
+- Shares the Docker network `oscar` with the Flutter devcontainer (reachable there as `http://django-oscar:8000`)
+
 ## Commands
 
 ```bash

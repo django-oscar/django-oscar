@@ -317,6 +317,11 @@ INSTALLED_APPS = [
 
     # Django apps that the sandbox depends on
     'django.contrib.sitemaps',
+
+    # REST API for the Flutter mobile app
+    'rest_framework',
+    'rest_framework.authtoken',
+    'oscarapi',
 ]
 
 # Add Oscar's custom auth backend so users can sign in using their email
@@ -393,6 +398,23 @@ OSCAR_THEME = env('OSCAR_THEME', default='default')
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
+
+# ========
+# REST API
+# ========
+
+# The mobile app authenticates with "Authorization: Token <key>", obtained
+# from /api/auth/token/ (see urls.py).
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
+OSCARAPI_ENABLE_REGISTRATION = True
+# Product and category views tailored for the mobile app, see apps/api/
+OSCARAPI_OVERRIDE_MODULES = ['apps.api']
 
 
 # Order processing

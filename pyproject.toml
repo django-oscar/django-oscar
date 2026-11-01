@@ -84,7 +84,10 @@ test = [
     "easy-thumbnails>=2.9,<2.11",
     "django-environ>=0.4,<0.13",
     "whitenoise>=6.7.0,<6.12",
-    "pycountry"
+    "pycountry",
+    # REST API for the mobile app (sandbox)
+    "djangorestframework>=3.15,<4",
+    "django-oscar-api>=3.3,<3.4",
 ]
 sorl-thumbnail = [
     "sorl-thumbnail>=12.10.0,<13.0.0",
