@@ -67,3 +67,21 @@ make extract_translations / compile_translations
 
 - black formatting; pylint config in `pylintrc` (code often uses targeted `# pylint: disable=...` comments). flake8/isort settings in `setup.cfg`.
 - User-facing strings are translated with `gettext_lazy as _`.
+
+## Flutter web app (/app/)
+
+The app's web build is served by the host nginx from `/srv/oscar/app/` (copied with `rsync -a --delete build/web/ <server>:/srv/oscar/app/`), on the same origin as the API. Add to the HTTPS `server` block, before `location /` (not yet in `docker/prod/nginx-host.conf.example`, root-owned):
+
+```nginx
+location = /app { return 301 /app/; }
+location /app/ {
+    alias /srv/oscar/app/;
+    try_files $uri $uri/ /app/index.html;
+    # files that point to the new build must not be cached
+    location ~ (index\.html|flutter_bootstrap\.js|flutter_service_worker\.js|version\.json|manifest\.json)$ {
+        add_header Cache-Control "no-cache";
+    }
+}
+```
+
+`REST_FRAMEWORK` is token-only (`TokenAuthentication`): with session authentication, a customer signed in on the website would see the app's API calls refused for CSRF (see `WebAppOriginTest`). Guest baskets keep using the session.

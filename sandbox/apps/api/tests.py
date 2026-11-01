@@ -525,3 +525,33 @@ class CartApiTest(TestCase):
         )
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response["Content-Type"], "application/json")
+
+
+class WebAppOriginTest(TestCase):
+    """The Flutter web app shares the website origin (/app/)"""
+
+    def test_website_session_does_not_trigger_csrf_on_the_api(self):
+        user = User.objects.create_user("jdoe", "jdoe@example.com", "s3cret-pass")
+        browser = Client(enforce_csrf_checks=True)
+        browser.force_login(user)  # signed in on the website
+
+        response = browser.post(
+            reverse("api-register"),
+            {
+                "email": "new@example.com",
+                "password1": "Sup3r-secret-42",
+                "password2": "Sup3r-secret-42",
+            },
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 201)
+
+    def test_guest_cart_still_uses_the_session(self):
+        product = create_product(title="Book", price=Decimal("5.00"), num_in_stock=3)
+        browser = Client(enforce_csrf_checks=True)
+        response = browser.post(
+            reverse("api-cart-lines"), {"product": product.pk, "quantity": 1},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(browser.get(reverse("api-cart")).json()["num_items"], 1)
