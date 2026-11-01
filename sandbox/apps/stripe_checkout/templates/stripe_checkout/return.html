@@ -1,0 +1,27 @@
+{% load i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ shop_name }}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; min-height: 100vh;
+           display: flex; align-items: center; justify-content: center;
+           background: #f9f9f9; color: #222; text-align: center; }
+    main { max-width: 26rem; padding: 2rem; }
+    h1 { font-size: 1.5rem; }
+    p { line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <main>
+    {% if canceled %}
+      <h1>{% trans "Payment canceled" %}</h1>
+      <p>{% trans "Nothing was charged. Close this page to go back to the app, your basket is still there." %}</p>
+    {% else %}
+      <h1>{% trans "Thank you!" %}</h1>
+      <p>{% trans "Your payment has been received. Close this page to go back to the app and see your order." %}</p>
+    {% endif %}
+  </main>
+</body>
+</html>

@@ -88,6 +88,8 @@ test = [
     # REST API for the mobile app (sandbox)
     "djangorestframework>=3.15,<4",
     "django-oscar-api>=3.3,<3.4",
+    # Stripe Checkout payment (sandbox/apps/stripe_checkout)
+    "stripe>=12,<17",
 ]
 sorl-thumbnail = [
     "sorl-thumbnail>=12.10.0,<13.0.0",

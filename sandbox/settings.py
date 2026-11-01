@@ -280,7 +280,8 @@ INSTALLED_APPS = [
     'oscar.apps.analytics.apps.AnalyticsConfig',
     'oscar.apps.checkout.apps.CheckoutConfig',
     'oscar.apps.address.apps.AddressConfig',
-    'oscar.apps.shipping.apps.ShippingConfig',
+    # forked: flat delivery charge (apps/shipping/repository.py)
+    'apps.shipping.apps.ShippingConfig',
     'oscar.apps.catalogue.apps.CatalogueConfig',
     'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
     'oscar.apps.communication.apps.CommunicationConfig',
@@ -322,6 +323,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'oscarapi',
+    # Stripe Checkout payment of the app basket (apps/stripe_checkout/)
+    'apps.stripe_checkout',
 ]
 
 # Add Oscar's custom auth backend so users can sign in using their email
@@ -445,6 +448,19 @@ OSCARAPI_ORDERLINE_FIELDS = (
 )
 # Product and category views tailored for the mobile app, see apps/api/
 OSCARAPI_OVERRIDE_MODULES = ['apps.api']
+
+# Payment (Stripe Checkout, apps/stripe_checkout/) and delivery
+# =============================================================
+# Test keys (sk_test_...) in development; never commit them. The webhook
+# secret (whsec_...) comes from the endpoint registered in the Stripe
+# dashboard for /api/checkout/stripe/webhook/ (or from `stripe listen`).
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY', default='')
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET', default='')
+# Stripe sessions expire after this many minutes (30 to 1440), the basket
+# stays frozen meanwhile
+STRIPE_CHECKOUT_EXPIRY_MINUTES = env.int('STRIPE_CHECKOUT_EXPIRY_MINUTES', default=30)
+# Delivery charge of every order, tax included (apps/shipping/methods.py)
+KHAFA_SHIPPING_CHARGE = env('KHAFA_SHIPPING_CHARGE', default='10.00')
 
 
 # Order processing
