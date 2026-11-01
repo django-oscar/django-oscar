@@ -3,6 +3,7 @@ Overrides of oscarapi.views.product, loaded through OSCARAPI_OVERRIDE_MODULES.
 """
 from oscar.core.loading import get_class, get_model
 from oscarapi.views import product as core_views
+from rest_framework.pagination import PageNumberPagination
 
 from apps.api.mobile_serializers import (
     MobileCategorySerializer,
@@ -22,18 +23,28 @@ class MobileStrategyMixin:
         return context
 
 
+class MobileProductPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
 class ProductList(MobileStrategyMixin, core_views.ProductList):
     """
-    Browsable products with price and availability inlined.
+    Browsable products with price and availability inlined, newest first,
+    paginated with ``?page=`` and ``?page_size=``.
 
     Supports ``?category=<id>`` (the category and its descendants) on top of
     the core ``?structure=`` filter.
     """
 
-    queryset = Product.objects.browsable().prefetch_related(
-        "images", "categories", "stockrecords"
+    queryset = (
+        Product.objects.browsable()
+        .prefetch_related("images", "categories", "stockrecords")
+        .order_by("-date_created", "-id")
     )
     serializer_class = MobileProductSerializer
+    pagination_class = MobileProductPagination
 
     def get_queryset(self):
         qs = super().get_queryset()

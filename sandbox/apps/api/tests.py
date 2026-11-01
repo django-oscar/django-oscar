@@ -52,7 +52,7 @@ class MobileCatalogueTest(TestCase):
         self.book.categories.add(self.books)
 
     def test_product_list_inlines_price_and_availability(self):
-        data = self.client.get(reverse("product-list")).json()
+        data = self.client.get(reverse("product-list")).json()["results"]
         self.assertEqual(len(data), 2)
         shirt = next(p for p in data if p["id"] == self.shirt.pk)
         self.assertEqual(shirt["price"]["excl_tax"], "12.00")
@@ -61,9 +61,22 @@ class MobileCatalogueTest(TestCase):
 
     def test_product_list_filters_by_category_and_descendants(self):
         url = reverse("product-list")
-        ids = [p["id"] for p in self.client.get(url, {"category": self.clothing.pk}).json()]
-        self.assertEqual(ids, [self.shirt.pk])
-        self.assertEqual(self.client.get(url, {"category": 999}).json(), [])
+        response = self.client.get(url, {"category": self.clothing.pk}).json()
+        self.assertEqual([p["id"] for p in response["results"]], [self.shirt.pk])
+        self.assertEqual(self.client.get(url, {"category": 999}).json()["results"], [])
+
+    def test_product_list_is_paginated_newest_first(self):
+        url = reverse("product-list")
+        first = self.client.get(url, {"page_size": 1}).json()
+        self.assertEqual(first["count"], 2)
+        self.assertEqual([p["id"] for p in first["results"]], [self.book.pk])
+        self.assertIsNotNone(first["next"])
+
+        second = self.client.get(url, {"page_size": 1, "page": 2}).json()
+        self.assertEqual([p["id"] for p in second["results"]], [self.shirt.pk])
+        self.assertIsNone(second["next"])
+
+        self.assertEqual(self.client.get(url, {"page": 3}).status_code, 404)
 
     def test_product_detail_inlines_price(self):
         data = self.client.get(reverse("product-detail", args=[self.book.pk])).json()

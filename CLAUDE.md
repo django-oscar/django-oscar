@@ -10,7 +10,7 @@ Django Oscar: a domain-driven e-commerce framework for Django, distributed as th
 
 This fork (Oscar 4.2.1) runs the khafa shop: the site is `sandbox/` (settings via env, Postgres, prod behind host nginx, see `docker-compose.prod.yml`). It is also the **backend of the Flutter mobile app** (`/workspace`), which is migrating here from WooCommerce:
 - REST API via **django-oscar-api** 3.3 (DRF), mounted at `/api/` in `sandbox/urls.py`, **outside** `i18n_patterns`
-- Mobile overrides in `sandbox/apps/api/` (`OSCARAPI_OVERRIDE_MODULES = ['apps.api']`): product list/detail with inline price and availability, `?category=<id>` filter (descendants included), categories with `id`/`parent_id`/`has_children` and `?parent=<id>`
+- Mobile overrides in `sandbox/apps/api/` (`OSCARAPI_OVERRIDE_MODULES = ['apps.api']`): product list (paginated: `?page=`, `?page_size=`) and detail with inline price and availability, `?category=<id>` filter (descendants included), categories with `id`/`parent_id`/`has_children` and `?parent=<id>`
 - Mobile auth: DRF token (`Authorization: Token <t>`) from `/api/auth/token/` (email as `username`, via `EmailBackend`); registration via `/api/register/` (`OSCARAPI_ENABLE_REGISTRATION`)
 - API tests: `cd sandbox && ./manage.py test apps.api` (needs a writable `whoosh_index`, or `HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.BaseSignalProcessor'` in a test settings module). If the API output changes, regenerate the Flutter fixtures in `/workspace/test/fixtures/oscar/`
 - Deps: `djangorestframework` and `django-oscar-api` are in the `test` extra of `pyproject.toml` (installed by `make install`) and must be in `docker/prod/Dockerfile`
