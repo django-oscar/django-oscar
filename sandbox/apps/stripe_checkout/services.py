@@ -20,7 +20,7 @@ from django.utils.translation import gettext as _
 from oscar.core.loading import get_class, get_model
 from oscarapi.basket import operations
 
-from apps.stripe_checkout.models import StripeCheckout
+from apps.stripe_checkout.models import StripeCheckout, StripeCustomer
 
 logger = logging.getLogger("apps.stripe_checkout")
 
@@ -49,6 +49,28 @@ class CheckoutError(Exception):
 
 def is_configured():
     return bool(settings.STRIPE_SECRET_KEY)
+
+
+def is_live():
+    return settings.STRIPE_SECRET_KEY.startswith(("sk_live_", "rk_live_"))
+
+
+def customer_id(user, create=True):
+    """Stripe Customer of a signed-in user, created on first use (None when
+    ``create`` is false and there is none yet)"""
+    livemode = is_live()
+    existing = StripeCustomer.objects.filter(user=user, livemode=livemode).first()
+    if existing is not None or not create:
+        return existing and existing.customer_id
+    params = {"email": user.email, "metadata": {"user_id": str(user.pk)}}
+    if user.get_full_name():
+        params["name"] = user.get_full_name()
+    customer = stripe.Customer.create(api_key=settings.STRIPE_SECRET_KEY, **params)
+    # a concurrent request may have created one meanwhile: keep the first
+    stored, __ = StripeCustomer.objects.get_or_create(
+        user=user, livemode=livemode, defaults={"customer_id": customer["id"]}
+    )
+    return stored.customer_id
 
 
 def to_minor_units(amount, currency):
@@ -147,11 +169,22 @@ def create_checkout(request, basket, email, shipping_address, client):
     order_number = str(OrderNumberGenerator().order_number(basket))
     success_url, cancel_url = return_urls(request, client)
     metadata = {"basket_id": str(basket.pk), "order_number": order_number}
+    if user is None:
+        payer = {"customer_email": email}
+    else:
+        # the Stripe page offers the saved cards and to save the new one
+        payer = {
+            "customer": customer_id(user),
+            "saved_payment_method_options": {
+                "payment_method_save": "enabled",
+                "allow_redisplay_filters": ["always", "limited", "unspecified"],
+            },
+        }
     session = stripe.checkout.Session.create(
         api_key=settings.STRIPE_SECRET_KEY,
         mode="payment",
         line_items=line_items(basket, charge, total, order_number),
-        customer_email=email,
+        **payer,
         client_reference_id=str(basket.pk),
         metadata=metadata,
         payment_intent_data={

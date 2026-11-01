@@ -54,3 +54,29 @@ class StripeCheckout(models.Model):
 
     def __str__(self):
         return "%s (%s)" % (self.order_number, self.status)
+
+
+class StripeCustomer(models.Model):
+    """The Stripe Customer of a user, holding their saved cards; test and
+    live keys see different customers, hence one per mode"""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="stripe_customers",
+    )
+    livemode = models.BooleanField(_("Live mode"), default=False)
+    customer_id = models.CharField(_("Stripe customer"), max_length=255, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=("user", "livemode"), name="stripe_customer_per_mode"
+            )
+        ]
+        verbose_name = _("Stripe customer")
+        verbose_name_plural = _("Stripe customers")
+
+    def __str__(self):
+        return self.customer_id

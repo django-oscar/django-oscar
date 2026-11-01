@@ -14,6 +14,11 @@ from apps.api.views.cart import (
     CartView,
 )
 from apps.api.views.review import MyReviewList, ProductReviewList
+from apps.stripe_checkout.payment_methods import (
+    PaymentMethodDetail,
+    PaymentMethodList,
+    PaymentMethodReturn,
+)
 from apps.stripe_checkout.views import (
     CheckoutCancel,
     CheckoutReturn,
@@ -40,6 +45,17 @@ urlpatterns = [
         "checkout/<str:session_id>/cancel/",
         CheckoutCancel.as_view(),
         name="api-checkout-cancel",
+    ),
+    path("payment-methods/", PaymentMethodList.as_view(), name="api-payment-methods"),
+    path(
+        "payment-methods/return/",
+        PaymentMethodReturn.as_view(),
+        name="api-payment-methods-return",
+    ),
+    path(
+        "payment-methods/<str:payment_method_id>/",
+        PaymentMethodDetail.as_view(),
+        name="api-payment-method",
     ),
     path("cart/", CartView.as_view(), name="api-cart"),
     path("cart/lines/", CartLines.as_view(), name="api-cart-lines"),

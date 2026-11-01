@@ -22,7 +22,7 @@ from oscar.test.factories import (
 )
 from rest_framework.authtoken.models import Token
 
-from apps.stripe_checkout.models import StripeCheckout
+from apps.stripe_checkout.models import StripeCheckout, StripeCustomer
 
 User = get_user_model()
 Basket = get_model("basket", "Basket")
@@ -30,6 +30,8 @@ Order = get_model("order", "Order")
 
 WEBHOOK_SECRET = "whsec_test"
 SESSION = "apps.stripe_checkout.services.stripe.checkout.Session"
+CUSTOMER = "apps.stripe_checkout.services.stripe.Customer"
+PAYMENT_METHOD = "apps.stripe_checkout.services.stripe.PaymentMethod"
 
 
 def stripe_session(
@@ -65,6 +67,9 @@ class StripeCheckoutTest(TestCase):
         self.auth = {
             "HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=self.user).key}"
         }
+        patcher = mock.patch(CUSTOMER + ".create", return_value={"id": "cus_test_1"})
+        self.customer_create = patcher.start()
+        self.addCleanup(patcher.stop)
         self.address = {
             "first_name": "Jane",
             "last_name": "Doe",
@@ -193,12 +198,35 @@ class StripeCheckoutTest(TestCase):
         self.assertIn("guest_email", response.json())
         create.assert_not_called()
 
-    def test_signed_in_user_pays_with_the_account_email(self):
+    def test_signed_in_user_pays_as_their_stripe_customer(self):
         self.add(**self.auth)
         response, create = self.start(auth=self.auth)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(create.call_args.kwargs["customer_email"], "jdoe@example.com")
-        self.assertEqual(StripeCheckout.objects.get().user, self.user)
+        kwargs = create.call_args.kwargs
+        self.assertEqual(kwargs["customer"], "cus_test_1")
+        self.assertNotIn("customer_email", kwargs)
+        self.assertEqual(
+            kwargs["saved_payment_method_options"]["payment_method_save"], "enabled"
+        )
+        self.customer_create.assert_called_once()
+        self.assertEqual(
+            self.customer_create.call_args.kwargs["email"], "jdoe@example.com"
+        )
+        checkout = StripeCheckout.objects.get()
+        self.assertEqual(checkout.user, self.user)
+        self.assertEqual(checkout.email, "jdoe@example.com")
+
+    def test_stripe_customer_is_created_once(self):
+        self.add(**self.auth)
+        self.start(auth=self.auth)
+        # the first basket is frozen, the user fills a new one
+        self.add(quantity=1, **self.auth)
+        __, create = self.start(
+            session=stripe_session(session_id="cs_test_2"), auth=self.auth
+        )
+        self.assertEqual(create.call_args.kwargs["customer"], "cus_test_1")
+        self.customer_create.assert_called_once()
+        self.assertEqual(StripeCustomer.objects.get().customer_id, "cus_test_1")
 
     def test_empty_basket_is_refused(self):
         response, create = self.start(auth=self.auth)
@@ -401,4 +429,221 @@ class StripeCheckoutTest(TestCase):
         self.assertContains(
             self.client.get(reverse("api-checkout-return"), {"canceled": 1}),
             "Payment canceled",
+        )
+
+
+def stripe_card(pm_id="pm_test_visa", customer="cus_test_1", name="Jane Doe"):
+    # a real Stripe object: unlike a dict, it has no .get()
+    return stripe.PaymentMethod.construct_from(
+        {
+            "id": pm_id,
+            "object": "payment_method",
+            "customer": customer,
+            "billing_details": {"name": name},
+            "card": {
+                "brand": "visa",
+                "last4": "4242",
+                "exp_month": 4,
+                "exp_year": 2030,
+            },
+        },
+        "sk_test_123",
+    )
+
+
+@override_settings(STRIPE_SECRET_KEY="sk_test_123")
+class PaymentMethodsTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("jdoe", "jdoe@example.com", "s3cret-pass")
+        self.user.first_name, self.user.last_name = "Jane", "Doe"
+        self.user.save()
+        self.auth = {
+            "HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=self.user).key}"
+        }
+        patcher = mock.patch(CUSTOMER + ".create", return_value={"id": "cus_test_1"})
+        self.customer_create = patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def with_customer(self):
+        StripeCustomer.objects.create(user=self.user, customer_id="cus_test_1")
+
+    def setup_page(self, **data):
+        session = {
+            "id": "cs_test_setup_1",
+            "url": "https://checkout.stripe.com/c/pay/cs_test_setup_1",
+        }
+        with mock.patch(SESSION + ".create", return_value=session) as create:
+            response = self.client.post(
+                reverse("api-payment-methods"),
+                data,
+                content_type="application/json",
+                **self.auth,
+            )
+        return response, create
+
+    def remove(self, pm_id="pm_test_visa", card=None):
+        with mock.patch(
+            PAYMENT_METHOD + ".retrieve", return_value=card or stripe_card(pm_id)
+        ), mock.patch(PAYMENT_METHOD + ".detach") as detach:
+            response = self.client.delete(
+                reverse("api-payment-method", args=[pm_id]), **self.auth
+            )
+        return response, detach
+
+    def test_token_required(self):
+        self.assertEqual(
+            self.client.get(reverse("api-payment-methods")).status_code, 401
+        )
+
+    def test_no_cards_before_the_first_one(self):
+        with mock.patch(CUSTOMER + ".list_payment_methods") as list_methods:
+            response = self.client.get(reverse("api-payment-methods"), **self.auth)
+        self.assertEqual(response.json(), [])
+        # no Stripe customer just to list nothing
+        list_methods.assert_not_called()
+        self.customer_create.assert_not_called()
+
+    def test_lists_the_cards(self):
+        self.with_customer()
+        cards = {"data": [stripe_card(), stripe_card("pm_test_2", name=None)]}
+        with mock.patch(
+            CUSTOMER + ".list_payment_methods", return_value=cards
+        ) as list_methods:
+            response = self.client.get(reverse("api-payment-methods"), **self.auth)
+        self.assertEqual(
+            response.json(),
+            [
+                {
+                    "id": "pm_test_visa",
+                    "brand": "visa",
+                    "last4": "4242",
+                    "exp_month": 4,
+                    "exp_year": 2030,
+                    "name": "Jane Doe",
+                },
+                {
+                    "id": "pm_test_2",
+                    "brand": "visa",
+                    "last4": "4242",
+                    "exp_month": 4,
+                    "exp_year": 2030,
+                    "name": "",
+                },
+            ],
+        )
+        self.assertEqual(list_methods.call_args.args, ("cus_test_1",))
+        self.assertEqual(list_methods.call_args.kwargs["type"], "card")
+
+    def test_stripe_unreachable_while_listing(self):
+        self.with_customer()
+        with mock.patch(
+            CUSTOMER + ".list_payment_methods",
+            side_effect=stripe.APIConnectionError("down"),
+        ):
+            response = self.client.get(reverse("api-payment-methods"), **self.auth)
+        self.assertEqual(response.status_code, 502)
+        self.assertIn("detail", response.json())
+
+    def test_test_and_live_customers_are_separate(self):
+        StripeCustomer.objects.create(
+            user=self.user, customer_id="cus_live_1", livemode=True
+        )
+        with mock.patch(CUSTOMER + ".list_payment_methods") as list_methods:
+            self.assertEqual(
+                self.client.get(reverse("api-payment-methods"), **self.auth).json(), []
+            )
+        list_methods.assert_not_called()
+
+    def test_add_a_card_opens_a_setup_page(self):
+        response, create = self.setup_page()
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            response.json(),
+            {
+                "session_id": "cs_test_setup_1",
+                "url": "https://checkout.stripe.com/c/pay/cs_test_setup_1",
+            },
+        )
+        kwargs = create.call_args.kwargs
+        self.assertEqual(kwargs["mode"], "setup")
+        self.assertEqual(kwargs["customer"], "cus_test_1")
+        self.assertEqual(
+            kwargs["success_url"],
+            "http://testserver/api/payment-methods/return/"
+            "?session_id={CHECKOUT_SESSION_ID}",
+        )
+        self.assertTrue(kwargs["cancel_url"].endswith("&canceled=1"))
+        self.assertEqual(
+            self.customer_create.call_args.kwargs,
+            {
+                "api_key": "sk_test_123",
+                "email": "jdoe@example.com",
+                "name": "Jane Doe",
+                "metadata": {"user_id": str(self.user.pk)},
+            },
+        )
+        customer = StripeCustomer.objects.get()
+        self.assertEqual(customer.user, self.user)
+        self.assertFalse(customer.livemode)
+
+    def test_web_client_comes_back_to_the_web_app(self):
+        self.with_customer()
+        __, create = self.setup_page(client="web")
+        self.assertEqual(
+            create.call_args.kwargs["success_url"],
+            "http://testserver/app/?payment_method_session={CHECKOUT_SESSION_ID}",
+        )
+        self.customer_create.assert_not_called()
+
+    def test_add_a_card_without_stripe_key(self):
+        with override_settings(STRIPE_SECRET_KEY=""):
+            response, create = self.setup_page()
+        self.assertEqual(response.status_code, 503)
+        create.assert_not_called()
+
+    def test_stripe_failure_when_adding_a_card(self):
+        with mock.patch(
+            SESSION + ".create", side_effect=stripe.APIConnectionError("down")
+        ):
+            response = self.client.post(
+                reverse("api-payment-methods"), {}, content_type="application/json",
+                **self.auth,
+            )  # fmt: skip
+        self.assertEqual(response.status_code, 502)
+
+    def test_remove_a_card(self):
+        self.with_customer()
+        response, detach = self.remove()
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(detach.call_args.args, ("pm_test_visa",))
+
+    def test_card_of_someone_else_is_not_found(self):
+        self.with_customer()
+        response, detach = self.remove(card=stripe_card(customer="cus_other"))
+        self.assertEqual(response.status_code, 404)
+        detach.assert_not_called()
+
+    def test_unknown_card_is_not_found(self):
+        self.with_customer()
+        with mock.patch(
+            PAYMENT_METHOD + ".retrieve",
+            side_effect=stripe.InvalidRequestError("No such PaymentMethod", "id"),
+        ):
+            response = self.client.delete(
+                reverse("api-payment-method", args=["pm_nope"]), **self.auth
+            )
+        self.assertEqual(response.status_code, 404)
+
+    def test_remove_without_customer_is_not_found(self):
+        response, detach = self.remove()
+        self.assertEqual(response.status_code, 404)
+        detach.assert_not_called()
+
+    def test_return_page(self):
+        self.assertContains(
+            self.client.get(reverse("api-payment-methods-return")), "Card saved"
+        )
+        self.assertContains(
+            self.client.get(reverse("api-payment-methods-return"), {"canceled": 1}),
+            "No card added",
         )
