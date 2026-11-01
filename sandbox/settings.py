@@ -398,6 +398,9 @@ OSCAR_THEME = env('OSCAR_THEME', default='default')
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
+# Scheme of the links in Oscar's emails (password reset, orders); the site is
+# served over HTTPS
+OSCAR_URL_SCHEMA = env('OSCAR_URL_SCHEMA', default='https')
 # Reviews (site and mobile app) are published once approved in the dashboard
 OSCAR_MODERATE_REVIEWS = True
 
@@ -412,6 +415,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
+    # Password reset emails (POST /api/account/password-reset/), per client IP
+    'DEFAULT_THROTTLE_RATES': {
+        'password_reset': env('API_PASSWORD_RESET_RATE', default='5/hour'),
+    },
+    # Behind the host nginx (X-Forwarded-For): throttle the real client IP
+    'NUM_PROXIES': env.int('API_NUM_PROXIES', default=1),
 }
 
 OSCARAPI_ENABLE_REGISTRATION = True

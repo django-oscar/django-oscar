@@ -1,6 +1,8 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
+from django.core import mail
+from django.core.cache import cache
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
@@ -311,3 +313,82 @@ class UserAddressApiTest(TestCase):
             reverse("useraddress-detail", args=[address_id]), **other_auth
         )
         self.assertEqual(response.status_code, 404)
+
+
+class AccountApiTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("jdoe", "jdoe@example.com", "s3cret-pass")
+        self.token = Token.objects.create(user=self.user).key
+        self.auth = {"HTTP_AUTHORIZATION": f"Token {self.token}"}
+
+    def test_name_can_be_changed_but_not_the_email(self):
+        response = self.client.patch(
+            reverse("api-account"),
+            {"first_name": "Jane", "last_name": "Doe", "email": "other@example.com"},
+            content_type="application/json",
+            **self.auth,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["first_name"], "Jane")
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.get_full_name(), "Jane Doe")
+        self.assertEqual(self.user.email, "jdoe@example.com")
+
+    def change_password(self, old, new, repeat=None):
+        return self.client.post(
+            reverse("api-account-password"),
+            {"old_password": old, "new_password1": new, "new_password2": repeat or new},
+            content_type="application/json",
+            **self.auth,
+        )
+
+    def test_password_change_keeps_the_token(self):
+        self.assertEqual(self.change_password("s3cret-pass", "N3w-pass-word").status_code, 204)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("N3w-pass-word"))
+        self.assertEqual(self.client.get(reverse("api-account"), **self.auth).status_code, 200)
+
+    def test_password_change_errors(self):
+        self.assertIn("old_password", self.change_password("wrong", "N3w-pass-word").json())
+        self.assertIn("new_password2", self.change_password("s3cret-pass", "short").json())
+        self.assertIn(
+            "new_password2", self.change_password("s3cret-pass", "N3w-pass-word", "other").json()
+        )
+
+    def test_account_requires_authentication(self):
+        self.assertEqual(self.client.get(reverse("api-account")).status_code, 401)
+        self.assertEqual(
+            self.client.post(reverse("api-account-password"), {}).status_code, 401
+        )
+
+
+class PasswordResetApiTest(TestCase):
+    def setUp(self):
+        cache.clear()  # throttle counters
+        User.objects.create_user("jdoe", "jdoe@example.com", "s3cret-pass")
+
+    def reset(self, email):
+        return self.client.post(
+            reverse("api-account-password-reset"),
+            {"email": email},
+            content_type="application/json",
+        )
+
+    def test_reset_email_links_to_the_website(self):
+        self.assertEqual(self.reset("jdoe@example.com").status_code, 204)
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["jdoe@example.com"])
+        self.assertIn("https://", mail.outbox[0].body)
+        self.assertIn("/password-reset/confirm/", mail.outbox[0].body)
+
+    def test_unknown_email_gives_the_same_answer(self):
+        self.assertEqual(self.reset("nobody@example.com").status_code, 204)
+        self.assertEqual(mail.outbox, [])
+
+    def test_invalid_email_is_rejected(self):
+        self.assertIn("email", self.reset("not-an-email").json())
+
+    def test_reset_requests_are_throttled(self):
+        statuses = [self.reset("jdoe@example.com").status_code for _ in range(6)]
+        self.assertEqual(statuses, [204] * 5 + [429])
