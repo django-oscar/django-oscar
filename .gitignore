@@ -65,3 +65,4 @@ settings_local.py
 
 # Production secrets
 .env.prod
+.env
