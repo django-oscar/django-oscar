@@ -45,6 +45,10 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 DashboardPermission.get("catalogue", "view_product"),
                 DashboardPermission.partner_dashboard_access,
             ),
+            "catalogue-partner-lookup": (
+                DashboardPermission.get("catalogue", "view_product"),
+                DashboardPermission.partner_dashboard_access,
+            ),
             "catalogue-product-create-child": DashboardPermission.get(
                 "catalogue", "view_product", "add_product"
             ),
@@ -126,6 +130,9 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
         )
         self.product_lookup_view = get_class(
             "dashboard.catalogue.views", "ProductLookupView"
+        )
+        self.partner_lookup_view = get_class(
+            "dashboard.catalogue.views", "PartnerLookupView"
         )
         self.product_create_redirect_view = get_class(
             "dashboard.catalogue.views", "ProductCreateRedirectView"
@@ -237,6 +244,11 @@ class CatalogueDashboardConfig(OscarDashboardConfig):
                 "product-lookup/",
                 self.product_lookup_view.as_view(),
                 name="catalogue-product-lookup",
+            ),
+            path(
+                "partner-lookup/",
+                self.partner_lookup_view.as_view(),
+                name="catalogue-partner-lookup",
             ),
             path(
                 "categories/",

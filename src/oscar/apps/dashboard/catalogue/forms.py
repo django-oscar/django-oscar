@@ -22,6 +22,7 @@ AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
 AttributeOption = get_model("catalogue", "AttributeOption")
 Option = get_model("catalogue", "Option")
 ProductSelect = get_class("dashboard.catalogue.widgets", "ProductSelect")
+PartnerSelect = get_class("dashboard.catalogue.widgets", "PartnerSelect")
 RelatedFieldWidgetWrapper, RelatedMultipleFieldWidgetWrapper = get_classes(
     "dashboard.widgets",
     ("RelatedFieldWidgetWrapper", "RelatedMultipleFieldWidgetWrapper"),
@@ -129,6 +130,7 @@ class StockRecordForm(forms.ModelForm):
             "num_in_stock",
             "low_stock_threshold",
         ]
+        widgets = {"partner": PartnerSelect}
 
 
 def _attr_text_field(attribute):
