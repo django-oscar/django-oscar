@@ -1,11 +1,11 @@
 import os
 import environ
-import oscar
 
 env = environ.Env()
 
 # Path helper
-location = lambda x: os.path.join(
+def location(x):
+    return os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
 DEBUG = env.bool('DEBUG', default=True)
@@ -49,7 +49,8 @@ LANGUAGE_CODE = 'en-gb'
 
 # Includes all languages that have >50% coverage in Transifex
 # Taken from Django's default setting for LANGUAGES
-gettext_noop = lambda s: s
+def gettext_noop(s):
+    return s
 LANGUAGES = (
     ('ar', gettext_noop('Arabic')),
     ('ca', gettext_noop('Catalan')),

@@ -4,9 +4,6 @@ from django.core import exceptions
 from django.urls import reverse
 
 # pylint: disable=W0611
-from oscar.apps.offer.applicator import (
-    Applicator,
-)  # backwards-compat
 
 
 def range_anchor(product_range):
