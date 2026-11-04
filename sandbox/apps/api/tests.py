@@ -97,6 +97,32 @@ class MobileCatalogueTest(TestCase):
 
         self.assertEqual(self.client.get(url, {"page": 3}).status_code, 404)
 
+    def search(self, q, **params):
+        response = self.client.get(reverse("product-list"), {"q": q, **params})
+        return [p["id"] for p in response.json()["results"]]
+
+    def test_product_list_searches_title_description_and_upc(self):
+        self.book.description = "A novel about the sea"
+        self.book.upc = "978-SEA"
+        self.book.save()
+        self.assertEqual(self.search("shi"), [self.shirt.pk])
+        self.assertEqual(self.search("NOVEL"), [self.book.pk])
+        self.assertEqual(self.search("978-sea"), [self.book.pk])
+        self.assertEqual(self.search("978"), [])  # the UPC must match whole
+
+    def test_product_search_needs_every_word(self):
+        self.book.description = "A novel about the sea"
+        self.book.save()
+        self.assertEqual(self.search("book sea"), [self.book.pk])
+        self.assertEqual(self.search("book shirt"), [])
+
+    def test_product_search_within_a_category(self):
+        self.assertEqual(self.search("shirt", category=self.clothing.pk), [self.shirt.pk])
+        self.assertEqual(self.search("book", category=self.clothing.pk), [])
+
+    def test_blank_search_lists_everything(self):
+        self.assertEqual(self.search("   "), [self.book.pk, self.shirt.pk])
+
     def test_product_detail_inlines_price(self):
         data = self.client.get(reverse("product-detail", args=[self.book.pk])).json()
         self.assertEqual(data["title"], "Book")
@@ -555,3 +581,75 @@ class WebAppOriginTest(TestCase):
         )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(browser.get(reverse("api-cart")).json()["num_items"], 1)
+
+
+class WishlistApiTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("jdoe", "jdoe@example.com", "s3cret-pass")
+        self.auth = {
+            "HTTP_AUTHORIZATION": f"Token {Token.objects.create(user=self.user).key}"
+        }
+        self.shirt = create_product(title="Shirt", price=12, num_in_stock=3)
+        self.book = create_product(title="Book", price=5, num_in_stock=1)
+
+    def add(self, product_id, **auth):
+        return self.client.post(
+            reverse("api-wishlist"), {"product": product_id},
+            content_type="application/json", **(auth or self.auth),
+        )
+
+    def listed(self):
+        response = self.client.get(reverse("api-wishlist"), **self.auth)
+        self.assertEqual(response.status_code, 200)
+        return [p["id"] for p in response.json()]
+
+    def test_empty_wishlist_is_not_created_by_listing(self):
+        self.assertEqual(self.listed(), [])
+        self.assertFalse(self.user.wishlists.exists())
+
+    def test_add_list_and_remove_products(self):
+        response = self.add(self.shirt.pk)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["price"]["excl_tax"], "12.00")
+        self.add(self.book.pk)
+        self.assertEqual(self.listed(), [self.book.pk, self.shirt.pk])
+
+        response = self.client.delete(
+            reverse("api-wishlist-item", args=[self.book.pk]), **self.auth
+        )
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(self.listed(), [self.shirt.pk])
+        # removing a product that is not there is not an error
+        response = self.client.delete(
+            reverse("api-wishlist-item", args=[self.book.pk]), **self.auth
+        )
+        self.assertEqual(response.status_code, 204)
+
+    def test_adding_twice_keeps_one_line(self):
+        self.assertEqual(self.add(self.shirt.pk).status_code, 201)
+        self.assertEqual(self.add(self.shirt.pk).status_code, 200)
+        self.assertEqual(self.user.wishlists.get().lines.count(), 1)
+
+    def test_uses_the_wishlist_of_the_website(self):
+        website = self.user.wishlists.create(name="Birthday")
+        website.add(self.book)
+        self.add(self.shirt.pk)
+        self.assertEqual(self.user.wishlists.count(), 1)
+        self.assertEqual(self.listed(), [self.shirt.pk, self.book.pk])
+
+    def test_other_users_wishlists_are_hidden(self):
+        other = User.objects.create_user("other", "other@example.com", "s3cret-pass")
+        other.wishlists.create().add(self.book)
+        self.assertEqual(self.listed(), [])
+
+    def test_unknown_product_is_refused(self):
+        self.assertEqual(self.add(999999).status_code, 404)
+        self.assertEqual(self.add("abc").status_code, 400)
+
+    def test_wishlist_requires_authentication(self):
+        self.assertEqual(self.client.get(reverse("api-wishlist")).status_code, 401)
+        response = self.client.post(
+            reverse("api-wishlist"), {"product": self.shirt.pk},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 401)

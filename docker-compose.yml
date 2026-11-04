@@ -16,6 +16,7 @@ services:
       - ~/projects/perso:/workspaces
       - ~/.pypirc:/root/.pypirc:ro
       - ~/.pip:/root/.pip:ro
+      - ~/.claude:/root/.claude:ro
 
     environment:
       WORKDIR: /app

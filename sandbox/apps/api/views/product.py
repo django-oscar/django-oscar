@@ -47,8 +47,9 @@ class ProductList(MobileStrategyMixin, core_views.ProductList):
     Browsable products with price and availability inlined, newest first,
     paginated with ``?page=`` and ``?page_size=``.
 
-    Supports ``?category=<id>`` (the category and its descendants) on top of
-    the core ``?structure=`` filter.
+    Supports ``?category=<id>`` (the category and its descendants) and
+    ``?q=<words>`` (every word in the title, the description or the UPC) on
+    top of the core ``?structure=`` filter.
     """
 
     queryset = with_reviews_count(
@@ -70,7 +71,18 @@ class ProductList(MobileStrategyMixin, core_views.ProductList):
             qs = qs.filter(
                 categories__in=category.get_descendants_and_self()
             ).distinct()
-        return qs
+        return search_products(qs, self.request.query_params.get("q", ""))
+
+
+def search_products(queryset, query):
+    """Products matching every word of ``query`` (no filter when blank)"""
+    for word in query.split():
+        queryset = queryset.filter(
+            Q(title__icontains=word)
+            | Q(description__icontains=word)
+            | Q(upc__iexact=word)
+        )
+    return queryset
 
 
 class ProductDetail(MobileStrategyMixin, core_views.ProductDetail):
