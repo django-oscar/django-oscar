@@ -1,5 +1,6 @@
-{% load i18n %}
-{% load url_tags %}
+{% extends "oscar/communication/emails/base.txt" %}
+{% load i18n url_tags %}
+{% block body %}
 {% absolute_url site.domain alert.get_confirm_url as confirm_url %}
 {% absolute_url site.domain alert.get_cancel_url as cancel_url %}
 {% blocktrans with title=alert.product.get_title|safe confirm_url=confirm_url cancel_url=cancel_url %}
@@ -15,3 +16,4 @@ You can cancel this alert at any time by clicking the following link:
 Thanks for your interest,
 The {{ site }} Team
 {% endblocktrans %}
+{% endblock %}
