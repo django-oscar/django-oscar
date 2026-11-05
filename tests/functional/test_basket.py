@@ -631,3 +631,31 @@ class BasketFormSetTests(WebTestCase):
             % 2,
             str(response.context["formset"].forms[0].errors),
         )
+
+    def test_ajax_update_after_basket_cookie_expired(self):
+        product = create_product(num_in_stock=10)
+        self.app.post(
+            reverse("basket:add", kwargs={"pk": product.pk}),
+            params={"product_id": product.id, "action": "add", "quantity": 1},
+        )
+        response = self.app.get(reverse("basket:summary"))
+        formset = response.context["formset"]
+        line = formset.forms[0].instance
+
+        data = {
+            formset.add_prefix("TOTAL_FORMS"): 1,
+            formset.add_prefix("INITIAL_FORMS"): 1,
+            formset.add_prefix("MIN_NUM_FORMS"): 0,
+            formset.add_prefix("MAX_NUM_FORMS"): 1000,
+            formset.forms[0].add_prefix("id"): line.pk,
+            formset.forms[0].add_prefix("quantity"): 2,
+        }
+        # The anonymous user's basket cookie has expired, so the request gets
+        # a new, unsaved basket.
+        self.app.reset()
+        response = self.app.post(reverse("basket:summary"), params=data, xhr=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("content_html", response.json)
+        line.refresh_from_db()
+        self.assertEqual(line.quantity, 1)
