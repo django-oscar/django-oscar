@@ -96,6 +96,7 @@ class OrderCreator(object):
                     available_to_user, msg = voucher.is_available_to_user(user=user)
                     if not available_to_user:
                         raise ValueError(msg)
+                    self._ensure_voucher_offers_available(voucher, user)
 
             # Record any discounts associated with this order
             for application in basket.offer_applications:
@@ -137,6 +138,16 @@ class OrderCreator(object):
         order_placed.send(sender=self, order=order, user=user)
 
         return order
+
+    def _ensure_voucher_offers_available(self, voucher, user):
+        voucher_offers = list(voucher.offers.all())
+        if voucher_offers and not any(
+            offer.is_available(user=user) for offer in voucher_offers
+        ):
+            raise ValueError(
+                _("The '%(code)s' voucher is no longer available")
+                % {"code": voucher.code}
+            )
 
     def create_order_model(
         self,
