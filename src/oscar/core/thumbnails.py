@@ -1,6 +1,10 @@
+import logging
+
 from django.apps import apps
 from django.conf import settings
 from django.utils.module_loading import import_string
+
+logger = logging.getLogger('oscar.thumbnails')
 
 
 class AbstractThumbnailer(object):
@@ -26,7 +30,10 @@ class SorlThumbnail(AbstractThumbnailer):
         width, height = size.split("x")
         # Set `size` to `width` if `height` is not provided.
         size = size if height else width
-        return get_thumbnail(source, size, **opts)
+        thumbnail = get_thumbnail(source, size, **opts)
+        if not thumbnail:
+            logger.error('Failed to generate thumbnail for the image %s', source)
+        return thumbnail
 
     def delete_thumbnails(self, source):
         from sorl.thumbnail import delete
@@ -34,8 +41,8 @@ class SorlThumbnail(AbstractThumbnailer):
 
         try:
             delete(source)
-        except ThumbnailError:
-            pass
+        except ThumbnailError as e:
+            logger.error('Failed to remove thumbnail for image %s:\n %s', source, str(e))
 
 
 class EasyThumbnails(AbstractThumbnailer):
