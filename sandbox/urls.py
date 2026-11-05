@@ -8,7 +8,7 @@ from django.contrib.sitemaps import views
 from django.urls import include, path
 from oscar.views import handler403, handler404, handler500
 
-from apps.sitemaps import base_sitemaps
+from .apps.sitemaps import base_sitemaps
 
 admin.autodiscover()
 
