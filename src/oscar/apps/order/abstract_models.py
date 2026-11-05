@@ -999,7 +999,7 @@ class AbstractLinePrice(models.Model):
         _("Price (excl. tax)"), decimal_places=2, max_digits=12
     )
     shipping_incl_tax = models.DecimalField(
-        _("Shiping (inc. tax)"), decimal_places=2, max_digits=12, default=0
+        _("Shipping (inc. tax)"), decimal_places=2, max_digits=12, default=0
     )
     shipping_excl_tax = models.DecimalField(
         _("Shipping (excl. tax)"), decimal_places=2, max_digits=12, default=0
