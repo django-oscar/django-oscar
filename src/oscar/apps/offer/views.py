@@ -31,9 +31,9 @@ class OfferDetailView(ListView):
     # pylint: disable=W0201
     def get(self, request, *args, **kwargs):
         try:
-            self.offer = ConditionalOffer.active.select_related().get(
-                slug=self.kwargs["slug"]
-            )
+            self.offer = ConditionalOffer.active.select_related(
+                "condition", "benefit"
+            ).get(slug=self.kwargs["slug"])
         except ConditionalOffer.DoesNotExist:
             raise http.Http404
         return super().get(request, *args, **kwargs)

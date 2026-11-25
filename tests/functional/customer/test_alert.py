@@ -50,6 +50,31 @@ class TestProductAlert(WebTest):
         )
 
 
+class TestProductAlertList(WebTest):
+    def setUp(self):
+        self.user = UserFactory()
+        self.product = create_product(num_in_stock=0)
+
+    def test_lists_only_the_users_open_alerts(self):
+        alert = ProductAlertFactory(
+            user=self.user, product=self.product, status=ProductAlert.ACTIVE
+        )
+        ProductAlertFactory(
+            user=UserFactory(), product=self.product, status=ProductAlert.ACTIVE
+        )
+        closed = ProductAlertFactory(
+            user=self.user,
+            product=create_product(num_in_stock=0),
+            status=ProductAlert.ACTIVE,
+        )
+        closed.close()
+
+        page = self.app.get(reverse("customer:alerts-list"), user=self.user)
+
+        assert list(page.context["alerts"]) == [alert]
+        assert self.product.get_title() in page
+
+
 class TestAUserWithAnActiveStockAlert(WebTest):
     def setUp(self):
         self.user = UserFactory()

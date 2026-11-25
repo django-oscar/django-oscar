@@ -23,7 +23,7 @@ class ProductAlertListView(PageTitleMixin, generic.ListView):
     active_tab = "alerts"
 
     def get_queryset(self):
-        return ProductAlert.objects.select_related().filter(
+        return ProductAlert.objects.select_related("product").filter(
             user=self.request.user,
             date_closed=None,
         )
