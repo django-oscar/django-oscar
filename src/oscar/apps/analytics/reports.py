@@ -90,7 +90,7 @@ class UserReportHTMLFormatter(ReportHTMLFormatter):
 class UserReportGenerator(ReportGenerator):
     code = "user_analytics"
     description = _("User analytics")
-    queryset = UserRecord._default_manager.select_related().all()
+    queryset = UserRecord._default_manager.select_related("user").all()
 
     formatters = {
         "CSV_formatter": UserReportCSVFormatter,
